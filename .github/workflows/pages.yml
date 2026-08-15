@@ -1,0 +1,57 @@
+# GitHub Pages delivery for learn.geterdone.io
+#
+# This is a SEPARATE delivery path from the Hetzner platform. It does not
+# touch platform-ops, the shared Caddy edge, or any registry reservation,
+# and it is NOT a shortcut around those gates -- they govern the Hetzner
+# platform, which remains unbuilt. See README STATUS.
+#
+# PREREQUISITE: the repository must be PUBLIC (GitHub Pages on a private
+# repo requires a paid plan), and Settings > Pages > Source must be set to
+# "GitHub Actions". Until then this workflow is inert by the `if` below.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Inert while the repo is private: Pages cannot publish and the run would
+    # fail confusingly. Flips on automatically once visibility changes.
+    if: ${{ github.event.repository.visibility == 'public' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify the published tree is self-contained
+        run: |
+          set -eu
+          # The invariant the test suite enforces, re-checked at publish time:
+          # a page that reaches out to a third party must never go live.
+          if grep -rEn 'src="https?://|@import|XMLHttpRequest|fetch\(' site/ ; then
+            echo "::error::external reference found in site/ -- refusing to publish"
+            exit 1
+          fi
+          test -f site/index.html
+          test -f site/market-structure/index.html
+          echo "self-containment OK"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
