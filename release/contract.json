@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "notes": [
+    "COMMITTED CONTRACT SOURCE, and the single source of truth for __LOOPBACK_PORT__ and __APP_SUBNET__. .github/workflows/release.yml reads this document, renders the deployment inputs from its network block, overwrites only the fields a release run can prove, validates the result against release/contract.schema.json, and emits it as release-artifacts/release-contract.json. Every field the workflow does not overwrite is reviewed policy and is authoritative exactly as written here.",
+    "Fields only a release run can know carry all-zero sentinels: release_id, source.revision, image.digest, image.reference, build.timestamp, compose.template_sha256, compose.rendered_sha256 and invocation.workflow_run_id. An all-zero digest or revision can never be a real one, so this document can never be mistaken for a release.",
+    "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED. The release workflow refuses to render or build while they hold placeholders, and names the allocation gate in the failure. Allocation is a human decision plus a live host preflight (platform-ops docs/APP_ONBOARDING.md section 2 reservation PR, section 4 bootstrap preflight, and docs/EDGE_ROUTING_CONTRACT.md section 5) and must never be automated here.",
+    "build.base_images[].digest is __BASE_IMAGE_DIGEST__ because Containerfile.release is the only place a base image is pinned; the workflow copies the digests it actually built from there, so the two can never drift.",
+    "placeholders_present is true, so every release gate must refuse this document as it stands."
+  ],
+  "unallocated": [
+    "/network/loopback_port",
+    "/network/internal_port",
+    "/network/subnet",
+    "/build/base_images/0/digest",
+    "/build/base_images/1/digest"
+  ],
+  "release_id": "0000000000000000000000000000000000000000-000000000000",
+  "application": {
+    "slug": "market-structure-lab",
+    "tenant_slug": "geterdone",
+    "project_name": "market-structure-lab",
+    "container_name": "market-structure-lab",
+    "title": "Market Structure Lab"
+  },
+  "source": {
+    "repository": "dmedellin/market-structure-lab",
+    "revision": "0000000000000000000000000000000000000000",
+    "ref": "refs/heads/main"
+  },
+  "image": {
+    "repository": "ghcr.io/dmedellin/market-structure-lab",
+    "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "reference": "ghcr.io/dmedellin/market-structure-lab@sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "build": {
+    "timestamp": "1970-01-01T00:00:00Z",
+    "source_date_epoch": 1700000000,
+    "base_images": [
+      {
+        "role": "build",
+        "reference": "docker.io/library/caddy",
+        "digest": "sha256:f43d8810c944e27e6f7ea80b165de11dbdab16cff15c8a80d83ae3e1a109a35d"
+      },
+      {
+        "role": "runtime",
+        "reference": "docker.io/library/caddy",
+        "digest": "sha256:f43d8810c944e27e6f7ea80b165de11dbdab16cff15c8a80d83ae3e1a109a35d"
+      }
+    ],
+    "reproducible": false
+  },
+  "compose": {
+    "template_path": "compose.template.yaml",
+    "template_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "rendered_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "runtime": {
+    "user": "1000:1000",
+    "read_only_rootfs": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "no_new_privileges": true,
+    "tmpfs": [
+      "/tmp:size=16m,mode=1777"
+    ],
+    "cpus": 0.5,
+    "memory_limit_mib": 256,
+    "memory_reservation_mib": 64,
+    "pids_limit": 128,
+    "restart": "unless-stopped"
+  },
+  "network": {
+    "loopback_host": "127.0.0.1",
+    "loopback_port": "__LOOPBACK_PORT__",
+    "internal_port": "__LOOPBACK_PORT__",
+    "subnet": "__APP_SUBNET__",
+    "class": "ordinary-rootful-bridge"
+  },
+  "health": {
+    "path": "/healthz",
+    "success_status": 200,
+    "deadline_seconds": 60,
+    "cache_control": "no-store"
+  },
+  "persistence": {
+    "class": "stateless",
+    "migrations": "forbidden"
+  },
+  "domains": {
+    "canonical": "learn.geterdone.io",
+    "aliases": [],
+    "all": [
+      "learn.geterdone.io"
+    ]
+  },
+  "protected_neighbors": [
+    "https://cyberpunk.pixelbattle.me/",
+    "https://app.hireanai.net/",
+    "https://hoa.hireanai.net/"
+  ],
+  "acceptance": {
+    "deadline_seconds": 300,
+    "checks": [
+      {
+        "id": "internal-health",
+        "description": "Health endpoint returns 200 and is never cached.",
+        "scope": "loopback",
+        "method": "GET",
+        "path": "/healthz",
+        "expect": {
+          "status": 200,
+          "max_redirects": 0,
+          "headers": [
+            {
+              "name": "Cache-Control",
+              "match": "contains",
+              "value": "no-store"
+            }
+          ]
+        },
+        "timeout_seconds": 5,
+        "attempts": 3,
+        "blocking": true
+      },
+      {
+        "id": "learn-index",
+        "description": "Learn catalog index is served at the site root and lists the lesson.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "Market Structure Lab",
+            "market-structure/"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            },
+            {
+              "name": "Cache-Control",
+              "match": "contains",
+              "value": "no-cache"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "lesson-page",
+        "description": "Market Structure lesson is served at the subpath and carries its title and risk disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/market-structure/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "Market Structure Lab",
+            "educational"
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "unknown-path-404",
+        "description": "An unknown path returns a real 404 and never a soft 200 or a redirect to the index.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/release-smoke-unknown-path",
+        "expect": {
+          "status": 404,
+          "max_redirects": 0
+        },
+        "timeout_seconds": 5,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "self-containment",
+        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/market-structure/",
+        "expect": {
+          "status": 200,
+          "no_external_origins": true,
+          "body_excludes_patterns": [
+            "<base[\\s>]"
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "security-headers",
+        "description": "Application security header policy is present on HTML responses.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "headers": [
+            {
+              "name": "X-Content-Type-Options",
+              "match": "equals",
+              "value": "nosniff"
+            },
+            {
+              "name": "Referrer-Policy",
+              "match": "present"
+            },
+            {
+              "name": "Content-Security-Policy",
+              "match": "contains",
+              "value": "frame-ancestors"
+            },
+            {
+              "name": "Permissions-Policy",
+              "match": "present"
+            },
+            {
+              "name": "Server",
+              "match": "absent"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      }
+    ]
+  },
+  "evidence": {
+    "audit_path": "/var/log/app-platform/market-structure-lab",
+    "app_root": "/srv/apps/market-structure-lab",
+    "minimum_retained_accepted_releases": 2,
+    "artifact_name": "market-structure-lab-release-evidence"
+  },
+  "invocation": {
+    "repository": "dmedellin/market-structure-lab",
+    "workflow_run_id": "0",
+    "workflow_run_attempt": 1,
+    "environment": "production"
+  },
+  "placeholders_present": true
+}

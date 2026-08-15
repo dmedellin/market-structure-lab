@@ -1,0 +1,722 @@
+#!/usr/bin/env python3
+"""Production smoke client for market-structure-lab (learn.geterdone.io).
+
+Standard library only, by design: this runs on the production host and inside the
+release workflow, where installing third-party packages is not a permitted mutation.
+
+It implements the blocking acceptance checks declared in release/contract.schema.json
+(``acceptance.checks``) and uses the identical check ids, so a smoke report line maps
+one-to-one onto a contract check:
+
+    internal-health     /healthz is 200 and never cached
+    learn-index         / is 200 HTML and lists the lesson
+    lesson-page         /market-structure/ is 200 and carries the lesson title
+    self-containment    served HTML references no origin but its own
+    security-headers    the application security header policy is present
+    unknown-path-404    an unknown path is a real 404, not a soft 200 or a redirect
+
+Usage:
+    python3 scripts/smoke.py https://learn.geterdone.io
+    python3 scripts/smoke.py http://127.0.0.1:<LOOPBACK_PORT> --timeout 5
+    python3 scripts/smoke.py https://learn.geterdone.io --json
+
+Exit status:
+    0  every check passed
+    1  at least one check failed (per-check detail is printed)
+    2  usage or configuration error
+
+Per platform-ops docs/RELEASE_SAFETY_GATES.md, there is no warning-only result: a
+missing, malformed, timed-out, or unexpectedly redirected response is a failure.
+"""
+
+from __future__ import annotations
+
+import argparse
+import http.client
+import json
+from html.parser import HTMLParser
+import re
+import socket
+import ssl
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+import uuid
+
+MAX_BODY_BYTES = 8 * 1024 * 1024
+USER_AGENT = "market-structure-lab-smoke/1"
+
+# Origins that may appear in a served document without being an external
+# dependency. These are identifiers, not fetches:
+#   - w3.org: XML/SVG/xlink namespace URIs, required by inline and data: SVG.
+#   - schema.org: JSON-LD @context identifier; browsers never dereference it.
+NAMESPACE_HOSTS = frozenset({"www.w3.org", "w3.org", "schema.org", "www.schema.org"})
+
+# Attribute positions the browser actually loads a subresource from. An external
+# origin in any of these breaks self-containment.
+LOADING_ATTRS = frozenset(
+    {
+        ("script", "src"), ("img", "src"), ("img", "srcset"), ("img", "lowsrc"),
+        ("source", "src"), ("source", "srcset"), ("iframe", "src"), ("frame", "src"),
+        ("embed", "src"), ("track", "src"), ("audio", "src"), ("video", "src"),
+        ("video", "poster"), ("object", "data"), ("input", "src"), ("a", "ping"),
+        ("use", "href"), ("use", "xlink:href"), ("image", "href"),
+        ("image", "xlink:href"), ("body", "background"), ("table", "background"),
+        ("td", "background"), ("feimage", "href"), ("feimage", "xlink:href"),
+    }
+)
+
+# Attribute positions that only ever navigate or identify. An external origin here
+# loads nothing: it is an ordinary outbound hyperlink, not a third-party dependency.
+NAVIGATION_ATTRS = frozenset({("a", "href"), ("area", "href"), ("form", "action")})
+
+# <link rel=...> values that identify rather than load. Everything else that a
+# <link> can carry (stylesheet, icon, preload, prefetch, preconnect, dns-prefetch,
+# manifest, modulepreload, mask-icon, apple-touch-icon) fetches.
+NON_LOADING_LINK_RELS = frozenset(
+    {"canonical", "alternate", "author", "license", "me", "help", "bookmark",
+     "next", "prev", "prefetch-disabled", "search", "tag", "index", "up"}
+)
+
+# Runtime network APIs. On a self-contained static page there is nothing legitimate
+# for these to talk to, so any occurrence is a violation.
+NETWORK_API_RE = re.compile(
+    r"""(?i)\b(?:fetch\s*\(|XMLHttpRequest|navigator\s*\.\s*sendBeacon|importScripts\s*\("""
+    r"""|new\s+WebSocket|new\s+EventSource|new\s+SharedWorker|navigator\s*\.\s*serviceWorker)"""
+)
+CSS_URL_RE = re.compile(r"""(?i)url\(\s*(['\"]?)([^)'\"]+)\1\s*\)""")
+CSS_IMPORT_RE = re.compile(r"""(?i)@import\s+(?:url\(\s*)?['\"]([^'\"]+)['\"]""")
+SCHEME_URL_RE = re.compile(r"""(?i)\bhttps?://[A-Za-z0-9._~%-]+(?::[0-9]+)?""")
+# Schemes that are inert for self-containment purposes.
+INERT_SCHEMES = ("data:", "mailto:", "tel:", "sms:", "blob:", "about:", "javascript:")
+
+
+class Violation:
+    """One self-containment defect, with enough detail to fix it without guessing."""
+
+    def __init__(self, line, kind, detail):
+        self.line = line
+        self.kind = kind
+        self.detail = detail
+
+    def __str__(self):
+        return "line %d: %s: %s" % (self.line, self.kind, self.detail)
+
+    def __eq__(self, other):
+        return isinstance(other, Violation) and str(self) == str(other)
+
+    def __hash__(self):
+        return hash(str(self))
+
+
+def _host_of(value):
+    """Return the lowercase host of an absolute or protocol-relative URL, else None."""
+    value = value.strip()
+    if value.startswith("//"):
+        value = "https:" + value
+    parts = urllib.parse.urlsplit(value)
+    if parts.scheme in ("http", "https") and parts.hostname:
+        return parts.hostname.lower()
+    return None
+
+
+class SelfContainmentParser(HTMLParser):
+    """Find every place a document would reach outside its own origin."""
+
+    def __init__(self, allowed_hosts, strict_links=False):
+        super().__init__(convert_charrefs=True)
+        self.allowed_hosts = {h.lower() for h in allowed_hosts}
+        self.strict_links = strict_links
+        self.violations = []
+        self._stack = []
+
+    # -- helpers
+
+    def _add(self, kind, detail, line=None):
+        self.violations.append(Violation(line or self.getpos()[0], kind, detail))
+
+    def _external(self, value):
+        host = _host_of(value)
+        if host is None or host in self.allowed_hosts or host in NAMESPACE_HOSTS:
+            return None
+        return host
+
+    def _check_url(self, value, kind, context):
+        """Check one URL-valued attribute for an external origin."""
+        value = (value or "").strip()
+        if not value or value.startswith("#"):
+            return
+        low = value.lower()
+        if low.startswith("data:"):
+            self._scan_embedded(value, context)
+            return
+        if low.startswith(INERT_SCHEMES):
+            return
+        scheme = urllib.parse.urlsplit(value).scheme.lower()
+        if scheme and scheme not in ("http", "https"):
+            self._add(kind, "%s uses non-http scheme %r" % (context, value))
+            return
+        host = self._external(value)
+        if host is not None:
+            self._add(kind, "%s -> %s" % (context, value))
+
+    def _check_srcset(self, value, context):
+        for candidate in (value or "").split(","):
+            url = candidate.strip().split(" ", 1)[0]
+            if url:
+                self._check_url(url, "external subresource", context)
+
+    def _scan_embedded(self, value, context):
+        """Scan inside a data: URI (inline SVG can still reference remote images)."""
+        for match in SCHEME_URL_RE.finditer(urllib.parse.unquote(value)):
+            if self._external(match.group(0)) is not None:
+                self._add("external subresource", "%s embeds %s" % (context, match.group(0)))
+
+    def _scan_css(self, text, context):
+        for match in CSS_IMPORT_RE.finditer(text):
+            self._check_url(match.group(1), "remote @import", "%s @import" % context)
+        for match in CSS_URL_RE.finditer(text):
+            self._check_url(match.group(2), "external subresource", "%s url()" % context)
+
+    # -- HTMLParser hooks
+
+    def handle_starttag(self, tag, attrs):
+        line = self.getpos()[0]
+        attrd = {}
+        for name, value in attrs:
+            attrd.setdefault(name.lower(), value)
+        self._stack.append(tag)
+
+        if tag == "base":
+            self._add("base tag", "<base> rewrites every relative URL and breaks subpath serving", line)
+
+        if tag == "meta":
+            equiv = (attrd.get("http-equiv") or "").lower()
+            if equiv == "refresh":
+                content = attrd.get("content") or ""
+                if "url=" in content.lower():
+                    url = content.lower().split("url=", 1)[1].strip().strip("'\"")
+                    self._check_url(url, "external redirect", "<meta http-equiv=refresh>")
+            elif attrd.get("content") and (attrd.get("property") or attrd.get("name")):
+                key = (attrd.get("property") or attrd.get("name") or "").lower()
+                if key.endswith(("image", "url", "audio", "video", "src")):
+                    self._check_url(attrd["content"], "external metadata origin", "<meta %s>" % key)
+
+        if tag == "link":
+            rel = (attrd.get("rel") or "").lower().split()
+            href = attrd.get("href")
+            if any(r in ("preconnect", "dns-prefetch") for r in rel):
+                if self._external(href or "") is not None:
+                    self._add("external origin hint", "<link rel=%s href=%s>" % (" ".join(rel), href), line)
+            elif href and not any(r in NON_LOADING_LINK_RELS for r in rel):
+                self._check_url(href, "external subresource", "<link rel=%s>" % (" ".join(rel) or "?"))
+
+        for name, value in attrd.items():
+            if value is None:
+                continue
+            if name in ("srcset", "imagesrcset"):
+                self._check_srcset(value, "<%s %s>" % (tag, name))
+            elif (tag, name) in LOADING_ATTRS:
+                self._check_url(value, "external subresource", "<%s %s>" % (tag, name))
+            elif (tag, name) in NAVIGATION_ATTRS:
+                if self.strict_links and self._external(value) is not None:
+                    self._add("external link", "<%s %s> -> %s" % (tag, name, value), line)
+            elif name == "style":
+                self._scan_css(value, "<%s style>" % tag)
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        if self._stack and self._stack[-1] == tag:
+            self._stack.pop()
+
+    def handle_endtag(self, tag):
+        if tag in self._stack:
+            while self._stack and self._stack.pop() != tag:
+                pass
+
+    def handle_data(self, data):
+        current = self._stack[-1] if self._stack else None
+        if current == "style":
+            self._scan_css(data, "<style>")
+        elif current == "script":
+            for match in NETWORK_API_RE.finditer(data):
+                self._add("runtime network call", match.group(0).strip())
+            for match in SCHEME_URL_RE.finditer(data):
+                if self._external(match.group(0)) is not None:
+                    self._add("external origin in script", match.group(0))
+
+
+def scan_self_containment(body, allowed_hosts, strict_links=False):
+    """Return the ordered, de-duplicated self-containment violations in a document.
+
+    An external origin is a violation when the browser would LOAD from it
+    (script, stylesheet, icon, font, image, iframe, preconnect, @import, url(),
+    fetch/XHR/WebSocket). A plain outbound <a href> navigates and loads nothing,
+    so it is reported only under strict_links.
+    """
+    parser = SelfContainmentParser(allowed_hosts, strict_links=strict_links)
+    parser.feed(body)
+    parser.close()
+    seen = set()
+    unique = []
+    for violation in parser.violations:
+        if violation not in seen:
+            seen.add(violation)
+            unique.append(violation)
+    return [str(v) for v in unique]
+
+
+class Response:
+    """A normalized HTTP response, redirect chain included."""
+
+    def __init__(self, status, headers, body, final_url, chain, elapsed_ms, blocked_redirect=None):
+        self.status = status
+        self.headers = headers
+        self.body = body
+        self.final_url = final_url
+        self.chain = chain
+        self.elapsed_ms = elapsed_ms
+        # Set when a redirect pointed off the tested origin and was refused.
+        self.blocked_redirect = blocked_redirect
+
+    def header(self, name):
+        return self.headers.get(name)
+
+    def text(self):
+        return self.body.decode("utf-8", errors="replace")
+
+
+class FetchError(Exception):
+    pass
+
+
+class _NoAutoRedirect(urllib.request.HTTPRedirectHandler):
+    """Surface 3xx as a response instead of following it.
+
+    urllib.request.build_opener ADDS to the default handler set rather than
+    replacing it, so the stock HTTPRedirectHandler must be explicitly overridden
+    or every redirect is followed invisibly and the hop chain becomes unobservable.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def build_opener(ca_file=None):
+    context = ssl.create_default_context(cafile=ca_file)
+    # Redirects are followed explicitly in fetch() so that the chain, the hop
+    # count, and the origin of every hop are observable evidence. Proxy
+    # environment variables are ignored: acceptance evidence must describe the
+    # upstream under test, not whatever a proxy returned.
+    return urllib.request.build_opener(
+        _NoAutoRedirect(),
+        urllib.request.ProxyHandler({}),
+        urllib.request.HTTPSHandler(context=context),
+    )
+
+
+def fetch(opener, url, method="GET", timeout=10.0, max_redirects=0, same_origin_only=True):
+    """Fetch url, following at most max_redirects same-origin hops.
+
+    A redirect that leaves the tested origin is REFUSED, not followed: an
+    acceptance probe must never issue a request to a host it was not pointed at,
+    and "redirected to an unexpected origin" is itself the finding.
+
+    Never raises for an HTTP status; raises FetchError for transport failures.
+    """
+    origin = origin_of(url)
+    chain = [url]
+    started = time.monotonic()
+    current = url
+    for _ in range(max_redirects + 1):
+        request = urllib.request.Request(current, method=method)
+        request.add_header("User-Agent", USER_AGENT)
+        request.add_header("Accept", "*/*")
+        # Caches must not mask a broken release.
+        request.add_header("Cache-Control", "no-cache")
+        try:
+            with opener.open(request, timeout=timeout) as raw:
+                status, headers, body = raw.status, raw.headers, raw.read(MAX_BODY_BYTES)
+        except urllib.error.HTTPError as exc:
+            status, headers = exc.code, exc.headers
+            try:
+                body = exc.read(MAX_BODY_BYTES)
+            except Exception:  # noqa: BLE001 - a body-less error response is still evidence
+                body = b""
+            finally:
+                exc.close()
+        except urllib.error.URLError as exc:
+            raise FetchError("%s %s: %s" % (method, current, exc.reason)) from exc
+        except (http.client.HTTPException, socket.timeout, ssl.SSLError, OSError) as exc:
+            raise FetchError("%s %s: %s" % (method, current, exc)) from exc
+
+        elapsed = (time.monotonic() - started) * 1000.0
+        location = headers.get("Location")
+        if status in (301, 302, 303, 307, 308) and location:
+            nxt = urllib.parse.urljoin(current, location)
+            if same_origin_only and origin_of(nxt) != origin:
+                chain.append(nxt)
+                return Response(status, headers, body, current, chain, elapsed, blocked_redirect=nxt)
+            chain.append(nxt)
+            current = nxt
+            if method == "HEAD" and status == 303:
+                method = "GET"
+            continue
+        return Response(status, headers, body, current, chain, elapsed)
+
+    raise FetchError("exceeded %d redirect(s): %s" % (max_redirects, " -> ".join(chain)))
+
+
+def origin_of(url):
+    """(scheme, host, port) with the default port normalized, so https://h and
+    https://h:443 are one origin while a different port is a different origin."""
+    parts = urllib.parse.urlsplit(url)
+    scheme = parts.scheme.lower()
+    port = parts.port or {"http": 80, "https": 443}.get(scheme)
+    return (scheme, (parts.hostname or "").lower(), port)
+
+
+class Check:
+    def __init__(self, check_id, description, target):
+        self.id = check_id
+        self.description = description
+        self.target = target
+        self.failures = []
+        self.status = None
+        self.elapsed_ms = None
+
+    def fail(self, message):
+        self.failures.append(message)
+
+    @property
+    def passed(self):
+        return not self.failures
+
+
+class Smoke:
+    def __init__(self, args):
+        self.args = args
+        self.base = args.base_url.rstrip("/")
+        self.opener = build_opener(args.ca_file)
+        self.checks = []
+        self._cache = {}
+
+    def url(self, path):
+        return self.base + path
+
+    def get(self, path, max_redirects, method="GET"):
+        key = (method, path, max_redirects)
+        if key not in self._cache:
+            self._cache[key] = fetch(
+                self.opener,
+                self.url(path),
+                method=method,
+                timeout=self.args.timeout,
+                max_redirects=max_redirects,
+            )
+        return self._cache[key]
+
+    def new_check(self, check_id, description, target):
+        check = Check(check_id, description, target)
+        self.checks.append(check)
+        return check
+
+    # -- shared assertions -------------------------------------------------
+
+    def assert_status(self, check, response, expected):
+        check.status = response.status
+        check.elapsed_ms = round(response.elapsed_ms, 1)
+        if response.status != expected:
+            check.fail("expected HTTP %d, got HTTP %d" % (expected, response.status))
+            return False
+        return True
+
+    def assert_same_origin_chain(self, check, response):
+        base_origin = origin_of(self.base)
+        if response.blocked_redirect:
+            check.status = response.status
+            check.fail(
+                "refused to follow a redirect to an unexpected origin: %s (chain: %s)"
+                % (response.blocked_redirect, " -> ".join(response.chain))
+            )
+            return False
+        for hop in response.chain[1:]:
+            if origin_of(hop) != base_origin:
+                check.fail(
+                    "redirected to an unexpected origin: %s (chain: %s)"
+                    % (hop, " -> ".join(response.chain))
+                )
+                return False
+        return True
+
+    def assert_header(self, check, response, name, expected=None, mode="present"):
+        value = response.header(name)
+        if mode == "absent":
+            if value is not None:
+                check.fail("header %s must not be sent, got %r" % (name, value))
+            return
+        if value is None:
+            check.fail("missing header: %s" % name)
+            return
+        if mode == "equals" and value.strip().lower() != expected.lower():
+            check.fail("header %s expected %r, got %r" % (name, expected, value))
+        elif mode == "contains" and expected.lower() not in value.lower():
+            check.fail("header %s expected to contain %r, got %r" % (name, expected, value))
+
+    def assert_contains(self, check, response, marker, label):
+        if marker not in response.text():
+            check.fail("%s not found in served body: %r" % (label, marker))
+
+    # -- checks ------------------------------------------------------------
+
+    def check_internal_health(self):
+        check = self.new_check(
+            "internal-health", "health endpoint is 200 and never cached", self.args.health_path
+        )
+        try:
+            response = self.get(self.args.health_path, max_redirects=0)
+        except FetchError as exc:
+            check.fail(str(exc))
+            return
+        if not self.assert_status(check, response, 200):
+            return
+        self.assert_header(check, response, "Cache-Control", "no-store", "contains")
+
+    def check_learn_index(self):
+        check = self.new_check("learn-index", "Learn catalog index is served at /", "/")
+        try:
+            response = self.get("/", max_redirects=self.args.max_redirects)
+        except FetchError as exc:
+            check.fail(str(exc))
+            return
+        if not self.assert_same_origin_chain(check, response):
+            return
+        if not self.assert_status(check, response, 200):
+            return
+        self.assert_header(check, response, "Content-Type", "text/html", "contains")
+        for marker in self.args.index_marker:
+            self.assert_contains(check, response, marker, "Learn index marker")
+
+    def check_lesson_page(self):
+        check = self.new_check(
+            "lesson-page", "lesson is served at its subpath", self.args.lesson_path
+        )
+        try:
+            response = self.get(self.args.lesson_path, max_redirects=self.args.max_redirects)
+        except FetchError as exc:
+            check.fail(str(exc))
+            return
+        if not self.assert_same_origin_chain(check, response):
+            return
+        if not self.assert_status(check, response, 200):
+            return
+        self.assert_header(check, response, "Content-Type", "text/html", "contains")
+        for marker in self.args.lesson_marker:
+            self.assert_contains(check, response, marker, "lesson marker")
+
+    def check_self_containment(self):
+        check = self.new_check(
+            "self-containment",
+            "served HTML references no origin but its own",
+            "/ and " + self.args.lesson_path,
+        )
+        allowed_hosts = set(NAMESPACE_HOSTS)
+        served_host = urllib.parse.urlsplit(self.base).hostname
+        if served_host:
+            allowed_hosts.add(served_host.lower())
+        for host in self.args.allow_origin:
+            allowed_hosts.add(host.lower())
+
+        for path in ("/", self.args.lesson_path):
+            try:
+                response = self.get(path, max_redirects=self.args.max_redirects)
+            except FetchError as exc:
+                check.fail(str(exc))
+                continue
+            check.status = response.status
+            if response.blocked_redirect:
+                check.fail(
+                    "%s: refused to follow a redirect to an unexpected origin: %s"
+                    % (path, response.blocked_redirect)
+                )
+                continue
+            if response.status != 200:
+                check.fail(
+                    "%s: expected HTTP 200 before scanning, got HTTP %d" % (path, response.status)
+                )
+                continue
+            violations = scan_self_containment(
+                response.text(), allowed_hosts, strict_links=self.args.strict_links
+            )
+            for violation in violations:
+                check.fail("%s: %s" % (path, violation))
+
+    def check_security_headers(self):
+        check = self.new_check("security-headers", "application security header policy", "/")
+        try:
+            response = self.get("/", max_redirects=self.args.max_redirects)
+        except FetchError as exc:
+            check.fail(str(exc))
+            return
+        if not self.assert_same_origin_chain(check, response):
+            return
+        if not self.assert_status(check, response, 200):
+            return
+        self.assert_header(check, response, "X-Content-Type-Options", "nosniff", "equals")
+        self.assert_header(check, response, "Referrer-Policy")
+        self.assert_header(check, response, "Permissions-Policy")
+        self.assert_header(check, response, "Content-Security-Policy", "frame-ancestors", "contains")
+        self.assert_header(check, response, "Cache-Control", "no-cache", "contains")
+        csp = response.header("Content-Security-Policy") or ""
+        if "default-src" not in csp.lower():
+            check.fail("Content-Security-Policy has no default-src directive: %r" % csp)
+        xfo = response.header("X-Frame-Options")
+        if xfo is not None and xfo.strip().lower() not in ("deny", "sameorigin"):
+            check.fail("X-Frame-Options must be DENY or SAMEORIGIN, got %r" % xfo)
+
+    def check_unknown_path_404(self):
+        path = self.args.unknown_path or "/release-smoke-unknown-%s" % uuid.uuid4().hex[:12]
+        check = self.new_check("unknown-path-404", "unknown path is a real 404", path)
+        try:
+            response = self.get(path, max_redirects=0)
+        except FetchError as exc:
+            check.fail(str(exc))
+            return
+        if response.status in (301, 302, 303, 307, 308):
+            check.status = response.status
+            check.fail(
+                "unknown path redirected to %r instead of returning 404"
+                % (response.header("Location") or "")
+            )
+            return
+        self.assert_status(check, response, 404)
+
+    def run(self):
+        self.check_internal_health()
+        self.check_learn_index()
+        self.check_lesson_page()
+        self.check_self_containment()
+        self.check_security_headers()
+        self.check_unknown_path_404()
+        return self.checks
+
+
+def parse_args(argv):
+    parser = argparse.ArgumentParser(
+        prog="smoke.py",
+        description="Blocking acceptance smoke checks for the market-structure-lab release.",
+    )
+    parser.add_argument("base_url", help="scheme://host[:port] of the deployment under test")
+    parser.add_argument("--timeout", type=float, default=10.0, help="per-request timeout seconds (default: 10)")
+    parser.add_argument("--max-redirects", type=int, default=2, help="redirect hops allowed for document requests (default: 2)")
+    parser.add_argument("--health-path", default="/healthz")
+    parser.add_argument("--lesson-path", default="/market-structure/")
+    parser.add_argument("--unknown-path", default=None, help="override the 404 probe path (default: random)")
+    parser.add_argument(
+        "--index-marker",
+        action="append",
+        default=None,
+        help="string that must appear in the Learn index (repeatable)",
+    )
+    parser.add_argument(
+        "--lesson-marker",
+        action="append",
+        default=None,
+        help="string that must appear in the lesson page (repeatable)",
+    )
+    parser.add_argument(
+        "--allow-origin",
+        action="append",
+        default=None,
+        metavar="HOST",
+        help="additional host allowed to appear in served HTML (repeatable); "
+        "defaults to the canonical public host so rel=canonical is not a violation",
+    )
+    parser.add_argument(
+        "--strict-links",
+        action="store_true",
+        help="also fail on outbound <a href> navigation to another origin "
+        "(off by default: a hyperlink loads nothing from the other origin)",
+    )
+    parser.add_argument("--ca-file", default=None, help="PEM bundle for TLS verification")
+    parser.add_argument("--json", action="store_true", help="emit a machine-readable report")
+    args = parser.parse_args(argv)
+
+    if args.index_marker is None:
+        args.index_marker = ["Market Structure Lab", "market-structure/"]
+    if args.lesson_marker is None:
+        args.lesson_marker = ["Market Structure Lab"]
+    if args.allow_origin is None:
+        args.allow_origin = ["learn.geterdone.io"]
+
+    parts = urllib.parse.urlsplit(args.base_url)
+    if parts.scheme not in ("http", "https") or not parts.netloc:
+        parser.error("base_url must be http://host[:port] or https://host[:port]")
+    if parts.path.rstrip("/"):
+        parser.error("base_url must not carry a path: %r" % parts.path)
+    if args.timeout <= 0:
+        parser.error("--timeout must be positive")
+    if args.max_redirects < 0:
+        parser.error("--max-redirects must not be negative")
+    if not args.lesson_path.startswith("/"):
+        parser.error("--lesson-path must start with /")
+    if not args.health_path.startswith("/"):
+        parser.error("--health-path must start with /")
+    return args
+
+
+def report_text(args, checks, stream):
+    print(
+        "market-structure-lab smoke  base=%s  timeout=%.1fs" % (args.base_url.rstrip("/"), args.timeout),
+        file=stream,
+    )
+    for check in checks:
+        verdict = "PASS" if check.passed else "FAIL"
+        status = "HTTP %s" % check.status if check.status is not None else "no response"
+        timing = " %.0f ms" % check.elapsed_ms if check.elapsed_ms is not None else ""
+        print("%s  %-18s %-28s %s%s" % (verdict, check.id, check.target, status, timing), file=stream)
+        for failure in check.failures:
+            print("        - %s" % failure, file=stream)
+    failed = [c for c in checks if not c.passed]
+    print(
+        "%d passed, %d failed" % (len(checks) - len(failed), len(failed)),
+        file=stream,
+    )
+
+
+def main(argv=None):
+    args = parse_args(sys.argv[1:] if argv is None else argv)
+    checks = Smoke(args).run()
+    failed = [c for c in checks if not c.passed]
+    if args.json:
+        json.dump(
+            {
+                "base_url": args.base_url.rstrip("/"),
+                "passed": len(checks) - len(failed),
+                "failed": len(failed),
+                "checks": [
+                    {
+                        "id": c.id,
+                        "description": c.description,
+                        "target": c.target,
+                        "status": c.status,
+                        "elapsed_ms": c.elapsed_ms,
+                        "result": "PASS" if c.passed else "FAIL",
+                        "failures": c.failures,
+                    }
+                    for c in checks
+                ],
+            },
+            sys.stdout,
+            indent=2,
+        )
+        sys.stdout.write("\n")
+    else:
+        report_text(args, checks, sys.stdout)
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

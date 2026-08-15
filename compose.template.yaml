@@ -1,0 +1,78 @@
+# market-structure-lab — immutable Compose template (rendered by the platform
+# deploy wrapper into an immutable release directory; never edited on the host).
+#
+# RENDER-TIME PLACEHOLDERS:
+#   __IMAGE_REF__      Canonical digest reference, ghcr.io/dmedellin/market-structure-lab@sha256:<64-hex>.
+#                      Never a mutable tag (DEPLOYMENT_CONTRACT.md §2).
+#   __LOOPBACK_PORT__  UNALLOCATED — see the block below.
+#   __APP_SUBNET__     UNALLOCATED — see the block below.
+#
+# ###########################################################################
+# # PORT AND SUBNET ALLOCATION IS A HUMAN DECISION. DO NOT AUTOMATE IT.     #
+# #                                                                         #
+# # __LOOPBACK_PORT__                                                       #
+# #   Taken on the host per platform-ops/apps/registry.yaml occupied_resources:
+# #     127.0.0.1:2019 caddy-admin, :3000 hoa-web, :3001 hoa-api             #
+# #   Also claimed by the (disabled) pixelbattle-landing reservation: 8080.  #
+# #   Pick a free port >=1024 and prove it free with a LIVE preflight        #
+# #   (`ss -ltnp`) immediately before onboarding, not from this file.        #
+# #                                                                         #
+# # __APP_SUBNET__                                                          #
+# #   NEVER 10.89.2.0/24 — the live baseline proves platform-private-edge    #
+# #   owns it. The pixelbattle-landing reference template still carries that #
+# #   subnet; it is stale and invalid, copy its SHAPE only.                  #
+# #   Also occupied: 10.88.0.0/16 podman-default, 10.89.0.0/24 hoa-meetings, #
+# #   10.89.1.0/24 cyberpunk-sky-raid, and 10.89.3.0/24 (claimed by the      #
+# #   pixelbattle-landing reservation).                                      #
+# #   Registry validation rejects OVERLAP, not merely equality. A human      #
+# #   chooses the CIDR and re-proves non-overlap against live                #
+# #   `podman network inspect` output before the network is created.         #
+# ###########################################################################
+services:
+  market-structure-lab:
+    image: __IMAGE_REF__
+    container_name: market-structure-lab
+    # Runtime security controls below are FROZEN by the registry `runtime:` block.
+    # A routine release may not weaken any of them.
+    user: "1000:1000"
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      # Caddy must not write to the read-only rootfs; both XDG paths land on tmpfs.
+      XDG_CONFIG_HOME: /tmp/caddy-config
+      XDG_DATA_HOME: /tmp/caddy-data
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    # Host-side exposure is loopback-only; the public edge is the host-native
+    # Caddy, which reverse-proxies to 127.0.0.1:__LOOPBACK_PORT__. Binding any
+    # other interface would publish the app around the edge.
+    ports:
+      - "127.0.0.1:__LOOPBACK_PORT__:__LOOPBACK_PORT__"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://127.0.0.1:__LOOPBACK_PORT__/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    cpus: 0.5
+    mem_limit: 256m
+    mem_reservation: 64m
+    pids_limit: 128
+    networks:
+      - app
+networks:
+  app:
+    name: market-structure-lab_app
+    driver: bridge
+    # Ordinary rootful bridge, matching registry `network.class:
+    # ordinary-rootful-bridge`. Deliberately NOT `internal: true`: the reference
+    # template sets it, but DEPLOYMENT_CONTRACT.md §3 constrains this class to a
+    # rootful ordinary bridge and the acceptance probes inspect the network class.
+    ipam:
+      config:
+        # UNALLOCATED — see the allocation banner at the top of this file.
+        - subnet: __APP_SUBNET__

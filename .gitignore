@@ -1,0 +1,51 @@
+# --- Secrets: never commit. If one is ever committed, rotate it. ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+secrets/
+authfile*
+.netrc
+
+# --- Build and release output (the site is served from site/, not from a build dir) ---
+dist/
+build/
+out/
+release-artifacts/
+deploy-evidence/
+*.tar
+*.tar.gz
+*.oci
+*.sif
+
+# --- Test, evidence, and tooling output ---
+.evidence/
+test-results/
+playwright-report/
+coverage/
+.cache/
+*.log
+
+# --- Language and editor cruft ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.idea/
+.vscode/
+*.swp
+
+# --- OS ---
+.DS_Store
+Thumbs.db

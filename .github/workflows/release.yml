@@ -1,0 +1,780 @@
+# Protected-main build, publish, and release-metadata workflow.
+#
+# What this workflow DOES today:
+#   * re-runs the full CI check set against the exact protected-main commit;
+#   * RENDERS the deployment placeholders from the one committed source of truth
+#     (release/contract.json) and refuses to go further while they are unallocated;
+#   * builds the image from Containerfile.release on GitHub-hosted infrastructure;
+#   * pushes it to ghcr.io/dmedellin/market-structure-lab by immutable digest;
+#   * emits the immutable release contract a deploy would consume, VALIDATES it
+#     against release/contract.schema.json, and uploads it with the release
+#     metadata (image digest, git revision, release-contract sha256, compose
+#     template and rendered-Compose sha256, release id, invocation identity) as a
+#     non-secret build artifact.
+#
+# WHY IT FAILS TODAY, ON PURPOSE:
+#   The host loopback port and the private app subnet are UNALLOCATED. Every
+#   deployment input (Containerfile.release, deploy/Caddyfile,
+#   compose.template.yaml, deploy/registry-entry.PROPOSED.yaml) still carries
+#   __LOOPBACK_PORT__ / __APP_SUBNET__, and `caddy validate` inside the image
+#   build rejects `invalid port '__LOOPBACK_PORT__'`. The render step below stops
+#   the run first, with a message naming the allocation gate. That is the correct
+#   outcome: allocation is a human decision proven by a live host preflight
+#   (platform-ops docs/EDGE_ROUTING_CONTRACT.md section 5), and CI must never
+#   invent a port to turn itself green.
+#
+# What this workflow DOES NOT do: deploy. See the deploy-production job at the
+# bottom, which is deliberately inert. Nothing here reaches the production host.
+#
+# Secrets: none beyond the automatic GITHUB_TOKEN. Do not add any.
+#
+# Action pinning: the platform contract prefers commit-pinned third-party
+# actions. These tags mirror dmedellin/pixelbattle-landing because no commit SHA
+# could be verified offline. Replace each tag with a verified 40-hex commit SHA
+# before onboarding; never guess one.
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+# One queue per app. Later releases wait; they never cancel an in-flight one
+# (docs/DEPLOYMENT_CONTRACT.md section 7).
+concurrency:
+  group: production-market-structure-lab
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  APP_SLUG: market-structure-lab
+  IMAGE_REPOSITORY: ghcr.io/dmedellin/market-structure-lab
+  # The single declared source of truth for every render-time value. Nothing in
+  # this workflow may take a port, a subnet, or a frozen contract field from
+  # anywhere else - not from an input, not from a variable, not from a default.
+  CONTRACT_SOURCE: release/contract.json
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # The same checks a pull request must pass, re-run against the merged commit.
+  # This is also what proves, for the exact commit being released, that nobody
+  # quietly allocated a port or subnet and that no CIDR overlaps a reserved one
+  # ("Unallocated resources stay unallocated" in ci.yml). The render step below
+  # therefore checks allocation STATE, not allocation LEGALITY; the two live in
+  # one place each.
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
+  build-and-publish:
+    name: Build and publish by digest
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+      image_reference: ${{ steps.metadata.outputs.image_reference }}
+      revision: ${{ steps.metadata.outputs.revision }}
+      release_id: ${{ steps.metadata.outputs.release_id }}
+      contract_sha256: ${{ steps.metadata.outputs.contract_sha256 }}
+      deployable: ${{ steps.metadata.outputs.deployable }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Exact commit, never a moving ref.
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Assert repository identity
+        run: |
+          set -euo pipefail
+          # The registry maps one source repository to one OCI repository. A
+          # fork or a rename must not publish into this app's namespace.
+          expected="ghcr.io/${GITHUB_REPOSITORY}"
+          if [ "$expected" != "$IMAGE_REPOSITORY" ]; then
+            echo "::error::Repository identity mismatch: $expected != $IMAGE_REPOSITORY"
+            exit 1
+          fi
+          echo "Publishing as $IMAGE_REPOSITORY"
+
+      # =================================================================
+      # RENDER. Containerfile.release and deploy/Caddyfile are committed
+      # UNRENDERED: they carry __LOOPBACK_PORT__ and __GIT_REVISION__ because a
+      # port is a scarce host resource a human must allocate. Building them
+      # verbatim cannot work - `caddy validate` in the image build rejects
+      # `invalid port '__LOOPBACK_PORT__'` - so this step renders them first,
+      # from release/contract.json and from this run's commit, and fails loudly
+      # while the source of truth is still unallocated.
+      #
+      # The checkout is ephemeral, so rendering happens in place: what is built
+      # is the committed file with the declared substitutions applied and
+      # nothing else. Comment lines are left untouched so the rendered file
+      # keeps documenting itself.
+      # =================================================================
+      - name: Render deployment placeholders
+        id: render
+        run: |
+          set -euo pipefail
+          # Deterministic build clock: the commit's own author/commit time, not
+          # "now". It is recorded as build.source_date_epoch and handed to buildx,
+          # so the image timestamps are a function of the source revision.
+          SOURCE_DATE_EPOCH="$(git show -s --format=%ct "$GITHUB_SHA")"
+          export SOURCE_DATE_EPOCH
+          python3 - <<'PY'
+          import json, os, pathlib, re, sys
+
+          CONTRACT = pathlib.Path(os.environ["CONTRACT_SOURCE"])
+          PORT_TOKEN = "__LOOPBACK_PORT__"
+          SUBNET_TOKEN = "__APP_SUBNET__"
+          CIDR = re.compile(r"^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}"
+                            r"(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])/(?:[0-9]|[12][0-9]|3[0-2])$")
+          PLACEHOLDER = re.compile(r"__[A-Z][A-Z0-9_]*__")
+          GATE = ("platform-ops docs/APP_ONBOARDING.md section 2 (reservation PR: the reviewed "
+                  "apps/registry.yaml entry that reserves the loopback endpoint and subnet) and "
+                  "section 4 (one-time bootstrap, immediately preceded by the live preflight), "
+                  "under the allocation rules in docs/EDGE_ROUTING_CONTRACT.md section 5")
+
+          def die(*lines):
+              for line in lines:
+                  print("::error::%s" % line)
+              sys.exit(1)
+
+          if not CONTRACT.is_file():
+              die("Missing %s, the single source of truth for every render-time value." % CONTRACT,
+                  "release/contract.example.json is a shape reference and must never be staged as a release.")
+          contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+          network = contract.get("network", {})
+          loopback, internal, subnet = (network.get("loopback_port"),
+                                        network.get("internal_port"),
+                                        network.get("subnet"))
+
+          def allocated_port(value):
+              return isinstance(value, int) and not isinstance(value, bool) and 1024 <= value <= 65535
+
+          unallocated = []
+          for field, value in (("loopback_port", loopback), ("internal_port", internal)):
+              if not allocated_port(value):
+                  unallocated.append("network.%s = %s%s" % (
+                      field, json.dumps(value),
+                      "  (still the unallocated token)" if value == PORT_TOKEN else ""))
+          if not (isinstance(subnet, str) and CIDR.match(subnet)):
+              unallocated.append("network.subnet = %s%s" % (
+                  json.dumps(subnet),
+                  "  (still the unallocated token)" if subnet == SUBNET_TOKEN else ""))
+
+          if unallocated:
+              die("UNALLOCATED DEPLOYMENT RESOURCES. This release cannot be rendered, so no image is built.",
+                  *["  %s" % item for item in unallocated],
+                  "%s is the single source of truth for %s and %s." % (CONTRACT, PORT_TOKEN, SUBNET_TOKEN),
+                  "To pass this gate a HUMAN must: choose a free host loopback port >= 1024 and a private "
+                  "subnet; prove both free against LIVE host state (ss -ltnp, podman network inspect, and the "
+                  "root registry occupied_resources) rather than against any file in this repository; land "
+                  "them in the reviewed platform-ops registry reservation; and only then write the integers "
+                  "and the CIDR into %s." % CONTRACT,
+                  "Allocation gate: %s." % GATE,
+                  "Automated allocation is forbidden. Do NOT hardcode a port or a subnet to make this build "
+                  "green: this workflow is supposed to fail here until the gate is passed.")
+
+          if internal != loopback:
+              die("network.internal_port (%s) must equal network.loopback_port (%s)." % (internal, loopback),
+                  "This app publishes 127.0.0.1:<loopback>:<internal> straight through: deploy/Caddyfile "
+                  "binds the port, Containerfile.release EXPOSEs and HEALTHCHECKs it, and the registry entry "
+                  "repeats it. Two different integers would render four artifacts that disagree, and JSON "
+                  "Schema cannot express that equality - so it is asserted here.")
+
+          epoch = os.environ.get("SOURCE_DATE_EPOCH", "").strip()
+          if not epoch.isdigit() or int(epoch) < 1700000000:
+              die("Could not determine a usable SOURCE_DATE_EPOCH from the commit: %r" % epoch)
+
+          revision = os.environ["GITHUB_SHA"].strip()
+          if not re.fullmatch(r"[0-9a-f]{40}", revision):
+              die("Source revision is not 40 lowercase hex: %r" % revision)
+
+          # Only these substitutions exist. Anything else that looks like a
+          # placeholder after rendering is an error, never a silent pass-through.
+          RENDERS = {
+              pathlib.Path("Containerfile.release"): {PORT_TOKEN: str(loopback),
+                                                      "__GIT_REVISION__": revision},
+              pathlib.Path("deploy/Caddyfile"): {PORT_TOKEN: str(loopback)},
+          }
+
+          def render(path, substitutions):
+              if not path.is_file():
+                  die("Cannot render %s: file not found." % path)
+              rendered, counts = [], {token: 0 for token in substitutions}
+              residual = []
+              for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(True), start=1):
+                  if line.lstrip().startswith("#"):
+                      rendered.append(line)     # prose that names a token is not a token
+                      continue
+                  for token, value in substitutions.items():
+                      counts[token] += line.count(token)
+                      line = line.replace(token, value)
+                  residual.extend((number, found) for found in PLACEHOLDER.findall(line))
+                  rendered.append(line)
+              if residual:
+                  die(*["%s:%d: unrendered placeholder %s. Every placeholder must have a declared "
+                        "substitution; a build must fail rather than ship one." % (path, number, found)
+                        for number, found in residual])
+              path.write_text("".join(rendered), encoding="utf-8")
+              return counts
+
+          for path, substitutions in RENDERS.items():
+              counts = render(path, substitutions)
+              print("rendered %s: %s" % (path, ", ".join("%s x%d" % item for item in sorted(counts.items()))))
+              if not counts.get(PORT_TOKEN):
+                  die("%s contained no %s to render. The deployment inputs and this workflow have drifted "
+                      "apart; do not paper over it." % (path, PORT_TOKEN))
+
+          # Only the build clock is handed to later steps. The port and the subnet
+          # are deliberately NOT: every step that needs them re-reads the one
+          # source of truth, so there is never a second place a value can enter.
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write("source_date_epoch=%s\n" % epoch)
+          PY
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.IMAGE_REPOSITORY }}
+          # Immutable, commit-addressed tag only. No `latest`, no moving
+          # deployment tag: the digest is the only deployable identity.
+          tags: type=sha,format=long
+          labels: |
+            org.opencontainers.image.title=Market Structure Lab
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - id: build
+        uses: docker/build-push-action@v7
+        env:
+          # buildx honours SOURCE_DATE_EPOCH for image timestamps. It makes the
+          # build a function of the commit rather than of the clock; whether two
+          # runs actually produce the identical digest is NOT asserted here, so
+          # the contract's build.reproducible stays false until someone proves it.
+          SOURCE_DATE_EPOCH: ${{ steps.render.outputs.source_date_epoch }}
+        with:
+          # The rendered working tree, not the committed bytes: see the render
+          # step. Containerfile.release still runs `caddy validate` on the
+          # rendered deploy/Caddyfile, so an unrendered config cannot ship.
+          context: .
+          file: ./Containerfile.release
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: mode=max
+          sbom: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # =================================================================
+      # The release contract is COMMITTED (release/contract.json) and COMPLETED
+      # here. Reviewed policy - identity, domains, runtime controls, health,
+      # acceptance matrix, evidence destinations, network - is committed, because
+      # it is exactly the sort of thing that must be reviewed in a pull request
+      # and must not be synthesized differently on every run. Everything a run
+      # can PROVE - source revision/ref, registry-returned digest, release id,
+      # build clock, base image digests, template and rendered-Compose hashes,
+      # invocation identity, placeholder state - is filled in from run facts,
+      # because committing those would mean committing a claim no commit can back.
+      # =================================================================
+      - name: Emit immutable release metadata
+        id: metadata
+        env:
+          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+          SOURCE_DATE_EPOCH: ${{ steps.render.outputs.source_date_epoch }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import datetime, hashlib, json, os, pathlib, re, sys
+
+          # Canonical serialization for anything that gets hashed:
+          #   UTF-8, sorted keys, compact separators, single trailing newline.
+          # The deploy wrapper's --contract-sha256 is the sha256 of exactly the
+          # bytes written to release-contract.json below.
+          def canonical(document):
+              return (json.dumps(document, sort_keys=True, separators=(",", ":"),
+                                 ensure_ascii=False) + "\n").encode("utf-8")
+
+          def sha256_bytes(data):
+              return hashlib.sha256(data).hexdigest()
+
+          def die(*lines):
+              for line in lines:
+                  print("::error::%s" % line)
+              sys.exit(1)
+
+          PLACEHOLDER = re.compile(r"^__[A-Z][A-Z0-9_]*__$")
+          ZERO_DIGEST = "sha256:" + "0" * 64
+          ZERO_REVISION = "0" * 40
+
+          # 1. The committed contract source. An example or a schema is never a
+          #    release; the example is explicitly refused.
+          source_path = pathlib.Path(os.environ["CONTRACT_SOURCE"])
+          if not source_path.is_file():
+              die("No committed release contract at %s." % source_path,
+                  "release/contract.example.json is a shape reference and must never be staged as a release.")
+          contract = json.loads(source_path.read_text(encoding="utf-8"))
+
+          # The network values come from the contract, not from the render step's
+          # outputs: one source of truth, read the same way in both steps. Passing
+          # them between steps would create a second place a port could come from.
+          network = contract.get("network", {})
+          loopback, internal, subnet = (network.get("loopback_port"),
+                                        network.get("internal_port"),
+                                        network.get("subnet"))
+          if not (isinstance(loopback, int) and not isinstance(loopback, bool)
+                  and 1024 <= loopback <= 65535 and internal == loopback):
+              die("network.loopback_port/%r and network.internal_port/%r are not one allocated port."
+                  % (loopback, internal),
+                  "The render step should already have stopped this run; do not render a Compose file "
+                  "around an unallocated or mismatched port.")
+          if not (isinstance(subnet, str) and re.fullmatch(
+                  r"(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}"
+                  r"(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])/(?:[0-9]|[12][0-9]|3[0-2])", subnet)):
+              die("network.subnet %r is not an allocated CIDR." % subnet)
+
+          # 2. Facts this run can prove.
+          digest = os.environ["IMAGE_DIGEST"].strip()
+          revision = os.environ["GITHUB_SHA"].strip()
+          repository = os.environ["GITHUB_REPOSITORY"]
+          image_repository = os.environ["IMAGE_REPOSITORY"]
+          fail = []
+          if not re.fullmatch(r"sha256:[0-9a-f]{64}", digest) or digest == ZERO_DIGEST:
+              fail.append("registry digest is not a real canonical sha256: %r" % digest)
+          if not re.fullmatch(r"[0-9a-f]{40}", revision) or revision == ZERO_REVISION:
+              fail.append("source revision is not a real 40-lowercase-hex commit: %r" % revision)
+          declared = contract.get("image", {}).get("repository")
+          if declared and declared != image_repository:
+              fail.append("contract image.repository %r != %r" % (declared, image_repository))
+          if fail:
+              die(*fail)
+
+          contract["source"] = {
+              "repository": repository,
+              "revision": revision,
+              "ref": os.environ["GITHUB_REF"],
+          }
+          contract["image"] = {
+              "repository": image_repository,
+              "digest": digest,
+              "reference": "%s@%s" % (image_repository, digest),
+          }
+          contract["release_id"] = "%s-%s" % (revision, digest.split(":")[1][:12])
+
+          # 3. Build facts, including the base images this run actually built
+          #    FROM. Containerfile.release is the only place a base image is
+          #    pinned, so the digests are read back out of it and cannot drift
+          #    from what was built.
+          containerfile = pathlib.Path("Containerfile.release")
+          base_images, seen = [], set()
+          for line in containerfile.read_text(encoding="utf-8").splitlines():
+              match = re.match(r"\s*FROM\s+(\S+)", line, re.I)
+              if not match or line.lstrip().startswith("#"):
+                  continue
+              reference, _, image_digest = match.group(1).partition("@")
+              if "/" in reference and ":" in reference.rsplit("/", 1)[1]:
+                  reference = reference.rsplit(":", 1)[0]   # a tag is never an identity
+              base_images.append({"reference": reference,
+                                  "digest": image_digest or "__BASE_IMAGE_DIGEST__"})
+          if not base_images:
+              die("No FROM instruction found in %s." % containerfile)
+          for index, entry in enumerate(base_images):
+              entry["role"] = "runtime" if index == len(base_images) - 1 else "build"
+          deduplicated = []
+          for entry in base_images:
+              key = (entry["role"], entry["reference"], entry["digest"])
+              if key not in seen:
+                  seen.add(key)
+                  deduplicated.append({"role": entry["role"], "reference": entry["reference"],
+                                       "digest": entry["digest"]})
+          # The build clock is the commit's, not the wall clock: two attempts of the
+          # same revision must produce the same bytes here. `workflow_run_attempt`
+          # distinguishes executions; it must not manufacture new release content
+          # (IMMUTABLE_RELEASE_AND_ACTIVATION.md section 2.1).
+          source_date_epoch = int(os.environ["SOURCE_DATE_EPOCH"])
+          contract["build"] = {
+              "timestamp": (datetime.datetime.fromtimestamp(source_date_epoch,
+                                                            datetime.timezone.utc)
+                            .replace(microsecond=0).isoformat().replace("+00:00", "Z")),
+              "source_date_epoch": source_date_epoch,
+              "base_images": deduplicated,
+              # True only when the same revision and clock were built twice and
+              # produced the identical digest. This workflow builds once.
+              "reproducible": False,
+          }
+
+          # 4. The trusted Compose template, and the compose.yaml it renders to.
+          #    The wrapper renders its own copy on the host from the template plus
+          #    ROOT-REGISTRY-authorized values (IMMUTABLE_RELEASE_AND_ACTIVATION.md
+          #    section 4 step 3); rendered_sha256 is what lets it prove that copy
+          #    is byte-identical to what this release intended. The copy written
+          #    here is evidence, never authorization.
+          compose_section = contract.setdefault("compose", {})
+          template_path = compose_section.get("template_path")
+          if not isinstance(template_path, str) or not re.fullmatch(
+                  r"(?:deploy/)?[A-Za-z0-9._-]+\.ya?ml", template_path):
+              die("compose.template_path %r is not a repository-relative Compose template path."
+                  % template_path)
+          template = pathlib.Path(template_path)
+          if not template.is_file():
+              die("compose.template_path names %s, which does not exist." % template,
+                  "Fix the path in %s or restore the template; this workflow will not guess a "
+                  "different file." % source_path)
+          template_text = template.read_text(encoding="utf-8")
+          compose_section["template_sha256"] = sha256_bytes(template.read_bytes())
+
+          # THE COMPOSE RENDER RULE, stated so an independent implementation can
+          # reproduce it byte for byte: replace every occurrence of each declared
+          # token in the whole file, comments included, and change nothing else.
+          # It is deliberately the dumbest possible rule. The host wrapper renders
+          # its OWN compose.yaml from the same template and compares it with
+          # rendered_sha256; a subtler rule here (say, skipping comments, as the
+          # image build inputs above can afford to do because only this workflow
+          # consumes them) would make the two copies disagree over bytes nobody
+          # can see.
+          substitutions = {
+              "__IMAGE_REF__": contract["image"]["reference"],
+              "__LOOPBACK_PORT__": str(loopback),
+              "__APP_SUBNET__": subnet,
+          }
+          rendered_text = template_text
+          for token, value in substitutions.items():
+              rendered_text = rendered_text.replace(token, value)
+          residual = [(number, found)
+                      for number, line in enumerate(rendered_text.splitlines(), start=1)
+                      for found in re.findall(r"__[A-Z][A-Z0-9_]*__", line)]
+          if residual:
+              die(*["%s:%d: unrendered placeholder %s in the Compose template. Every token must "
+                    "have a declared substitution." % (template, number, found)
+                    for number, found in residual])
+          rendered_compose = rendered_text.encode("utf-8")
+          compose_section["rendered_sha256"] = sha256_bytes(rendered_compose)
+
+          # 5. Invocation identity: delivery/audit identity, never release content
+          #    identity (IMMUTABLE_RELEASE_AND_ACTIVATION.md section 2.1). The
+          #    environment is the production environment this release is destined
+          #    for and is the only one the deploy job may ever run in.
+          contract["invocation"] = {
+              "repository": repository,
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+              "workflow_run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              "environment": "production",
+          }
+
+          contract["notes"] = [
+              "Emitted by .github/workflows/release.yml from the committed source %s at run %s attempt %s."
+              % (source_path, os.environ["GITHUB_RUN_ID"], os.environ["GITHUB_RUN_ATTEMPT"]),
+              "Proven by this run: source, image, release_id, build, compose hashes, invocation, "
+              "placeholders_present and unallocated. Every other field is reviewed policy, committed and "
+              "unchanged.",
+              "NO DEPLOYMENT RAN. This repository is not onboarded: there is no root registry entry, no "
+              "self-hosted runner, no installed deploy wrapper, and no approved production environment.",
+          ]
+
+          # 6. Unresolved placeholders block deployment, and the contract has to
+          #    say WHERE they are: `unallocated` is a list of JSON Pointers, and
+          #    the schema requires it exactly when placeholders_present is true.
+          def placeholder_pointers(node, pointer=""):
+              found = []
+              if isinstance(node, dict):
+                  for key, child in node.items():
+                      if key in ("notes", "unallocated"):
+                          continue
+                      found.extend(placeholder_pointers(child, "%s/%s" % (pointer, key)))
+              elif isinstance(node, list):
+                  for index, child in enumerate(node):
+                      found.extend(placeholder_pointers(child, "%s/%d" % (pointer, index)))
+              elif isinstance(node, str) and PLACEHOLDER.match(node):
+                  found.append(pointer)
+              return found
+
+          placeholders = sorted(set(placeholder_pointers(contract)))
+          contract["placeholders_present"] = bool(placeholders)
+          if placeholders:
+              contract["unallocated"] = placeholders
+          else:
+              contract.pop("unallocated", None)
+          deployable = not placeholders
+
+          payload = canonical(contract)
+          out = pathlib.Path("release-artifacts")
+          out.mkdir(exist_ok=True)
+          (out / "release-contract.json").write_bytes(payload)
+          (out / "compose.yaml").write_bytes(rendered_compose)
+          contract_sha256 = sha256_bytes(payload)
+
+          metadata = {
+              "schema_version": 1,
+              "application": {"slug": os.environ["APP_SLUG"]},
+              "source": contract["source"],
+              "image": contract["image"],
+              "release_id": contract["release_id"],
+              "release_contract_sha256": contract_sha256,
+              "compose": {"template_path": template_path,
+                          "template_sha256": compose_section["template_sha256"],
+                          "rendered_sha256": compose_section["rendered_sha256"]},
+              "invocation": dict(contract["invocation"],
+                                 run_url="%s/%s/actions/runs/%s" % (os.environ["GITHUB_SERVER_URL"],
+                                                                    repository,
+                                                                    os.environ["GITHUB_RUN_ID"])),
+              "deployable": deployable,
+              "unresolved_placeholders": placeholders,
+              "deploy_blockers": [
+                  "No registry entry: the platform root registry has no market-structure-lab app.",
+                  "No self-hosted repo-scoped runner exists for this repository.",
+                  "No production environment or human approval gate is configured.",
+              ] + (["Unresolved placeholders: %s" % ", ".join(placeholders)] if placeholders else []),
+          }
+          (out / "release-metadata.json").write_bytes(canonical(metadata))
+
+          checksums = []
+          for name in sorted(p.name for p in out.iterdir()):
+              checksums.append("%s  %s" % (sha256_bytes((out / name).read_bytes()), name))
+          (out / "checksums.sha256").write_text("\n".join(checksums) + "\n", encoding="utf-8")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write("revision=%s\n" % revision)
+              handle.write("image_reference=%s\n" % contract["image"]["reference"])
+              handle.write("release_id=%s\n" % contract["release_id"])
+              handle.write("contract_sha256=%s\n" % contract_sha256)
+              handle.write("deployable=%s\n" % ("true" if deployable else "false"))
+
+          summary = [
+              "### Release metadata", "",
+              "| field | value |", "| --- | --- |",
+              "| image | `%s` |" % contract["image"]["reference"],
+              "| revision | `%s` |" % revision,
+              "| release id | `%s` |" % contract["release_id"],
+              "| release-contract sha256 | `%s` |" % contract_sha256,
+              "| compose template sha256 | `%s` |" % compose_section["template_sha256"],
+              "| rendered compose sha256 | `%s` |" % compose_section["rendered_sha256"],
+              "| deployable | **%s** |" % ("yes" if deployable else "no"),
+              "",
+              "Published by digest. **No deployment ran**: this repository is not onboarded to the platform.",
+          ]
+          if placeholders:
+              summary.append("")
+              summary.append("Unresolved placeholders requiring human allocation: `%s`"
+                             % "`, `".join(placeholders))
+              print("::warning::Release contract still contains placeholders (%s). "
+                    "Deployment is blocked until a human allocates them."
+                    % ", ".join(placeholders))
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as handle:
+              handle.write("\n".join(summary) + "\n")
+          PY
+
+      # The emitted contract is what a deploy would consume, so it must be
+      # provably well-formed before anyone can consume it. The previous version
+      # of this workflow emitted a document that could never validate (a
+      # top-level `workflow` key against additionalProperties:false, and no
+      # `invocation` object at all) precisely because nothing ever checked.
+      - name: Validate the emitted release contract against its schema
+        run: |
+          set -euo pipefail
+          python3 scripts/validate_release_contract.py \
+            --schema release/contract.schema.json \
+            --github \
+            release-artifacts/release-contract.json
+
+      # Upload whenever the metadata step produced artifacts, including when the
+      # schema validation above rejected them - the invalid document is exactly
+      # what someone needs to look at. Not when the render gate stopped the run
+      # first: there is nothing to upload then, and a second red step would only
+      # bury the allocation message.
+      - name: Upload release metadata
+        if: always() && steps.metadata.outcome == 'success'
+        uses: actions/upload-artifact@v5
+        with:
+          name: release-metadata-${{ github.run_id }}-${{ github.run_attempt }}
+          path: release-artifacts/
+          if-no-files-found: error
+          retention-days: 90
+
+  # ===================================================================
+  # deploy-production — INTENTIONALLY INERT. `if: false` means this job
+  # is never scheduled. It is committed as executable documentation of the
+  # deploy shape, not as a working deployment.
+  #
+  # Every one of these must exist before the guard may be removed, and each is
+  # a reviewed platform change made in dmedellin/platform-ops plus a host
+  # change - never a workflow edit here:
+  #
+  #   1. A root registry entry for slug `market-structure-lab`
+  #      (platform-ops apps/registry.yaml), reviewed and collision-checked.
+  #   2. A HUMAN-ALLOCATED loopback port and private app subnet, proven free by
+  #      a live host preflight. Both are `__LOOPBACK_PORT__` / `__APP_SUBNET__`
+  #      today. Automated allocation is forbidden.
+  #   3. A self-hosted, repository-scoped runner with the labels below.
+  #      THIS RUNNER DOES NOT EXIST YET. Nothing has been installed on any host.
+  #   4. The root-owned wrapper /usr/local/sbin/app-platform-deploy plus the
+  #      wrapper-only sudoers rule for that runner account.
+  #   5. A GitHub `production` environment restricted to protected main and
+  #      gated by HUMAN APPROVAL. That gate stays until independent SRE
+  #      terminal acceptance (docs/APP_ONBOARDING.md section 6) - it is not a
+  #      formality to be removed when the deploy first works.
+  #   6. The learn.geterdone.io Caddy fragment and DNS record, which are a
+  #      separate reviewed edge transaction (docs/APP_ONBOARDING.md section 5),
+  #      not part of any release.
+  #
+  # The command below is the ONLY interface a runner may call
+  # (docs/DEPLOYMENT_CONTRACT.md section 4). The GHCR token goes over stdin,
+  # never argv and never a log line.
+  # ===================================================================
+  deploy-production:
+    name: Deploy to production (INERT - platform onboarding not built)
+    needs: build-and-publish
+    if: false
+    runs-on: [self-hosted, linux, x64, hetzner-prod, market-structure-lab]
+    environment: production
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Refuse a release contract that still holds placeholders
+        run: |
+          set -euo pipefail
+          if [ "${{ needs.build-and-publish.outputs.deployable }}" != "true" ]; then
+            echo "::error::Release contract has unresolved placeholders; a human must allocate them first."
+            exit 1
+          fi
+
+      - name: Deploy through the root-owned platform boundary
+        id: deploy
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIGEST: ${{ needs.build-and-publish.outputs.digest }}
+          REVISION: ${{ needs.build-and-publish.outputs.revision }}
+          CONTRACT_SHA256: ${{ needs.build-and-publish.outputs.contract_sha256 }}
+        run: |
+          set -euo pipefail
+          mkdir -p deploy-evidence
+          # The wrapper's own stdout/stderr is the runner-side transcript. It is
+          # captured rather than streamed so that it is redacted BEFORE it is
+          # persisted or uploaded (docs/DEPLOYMENT_CONTRACT.md section 11:
+          # "Redaction happens before persistent write and artifact upload").
+          # The authoritative record is the root-owned redacted transcript and
+          # result.json the wrapper writes under
+          # /var/log/app-platform/market-structure-lab/<UTC-date>/, which this
+          # unprivileged runner account cannot read; the copy uploaded below is
+          # correlated to it by run id, attempt, digest and contract hash, and
+          # is explicitly not the sole evidence store.
+          status=0
+          printf '%s\n' "$GHCR_TOKEN" | sudo -n /usr/local/sbin/app-platform-deploy \
+            --slug "$APP_SLUG" \
+            --repository "$IMAGE_REPOSITORY" \
+            --digest "$DIGEST" \
+            --revision "$REVISION" \
+            --contract-sha256 "$CONTRACT_SHA256" \
+            > deploy-evidence/transcript.raw 2>&1 || status=$?
+          echo "wrapper_exit_status=$status" >> "$GITHUB_OUTPUT"
+          exit "$status"
+
+      - name: Redact and hash the deployment transcript
+        if: always()
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WRAPPER_EXIT_STATUS: ${{ steps.deploy.outputs.wrapper_exit_status }}
+          IMAGE_REFERENCE: ${{ needs.build-and-publish.outputs.image_reference }}
+          REVISION: ${{ needs.build-and-publish.outputs.revision }}
+          RELEASE_ID: ${{ needs.build-and-publish.outputs.release_id }}
+          CONTRACT_SHA256: ${{ needs.build-and-publish.outputs.contract_sha256 }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, re
+
+          out = pathlib.Path("deploy-evidence")
+          out.mkdir(exist_ok=True)
+          raw = out / "transcript.raw"
+          text = raw.read_text(encoding="utf-8", errors="replace") if raw.is_file() else \
+              "(the deploy step produced no transcript; it did not start or was cancelled)\n"
+
+          REDACTED = "***REDACTED***"
+          # 1. The exact secret material this job holds, longest first.
+          literals = sorted((value for value in (os.environ.get("GHCR_TOKEN"),) if value),
+                            key=len, reverse=True)
+          # 2. Anything else shaped like a credential, because a transcript may
+          #    quote material this job never had.
+          patterns = [
+              re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}"),
+              re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}"),
+              re.compile(r"(?i)\b(authorization|proxy-authorization)\s*:\s*\S+(\s+\S+)?"),
+              re.compile(r"(?i)\b(bearer|basic)\s+[A-Za-z0-9+/=._-]{8,}"),
+              re.compile(r"(?i)--(password|token|secret|authfile)(=|\s+)\S+"),
+              re.compile(r"(?i)\b(password|passwd|secret|api[_-]?key|access[_-]?token|"
+                         r"registry[_-]?token)\s*[:=]\s*\S+"),
+              re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----"),
+          ]
+          lines = []
+          for line in text.splitlines():
+              for literal in literals:
+                  line = line.replace(literal, REDACTED)
+              for pattern in patterns:
+                  line = pattern.sub(REDACTED, line)
+              lines.append(line)
+          transcript = ("\n".join(lines) + "\n").encode("utf-8")
+
+          (out / "transcript.log").write_bytes(transcript)
+          digest = hashlib.sha256(transcript).hexdigest()
+          (out / "transcript.log.sha256").write_text("%s  transcript.log\n" % digest, encoding="utf-8")
+          if raw.is_file():
+              raw.unlink()   # the unredacted capture never leaves this step
+
+          status = os.environ.get("WRAPPER_EXIT_STATUS", "")
+          (out / "invocation.json").write_text(json.dumps({
+              "schema_version": 1,
+              "slug": os.environ["APP_SLUG"],
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+              "workflow_run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              "environment": "production",
+              "runner_labels": ["self-hosted", "linux", "x64", "hetzner-prod",
+                                os.environ["APP_SLUG"]],
+              "image_reference": os.environ.get("IMAGE_REFERENCE", ""),
+              "source_revision": os.environ.get("REVISION", ""),
+              "release_id": os.environ.get("RELEASE_ID", ""),
+              "release_contract_sha256": os.environ.get("CONTRACT_SHA256", ""),
+              "wrapper_exit_status": int(status) if status.isdigit() else None,
+              "transcript_sha256": digest,
+              "note": ("Runner-side correlation record and redacted transcript copy only. The "
+                       "authoritative append-only audit record is root-owned under "
+                       "/var/log/app-platform/<slug>/<UTC-date>/ and is not readable by this "
+                       "runner account. This file asserts no acceptance outcome."),
+          }, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+
+      - name: Upload redacted deployment transcript
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          # evidence.artifact_name in the release contract is the stable prefix;
+          # run id and attempt keep re-runs from colliding.
+          name: market-structure-lab-release-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          # An explicit allowlist, never the whole directory: the unredacted
+          # capture must not be uploadable even if the redaction step fails.
+          path: |
+            deploy-evidence/transcript.log
+            deploy-evidence/transcript.log.sha256
+            deploy-evidence/invocation.json
+          if-no-files-found: error
+          retention-days: 90

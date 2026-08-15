@@ -1,0 +1,72 @@
+# market-structure-lab — release image for https://learn.geterdone.io
+#
+# The site is hand-written static HTML. There is NO application build step, no
+# bundler and no package manager here on purpose: inventing one would add supply
+# chain and reproducibility risk for zero benefit. The first stage exists only to
+# stage, verify and normalize the document root; the final stage is Caddy + files.
+#
+# RENDER-TIME PLACEHOLDERS (substitute before `podman build`):
+#   __LOOPBACK_PORT__  UNALLOCATED. Human allocation + live host preflight required.
+#                      Must be the SAME integer here, in deploy/Caddyfile, in
+#                      compose.template.yaml, and in the registry entry.
+#   __GIT_REVISION__   Exact 40-lowercase-hex protected-main commit being released.
+#                      The deploy wrapper inspects this label and fails on mismatch
+#                      (DEPLOYMENT_CONTRACT.md §6 step 7).
+# A build must fail, not proceed, if any __PLACEHOLDER__ survives rendering.
+
+# Base image pinned by digest, mirroring the reference deployment.
+# docker.io/library/caddy:2.10.0-alpine, digest recorded in the platform host
+# baseline capture: platform-ops/artifacts/t_ba7cf663_base_images_detailed.txt
+# and used by platform-ops/deployments/pixelbattle-landing/Containerfile.release.
+# Re-verify against the registry (`skopeo inspect`) at release time; if it cannot
+# be verified, replace it with __BASE_IMAGE_DIGEST__ and stop — never substitute
+# a mutable tag and never write a plausible-looking digest.
+FROM docker.io/library/caddy@sha256:f43d8810c944e27e6f7ea80b165de11dbdab16cff15c8a80d83ae3e1a109a35d AS site
+
+WORKDIR /srv
+COPY site/ ./
+
+# Document-root contract. /srv IS the root of https://learn.geterdone.io, so the
+# tree must be published as:
+#     /srv/index.html                    -> learn.geterdone.io/
+#     /srv/market-structure/index.html   -> learn.geterdone.io/market-structure/
+# The build fails loudly here rather than silently shipping an image whose URLs
+# do not match the registered canonical host. If the repo tree ever nests the
+# pages under an extra directory level, fix the tree (or this COPY) — do NOT
+# paper over it with a rewrite in the Caddyfile.
+# Also normalize modes: the image runs as UID 1000 with a read-only rootfs, so
+# every published file must be world-readable and every directory traversable.
+RUN set -eu; \
+    test -f /srv/index.html || { echo "FATAL: missing /srv/index.html (Learn index)"; exit 1; }; \
+    test -f /srv/market-structure/index.html || { echo "FATAL: missing /srv/market-structure/index.html"; exit 1; }; \
+    test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: the lesson is published at learn.geterdone.io/market-structure/, never learn.geterdone.io/learn/market-structure/. Move site/learn/* up one level."; exit 1; }; \
+    chmod -R a=rX /srv
+
+FROM docker.io/library/caddy@sha256:f43d8810c944e27e6f7ea80b165de11dbdab16cff15c8a80d83ae3e1a109a35d
+
+LABEL org.opencontainers.image.source="https://github.com/dmedellin/market-structure-lab" \
+      org.opencontainers.image.revision="__GIT_REVISION__" \
+      org.opencontainers.image.title="Market Structure Lab"
+
+COPY --chmod=0644 deploy/Caddyfile /etc/caddy/Caddyfile
+COPY --from=site /srv /srv
+
+# Fail the build on a malformed or unrendered config instead of shipping an
+# image that crash-loops on the host.
+RUN caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile
+
+# Drop the file capability the base image sets on the binary (cap_net_bind_service).
+# The container runs unprivileged with cap_drop ALL + no-new-privileges and binds
+# an unprivileged port only, so the capability is both useless and a liability.
+RUN setcap -r /usr/bin/caddy
+
+USER 1000:1000
+EXPOSE __LOOPBACK_PORT__
+
+# NOTE: `podman build` defaults to OCI image format, which DROPS HEALTHCHECK
+# ("HEALTHCHECK is not supported for OCI image format and will be ignored").
+# Build with `--format docker` if the image-level healthcheck is wanted. The
+# authoritative liveness signal for the platform is the compose healthcheck in
+# compose.template.yaml, which is what the deploy wrapper waits on; this line is
+# a convenience for local runs and must not be relied on alone.
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD wget -q -O- http://127.0.0.1:__LOOPBACK_PORT__/healthz || exit 1

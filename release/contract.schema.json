@@ -1,0 +1,546 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmedellin/market-structure-lab/blob/main/release/contract.schema.json",
+  "title": "Market Structure Lab release contract",
+  "description": "Versioned JSON release contract for the market-structure-lab platform application, as required by platform-ops docs/DEPLOYMENT_CONTRACT.md section 3 (release metadata contract) and consumed by the root-owned deploy wrapper during staging validation. The wrapper computes this document's own SHA-256 externally (release-contract checksum); it is therefore deliberately not a field of the document.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "release_id",
+    "application",
+    "source",
+    "image",
+    "build",
+    "compose",
+    "runtime",
+    "network",
+    "health",
+    "persistence",
+    "domains",
+    "protected_neighbors",
+    "acceptance",
+    "evidence",
+    "invocation",
+    "placeholders_present"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "description": "Contract schema version. Any change to field meaning, frozen values, or acceptance semantics requires a new version plus re-acceptance."
+    },
+    "notes": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "description": "Non-authoritative human notes. Never used for any decision."
+    },
+    "unallocated": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^/[A-Za-z0-9_]+(?:/[A-Za-z0-9_]+)*$",
+        "description": "JSON Pointer to a field still carrying an unallocated placeholder."
+      },
+      "description": "Required when placeholders_present is true. Enumerates every field a human must allocate before this contract may be used for a real release."
+    },
+    "release_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}-[0-9a-f]{12}$",
+      "description": "Immutable release directory name: <40-hex source revision>-<first 12 hex of the image digest>. The wrapper must independently verify that it is exactly source.revision + '-' + first 12 hex of image.digest; JSON Schema cannot express that equality."
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slug", "tenant_slug", "project_name", "container_name", "title"],
+      "properties": {
+        "slug": {
+          "const": "market-structure-lab",
+          "description": "FROZEN. Must equal the root registry slug for this app once onboarding registers it."
+        },
+        "tenant_slug": {"const": "geterdone"},
+        "project_name": {"const": "market-structure-lab"},
+        "container_name": {"const": "market-structure-lab"},
+        "title": {"type": "string", "minLength": 1, "maxLength": 128}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "revision", "ref"],
+      "properties": {
+        "repository": {
+          "const": "dmedellin/market-structure-lab",
+          "description": "FROZEN. Authenticated GitHub repository that produced this release."
+        },
+        "revision": {
+          "$ref": "#/$defs/gitRevision",
+          "description": "Exact 40-lowercase-hex commit on protected main. Short SHAs, tags, and branch names are never acceptable."
+        },
+        "ref": {
+          "const": "refs/heads/main",
+          "description": "FROZEN. Only protected main may produce a routine release."
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "digest", "reference"],
+      "properties": {
+        "repository": {
+          "const": "ghcr.io/dmedellin/market-structure-lab",
+          "description": "FROZEN. Registry-returned repository; must match the root registry oci_repository."
+        },
+        "digest": {
+          "$ref": "#/$defs/imageDigest",
+          "description": "Registry-returned manifest digest. Never a tag, never a 12-hex prefix."
+        },
+        "reference": {
+          "type": "string",
+          "pattern": "^ghcr\\.io/dmedellin/market-structure-lab@sha256:[0-9a-f]{64}$",
+          "description": "The only deployable image reference. The wrapper must verify it equals image.repository + '@' + image.digest byte for byte."
+        }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timestamp", "source_date_epoch", "base_images", "reproducible"],
+      "properties": {
+        "timestamp": {
+          "$ref": "#/$defs/rfc3339Utc",
+          "description": "UTC build time, RFC 3339 with a literal Z. Local offsets are rejected."
+        },
+        "source_date_epoch": {
+          "type": "integer",
+          "minimum": 1700000000,
+          "description": "Deterministic build clock passed to the image builder so the digest is reproducible from source.revision."
+        },
+        "base_images": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["role", "reference", "digest"],
+            "properties": {
+              "role": {"enum": ["build", "runtime"]},
+              "reference": {"type": "string", "minLength": 1, "description": "Base image repository without a tag or digest."},
+              "digest": {
+                "oneOf": [
+                  {"$ref": "#/$defs/imageDigest"},
+                  {"$ref": "#/$defs/placeholder"}
+                ],
+                "description": "Pinned base image digest. __BASE_IMAGE_DIGEST__ marks a digest that has NOT been verified against a registry; a fabricated sha256 is a contract violation."
+              }
+            }
+          }
+        },
+        "reproducible": {
+          "type": "boolean",
+          "description": "True only when the same source.revision and source_date_epoch were built twice and produced the identical image digest."
+        }
+      }
+    },
+    "compose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["template_path", "template_sha256", "rendered_sha256"],
+      "properties": {
+        "template_path": {
+          "type": "string",
+          "pattern": "^(?:deploy/)?[A-Za-z0-9._-]+\\.ya?ml$",
+          "description": "Repository-relative path of the trusted Compose template. The template is committed at the repository root as compose.template.yaml; deploy/ is accepted as the only other location so this field can name the file wherever the repository keeps it. Absolute paths, traversing paths and any deeper directory are rejected. A pattern match is NOT proof the file exists, and this is the field's real failure mode: a deploy/-only pattern made the committed root path unrepresentable, the example named a file that did not exist, and the release workflow quietly hashed a different template and reported success. The workflow now hashes exactly the file this field names and fails when it names none, because a template_sha256 computed over a file the contract never named certifies nothing."
+        },
+        "template_sha256": {"$ref": "#/$defs/sha256Hex"},
+        "rendered_sha256": {
+          "$ref": "#/$defs/sha256Hex",
+          "description": "SHA-256 of the compose.yaml rendered from the template plus root-registry-authorized values only."
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "user",
+        "read_only_rootfs",
+        "cap_drop",
+        "no_new_privileges",
+        "tmpfs",
+        "cpus",
+        "memory_limit_mib",
+        "memory_reservation_mib",
+        "pids_limit",
+        "restart"
+      ],
+      "properties": {
+        "user": {"type": "string", "pattern": "^[0-9]+:[0-9]+$"},
+        "read_only_rootfs": {"const": true},
+        "cap_drop": {"type": "array", "const": ["ALL"]},
+        "no_new_privileges": {"const": true},
+        "tmpfs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^/[A-Za-z0-9/_.-]*:[A-Za-z0-9=,]+$"},
+          "description": "Bounded tmpfs mounts only. Unbounded or host-path mounts are rejected."
+        },
+        "cpus": {"type": "number", "exclusiveMinimum": 0, "maximum": 2},
+        "memory_limit_mib": {"type": "integer", "minimum": 16, "maximum": 1024},
+        "memory_reservation_mib": {"type": "integer", "minimum": 0, "maximum": 1024},
+        "pids_limit": {"type": "integer", "minimum": 16, "maximum": 512},
+        "restart": {"const": "unless-stopped"}
+      }
+    },
+    "network": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["loopback_host", "loopback_port", "internal_port", "subnet", "class"],
+      "properties": {
+        "loopback_host": {"const": "127.0.0.1"},
+        "loopback_port": {
+          "oneOf": [
+            {"$ref": "#/$defs/allocatedPort"},
+            {"$ref": "#/$defs/unallocatedPortToken"}
+          ],
+          "description": "Host loopback port, in exactly one of two states: an allocated integer, or the unallocated token. A human must choose the integer and prove with a live preflight that no listener, registry reservation, or neighbor owns it. Automated allocation is forbidden."
+        },
+        "internal_port": {
+          "oneOf": [
+            {"$ref": "#/$defs/allocatedPort"},
+            {"$ref": "#/$defs/unallocatedPortToken"}
+          ],
+          "description": "Port the in-container web server listens on: the port deploy/Caddyfile binds, Containerfile.release EXPOSEs and HEALTHCHECKs, and the registry entry repeats. Every one of those artifacts still carries the unallocated token there, and compose publishes the loopback port straight through to it, so while unallocated this field carries the SAME token as loopback_port and renders to the SAME integer. Being namespaced does not make it independently choosable, and it must never be pinned to a number the host has already reserved for another app."
+        },
+        "subnet": {
+          "oneOf": [
+            {"$ref": "#/$defs/cidr"},
+            {"const": "__APP_SUBNET__"}
+          ],
+          "description": "Private app bridge subnet. UNALLOCATED: a human must choose it and prove it collides with no live route and no registry reservation. 10.89.2.0/24 is owned by platform-private-edge and must never be used."
+        },
+        "class": {
+          "const": "ordinary-rootful-bridge",
+          "description": "FROZEN. Not internal:true; the app is reached only through the host loopback publish."
+        }
+      }
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "success_status", "deadline_seconds", "cache_control"],
+      "properties": {
+        "path": {
+          "const": "/healthz",
+          "description": "FROZEN. Served by the in-container web server; must match the root registry health path."
+        },
+        "success_status": {"const": 200},
+        "deadline_seconds": {"type": "integer", "minimum": 5, "maximum": 600},
+        "cache_control": {"const": "no-store"}
+      }
+    },
+    "persistence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "migrations"],
+      "properties": {
+        "class": {"const": "stateless"},
+        "migrations": {"const": "forbidden"}
+      }
+    },
+    "domains": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonical", "aliases", "all"],
+      "properties": {
+        "canonical": {
+          "const": "learn.geterdone.io",
+          "description": "FROZEN. The apex geterdone.io is a separate live GitHub Pages site owned elsewhere and is out of scope for this app."
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/domain"}
+        },
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/domain"},
+          "contains": {"const": "learn.geterdone.io"},
+          "not": {
+            "contains": {"enum": ["geterdone.io", "www.geterdone.io"]}
+          },
+          "description": "Every public hostname this app claims. Claiming the apex or its www alias is rejected: they belong to a separate site this platform does not control."
+        }
+      }
+    },
+    "protected_neighbors": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^https://[a-z0-9.-]+/[^\\s]*$"},
+      "description": "Public endpoints of other tenants on the same host. Each must stay healthy and identity-stable across the release window; drift fails acceptance and rolls back only this app."
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deadline_seconds", "checks"],
+      "properties": {
+        "deadline_seconds": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 300,
+          "description": "Total wall-clock ceiling for the whole acceptance matrix after app recreation. Retries never reset it."
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/acceptanceCheck"},
+          "allOf": [
+            {"contains": {"properties": {"id": {"const": "internal-health"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "learn-index"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "lesson-page"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "unknown-path-404"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "self-containment"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "security-headers"}}, "required": ["id"]}}
+          ],
+          "description": "The complete blocking acceptance matrix. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audit_path", "app_root", "minimum_retained_accepted_releases", "artifact_name"],
+      "properties": {
+        "audit_path": {"const": "/var/log/app-platform/market-structure-lab"},
+        "app_root": {"const": "/srv/apps/market-structure-lab"},
+        "minimum_retained_accepted_releases": {"type": "integer", "minimum": 2},
+        "artifact_name": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "description": "Non-secret workflow artifact that carries the redacted transcript and result. Never a secret destination."
+        }
+      }
+    },
+    "invocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "workflow_run_id", "workflow_run_attempt", "environment"],
+      "properties": {
+        "repository": {"const": "dmedellin/market-structure-lab"},
+        "workflow_run_id": {"type": "string", "pattern": "^[0-9]{1,20}$"},
+        "workflow_run_attempt": {"type": "integer", "minimum": 1, "maximum": 100},
+        "environment": {"const": "production"}
+      },
+      "description": "Delivery/audit identity. It distinguishes executions and never changes release content identity."
+    },
+    "placeholders_present": {
+      "type": "boolean",
+      "description": "True while any __PLACEHOLDER__ remains. A release gate must refuse to deploy a contract whose value is true."
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "DRAFT VARIANT. placeholders_present:true is the ONLY state in which an unallocated token may appear anywhere in this document, and it must be accompanied by the list of what a human still has to allocate. A draft is authorable, auditable, and never deployable.",
+      "if": {
+        "properties": {"placeholders_present": {"const": true}},
+        "required": ["placeholders_present"]
+      },
+      "then": {"required": ["unallocated"]}
+    },
+    {
+      "$comment": "RELEASE VARIANT. placeholders_present:false is this document's assertion that it is deployable, so every field that has an unallocated state must be in its allocated state, and nothing may still be listed as unallocated. This is the only branch a deploy gate may act on.",
+      "if": {
+        "properties": {"placeholders_present": {"const": false}},
+        "required": ["placeholders_present"]
+      },
+      "then": {
+        "not": {"required": ["unallocated"]},
+        "properties": {
+          "network": {
+            "properties": {
+              "loopback_port": {"$ref": "#/$defs/allocatedPort"},
+              "internal_port": {"$ref": "#/$defs/allocatedPort"},
+              "subnet": {"$ref": "#/$defs/cidr"}
+            }
+          },
+          "build": {
+            "properties": {
+              "base_images": {
+                "items": {
+                  "properties": {"digest": {"$ref": "#/$defs/imageDigest"}}
+                }
+              }
+            }
+          }
+        },
+        "description": "A deployable contract carries no placeholders: the human-allocated loopback port, the internal port rendered to that same integer, the subnet, and every base image digest must all be real values, and a stale unallocated list may not survive alongside the claim."
+      }
+    },
+    {
+      "$comment": "An unallocated loopback_port must be declared, not merely present. Declaring it forces placeholders_present true and puts the field's JSON Pointer in the unallocated list, so a reader never has to scan the document to learn what is missing.",
+      "if": {
+        "required": ["network"],
+        "properties": {
+          "network": {
+            "required": ["loopback_port"],
+            "properties": {"loopback_port": {"$ref": "#/$defs/unallocatedPortToken"}}
+          }
+        }
+      },
+      "then": {
+        "required": ["unallocated"],
+        "properties": {
+          "placeholders_present": {"const": true},
+          "unallocated": {"contains": {"const": "/network/loopback_port"}}
+        }
+      }
+    },
+    {
+      "$comment": "Same rule for internal_port. Without it a document could carry the token and still claim there is nothing to allocate.",
+      "if": {
+        "required": ["network"],
+        "properties": {
+          "network": {
+            "required": ["internal_port"],
+            "properties": {"internal_port": {"$ref": "#/$defs/unallocatedPortToken"}}
+          }
+        }
+      },
+      "then": {
+        "required": ["unallocated"],
+        "properties": {
+          "placeholders_present": {"const": true},
+          "unallocated": {"contains": {"const": "/network/internal_port"}}
+        }
+      }
+    },
+    {
+      "$comment": "Same rule for the subnet. Base image digests are deliberately not covered here: their JSON Pointer carries an array index that JSON Schema cannot correlate with the element it came from, so /build/base_images/<n>/digest coverage stays a wrapper check.",
+      "if": {
+        "required": ["network"],
+        "properties": {
+          "network": {
+            "required": ["subnet"],
+            "properties": {"subnet": {"const": "__APP_SUBNET__"}}
+          }
+        }
+      },
+      "then": {
+        "required": ["unallocated"],
+        "properties": {
+          "placeholders_present": {"const": true},
+          "unallocated": {"contains": {"const": "/network/subnet"}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256Hex": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "imageDigest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "gitRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "rfc3339Utc": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+    },
+    "placeholder": {"type": "string", "pattern": "^__[A-Z][A-Z0-9_]*__$"},
+    "allocatedPort": {"type": "integer", "minimum": 1024, "maximum": 65535},
+    "unallocatedPortToken": {
+      "const": "__LOOPBACK_PORT__",
+      "description": "The single token that marks a port as unallocated. Both network ports carry this one token on purpose: compose publishes the host loopback port straight through to the port the container binds, so the two render to one integer. A per-field token would invite them to drift apart, and a free-form placeholder pattern here would let an invented token slip through."
+    },
+    "cidr": {
+      "type": "string",
+      "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])/(?:[0-9]|[12][0-9]|3[0-2])$"
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$"
+    },
+    "headerExpectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "match"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9-]*$"},
+        "match": {"enum": ["present", "absent", "equals", "contains", "regex"]},
+        "value": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"match": {"enum": ["equals", "contains", "regex"]}},
+            "required": ["match"]
+          },
+          "then": {"required": ["value"]},
+          "else": {"not": {"required": ["value"]}}
+        }
+      ]
+    },
+    "acceptanceCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "scope", "method", "path", "expect", "timeout_seconds", "attempts", "blocking"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 48
+        },
+        "description": {"type": "string", "minLength": 1, "maxLength": 256},
+        "scope": {
+          "enum": ["container", "loopback", "public"],
+          "description": "container = engine healthcheck inside the app network; loopback = 127.0.0.1:<loopback_port>; public = canonical HTTPS through the shared edge."
+        },
+        "method": {"enum": ["GET", "HEAD"]},
+        "path": {"type": "string", "pattern": "^/[^\\s#]*$"},
+        "expect": {"$ref": "#/$defs/expectation"},
+        "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 30},
+        "attempts": {"type": "integer", "minimum": 1, "maximum": 3},
+        "blocking": {
+          "const": true,
+          "description": "There is no warning-only acceptance check. Every check blocks."
+        }
+      }
+    },
+    "expectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "status": {"type": "integer", "minimum": 100, "maximum": 599},
+        "max_redirects": {"type": "integer", "minimum": 0, "maximum": 5},
+        "same_origin_redirects_only": {"type": "boolean"},
+        "headers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/headerExpectation"}
+        },
+        "body_contains": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "body_excludes_patterns": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "no_external_origins": {
+          "type": "boolean",
+          "description": "When true, the served document must reference no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt."
+        }
+      }
+    }
+  }
+}

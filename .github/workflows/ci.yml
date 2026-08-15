@@ -1,0 +1,673 @@
+# Pull-request CI for the Market Structure Lab site.
+#
+# Scope boundary (docs/DEPLOYMENT_CONTRACT.md section 2): this workflow runs on
+# GitHub-hosted runners only. It must never reference self-hosted labels, the
+# production environment, the root-owned deploy wrapper, or production
+# credentials. It requires no secrets beyond the default read-only GITHUB_TOKEN.
+#
+# Action pinning: the platform contract prefers commit-pinned third-party
+# actions. The tags below mirror the sibling application repo
+# (dmedellin/pixelbattle-landing) because no verified commit SHA was available
+# offline. Replace each tag with its verified 40-hex commit SHA before this repo
+# is onboarded; do not guess a SHA.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  # release.yml calls this workflow so that a protected-main build cannot be
+  # published unless the exact same commit passed the exact same checks.
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  # Superseded pull-request pushes may be cancelled. A release run may not:
+  # queued releases must never terminate an in-flight one.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  site:
+    name: Site checks (well-formed, self-contained, links resolve)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Resolve the web root
+        id: webroot
+        run: |
+          set -euo pipefail
+          # The container serves one directory as "/" for learn.geterdone.io.
+          # Resolution order is deterministic:
+          #   1. $SITE_WEB_ROOT if exported by a later change,
+          #   2. site/ when site/index.html exists,
+          #   3. the single immediate subdirectory of site/ when there is
+          #      exactly one and site/index.html does not exist.
+          # Anything else is ambiguous and fails, because a root-absolute link
+          # cannot be resolved without knowing which directory is "/".
+          root="${SITE_WEB_ROOT:-}"
+          if [ -z "$root" ]; then
+            if [ -f site/index.html ]; then
+              root=site
+            else
+              mapfile -t subs < <(find site -mindepth 1 -maxdepth 1 -type d | sort)
+              if [ "${#subs[@]}" -eq 1 ]; then
+                root="${subs[0]}"
+              else
+                echo "::error::Cannot resolve the web root. Expected site/index.html or exactly one subdirectory of site/. Set SITE_WEB_ROOT to disambiguate."
+                exit 1
+              fi
+            fi
+          fi
+          echo "Web root: $root"
+          if [ ! -f "$root/index.html" ]; then
+            echo "::warning file=$root::No index.html at the web root; https://learn.geterdone.io/ (the Learn catalog landing) would 404."
+          fi
+          echo "root=$root" >> "$GITHUB_OUTPUT"
+
+      - name: HTML is well-formed
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, sys
+          from html.parser import HTMLParser
+
+          VOID = {"area","base","br","col","embed","hr","img","input","link",
+                  "meta","param","source","track","wbr"}
+          # Elements whose end tag HTML5 allows to be omitted. They may be
+          # implicitly closed by a following sibling or an ancestor's end tag.
+          OPTIONAL_END = {"p","li","dt","dd","option","optgroup","thead","tbody",
+                          "tfoot","tr","td","th","rt","rp","colgroup","html",
+                          "head","body"}
+
+          class Checker(HTMLParser):
+              def __init__(self, path):
+                  super().__init__(convert_charrefs=True)
+                  self.path = path
+                  self.stack = []
+                  self.errors = []
+                  self.ids = {}
+                  self.saw_doctype = False
+                  self.counts = {}
+
+              def err(self, msg):
+                  line, col = self.getpos()
+                  self.errors.append((line, col, msg))
+
+              def handle_decl(self, decl):
+                  if decl.strip().lower().startswith("doctype"):
+                      self.saw_doctype = True
+                      if decl.strip().lower() != "doctype html":
+                          self.err("non-HTML5 doctype: <!%s>" % decl)
+
+              def handle_starttag(self, tag, attrs):
+                  self.counts[tag] = self.counts.get(tag, 0) + 1
+                  seen = set()
+                  for name, value in attrs:
+                      if name in seen:
+                          self.err("duplicate attribute %r on <%s>" % (name, tag))
+                      seen.add(name)
+                      if name == "id" and value:
+                          if value in self.ids:
+                              self.err("duplicate id %r (first seen on line %d)"
+                                       % (value, self.ids[value]))
+                          else:
+                              self.ids[value] = self.getpos()[0]
+                  if tag in VOID:
+                      return
+                  # Implicitly close optional-end siblings, e.g. <li>a<li>b.
+                  while self.stack and self.stack[-1][0] in OPTIONAL_END and (
+                          self.stack[-1][0] == tag or
+                          (self.stack[-1][0] == "p" and tag in
+                           {"p","div","section","article","ul","ol","table",
+                            "pre","blockquote","h1","h2","h3","h4","h5","h6",
+                            "figure","form","hr","details","fieldset","header",
+                            "footer","nav","main","aside","dl"})):
+                      self.stack.pop()
+                  self.stack.append((tag, self.getpos()[0]))
+
+              def handle_startendtag(self, tag, attrs):
+                  self.handle_starttag(tag, attrs)
+                  if tag not in VOID and self.stack and self.stack[-1][0] == tag:
+                      self.stack.pop()
+
+              def handle_endtag(self, tag):
+                  if tag in VOID:
+                      self.err("end tag </%s> for a void element" % tag)
+                      return
+                  if tag not in [t for t, _ in self.stack]:
+                      self.err("stray end tag </%s>" % tag)
+                      return
+                  while self.stack:
+                      top, opened = self.stack.pop()
+                      if top == tag:
+                          break
+                      if top not in OPTIONAL_END:
+                          self.err("</%s> closes <%s> opened on line %d"
+                                   % (tag, top, opened))
+
+              def finish(self):
+                  for tag, opened in self.stack:
+                      if tag not in OPTIONAL_END:
+                          self.errors.append((opened, 0, "unclosed <%s>" % tag))
+                  if not self.saw_doctype:
+                      self.errors.append((1, 0, "missing <!doctype html>"))
+                  for required in ("html", "head", "body", "title"):
+                      if self.counts.get(required, 0) != 1:
+                          self.errors.append(
+                              (1, 0, "expected exactly one <%s>, found %d"
+                               % (required, self.counts.get(required, 0))))
+                  return self.errors
+
+          failures = 0
+          files = sorted(pathlib.Path("site").rglob("*.html"))
+          if not files:
+              print("::error::No HTML found under site/.")
+              sys.exit(1)
+          for path in files:
+              checker = Checker(path)
+              checker.feed(path.read_text(encoding="utf-8"))
+              checker.close()
+              errors = checker.finish()
+              for line, col, msg in errors:
+                  print("::error file=%s,line=%d::%s" % (path, line, msg))
+              failures += len(errors)
+              print("%s: %d element(s) checked, %d error(s)"
+                    % (path, sum(checker.counts.values()), len(errors)))
+          sys.exit(1 if failures else 0)
+          PY
+
+      - name: Self-containment invariant
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import pathlib, re, sys
+          from html.parser import HTMLParser
+
+          # INVARIANT: a page under site/ must render completely with zero
+          # network requests beyond the document itself. No remote subresource,
+          # no <script src>, no remote <link>, no @import, no fetch/XHR.
+          #
+          # Three narrow, reviewed exceptions exist and nothing else is allowed:
+          SELF_ORIGIN = "https://learn.geterdone.io"
+          # 1. Plain navigation links. An <a href> starts no request until the
+          #    reader clicks, so it cannot break offline self-containment, but
+          #    every origin here is a deliberate review decision. Adding one is
+          #    a code change, not an exception granted at runtime.
+          ALLOWED_LINK_ORIGINS = (SELF_ORIGIN, "https://geterdone.io")
+          # 2. XML namespace identifiers. Never fetched; required by inline SVG
+          #    and document.createElementNS.
+          NAMESPACE_URIS = ("http://www.w3.org/2000/svg",
+                            "http://www.w3.org/1999/xlink",
+                            "http://www.w3.org/1999/xhtml",
+                            "http://www.w3.org/2000/xmlns/")
+          # 3. Same-origin metadata URLs in <link rel=canonical|alternate> and
+          #    og:url/twitter:url, which describe the page rather than load it.
+          METADATA_LINK_RELS = {"canonical", "alternate"}
+          METADATA_META_KEYS = {"og:url", "twitter:url"}
+
+          MARKUP_SUFFIXES = {".html", ".htm", ".svg", ".xhtml"}
+          TEXT_SUFFIXES = MARKUP_SUFFIXES | {".css", ".js", ".mjs", ".json",
+                                             ".xml", ".txt", ".md", ".webmanifest"}
+          REMOTE = re.compile(r'^\s*(?:https?:)?//', re.I)
+          ANY_URL = re.compile(r'https?://', re.I)
+          TEXT_RULES = [
+              ("AT_IMPORT", re.compile(r'@import', re.I), "CSS @import"),
+              ("NETWORK_API", re.compile(
+                  r'\bfetch\s*\(|\bXMLHttpRequest\b|\bWebSocket\b|\bEventSource\b'
+                  r'|\bsendBeacon\b|\bimportScripts\b|\bnavigator\.serviceWorker\b'
+                  r'|\bimport\s*\(', re.I),
+               "runtime network API"),
+          ]
+
+          violations = []
+          notices = []
+
+          def origin_allowed(url, allowed):
+              return any(url == o or url.startswith(o + "/") or url.startswith(o + "?")
+                         or url.startswith(o + "#") for o in allowed)
+
+          def scan_text(path, line, text):
+              # Namespace identifiers and reviewed navigation origins are the
+              # only absolute URLs allowed to survive in text, CSS, or script.
+              scrubbed = text
+              for uri in NAMESPACE_URIS:
+                  scrubbed = scrubbed.replace(uri, "")
+              for origin in ALLOWED_LINK_ORIGINS:
+                  scrubbed = scrubbed.replace(origin, "")
+              for m in ANY_URL.finditer(scrubbed):
+                  offset = line + scrubbed.count("\n", 0, m.start())
+                  violations.append((path, offset, "EXTERNAL_URL",
+                                     "absolute http(s) URL in text/script/style"))
+              for rule, pattern, label in TEXT_RULES:
+                  for m in pattern.finditer(text):
+                      offset = line + text.count("\n", 0, m.start())
+                      violations.append((path, offset, rule, label))
+
+          class Scanner(HTMLParser):
+              def __init__(self, path):
+                  super().__init__(convert_charrefs=True)
+                  self.path = path
+
+              def bad(self, rule, detail):
+                  violations.append((self.path, self.getpos()[0], rule, detail))
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = [(k.lower(), (v or "").strip()) for k, v in attrs]
+                  values = dict(attrs)
+                  rel = values.get("rel", "").lower()
+                  meta_key = (values.get("property") or values.get("name") or "").lower()
+                  for name, value in attrs:
+                      if not value:
+                          continue
+                      if name == "xmlns" or name.startswith("xmlns:"):
+                          if value not in NAMESPACE_URIS:
+                              self.bad("EXTERNAL_URL", "unknown namespace URI %r" % value)
+                          continue
+                      candidates = ([c.strip().split(" ")[0] for c in value.split(",")]
+                                    if name == "srcset" else [value])
+                      for url in candidates:
+                          if not url or not REMOTE.match(url):
+                              continue
+                          if tag == "script" and name == "src":
+                              self.bad("SCRIPT_SRC", "<script src> is forbidden; inline the JavaScript")
+                          elif tag in ("a", "area") and name == "href":
+                              if origin_allowed(url, ALLOWED_LINK_ORIGINS):
+                                  notices.append((self.path, self.getpos()[0], url))
+                              else:
+                                  self.bad("EXTERNAL_LINK",
+                                           "link to unreviewed origin %r (add it to ALLOWED_LINK_ORIGINS only after review)" % url)
+                          elif tag == "link" and name == "href":
+                              if rel in METADATA_LINK_RELS and origin_allowed(url, (SELF_ORIGIN,)):
+                                  continue
+                              self.bad("LINK_REMOTE", "<link rel=%r href=%r> to a remote origin" % (rel, url))
+                          elif tag == "meta" and name == "content":
+                              if meta_key in METADATA_META_KEYS and origin_allowed(url, (SELF_ORIGIN,)):
+                                  continue
+                              self.bad("EXTERNAL_URL", "<meta %s> carries a remote URL %r" % (meta_key, url))
+                          else:
+                              self.bad("EXTERNAL_SUBRESOURCE",
+                                       "<%s %s=%r> would fetch a remote resource" % (tag, name, url))
+
+              handle_startendtag = handle_starttag
+
+              def handle_data(self, data):
+                  scan_text(self.path, self.getpos()[0], data)
+
+              def handle_comment(self, data):
+                  scan_text(self.path, self.getpos()[0], data)
+
+          files = [p for p in sorted(pathlib.Path("site").rglob("*"))
+                   if p.is_file() and p.suffix.lower() in TEXT_SUFFIXES]
+          if not files:
+              print("::error::No scannable files under site/.")
+              sys.exit(1)
+          for path in files:
+              text = path.read_text(encoding="utf-8", errors="replace")
+              if path.suffix.lower() in MARKUP_SUFFIXES:
+                  scanner = Scanner(path)
+                  scanner.feed(text)
+                  scanner.close()
+              else:
+                  scan_text(path, 1, text)
+
+          for path, line, url in notices:
+              print("::notice file=%s,line=%d::reviewed outbound link: %s" % (path, line, url))
+          for path, line, rule, detail in violations:
+              print("::error file=%s,line=%d::%s: %s" % (path, line, rule, detail))
+          print("Self-containment: %d file(s) scanned, %d violation(s), %d reviewed outbound link(s)."
+                % (len(files), len(violations), len(notices)))
+          sys.exit(1 if violations else 0)
+          PY
+      - name: Internal links resolve
+        env:
+          WEB_ROOT: ${{ steps.webroot.outputs.root }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os, pathlib, re, sys
+          from html.parser import HTMLParser
+
+          web_root = pathlib.Path(os.environ["WEB_ROOT"]).resolve()
+          site = pathlib.Path("site").resolve()
+          SKIP_SCHEMES = ("mailto:", "tel:", "data:", "javascript:", "sms:", "blob:")
+
+          class Collector(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.links = []   # (attr, value, line)
+                  self.ids = set()
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if attrs.get("id"):
+                      self.ids.add(attrs["id"])
+                  if tag == "a" and attrs.get("name"):
+                      self.ids.add(attrs["name"])
+                  for attr in ("href", "src", "poster", "action", "data"):
+                      value = attrs.get(attr)
+                      if value:
+                          self.links.append((attr, value.strip(), self.getpos()[0]))
+                  if attrs.get("srcset"):
+                      for candidate in attrs["srcset"].split(","):
+                          url = candidate.strip().split(" ")[0]
+                          if url:
+                              self.links.append(("srcset", url, self.getpos()[0]))
+
+              handle_startendtag = handle_starttag
+
+          def parse(path):
+              collector = Collector()
+              collector.feed(path.read_text(encoding="utf-8"))
+              collector.close()
+              return collector
+
+          pages = {p.resolve(): parse(p) for p in sorted(site.rglob("*.html"))}
+          errors = []
+
+          def target_file(path):
+              if path.is_dir():
+                  return path / "index.html"
+              if str(path).endswith("/"):
+                  return pathlib.Path(str(path) + "index.html")
+              return path
+
+          for page, data in pages.items():
+              for attr, value, line in data.links:
+                  if value.lower().startswith(SKIP_SCHEMES) or re.match(r'^[a-z][a-z0-9+.-]*:', value, re.I):
+                      continue  # non-path schemes; remote URLs are already fatal above
+                  url, _, fragment = value.partition("#")
+                  if not url:
+                      if fragment and fragment not in data.ids and fragment != "top":
+                          errors.append((page, line, "fragment #%s not found in this page" % fragment))
+                      continue
+                  url = url.split("?")[0]
+                  base = web_root if url.startswith("/") else page.parent
+                  raw = (base / url.lstrip("/"))
+                  candidate = target_file(pathlib.Path(os.path.normpath(str(raw))))
+                  try:
+                      candidate.relative_to(site)
+                  except ValueError:
+                      errors.append((page, line, "%s=%r escapes site/" % (attr, value)))
+                      continue
+                  if not candidate.exists():
+                      errors.append((page, line, "%s=%r -> missing %s"
+                                     % (attr, value, candidate.relative_to(pathlib.Path.cwd().resolve()))))
+                      continue
+                  if fragment and candidate.suffix == ".html":
+                      other = pages.get(candidate.resolve())
+                      if other is None:
+                          other = parse(candidate)
+                      if fragment not in other.ids and fragment != "top":
+                          errors.append((page, line, "%s=%r -> fragment #%s not found"
+                                         % (attr, value, fragment)))
+
+          for page, line, msg in errors:
+              print("::error file=%s,line=%d::broken internal link: %s"
+                    % (page.relative_to(pathlib.Path.cwd().resolve()), line, msg))
+          print("Link check: %d page(s), %d error(s)." % (len(pages), len(errors)))
+          sys.exit(1 if errors else 0)
+          PY
+
+      - name: Canonical tests
+        run: |
+          set -euo pipefail
+          # The repository's own invariant suite: standard library only, no
+          # install step, no network. It asserts the same properties against the
+          # files on disk that scripts/smoke.py asserts against served responses.
+          if compgen -G "tests/test_*.py" > /dev/null; then
+            python3 -m unittest discover -s tests -v
+          else
+            echo "::warning::No tests/test_*.py found; the invariant suite did not run."
+          fi
+
+  container:
+    name: Container and deployment-input checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Containerfile lint
+        run: |
+          set -euo pipefail
+          if [ ! -f Containerfile.release ]; then
+            echo "::error file=Containerfile.release::Containerfile.release is required; release.yml builds the published image from it (see AGENTS.md)."
+            exit 1
+          fi
+          # hadolint is not preinstalled on GitHub-hosted runners. Use it when a
+          # runner image provides it; never install it from the network here,
+          # because that would make PR CI non-deterministic.
+          if command -v hadolint >/dev/null 2>&1; then
+            hadolint Containerfile.release Containerfile 2>/dev/null || hadolint Containerfile.release
+          else
+            echo "::notice::hadolint not available on this runner; running the built-in Containerfile checks only."
+          fi
+          python3 - <<'PY'
+          import pathlib, re, sys
+
+          errors, warnings = [], []
+          for path in sorted(pathlib.Path(".").glob("Containerfile*")):
+              lines = path.read_text(encoding="utf-8").splitlines()
+              has_user, has_expose, has_from = False, False, False
+              for number, line in enumerate(lines, start=1):
+                  stripped = line.strip()
+                  if not stripped or stripped.startswith("#"):
+                      continue
+                  head = stripped.split(None, 1)[0].upper()
+                  if head == "FROM":
+                      has_from = True
+                      image = stripped.split(None, 1)[1].split(" AS ")[0].split(" as ")[0].strip()
+                      if "__BASE_IMAGE_DIGEST__" in image:
+                          warnings.append((path, number,
+                                           "base image digest is still the __BASE_IMAGE_DIGEST__ placeholder; a human must pin a verified digest before release"))
+                      elif "@sha256:" not in image:
+                          errors.append((path, number,
+                                         "FROM %s is not digest-pinned (@sha256:...)" % image))
+                      elif not re.search(r'@sha256:[0-9a-f]{64}$', image):
+                          errors.append((path, number, "malformed image digest: %s" % image))
+                  elif head == "USER":
+                      value = stripped.split(None, 1)[1].strip().strip('"')
+                      if value in ("0", "root", "0:0"):
+                          errors.append((path, number, "USER must not be root"))
+                      else:
+                          has_user = True
+                  elif head == "EXPOSE":
+                      has_expose = True
+                  elif head == "ADD" and re.search(r'\bhttps?://', stripped):
+                      errors.append((path, number, "ADD from a URL is forbidden"))
+                  if re.search(r'\b(curl|wget)\b[^|]*\|\s*(ba)?sh', stripped):
+                      errors.append((path, number, "piping a download into a shell is forbidden"))
+                  if re.search(r'(?i)\b(password|passwd|secret|api[_-]?key|token)\s*=\s*\S', stripped) \
+                     and "__" not in stripped:
+                      errors.append((path, number, "possible embedded credential"))
+              if not has_from:
+                  errors.append((path, 1, "no FROM instruction"))
+              if not has_user:
+                  errors.append((path, 1, "no non-root USER instruction"))
+              if not has_expose:
+                  warnings.append((path, 1, "no EXPOSE instruction"))
+              if not any(l.strip().upper().startswith("HEALTHCHECK") for l in lines):
+                  warnings.append((path, 1, "no HEALTHCHECK; the platform requires a working /healthz"))
+
+          for path, number, msg in warnings:
+              print("::warning file=%s,line=%d::%s" % (path, number, msg))
+          for path, number, msg in errors:
+              print("::error file=%s,line=%d::%s" % (path, number, msg))
+          sys.exit(1 if errors else 0)
+          PY
+
+      - name: Unallocated resources stay unallocated
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ipaddress, pathlib, re, sys
+
+          # Loopback-port and subnet allocation is an explicit human decision
+          # proven against live host state (docs/EDGE_ROUTING_CONTRACT.md
+          # section 5). CI cannot allocate; it only proves nobody quietly did.
+          # Only deployment INPUT files are inspected. Prose that merely names a
+          # forbidden value (a schema description, a comment) is not an
+          # allocation and must not fail the build.
+          #
+          # Two different questions are asked here, and both have to be:
+          #   1. RULES - has anyone written a concrete value where an unallocated
+          #      placeholder belongs? Every port field is covered, including
+          #      internal_port: this app publishes 127.0.0.1:<loopback>:<internal>
+          #      straight through, so the container binds the SAME integer the host
+          #      reserves (deploy/Caddyfile, Containerfile.release EXPOSE and the
+          #      registry entry all carry the one __LOOPBACK_PORT__ token). Calling
+          #      the internal port "namespaced, therefore free" is how a hardcoded
+          #      8080 - a port another app has already claimed - slipped into a
+          #      committed contract while the loopback port was still a placeholder.
+          #   2. RESERVED - if any CIDR appears at all, does it collide with a
+          #      network that is already taken? Registry validation rejects
+          #      OVERLAP, not merely equality, so string comparison against
+          #      "10.89.2.0/24" is not a check: 10.89.2.0/25, 10.89.0.0/16 and
+          #      10.89.2.7/32 are all the same collision and none of them are that
+          #      string. ipaddress does the real containment test.
+          #
+          # When a human does allocate, they update these RULES in the same
+          # reviewed change that lands the integers - deliberately, not by
+          # discovering CI is red.
+          SCOPE = ["deploy", "release", "platform"]
+          NAMES = ("compose.yaml", "compose.yml", "compose.template.yaml",
+                   "compose.production.yaml", "Containerfile", "Containerfile.release")
+          # Documentation is not configuration. Several files here deliberately
+          # NAME the forbidden subnet and the taken ports so a human reading them
+          # cannot pick one by accident; failing the build on that prose would
+          # teach people to delete the warning instead of the value. So the whole
+          # documentation block is skipped - not merely its first line - along
+          # with comments and trailing comments.
+          DOC_KEYS = {"description", "title", "comment", "note", "notes",
+                      "examples", "rationale"}
+          KEY_LINE = re.compile(r'^-?\s*"?(\$?[A-Za-z_][A-Za-z0-9_-]*)"?\s*:')
+          RULES = [
+              (re.compile(r'127\.0\.0\.1:\d+:\d+'),
+               "hardcoded loopback publish mapping; keep __LOOPBACK_PORT__ until a human allocates a port"),
+              (re.compile(r'"?loopback_port"?\s*[:=]\s*"?\d'),
+               "hardcoded loopback port; keep __LOOPBACK_PORT__ until a human allocates one"),
+              (re.compile(r'"?internal_port"?\s*[:=]\s*"?\d'),
+               "hardcoded internal port; this app binds the same integer it publishes, so keep "
+               "__LOOPBACK_PORT__ here too until a human allocates one"),
+              (re.compile(r'"?subnet"?\s*[:=]\s*"?\d'),
+               "hardcoded subnet; keep __APP_SUBNET__ until a human allocates one"),
+              # Caddy site-address line, e.g. ":8080 {" — the in-container listener.
+              (re.compile(r'^\s*:\d+\s*\{'),
+               "hardcoded Caddy site address; keep :__LOOPBACK_PORT__ until a human allocates a port"),
+              # Containerfile EXPOSE, e.g. "EXPOSE 8080".
+              (re.compile(r'^\s*EXPOSE\s+\d'),
+               "hardcoded EXPOSE port; keep __LOOPBACK_PORT__ until a human allocates one"),
+              # Any loopback healthcheck/probe URL, e.g. http://127.0.0.1:8080/healthz.
+              (re.compile(r'127\.0\.0\.1:\d+/'),
+               "hardcoded loopback probe URL; keep __LOOPBACK_PORT__ until a human allocates one"),
+          ]
+
+          # Networks the live host baseline and the root registry prove are taken.
+          RESERVED = [
+              ("10.89.2.0/24", "platform-private-edge (live baseline); NEVER usable by this app"),
+              ("10.88.0.0/16", "the Podman default network"),
+              ("10.89.0.0/24", "hoa-meetings"),
+              ("10.89.1.0/24", "cyberpunk-sky-raid"),
+              ("10.89.3.0/24", "the pixelbattle-landing reservation"),
+          ]
+          RESERVED = [(ipaddress.ip_network(cidr), owner) for cidr, owner in RESERVED]
+          CIDR_TOKEN = re.compile(r'(?<![\w.])((?:\d{1,3}\.){3}\d{1,3}/\d{1,2})(?![\w.])')
+
+          targets = []
+          for name in NAMES:
+              targets.extend(pathlib.Path(".").glob(name))
+          for directory in SCOPE:
+              base = pathlib.Path(directory)
+              if base.is_dir():
+                  targets.extend(p for p in base.rglob("*") if p.is_file())
+
+          def configuration_lines(path, text):
+              """Yield (line number, code) for every line that configures something."""
+              doc_indent = None
+              for number, raw in enumerate(text.splitlines(), start=1):
+                  stripped, indent = raw.strip(), len(raw) - len(raw.lstrip())
+                  if doc_indent is not None:
+                      if not stripped or indent > doc_indent:
+                          continue          # still inside a documentation block
+                      doc_indent = None
+                  if not stripped or stripped.startswith(("#", "//")):
+                      continue
+                  match = KEY_LINE.match(stripped)
+                  if match and match.group(1).lower().lstrip("$") in DOC_KEYS:
+                      doc_indent = indent
+                      continue
+                  if path.suffix.lower() != ".json":
+                      stripped = stripped.split(" #", 1)[0].split("\t#", 1)[0].strip()
+                  if stripped:
+                      yield number, stripped
+
+          errors = []
+          for path in sorted(set(targets)):
+              try:
+                  text = path.read_text(encoding="utf-8")
+              except (UnicodeDecodeError, OSError):
+                  continue
+              for number, stripped in configuration_lines(path, text):
+                  for pattern, message in RULES:
+                      if pattern.search(stripped):
+                          errors.append((path, number, message))
+                  for token in CIDR_TOKEN.findall(stripped):
+                      try:
+                          candidate = ipaddress.ip_network(token, strict=False)
+                      except ValueError as exc:
+                          errors.append((path, number, "%s is not a valid IPv4 CIDR (%s)" % (token, exc)))
+                          continue
+                      for reserved, owner in RESERVED:
+                          if candidate.overlaps(reserved):
+                              errors.append((path, number,
+                                             "%s OVERLAPS %s, which belongs to %s. Overlap - not merely "
+                                             "equality - is what registry validation rejects, and a human "
+                                             "must re-prove non-overlap against live `podman network "
+                                             "inspect` output before any network is created."
+                                             % (token, reserved, owner)))
+          for path, number, message in errors:
+              print("::error file=%s,line=%d::%s" % (path, number, message))
+          print("Allocation guard: %d file(s) inspected, %d placeholder/overlap violation(s), "
+                "%d reserved network(s) checked." % (len(set(targets)), len(errors), len(RESERVED)))
+          sys.exit(1 if errors else 0)
+          PY
+
+      - name: Release contract documents validate against the release schema
+        run: |
+          set -euo pipefail
+          # Nothing used to validate any release contract, which is exactly how a
+          # document that could never satisfy release/contract.schema.json (a
+          # top-level `workflow` key against additionalProperties:false, and no
+          # `invocation` object at all) survived in the release workflow. The same
+          # standard-library checker runs here against every committed contract
+          # document and there against the emitted one, so the schema is exercised
+          # on every pull request rather than only during a release.
+          python3 scripts/validate_release_contract.py \
+            --schema release/contract.schema.json \
+            --github \
+            release/contract.json \
+            release/contract.example.json
+
+      - name: No credential-shaped files are tracked
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -Ei '(^|/)\.env($|\.)|\.(pem|key|p12|pfx|jks|keystore)$'; then
+            echo "::error::Credential-shaped files are tracked in Git. Remove them and rotate anything exposed."
+            exit 1
+          fi
+          echo "No credential-shaped files tracked."

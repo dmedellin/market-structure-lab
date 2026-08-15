@@ -1,0 +1,152 @@
+# market-structure-lab — IN-CONTAINER web server config (Caddy)
+# Public identity: https://learn.geterdone.io/  (Learn index)
+#                  https://learn.geterdone.io/market-structure/  (lesson)
+#
+# WHY THIS FILE EXISTS
+# The platform serves apps only as containers behind `reverse_proxy 127.0.0.1:<port>`
+# (docs/EDGE_ROUTING_CONTRACT.md §7). There is no host file_server / document root.
+# The site is plain static HTML with no health route, so this config is also the
+# ONLY source of the GET /healthz 200 the deployment contract requires.
+#
+# EDGE BOUNDARY — do not cross it here:
+#   * Host-native Caddy terminates public TLS and proxies PLAIN HTTP to the
+#     loopback upstream. This container speaks plain HTTP only: no TLS, no
+#     certificates, no HTTP->HTTPS redirect, no HSTS. Those are edge-owned and
+#     adding them here is an unreviewed edge policy change.
+#   * Nothing below trusts X-Forwarded-*. A static file server makes no security
+#     decision from client-supplied forwarding headers (EDGE_ROUTING_CONTRACT §7.1).
+#
+# UNALLOCATED PLACEHOLDER — __LOOPBACK_PORT__
+#   Port allocation is an explicit human decision plus a live host preflight
+#   (registry `occupied_resources` + `ss -ltnp` on the host). It is deliberately
+#   NOT chosen here and must not be automated or guessed.
+#   Render __LOOPBACK_PORT__ to the SAME integer in all four artifacts before
+#   building: this file, Containerfile.release (EXPOSE + HEALTHCHECK),
+#   compose.template.yaml (both sides of the published mapping), and the
+#   registry entry (network.loopback_port and network.internal_port).
+#   Known-taken on the host today: 2019 caddy-admin, 3000/3001 hoa-web/hoa-api,
+#   8080 proposed by pixelbattle-landing.
+{
+	# Minimal surface: no admin API (it would otherwise listen on :2019 inside
+	# the container), no automatic HTTPS (edge-owned), no config persistence
+	# (the root filesystem is read-only; only /tmp is writable).
+	admin off
+	auto_https off
+	persist_config off
+}
+
+# --- Security header policy (app-owned: headers_profile geterdone-learn-static-v1) ---
+# Defined ONCE as a snippet because it must be applied in TWO places: the normal
+# route chain AND handle_errors. Caddy does not carry a route's response headers
+# into the error route, so an error response served straight from handle_errors
+# would otherwise ship Caddy's default `Server: Caddy` and none of this policy,
+# while `GET /` shipped the full set. The release contract asserts `Server:
+# absent` and this header set as APPLICATION policy, not as index-page policy,
+# so an unauthenticated `GET /nope` must not be the one response that leaks the
+# server identity and drops the CSP.
+# The reviewed edge Caddy fragment must reconcile with, not blindly duplicate, these.
+# Deliberately absent: HSTS (edge/TLS-owned), COEP/COOP cross-origin isolation
+# (not needed, requires separate compatibility review), CORS (no cross-origin API).
+(security_headers) {
+	header {
+		-Server
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Cross-Origin-Resource-Policy "same-site"
+		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+		# The lessons are single-file pages: inline <style>, one inline <script>,
+		# inline SVG and data:image/svg+xml backgrounds, no external origins.
+		# 'unsafe-inline' is required by that shape; everything else is denied.
+		# If a page ever needs an external font/script/analytics, that is a
+		# reviewed change here, not a silent exception.
+		Content-Security-Policy "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'"
+	}
+}
+
+# Bind on all interfaces INSIDE the container namespace. Binding 127.0.0.1 here
+# would break Podman port publishing; host-side loopback-only exposure is done by
+# compose (`ports: 127.0.0.1:__LOOPBACK_PORT__:__LOOPBACK_PORT__`).
+:__LOOPBACK_PORT__ {
+	log {
+		output stdout
+	}
+
+	root * /srv
+
+	# Edge also declares zstd+gzip; compressing here keeps the loopback hop cheap
+	# and lets the edge pass through. Content types and validators are preserved.
+	encode zstd gzip
+
+	# --- Security headers (app-owned policy: headers_profile geterdone-learn-static-v1) ---
+	# Imported, not written inline, because the SAME policy must also be applied
+	# inside handle_errors; see the snippet definition above.
+	import security_headers
+
+	# --- Cache policy (app-owned: cache_profile geterdone-learn-static-v1) ---
+	# The three matchers are disjoint by construction, so exactly one
+	# Cache-Control applies. Note that header matchers see the ORIGINAL request
+	# path, before try_files rewrites it, so the classification below is keyed on
+	# the public URL and the UNCLASSIFIED default is deliberately the safe one.
+
+	# /assets/** is RESERVED for content-fingerprinted files (hash in the
+	# filename). Anything not fingerprinted must not be published under /assets/,
+	# because this rule makes a stale copy unfixable for a year.
+	@immutable path /assets/*
+	header @immutable Cache-Control "public, max-age=31536000, immutable"
+
+	# Known static asset types outside /assets/ (favicon, images, fonts): short
+	# lifetime, always revalidated.
+	@static {
+		path *.css *.js *.mjs *.png *.jpg *.jpeg *.gif *.svg *.webp *.avif *.ico *.woff2 *.woff *.ttf
+		not path /assets/*
+	}
+	header @static Cache-Control "public, max-age=300, must-revalidate"
+
+	# Everything else: HTML pages, directory URLs, extensionless clean URLs and
+	# anything unclassified. The lesson and index pages are single-file HTML that
+	# change IN PLACE at the same URL, so they must always be revalidated and must
+	# never be immutable or long-lived. Unclassified paths fall here on purpose.
+	@revalidate {
+		not path /assets/*
+		not path *.css *.js *.mjs *.png *.jpg *.jpeg *.gif *.svg *.webp *.avif *.ico *.woff2 *.woff *.ttf
+		not path /healthz
+	}
+	header @revalidate Cache-Control "no-cache"
+
+	# --- Health endpoint (registry health.path=/healthz, success_status=200) ---
+	# Availability probe only: no build metadata, no internal topology, no secrets.
+	# Never cached, and kept out of the access log so the 30s HEALTHCHECK is quiet.
+	handle /healthz {
+		log_skip
+		header Cache-Control "no-store"
+		header Content-Type "text/plain; charset=utf-8"
+		respond "ok" 200
+	}
+
+	# --- Static site ---
+	handle {
+		# Clean URLs. Deliberately does NOT include {path}/index.html: letting a
+		# directory request reach file_server is what produces the canonical 30x
+		# redirect /market-structure -> /market-structure/, so one page has one
+		# URL. Rewriting to index.html here instead would serve the same page at
+		# both URLs. {path}.html still allows /foo -> foo.html if a flat page is
+		# ever added.
+		try_files {path} {path}.html
+		file_server {
+			index index.html
+		}
+	}
+
+	# Unknown paths must return a real 404 (acceptance probes assert this) and
+	# must not be cached as if they were content.
+	handle_errors {
+		# An error page is still a response from this application, so it carries
+		# the same header policy as any other. Without this import a 404 is the
+		# one response that advertises `Server: Caddy` and carries no CSP.
+		import security_headers
+		header Cache-Control "no-store"
+		header Content-Type "text/plain; charset=utf-8"
+		respond "{err.status_code} {err.status_text}" {err.status_code}
+	}
+}

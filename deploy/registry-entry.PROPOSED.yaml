@@ -1,0 +1,125 @@
+# PROPOSAL ONLY — NOT A LIVE REGISTRY FILE.
+#
+# This is a draft `apps:` entry to be reviewed as a PULL REQUEST against
+# platform-ops `apps/registry.yaml` (APP_ONBOARDING.md §2, "Reservation PR").
+# It lives in the application repo so the app team can propose an interface;
+# it grants nothing. The registry is a platform authorization allowlist, not
+# application input, and only the reviewed, root-installed
+# /etc/app-platform/apps.yaml has authority.
+#
+# STATE: deployment_state onboarding-disabled + enabled false. A reservation
+# authorizes no host installation, no container, no Caddy fragment, no DNS
+# record and no release. Flipping either field is a separate lifecycle gate.
+#
+# THIS FILE DOES NOT VALIDATE YET, ON PURPOSE.
+#   network.loopback_port / network.internal_port -> __LOOPBACK_PORT__
+#   network.subnet                                -> __APP_SUBNET__
+# Port and subnet allocation is explicitly a human decision plus a live host
+# preflight; it must not be automated or guessed here. A reviewer substitutes
+# the allocated integer and CIDR, then runs, from the platform-ops checkout:
+#     python3 scripts/validate_app_registry.py
+#     python3 -m unittest discover -s tests -v
+# Constraints the chosen values must satisfy:
+#   * loopback port free and >=1024. Occupied today: 2019 caddy-admin,
+#     3000 hoa-web, 3001 hoa-api; 8080 is claimed by the pixelbattle-landing
+#     reservation.
+#   * subnet must not OVERLAP (not merely differ from) 10.88.0.0/16
+#     podman-default, 10.89.0.0/24 hoa-meetings, 10.89.1.0/24 cyberpunk-sky-raid,
+#     10.89.2.0/24 platform-private-edge, or 10.89.3.0/24 (pixelbattle-landing
+#     reservation). NEVER 10.89.2.0/24.
+#   * the same rendered port must appear in deploy/Caddyfile,
+#     Containerfile.release and compose.template.yaml.
+#
+# No occupied_resources change is needed for this app: learn.geterdone.io, the
+# project/container name and the loopback endpoint are all carried by this
+# wrapper-managed entry and are collision-checked from it.
+#
+# SCOPE NOTE: the apex geterdone.io is a separate, live GitHub Pages site that
+# this platform does not serve or control. The edge/DNS transaction adds only
+# the `learn` hostname; apex, www, MX, TXT, NS and CAA records are never touched.
+
+apps:
+  - tenant_slug: geterdone
+    slug: market-structure-lab
+    deployment_state: onboarding-disabled
+    enabled: false
+    source_repository: dmedellin/market-structure-lab
+    oci_repository: ghcr.io/dmedellin/market-structure-lab
+    project_name: market-structure-lab
+    container_name: market-structure-lab
+    runner:
+      # PROPOSED identity. No runner is registered for this repository yet;
+      # registration is a separately approved host change (APP_ONBOARDING §4)
+      # and its credentials never appear in Git.
+      repository: dmedellin/market-structure-lab
+      service: actions.runner.dmedellin-market-structure-lab.hetzner-geterdone-prod.service
+      labels:
+        - self-hosted
+        - linux
+        - x64
+        - hetzner-prod
+        - market-structure-lab
+    network:
+      loopback_host: 127.0.0.1
+      loopback_port: __LOOPBACK_PORT__   # UNALLOCATED — human allocation + live preflight
+      internal_port: __LOOPBACK_PORT__   # same value; the container listens on the published port
+      subnet: __APP_SUBNET__             # UNALLOCATED — must not overlap anything; never 10.89.2.0/24
+      class: ordinary-rootful-bridge
+    health:
+      path: /healthz
+      success_status: 200
+      deadline_seconds: 60
+    domains:
+      canonical: learn.geterdone.io
+      aliases: []
+      all:
+        - learn.geterdone.io
+    edge:
+      upstream_scheme: http
+      canonical_redirect_status: 308
+      compression:
+        - zstd
+        - gzip
+      websocket: false
+      headers_profile: geterdone-learn-static-v1
+      cache_profile: geterdone-learn-static-v1
+      caddy_fragment: /etc/caddy/sites-enabled/learn.geterdone.io.caddy
+      dns_provider: godaddy
+      tls_mode: caddy-automatic-public
+    persistence:
+      class: stateless
+      migrations: forbidden
+    runtime:
+      user: "1000:1000"
+      read_only_rootfs: true
+      cap_drop:
+        - ALL
+      no_new_privileges: true
+      tmpfs:
+        - /tmp:size=16m,mode=1777
+      cpus: 0.5
+      memory_limit_mib: 256
+      memory_reservation_mib: 64
+      pids_limit: 128
+      restart: unless-stopped
+    protected_neighbors:
+      - https://cyberpunk.pixelbattle.me/
+      - https://app.hireanai.net/
+      - https://hoa.hireanai.net/
+    paths:
+      app_root: /srv/apps/market-structure-lab
+      audit_path: /var/log/app-platform/market-structure-lab
+      minimum_retained_accepted_releases: 2
+    ownership:
+      release: release-engineer
+      platform: platform-engineer
+      edge: domain-edge-manager
+      acceptance: sre-security
+    notes:
+      - Proposal for review as a platform-ops reservation PR; this file in the application repo carries no authority.
+      - Loopback port and subnet are unallocated placeholders. Allocation is a human decision plus a live host preflight and is deliberately not automated.
+      - 10.89.2.0/24 must never be proposed for this app; the live baseline proves platform-private-edge owns it.
+      - Static single-file HTML pages served by an in-container Caddy. There is no host document root, so /healthz is provided by the application image, not by the site content.
+      - Protected neighbors list the tenants live on this host today. pixelbattle.me is intentionally absent; it is still served by an external provider and its own registry entry is onboarding-disabled. Add it once pixelbattle-landing is accepted on this host.
+      - Apex geterdone.io is a separate live GitHub Pages site outside this platform. Only the learn subdomain record is in scope for the edge/DNS transaction.
+      - Runner service name is a proposal; no runner, wrapper, sudoers rule, Caddy fragment or DNS record exists for this app yet.
