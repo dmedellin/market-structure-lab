@@ -206,7 +206,17 @@ jobs:
           #    reader clicks, so it cannot break offline self-containment, but
           #    every origin here is a deliberate review decision. Adding one is
           #    a code change, not an exception granted at runtime.
-          ALLOWED_LINK_ORIGINS = (SELF_ORIGIN, "https://geterdone.io")
+          # Outbound <a href> origins that have been REVIEWED. A link navigates
+          # and loads nothing, so it does not break self-containment -- but a new
+          # origin must still be a deliberate decision, not something that drifts
+          # in with a lesson. Reviewed 2026-08-15: both are authoritative,
+          # non-commercial options-education sources cited by lab 07, and all
+          # three deep paths were confirmed to return HTTP 200.
+          #   optionseducation.org -- Options Industry Council
+          #   finra.org            -- Financial Industry Regulatory Authority
+          ALLOWED_LINK_ORIGINS = (SELF_ORIGIN, "https://geterdone.io",
+                                  "https://www.optionseducation.org",
+                                  "https://www.finra.org")
           # 2. XML namespace identifiers. Never fetched; required by inline SVG
           #    and document.createElementNS.
           NAMESPACE_URIS = ("http://www.w3.org/2000/svg",
