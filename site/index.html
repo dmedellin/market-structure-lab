@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Learn · geterdone.io</title>
-  <meta name="description" content="A growing library of interactive, self-contained trading and markets lessons. Start with Market Structure Lab: read the story of price on live candlestick charts." />
+  <title>Market Structure Course · Learn · geterdone.io</title>
+  <meta name="description" content="A free seven-part interactive course on market structure: read the story of price, then work through ranges and liquidity sweeps, multi-timeframe context, entry models, invalidation and reward-to-risk, volume, and options contract selection. Every lab is one self-contained page." />
   <link rel="canonical" href="https://learn.geterdone.io/" />
 
   <!-- Favicon: inline data-URI SVG, no external asset. Mirrors the lesson brand mark
@@ -20,13 +20,13 @@
        og:image + twitter:card=summary_large_image once a real 1200x630 asset is committed. -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Learn · geterdone.io" />
-  <meta property="og:title" content="Learn · geterdone.io" />
-  <meta property="og:description" content="A growing library of interactive, self-contained trading and markets lessons." />
+  <meta property="og:title" content="Market Structure Course · Learn · geterdone.io" />
+  <meta property="og:description" content="A seven-part interactive course on market structure — structure, breakouts, multi-timeframe context, entries, risk, volume, and options. Seven self-contained pages." />
   <meta property="og:url" content="https://learn.geterdone.io/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Learn · geterdone.io" />
-  <meta name="twitter:description" content="A growing library of interactive, self-contained trading and markets lessons." />
+  <meta name="twitter:title" content="Market Structure Course · Learn · geterdone.io" />
+  <meta name="twitter:description" content="A seven-part interactive course on market structure — structure, breakouts, multi-timeframe context, entries, risk, volume, and options. Seven self-contained pages." />
 
   <style>
     /* ---------------------------------------------------------------------
@@ -400,13 +400,64 @@
       white-space: nowrap;
     }
 
-    /* ---------- Lesson catalog grid ---------- */
-    .lesson-grid {
+    /* ---------- Ordered course track ----------
+       Replaces the old auto-fill catalog grid. Seven labs are a SEQUENCE, not a
+       gallery, so the list is a single-column <ol> with a numbered rail down the
+       left: a reader sees position at a glance, and assistive tech gets the same
+       fact from the list element itself rather than from the drawn numerals.
+       The .lesson-card component below is UNCHANGED — the track only positions
+       it, and from 760px up lays it on its side. */
+    .course-track {
+      /* The rail carries the numbering visually; the <ol> carries it
+         semantically. list-style is off so the two never double up. */
+      list-style: none;
+      margin: 0;
+      padding: 0;
       display: grid;
-      /* min() keeps the track from overflowing viewports narrower than the min. */
-      grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
       gap: 16px;
+    }
+
+    .course-step {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 14px;
       align-items: stretch;
+    }
+
+    .step-rail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* The connector that carries the eye to the next lab. Dropped on the last
+       step so the sequence visibly ends instead of trailing off. */
+    .step-rail::after {
+      content: "";
+      flex: 1 1 auto;
+      width: 2px;
+      min-height: 10px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, var(--line-strong), transparent);
+    }
+    .course-step:last-child .step-rail::after { background: none; }
+
+    .step-num {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      margin: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background: var(--panel-2);
+      color: var(--cyan-2);
+      font-size: 0.95rem;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
     }
 
     .lesson-card {
@@ -517,22 +568,48 @@
 
     .level { color: var(--muted); font-size: 0.74rem; font-weight: 700; }
 
-    /* Placeholder tile — DELETE this once a second real lesson exists. */
-    .soon {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 8px;
-      min-height: 200px;
-      padding: 22px;
-      border: 1px dashed var(--line-strong);
-      border-radius: var(--radius);
-      background: transparent;
-      color: var(--muted);
-      text-align: center;
+    /* From 760px the card turns on its side — thumbnail left, copy right — so a
+       seven-item column stays scannable instead of becoming seven tall tiles.
+       Below that it is exactly the stacked card the catalog already shipped. */
+    @media (min-width: 760px) {
+      .course-step .lesson-card { flex-direction: row; }
+      .course-step .thumb {
+        flex: none;
+        width: 296px;
+        display: grid;
+        place-items: center;
+        border-bottom: 0;
+        border-right: 1px solid var(--line);
+      }
     }
-    .soon strong { display: block; color: var(--text); font-size: 0.97rem; }
-    .soon span { font-size: 0.82rem; }
+
+    /* Standing disclaimer. Same shape as .noscript-note below — amber rule on a
+       panel — because it is the same kind of aside; unlike that one it is always
+       visible, because this page is where a reader starts. */
+    .edu-note {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .edu-note strong { color: var(--text); }
+
+    /* Text for assistive tech only; never for anything a sighted reader needs. */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
 
     /* Same note styling as the lesson page. */
     .noscript-note {
@@ -572,6 +649,24 @@
     }
     .sv-text-live { fill: var(--text); }
 
+    /* Added for the per-lab thumbnails. Same rule as the block above: every
+       value is a token, so one declaration serves both themes and neither can
+       drift. */
+    .sv-zone { fill: var(--cyan); opacity: .1; }
+    .sv-zone-line { stroke: var(--cyan); stroke-width: 1.75; fill: none; }
+    .sv-zone-dash { stroke: var(--cyan); stroke-width: 1.5; stroke-dasharray: 5 5; fill: none; opacity: .8; }
+    .sv-dot-warn { fill: var(--panel-solid); stroke: var(--red); stroke-width: 2.5; }
+    .sv-dot-ok { fill: var(--panel-solid); stroke: var(--green); stroke-width: 2.5; }
+    .sv-risk { fill: var(--red); opacity: .16; }
+    .sv-reward { fill: var(--green); opacity: .16; }
+    .sv-risk-line { stroke: var(--red); stroke-width: 1.75; stroke-dasharray: 6 5; fill: none; }
+    .sv-reward-line { stroke: var(--green); stroke-width: 1.75; stroke-dasharray: 6 5; fill: none; }
+    .sv-entry { stroke: var(--text); stroke-width: 1.75; fill: none; opacity: .7; }
+    .sv-bar { fill: var(--muted); opacity: .45; }
+    .sv-bar-hi { fill: var(--cyan); }
+    .sv-bench { stroke: var(--muted); stroke-width: 2.5; stroke-dasharray: 6 5; fill: none; opacity: .75; }
+    .sv-payoff { stroke: var(--purple); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .sv-axis { stroke: var(--line-strong); stroke-width: 1.5; }
     /* ---------- Footer ---------- */
     footer {
       display: flex;
@@ -604,7 +699,8 @@
       .section { padding: 27px 0; }
       .section-head { display: block; }
       .count-chip { display: inline-block; margin-top: 12px; }
-      .lesson-grid { grid-template-columns: 1fr; }
+      .course-step { grid-template-columns: 38px minmax(0, 1fr); gap: 10px; }
+      .step-num { width: 38px; height: 38px; border-radius: 12px; font-size: 0.84rem; }
       footer { display: block; }
       footer p { margin: 0 0 6px; }
     }
@@ -664,7 +760,7 @@
 
       <nav class="topnav" aria-label="Primary">
         <a href="./" aria-current="page">Library</a>
-        <a href="#lessons">Lessons</a>
+        <a href="#course">Course</a>
       </nav>
 
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
@@ -673,7 +769,7 @@
     <noscript>
       <div class="noscript-note">
         <strong>JavaScript is off, so the theme toggle is hidden.</strong>
-        Everything else on this page — the catalog, the lesson links, and the
+        Everything else on this page — the course outline, the lab links, and the
         illustrations — is plain HTML and CSS and works normally. The page still
         follows your system's light or dark preference.
       </div>
@@ -682,143 +778,539 @@
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
         <div>
-          <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Learning library</span>
-          <h1 id="hero-title">Interactive lessons that <span class="gradient-text">teach the chart.</span></h1>
-          <p>Self-contained, hands-on lessons on how markets actually move — built to be read in a sitting and practised in the browser. No accounts, no tracking, no fluff.</p>
+          <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Market Structure Course · 7 labs</span>
+          <h1 id="hero-title">Seven labs that <span class="gradient-text">teach the chart.</span></h1>
+          <p>A complete, ordered course on how price actually moves — from reading structure on a bare chart, through breakouts, context, entries and risk, to picking an options contract. Every lab is one self-contained interactive page: no accounts, no tracking, nothing to install. Take them in order; each one leans on the one before it.</p>
           <div class="hero-actions">
-            <a class="btn primary" href="./market-structure/">Start with Market Structure</a>
-            <a class="btn ghost" href="#lessons">Browse all lessons</a>
+            <a class="btn primary" href="./market-structure/">Start with Lab 01</a>
+            <a class="btn ghost" href="#course">See all seven labs</a>
           </div>
         </div>
 
         <div class="hero-visual">
-          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of a lesson catalogue: one published lesson card with a rising price line, and two placeholder cards for lessons still to come.">
-            <!-- Two upcoming (dashed/muted) tiles -->
-            <rect class="sv-tile" x="46" y="34" width="428" height="74" rx="16" opacity=".45" />
-            <polyline class="sv-spark" points="72,88 108,66 140,78 176,52 208,60" opacity=".28" />
-            <rect class="sv-chip-muted" x="330" y="60" width="118" height="10" rx="5" />
-            <rect class="sv-chip-muted" x="330" y="78" width="76" height="10" rx="5" />
+          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of a seven-part course: seven rising steps labelled 01 through 07, with a line tracing their tops.">
+            <line class="sv-axis" x1="24" y1="272" x2="500" y2="272" />
 
-            <rect class="sv-tile" x="46" y="122" width="428" height="74" rx="16" opacity=".7" />
-            <polyline class="sv-spark" points="72,176 108,150 140,162 176,134 208,146" />
-            <rect class="sv-chip-muted" x="330" y="148" width="118" height="10" rx="5" />
-            <rect class="sv-chip-muted" x="330" y="166" width="90" height="10" rx="5" />
+            <g class="sv-tile">
+              <rect x="32" y="212" width="52" height="60" rx="10" opacity=".5" />
+              <rect x="100" y="188" width="52" height="84" rx="10" opacity=".58" />
+              <rect x="168" y="164" width="52" height="108" rx="10" opacity=".66" />
+              <rect x="236" y="140" width="52" height="132" rx="10" opacity=".74" />
+              <rect x="304" y="116" width="52" height="156" rx="10" opacity=".82" />
+              <rect x="372" y="86" width="52" height="186" rx="10" opacity=".9" />
+              <rect x="440" y="56" width="52" height="216" rx="10" />
+            </g>
 
-            <!-- The one live lesson -->
-            <rect class="sv-tile-live" x="46" y="210" width="428" height="80" rx="16" />
-            <polyline class="sv-spark-live" points="72,268 104,238 132,254 168,222 198,236 232,206" />
-            <g class="sv-dot"><circle cx="104" cy="238" r="4" /><circle cx="168" cy="222" r="4" /><circle cx="232" cy="206" r="4" /></g>
-            <line class="sv-level" x1="132" y1="254" x2="250" y2="254" />
-            <rect class="sv-chip" x="330" y="234" width="118" height="10" rx="5" />
-            <rect class="sv-chip" x="330" y="252" width="76" height="10" rx="5" opacity=".55" />
-            <text class="sv-text sv-text-live" x="72" y="204">LIVE NOW</text>
+            <polyline class="sv-spark-live" points="58,212 126,188 194,164 262,140 330,116 398,86 466,56" />
+            <g class="sv-dot">
+              <circle cx="58" cy="212" r="5" />
+              <circle cx="126" cy="188" r="5" />
+              <circle cx="194" cy="164" r="5" />
+              <circle cx="262" cy="140" r="5" />
+              <circle cx="330" cy="116" r="5" />
+              <circle cx="398" cy="86" r="5" />
+              <circle cx="466" cy="56" r="5" />
+            </g>
+
+            <g class="sv-text" text-anchor="middle">
+              <text x="58" y="200">01</text>
+              <text x="126" y="176">02</text>
+              <text x="194" y="152">03</text>
+              <text x="262" y="128">04</text>
+              <text x="330" y="104">05</text>
+              <text x="398" y="74">06</text>
+              <text x="466" y="44" class="sv-text-live">07</text>
+            </g>
           </svg>
         </div>
       </section>
 
-      <section class="section" id="lessons" aria-labelledby="lessons-title">
+      <section class="section" id="course" aria-labelledby="course-title">
         <div class="section-head">
           <div>
-            <p class="kicker">Catalog</p>
-            <h2 id="lessons-title">Lessons</h2>
-            <p>Every lesson is a single self-contained page: interactive charts, worked explanations, and a way to test yourself before you touch a live market.</p>
+            <p class="kicker">Curriculum</p>
+            <h2 id="course-title">The course, in order</h2>
+            <p>Seven labs, each a single self-contained page of interactive charts, worked explanations, and a way to test yourself. They build on one another: read structure first, then where it breaks, then how to enter it, risk it, and express it.</p>
           </div>
-          <p class="count-chip">1 lesson published · more in progress</p>
+          <p class="count-chip">7 labs · start at 01</p>
         </div>
 
-        <div class="lesson-grid">
+        <p class="edu-note">
+          <strong>Educational use only — nothing here is trading advice.</strong>
+          Every chart, price, quote, and options figure in this course is a
+          synthetic example generated to illustrate a concept. No lab describes a
+          real instrument or a real market session, and nothing on these pages is
+          a recommendation, a signal, or a forecast. Trading carries the risk of
+          losing money.
+        </p>
 
-          <!-- ===================================================================
-               ADD LESSON #2: copy this entire <article class="lesson-card"> ...
-               </article> block, paste it directly below, then change only:
-                 1. the href on .lesson-link  (e.g. ./order-flow/)
-                 2. the <h3> title
-                 3. the description <p>
-                 4. .topic-tag text and .time-tag text
-                 5. .level text
-                 6. the inline SVG thumbnail + its aria-label
-               The grid reflows on its own — no CSS changes needed.
-               =================================================================== -->
-          <article class="lesson-card">
-            <div class="thumb">
-              <svg viewBox="0 0 360 150" role="img" aria-label="Candlestick chart thumbnail showing a rising sequence of higher highs and higher lows, with a protected low marked by a dashed level.">
-                <g class="sv-grid">
-                  <line x1="8" y1="34" x2="352" y2="34" />
-                  <line x1="8" y1="76" x2="352" y2="76" />
-                  <line x1="8" y1="118" x2="352" y2="118" />
-                </g>
+        <!-- ===================================================================
+             ADDING LAB 08: copy one whole <li class="course-step"> block, paste
+             it at the END of this list, then change only:
+               1. the .step-num digits
+               2. the href on .lesson-link  (a new ./<slug>/ directory)
+               3. the <h3> title, the description <p>, .topic-tag, .time-tag,
+                  .level
+               4. the inline SVG thumbnail + its aria-label
+             The rail numbering, the connector, and the last-step rules follow
+             from the list itself — no CSS changes needed. A new URL also has to
+             be registered in tests/test_site_invariants.py (REQUIRED_PAGES) and
+             in the release acceptance checks.
+             =================================================================== -->
+        <ol class="course-track" role="list">
 
-                <!-- candles: wick line + body rect -->
-                <g>
-                  <line class="sv-wick-dn" x1="20" y1="104" x2="20" y2="136" /><rect class="sv-dn" x="14" y="110" width="12" height="20" rx="2" />
-                  <line class="sv-wick-up" x1="48" y1="84" x2="48" y2="118" /><rect class="sv-up" x="42" y="90" width="12" height="24" rx="2" />
-                  <line class="sv-wick-up" x1="76" y1="70" x2="76" y2="102" /><rect class="sv-up" x="70" y="76" width="12" height="22" rx="2" />
-                  <line class="sv-wick-dn" x1="104" y1="62" x2="104" y2="92" /><rect class="sv-dn" x="98" y="68" width="12" height="20" rx="2" />
-                  <line class="sv-wick-dn" x1="132" y1="78" x2="132" y2="108" /><rect class="sv-dn" x="126" y="84" width="12" height="20" rx="2" />
-                  <line class="sv-wick-dn" x1="160" y1="88" x2="160" y2="116" /><rect class="sv-dn" x="154" y="92" width="12" height="20" rx="2" />
-                  <line class="sv-wick-up" x1="188" y1="60" x2="188" y2="98" /><rect class="sv-up" x="182" y="66" width="12" height="28" rx="2" />
-                  <line class="sv-wick-up" x1="216" y1="42" x2="216" y2="74" /><rect class="sv-up" x="210" y="48" width="12" height="22" rx="2" />
-                  <line class="sv-wick-dn" x1="244" y1="50" x2="244" y2="86" /><rect class="sv-dn" x="238" y="56" width="12" height="26" rx="2" />
-                  <line class="sv-wick-dn" x1="272" y1="62" x2="272" y2="92" /><rect class="sv-dn" x="266" y="66" width="12" height="22" rx="2" />
-                  <line class="sv-wick-up" x1="300" y1="30" x2="300" y2="70" /><rect class="sv-up" x="294" y="36" width="12" height="30" rx="2" />
-                  <line class="sv-wick-up" x1="328" y1="18" x2="328" y2="48" /><rect class="sv-up" x="322" y="24" width="12" height="20" rx="2" />
-                </g>
-
-                <!-- structure path through the swing points -->
-                <polyline class="sv-struct" points="20,136 104,62 160,116 216,42 272,92 328,18" />
-                <g class="sv-dot">
-                  <circle cx="104" cy="62" r="4.5" />
-                  <circle cx="160" cy="116" r="4.5" />
-                  <circle cx="216" cy="42" r="4.5" />
-                  <circle cx="272" cy="92" r="4.5" />
-                  <circle cx="328" cy="18" r="4.5" />
-                </g>
-
-                <!-- protected low -->
-                <line class="sv-level" x1="160" y1="116" x2="350" y2="116" />
-              </svg>
+          <li class="course-step">
+            <div class="step-rail">
+              <p class="step-num"><span class="visually-hidden">Lab </span>01</p>
             </div>
+            <article class="lesson-card">
+              <div class="thumb">
+                <svg viewBox="0 0 360 150" role="img" aria-label="Candlestick chart thumbnail showing a rising sequence of higher highs and higher lows, with a protected low marked by a dashed level.">
+                  <g class="sv-grid">
+                    <line x1="8" y1="34" x2="352" y2="34" />
+                    <line x1="8" y1="76" x2="352" y2="76" />
+                    <line x1="8" y1="118" x2="352" y2="118" />
+                  </g>
 
-            <div class="lesson-body">
-              <div class="meta-row">
-                <span class="topic-tag">Price action</span>
-                <span class="time-tag">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 7v5l3.5 2" />
-                  </svg>
-                  ~25 min read + practice
-                </span>
+                  <!-- candles: wick line + body rect -->
+                  <g>
+                    <line class="sv-wick-dn" x1="20" y1="104" x2="20" y2="136" /><rect class="sv-dn" x="14" y="110" width="12" height="20" rx="2" />
+                    <line class="sv-wick-up" x1="48" y1="84" x2="48" y2="118" /><rect class="sv-up" x="42" y="90" width="12" height="24" rx="2" />
+                    <line class="sv-wick-up" x1="76" y1="70" x2="76" y2="102" /><rect class="sv-up" x="70" y="76" width="12" height="22" rx="2" />
+                    <line class="sv-wick-dn" x1="104" y1="62" x2="104" y2="92" /><rect class="sv-dn" x="98" y="68" width="12" height="20" rx="2" />
+                    <line class="sv-wick-dn" x1="132" y1="78" x2="132" y2="108" /><rect class="sv-dn" x="126" y="84" width="12" height="20" rx="2" />
+                    <line class="sv-wick-dn" x1="160" y1="88" x2="160" y2="116" /><rect class="sv-dn" x="154" y="92" width="12" height="20" rx="2" />
+                    <line class="sv-wick-up" x1="188" y1="60" x2="188" y2="98" /><rect class="sv-up" x="182" y="66" width="12" height="28" rx="2" />
+                    <line class="sv-wick-up" x1="216" y1="42" x2="216" y2="74" /><rect class="sv-up" x="210" y="48" width="12" height="22" rx="2" />
+                    <line class="sv-wick-dn" x1="244" y1="50" x2="244" y2="86" /><rect class="sv-dn" x="238" y="56" width="12" height="26" rx="2" />
+                    <line class="sv-wick-dn" x1="272" y1="62" x2="272" y2="92" /><rect class="sv-dn" x="266" y="66" width="12" height="22" rx="2" />
+                    <line class="sv-wick-up" x1="300" y1="30" x2="300" y2="70" /><rect class="sv-up" x="294" y="36" width="12" height="30" rx="2" />
+                    <line class="sv-wick-up" x1="328" y1="18" x2="328" y2="48" /><rect class="sv-up" x="322" y="24" width="12" height="20" rx="2" />
+                  </g>
+
+                  <!-- structure path through the swing points -->
+                  <polyline class="sv-struct" points="20,136 104,62 160,116 216,42 272,92 328,18" />
+                  <g class="sv-dot">
+                    <circle cx="104" cy="62" r="4.5" />
+                    <circle cx="160" cy="116" r="4.5" />
+                    <circle cx="216" cy="42" r="4.5" />
+                    <circle cx="272" cy="92" r="4.5" />
+                    <circle cx="328" cy="18" r="4.5" />
+                  </g>
+
+                  <!-- protected low -->
+                  <line class="sv-level" x1="160" y1="116" x2="350" y2="116" />
+                </svg>
               </div>
 
-              <h3><a class="lesson-link" href="./market-structure/">Market Structure Lab</a></h3>
+              <div class="lesson-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Price action</span>
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~25 min
+                  </span>
+                </div>
 
-              <p>Learn to read the story of price: identify higher highs, higher lows, protected swings, breaks of structure, and reversals on interactive candlestick charts. Includes a stepped structure explorer and a self-scoring practice quiz.</p>
+                <h3><a class="lesson-link" href="./market-structure/">Market Structure Lab</a></h3>
 
-              <div class="lesson-foot">
-                <span class="go">
-                  Start lesson
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                    <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
-                  </svg>
-                </span>
-                <span class="level">Beginner → Intermediate</span>
+                <p>Learn to read the story of price: identify higher highs, higher lows, protected swings, breaks of structure, and reversals on interactive candlestick charts. Includes a stepped structure explorer and a self-scoring practice quiz.</p>
+
+                <div class="lesson-foot">
+                  <span class="go">
+                    Start lab
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Beginner → Intermediate</span>
+                </div>
               </div>
+            </article>
+          </li>
+
+          <li class="course-step">
+            <div class="step-rail">
+              <p class="step-num"><span class="visually-hidden">Lab </span>02</p>
             </div>
-          </article>
-          <!-- ================= END of the copy-paste block ================= -->
+            <article class="lesson-card">
+              <div class="thumb">
+                <svg viewBox="0 0 360 150" role="img" aria-label="Range thumbnail: price rotating between support and resistance, one wick sweeping above the range high and closing back inside, then a confirmed breakout and a retest of the old high.">
+                  <g class="sv-grid">
+                    <line x1="8" y1="34" x2="352" y2="34" />
+                    <line x1="8" y1="76" x2="352" y2="76" />
+                    <line x1="8" y1="118" x2="352" y2="118" />
+                  </g>
 
-          <!-- Placeholder tile so a one-item catalog doesn't read as broken.
-               DELETE this <div class="soon"> once lesson #2 ships. -->
-          <div class="soon">
-            <strong>More lessons in progress</strong>
-            <span>New interactive lessons get added here as they are finished.</span>
-          </div>
+                  <!-- the range, and the old high carried right as the retest level -->
+                  <rect class="sv-zone" x="14" y="52" width="214" height="52" rx="4" />
+                  <line class="sv-zone-line" x1="14" y1="52" x2="228" y2="52" />
+                  <line class="sv-zone-line" x1="14" y1="104" x2="228" y2="104" />
+                  <line class="sv-level" x1="228" y1="52" x2="352" y2="52" />
 
-        </div>
+                  <g>
+                    <line class="sv-wick-dn" x1="26" y1="60" x2="26" y2="100" /><rect class="sv-dn" x="20" y="66" width="12" height="26" rx="2" />
+                    <line class="sv-wick-up" x1="54" y1="58" x2="54" y2="102" /><rect class="sv-up" x="48" y="76" width="12" height="22" rx="2" />
+                    <line class="sv-wick-dn" x1="82" y1="56" x2="82" y2="98" /><rect class="sv-dn" x="76" y="62" width="12" height="26" rx="2" />
+                    <line class="sv-wick-up" x1="110" y1="62" x2="110" y2="104" /><rect class="sv-up" x="104" y="80" width="12" height="20" rx="2" />
+                    <line class="sv-wick-dn" x1="138" y1="54" x2="138" y2="96" /><rect class="sv-dn" x="132" y="60" width="12" height="28" rx="2" />
+                    <!-- the sweep: wick clears the high, body closes back inside -->
+                    <line class="sv-wick-dn" x1="166" y1="34" x2="166" y2="90" /><rect class="sv-dn" x="160" y="64" width="12" height="22" rx="2" />
+                    <line class="sv-wick-up" x1="194" y1="62" x2="194" y2="102" /><rect class="sv-up" x="188" y="70" width="12" height="26" rx="2" />
+                    <!-- breakout, then a retest that holds the old high -->
+                    <line class="sv-wick-up" x1="222" y1="30" x2="222" y2="78" /><rect class="sv-up" x="216" y="36" width="12" height="36" rx="2" />
+                    <line class="sv-wick-up" x1="250" y1="24" x2="250" y2="56" /><rect class="sv-up" x="244" y="30" width="12" height="20" rx="2" />
+                    <line class="sv-wick-dn" x1="278" y1="32" x2="278" y2="56" /><rect class="sv-dn" x="272" y="38" width="12" height="14" rx="2" />
+                    <line class="sv-wick-up" x1="306" y1="20" x2="306" y2="50" /><rect class="sv-up" x="300" y="26" width="12" height="20" rx="2" />
+                    <line class="sv-wick-up" x1="334" y1="12" x2="334" y2="42" /><rect class="sv-up" x="328" y="18" width="12" height="20" rx="2" />
+                  </g>
+
+                  <circle class="sv-dot-warn" cx="166" cy="34" r="5" />
+                </svg>
+              </div>
+
+              <div class="lesson-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Boundaries</span>
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~20 min
+                  </span>
+                </div>
+
+                <h3><a class="lesson-link" href="./ranges-breakouts-liquidity/">Ranges, Breakouts &amp; Liquidity Sweeps</a></h3>
+
+                <p>Classify range rejection, confirmed breakout, retest, and high/low liquidity sweeps.</p>
+
+                <div class="lesson-foot">
+                  <span class="go">
+                    Start lab
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Beginner → Intermediate</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li class="course-step">
+            <div class="step-rail">
+              <p class="step-num"><span class="visually-hidden">Lab </span>03</p>
+            </div>
+            <article class="lesson-card">
+              <div class="thumb">
+                <svg viewBox="0 0 360 150" role="img" aria-label="Two stacked panels: a higher-timeframe uptrend on top with one segment highlighted, and the lower-timeframe detail of that same segment expanded below.">
+                  <rect class="sv-tile" x="8" y="6" width="344" height="60" rx="10" opacity=".55" />
+                  <rect class="sv-tile" x="8" y="84" width="344" height="60" rx="10" opacity=".55" />
+
+                  <text class="sv-text" x="18" y="22">HTF</text>
+                  <text class="sv-text" x="18" y="100">LTF</text>
+
+                  <polyline class="sv-struct" points="24,56 62,40 90,48 128,28 162,38 200,22 238,32 276,18 310,26 344,12" />
+                  <g class="sv-dot">
+                    <circle cx="128" cy="28" r="4" />
+                    <circle cx="238" cy="32" r="4" />
+                  </g>
+
+                  <!-- the higher-timeframe segment the lower timeframe expands -->
+                  <rect class="sv-zone" x="252" y="10" width="96" height="52" rx="6" />
+                  <rect class="sv-zone-line" x="252" y="10" width="96" height="52" rx="6" />
+                  <line class="sv-zone-dash" x1="252" y1="62" x2="14" y2="84" />
+                  <line class="sv-zone-dash" x1="348" y1="62" x2="346" y2="84" />
+
+                  <polyline class="sv-spark-live" points="20,136 44,126 68,132 92,120 116,126 140,112 164,120 188,108 212,114 236,100 260,108 284,96 308,102 332,90" />
+                  <g class="sv-dot">
+                    <circle cx="140" cy="112" r="3.5" />
+                    <circle cx="236" cy="100" r="3.5" />
+                    <circle cx="332" cy="90" r="3.5" />
+                  </g>
+                  <line class="sv-level" x1="140" y1="112" x2="348" y2="112" />
+                </svg>
+              </div>
+
+              <div class="lesson-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Context</span>
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~20 min
+                  </span>
+                </div>
+
+                <h3><a class="lesson-link" href="./multi-timeframe-market-structure/">Multi-Timeframe Market Structure</a></h3>
+
+                <p>Combine higher-timeframe regime and location with lower-timeframe trigger and invalidation.</p>
+
+                <div class="lesson-foot">
+                  <span class="go">
+                    Start lab
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Intermediate</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li class="course-step">
+            <div class="step-rail">
+              <p class="step-num"><span class="visually-hidden">Lab </span>04</p>
+            </div>
+            <article class="lesson-card">
+              <div class="thumb">
+                <svg viewBox="0 0 360 150" role="img" aria-label="An uptrend that pulls back into a shaded entry zone and then continues, with three entry markers — aggressive inside the pullback, confirmation at the turn, continuation once the higher low holds — above a dashed invalidation level.">
+                  <g class="sv-grid">
+                    <line x1="8" y1="34" x2="352" y2="34" />
+                    <line x1="8" y1="76" x2="352" y2="76" />
+                    <line x1="8" y1="118" x2="352" y2="118" />
+                  </g>
+
+                  <rect class="sv-zone" x="140" y="76" width="112" height="34" rx="6" />
+                  <line class="sv-zone-line" x1="140" y1="76" x2="252" y2="76" />
+
+                  <polyline class="sv-struct" points="16,134 66,96 92,108 128,58 168,90 196,80 214,104 258,72 300,84 344,26" />
+                  <g class="sv-dot">
+                    <circle cx="128" cy="58" r="4.5" />
+                    <circle cx="214" cy="104" r="4.5" />
+                    <circle cx="344" cy="26" r="4.5" />
+                  </g>
+
+                  <!-- three entry models on the same pullback -->
+                  <circle class="sv-dot-ok" cx="180" cy="86" r="5" />
+                  <circle class="sv-dot-ok" cx="232" cy="91" r="5" />
+                  <circle class="sv-dot-ok" cx="286" cy="80" r="5" />
+
+                  <!-- the higher low: where all three are wrong -->
+                  <line class="sv-level" x1="214" y1="104" x2="352" y2="104" />
+                </svg>
+              </div>
+
+              <div class="lesson-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Execution</span>
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~20 min
+                  </span>
+                </div>
+
+                <h3><a class="lesson-link" href="./pullbacks-entry-models/">Pullbacks &amp; Entry Models</a></h3>
+
+                <p>Compare aggressive, confirmation, and continuation entry models across healthy and failed pullbacks.</p>
+
+                <div class="lesson-foot">
+                  <span class="go">
+                    Start lab
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Intermediate</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li class="course-step">
+            <div class="step-rail">
+              <p class="step-num"><span class="visually-hidden">Lab </span>05</p>
+            </div>
+            <article class="lesson-card">
+              <div class="thumb">
+                <svg viewBox="0 0 360 150" role="img" aria-label="A planned trade: an entry level with a red one-R stop band below it and a green two-R target band above, and price advancing from the entry up into the target.">
+                  <g class="sv-grid">
+                    <line x1="8" y1="34" x2="352" y2="34" />
+                    <line x1="8" y1="76" x2="352" y2="76" />
+                    <line x1="8" y1="118" x2="352" y2="118" />
+                  </g>
+
+                  <!-- reward is exactly twice the height of risk -->
+                  <rect class="sv-reward" x="132" y="34" width="212" height="52" rx="5" />
+                  <rect class="sv-risk" x="132" y="86" width="212" height="26" rx="5" />
+                  <line class="sv-reward-line" x1="132" y1="34" x2="344" y2="34" />
+                  <line class="sv-risk-line" x1="132" y1="112" x2="344" y2="112" />
+                  <line class="sv-entry" x1="120" y1="86" x2="352" y2="86" />
+
+                  <polyline class="sv-struct" points="16,126 52,104 84,114 118,92 132,86 176,72 214,80 258,54 300,62 344,38" />
+                  <circle class="sv-dot" cx="132" cy="86" r="5" />
+
+                  <text class="sv-text" x="140" y="28">TARGET · 2R</text>
+                  <text class="sv-text" x="140" y="128">STOP · 1R</text>
+                </svg>
+              </div>
+
+              <div class="lesson-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Risk</span>
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~25 min
+                  </span>
+                </div>
+
+                <h3><a class="lesson-link" href="./invalidation-stops-risk-reward/">Invalidation, Stops &amp; Reward-to-Risk</a></h3>
+
+                <p>Plan structural stops, position size, risk budget, targets, and R multiples.</p>
+
+                <div class="lesson-foot">
+                  <span class="go">
+                    Start lab
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Intermediate</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li class="course-step">
+            <div class="step-rail">
+              <p class="step-num"><span class="visually-hidden">Lab </span>06</p>
+            </div>
+            <article class="lesson-card">
+              <div class="thumb">
+                <svg viewBox="0 0 360 150" role="img" aria-label="Volume bars along the bottom with two expansion bars highlighted, and above them two normalized performance lines: a solid leader pulling away from a dashed benchmark.">
+                  <g class="sv-grid">
+                    <line x1="8" y1="30" x2="352" y2="30" />
+                    <line x1="8" y1="62" x2="352" y2="62" />
+                  </g>
+
+                  <!-- normalized performance vs a dashed benchmark -->
+                  <polyline class="sv-bench" points="20,92 48,90 76,94 104,86 132,90 160,84 188,88 216,80 244,84 272,78 300,74 328,68" />
+                  <polyline class="sv-spark-live" points="20,92 48,84 76,88 104,76 132,80 160,66 188,70 216,54 244,58 272,44 300,32 328,20" />
+
+                  <!-- participation -->
+                  <g class="sv-bar">
+                    <rect x="20" y="128" width="12" height="14" rx="2" />
+                    <rect x="48" y="120" width="12" height="22" rx="2" />
+                    <rect x="76" y="124" width="12" height="18" rx="2" />
+                    <rect x="104" y="112" width="12" height="30" rx="2" />
+                    <rect x="132" y="122" width="12" height="20" rx="2" />
+                    <rect x="160" y="126" width="12" height="16" rx="2" />
+                    <rect x="188" y="118" width="12" height="24" rx="2" />
+                    <rect x="244" y="122" width="12" height="20" rx="2" />
+                    <rect x="272" y="124" width="12" height="18" rx="2" />
+                    <rect x="328" y="116" width="12" height="26" rx="2" />
+                  </g>
+                  <g class="sv-bar-hi">
+                    <rect x="216" y="108" width="12" height="34" rx="2" />
+                    <rect x="300" y="102" width="12" height="40" rx="2" />
+                  </g>
+
+                  <line class="sv-axis" x1="14" y1="142" x2="346" y2="142" />
+                </svg>
+              </div>
+
+              <div class="lesson-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Participation</span>
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~20 min
+                  </span>
+                </div>
+
+                <h3><a class="lesson-link" href="./volume-relative-strength/">Volume &amp; Relative Strength</a></h3>
+
+                <p>Interpret price-volume participation and compare normalized performance against a benchmark.</p>
+
+                <div class="lesson-foot">
+                  <span class="go">
+                    Start lab
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Intermediate</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li class="course-step">
+            <div class="step-rail">
+              <p class="step-num"><span class="visually-hidden">Lab </span>07</p>
+            </div>
+            <article class="lesson-card">
+              <div class="thumb">
+                <svg viewBox="0 0 360 150" role="img" aria-label="A long option payoff diagram: a flat premium loss below the strike, a kink at the strike, then a rising profit line crossing zero at break-even.">
+                  <g class="sv-grid">
+                    <line x1="8" y1="40" x2="352" y2="40" />
+                    <line x1="8" y1="120" x2="352" y2="120" />
+                  </g>
+
+                  <!-- capped loss below zero, uncapped profit above -->
+                  <polygon class="sv-risk" points="16,86 215,86 170,110 16,110" />
+                  <polygon class="sv-reward" points="215,86 340,86 340,20" />
+
+                  <line class="sv-level" x1="12" y1="86" x2="352" y2="86" />
+                  <line class="sv-zone-line" x1="170" y1="16" x2="170" y2="134" />
+
+                  <polyline class="sv-payoff" points="16,110 170,110 340,20" />
+                  <circle class="sv-dot" cx="215" cy="86" r="5" />
+
+                  <text class="sv-text" x="176" y="30">STRIKE</text>
+                  <text class="sv-text" x="222" y="104">BREAK-EVEN</text>
+                  <text class="sv-text" x="16" y="78">0</text>
+                </svg>
+              </div>
+
+              <div class="lesson-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Options</span>
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~30 min
+                  </span>
+                </div>
+
+                <h3><a class="lesson-link" href="./options-contract-selection/">Options Contract Selection</a></h3>
+
+                <p>Explore long-call and long-put strike, expiration, Greeks, time buffer, P/L sensitivity, and bid/ask spread.</p>
+
+                <div class="lesson-foot">
+                  <span class="go">
+                    Start lab
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Intermediate → Advanced</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+        </ol>
       </section>
     </main>
-
     <footer>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
       <p><a href="https://geterdone.io">geterdone.io</a></p>

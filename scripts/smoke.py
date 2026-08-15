@@ -11,9 +11,17 @@ one-to-one onto a contract check:
     internal-health     /healthz is 200 and never cached
     learn-index         / is 200 HTML and lists the lesson
     lesson-page         /market-structure/ is 200 and carries the lesson title
-    self-containment    served HTML references no origin but its own
+    lesson-<slug>       one check per remaining lab of the Market Structure Course:
+                        the lab URL is 200 HTML, carries its own title, its own
+                        canonical path, and the educational-use disclaimer
+    self-containment    served HTML references no origin but its own, on EVERY
+                        published page
     security-headers    the application security header policy is present
     unknown-path-404    an unknown path is a real 404, not a soft 200 or a redirect
+
+The course is seven labs. Checking one of them and calling the site smoke-tested
+is how six broken pages ship, so every lab gets its own check id and its own line
+in the report.
 
 Usage:
     python3 scripts/smoke.py https://learn.geterdone.io
@@ -47,6 +55,53 @@ import uuid
 
 MAX_BODY_BYTES = 8 * 1024 * 1024
 USER_AGENT = "market-structure-lab-smoke/1"
+
+# The Market Structure Course as published, in course order: (check id, URL path,
+# markers that must appear VERBATIM in the served HTML of that page). The ids are
+# the acceptance-check ids in release/contract.json, so one report line maps onto
+# one contract check. tests/test_site_invariants.py REQUIRED_PAGES declares the
+# same URL space against the files on disk.
+#
+# Lab 01 is NOT listed here: it is addressed through --lesson-path/--lesson-marker
+# under the contract id "lesson-page", so those flags keep working.
+#
+# Markers avoid "&" on purpose (a title may be served escaped or raw) and pair a
+# title fragment, which proves WHICH document was served, with the page's own
+# canonical path and the disclaimer every trading lesson must carry.
+DISCLAIMER_MARKER = "Educational use only"
+
+COURSE_LESSONS = (
+    (
+        "lesson-ranges-breakouts-liquidity",
+        "/ranges-breakouts-liquidity/",
+        ("Liquidity Sweeps Lab", "/ranges-breakouts-liquidity/", DISCLAIMER_MARKER),
+    ),
+    (
+        "lesson-multi-timeframe-market-structure",
+        "/multi-timeframe-market-structure/",
+        ("Multi-Timeframe Market Structure Lab", "/multi-timeframe-market-structure/", DISCLAIMER_MARKER),
+    ),
+    (
+        "lesson-pullbacks-entry-models",
+        "/pullbacks-entry-models/",
+        ("Entry Models Lab", "/pullbacks-entry-models/", DISCLAIMER_MARKER),
+    ),
+    (
+        "lesson-invalidation-stops-risk-reward",
+        "/invalidation-stops-risk-reward/",
+        ("Reward-to-Risk Lab", "/invalidation-stops-risk-reward/", DISCLAIMER_MARKER),
+    ),
+    (
+        "lesson-volume-relative-strength",
+        "/volume-relative-strength/",
+        ("Relative Strength Lab", "/volume-relative-strength/", DISCLAIMER_MARKER),
+    ),
+    (
+        "lesson-options-contract-selection",
+        "/options-contract-selection/",
+        ("Options Contract Selection Lab", "/options-contract-selection/", DISCLAIMER_MARKER),
+    ),
+)
 
 # Origins that may appear in a served document without being an external
 # dependency. These are identifiers, not fetches:
@@ -499,28 +554,53 @@ class Smoke:
         for marker in self.args.index_marker:
             self.assert_contains(check, response, marker, "Learn index marker")
 
-    def check_lesson_page(self):
-        check = self.new_check(
-            "lesson-page", "lesson is served at its subpath", self.args.lesson_path
-        )
-        try:
-            response = self.get(self.args.lesson_path, max_redirects=self.args.max_redirects)
-        except FetchError as exc:
-            check.fail(str(exc))
-            return
-        if not self.assert_same_origin_chain(check, response):
-            return
-        if not self.assert_status(check, response, 200):
-            return
-        self.assert_header(check, response, "Content-Type", "text/html", "contains")
-        for marker in self.args.lesson_marker:
-            self.assert_contains(check, response, marker, "lesson marker")
+    def lesson_targets(self):
+        """(check id, path, markers) for every lab of the course, lab 01 first.
+
+        Lab 01 comes from --lesson-path/--lesson-marker so the flags still steer it;
+        the other six come from the published URL map.
+        """
+        targets = [("lesson-page", self.args.lesson_path, tuple(self.args.lesson_marker))]
+        seen = {self.args.lesson_path}
+        for check_id, path, markers in COURSE_LESSONS:
+            if path in seen:
+                # --lesson-path was pointed at a lab that is already in the map;
+                # check it once rather than reporting two lines for one URL.
+                continue
+            seen.add(path)
+            targets.append((check_id, path, markers))
+        return targets
+
+    def page_paths(self):
+        """Every published page, catalog first: what a whole-site probe must cover."""
+        paths = ["/"]
+        for _, path, _ in self.lesson_targets():
+            if path not in paths:
+                paths.append(path)
+        return paths
+
+    def check_lesson_pages(self):
+        for check_id, path, markers in self.lesson_targets():
+            check = self.new_check(check_id, "lesson is served at its subpath", path)
+            try:
+                response = self.get(path, max_redirects=self.args.max_redirects)
+            except FetchError as exc:
+                check.fail(str(exc))
+                continue
+            if not self.assert_same_origin_chain(check, response):
+                continue
+            if not self.assert_status(check, response, 200):
+                continue
+            self.assert_header(check, response, "Content-Type", "text/html", "contains")
+            for marker in markers:
+                self.assert_contains(check, response, marker, "lesson marker")
 
     def check_self_containment(self):
+        paths = self.page_paths()
         check = self.new_check(
             "self-containment",
             "served HTML references no origin but its own",
-            "/ and " + self.args.lesson_path,
+            "all %d published pages" % len(paths),
         )
         allowed_hosts = set(NAMESPACE_HOSTS)
         served_host = urllib.parse.urlsplit(self.base).hostname
@@ -529,7 +609,7 @@ class Smoke:
         for host in self.args.allow_origin:
             allowed_hosts.add(host.lower())
 
-        for path in ("/", self.args.lesson_path):
+        for path in paths:
             try:
                 response = self.get(path, max_redirects=self.args.max_redirects)
             except FetchError as exc:
@@ -596,7 +676,7 @@ class Smoke:
     def run(self):
         self.check_internal_health()
         self.check_learn_index()
-        self.check_lesson_page()
+        self.check_lesson_pages()
         self.check_self_containment()
         self.check_security_headers()
         self.check_unknown_path_404()
@@ -612,7 +692,12 @@ def parse_args(argv):
     parser.add_argument("--timeout", type=float, default=10.0, help="per-request timeout seconds (default: 10)")
     parser.add_argument("--max-redirects", type=int, default=2, help="redirect hops allowed for document requests (default: 2)")
     parser.add_argument("--health-path", default="/healthz")
-    parser.add_argument("--lesson-path", default="/market-structure/")
+    parser.add_argument(
+        "--lesson-path",
+        default="/market-structure/",
+        help="lab 01's URL, checked as contract id lesson-page (default: /market-structure/); "
+        "the other six labs are fixed by the published URL map",
+    )
     parser.add_argument("--unknown-path", default=None, help="override the 404 probe path (default: random)")
     parser.add_argument(
         "--index-marker",
@@ -624,7 +709,8 @@ def parse_args(argv):
         "--lesson-marker",
         action="append",
         default=None,
-        help="string that must appear in the lesson page (repeatable)",
+        help="string that must appear in the --lesson-path page (repeatable); "
+        "the other labs carry their own markers",
     )
     parser.add_argument(
         "--allow-origin",
@@ -647,7 +733,7 @@ def parse_args(argv):
     if args.index_marker is None:
         args.index_marker = ["Market Structure Lab", "market-structure/"]
     if args.lesson_marker is None:
-        args.lesson_marker = ["Market Structure Lab"]
+        args.lesson_marker = ["Market Structure Lab", DISCLAIMER_MARKER]
     if args.allow_origin is None:
         args.allow_origin = ["learn.geterdone.io"]
 
@@ -676,7 +762,7 @@ def report_text(args, checks, stream):
         verdict = "PASS" if check.passed else "FAIL"
         status = "HTTP %s" % check.status if check.status is not None else "no response"
         timing = " %.0f ms" % check.elapsed_ms if check.elapsed_ms is not None else ""
-        print("%s  %-18s %-28s %s%s" % (verdict, check.id, check.target, status, timing), file=stream)
+        print("%s  %-39s %-34s %s%s" % (verdict, check.id, check.target, status, timing), file=stream)
         for failure in check.failures:
             print("        - %s" % failure, file=stream)
     failed = [c for c in checks if not c.passed]

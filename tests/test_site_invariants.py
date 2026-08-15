@@ -21,6 +21,7 @@ What is deliberately strict here:
     public URL.
 """
 
+import json
 import os
 import re
 import sys
@@ -36,12 +37,25 @@ SITE_ROOT = Path(os.environ.get("SITE_ROOT") or (REPO_ROOT / "site")).resolve()
 CANONICAL_ORIGIN = "https://learn.geterdone.io"
 CANONICAL_HOST = "learn.geterdone.io"
 
-# The document root must publish exactly these URLs (Containerfile.release and
-# deploy/Caddyfile both assert the same mapping).
+# The document root must publish exactly these URLs: the Learn catalog, then the
+# seven labs of the Market Structure Course in course order. Containerfile.release,
+# .github/workflows/pages.yml, release/contract.json (acceptance.checks) and
+# scripts/smoke.py all assert the same mapping; changing one without the others is
+# how a lesson silently stops being published.
 REQUIRED_PAGES = {
     "/": "index.html",
     "/market-structure/": "market-structure/index.html",
+    "/ranges-breakouts-liquidity/": "ranges-breakouts-liquidity/index.html",
+    "/multi-timeframe-market-structure/": "multi-timeframe-market-structure/index.html",
+    "/pullbacks-entry-models/": "pullbacks-entry-models/index.html",
+    "/invalidation-stops-risk-reward/": "invalidation-stops-risk-reward/index.html",
+    "/volume-relative-strength/": "volume-relative-strength/index.html",
+    "/options-contract-selection/": "options-contract-selection/index.html",
 }
+
+# "/" is the catalog; every other published URL is a trading lesson. All of them
+# are labs of the same course, so all of them carry the same disclaimer.
+LESSON_PAGES = {url: rel for url, rel in REQUIRED_PAGES.items() if url != "/"}
 
 # Every lesson page (any page below the catalog root) must keep this disclaimer.
 DISCLAIMER_RE = re.compile(r"(?i)educational use only")
@@ -200,6 +214,50 @@ class TestPublishedLayout(SiteFixture):
         )
 
 
+class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
+    """The published URL map is declared in several places. Drift is the failure.
+
+    REQUIRED_PAGES above is the on-disk declaration. scripts/smoke.py declares the
+    same map for the SERVED responses and release/contract.json declares it as the
+    acceptance matrix. A lesson added to one and not the others is a live page that
+    nothing probes, which is exactly the hole these tests exist to close.
+    """
+
+    def test_smoke_client_probes_every_published_page(self):
+        from smoke import COURSE_LESSONS, parse_args
+
+        args = parse_args([CANONICAL_ORIGIN])
+        probed = {"/", args.lesson_path} | {path for _, path, _ in COURSE_LESSONS}
+        self.assertEqual(
+            set(REQUIRED_PAGES),
+            probed,
+            "scripts/smoke.py probes a different URL set than this suite declares "
+            "(only in smoke: %s; only here: %s). A production smoke run would leave "
+            "a published page unchecked."
+            % (sorted(probed - set(REQUIRED_PAGES)), sorted(set(REQUIRED_PAGES) - probed)),
+        )
+
+    def test_release_contract_accepts_every_published_page(self):
+        for name in ("contract.json", "contract.example.json"):
+            path = REPO_ROOT / "release" / name
+            with self.subTest(contract=name):
+                if not path.is_file():
+                    self.skipTest("no release/%s in this checkout" % name)
+                document = json.loads(path.read_text(encoding="utf-8"))
+                checked = {
+                    check["path"]
+                    for check in document["acceptance"]["checks"]
+                    if check.get("scope") == "public"
+                }
+                missing = sorted(set(REQUIRED_PAGES) - checked)
+                self.assertEqual(
+                    [],
+                    missing,
+                    "release/%s declares no public acceptance check for %s; a release "
+                    "would be accepted without ever fetching those pages" % (name, missing),
+                )
+
+
 class TestSelfContainment(SiteFixture):
     def test_pages_reference_no_external_origin(self):
         for doc in self.documents:
@@ -345,7 +403,21 @@ class TestPageMetadata(SiteFixture):
 
 class TestContent(SiteFixture):
     def test_lesson_pages_retain_the_disclaimer(self):
-        lessons = [doc for doc in self.documents if served_path(doc.path) != "/"]
+        """All seven labs teach trading, so all seven must say educational use only.
+
+        Checked two ways on purpose: every DECLARED lesson must be present (a lab
+        that vanished cannot pass by not being iterated), and every PUBLISHED
+        non-catalog page must carry the disclaimer (a lab added without touching
+        REQUIRED_PAGES is still covered).
+        """
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        missing = sorted(set(LESSON_PAGES) - set(by_url))
+        self.assertEqual(
+            [],
+            missing,
+            "declared lesson pages are not published: %s" % missing,
+        )
+        lessons = [doc for url, doc in sorted(by_url.items()) if url != "/"]
         self.assertTrue(lessons, "no lesson page found under %s" % SITE_ROOT)
         for doc in lessons:
             with self.subTest(page=str(doc.path.relative_to(REPO_ROOT))):

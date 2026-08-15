@@ -28,8 +28,11 @@ COPY site/ ./
 
 # Document-root contract. /srv IS the root of https://learn.geterdone.io, so the
 # tree must be published as:
-#     /srv/index.html                    -> learn.geterdone.io/
-#     /srv/market-structure/index.html   -> learn.geterdone.io/market-structure/
+#     /srv/index.html                       -> learn.geterdone.io/
+#     /srv/<lab>/index.html                 -> learn.geterdone.io/<lab>/
+# for each of the seven labs of the Market Structure Course listed in the RUN
+# below (the same map as REQUIRED_PAGES in tests/test_site_invariants.py and
+# acceptance.checks in release/contract.json).
 # The build fails loudly here rather than silently shipping an image whose URLs
 # do not match the registered canonical host. If the repo tree ever nests the
 # pages under an extra directory level, fix the tree (or this COPY) — do NOT
@@ -38,7 +41,15 @@ COPY site/ ./
 # every published file must be world-readable and every directory traversable.
 RUN set -eu; \
     test -f /srv/index.html || { echo "FATAL: missing /srv/index.html (Learn index)"; exit 1; }; \
-    test -f /srv/market-structure/index.html || { echo "FATAL: missing /srv/market-structure/index.html"; exit 1; }; \
+    for lab in market-structure \
+            ranges-breakouts-liquidity \
+            multi-timeframe-market-structure \
+            pullbacks-entry-models \
+            invalidation-stops-risk-reward \
+            volume-relative-strength \
+            options-contract-selection; do \
+        test -f "/srv/$lab/index.html" || { echo "FATAL: missing /srv/$lab/index.html (lab of the Market Structure Course)"; exit 1; }; \
+    done; \
     test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: the lesson is published at learn.geterdone.io/market-structure/, never learn.geterdone.io/learn/market-structure/. Move site/learn/* up one level."; exit 1; }; \
     chmod -R a=rX /srv
 

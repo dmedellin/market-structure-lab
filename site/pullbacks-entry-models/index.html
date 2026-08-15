@@ -1,0 +1,2009 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
+  <title>Pullbacks & Entry Models Lab</title>
+  <link rel="canonical" href="https://learn.geterdone.io/pullbacks-entry-models/" />
+  <meta name="author" content="dmedellin" />
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#eef4f8" media="(prefers-color-scheme: light)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="learn.geterdone.io" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Pullbacks &amp; Entry Models Lab" />
+  <meta property="og:description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
+  <meta property="og:url" content="https://learn.geterdone.io/pullbacks-entry-models/" />
+  <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Pullbacks &amp; Entry Models Lab" />
+  <meta name="twitter:description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071019'/%3E%3Cpath d='M10 46 L24 29 L34 39 L46 17' fill='none' stroke='%2336d6e7' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <style>
+
+/* ---------------------------------------------------------------------
+   DESIGN TOKENS — same vocabulary and the same light values as
+   site/market-structure/index.html, so the seven labs and the catalog read
+   as one product. Do not fork this palette.
+
+   THEME RULE, and the reason these blocks are the only place light values
+   may live: the palette flips through TWO independent paths — the explicit
+   toggle ([data-theme="light"]) and the system preference (the media block
+   below, for the visitor who never touches the toggle). A component-level
+   `[data-theme="light"] .foo {…}` override only ever reaches the first of
+   them, so a light-OS visitor gets the light background with dark-theme
+   accents. There are no component-level theme rules on this page; every
+   component reads a token instead. Keep it that way and the two paths
+   cannot drift, because there is nothing per-path left to forget.
+
+   Accents are re-declared for light because they are read AS TEXT
+   (.eyebrow, .concept-card .icon, .state-pill, td.good/.warn/.bad, the
+   gradient headline, and every SVG .tone-* chart label). Keeping the dark
+   accents on a light background measured 1.6-2.2:1. Light values are
+   contrast-checked against --bg (#eef4f8, the darkest light surface):
+   --cyan 4.99:1, --cyan-2 5.44:1, --green 4.95:1, --red 5.15:1,
+   --amber 5.34:1, --purple 5.45:1, --blue 5.26:1, --muted 4.57:1 — all
+   >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the
+   emphasis stop in both themes, so it has to be the more readable one
+   against the current background, not simply the lighter hue.
+
+   --on-accent is the ink that sits ON a filled accent (.brand-mark,
+   .btn.primary, .tab.active, .check-dot, .lesson-row .num, .callout .mark,
+   .skip-link). It has to flip with the theme because those accent fills go
+   dark in light mode.
+   --------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+  --bg: #071019;
+  --bg-2: #0b1622;
+  --panel: rgba(16, 31, 46, 0.91);
+  --panel-solid: #101f2e;
+  --panel-2: #142638;
+  --panel-3: #182d41;
+  --text: #edf7ff;
+  --muted: #95aabd;
+  --line: rgba(170, 202, 226, 0.16);
+  --line-strong: rgba(170, 202, 226, 0.3);
+  --cyan: #37d7e7;
+  --cyan-2: #91f4ff;
+  --green: #41e39b;
+  --red: #ff6e7d;
+  --amber: #ffc857;
+  --purple: #b69cff;
+  --blue: #76a8ff;
+  --on-accent: #041116;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+/* System preference, only when the visitor has NOT made an explicit choice.
+   The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+   survive on a light-mode OS. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+  color-scheme: light;
+  --bg: #eef4f8;
+  --bg-2: #f8fbfd;
+  --panel: rgba(255, 255, 255, 0.9);
+  --panel-solid: #ffffff;
+  --panel-2: #f4f8fb;
+  --panel-3: #eaf2f7;
+  --text: #112433;
+  --muted: #556c7d;
+  --line: rgba(26, 63, 88, 0.12);
+  --line-strong: rgba(26, 63, 88, 0.22);
+  --cyan: #0e7382;
+  --cyan-2: #0b6d79;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --on-accent: #ffffff;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  }
+}
+
+/* Explicit choice (localStorage key: marketStructureTheme). Byte-identical
+   values to the media block above — the two light paths must never disagree. */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eef4f8;
+  --bg-2: #f8fbfd;
+  --panel: rgba(255, 255, 255, 0.9);
+  --panel-solid: #ffffff;
+  --panel-2: #f4f8fb;
+  --panel-3: #eaf2f7;
+  --text: #112433;
+  --muted: #556c7d;
+  --line: rgba(26, 63, 88, 0.12);
+  --line-strong: rgba(26, 63, 88, 0.22);
+  --cyan: #0e7382;
+  --cyan-2: #0b6d79;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --on-accent: #ffffff;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+    radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+button, input, select { font: inherit; }
+button { color: inherit; }
+a { color: inherit; }
+svg { display: block; }
+
+/* Visible focus everywhere, in both themes. Matches site/market-structure/. */
+:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 60;
+  padding: 11px 15px;
+  border-radius: 12px;
+  color: var(--on-accent);
+  background: var(--cyan-2);
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: top 140ms ease;
+}
+.skip-link:focus-visible { top: 12px; }
+
+.shell {
+  width: min(1220px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 22px 0 64px;
+}
+
+.topbar {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topnav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.84rem;
+  padding: 8px 10px;
+  border-radius: 9px;
+}
+
+.topnav a:hover { color: var(--text); background: var(--line); }
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--on-accent);
+  font-weight: 950;
+  background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+  box-shadow: 0 8px 26px rgba(55, 215, 231, 0.25);
+}
+
+.brand-copy strong {
+  display: block;
+  font-size: 0.96rem;
+  letter-spacing: 0.01em;
+}
+
+.brand-copy span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.icon-btn {
+  width: 39px;
+  height: 39px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--panel-2);
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.16fr 0.84fr;
+  gap: 28px;
+  align-items: center;
+  padding: 74px 8px 42px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  color: var(--cyan-2);
+  border: 1px solid rgba(55, 215, 231, 0.28);
+  border-radius: 999px;
+  background: rgba(55, 215, 231, 0.08);
+  font-size: 0.77rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 5px rgba(55, 215, 231, 0.12);
+}
+
+h1 {
+  max-width: 820px;
+  margin: 18px 0 15px;
+  font-size: clamp(2.55rem, 6vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.gradient-text {
+  background: linear-gradient(110deg, var(--cyan-2), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.8vw, 1.16rem);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 780;
+  font-size: 0.9rem;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 8px 11px; font-size: 0.8rem; border-radius: 10px; }
+.btn:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
+
+.hero-visual {
+  position: relative;
+  min-height: 330px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(170,202,226,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(170,202,226,0.06) 1px, transparent 1px),
+    radial-gradient(circle at 75% 20%, rgba(55,215,231,0.14), transparent 15rem),
+    var(--panel-solid);
+  background-size: 42px 42px, 42px 42px, auto, auto;
+  box-shadow: var(--shadow);
+}
+
+.hero-visual svg { width: 100%; height: 100%; min-height: 330px; }
+
+.float-label {
+  position: absolute;
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  font-size: 0.76rem;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.section {
+  padding: 34px 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.45rem);
+  letter-spacing: -0.04em;
+}
+
+.section-head p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 16px 42px rgba(0,0,0,0.12);
+}
+
+.card-pad { padding: 20px; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.concept-card {
+  min-height: 100%;
+  padding: 19px;
+}
+
+.concept-card .icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  font-weight: 900;
+  color: var(--cyan-2);
+}
+
+.concept-card h3 { margin: 0 0 7px; font-size: 1.02rem; }
+.concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+.lab-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(290px, 0.65fr);
+  gap: 16px;
+}
+
+.chart-card { overflow: hidden; }
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.chart-title strong { display: block; font-size: 0.92rem; }
+.chart-title span { display: block; color: var(--muted); font-size: 0.76rem; }
+
+.tab-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tab {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: var(--panel-2);
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 750;
+  font-size: 0.78rem;
+}
+
+.tab:hover { color: var(--text); border-color: var(--line-strong); }
+.tab.active { color: var(--on-accent); border-color: transparent; background: var(--cyan); }
+
+.chart-wrap {
+  position: relative;
+  min-height: 390px;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(55,215,231,0.07), transparent 19rem),
+    var(--panel-solid);
+}
+
+.market-chart {
+  width: 100%;
+  height: auto;
+  min-height: 390px;
+  touch-action: none;
+}
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 10;
+  display: none;
+  pointer-events: none;
+  min-width: 148px;
+  padding: 9px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel-solid);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.24);
+  color: var(--text);
+  font-size: 0.75rem;
+}
+
+.chart-tooltip strong { display: block; margin-bottom: 3px; }
+.chart-tooltip span { color: var(--muted); }
+
+.chart-grid { stroke: var(--line); stroke-width: 1; }
+.chart-axis { fill: var(--muted); font-size: 11px; }
+.candle-up .wick, .candle-up .body { stroke: var(--green); }
+.candle-up .body { fill: var(--green); }
+.candle-down .wick, .candle-down .body { stroke: var(--red); }
+.candle-down .body { fill: var(--red); }
+.candle-flat .wick, .candle-flat .body { stroke: var(--amber); }
+.candle-flat .body { fill: var(--amber); }
+.close-dot { fill: var(--cyan-2); stroke: var(--panel-solid); stroke-width: 2; }
+.level-line { stroke-width: 1.6; stroke-dasharray: 7 6; }
+.tone-cyan { stroke: var(--cyan); fill: var(--cyan); }
+.tone-green { stroke: var(--green); fill: var(--green); }
+.tone-red { stroke: var(--red); fill: var(--red); }
+.tone-amber { stroke: var(--amber); fill: var(--amber); }
+.tone-purple { stroke: var(--purple); fill: var(--purple); }
+.tone-blue { stroke: var(--blue); fill: var(--blue); }
+.chart-label {
+  font-size: 11px;
+  font-weight: 850;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.zone { opacity: 0.08; }
+.focus-window { fill: rgba(55,215,231,0.09); stroke: var(--cyan); stroke-width: 1.4; stroke-dasharray: 7 5; }
+
+.control-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.control-group.grow { flex: 1; }
+
+.control-group label {
+  color: var(--muted);
+  font-size: 0.77rem;
+  white-space: nowrap;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--cyan);
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.check input { accent-color: var(--cyan); }
+
+.side-panel {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.side-panel h3 { margin: 0; font-size: 1.08rem; }
+.side-panel > p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+.verdict {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-2);
+}
+
+.verdict .label {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.verdict strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 1.08rem;
+}
+
+.verdict p { margin: 6px 0 0; color: var(--muted); font-size: 0.82rem; }
+
+.checklist {
+  display: grid;
+  gap: 9px;
+}
+
+.check-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+}
+
+.check-dot {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--panel-3);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.check-row.pass .check-dot { color: var(--on-accent); background: var(--green); }
+.check-row.warn .check-dot { color: var(--on-accent); background: var(--amber); }
+.check-row.fail .check-dot { color: var(--on-accent); background: var(--red); }
+.check-row strong { display: block; font-size: 0.82rem; }
+.check-row span { display: block; color: var(--muted); font-size: 0.75rem; margin-top: 2px; }
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.metric {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+
+.metric .k {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric .v {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.03rem;
+  font-weight: 900;
+}
+
+.note {
+  padding: 13px 14px;
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 12px 12px 0;
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.note strong { color: var(--text); }
+
+.matrix {
+  display: grid;
+  gap: 8px;
+}
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.matrix-row > span:first-child {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.state-pill::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state-pill.bull { color: var(--green); }
+.state-pill.bear { color: var(--red); }
+.state-pill.range { color: var(--amber); }
+.state-pill.shift { color: var(--purple); }
+.state-pill.neutral { color: var(--muted); }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 760;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  outline: none;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.field input:focus,
+.field select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(55,215,231,0.1); }
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+th, td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+th {
+  color: var(--muted);
+  background: var(--panel-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+tr:last-child td { border-bottom: 0; }
+tr.selectable { cursor: pointer; }
+tr.selectable:hover td { background: rgba(55,215,231,0.05); }
+tr.selected td { background: rgba(55,215,231,0.1); }
+td.good { color: var(--green); font-weight: 800; }
+td.warn { color: var(--amber); font-weight: 800; }
+td.bad { color: var(--red); font-weight: 800; }
+
+.practice {
+  padding: 20px;
+}
+
+.practice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.practice-head h3 { margin: 0; }
+.score {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.choice {
+  min-height: 54px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-weight: 780;
+}
+
+.choice:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.choice.correct { border-color: var(--green); background: rgba(65,227,155,0.1); }
+.choice.incorrect { border-color: var(--red); background: rgba(255,110,125,0.1); }
+
+.feedback {
+  min-height: 56px;
+  margin-top: 12px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.feedback.good { border-color: rgba(65,227,155,0.45); background: rgba(65,227,155,0.07); }
+.feedback.bad { border-color: rgba(255,110,125,0.45); background: rgba(255,110,125,0.07); }
+.feedback strong { color: var(--text); }
+
+.lesson-list {
+  display: grid;
+  gap: 10px;
+}
+
+.lesson-row {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+}
+
+.lesson-row .num {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--cyan);
+  font-weight: 950;
+}
+
+.lesson-row strong { display: block; font-size: 0.88rem; }
+.lesson-row span { display: block; margin-top: 3px; color: var(--muted); font-size: 0.8rem; }
+
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid rgba(255,200,87,0.3);
+  border-radius: 15px;
+  background: rgba(255,200,87,0.07);
+}
+
+.callout .mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--amber);
+  font-weight: 950;
+}
+
+.callout strong { display: block; }
+.callout p { margin: 4px 0 0; color: var(--muted); font-size: 0.84rem; }
+
+.footer {
+  margin-top: 42px;
+  padding: 22px 4px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.footer strong { color: var(--text); }
+.footer p { margin: 0 0 6px; }
+.footer p:last-child { margin-bottom: 0; }
+.footer a { color: var(--cyan-2); text-underline-offset: 3px; }
+.footer a:hover { color: var(--text); }
+
+.noscript-note {
+  display: block;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.noscript-note strong { display: block; margin-bottom: 4px; color: var(--text); }
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; padding-top: 54px; }
+  .hero-visual { min-height: 290px; }
+  .lab-layout { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .shell { width: min(100% - 18px, 1220px); padding-top: 9px; }
+  .topbar { top: 7px; }
+  .topnav { display: none; }
+  .brand-copy span { display: none; }
+  .hero { padding: 48px 2px 28px; }
+  h1 { font-size: clamp(2.35rem, 14vw, 4.3rem); }
+  .section { padding: 27px 0; }
+  .section-head { display: block; }
+  .section-head p { margin-top: 8px; }
+  .grid-2, .grid-3, .grid-4, .choice-grid, .form-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: 1fr; }
+  .chart-wrap, .market-chart { min-height: 320px; }
+  .control-strip { align-items: stretch; }
+  .control-group.grow { flex-basis: 100%; }
+  .matrix-row { grid-template-columns: 88px 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+}
+
+
+.entry-model-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.entry-model {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+  text-align: left;
+  cursor: pointer;
+}
+.entry-model:hover { border-color: var(--line-strong); }
+.entry-model.active { border-color: var(--cyan); background: rgba(55,215,231,.09); }
+.entry-model strong { display: block; font-size: .82rem; }
+.entry-model span { display: block; margin-top: 3px; color: var(--muted); font-size: .72rem; }
+.tradeoff-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+}
+.tradeoff-bar span {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line-strong);
+}
+.tradeoff-bar span.on { background: var(--cyan); }
+.rr-large {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.rr-large strong { font-size: 2rem; line-height: 1; letter-spacing: -.04em; }
+.rr-large span { color: var(--muted); font-size: .8rem; }
+.risk-zone { fill: var(--red); opacity: .08; }
+.reward-zone { fill: var(--green); opacity: .08; }
+.entry-marker {
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+.model-marker {
+  font-size: 12px;
+  font-weight: 900;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 4px;
+}
+@media (max-width: 720px) {
+  .entry-model-grid { grid-template-columns: 1fr; }
+}
+
+  </style>
+
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives in <head> and not with setupTheme() at
+       the bottom of <body>: that runs after the first paint.
+       SAME localStorage key as every other page in this course
+       ('marketStructureTheme') so one toggle persists across all of them. The
+       allowlist matters — a corrupt value would otherwise be written straight
+       onto data-theme, matching no CSS while still counting as an explicit
+       choice, which permanently mislabels the toggle and pins the page to the
+       dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('marketStructureTheme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Pullbacks and Entry Models Lab — back to the Learn library">
+        <div class="brand-mark" aria-hidden="true">04</div>
+        <div class="brand-copy">
+          <strong>Market Structure Course</strong>
+          <span>Standalone interactive learning lab</span>
+        </div>
+      </a>
+      <nav class="topnav" aria-label="Primary">
+        <a href="../">Library</a>
+        <a href="#lab">Entry Lab</a>
+        <a href="#sequence">Sequence</a>
+        <a href="#practice">Practice</a>
+      </nav>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+    </header>
+
+    <noscript>
+      <div class="noscript-note">
+        <strong>JavaScript is required for the interactive parts of this lesson.</strong>
+        The pullback charts, the entry-model comparator, and the drill are drawn in your browser, so they stay blank while JavaScript is disabled. The written explanations and the common-mistakes list below still read normally.
+      </div>
+    </noscript>
+
+    <main id="main">
+
+
+<section class="hero">
+  <div>
+    <span class="eyebrow"><span class="pulse"></span>Lesson 04 · Execution</span>
+    <h1>Pullbacks &amp; <span class="gradient-text">entry models</span></h1>
+    <p>
+      A correct directional bias can still produce a poor trade when the entry is late, premature,
+      or structurally invalid. Compare earlier entries with confirmation-based and continuation entries.
+    </p>
+    <div class="hero-actions">
+      <button class="btn primary" type="button" onclick="scrollToLab()">Test entry models</button>
+      <a class="btn ghost" href="#sequence">See the entry sequence</a>
+    </div>
+  </div>
+  <div class="hero-visual" aria-label="Pullback with aggressive, confirmation, and breakout entries">
+    <svg viewBox="0 0 520 330" role="img" aria-label="Pullback with aggressive, confirmation, and breakout entries">
+      <polyline points="34,254 78,218 112,226 150,180 190,194 230,135 270,155 306,112 340,168 368,186 396,156 424,123 458,92 490,72"
+        fill="none" stroke="var(--cyan)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="318" y1="168" x2="498" y2="168" stroke="var(--green)" stroke-width="2" stroke-dasharray="7 6"/>
+      <circle cx="368" cy="186" r="7" fill="var(--amber)"/>
+      <circle cx="396" cy="156" r="7" fill="var(--purple)"/>
+      <circle cx="458" cy="92" r="7" fill="var(--cyan)"/>
+      <text x="352" y="213" fill="var(--amber)" font-size="11" font-weight="900">EARLY</text>
+      <text x="390" y="145" fill="var(--purple)" font-size="11" font-weight="900">CONFIRM</text>
+      <text x="450" y="79" fill="var(--cyan-2)" font-size="11" font-weight="900">CONTINUE</text>
+      <text x="321" y="158" fill="var(--green)" font-size="11" font-weight="900">PRIOR BOS / SUPPORT</text>
+    </svg>
+    <div class="float-label" style="left:18px;bottom:18px;">Earlier price ↔ less confirmation</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div><h2>Three entry families</h2></div>
+    <p>None is universally best. Each exchanges entry price, confirmation, and distance to invalidation.</p>
+  </div>
+  <div class="grid-3">
+    <article class="card concept-card">
+      <div class="icon">A</div>
+      <h3>Aggressive</h3>
+      <p>Enter at the expected reaction zone before a lower-timeframe shift. Better location, but more false starts.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">C</div>
+      <h3>Confirmation</h3>
+      <p>Wait for a reaction, local structure shift, and a defined swing that can serve as invalidation.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">B</div>
+      <h3>Continuation breakout</h3>
+      <p>Enter as price resumes through a continuation level. Stronger proof, but usually a later price and wider chase risk.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="lab">
+  <div class="section-head">
+    <div><h2>Entry model comparator</h2></div>
+    <p>Switch the pullback, then compare how each entry changes price, invalidation, and reward-to-risk.</p>
+  </div>
+
+  <div class="lab-layout">
+    <article class="card chart-card">
+      <div class="chart-toolbar">
+        <div class="chart-title">
+          <strong id="pullbackTitle">Healthy bullish pullback</strong>
+          <span>Illustrative candles · synthetic data</span>
+        </div>
+        <div class="tab-row" id="pullbackTabs">
+          <button class="tab active" data-scenario="healthyBull" type="button">Healthy bull</button>
+          <button class="tab" data-scenario="deepBull" type="button">Deep bull</button>
+          <button class="tab" data-scenario="failedBull" type="button">Failed bull</button>
+          <button class="tab" data-scenario="healthyBear" type="button">Healthy bear</button>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <svg id="pullbackChart" class="market-chart" aria-label="Pullback and entry model chart"></svg>
+        <div class="chart-tooltip"></div>
+      </div>
+      <div class="control-strip">
+        <label class="check"><input id="showPullbackStructure" type="checkbox" checked /> Structure</label>
+        <label class="check"><input id="showEntryZones" type="checkbox" checked /> Risk / reward zones</label>
+        <label class="check"><input id="showAllEntries" type="checkbox" /> Compare all entry markers</label>
+      </div>
+    </article>
+
+    <aside class="card side-panel">
+      <h3>Select an entry model</h3>
+      <div class="entry-model-grid" id="entryModels">
+        <button class="entry-model" data-model="aggressive" type="button">
+          <strong>Aggressive</strong><span>At the reaction zone</span>
+          <div class="tradeoff-bar"><span class="on"></span><span></span><span></span></div>
+        </button>
+        <button class="entry-model active" data-model="confirmation" type="button">
+          <strong>Confirmation</strong><span>After local shift</span>
+          <div class="tradeoff-bar"><span class="on"></span><span class="on"></span><span></span></div>
+        </button>
+        <button class="entry-model" data-model="breakout" type="button">
+          <strong>Continuation</strong><span>On resumed BOS</span>
+          <div class="tradeoff-bar"><span class="on"></span><span class="on"></span><span class="on"></span></div>
+        </button>
+      </div>
+
+      <!-- ONE wrapping live region for everything renderPullback() rewrites in
+           this panel. Separate live regions on each readout would fire six
+           announcements per click; this fires one. -->
+      <div id="entryReadout" aria-live="polite">
+      <div class="verdict">
+        <span class="label">Model assessment</span>
+        <strong id="entryVerdict">Confirmation entry</strong>
+        <p id="entryReason">Waits for the pullback to shift upward, then uses the new local low as invalidation.</p>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric"><span class="k">Entry</span><span class="v" id="entryPrice">110.40</span></div>
+        <div class="metric"><span class="k">Stop</span><span class="v" id="stopPrice">108.20</span></div>
+        <div class="metric"><span class="k">Target</span><span class="v" id="targetPrice">116.00</span></div>
+      </div>
+
+      <div class="verdict">
+        <span class="label">Illustrative reward-to-risk</span>
+        <div class="rr-large"><strong id="entryRR">2.55R</strong><span id="entryRiskText">2.20 points at risk</span></div>
+      </div>
+
+      <div class="note" id="entryNote">
+        <strong>Tradeoff:</strong> Confirmation sacrifices some entry price to gain evidence that the pullback has ended.
+      </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="sequence">
+  <div class="section-head">
+    <div><h2>The entry sequence</h2></div>
+    <p>Direction alone is not an entry. Require a useful location, a reaction, a trigger, and an explicit invalidation.</p>
+  </div>
+  <div class="grid-4">
+    <article class="card concept-card">
+      <div class="icon">1</div>
+      <h3>Trend</h3>
+      <p>Identify the active higher-timeframe structure and the protected swing that keeps the thesis alive.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">2</div>
+      <h3>Location</h3>
+      <p>Wait for price to reach a prior breakout, range edge, support/resistance zone, or another preplanned area.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">3</div>
+      <h3>Reaction + trigger</h3>
+      <p>Choose whether your model enters on touch, on a local shift, or only after continuation resumes.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">4</div>
+      <h3>Invalidation</h3>
+      <p>Define the price that proves the entry model wrong, then size the trade around that distance.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="practice">
+  <div class="grid-2">
+    <!-- ONE wrapping live region for the drill. The chart inside opts out with
+         aria-live="off": it is redrawn on every question and its SVG <text>
+         labels would otherwise be read out as noise on each answer. -->
+    <article class="card practice" aria-live="polite">
+      <div class="practice-head">
+        <h3>Entry-model drill</h3>
+        <span class="score" id="entryScore">Score 0 / 0</span>
+      </div>
+      <p id="entryQuizPrompt" style="margin:0;color:var(--muted);font-size:.88rem;"></p>
+      <div class="chart-wrap" style="min-height:300px;margin-top:12px;" aria-live="off">
+        <svg id="entryQuizChart" class="market-chart" style="min-height:300px;" aria-label="Entry model practice chart"></svg>
+        <div class="chart-tooltip"></div>
+      </div>
+      <div class="choice-grid" id="entryChoices">
+        <button class="choice" data-answer="aggressive" type="button">Aggressive entry</button>
+        <button class="choice" data-answer="confirmation" type="button">Confirmation entry</button>
+        <button class="choice" data-answer="breakout" type="button">Continuation breakout</button>
+        <button class="choice" data-answer="notrade" type="button">No trade</button>
+      </div>
+      <div class="feedback" id="entryFeedback">Choose the entry model that matches the stated rule—not the one that looks best in hindsight.</div>
+      <button class="btn small" id="nextEntryQuiz" type="button" style="margin-top:10px;">Next rule</button>
+    </article>
+
+    <article class="card card-pad">
+      <h3 style="margin-top:0;">Common mistakes</h3>
+      <div class="lesson-list">
+        <div class="lesson-row">
+          <div class="num">1</div>
+          <div><strong>Buying because price “looks cheap”</strong><span>A deep pullback is not automatically attractive; it may already have invalidated the trend.</span></div>
+        </div>
+        <div class="lesson-row">
+          <div class="num">2</div>
+          <div><strong>Waiting for so much proof that location disappears</strong><span>More confirmation can reduce uncertainty while also worsening entry price and reward-to-risk.</span></div>
+        </div>
+        <div class="lesson-row">
+          <div class="num">3</div>
+          <div><strong>Moving the model after entry</strong><span>Choose touch, confirmation, or continuation before the setup occurs and evaluate that model consistently.</span></div>
+        </div>
+        <div class="lesson-row">
+          <div class="num">4</div>
+          <div><strong>Ignoring the failed pullback</strong><span>Once the protected structural level breaks, “waiting for a better entry” can become denial of invalidation.</span></div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+
+    </main>
+
+    <footer class="footer">
+      <p><strong>Educational lab.</strong> Charts and numbers are synthetic examples—not live market data or trading signals.</p>
+      <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
+      <p><a href="https://geterdone.io">geterdone.io</a></p>
+    </footer>
+  </div>
+
+  <script>
+
+const NS = "http://www.w3.org/2000/svg";
+
+function svgNode(tag, attrs = {}, textContent = "") {
+  const node = document.createElementNS(NS, tag);
+  Object.entries(attrs).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) node.setAttribute(key, value);
+  });
+  if (textContent !== "") node.textContent = textContent;
+  return node;
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function formatPrice(value) {
+  return Number(value).toFixed(2);
+}
+
+function formatCompact(value) {
+  const n = Number(value);
+  if (Math.abs(n) >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+  if (Math.abs(n) >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return n.toFixed(0);
+}
+
+function deterministicNoise(index, salt = 1) {
+  const x = Math.sin((index + 1) * (12.9898 + salt * 0.19)) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+function candlesFromCloses(closes, overrides = {}, salt = 1) {
+  return closes.map((close, index) => {
+    const open = index === 0
+      ? close - (deterministicNoise(index, salt) - 0.45) * 1.2
+      : closes[index - 1] + (deterministicNoise(index, salt + 1) - 0.5) * 0.5;
+    const spread = 0.55 + deterministicNoise(index, salt + 2) * 0.8;
+    let high = Math.max(open, close) + spread;
+    let low = Math.min(open, close) - spread * (0.8 + deterministicNoise(index, salt + 3) * 0.4);
+    const custom = overrides[index] || {};
+    return {
+      o: custom.o ?? open,
+      h: custom.h ?? high,
+      l: custom.l ?? low,
+      c: custom.c ?? close,
+      v: custom.v ?? Math.round(700 + deterministicNoise(index, salt + 4) * 650),
+      label: custom.label || ""
+    };
+  });
+}
+
+function clearSvg(svg) {
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+}
+
+function attachTooltip(target, wrap, htmlFactory) {
+  const tooltip = wrap ? wrap.querySelector(".chart-tooltip") : null;
+  if (!tooltip) return;
+  target.addEventListener("pointermove", (event) => {
+    tooltip.innerHTML = htmlFactory();
+    tooltip.style.display = "block";
+    const bounds = wrap.getBoundingClientRect();
+    const left = clamp(event.clientX - bounds.left + 12, 8, bounds.width - 170);
+    const top = clamp(event.clientY - bounds.top - 58, 8, bounds.height - 90);
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  });
+  target.addEventListener("pointerleave", () => {
+    tooltip.style.display = "none";
+  });
+}
+
+function drawCandles(svg, data, options = {}) {
+  clearSvg(svg);
+  const W = options.width || 960;
+  const H = options.height || 430;
+  const margin = {
+    left: options.marginLeft ?? 58,
+    right: options.marginRight ?? 20,
+    top: options.marginTop ?? 20,
+    bottom: options.marginBottom ?? 38
+  };
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+  const visibleCount = clamp(options.visibleCount ?? data.length, 1, data.length);
+  const visible = data.slice(0, visibleCount);
+  const includeValues = options.includeValues || [];
+  let minPrice = Math.min(...visible.map(d => d.l), ...includeValues);
+  let maxPrice = Math.max(...visible.map(d => d.h), ...includeValues);
+  const rawRange = Math.max(0.01, maxPrice - minPrice);
+  minPrice -= rawRange * 0.09;
+  maxPrice += rawRange * 0.09;
+
+  const plot = {
+    left: margin.left,
+    right: W - margin.right,
+    top: margin.top,
+    bottom: H - margin.bottom
+  };
+  plot.width = plot.right - plot.left;
+  plot.height = plot.bottom - plot.top;
+
+  const xStep = plot.width / Math.max(data.length, 1);
+  const x = (index) => plot.left + xStep * index + xStep / 2;
+  const y = (price) => plot.bottom - ((price - minPrice) / (maxPrice - minPrice)) * plot.height;
+  const priceFromY = (pixel) => minPrice + ((plot.bottom - pixel) / plot.height) * (maxPrice - minPrice);
+
+  const defs = svgNode("defs");
+  const clip = svgNode("clipPath", { id: `${svg.id || "chart"}-clip` });
+  clip.appendChild(svgNode("rect", { x: plot.left, y: plot.top, width: plot.width, height: plot.height }));
+  defs.appendChild(clip);
+  svg.appendChild(defs);
+
+  for (let i = 0; i <= 5; i++) {
+    const yy = plot.top + (plot.height / 5) * i;
+    svg.appendChild(svgNode("line", {
+      x1: plot.left, y1: yy, x2: plot.right, y2: yy, class: "chart-grid"
+    }));
+    const price = maxPrice - ((maxPrice - minPrice) / 5) * i;
+    svg.appendChild(svgNode("text", {
+      x: plot.left - 9, y: yy + 4, "text-anchor": "end", class: "chart-axis"
+    }, price.toFixed(options.axisDecimals ?? 1)));
+  }
+
+  for (let i = 0; i <= 6; i++) {
+    const xx = plot.left + (plot.width / 6) * i;
+    svg.appendChild(svgNode("line", {
+      x1: xx, y1: plot.top, x2: xx, y2: plot.bottom, class: "chart-grid"
+    }));
+  }
+
+  const zoneLayer = svgNode("g", { "clip-path": `url(#${svg.id || "chart"}-clip)` });
+  (options.zones || []).forEach(zone => {
+    const topY = y(Math.max(zone.high, zone.low));
+    const bottomY = y(Math.min(zone.high, zone.low));
+    zoneLayer.appendChild(svgNode("rect", {
+      x: plot.left,
+      y: topY,
+      width: plot.width,
+      height: Math.max(1, bottomY - topY),
+      class: `zone tone-${zone.tone || "cyan"}`
+    }));
+    if (zone.label) {
+      svg.appendChild(svgNode("text", {
+        x: plot.right - 5,
+        y: topY + 13,
+        "text-anchor": "end",
+        class: `chart-label tone-${zone.tone || "cyan"}`
+      }, zone.label));
+    }
+  });
+  svg.appendChild(zoneLayer);
+
+  (options.focusWindows || []).forEach(windowDef => {
+    const startX = x(windowDef.start) - xStep * 0.48;
+    const endX = x(windowDef.end) + xStep * 0.48;
+    svg.appendChild(svgNode("rect", {
+      x: startX,
+      y: plot.top,
+      width: Math.max(xStep, endX - startX),
+      height: plot.height,
+      class: "focus-window"
+    }));
+    if (windowDef.label) {
+      svg.appendChild(svgNode("text", {
+        x: startX + 7, y: plot.top + 16, class: "chart-label tone-cyan"
+      }, windowDef.label));
+    }
+  });
+
+  const candleLayer = svgNode("g", { "clip-path": `url(#${svg.id || "chart"}-clip)` });
+  const candleWidth = Math.max(3, Math.min(17, xStep * 0.58));
+  const wrap = svg.closest(".chart-wrap");
+
+  visible.forEach((d, index) => {
+    const group = svgNode("g", {
+      class: d.c > d.o ? "candle-up" : d.c < d.o ? "candle-down" : "candle-flat"
+    });
+    group.appendChild(svgNode("line", {
+      x1: x(index), y1: y(d.h), x2: x(index), y2: y(d.l),
+      class: "wick", "stroke-width": 1.5
+    }));
+    const bodyTop = y(Math.max(d.o, d.c));
+    const bodyBottom = y(Math.min(d.o, d.c));
+    group.appendChild(svgNode("rect", {
+      x: x(index) - candleWidth / 2,
+      y: bodyTop,
+      width: candleWidth,
+      height: Math.max(2, bodyBottom - bodyTop),
+      rx: 1.5,
+      class: "body",
+      "fill-opacity": 0.86,
+      "stroke-width": 1
+    }));
+    const hit = svgNode("rect", {
+      x: x(index) - xStep / 2,
+      y: plot.top,
+      width: xStep,
+      height: plot.height,
+      fill: "transparent"
+    });
+    attachTooltip(hit, wrap, () =>
+      `<strong>Candle ${index + 1}</strong><span>O ${formatPrice(d.o)} · H ${formatPrice(d.h)}<br>L ${formatPrice(d.l)} · C ${formatPrice(d.c)}</span>`
+    );
+    group.appendChild(hit);
+    candleLayer.appendChild(group);
+
+    if (options.showCloses) {
+      candleLayer.appendChild(svgNode("circle", {
+        cx: x(index), cy: y(d.c), r: 3.4, class: "close-dot"
+      }));
+    }
+  });
+  svg.appendChild(candleLayer);
+
+  (options.levels || []).forEach(level => {
+    const yy = y(level.value);
+    svg.appendChild(svgNode("line", {
+      x1: plot.left, y1: yy, x2: plot.right, y2: yy,
+      class: `level-line tone-${level.tone || "cyan"}`,
+      "stroke-dasharray": level.solid ? "0" : (level.dash || "7 6"),
+      opacity: level.opacity ?? 0.9
+    }));
+    if (level.label) {
+      const anchor = level.side === "left" ? "start" : "end";
+      const xx = level.side === "left" ? plot.left + 6 : plot.right - 5;
+      svg.appendChild(svgNode("text", {
+        x: xx, y: yy - 7, "text-anchor": anchor,
+        class: `chart-label tone-${level.tone || "cyan"}`
+      }, level.label));
+    }
+  });
+
+  (options.annotations || []).forEach(annotation => {
+    if (annotation.index >= visibleCount) return;
+    const px = x(annotation.index);
+    const py = y(annotation.value ?? data[annotation.index].c);
+    const dy = annotation.position === "below" ? 18 : -12;
+    svg.appendChild(svgNode("circle", {
+      cx: px, cy: py, r: 4.5,
+      class: `tone-${annotation.tone || "cyan"}`,
+      fill: "var(--panel-solid)", "stroke-width": 2
+    }));
+    svg.appendChild(svgNode("text", {
+      x: px + (annotation.dx || 0),
+      y: py + dy + (annotation.dy || 0),
+      "text-anchor": annotation.anchor || "middle",
+      class: `chart-label tone-${annotation.tone || "cyan"}`
+    }, annotation.label));
+  });
+
+  if (typeof options.overlay === "function") {
+    options.overlay({ svg, x, y, priceFromY, plot, xStep, visibleCount, data, minPrice, maxPrice, W, H });
+  }
+
+  return { x, y, priceFromY, plot, xStep, minPrice, maxPrice, visibleCount };
+}
+
+function drawLineChart(svg, seriesList, options = {}) {
+  clearSvg(svg);
+  const W = options.width || 960;
+  const H = options.height || 320;
+  const margin = { left: 55, right: 20, top: 20, bottom: 34 };
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const allValues = seriesList.flatMap(s => s.values);
+  let minValue = Math.min(...allValues);
+  let maxValue = Math.max(...allValues);
+  const padding = Math.max(0.01, (maxValue - minValue) * 0.1);
+  minValue -= padding;
+  maxValue += padding;
+  const plot = { left: margin.left, right: W - margin.right, top: margin.top, bottom: H - margin.bottom };
+  plot.width = plot.right - plot.left;
+  plot.height = plot.bottom - plot.top;
+  const maxLen = Math.max(...seriesList.map(s => s.values.length));
+  const x = i => plot.left + (i / Math.max(1, maxLen - 1)) * plot.width;
+  const y = v => plot.bottom - ((v - minValue) / Math.max(0.001, maxValue - minValue)) * plot.height;
+
+  for (let i = 0; i <= 5; i++) {
+    const yy = plot.top + plot.height * i / 5;
+    svg.appendChild(svgNode("line", { x1: plot.left, y1: yy, x2: plot.right, y2: yy, class: "chart-grid" }));
+    const val = maxValue - (maxValue - minValue) * i / 5;
+    svg.appendChild(svgNode("text", { x: plot.left - 8, y: yy + 4, "text-anchor": "end", class: "chart-axis" }, val.toFixed(options.decimals ?? 1)));
+  }
+
+  seriesList.forEach((series, sIndex) => {
+    const pts = series.values.map((value, i) => `${x(i)},${y(value)}`).join(" ");
+    svg.appendChild(svgNode("polyline", {
+      points: pts,
+      fill: "none",
+      class: `tone-${series.tone || (sIndex === 0 ? "cyan" : "purple")}`,
+      stroke: "currentColor",
+      "stroke-width": series.width || 2.6,
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      opacity: series.opacity ?? 1
+    }));
+    if (series.label) {
+      const lastIndex = series.values.length - 1;
+      svg.appendChild(svgNode("text", {
+        x: x(lastIndex) - 4,
+        y: y(series.values[lastIndex]) - 9,
+        "text-anchor": "end",
+        class: `chart-label tone-${series.tone || "cyan"}`
+      }, series.label));
+    }
+  });
+
+  return { x, y, plot, minValue, maxValue };
+}
+
+// Theme. The stored choice was already read, validated against the
+// 'light'/'dark' allowlist, and applied by the pre-paint <head> script, so
+// document.documentElement.dataset.theme is trustworthy by the time this runs.
+// This function only owns the toggle and its icon.
+//
+// No chart repaint is wired here on purpose: every SVG colour on this page comes
+// from a CSS class or a var() presentation attribute, so the charts retheme
+// themselves. Nothing samples a token with getComputedStyle, and calling the
+// renderers would reset the drill's answered state.
+function setupTheme() {
+  const button = document.getElementById("themeToggle");
+  const lightQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+  // No explicit choice stored means the system preference decides, matching the CSS media block.
+  const effectiveTheme = () =>
+    document.documentElement.dataset.theme || (lightQuery && lightQuery.matches ? "light" : "dark");
+  const renderIcon = () => {
+    if (!button) return;
+    button.textContent = effectiveTheme() === "light" ? "☀" : "☾";
+  };
+  renderIcon();
+  button?.addEventListener("click", () => {
+    const next = effectiveTheme() === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem("marketStructureTheme", next);
+    } catch (_) {
+      // Theme still works for the current page when storage is unavailable.
+    }
+    renderIcon();
+  });
+  if (lightQuery) {
+    const onSystemThemeChange = () => {
+      if (document.documentElement.dataset.theme) return; // an explicit toggle choice wins
+      renderIcon();
+    };
+    if (lightQuery.addEventListener) lightQuery.addEventListener("change", onSystemThemeChange);
+    else if (lightQuery.addListener) lightQuery.addListener(onSystemThemeChange);
+  }
+}
+
+function scrollToLab() {
+  document.getElementById("lab")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+setupTheme();
+
+
+
+function buildPullbackScenario(key) {
+  const scenarios = {
+    healthyBull: {
+      title: "Healthy bullish pullback",
+      direction: "long",
+      valid: true,
+      closes: [100.0,101.6,103.4,102.7,105.2,107.4,106.7,109.2,111.0,110.4,109.2,108.5,109.1,110.3,111.6,113.0,114.2,113.7,115.4,116.2],
+      structure: [
+        { value: 108.0, label: "Prior BOS / support", tone: "green" },
+        { value: 107.4, label: "Protected low", tone: "red" }
+      ],
+      annotations: [
+        { index: 8, value: 111.0, label: "HH", tone: "cyan" },
+        { index: 11, value: 108.0, label: "Reaction", tone: "green", position: "below" },
+        { index: 14, value: 111.6, label: "Local shift", tone: "purple" }
+      ],
+      models: {
+        aggressive: {
+          label: "Aggressive entry",
+          entry: 108.6, stop: 107.2, target: 116.0, index: 11,
+          reason: "Enters at the support reaction before the local downtrend has fully shifted.",
+          note: "Better location and smaller price risk, but the pullback could continue through support."
+        },
+        confirmation: {
+          label: "Confirmation entry",
+          entry: 110.4, stop: 108.2, target: 116.0, index: 13,
+          reason: "Waits for the pullback to shift upward, then uses the new local low as invalidation.",
+          note: "Confirmation sacrifices some entry price to gain evidence that the pullback has ended."
+        },
+        breakout: {
+          label: "Continuation breakout",
+          entry: 112.0, stop: 109.7, target: 116.4, index: 15,
+          reason: "Enters only after price resumes through the continuation high.",
+          note: "Most confirmation, but the later entry reduces reward-to-risk and increases chase risk."
+        }
+      }
+    },
+    deepBull: {
+      title: "Deep bullish pullback",
+      direction: "long",
+      valid: true,
+      closes: [96.0,98.2,100.4,99.5,102.8,105.1,104.0,107.0,109.4,108.8,106.9,104.8,103.2,102.6,103.5,105.0,106.7,108.1,109.8,111.0],
+      structure: [
+        { value: 103.0, label: "Protected-low area", tone: "red" },
+        { value: 105.0, label: "Prior breakout", tone: "green" }
+      ],
+      annotations: [
+        { index: 8, value: 109.4, label: "HH", tone: "cyan" },
+        { index: 13, value: 102.6, label: "Deep test", tone: "amber", position: "below" },
+        { index: 17, value: 108.1, label: "Shift up", tone: "purple" }
+      ],
+      models: {
+        aggressive: {
+          label: "Aggressive entry",
+          entry: 103.2, stop: 102.1, target: 111.0, index: 13,
+          reason: "Attempts the reaction very near the protected low before clear confirmation.",
+          note: "The location is attractive, but the trend is close to structural failure; precision matters."
+        },
+        confirmation: {
+          label: "Confirmation entry",
+          entry: 105.3, stop: 102.4, target: 111.0, index: 15,
+          reason: "Requires the deep pullback to reclaim local structure before entering.",
+          note: "A deep pullback usually deserves more confirmation because the protected swing is nearby."
+        },
+        breakout: {
+          label: "Continuation breakout",
+          entry: 108.4, stop: 104.7, target: 112.0, index: 18,
+          reason: "Waits for broad continuation after the deep retracement.",
+          note: "The thesis is better confirmed, but most of the available move may already be consumed."
+        }
+      }
+    },
+    failedBull: {
+      title: "Failed bullish pullback",
+      direction: "long",
+      valid: false,
+      closes: [98.0,100.0,102.1,101.4,104.0,106.3,105.6,108.2,110.0,109.2,107.8,106.0,104.1,102.5,100.8,99.4,98.7,97.2,96.0,95.1],
+      structure: [
+        { value: 101.8, label: "Protected low", tone: "red" },
+        { value: 104.0, label: "Prior breakout", tone: "green" }
+      ],
+      annotations: [
+        { index: 8, value: 110.0, label: "HH", tone: "cyan" },
+        { index: 14, value: 100.8, label: "Structure broken", tone: "red", position: "below" }
+      ],
+      models: {
+        aggressive: { label: "No valid aggressive entry", entry: null, stop: null, target: null, index: 13, reason: "The expected support failed and price broke the protected bullish swing.", note: "A lower price is not a better entry after the structure that justified the trade has failed." },
+        confirmation: { label: "No confirmation", entry: null, stop: null, target: null, index: 15, reason: "No bullish structure shift forms after the protected low breaks.", note: "Do not manufacture confirmation by using smaller and smaller timeframes." },
+        breakout: { label: "No continuation", entry: null, stop: null, target: null, index: 17, reason: "Price continues lower instead of reclaiming the broken structure.", note: "The correct action for this model is no trade, not a later long entry." }
+      }
+    },
+    healthyBear: {
+      title: "Healthy bearish pullback",
+      direction: "short",
+      valid: true,
+      closes: [122.0,120.1,118.4,119.0,116.3,114.2,115.0,112.1,110.3,111.0,112.5,113.7,113.1,111.8,110.2,108.7,107.5,108.0,106.2,105.1],
+      structure: [
+        { value: 114.0, label: "Prior breakdown / resistance", tone: "red" },
+        { value: 115.2, label: "Protected high", tone: "red" }
+      ],
+      annotations: [
+        { index: 8, value: 110.3, label: "LL", tone: "red", position: "below" },
+        { index: 11, value: 113.7, label: "Reaction", tone: "amber" },
+        { index: 14, value: 110.2, label: "Local shift", tone: "purple", position: "below" }
+      ],
+      models: {
+        aggressive: {
+          label: "Aggressive short",
+          entry: 113.3, stop: 114.7, target: 105.5, index: 11,
+          reason: "Shorts the resistance reaction before the lower-timeframe bounce fully shifts down.",
+          note: "Earlier price, but the bounce can still extend toward the protected high."
+        },
+        confirmation: {
+          label: "Confirmation short",
+          entry: 111.6, stop: 114.0, target: 105.5, index: 13,
+          reason: "Waits for the bounce to form a lower high and break downward.",
+          note: "Gains bearish evidence while giving up some entry price."
+        },
+        breakout: {
+          label: "Continuation breakdown",
+          entry: 109.8, stop: 112.4, target: 104.8, index: 15,
+          reason: "Enters as the larger downtrend resumes below the continuation low.",
+          note: "Strongest confirmation, but reward-to-risk may compress after the move resumes."
+        }
+      }
+    }
+  };
+  const s = scenarios[key];
+  return { ...s, data: candlesFromCloses(s.closes, {}, 90 + Object.keys(scenarios).indexOf(key)) };
+}
+
+const pullbackState = {
+  scenario: "healthyBull",
+  model: "confirmation",
+  score: 0,
+  attempts: 0,
+  quizIndex: 0,
+  quizAnswered: false
+};
+
+function calculateRR(direction, entry, stop, target) {
+  if ([entry, stop, target].some(v => v === null || !Number.isFinite(v))) return null;
+  const risk = direction === "long" ? entry - stop : stop - entry;
+  const reward = direction === "long" ? target - entry : entry - target;
+  if (risk <= 0 || reward <= 0) return null;
+  return { risk, reward, rr: reward / risk };
+}
+
+function renderPullback() {
+  const s = buildPullbackScenario(pullbackState.scenario);
+  const model = s.models[pullbackState.model];
+  const showStructure = document.getElementById("showPullbackStructure").checked;
+  const showZones = document.getElementById("showEntryZones").checked;
+  const showAll = document.getElementById("showAllEntries").checked;
+  const levels = showStructure ? s.structure : [];
+  const annotations = showStructure ? s.annotations : [];
+
+  if (model.entry !== null) {
+    levels.push(
+      { value: model.entry, label: "Entry", tone: "cyan", solid: true },
+      { value: model.stop, label: "Invalidation", tone: "red", solid: true },
+      { value: model.target, label: "Target", tone: "green", solid: true }
+    );
+  }
+
+  drawCandles(document.getElementById("pullbackChart"), s.data, {
+    includeValues: [
+      ...s.structure.map(l => l.value),
+      ...(model.entry !== null ? [model.entry, model.stop, model.target] : [])
+    ],
+    levels,
+    annotations,
+    overlay: ({ svg, x, y, plot, xStep }) => {
+      if (model.entry !== null && showZones) {
+        const startX = x(model.index) - xStep * 0.45;
+        const endX = plot.right;
+        const rewardTop = Math.min(y(model.entry), y(model.target));
+        const rewardBottom = Math.max(y(model.entry), y(model.target));
+        const riskTop = Math.min(y(model.entry), y(model.stop));
+        const riskBottom = Math.max(y(model.entry), y(model.stop));
+        svg.insertBefore(svgNode("rect", {
+          x: startX, y: rewardTop, width: endX - startX, height: Math.max(2, rewardBottom - rewardTop), class: "reward-zone"
+        }), svg.children[1] || null);
+        svg.insertBefore(svgNode("rect", {
+          x: startX, y: riskTop, width: endX - startX, height: Math.max(2, riskBottom - riskTop), class: "risk-zone"
+        }), svg.children[1] || null);
+      }
+
+      const modelsToShow = showAll
+        ? Object.entries(s.models).filter(([, m]) => m.entry !== null)
+        : [[pullbackState.model, model]].filter(([, m]) => m.entry !== null);
+
+      modelsToShow.forEach(([key, entryModel]) => {
+        const tone = key === "aggressive" ? "amber" : key === "confirmation" ? "purple" : "cyan";
+        const px = x(entryModel.index);
+        const py = y(entryModel.entry);
+        svg.appendChild(svgNode("circle", { cx: px, cy: py, r: 6, class: `tone-${tone}`, fill: "var(--panel-solid)", "stroke-width": 3 }));
+        svg.appendChild(svgNode("text", {
+          x: px, y: py - 12, "text-anchor": "middle", class: `model-marker tone-${tone}`
+        }, key === "aggressive" ? "A" : key === "confirmation" ? "C" : "B"));
+      });
+    }
+  });
+
+  document.getElementById("pullbackTitle").textContent = s.title;
+  document.getElementById("entryVerdict").textContent = model.label;
+  document.getElementById("entryReason").textContent = model.reason;
+  document.getElementById("entryNote").innerHTML = `<strong>Tradeoff:</strong> ${model.note}`;
+
+  const rr = calculateRR(s.direction, model.entry, model.stop, model.target);
+  document.getElementById("entryPrice").textContent = model.entry === null ? "—" : formatPrice(model.entry);
+  document.getElementById("stopPrice").textContent = model.stop === null ? "—" : formatPrice(model.stop);
+  document.getElementById("targetPrice").textContent = model.target === null ? "—" : formatPrice(model.target);
+  document.getElementById("entryRR").textContent = rr ? `${rr.rr.toFixed(2)}R` : "No trade";
+  document.getElementById("entryRiskText").textContent = rr ? `${rr.risk.toFixed(2)} points at risk` : "Structure invalidated";
+
+  document.querySelectorAll("#entryModels .entry-model").forEach(button => {
+    button.classList.toggle("active", button.dataset.model === pullbackState.model);
+  });
+}
+
+document.getElementById("pullbackTabs").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-scenario]");
+  if (!button) return;
+  pullbackState.scenario = button.dataset.scenario;
+  document.querySelectorAll("#pullbackTabs .tab").forEach(tab => tab.classList.toggle("active", tab === button));
+  renderPullback();
+});
+
+document.getElementById("entryModels").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-model]");
+  if (!button) return;
+  pullbackState.model = button.dataset.model;
+  renderPullback();
+});
+
+["showPullbackStructure", "showEntryZones", "showAllEntries"].forEach(id => {
+  document.getElementById(id).addEventListener("change", renderPullback);
+});
+
+const entryQuizItems = [
+  {
+    scenario: "healthyBull",
+    prompt: "Your written rule says: enter at the planned support zone before a lower-timeframe structure shift. Which model is that?",
+    answer: "aggressive",
+    explanation: "That rule describes an aggressive touch/reaction entry. It prioritizes location over confirmation."
+  },
+  {
+    scenario: "healthyBull",
+    prompt: "Your rule requires a local higher low and a break of the pullback's last lower high, but not a new major high. Which model matches?",
+    answer: "confirmation",
+    explanation: "That is a confirmation entry: the pullback shifts first, then the trade uses the new local swing as invalidation."
+  },
+  {
+    scenario: "healthyBear",
+    prompt: "Your rule waits until price resumes through the prior continuation low before entering. Which model matches?",
+    answer: "breakout",
+    explanation: "That is a continuation breakout entry. It waits for the larger trend to resume."
+  },
+  {
+    scenario: "failedBull",
+    prompt: "The bullish protected low has broken and no reclaim or bullish shift appears. What does the plan require?",
+    answer: "notrade",
+    explanation: "The structure that justified the long thesis is gone. A cheaper price does not restore the setup."
+  }
+];
+
+function renderEntryQuiz() {
+  const q = entryQuizItems[pullbackState.quizIndex];
+  const s = buildPullbackScenario(q.scenario);
+  pullbackState.quizAnswered = false;
+  document.getElementById("entryQuizPrompt").textContent = q.prompt;
+  document.querySelectorAll("#entryChoices .choice").forEach(button => {
+    button.classList.remove("correct", "incorrect");
+    button.disabled = false;
+  });
+  const feedback = document.getElementById("entryFeedback");
+  feedback.className = "feedback";
+  feedback.textContent = "Choose the entry model that matches the stated rule—not the one that looks best in hindsight.";
+
+  drawCandles(document.getElementById("entryQuizChart"), s.data, {
+    height: 330,
+    includeValues: s.structure.map(l => l.value),
+    levels: s.structure,
+    annotations: s.annotations,
+    overlay: ({ svg, x, y }) => {
+      if (q.scenario === "failedBull") return;
+      Object.entries(s.models).forEach(([key, model]) => {
+        if (model.entry === null) return;
+        const tone = key === "aggressive" ? "amber" : key === "confirmation" ? "purple" : "cyan";
+        const label = key === "aggressive" ? "A" : key === "confirmation" ? "C" : "B";
+        svg.appendChild(svgNode("circle", { cx: x(model.index), cy: y(model.entry), r: 6, class: `tone-${tone}`, fill: "var(--panel-solid)", "stroke-width": 3 }));
+        svg.appendChild(svgNode("text", { x: x(model.index), y: y(model.entry) - 12, "text-anchor": "middle", class: `model-marker tone-${tone}` }, label));
+      });
+    }
+  });
+}
+
+document.getElementById("entryChoices").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-answer]");
+  if (!button || pullbackState.quizAnswered) return;
+  pullbackState.quizAnswered = true;
+  pullbackState.attempts += 1;
+  const q = entryQuizItems[pullbackState.quizIndex];
+  const correct = button.dataset.answer === q.answer;
+  if (correct) pullbackState.score += 1;
+  document.querySelectorAll("#entryChoices .choice").forEach(choice => {
+    choice.disabled = true;
+    if (choice.dataset.answer === q.answer) choice.classList.add("correct");
+  });
+  if (!correct) button.classList.add("incorrect");
+  document.getElementById("entryScore").textContent = `Score ${pullbackState.score} / ${pullbackState.attempts}`;
+  const feedback = document.getElementById("entryFeedback");
+  feedback.className = `feedback ${correct ? "good" : "bad"}`;
+  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${q.explanation}`;
+});
+
+document.getElementById("nextEntryQuiz").addEventListener("click", () => {
+  pullbackState.quizIndex = (pullbackState.quizIndex + 1) % entryQuizItems.length;
+  renderEntryQuiz();
+});
+
+renderPullback();
+renderEntryQuiz();
+
+  </script>
+</body>
+</html>

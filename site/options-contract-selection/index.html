@@ -1,0 +1,2439 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="An interactive standalone lesson for comparing long call and long put expirations, strikes, Greeks, time buffer, payoff sensitivity, and bid-ask spread." />
+  <title>Options Contract Selection Lab</title>
+  <link rel="canonical" href="https://learn.geterdone.io/options-contract-selection/" />
+  <meta name="author" content="dmedellin" />
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#eef4f8" media="(prefers-color-scheme: light)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="learn.geterdone.io" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Options Contract Selection Lab" />
+  <meta property="og:description" content="An interactive standalone lesson for comparing long call and long put expirations, strikes, Greeks, time buffer, payoff sensitivity, and bid-ask spread." />
+  <meta property="og:url" content="https://learn.geterdone.io/options-contract-selection/" />
+  <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Options Contract Selection Lab" />
+  <meta name="twitter:description" content="An interactive standalone lesson for comparing long call and long put expirations, strikes, Greeks, time buffer, payoff sensitivity, and bid-ask spread." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071019'/%3E%3Cpath d='M10 46 L24 29 L34 39 L46 17' fill='none' stroke='%2336d6e7' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <style>
+
+/* ---------------------------------------------------------------------
+   DESIGN TOKENS. Same vocabulary as site/index.html and
+   site/market-structure/index.html so the catalog and all seven labs read as
+   one product; --panel-3 and --blue are the two tokens this lab adds.
+
+   THEME RULE, and the reason this block is the only place light values may
+   live: the palette flips through TWO independent paths — the explicit toggle
+   ([data-theme="light"]) and the system preference (the media block below, for
+   the visitor who never touches the toggle). A component-level
+   `[data-theme="light"] .foo {…}` override only ever reaches the first of them,
+   so a light-OS visitor gets the light background with dark-theme accents.
+   There are no component-level theme rules on this page; every component reads
+   a token instead. Keep it that way and the two paths cannot drift.
+
+   Accents are re-declared for light because this page reads them AS TEXT
+   (.eyebrow, .state-pill, .fit-badge, .moneyness-*, td.good/.warn/.bad,
+   .option-choice em, .chart-label, the gradient headline, and every <text> in
+   the hero SVG). Every light value below was contrast-checked by computation,
+   not by eye, against the WORST surface it can land on — which is not --bg but
+   one of the low-alpha accent washes this page paints text on (.note,
+   .callout, .model-warning, .feedback.good/.bad, .choice.correct/.incorrect,
+   tr.selected td) composited over --bg or --panel-solid. Worst case per token:
+   --cyan 4.79:1, --cyan-2 5.22:1, --green 4.75:1, --red 4.94:1,
+   --amber 5.12:1, --purple 5.23:1, --blue 5.18:1, --muted 4.52:1,
+   --text 13.9:1 — all >= 4.5:1.
+
+   Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the emphasis stop
+   in both themes, so it has to be the more readable one against the current
+   background, not simply the lighter hue.
+
+   One deliberate deviation from site/market-structure/index.html: light
+   --muted is #5a6f80 rather than that page's #5c7182. This lab is the only one
+   that sets muted body text on amber and red washes — .callout p carries the
+   expire-worthless risk paragraph over rgba(255,200,87,.07) — and #5c7182
+   measures 4.39:1 there. Two steps darker clears 4.5:1 on every surface with
+   no visible change. Every other token is byte-identical to the reference.
+
+   --on-accent is the ink that sits ON a filled accent (.btn.primary,
+   .brand-mark, .tab.active, .lesson-row .num, .callout .mark, .check-dot,
+   .skip-link). It has to flip with the theme because those accent fills go
+   dark in light mode.
+   --------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+  --bg: #071019;
+  --bg-2: #0b1622;
+  --panel: rgba(16, 31, 46, 0.91);
+  --panel-solid: #101f2e;
+  --panel-2: #142638;
+  --panel-3: #182d41;
+  --text: #edf7ff;
+  --muted: #95aabd;
+  --line: rgba(170, 202, 226, 0.16);
+  --line-strong: rgba(170, 202, 226, 0.3);
+  --cyan: #37d7e7;
+  --cyan-2: #91f4ff;
+  --green: #41e39b;
+  --red: #ff6e7d;
+  --amber: #ffc857;
+  --purple: #b69cff;
+  --blue: #76a8ff;
+  --on-accent: #041116;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+/* System preference, only when the visitor has NOT made an explicit choice.
+   The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+   survive on a light-mode OS. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #eef4f8;
+    --bg-2: #f8fbfd;
+    --panel: rgba(255, 255, 255, 0.9);
+    --panel-solid: #ffffff;
+    --panel-2: #f4f8fb;
+    --panel-3: #ecf3f8;
+    --text: #112433;
+    --muted: #5a6f80;
+    --line: rgba(26, 63, 88, 0.12);
+    --line-strong: rgba(26, 63, 88, 0.22);
+    --cyan: #0e7382;
+    --cyan-2: #0b6d79;
+    --green: #10784f;
+    --red: #c22a34;
+    --amber: #8a5a06;
+    --purple: #6b46d6;
+    --blue: #1d5fd0;
+    --on-accent: #ffffff;
+    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  }
+}
+
+/* Explicit choice (localStorage key: marketStructureTheme). Byte-identical
+   values to the media block above — the two light paths must never disagree. */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #eef4f8;
+  --bg-2: #f8fbfd;
+  --panel: rgba(255, 255, 255, 0.9);
+  --panel-solid: #ffffff;
+  --panel-2: #f4f8fb;
+  --panel-3: #ecf3f8;
+  --text: #112433;
+  --muted: #5a6f80;
+  --line: rgba(26, 63, 88, 0.12);
+  --line-strong: rgba(26, 63, 88, 0.22);
+  --cyan: #0e7382;
+  --cyan-2: #0b6d79;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --on-accent: #ffffff;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+    radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+button, input, select { font: inherit; }
+button { color: inherit; }
+a { color: inherit; }
+svg { display: block; }
+
+/* Visible focus everywhere, in both themes. Matches site/market-structure/. */
+:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 60;
+  padding: 11px 15px;
+  border-radius: 12px;
+  color: var(--on-accent);
+  background: var(--cyan-2);
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: top 140ms ease;
+}
+.skip-link:focus-visible { top: 12px; }
+
+.shell {
+  width: min(1220px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 22px 0 64px;
+}
+
+.topbar {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topnav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.84rem;
+  padding: 8px 10px;
+  border-radius: 9px;
+}
+
+.topnav a:hover { color: var(--text); background: var(--line); }
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--on-accent);
+  font-weight: 950;
+  background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+  box-shadow: 0 8px 26px rgba(55, 215, 231, 0.25);
+}
+
+.brand-copy strong {
+  display: block;
+  font-size: 0.96rem;
+  letter-spacing: 0.01em;
+}
+
+.brand-copy span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.icon-btn {
+  width: 39px;
+  height: 39px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--panel-2);
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.16fr 0.84fr;
+  gap: 28px;
+  align-items: center;
+  padding: 74px 8px 42px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  color: var(--cyan-2);
+  border: 1px solid rgba(55, 215, 231, 0.28);
+  border-radius: 999px;
+  background: rgba(55, 215, 231, 0.08);
+  font-size: 0.77rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 5px rgba(55, 215, 231, 0.12);
+}
+
+h1 {
+  max-width: 820px;
+  margin: 18px 0 15px;
+  font-size: clamp(2.55rem, 6vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.gradient-text {
+  background: linear-gradient(110deg, var(--cyan-2), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.8vw, 1.16rem);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 780;
+  font-size: 0.9rem;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 8px 11px; font-size: 0.8rem; border-radius: 10px; }
+.btn:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
+
+.hero-visual {
+  position: relative;
+  min-height: 330px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(170,202,226,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(170,202,226,0.06) 1px, transparent 1px),
+    radial-gradient(circle at 75% 20%, rgba(55,215,231,0.14), transparent 15rem),
+    var(--panel-solid);
+  background-size: 42px 42px, 42px 42px, auto, auto;
+  box-shadow: var(--shadow);
+}
+
+.hero-visual svg { width: 100%; height: 100%; min-height: 330px; }
+
+.float-label {
+  position: absolute;
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  font-size: 0.76rem;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.section {
+  padding: 34px 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.45rem);
+  letter-spacing: -0.04em;
+}
+
+.section-head p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 16px 42px rgba(0,0,0,0.12);
+}
+
+.card-pad { padding: 20px; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.concept-card {
+  min-height: 100%;
+  padding: 19px;
+}
+
+.concept-card .icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  font-weight: 900;
+  color: var(--cyan-2);
+}
+
+.concept-card h3 { margin: 0 0 7px; font-size: 1.02rem; }
+.concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+.lab-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(290px, 0.65fr);
+  gap: 16px;
+}
+
+.chart-card { overflow: hidden; }
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.chart-title strong { display: block; font-size: 0.92rem; }
+.chart-title span { display: block; color: var(--muted); font-size: 0.76rem; }
+
+.tab-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tab {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: var(--panel-2);
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 750;
+  font-size: 0.78rem;
+}
+
+.tab:hover { color: var(--text); border-color: var(--line-strong); }
+.tab.active { color: var(--on-accent); border-color: transparent; background: var(--cyan); }
+
+.chart-wrap {
+  position: relative;
+  min-height: 390px;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(55,215,231,0.07), transparent 19rem),
+    var(--panel-solid);
+}
+
+.market-chart {
+  width: 100%;
+  height: auto;
+  min-height: 390px;
+  touch-action: none;
+}
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 10;
+  display: none;
+  pointer-events: none;
+  min-width: 148px;
+  padding: 9px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel-solid);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.24);
+  color: var(--text);
+  font-size: 0.75rem;
+}
+
+.chart-tooltip strong { display: block; margin-bottom: 3px; }
+.chart-tooltip span { color: var(--muted); }
+
+.chart-grid { stroke: var(--line); stroke-width: 1; }
+.chart-axis { fill: var(--muted); font-size: 11px; }
+.candle-up .wick, .candle-up .body { stroke: var(--green); }
+.candle-up .body { fill: var(--green); }
+.candle-down .wick, .candle-down .body { stroke: var(--red); }
+.candle-down .body { fill: var(--red); }
+.candle-flat .wick, .candle-flat .body { stroke: var(--amber); }
+.candle-flat .body { fill: var(--amber); }
+.close-dot { fill: var(--cyan-2); stroke: var(--panel-solid); stroke-width: 2; }
+.level-line { stroke-width: 1.6; stroke-dasharray: 7 6; }
+.tone-cyan { stroke: var(--cyan); fill: var(--cyan); }
+.tone-green { stroke: var(--green); fill: var(--green); }
+.tone-red { stroke: var(--red); fill: var(--red); }
+.tone-amber { stroke: var(--amber); fill: var(--amber); }
+.tone-purple { stroke: var(--purple); fill: var(--purple); }
+.tone-blue { stroke: var(--blue); fill: var(--blue); }
+.chart-label {
+  font-size: 11px;
+  font-weight: 850;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.zone { opacity: 0.08; }
+.focus-window { fill: rgba(55,215,231,0.09); stroke: var(--cyan); stroke-width: 1.4; stroke-dasharray: 7 5; }
+
+.control-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.control-group.grow { flex: 1; }
+
+.control-group label {
+  color: var(--muted);
+  font-size: 0.77rem;
+  white-space: nowrap;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--cyan);
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.check input { accent-color: var(--cyan); }
+
+.side-panel {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.side-panel h3 { margin: 0; font-size: 1.08rem; }
+.side-panel > p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+.verdict {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-2);
+}
+
+.verdict .label {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.verdict strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 1.08rem;
+}
+
+.verdict p { margin: 6px 0 0; color: var(--muted); font-size: 0.82rem; }
+
+.checklist {
+  display: grid;
+  gap: 9px;
+}
+
+.check-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+}
+
+.check-dot {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--panel-3);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.check-row.pass .check-dot { color: var(--on-accent); background: var(--green); }
+.check-row.warn .check-dot { color: var(--on-accent); background: var(--amber); }
+.check-row.fail .check-dot { color: var(--on-accent); background: var(--red); }
+.check-row strong { display: block; font-size: 0.82rem; }
+.check-row span { display: block; color: var(--muted); font-size: 0.75rem; margin-top: 2px; }
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.metric {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+
+.metric .k {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric .v {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.03rem;
+  font-weight: 900;
+}
+
+.note {
+  padding: 13px 14px;
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 12px 12px 0;
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.note strong { color: var(--text); }
+
+.matrix {
+  display: grid;
+  gap: 8px;
+}
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.matrix-row > span:first-child {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.state-pill::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state-pill.bull { color: var(--green); }
+.state-pill.bear { color: var(--red); }
+.state-pill.range { color: var(--amber); }
+.state-pill.shift { color: var(--purple); }
+.state-pill.neutral { color: var(--muted); }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 760;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  outline: none;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.field input:focus,
+.field select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(55,215,231,0.1); }
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+th, td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+th {
+  color: var(--muted);
+  background: var(--panel-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+tr:last-child td { border-bottom: 0; }
+tr.selectable { cursor: pointer; }
+tr.selectable:hover td { background: rgba(55,215,231,0.05); }
+tr.selected td { background: rgba(55,215,231,0.1); }
+td.good { color: var(--green); font-weight: 800; }
+td.warn { color: var(--amber); font-weight: 800; }
+td.bad { color: var(--red); font-weight: 800; }
+
+.practice {
+  padding: 20px;
+}
+
+.practice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.practice-head h3 { margin: 0; }
+.score {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.choice {
+  min-height: 54px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-weight: 780;
+}
+
+.choice:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.choice.correct { border-color: var(--green); background: rgba(65,227,155,0.1); }
+.choice.incorrect { border-color: var(--red); background: rgba(255,110,125,0.1); }
+
+.feedback {
+  min-height: 56px;
+  margin-top: 12px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.feedback.good { border-color: rgba(65,227,155,0.45); background: rgba(65,227,155,0.07); }
+.feedback.bad { border-color: rgba(255,110,125,0.45); background: rgba(255,110,125,0.07); }
+.feedback strong { color: var(--text); }
+
+.lesson-list {
+  display: grid;
+  gap: 10px;
+}
+
+.lesson-row {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+}
+
+.lesson-row .num {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--cyan);
+  font-weight: 950;
+}
+
+.lesson-row strong { display: block; font-size: 0.88rem; }
+.lesson-row span { display: block; margin-top: 3px; color: var(--muted); font-size: 0.8rem; }
+
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid rgba(255,200,87,0.3);
+  border-radius: 15px;
+  background: rgba(255,200,87,0.07);
+}
+
+.callout .mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--amber);
+  font-weight: 950;
+}
+
+.callout strong { display: block; }
+.callout p { margin: 4px 0 0; color: var(--muted); font-size: 0.84rem; }
+
+.footer {
+  margin-top: 42px;
+  padding: 22px 4px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.footer strong { color: var(--text); }
+.footer p { margin: 0 0 7px; }
+.footer p:last-child { margin-bottom: 0; }
+.footer a { color: var(--cyan-2); text-underline-offset: 3px; }
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; padding-top: 54px; }
+  .hero-visual { min-height: 290px; }
+  .lab-layout { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .shell { width: min(100% - 18px, 1220px); padding-top: 9px; }
+  .topbar { top: 7px; }
+  .brand-copy span { display: none; }
+  .hero { padding: 48px 2px 28px; }
+  h1 { font-size: clamp(2.35rem, 14vw, 4.3rem); }
+  .section { padding: 27px 0; }
+  .section-head { display: block; }
+  .section-head p { margin-top: 8px; }
+  .grid-2, .grid-3, .grid-4, .choice-grid, .form-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: 1fr; }
+  .chart-wrap, .market-chart { min-height: 320px; }
+  .control-strip { align-items: stretch; }
+  .control-group.grow { flex-basis: 100%; }
+  .matrix-row { grid-template-columns: 88px 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+}
+
+
+.options-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(300px, .55fr);
+  gap: 16px;
+}
+.chain-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line);
+}
+.contract-summary {
+  padding: 18px;
+  display: grid;
+  gap: 13px;
+}
+.contract-code {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.contract-code strong {
+  font-size: 1.25rem;
+  letter-spacing: -.03em;
+}
+.fit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  font-size: .72rem;
+  font-weight: 850;
+}
+.fit-badge.good { color: var(--green); }
+.fit-badge.warn { color: var(--amber); }
+.fit-badge.bad { color: var(--red); }
+.greek-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.greek-card {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+.greek-card span { display: block; color: var(--muted); font-size: .67rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 800; }
+.greek-card strong { display: block; margin-top: 3px; font-size: 1rem; }
+.greek-card small { display: block; margin-top: 2px; color: var(--muted); font-size: .68rem; }
+.moneyness-itm { color: var(--green); font-weight: 850; }
+.moneyness-atm { color: var(--amber); font-weight: 850; }
+.moneyness-otm { color: var(--purple); font-weight: 850; }
+.payoff-chart {
+  width: 100%;
+  min-height: 380px;
+}
+.pnl-positive { fill: rgba(65,227,155,.09); }
+.pnl-negative { fill: rgba(255,110,125,.08); }
+.zero-line { stroke: var(--line-strong); stroke-width: 1.5; }
+.option-line { fill: none; stroke: var(--cyan); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.quote-meter {
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  /* Was three hardcoded dark-theme rgba() stops. Those are 80-85% alpha, so
+     the literal hue dominated the pixel and the whole bar measured 1.4-2.4:1
+     against a light card — the one graphic on this page that really did go
+     near-invisible when the theme flipped. color-mix of the same tokens at the
+     same alpha is byte-identical in dark (--green is rgb(65,227,155), --amber
+     rgb(255,200,87), --red rgb(255,110,125)) and reaches 3.7-4.5:1 in light. */
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--green) 80%, transparent) 0 34%,
+    color-mix(in srgb, var(--amber) 85%, transparent) 34% 66%,
+    color-mix(in srgb, var(--red) 85%, transparent) 66% 100%);
+  position: relative;
+}
+.quote-marker {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 20px;
+  border-radius: 2px;
+  background: var(--text);
+  box-shadow: 0 0 0 2px var(--panel-solid);
+}
+.option-choice {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+.option-choice span { display: block; color: var(--muted); font-size: .72rem; margin-top: 3px; }
+.option-choice em {
+  align-self: center;
+  font-style: normal;
+  color: var(--cyan-2);
+  font-size: .72rem;
+  font-weight: 850;
+}
+.model-warning {
+  padding: 12px 13px;
+  border: 1px solid rgba(255,200,87,.32);
+  border-radius: 12px;
+  background: rgba(255,200,87,.06);
+  color: var(--muted);
+  font-size: .78rem;
+}
+.model-warning strong { color: var(--text); }
+@media (max-width: 980px) {
+  .options-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .chain-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .greek-grid { grid-template-columns: 1fr; }
+}
+
+/* The payoff-chart legend markup already existed; its styles did not, so the
+   swatches rendered as zero-width spans. Token-bound, like every other colour
+   on this page. */
+.legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: .74rem;
+  font-weight: 750;
+}
+.legend-line {
+  width: 22px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--cyan);
+}
+.legend-line.purple { background: var(--purple); }
+.legend-line.amber { background: var(--amber); }
+
+/* The strike cell is a real button so the chain row can be reached and
+   selected from the keyboard. It inherits the cell's type so the table still
+   looks identical. */
+.strike-pick {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.noscript-note {
+  display: block;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.noscript-note strong { display: block; margin-bottom: 4px; color: var(--text); }
+
+@media (max-width: 720px) {
+  .topnav { display: none; }
+}
+
+  </style>
+
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives in <head> and not in the page script at
+       the bottom of <body>: that runs after the first paint.
+       SAME localStorage key as site/index.html and every other lesson
+       ('marketStructureTheme') so the choice persists across all seven labs.
+       The allowlist matters — a corrupt value would otherwise be written
+       straight onto data-theme, matching no CSS while still counting as an
+       explicit choice, which permanently mislabels the toggle and pins the page
+       to the dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('marketStructureTheme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Options Contract Selection Lab — back to the Learn library">
+        <div class="brand-mark" aria-hidden="true">07</div>
+        <div class="brand-copy">
+          <strong>Market Structure Course</strong>
+          <span>Standalone interactive learning lab</span>
+        </div>
+      </a>
+      <nav class="topnav" aria-label="Primary">
+        <a href="../">Library</a>
+        <a href="#lab">Chain</a>
+        <a href="#simulator">Simulator</a>
+        <a href="#practice">Practice</a>
+      </nav>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+    </header>
+
+    <noscript>
+      <div class="noscript-note">
+        <strong>JavaScript is required for the interactive parts of this lesson.</strong>
+        The synthetic option chain, the exit-value payoff chart, the quote-quality evaluator, and the selection drill are all computed in your browser, so they stay empty while JavaScript is disabled. The written explanations and the risk notes below still read normally.
+      </div>
+    </noscript>
+
+    <main id="main">
+
+<section class="hero">
+  <div>
+    <span class="eyebrow"><span class="pulse"></span>Lesson 07 · Options</span>
+    <h1>Options contract <span class="gradient-text">selection</span></h1>
+    <p>
+      Translate a directional thesis into a long call or long put deliberately. Compare expiration,
+      moneyness, directional sensitivity, time decay, volatility exposure, and quote quality instead of buying the cheapest contract.
+    </p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#lab">Build a synthetic chain</a>
+      <a class="btn ghost" href="#simulator">Run the exit simulator</a>
+    </div>
+  </div>
+  <div class="hero-visual" aria-label="Option chain and payoff curve">
+    <svg viewBox="0 0 520 330" role="img" aria-label="Option chain and payoff curve">
+      <rect x="40" y="42" width="220" height="236" rx="18" fill="var(--panel)" stroke="var(--line-strong)"/>
+      <line x1="58" y1="86" x2="242" y2="86" stroke="var(--line-strong)"/>
+      <line x1="58" y1="124" x2="242" y2="124" stroke="var(--line)"/>
+      <line x1="58" y1="162" x2="242" y2="162" stroke="var(--line)"/>
+      <line x1="58" y1="200" x2="242" y2="200" stroke="var(--line)"/>
+      <rect x="55" y="128" width="190" height="31" rx="8" fill="rgba(55,215,231,.10)" stroke="var(--cyan)"/>
+      <text x="62" y="68" fill="var(--muted)" font-size="10" font-weight="800">STRIKE</text>
+      <text x="138" y="68" fill="var(--muted)" font-size="10" font-weight="800">DELTA</text>
+      <text x="195" y="68" fill="var(--muted)" font-size="10" font-weight="800">PREMIUM</text>
+      <text x="64" y="108" fill="var(--text)" font-size="11">95</text>
+      <text x="140" y="108" fill="var(--text)" font-size="11">0.68</text>
+      <text x="199" y="108" fill="var(--text)" font-size="11">$7.12</text>
+      <text x="64" y="148" fill="var(--cyan-2)" font-size="11" font-weight="900">100</text>
+      <text x="140" y="148" fill="var(--cyan-2)" font-size="11" font-weight="900">0.55</text>
+      <text x="199" y="148" fill="var(--cyan-2)" font-size="11" font-weight="900">$4.36</text>
+      <text x="64" y="187" fill="var(--text)" font-size="11">105</text>
+      <text x="140" y="187" fill="var(--text)" font-size="11">0.38</text>
+      <text x="199" y="187" fill="var(--text)" font-size="11">$2.25</text>
+      <path d="M300 244 C336 242 356 234 378 214 C404 190 421 145 444 102 C457 78 472 62 490 54"
+        fill="none" stroke="var(--cyan)" stroke-width="5" stroke-linecap="round"/>
+      <line x1="288" y1="226" x2="494" y2="226" stroke="var(--line-strong)" stroke-width="2"/>
+      <line x1="392" y1="48" x2="392" y2="260" stroke="var(--purple)" stroke-width="2" stroke-dasharray="7 6"/>
+      <text x="396" y="74" fill="var(--purple)" font-size="11" font-weight="900">STRIKE</text>
+      <text x="318" y="218" fill="var(--red)" font-size="11" font-weight="900">PREMIUM RISK</text>
+      <text x="435" y="91" fill="var(--green)" font-size="11" font-weight="900">UPSIDE</text>
+    </svg>
+    <div class="float-label" style="right:18px;bottom:18px;">This lab covers long options only</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div><h2>The contract decision stack</h2></div>
+    <p>Start with the underlying thesis. The option is a wrapper around that thesis, not a substitute for it.</p>
+  </div>
+  <div class="grid-4">
+    <article class="card concept-card">
+      <div class="icon">1</div>
+      <h3>Direction</h3>
+      <p>A long call expresses bullish exposure; a long put expresses bearish exposure. Define the chart invalidation first.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">2</div>
+      <h3>Time</h3>
+      <p>Expiration must outlast the thesis. Extra time adds premium and changes theta and vega exposure.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">3</div>
+      <h3>Strike</h3>
+      <p>Moneyness changes premium, delta, intrinsic value, and how much underlying movement the contract captures.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">4</div>
+      <h3>Liquidity</h3>
+      <p>Evaluate the bid/ask spread and actual market depth. A good thesis can be damaged by expensive entry and exit friction.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="lab">
+  <div class="section-head">
+    <div><h2>Synthetic option-chain explorer</h2></div>
+    <p>Select a row to inspect the tradeoffs. Prices and Greeks come from a simplified European-style model—not live quotes.</p>
+  </div>
+
+  <div class="options-grid">
+    <article class="card chart-card">
+      <div class="chain-controls">
+        <div class="field">
+          <label for="optionDirection">Long option</label>
+          <select id="optionDirection">
+            <option value="call">Call · bullish</option>
+            <option value="put">Put · bearish</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="underlyingPrice">Underlying price</label>
+          <input id="underlyingPrice" type="number" min="0.01" step="0.5" value="100" />
+        </div>
+        <div class="field">
+          <label for="thesisTarget">Thesis target</label>
+          <input id="thesisTarget" type="number" min="0.01" step="0.5" value="108" />
+        </div>
+        <div class="field">
+          <label for="thesisDays">Expected thesis time · days</label>
+          <input id="thesisDays" type="number" min="0" step="1" value="10" />
+        </div>
+        <div class="field">
+          <label for="chainDte">Expiration · DTE</label>
+          <select id="chainDte">
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+            <option value="30" selected>30 days</option>
+            <option value="45">45 days</option>
+            <option value="60">60 days</option>
+            <option value="90">90 days</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="optionIv">Implied volatility assumption</label>
+          <input id="optionIv" type="number" min="1" max="300" step="1" value="35" />
+        </div>
+        <div class="field">
+          <label for="contractMultiplier">Contract multiplier</label>
+          <input id="contractMultiplier" type="number" min="1" step="1" value="100" />
+        </div>
+        <div class="field">
+          <label for="riskFreeRate">Risk-free rate assumption</label>
+          <input id="riskFreeRate" type="number" min="-10" max="30" step="0.1" value="4.0" />
+        </div>
+      </div>
+
+      <div class="table-wrap" style="border:0;border-radius:0;">
+        <table id="optionChainTable">
+          <thead>
+            <tr>
+              <th scope="col">Strike</th>
+              <th scope="col">Moneyness</th>
+              <th scope="col">Model premium</th>
+              <th scope="col">|Delta|</th>
+              <th scope="col">Theta / day</th>
+              <th scope="col">Vega / IV pt</th>
+              <th scope="col">Time buffer</th>
+            </tr>
+          </thead>
+          <tbody id="optionChainBody"></tbody>
+        </table>
+      </div>
+
+      <div class="model-warning" style="margin:14px 15px;">
+        <strong>Model limits:</strong> European-style Black–Scholes estimate; no dividends, commissions, early exercise,
+        volatility skew, discrete rates, or live market supply/demand. Use it to learn relationships—not to price a real order.
+      </div>
+    </article>
+
+    <aside class="card contract-summary" aria-live="polite">
+      <div class="contract-code">
+        <strong id="selectedContract">100 Call · 30 DTE</strong>
+        <span class="fit-badge good" id="timeFitBadge">Adequate time buffer</span>
+      </div>
+
+      <div class="verdict">
+        <span class="label">Thesis-time fit</span>
+        <strong id="timeFitTitle">20 days beyond thesis</strong>
+        <p id="timeFitReason">The selected expiration outlasts the expected 10-day thesis window.</p>
+      </div>
+
+      <div class="greek-grid">
+        <div class="greek-card">
+          <span>Model premium</span><strong id="selectedPremium">$4.58</strong><small>Per share before multiplier</small>
+        </div>
+        <div class="greek-card">
+          <span>Premium at risk</span><strong id="selectedMaxRisk">$458</strong><small>Long option, excluding fees</small>
+        </div>
+        <div class="greek-card">
+          <span>Delta</span><strong id="selectedDelta">0.55</strong><small>Directional sensitivity estimate</small>
+        </div>
+        <div class="greek-card">
+          <span>Theta / day</span><strong id="selectedTheta">−$0.07</strong><small>All else equal, model estimate</small>
+        </div>
+        <div class="greek-card">
+          <span>Vega / IV point</span><strong id="selectedVega">$0.11</strong><small>Per share model estimate</small>
+        </div>
+        <div class="greek-card">
+          <span>Expiration breakeven</span><strong id="selectedBreakeven">$104.58</strong><small>Based on model premium</small>
+        </div>
+      </div>
+
+      <div class="note" id="contractLens">
+        <strong>Lens:</strong> Near-the-money contracts balance premium and directional sensitivity in this synthetic example,
+        but the best fit depends on your thesis, risk limits, volatility, and actual quotes.
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="simulator">
+  <div class="section-head">
+    <div><h2>Exit-value simulator</h2></div>
+    <p>Estimate how the selected long option may respond to price, elapsed time, and unchanged IV. This is a model sensitivity exercise.</p>
+  </div>
+
+  <div class="lab-layout">
+    <article class="card chart-card">
+      <div class="chart-toolbar">
+        <div class="chart-title">
+          <strong>Estimated P/L across underlying prices</strong>
+          <span id="payoffSubtitle">After 10 days · 20 DTE remaining · IV unchanged</span>
+        </div>
+        <div class="legend-row">
+          <span class="legend-item"><span class="legend-line"></span>P/L per contract</span>
+          <span class="legend-item"><span class="legend-line purple"></span>Thesis target</span>
+        </div>
+      </div>
+      <div class="chart-wrap" style="min-height:390px;">
+        <svg id="optionPayoffChart" class="payoff-chart" role="img" aria-label="Estimated option profit and loss curve"></svg>
+        <div class="chart-tooltip"></div>
+      </div>
+      <div class="control-strip">
+        <div class="control-group grow">
+          <label for="exitDays">Days elapsed</label>
+          <input id="exitDays" type="range" min="0" max="30" value="10" step="1" />
+          <strong id="exitDaysLabel">10</strong>
+        </div>
+        <div class="control-group grow">
+          <label for="exitPrice">Exit underlying</label>
+          <input id="exitPrice" type="range" min="75" max="125" value="108" step="0.5" />
+          <strong id="exitPriceLabel">$108.00</strong>
+        </div>
+      </div>
+    </article>
+
+    <aside class="card side-panel" aria-live="polite">
+      <h3>Selected exit point</h3>
+      <div class="metric-grid">
+        <div class="metric"><span class="k">Option value</span><span class="v" id="exitOptionValue">$9.12</span></div>
+        <div class="metric"><span class="k">P/L / contract</span><span class="v" id="exitPnl">$454</span></div>
+        <div class="metric"><span class="k">Return on premium</span><span class="v" id="exitReturn">+99.1%</span></div>
+      </div>
+
+      <div class="verdict">
+        <span class="label">At thesis target</span>
+        <strong id="targetPnl">$454 estimated P/L</strong>
+        <p id="targetPnlReason">Assumes the underlying reaches the target after the selected elapsed time and IV remains unchanged.</p>
+      </div>
+
+      <div class="field">
+        <label for="paidPremium">Premium paid per share</label>
+        <input id="paidPremium" type="number" min="0" step="0.01" value="4.58" />
+      </div>
+
+      <div class="note">
+        <strong>Why direction can be right and P/L still disappoint:</strong> elapsed time, a decline in implied volatility,
+        bid/ask friction, and insufficient magnitude can offset gains from the underlying move.
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="practice">
+  <div class="grid-2">
+    <article class="card card-pad">
+      <h3 style="margin-top:0;">Quote-quality evaluator</h3>
+      <p style="margin:0 0 13px;color:var(--muted);font-size:.86rem;">
+        Enter an actual or hypothetical bid and ask. The spread is part of the cost of entering and exiting.
+      </p>
+      <div class="form-grid">
+        <div class="field">
+          <label for="quoteBid">Bid</label>
+          <input id="quoteBid" type="number" min="0" step="0.01" value="4.45" />
+        </div>
+        <div class="field">
+          <label for="quoteAsk">Ask</label>
+          <input id="quoteAsk" type="number" min="0" step="0.01" value="4.71" />
+        </div>
+      </div>
+      <div aria-live="polite">
+        <div class="metric-grid" style="margin-top:12px;">
+          <div class="metric"><span class="k">Midpoint</span><span class="v" id="quoteMid">$4.58</span></div>
+          <div class="metric"><span class="k">Spread</span><span class="v" id="quoteSpread">$0.26</span></div>
+          <div class="metric"><span class="k">Spread / mid</span><span class="v" id="quoteSpreadPct">5.7%</span></div>
+        </div>
+        <div class="quote-meter" style="margin-top:14px;"><span class="quote-marker" id="quoteMarker" style="left:28%;"></span></div>
+        <div class="feedback" id="quoteFeedback" style="margin-top:12px;">
+          The spread is visible enough to include in the trade plan. Narrower is generally easier to enter and exit near the displayed market.
+        </div>
+      </div>
+    </article>
+
+    <article class="card practice">
+      <div class="practice-head">
+        <h3>Contract-selection drill</h3>
+        <span class="score" id="optionScore">Score 0 / 0</span>
+      </div>
+      <p id="optionQuizPrompt" style="margin:0;color:var(--muted);font-size:.88rem;"></p>
+      <div class="choice-grid" id="optionChoices"></div>
+      <div class="feedback" id="optionFeedback" aria-live="polite">Choose the contract that best satisfies the stated constraints—not simply the lowest premium.</div>
+      <button class="btn small" id="nextOptionQuiz" type="button" style="margin-top:10px;">Next thesis</button>
+    </article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="callout">
+    <div class="mark">!</div>
+    <div>
+      <strong>Long calls and puts can expire worthless.</strong>
+      <p>
+        This lab does not model assignment, exercise decisions, taxes, commissions, early exercise,
+        broker approval, or suitability. Review the standardized options risk disclosure before trading.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+    </main>
+
+    <footer class="footer">
+      <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
+      <p>
+
+<strong>Educational model—not a recommendation.</strong>
+Long options can lose the full premium and are not suitable for every investor.
+Official reading:
+<a href="https://www.optionseducation.org/optionsoverview/options-basics" target="_blank" rel="noopener">OIC Options Basics</a> ·
+<a href="https://www.optionseducation.org/news/understanding-the-bid-and-ask-prices-for-options" target="_blank" rel="noopener">OIC Bid/Ask Guide</a> ·
+<a href="https://www.finra.org/investors/investing/investment-products/options" target="_blank" rel="noopener">FINRA Options Overview</a>.
+
+      </p>
+      <p><a href="https://geterdone.io">geterdone.io</a></p>
+    </footer>
+  </div>
+
+  <script>
+
+const NS = "http://www.w3.org/2000/svg";
+
+function svgNode(tag, attrs = {}, textContent = "") {
+  const node = document.createElementNS(NS, tag);
+  Object.entries(attrs).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) node.setAttribute(key, value);
+  });
+  if (textContent !== "") node.textContent = textContent;
+  return node;
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function formatPrice(value) {
+  return Number(value).toFixed(2);
+}
+
+function formatCompact(value) {
+  const n = Number(value);
+  if (Math.abs(n) >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+  if (Math.abs(n) >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return n.toFixed(0);
+}
+
+function deterministicNoise(index, salt = 1) {
+  const x = Math.sin((index + 1) * (12.9898 + salt * 0.19)) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+function candlesFromCloses(closes, overrides = {}, salt = 1) {
+  return closes.map((close, index) => {
+    const open = index === 0
+      ? close - (deterministicNoise(index, salt) - 0.45) * 1.2
+      : closes[index - 1] + (deterministicNoise(index, salt + 1) - 0.5) * 0.5;
+    const spread = 0.55 + deterministicNoise(index, salt + 2) * 0.8;
+    let high = Math.max(open, close) + spread;
+    let low = Math.min(open, close) - spread * (0.8 + deterministicNoise(index, salt + 3) * 0.4);
+    const custom = overrides[index] || {};
+    return {
+      o: custom.o ?? open,
+      h: custom.h ?? high,
+      l: custom.l ?? low,
+      c: custom.c ?? close,
+      v: custom.v ?? Math.round(700 + deterministicNoise(index, salt + 4) * 650),
+      label: custom.label || ""
+    };
+  });
+}
+
+function clearSvg(svg) {
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+}
+
+function attachTooltip(target, wrap, htmlFactory) {
+  const tooltip = wrap ? wrap.querySelector(".chart-tooltip") : null;
+  if (!tooltip) return;
+  target.addEventListener("pointermove", (event) => {
+    tooltip.innerHTML = htmlFactory();
+    tooltip.style.display = "block";
+    const bounds = wrap.getBoundingClientRect();
+    const left = clamp(event.clientX - bounds.left + 12, 8, bounds.width - 170);
+    const top = clamp(event.clientY - bounds.top - 58, 8, bounds.height - 90);
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  });
+  target.addEventListener("pointerleave", () => {
+    tooltip.style.display = "none";
+  });
+}
+
+function drawCandles(svg, data, options = {}) {
+  clearSvg(svg);
+  const W = options.width || 960;
+  const H = options.height || 430;
+  const margin = {
+    left: options.marginLeft ?? 58,
+    right: options.marginRight ?? 20,
+    top: options.marginTop ?? 20,
+    bottom: options.marginBottom ?? 38
+  };
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+  const visibleCount = clamp(options.visibleCount ?? data.length, 1, data.length);
+  const visible = data.slice(0, visibleCount);
+  const includeValues = options.includeValues || [];
+  let minPrice = Math.min(...visible.map(d => d.l), ...includeValues);
+  let maxPrice = Math.max(...visible.map(d => d.h), ...includeValues);
+  const rawRange = Math.max(0.01, maxPrice - minPrice);
+  minPrice -= rawRange * 0.09;
+  maxPrice += rawRange * 0.09;
+
+  const plot = {
+    left: margin.left,
+    right: W - margin.right,
+    top: margin.top,
+    bottom: H - margin.bottom
+  };
+  plot.width = plot.right - plot.left;
+  plot.height = plot.bottom - plot.top;
+
+  const xStep = plot.width / Math.max(data.length, 1);
+  const x = (index) => plot.left + xStep * index + xStep / 2;
+  const y = (price) => plot.bottom - ((price - minPrice) / (maxPrice - minPrice)) * plot.height;
+  const priceFromY = (pixel) => minPrice + ((plot.bottom - pixel) / plot.height) * (maxPrice - minPrice);
+
+  const defs = svgNode("defs");
+  const clip = svgNode("clipPath", { id: `${svg.id || "chart"}-clip` });
+  clip.appendChild(svgNode("rect", { x: plot.left, y: plot.top, width: plot.width, height: plot.height }));
+  defs.appendChild(clip);
+  svg.appendChild(defs);
+
+  for (let i = 0; i <= 5; i++) {
+    const yy = plot.top + (plot.height / 5) * i;
+    svg.appendChild(svgNode("line", {
+      x1: plot.left, y1: yy, x2: plot.right, y2: yy, class: "chart-grid"
+    }));
+    const price = maxPrice - ((maxPrice - minPrice) / 5) * i;
+    svg.appendChild(svgNode("text", {
+      x: plot.left - 9, y: yy + 4, "text-anchor": "end", class: "chart-axis"
+    }, price.toFixed(options.axisDecimals ?? 1)));
+  }
+
+  for (let i = 0; i <= 6; i++) {
+    const xx = plot.left + (plot.width / 6) * i;
+    svg.appendChild(svgNode("line", {
+      x1: xx, y1: plot.top, x2: xx, y2: plot.bottom, class: "chart-grid"
+    }));
+  }
+
+  const zoneLayer = svgNode("g", { "clip-path": `url(#${svg.id || "chart"}-clip)` });
+  (options.zones || []).forEach(zone => {
+    const topY = y(Math.max(zone.high, zone.low));
+    const bottomY = y(Math.min(zone.high, zone.low));
+    zoneLayer.appendChild(svgNode("rect", {
+      x: plot.left,
+      y: topY,
+      width: plot.width,
+      height: Math.max(1, bottomY - topY),
+      class: `zone tone-${zone.tone || "cyan"}`
+    }));
+    if (zone.label) {
+      svg.appendChild(svgNode("text", {
+        x: plot.right - 5,
+        y: topY + 13,
+        "text-anchor": "end",
+        class: `chart-label tone-${zone.tone || "cyan"}`
+      }, zone.label));
+    }
+  });
+  svg.appendChild(zoneLayer);
+
+  (options.focusWindows || []).forEach(windowDef => {
+    const startX = x(windowDef.start) - xStep * 0.48;
+    const endX = x(windowDef.end) + xStep * 0.48;
+    svg.appendChild(svgNode("rect", {
+      x: startX,
+      y: plot.top,
+      width: Math.max(xStep, endX - startX),
+      height: plot.height,
+      class: "focus-window"
+    }));
+    if (windowDef.label) {
+      svg.appendChild(svgNode("text", {
+        x: startX + 7, y: plot.top + 16, class: "chart-label tone-cyan"
+      }, windowDef.label));
+    }
+  });
+
+  const candleLayer = svgNode("g", { "clip-path": `url(#${svg.id || "chart"}-clip)` });
+  const candleWidth = Math.max(3, Math.min(17, xStep * 0.58));
+  const wrap = svg.closest(".chart-wrap");
+
+  visible.forEach((d, index) => {
+    const group = svgNode("g", {
+      class: d.c > d.o ? "candle-up" : d.c < d.o ? "candle-down" : "candle-flat"
+    });
+    group.appendChild(svgNode("line", {
+      x1: x(index), y1: y(d.h), x2: x(index), y2: y(d.l),
+      class: "wick", "stroke-width": 1.5
+    }));
+    const bodyTop = y(Math.max(d.o, d.c));
+    const bodyBottom = y(Math.min(d.o, d.c));
+    group.appendChild(svgNode("rect", {
+      x: x(index) - candleWidth / 2,
+      y: bodyTop,
+      width: candleWidth,
+      height: Math.max(2, bodyBottom - bodyTop),
+      rx: 1.5,
+      class: "body",
+      "fill-opacity": 0.86,
+      "stroke-width": 1
+    }));
+    const hit = svgNode("rect", {
+      x: x(index) - xStep / 2,
+      y: plot.top,
+      width: xStep,
+      height: plot.height,
+      fill: "transparent"
+    });
+    attachTooltip(hit, wrap, () =>
+      `<strong>Candle ${index + 1}</strong><span>O ${formatPrice(d.o)} · H ${formatPrice(d.h)}<br>L ${formatPrice(d.l)} · C ${formatPrice(d.c)}</span>`
+    );
+    group.appendChild(hit);
+    candleLayer.appendChild(group);
+
+    if (options.showCloses) {
+      candleLayer.appendChild(svgNode("circle", {
+        cx: x(index), cy: y(d.c), r: 3.4, class: "close-dot"
+      }));
+    }
+  });
+  svg.appendChild(candleLayer);
+
+  (options.levels || []).forEach(level => {
+    const yy = y(level.value);
+    svg.appendChild(svgNode("line", {
+      x1: plot.left, y1: yy, x2: plot.right, y2: yy,
+      class: `level-line tone-${level.tone || "cyan"}`,
+      "stroke-dasharray": level.solid ? "0" : (level.dash || "7 6"),
+      opacity: level.opacity ?? 0.9
+    }));
+    if (level.label) {
+      const anchor = level.side === "left" ? "start" : "end";
+      const xx = level.side === "left" ? plot.left + 6 : plot.right - 5;
+      svg.appendChild(svgNode("text", {
+        x: xx, y: yy - 7, "text-anchor": anchor,
+        class: `chart-label tone-${level.tone || "cyan"}`
+      }, level.label));
+    }
+  });
+
+  (options.annotations || []).forEach(annotation => {
+    if (annotation.index >= visibleCount) return;
+    const px = x(annotation.index);
+    const py = y(annotation.value ?? data[annotation.index].c);
+    const dy = annotation.position === "below" ? 18 : -12;
+    svg.appendChild(svgNode("circle", {
+      cx: px, cy: py, r: 4.5,
+      class: `tone-${annotation.tone || "cyan"}`,
+      fill: "var(--panel-solid)", "stroke-width": 2
+    }));
+    svg.appendChild(svgNode("text", {
+      x: px + (annotation.dx || 0),
+      y: py + dy + (annotation.dy || 0),
+      "text-anchor": annotation.anchor || "middle",
+      class: `chart-label tone-${annotation.tone || "cyan"}`
+    }, annotation.label));
+  });
+
+  if (typeof options.overlay === "function") {
+    options.overlay({ svg, x, y, priceFromY, plot, xStep, visibleCount, data, minPrice, maxPrice, W, H });
+  }
+
+  return { x, y, priceFromY, plot, xStep, minPrice, maxPrice, visibleCount };
+}
+
+function drawLineChart(svg, seriesList, options = {}) {
+  clearSvg(svg);
+  const W = options.width || 960;
+  const H = options.height || 320;
+  const margin = { left: 55, right: 20, top: 20, bottom: 34 };
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const allValues = seriesList.flatMap(s => s.values);
+  let minValue = Math.min(...allValues);
+  let maxValue = Math.max(...allValues);
+  const padding = Math.max(0.01, (maxValue - minValue) * 0.1);
+  minValue -= padding;
+  maxValue += padding;
+  const plot = { left: margin.left, right: W - margin.right, top: margin.top, bottom: H - margin.bottom };
+  plot.width = plot.right - plot.left;
+  plot.height = plot.bottom - plot.top;
+  const maxLen = Math.max(...seriesList.map(s => s.values.length));
+  const x = i => plot.left + (i / Math.max(1, maxLen - 1)) * plot.width;
+  const y = v => plot.bottom - ((v - minValue) / Math.max(0.001, maxValue - minValue)) * plot.height;
+
+  for (let i = 0; i <= 5; i++) {
+    const yy = plot.top + plot.height * i / 5;
+    svg.appendChild(svgNode("line", { x1: plot.left, y1: yy, x2: plot.right, y2: yy, class: "chart-grid" }));
+    const val = maxValue - (maxValue - minValue) * i / 5;
+    svg.appendChild(svgNode("text", { x: plot.left - 8, y: yy + 4, "text-anchor": "end", class: "chart-axis" }, val.toFixed(options.decimals ?? 1)));
+  }
+
+  seriesList.forEach((series, sIndex) => {
+    const pts = series.values.map((value, i) => `${x(i)},${y(value)}`).join(" ");
+    svg.appendChild(svgNode("polyline", {
+      points: pts,
+      fill: "none",
+      class: `tone-${series.tone || (sIndex === 0 ? "cyan" : "purple")}`,
+      stroke: "currentColor",
+      "stroke-width": series.width || 2.6,
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      opacity: series.opacity ?? 1
+    }));
+    if (series.label) {
+      const lastIndex = series.values.length - 1;
+      svg.appendChild(svgNode("text", {
+        x: x(lastIndex) - 4,
+        y: y(series.values[lastIndex]) - 9,
+        "text-anchor": "end",
+        class: `chart-label tone-${series.tone || "cyan"}`
+      }, series.label));
+    }
+  });
+
+  return { x, y, plot, minValue, maxValue };
+}
+
+/* Theme. The stored choice was already read, validated against the
+   'light'/'dark' allowlist, and applied by the pre-paint <head> script, so
+   data-theme is trustworthy by the time this runs; this block only owns the
+   toggle and its icon. The key is shared with site/index.html and every other
+   lesson, so one choice follows the reader across all seven labs.
+
+   No redraw is scheduled on a theme flip on purpose: nothing here samples
+   tokens with getComputedStyle — every colour in the chain table, the payoff
+   curve, and the hero SVG resolves through a CSS custom property, so the flip
+   repaints them on its own. Re-running the render would also push
+   updateExitControls() through, which re-seeds the two exit sliders and would
+   silently throw away the reader's position. */
+const THEME_KEY = "marketStructureTheme";
+
+function setupTheme() {
+  const button = document.getElementById("themeToggle");
+  const lightQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+  // No explicit choice stored means the system preference decides, matching the CSS media block.
+  const effectiveTheme = () =>
+    document.documentElement.dataset.theme || (lightQuery && lightQuery.matches ? "light" : "dark");
+
+  const renderIcon = () => {
+    if (!button) return;
+    button.textContent = effectiveTheme() === "light" ? "☀" : "☾";
+  };
+  renderIcon();
+
+  button?.addEventListener("click", () => {
+    const next = effectiveTheme() === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch (_) {
+      // Theme still works for the current page when storage is unavailable.
+    }
+    renderIcon();
+  });
+
+  if (lightQuery) {
+    const onSystemThemeChange = () => {
+      if (document.documentElement.dataset.theme) return; // an explicit toggle choice wins
+      renderIcon();
+    };
+    if (lightQuery.addEventListener) lightQuery.addEventListener("change", onSystemThemeChange);
+    else if (lightQuery.addListener) lightQuery.addListener(onSystemThemeChange);
+  }
+}
+
+setupTheme();
+
+
+
+function normPdf(x) {
+  return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI);
+}
+
+function normCdf(x) {
+  const sign = x < 0 ? -1 : 1;
+  const z = Math.abs(x) / Math.sqrt(2);
+  const t = 1 / (1 + 0.3275911 * z);
+  const a1 = 0.254829592;
+  const a2 = -0.284496736;
+  const a3 = 1.421413741;
+  const a4 = -1.453152027;
+  const a5 = 1.061405429;
+  const erf = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-z * z);
+  return 0.5 * (1 + sign * erf);
+}
+
+function optionModel(type, S, K, dte, ivPct, ratePct) {
+  const sigma = Math.max(0.0001, ivPct / 100);
+  const r = ratePct / 100;
+  if (dte <= 0) {
+    const intrinsic = type === "call" ? Math.max(0, S - K) : Math.max(0, K - S);
+    const delta = type === "call" ? (S > K ? 1 : S < K ? 0 : 0.5) : (S < K ? -1 : S > K ? 0 : -0.5);
+    return { price: intrinsic, delta, theta: 0, vega: 0 };
+  }
+  const T = dte / 365;
+  const sqrtT = Math.sqrt(T);
+  const d1 = (Math.log(S / K) + (r + 0.5 * sigma * sigma) * T) / (sigma * sqrtT);
+  const d2 = d1 - sigma * sqrtT;
+  const discount = Math.exp(-r * T);
+  const pdf = normPdf(d1);
+  let price, delta, thetaAnnual;
+  if (type === "call") {
+    price = S * normCdf(d1) - K * discount * normCdf(d2);
+    delta = normCdf(d1);
+    thetaAnnual = -(S * pdf * sigma) / (2 * sqrtT) - r * K * discount * normCdf(d2);
+  } else {
+    price = K * discount * normCdf(-d2) - S * normCdf(-d1);
+    delta = normCdf(d1) - 1;
+    thetaAnnual = -(S * pdf * sigma) / (2 * sqrtT) + r * K * discount * normCdf(-d2);
+  }
+  const vegaPerPoint = S * pdf * sqrtT / 100;
+  return {
+    price: Math.max(0, price),
+    delta,
+    theta: thetaAnnual / 365,
+    vega: vegaPerPoint
+  };
+}
+
+function optionMoney(value) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(value);
+}
+
+function signedMoney(value, digits = 2) {
+  const sign = value > 0 ? "+" : value < 0 ? "−" : "";
+  return `${sign}${optionMoney(Math.abs(value)).replace("$", "$")}`;
+}
+
+function signedPercent(value) {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
+}
+
+function optionMoneyness(type, S, K) {
+  const tolerance = Math.max(0.25, S * 0.005);
+  if (Math.abs(S - K) <= tolerance) return { label: "ATM", cls: "moneyness-atm" };
+  const itm = type === "call" ? S > K : S < K;
+  return itm ? { label: "ITM", cls: "moneyness-itm" } : { label: "OTM", cls: "moneyness-otm" };
+}
+
+function strikeStep(S) {
+  if (S < 25) return 1;
+  if (S < 75) return 2.5;
+  if (S < 250) return 5;
+  return 10;
+}
+
+function buildStrikes(S) {
+  const step = strikeStep(S);
+  const center = Math.round(S / step) * step;
+  return Array.from({ length: 9 }, (_, i) => Math.max(step, center + (i - 4) * step));
+}
+
+const optionInputs = {
+  type: document.getElementById("optionDirection"),
+  S: document.getElementById("underlyingPrice"),
+  target: document.getElementById("thesisTarget"),
+  thesisDays: document.getElementById("thesisDays"),
+  dte: document.getElementById("chainDte"),
+  iv: document.getElementById("optionIv"),
+  multiplier: document.getElementById("contractMultiplier"),
+  rate: document.getElementById("riskFreeRate")
+};
+
+const optionState = {
+  selectedStrike: 100,
+  selectedModel: null,
+  score: 0,
+  attempts: 0,
+  quizIndex: 0,
+  quizAnswered: false
+};
+
+function optNumber(input, fallback) {
+  const value = Number(input.value);
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function currentOptionParams() {
+  return {
+    type: optionInputs.type.value,
+    S: Math.max(0.01, optNumber(optionInputs.S, 100)),
+    target: Math.max(0.01, optNumber(optionInputs.target, 108)),
+    thesisDays: Math.max(0, Math.floor(optNumber(optionInputs.thesisDays, 10))),
+    dte: Math.max(0, Math.floor(optNumber(optionInputs.dte, 30))),
+    iv: Math.max(0.1, optNumber(optionInputs.iv, 35)),
+    multiplier: Math.max(1, Math.floor(optNumber(optionInputs.multiplier, 100))),
+    rate: optNumber(optionInputs.rate, 4)
+  };
+}
+
+function describeTimeFit(dte, thesisDays) {
+  const buffer = dte - thesisDays;
+  if (buffer < 0) {
+    return {
+      cls: "bad",
+      badge: "Expires before thesis",
+      title: `${Math.abs(buffer)} days short`,
+      reason: `The option expires before the expected ${thesisDays}-day thesis window is complete.`
+    };
+  }
+  if (buffer < 7) {
+    return {
+      cls: "warn",
+      badge: "Tight time buffer",
+      title: `${buffer} days beyond thesis`,
+      reason: "The expiration outlasts the thesis only narrowly, leaving little room for timing error."
+    };
+  }
+  return {
+    cls: "good",
+    badge: "Adequate time buffer",
+    title: `${buffer} days beyond thesis`,
+    reason: `The selected expiration outlasts the expected ${thesisDays}-day thesis window.`
+  };
+}
+
+function renderOptionChain() {
+  const p = currentOptionParams();
+  const strikes = buildStrikes(p.S);
+  if (!strikes.includes(optionState.selectedStrike)) {
+    optionState.selectedStrike = strikes.reduce((best, strike) =>
+      Math.abs(strike - p.S) < Math.abs(best - p.S) ? strike : best, strikes[0]);
+  }
+
+  const tbody = document.getElementById("optionChainBody");
+  tbody.innerHTML = "";
+  strikes.forEach(K => {
+    const model = optionModel(p.type, p.S, K, p.dte, p.iv, p.rate);
+    const m = optionMoneyness(p.type, p.S, K);
+    const buffer = p.dte - p.thesisDays;
+    const row = document.createElement("tr");
+    row.className = `selectable ${K === optionState.selectedStrike ? "selected" : ""}`;
+    row.dataset.strike = K;
+    row.innerHTML = `
+      <td><button type="button" class="strike-pick" aria-pressed="${K === optionState.selectedStrike}">${K.toFixed(K % 1 ? 1 : 0)}</button></td>
+      <td class="${m.cls}">${m.label}</td>
+      <td>${optionMoney(model.price)}</td>
+      <td>${Math.abs(model.delta).toFixed(2)}</td>
+      <td>${signedMoney(model.theta)}</td>
+      <td>${optionMoney(model.vega)}</td>
+      <td class="${buffer < 0 ? "bad" : buffer < 7 ? "warn" : "good"}">${buffer >= 0 ? "+" : ""}${buffer}d</td>
+    `;
+    row.addEventListener("click", (event) => {
+      // renderOptionChain() rebuilds every row, so the button that was just
+      // activated is detached. Put focus back on its replacement, otherwise a
+      // keyboard reader is dropped to the top of the document on every pick.
+      const wasFocused = event.target.closest(".strike-pick") === document.activeElement;
+      optionState.selectedStrike = K;
+      renderOptionChain();
+      syncPaidPremium(true);
+      renderOptionSimulator();
+      if (wasFocused) document.querySelector("#optionChainBody tr.selected .strike-pick")?.focus();
+    });
+    tbody.appendChild(row);
+  });
+
+  const selected = optionModel(p.type, p.S, optionState.selectedStrike, p.dte, p.iv, p.rate);
+  optionState.selectedModel = selected;
+  const m = optionMoneyness(p.type, p.S, optionState.selectedStrike);
+  const fit = describeTimeFit(p.dte, p.thesisDays);
+  const label = `${optionState.selectedStrike.toFixed(optionState.selectedStrike % 1 ? 1 : 0)} ${p.type === "call" ? "Call" : "Put"} · ${p.dte} DTE`;
+  document.getElementById("selectedContract").textContent = label;
+
+  const badge = document.getElementById("timeFitBadge");
+  badge.className = `fit-badge ${fit.cls}`;
+  badge.textContent = fit.badge;
+  document.getElementById("timeFitTitle").textContent = fit.title;
+  document.getElementById("timeFitReason").textContent = fit.reason;
+  document.getElementById("selectedPremium").textContent = optionMoney(selected.price);
+  document.getElementById("selectedMaxRisk").textContent = optionMoney(selected.price * p.multiplier);
+  document.getElementById("selectedDelta").textContent = selected.delta.toFixed(2);
+  document.getElementById("selectedTheta").textContent = signedMoney(selected.theta);
+  document.getElementById("selectedVega").textContent = optionMoney(selected.vega);
+  const breakeven = p.type === "call"
+    ? optionState.selectedStrike + selected.price
+    : optionState.selectedStrike - selected.price;
+  document.getElementById("selectedBreakeven").textContent = optionMoney(breakeven);
+
+  const absDelta = Math.abs(selected.delta);
+  let lens;
+  if (m.label === "ITM") {
+    lens = `This ${m.label} contract has higher directional sensitivity (${absDelta.toFixed(2)} absolute delta) and more premium at risk than farther OTM strikes in the same expiration.`;
+  } else if (m.label === "OTM") {
+    lens = `This ${m.label} contract costs less, but has lower directional sensitivity (${absDelta.toFixed(2)} absolute delta) and requires more underlying movement to gain intrinsic value.`;
+  } else {
+    lens = `This ${m.label} contract sits near the current price, balancing premium and directional sensitivity in this simplified model.`;
+  }
+  document.getElementById("contractLens").innerHTML = `<strong>Lens:</strong> ${lens}`;
+
+  updateExitControls();
+}
+
+function syncPaidPremium(force = false) {
+  if (!optionState.selectedModel) return;
+  const input = document.getElementById("paidPremium");
+  if (force || !input.dataset.edited) {
+    input.value = optionState.selectedModel.price.toFixed(2);
+    input.dataset.edited = "";
+  }
+  const modelMid = optionState.selectedModel.price;
+  const bid = Math.max(0.01, modelMid * 0.972);
+  const ask = modelMid * 1.028;
+  document.getElementById("quoteBid").value = bid.toFixed(2);
+  document.getElementById("quoteAsk").value = ask.toFixed(2);
+  renderQuoteQuality();
+}
+
+function updateExitControls() {
+  const p = currentOptionParams();
+  const exitDays = document.getElementById("exitDays");
+  exitDays.max = p.dte;
+  exitDays.value = Math.min(p.thesisDays, p.dte);
+  document.getElementById("exitDaysLabel").textContent = exitDays.value;
+
+  const span = Math.max(strikeStep(p.S) * 5, p.S * 0.25);
+  const exitPrice = document.getElementById("exitPrice");
+  exitPrice.min = Math.max(0.01, p.S - span).toFixed(2);
+  exitPrice.max = (p.S + span).toFixed(2);
+  exitPrice.value = clamp(p.target, Number(exitPrice.min), Number(exitPrice.max));
+  document.getElementById("exitPriceLabel").textContent = optionMoney(exitPrice.value);
+}
+
+function drawOptionPayoff(svg, points, p, selectedExitPrice, targetPrice, paidPremium, remainingDte) {
+  clearSvg(svg);
+  const W = 960;
+  const H = 420;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const plot = { left: 66, right: 940, top: 22, bottom: 374 };
+  plot.width = plot.right - plot.left;
+  plot.height = plot.bottom - plot.top;
+  const xs = points.map(d => d.S);
+  const ys = points.map(d => d.pnl);
+  let minY = Math.min(...ys, 0);
+  let maxY = Math.max(...ys, 0);
+  const pad = Math.max(1, (maxY - minY) * 0.1);
+  minY -= pad;
+  maxY += pad;
+  const x = S => plot.left + ((S - Math.min(...xs)) / (Math.max(...xs) - Math.min(...xs))) * plot.width;
+  const y = pnl => plot.bottom - ((pnl - minY) / (maxY - minY)) * plot.height;
+
+  for (let i = 0; i <= 5; i++) {
+    const yy = plot.top + plot.height * i / 5;
+    svg.appendChild(svgNode("line", { x1: plot.left, y1: yy, x2: plot.right, y2: yy, class: "chart-grid" }));
+    const val = maxY - (maxY - minY) * i / 5;
+    svg.appendChild(svgNode("text", { x: plot.left - 8, y: yy + 4, "text-anchor": "end", class: "chart-axis" }, optionMoney(val)));
+  }
+  for (let i = 0; i <= 6; i++) {
+    const xx = plot.left + plot.width * i / 6;
+    svg.appendChild(svgNode("line", { x1: xx, y1: plot.top, x2: xx, y2: plot.bottom, class: "chart-grid" }));
+    const val = Math.min(...xs) + (Math.max(...xs) - Math.min(...xs)) * i / 6;
+    svg.appendChild(svgNode("text", { x: xx, y: plot.bottom + 20, "text-anchor": "middle", class: "chart-axis" }, val.toFixed(0)));
+  }
+
+  if (minY < 0) {
+    svg.appendChild(svgNode("rect", {
+      x: plot.left, y: y(0), width: plot.width, height: plot.bottom - y(0), class: "pnl-negative"
+    }));
+  }
+  if (maxY > 0) {
+    svg.appendChild(svgNode("rect", {
+      x: plot.left, y: plot.top, width: plot.width, height: y(0) - plot.top, class: "pnl-positive"
+    }));
+  }
+  svg.appendChild(svgNode("line", { x1: plot.left, y1: y(0), x2: plot.right, y2: y(0), class: "zero-line" }));
+  svg.appendChild(svgNode("text", { x: plot.left + 5, y: y(0) - 7, class: "chart-label tone-amber" }, "Break-even P/L line"));
+
+  const path = points.map((d, i) => `${i === 0 ? "M" : "L"} ${x(d.S)} ${y(d.pnl)}`).join(" ");
+  svg.appendChild(svgNode("path", { d: path, class: "option-line" }));
+
+  const targetX = x(targetPrice);
+  svg.appendChild(svgNode("line", { x1: targetX, y1: plot.top, x2: targetX, y2: plot.bottom, class: "level-line tone-purple" }));
+  svg.appendChild(svgNode("text", { x: targetX + 5, y: plot.top + 16, class: "chart-label tone-purple" }, "Thesis target"));
+
+  const currentX = x(p.S);
+  svg.appendChild(svgNode("line", { x1: currentX, y1: plot.top, x2: currentX, y2: plot.bottom, class: "level-line tone-cyan", opacity: .55 }));
+  svg.appendChild(svgNode("text", { x: currentX + 5, y: plot.bottom - 9, class: "chart-label tone-cyan" }, "Current"));
+
+  const selected = points.reduce((best, point) => Math.abs(point.S - selectedExitPrice) < Math.abs(best.S - selectedExitPrice) ? point : best, points[0]);
+  svg.appendChild(svgNode("circle", { cx: x(selected.S), cy: y(selected.pnl), r: 6, class: selected.pnl >= 0 ? "tone-green" : "tone-red", fill: "var(--panel-solid)", "stroke-width": 3 }));
+  svg.appendChild(svgNode("text", {
+    x: x(selected.S),
+    y: y(selected.pnl) + (selected.pnl >= 0 ? -12 : 20),
+    "text-anchor": "middle",
+    class: `chart-label ${selected.pnl >= 0 ? "tone-green" : "tone-red"}`
+  }, `${optionMoney(selected.pnl)}`));
+
+  const wrap = svg.closest(".chart-wrap");
+  const hitWidth = plot.width / points.length;
+  points.forEach(point => {
+    const hit = svgNode("rect", { x: x(point.S) - hitWidth / 2, y: plot.top, width: hitWidth, height: plot.height, fill: "transparent" });
+    attachTooltip(hit, wrap, () => `<strong>Underlying ${optionMoney(point.S)}</strong><span>Option value ${optionMoney(point.value)}<br>P/L ${optionMoney(point.pnl)} per contract<br>${remainingDte} DTE remaining</span>`);
+    svg.appendChild(hit);
+  });
+}
+
+function renderOptionSimulator() {
+  if (!optionState.selectedModel) return;
+  const p = currentOptionParams();
+  const elapsed = Number(document.getElementById("exitDays").value);
+  const exitS = Number(document.getElementById("exitPrice").value);
+  const remaining = Math.max(0, p.dte - elapsed);
+  const paid = Math.max(0, Number(document.getElementById("paidPremium").value) || 0);
+  const span = Math.max(strikeStep(p.S) * 5, p.S * 0.25);
+  const minS = Math.max(0.01, p.S - span);
+  const maxS = p.S + span;
+  const points = Array.from({ length: 81 }, (_, i) => {
+    const S = minS + (maxS - minS) * i / 80;
+    const value = optionModel(p.type, S, optionState.selectedStrike, remaining, p.iv, p.rate).price;
+    return { S, value, pnl: (value - paid) * p.multiplier };
+  });
+
+  drawOptionPayoff(
+    document.getElementById("optionPayoffChart"),
+    points,
+    p,
+    exitS,
+    p.target,
+    paid,
+    remaining
+  );
+
+  const exitModel = optionModel(p.type, exitS, optionState.selectedStrike, remaining, p.iv, p.rate);
+  const pnl = (exitModel.price - paid) * p.multiplier;
+  const premiumRisk = paid * p.multiplier;
+  const ret = premiumRisk > 0 ? pnl / premiumRisk * 100 : 0;
+  const targetModel = optionModel(p.type, p.target, optionState.selectedStrike, remaining, p.iv, p.rate);
+  const targetPnl = (targetModel.price - paid) * p.multiplier;
+
+  document.getElementById("payoffSubtitle").textContent = `After ${elapsed} days · ${remaining} DTE remaining · IV unchanged`;
+  document.getElementById("exitOptionValue").textContent = optionMoney(exitModel.price);
+  const pnlEl = document.getElementById("exitPnl");
+  pnlEl.textContent = signedMoney(pnl, 0);
+  pnlEl.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
+  const returnEl = document.getElementById("exitReturn");
+  returnEl.textContent = signedPercent(ret);
+  returnEl.style.color = ret >= 0 ? "var(--green)" : "var(--red)";
+  document.getElementById("targetPnl").textContent = `${signedMoney(targetPnl, 0)} estimated P/L`;
+  document.getElementById("targetPnlReason").textContent =
+    `Assumes the underlying reaches ${optionMoney(p.target)} after ${elapsed} days, ${remaining} DTE remain, and IV stays at ${p.iv.toFixed(0)}%.`;
+}
+
+document.getElementById("exitDays").addEventListener("input", (event) => {
+  document.getElementById("exitDaysLabel").textContent = event.target.value;
+  renderOptionSimulator();
+});
+document.getElementById("exitPrice").addEventListener("input", (event) => {
+  document.getElementById("exitPriceLabel").textContent = optionMoney(event.target.value);
+  renderOptionSimulator();
+});
+document.getElementById("paidPremium").addEventListener("input", (event) => {
+  event.target.dataset.edited = "true";
+  renderOptionSimulator();
+});
+
+Object.values(optionInputs).forEach(input => {
+  input.addEventListener("change", () => {
+    const p = currentOptionParams();
+    if (p.type === "call" && p.target <= p.S) optionInputs.target.value = (p.S + strikeStep(p.S) * 1.5).toFixed(2);
+    if (p.type === "put" && p.target >= p.S) optionInputs.target.value = Math.max(0.01, p.S - strikeStep(p.S) * 1.5).toFixed(2);
+    renderOptionChain();
+    syncPaidPremium(true);
+    renderOptionSimulator();
+  });
+  input.addEventListener("input", () => {
+    renderOptionChain();
+    syncPaidPremium(true);
+    renderOptionSimulator();
+  });
+});
+
+function renderQuoteQuality() {
+  const bid = Math.max(0, Number(document.getElementById("quoteBid").value) || 0);
+  const ask = Math.max(0, Number(document.getElementById("quoteAsk").value) || 0);
+  const mid = (bid + ask) / 2;
+  const spread = ask - bid;
+  const spreadPct = mid > 0 ? spread / mid * 100 : NaN;
+  document.getElementById("quoteMid").textContent = optionMoney(mid);
+  document.getElementById("quoteSpread").textContent = spread >= 0 ? optionMoney(spread) : "Invalid";
+  document.getElementById("quoteSpreadPct").textContent = Number.isFinite(spreadPct) && spread >= 0 ? `${spreadPct.toFixed(1)}%` : "Invalid";
+  const marker = document.getElementById("quoteMarker");
+  marker.style.left = `${clamp((spreadPct || 0) / 20 * 100, 0, 100)}%`;
+  const feedback = document.getElementById("quoteFeedback");
+  if (ask < bid) {
+    feedback.className = "feedback bad";
+    feedback.innerHTML = "<strong>Invalid quote.</strong> Ask must be greater than or equal to bid.";
+  } else if (!Number.isFinite(spreadPct)) {
+    feedback.className = "feedback bad";
+    feedback.innerHTML = "<strong>Incomplete quote.</strong> Enter positive bid and ask values.";
+  } else if (spreadPct <= 5) {
+    feedback.className = "feedback good";
+    feedback.innerHTML = "<strong>Relatively narrow example.</strong> Still use limit orders and inspect available size and actual fills.";
+  } else if (spreadPct <= 10) {
+    feedback.className = "feedback";
+    feedback.innerHTML = "<strong>Meaningful friction.</strong> Include the spread in entry, exit, and break-even planning.";
+  } else {
+    feedback.className = "feedback bad";
+    feedback.innerHTML = "<strong>Wide example.</strong> Slippage and exit difficulty may dominate a modest directional edge.";
+  }
+}
+
+["quoteBid", "quoteAsk"].forEach(id => {
+  document.getElementById(id).addEventListener("input", renderQuoteQuality);
+});
+
+const optionQuizItems = [
+  {
+    prompt: "Bullish thesis: 100 → 108 over about 10 days. Goal: a balanced long-call example with time buffer and manageable quote friction.",
+    answer: "B",
+    choices: [
+      { id: "A", title: "110 Call · 5 DTE", detail: "|Δ| 0.18 · 18% spread · lowest premium", tag: "cheap / urgent" },
+      { id: "B", title: "100 Call · 30 DTE", detail: "|Δ| 0.55 · 4% spread · 20-day buffer", tag: "balanced fit" },
+      { id: "C", title: "85 Call · 90 DTE", detail: "|Δ| 0.89 · 3% spread · highest premium", tag: "high delta / costly" },
+      { id: "D", title: "100 Put · 30 DTE", detail: "|Δ| 0.47 · 4% spread · bearish direction", tag: "wrong direction" }
+    ],
+    explanation: "B best matches the stated balanced constraints. It is not universally superior; the question specifically values direction, usable time buffer, and moderate sensitivity without the highest premium."
+  },
+  {
+    prompt: "Bearish thesis: 200 → 185 over roughly 15 days. Goal: avoid expiration before the thesis and avoid a far-OTM lottery-style contract.",
+    answer: "C",
+    choices: [
+      { id: "A", title: "215 Call · 45 DTE", detail: "Bullish contract for a bearish thesis", tag: "wrong direction" },
+      { id: "B", title: "180 Put · 7 DTE", detail: "|Δ| 0.12 · expires before thesis", tag: "too little time" },
+      { id: "C", title: "200 Put · 45 DTE", detail: "|Δ| 0.52 · 30-day buffer", tag: "aligned" },
+      { id: "D", title: "150 Put · 30 DTE", detail: "|Δ| 0.04 · very far OTM", tag: "low sensitivity" }
+    ],
+    explanation: "C aligns direction and provides time beyond the expected thesis window without relying on a very low-delta far-OTM strike."
+  },
+  {
+    prompt: "Two contracts express the same thesis. Contract X has a 3% bid/ask spread; Contract Y has a 22% spread and very little displayed activity. Which is easier to plan around?",
+    answer: "A",
+    choices: [
+      { id: "A", title: "Contract X", detail: "Narrower displayed spread", tag: "less friction" },
+      { id: "B", title: "Contract Y", detail: "Wider displayed spread", tag: "more friction" },
+      { id: "C", title: "Always choose cheaper premium", detail: "Ignore quote quality", tag: "incomplete" },
+      { id: "D", title: "They are identical", detail: "Spread does not matter", tag: "incorrect" }
+    ],
+    explanation: "X is generally easier to plan and execute near the displayed market. Actual depth, limit prices, and fills still matter."
+  }
+];
+
+function renderOptionQuiz() {
+  const q = optionQuizItems[optionState.quizIndex];
+  optionState.quizAnswered = false;
+  document.getElementById("optionQuizPrompt").textContent = q.prompt;
+  const grid = document.getElementById("optionChoices");
+  grid.innerHTML = "";
+  q.choices.forEach(choice => {
+    const button = document.createElement("button");
+    button.className = "choice option-choice";
+    button.type = "button";
+    button.dataset.answer = choice.id;
+    button.innerHTML = `<div><strong>${choice.id}. ${choice.title}</strong><span>${choice.detail}</span></div><em>${choice.tag}</em>`;
+    grid.appendChild(button);
+  });
+  const feedback = document.getElementById("optionFeedback");
+  feedback.className = "feedback";
+  feedback.textContent = "Choose the contract that best satisfies the stated constraints—not simply the lowest premium.";
+}
+
+document.getElementById("optionChoices").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-answer]");
+  if (!button || optionState.quizAnswered) return;
+  optionState.quizAnswered = true;
+  optionState.attempts += 1;
+  const q = optionQuizItems[optionState.quizIndex];
+  const correct = button.dataset.answer === q.answer;
+  if (correct) optionState.score += 1;
+  document.querySelectorAll("#optionChoices .choice").forEach(choice => {
+    choice.disabled = true;
+    if (choice.dataset.answer === q.answer) choice.classList.add("correct");
+  });
+  if (!correct) button.classList.add("incorrect");
+  document.getElementById("optionScore").textContent = `Score ${optionState.score} / ${optionState.attempts}`;
+  const feedback = document.getElementById("optionFeedback");
+  feedback.className = `feedback ${correct ? "good" : "bad"}`;
+  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${q.explanation}`;
+});
+
+document.getElementById("nextOptionQuiz").addEventListener("click", () => {
+  optionState.quizIndex = (optionState.quizIndex + 1) % optionQuizItems.length;
+  renderOptionQuiz();
+});
+
+renderOptionChain();
+syncPaidPremium(true);
+renderOptionSimulator();
+renderQuoteQuality();
+renderOptionQuiz();
+
+  </script>
+</body>
+</html>

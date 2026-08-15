@@ -1,0 +1,1993 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="An interactive standalone lesson for reading ranges, confirmed breakouts, retests, and liquidity sweeps." />
+  <title>Ranges, Breakouts & Liquidity Sweeps Lab</title>
+  <link rel="canonical" href="https://learn.geterdone.io/ranges-breakouts-liquidity/" />
+  <meta name="author" content="dmedellin" />
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="learn.geterdone.io" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Ranges, Breakouts &amp; Liquidity Sweeps Lab" />
+  <meta property="og:description" content="An interactive standalone lesson for reading ranges, confirmed breakouts, retests, and liquidity sweeps." />
+  <meta property="og:url" content="https://learn.geterdone.io/ranges-breakouts-liquidity/" />
+  <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Ranges, Breakouts &amp; Liquidity Sweeps Lab" />
+  <meta name="twitter:description" content="An interactive standalone lesson for reading ranges, confirmed breakouts, retests, and liquidity sweeps." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071019'/%3E%3Cpath d='M10 46 L24 29 L34 39 L46 17' fill='none' stroke='%2336d6e7' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <style>
+
+/* ---------------------------------------------------------------------
+   DESIGN TOKENS — the single place any theme-dependent colour may live.
+
+   THEME RULE: the palette flips through TWO independent paths — the explicit
+   toggle ([data-theme="light"]) and the system preference (the media block,
+   for the visitor who never touches the toggle). A component-level
+   `[data-theme="light"] .foo {…}` override only ever reaches the FIRST of
+   them, so a light-OS visitor would get the light background with dark-theme
+   accents. There are no component-level theme rules on this page; every
+   component reads a token instead. Keep it that way and the two paths cannot
+   drift, because there is nothing per-path left to forget.
+
+   The ACCENTS are re-declared for light, not just the neutrals, because they
+   are read AS TEXT (.eyebrow, .concept-card .icon, .state-pill, td.good/warn/
+   bad, .chart-label, .chart-axis, the gradient headline) and the dark accents
+   are far too light to read on a light surface. Light values are contrast-
+   checked against --bg (#edf4f8, the darkest light surface):
+     --cyan 4.98:1  --cyan-2 5.43:1  --green 4.94:1  --red 5.14:1
+     --amber 5.33:1 --purple 5.44:1  --blue 5.64:1   --muted 4.91:1
+   all >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is
+   the emphasis stop in both themes, so it has to be the more readable one
+   against the current background, not simply the lighter hue.
+
+   --on-accent is the ink that sits ON a filled accent (.btn.primary,
+   .brand-mark, .tab.active, .check-dot, .lesson-row .num, .callout .mark,
+   .skip-link). It has to flip with the theme because those accent fills go
+   dark in light mode.
+   --------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+  --bg: #071019;
+  --bg-2: #0b1622;
+  --panel: rgba(16, 31, 46, 0.91);
+  --panel-solid: #101f2e;
+  --panel-2: #142638;
+  --panel-3: #182d41;
+  --text: #edf7ff;
+  --muted: #95aabd;
+  --line: rgba(170, 202, 226, 0.16);
+  --line-strong: rgba(170, 202, 226, 0.3);
+  --cyan: #37d7e7;
+  --cyan-2: #91f4ff;
+  --green: #41e39b;
+  --red: #ff6e7d;
+  --amber: #ffc857;
+  --purple: #b69cff;
+  --blue: #76a8ff;
+  --on-accent: #041116;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+/* System preference, only when the visitor has NOT made an explicit choice.
+   The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+   survive on a light-mode OS. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #edf4f8;
+    --bg-2: #f9fbfd;
+    --panel: rgba(255, 255, 255, 0.94);
+    --panel-solid: #ffffff;
+    --panel-2: #f3f8fb;
+    --panel-3: #eaf2f7;
+    --text: #102433;
+    --muted: #586c7c;
+    --line: rgba(24, 62, 88, 0.13);
+    --line-strong: rgba(24, 62, 88, 0.24);
+    --cyan: #0e7382;
+    --cyan-2: #0b6d79;
+    --green: #10784f;
+    --red: #c22a34;
+    --amber: #8a5a06;
+    --purple: #6b46d6;
+    --blue: #1d5fd0;
+    --on-accent: #ffffff;
+    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  }
+}
+
+/* Explicit choice (localStorage key: marketStructureTheme). Byte-identical
+   values to the media block above — the two light paths must never disagree. */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #edf4f8;
+  --bg-2: #f9fbfd;
+  --panel: rgba(255, 255, 255, 0.94);
+  --panel-solid: #ffffff;
+  --panel-2: #f3f8fb;
+  --panel-3: #eaf2f7;
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --line-strong: rgba(24, 62, 88, 0.24);
+  --cyan: #0e7382;
+  --cyan-2: #0b6d79;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --on-accent: #ffffff;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+    radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+button, input, select { font: inherit; }
+button { color: inherit; }
+a { color: inherit; }
+svg { display: block; }
+
+/* Visible focus everywhere, in both themes. */
+:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 60;
+  padding: 11px 15px;
+  border-radius: 12px;
+  color: var(--on-accent);
+  background: var(--cyan-2);
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: top 140ms ease;
+}
+.skip-link:focus-visible { top: 12px; }
+
+.shell {
+  width: min(1220px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 22px 0 64px;
+}
+
+.topbar {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--on-accent);
+  font-weight: 950;
+  background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+  box-shadow: 0 8px 26px rgba(55, 215, 231, 0.25);
+}
+
+.brand-copy strong {
+  display: block;
+  font-size: 0.96rem;
+  letter-spacing: 0.01em;
+}
+
+.brand-copy span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.topnav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.84rem;
+  padding: 8px 10px;
+  border-radius: 9px;
+}
+
+.topnav a:hover { color: var(--text); background: var(--line); }
+
+.noscript-note {
+  display: block;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.noscript-note strong { display: block; margin-bottom: 4px; color: var(--text); }
+
+.icon-btn {
+  width: 39px;
+  height: 39px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--panel-2);
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.16fr 0.84fr;
+  gap: 28px;
+  align-items: center;
+  padding: 74px 8px 42px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  color: var(--cyan-2);
+  border: 1px solid rgba(55, 215, 231, 0.28);
+  border-radius: 999px;
+  background: rgba(55, 215, 231, 0.08);
+  font-size: 0.77rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 5px rgba(55, 215, 231, 0.12);
+}
+
+h1 {
+  max-width: 820px;
+  margin: 18px 0 15px;
+  font-size: clamp(2.55rem, 6vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.gradient-text {
+  background: linear-gradient(110deg, var(--cyan-2), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.8vw, 1.16rem);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 780;
+  font-size: 0.9rem;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 8px 11px; font-size: 0.8rem; border-radius: 10px; }
+.btn:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
+
+.hero-visual {
+  position: relative;
+  min-height: 330px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(170,202,226,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(170,202,226,0.06) 1px, transparent 1px),
+    radial-gradient(circle at 75% 20%, rgba(55,215,231,0.14), transparent 15rem),
+    var(--panel-solid);
+  background-size: 42px 42px, 42px 42px, auto, auto;
+  box-shadow: var(--shadow);
+}
+
+.hero-visual svg { width: 100%; height: 100%; min-height: 330px; }
+
+.float-label {
+  position: absolute;
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  font-size: 0.76rem;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.section {
+  padding: 34px 0;
+  scroll-margin-top: 88px;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.45rem);
+  letter-spacing: -0.04em;
+}
+
+.section-head p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 16px 42px rgba(0,0,0,0.12);
+}
+
+.card-pad { padding: 20px; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.concept-card {
+  min-height: 100%;
+  padding: 19px;
+}
+
+.concept-card .icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  font-weight: 900;
+  color: var(--cyan-2);
+}
+
+.concept-card h3 { margin: 0 0 7px; font-size: 1.02rem; }
+.concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+.lab-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(290px, 0.65fr);
+  gap: 16px;
+}
+
+.chart-card { overflow: hidden; }
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.chart-title strong { display: block; font-size: 0.92rem; }
+.chart-title span { display: block; color: var(--muted); font-size: 0.76rem; }
+
+.tab-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tab {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: var(--panel-2);
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 750;
+  font-size: 0.78rem;
+}
+
+.tab:hover { color: var(--text); border-color: var(--line-strong); }
+.tab.active { color: var(--on-accent); border-color: transparent; background: var(--cyan); }
+
+.chart-wrap {
+  position: relative;
+  min-height: 390px;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(55,215,231,0.07), transparent 19rem),
+    var(--panel-solid);
+}
+
+.market-chart {
+  width: 100%;
+  height: auto;
+  min-height: 390px;
+  touch-action: none;
+}
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 10;
+  display: none;
+  pointer-events: none;
+  min-width: 148px;
+  padding: 9px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel-solid);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.24);
+  color: var(--text);
+  font-size: 0.75rem;
+}
+
+.chart-tooltip strong { display: block; margin-bottom: 3px; }
+.chart-tooltip span { color: var(--muted); }
+
+.chart-grid { stroke: var(--line); stroke-width: 1; }
+.chart-axis { fill: var(--muted); font-size: 11px; }
+.candle-up .wick, .candle-up .body { stroke: var(--green); }
+.candle-up .body { fill: var(--green); }
+.candle-down .wick, .candle-down .body { stroke: var(--red); }
+.candle-down .body { fill: var(--red); }
+.candle-flat .wick, .candle-flat .body { stroke: var(--amber); }
+.candle-flat .body { fill: var(--amber); }
+.close-dot { fill: var(--cyan-2); stroke: var(--panel-solid); stroke-width: 2; }
+.level-line { stroke-width: 1.6; stroke-dasharray: 7 6; }
+.tone-cyan { stroke: var(--cyan); fill: var(--cyan); }
+.tone-green { stroke: var(--green); fill: var(--green); }
+.tone-red { stroke: var(--red); fill: var(--red); }
+.tone-amber { stroke: var(--amber); fill: var(--amber); }
+.tone-purple { stroke: var(--purple); fill: var(--purple); }
+.tone-blue { stroke: var(--blue); fill: var(--blue); }
+.chart-label {
+  font-size: 11px;
+  font-weight: 850;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.zone { opacity: 0.08; }
+
+/* SVG colour hooks. CSS custom properties are not reliably substituted inside
+   SVG *presentation attributes* (fill="var(--x)"), so every themed SVG colour
+   is bound through a class or through currentColor instead. */
+.annot-dot { fill: var(--panel-solid); }
+.stop-cyan { stop-color: var(--cyan); }
+.stop-purple { stop-color: var(--purple); }
+.ink-cyan { color: var(--cyan); }
+.ink-cyan-2 { color: var(--cyan-2); }
+.ink-green { color: var(--green); }
+.ink-red { color: var(--red); }
+.ink-amber { color: var(--amber); }
+.focus-window { fill: rgba(55,215,231,0.09); stroke: var(--cyan); stroke-width: 1.4; stroke-dasharray: 7 5; }
+
+.control-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.control-group.grow { flex: 1; }
+
+.control-group label {
+  color: var(--muted);
+  font-size: 0.77rem;
+  white-space: nowrap;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--cyan);
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.check input { accent-color: var(--cyan); }
+
+.side-panel {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.side-panel h3 { margin: 0; font-size: 1.08rem; }
+.side-panel > p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+.verdict {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-2);
+}
+
+.verdict .label {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.verdict strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 1.08rem;
+}
+
+.verdict p { margin: 6px 0 0; color: var(--muted); font-size: 0.82rem; }
+
+.checklist {
+  display: grid;
+  gap: 9px;
+}
+
+.check-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+}
+
+.check-dot {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--panel-3);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.check-row.pass .check-dot { color: var(--on-accent); background: var(--green); }
+.check-row.warn .check-dot { color: var(--on-accent); background: var(--amber); }
+.check-row.fail .check-dot { color: var(--on-accent); background: var(--red); }
+.check-row strong { display: block; font-size: 0.82rem; }
+.check-row span { display: block; color: var(--muted); font-size: 0.75rem; margin-top: 2px; }
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.metric {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+
+.metric .k {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric .v {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.03rem;
+  font-weight: 900;
+}
+
+.note {
+  padding: 13px 14px;
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 12px 12px 0;
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.note strong { color: var(--text); }
+
+.matrix {
+  display: grid;
+  gap: 8px;
+}
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.matrix-row > span:first-child {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.state-pill::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state-pill.bull { color: var(--green); }
+.state-pill.bear { color: var(--red); }
+.state-pill.range { color: var(--amber); }
+.state-pill.shift { color: var(--purple); }
+.state-pill.neutral { color: var(--muted); }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 760;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  outline: none;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.field input:focus,
+.field select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(55,215,231,0.1); }
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+th, td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+th {
+  color: var(--muted);
+  background: var(--panel-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+tr:last-child td { border-bottom: 0; }
+tr.selectable { cursor: pointer; }
+tr.selectable:hover td { background: rgba(55,215,231,0.05); }
+tr.selected td { background: rgba(55,215,231,0.1); }
+td.good { color: var(--green); font-weight: 800; }
+td.warn { color: var(--amber); font-weight: 800; }
+td.bad { color: var(--red); font-weight: 800; }
+
+.practice {
+  padding: 20px;
+}
+
+.practice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.practice-head h3 { margin: 0; }
+.score {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.choice {
+  min-height: 54px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-weight: 780;
+}
+
+.choice:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.choice.correct { border-color: var(--green); background: rgba(65,227,155,0.1); }
+.choice.incorrect { border-color: var(--red); background: rgba(255,110,125,0.1); }
+
+.feedback {
+  min-height: 56px;
+  margin-top: 12px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.feedback.good { border-color: rgba(65,227,155,0.45); background: rgba(65,227,155,0.07); }
+.feedback.bad { border-color: rgba(255,110,125,0.45); background: rgba(255,110,125,0.07); }
+.feedback strong { color: var(--text); }
+
+.lesson-list {
+  display: grid;
+  gap: 10px;
+}
+
+.lesson-row {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+}
+
+.lesson-row .num {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--cyan);
+  font-weight: 950;
+}
+
+.lesson-row strong { display: block; font-size: 0.88rem; }
+.lesson-row span { display: block; margin-top: 3px; color: var(--muted); font-size: 0.8rem; }
+
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid rgba(255,200,87,0.3);
+  border-radius: 15px;
+  background: rgba(255,200,87,0.07);
+}
+
+.callout .mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--amber);
+  font-weight: 950;
+}
+
+.callout strong { display: block; }
+.callout p { margin: 4px 0 0; color: var(--muted); font-size: 0.84rem; }
+
+.footer {
+  margin-top: 42px;
+  padding: 22px 4px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.footer strong { color: var(--text); }
+.footer p { margin: 0 0 6px; }
+.footer p:last-child { margin-bottom: 0; }
+.footer a { color: var(--cyan-2); text-underline-offset: 3px; }
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; padding-top: 54px; }
+  .hero-visual { min-height: 290px; }
+  .lab-layout { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .shell { width: min(100% - 18px, 1220px); padding-top: 9px; }
+  .topbar { top: 7px; }
+  .brand-copy span { display: none; }
+  .hero { padding: 48px 2px 28px; }
+  h1 { font-size: clamp(2.35rem, 14vw, 4.3rem); }
+  .section { padding: 27px 0; }
+  .section-head { display: block; }
+  .section-head p { margin-top: 8px; }
+  .grid-2, .grid-3, .grid-4, .choice-grid, .form-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: 1fr; }
+  .chart-wrap, .market-chart { min-height: 320px; }
+  .control-strip { align-items: stretch; }
+  .control-group.grow { flex-basis: 100%; }
+  .matrix-row { grid-template-columns: 88px 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+}
+
+
+  </style>
+
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives in <head> and not with the rest of the
+       page script at the bottom of <body>: that runs after the first paint.
+       SAME localStorage key as every other page in this course
+       ('marketStructureTheme') so the choice persists across all seven lessons.
+       The allowlist matters — a corrupt value would otherwise be written
+       straight onto data-theme, matching no CSS while still counting as an
+       explicit choice, which permanently mislabels the toggle and pins the page
+       to the dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('marketStructureTheme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Market Structure Course — back to the lesson library">
+        <div class="brand-mark" aria-hidden="true">02</div>
+        <div class="brand-copy">
+          <strong>Market Structure Course</strong>
+          <span>Standalone interactive learning lab</span>
+        </div>
+      </a>
+      <nav class="topnav" aria-label="Primary">
+        <a href="../">Library</a>
+        <a href="#concepts">Concepts</a>
+        <a href="#lab">Interactive Lab</a>
+        <a href="#framework">Framework</a>
+        <a href="#practice">Practice</a>
+      </nav>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+    </header>
+
+    <noscript>
+      <div class="noscript-note">
+        <strong>JavaScript is required for the interactive parts of this lesson.</strong>
+        The candlestick charts, the boundary reader, and the classification drill are drawn in your browser, so they stay blank while JavaScript is disabled. The written explanations, the decision framework, and the journal prompts below still read normally.
+      </div>
+    </noscript>
+
+    <main id="main">
+
+<section class="hero">
+  <div>
+    <span class="eyebrow"><span class="pulse"></span>Lesson 02 · Boundaries</span>
+    <h1>Ranges, breakouts &amp; <span class="gradient-text">liquidity sweeps</span></h1>
+    <p>
+      Learn to separate a real break from a dramatic wick. The central question is not
+      “Did price cross the line?” but “Did price close beyond it, hold there, and build structure?”
+    </p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#lab">Open the lab</a>
+      <a class="btn ghost" href="#framework">See the decision framework</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <svg viewBox="0 0 520 330" role="img" aria-label="Illustration of a range, sweep, and breakout">
+      <defs>
+        <linearGradient id="heroSweep" x1="0" x2="1">
+          <stop class="stop-cyan" offset="0" stop-opacity=".9"/>
+          <stop class="stop-purple" offset="1" stop-opacity=".9"/>
+        </linearGradient>
+      </defs>
+      <line class="ink-red" x1="42" y1="92" x2="478" y2="92" stroke="currentColor" stroke-width="2" stroke-dasharray="8 7"/>
+      <line class="ink-green" x1="42" y1="244" x2="478" y2="244" stroke="currentColor" stroke-width="2" stroke-dasharray="8 7"/>
+      <text class="ink-red" x="46" y="80" fill="currentColor" font-size="12" font-weight="800">RANGE HIGH</text>
+      <text class="ink-green" x="46" y="264" fill="currentColor" font-size="12" font-weight="800">RANGE LOW</text>
+      <polyline
+        points="46,190 82,152 116,210 150,127 188,183 224,106 254,171 290,118 326,190 356,83 370,43 386,111 420,124 454,72 478,58"
+        fill="none" stroke="url(#heroSweep)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle class="ink-amber" cx="370" cy="43" r="7" fill="currentColor"/>
+      <path class="ink-amber" d="M370 35 L370 18" stroke="currentColor" stroke-width="2"/>
+      <text class="ink-amber" x="370" y="13" text-anchor="middle" fill="currentColor" font-size="12" font-weight="900">SWEEP</text>
+      <circle class="ink-cyan" cx="454" cy="72" r="7" fill="currentColor"/>
+      <text class="ink-cyan-2" x="452" y="54" text-anchor="middle" fill="currentColor" font-size="12" font-weight="900">ACCEPTANCE</text>
+    </svg>
+    <div class="float-label" style="left:18px;bottom:18px;">Wick ≠ confirmed break</div>
+  </div>
+</section>
+
+<section class="section" id="concepts">
+  <div class="section-head">
+    <div><h2>Three ideas to master</h2></div>
+    <p>A range is a negotiation zone. Its boundaries become meaningful because traders repeatedly react there.</p>
+  </div>
+  <div class="grid-3">
+    <article class="card concept-card">
+      <div class="icon">↔</div>
+      <h3>Range</h3>
+      <p>Price rotates between a recognizable high and low. The middle usually offers less information than the edges.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">✓</div>
+      <h3>Acceptance</h3>
+      <p>Price closes beyond a boundary, spends time outside, and either holds or forms new structure there.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">↶</div>
+      <h3>Liquidity sweep</h3>
+      <p>Price trades beyond an obvious level, then rejects and closes back inside. The failed break is the evidence.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="lab">
+  <div class="section-head">
+    <div><h2>Interactive boundary reader</h2></div>
+    <p>Play each scenario candle by candle. Watch the close and the follow-through rather than reacting to the wick alone.</p>
+  </div>
+
+  <div class="lab-layout">
+    <article class="card chart-card">
+      <div class="chart-toolbar">
+        <div class="chart-title">
+          <strong id="scenarioTitle">Range rejection</strong>
+          <span>Illustrative 1-hour candles · synthetic data</span>
+        </div>
+        <div class="tab-row" id="scenarioTabs">
+          <button class="tab active" data-scenario="rejection" type="button">Rejection</button>
+          <button class="tab" data-scenario="breakout" type="button">Breakout</button>
+          <button class="tab" data-scenario="retest" type="button">Break + retest</button>
+          <button class="tab" data-scenario="highSweep" type="button">High sweep</button>
+          <button class="tab" data-scenario="lowSweep" type="button">Low sweep</button>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <svg id="boundaryChart" class="market-chart" role="img" aria-label="Interactive candlestick chart"></svg>
+        <div class="chart-tooltip"></div>
+      </div>
+      <div class="control-strip">
+        <button class="btn small" id="playBoundary" type="button">▶ Play</button>
+        <div class="control-group grow">
+          <label for="boundaryStep">Candle</label>
+          <input id="boundaryStep" type="range" min="1" max="28" value="28" />
+          <strong id="boundaryStepLabel">28 / 28</strong>
+        </div>
+        <label class="check"><input id="showRange" type="checkbox" checked /> Range</label>
+        <label class="check"><input id="showCloses" type="checkbox" /> Closes</label>
+        <label class="check"><input id="showBoundaryLabels" type="checkbox" checked /> Labels</label>
+      </div>
+    </article>
+
+    <!-- One wrapping live region: the summary, the verdict, its reason and the
+         three checklist rows are all rewritten together by renderBoundary(), so
+         a single polite region announces the new diagnosis once instead of
+         firing five separate announcements per slider step. -->
+    <aside class="card side-panel" aria-live="polite">
+      <h3>Read the evidence</h3>
+      <p id="scenarioSummary">The upper boundary rejects price without a confirmed close outside.</p>
+
+      <div class="verdict">
+        <span class="label">Current diagnosis</span>
+        <strong id="boundaryVerdict">Range still intact</strong>
+        <p id="boundaryReason">Price tested the high but has not demonstrated acceptance above it.</p>
+      </div>
+
+      <div class="checklist">
+        <div class="check-row" id="checkCross">
+          <div class="check-dot">1</div>
+          <div><strong>Trade beyond boundary</strong><span id="checkCrossText">Has price crossed the high or low?</span></div>
+        </div>
+        <div class="check-row" id="checkClose">
+          <div class="check-dot">2</div>
+          <div><strong>Close outside</strong><span id="checkCloseText">A wick alone is not enough.</span></div>
+        </div>
+        <div class="check-row" id="checkHold">
+          <div class="check-dot">3</div>
+          <div><strong>Hold or retest</strong><span id="checkHoldText">Look for continuation or a successful retest.</span></div>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Working rule:</strong> Treat a wick beyond the boundary with a close back inside as a sweep candidate.
+        Treat a strong close outside as evidence—not final proof—of a breakout.
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="framework">
+  <div class="section-head">
+    <div><h2>The boundary decision framework</h2></div>
+    <p>Classify the sequence, not a single candle.</p>
+  </div>
+  <div class="grid-4">
+    <article class="card concept-card">
+      <div class="icon">1</div>
+      <h3>Rejection</h3>
+      <p>Price reaches a boundary and rotates away without materially trading through it.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">2</div>
+      <h3>Confirmed breakout</h3>
+      <p>A close lands outside the range and subsequent candles remain accepted beyond the boundary.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">3</div>
+      <h3>Breakout + retest</h3>
+      <p>Price exits, returns to the old boundary, holds it from the other side, and resumes.</p>
+    </article>
+    <article class="card concept-card">
+      <div class="icon">4</div>
+      <h3>Liquidity sweep</h3>
+      <p>Price pierces the level, fails to remain outside, and often accelerates back through the range.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section" id="practice">
+  <div class="grid-2">
+    <article class="card practice">
+      <div class="practice-head">
+        <h3>Classification drill</h3>
+        <span class="score" id="boundaryScore">Score 0 / 0</span>
+      </div>
+      <p style="margin:0;color:var(--muted);font-size:.88rem;">
+        Labels are hidden. Classify the completed sequence around the range boundary.
+      </p>
+      <div class="chart-wrap" style="min-height:300px;margin:14px -4px 0;">
+        <svg id="boundaryQuizChart" class="market-chart" style="min-height:300px;" role="img" aria-label="Practice candlestick chart"></svg>
+        <div class="chart-tooltip"></div>
+      </div>
+      <div class="choice-grid" id="boundaryChoices">
+        <button class="choice" data-answer="rejection" type="button">Range rejection</button>
+        <button class="choice" data-answer="breakout" type="button">Confirmed breakout</button>
+        <button class="choice" data-answer="retest" type="button">Breakout + retest</button>
+        <button class="choice" data-answer="sweep" type="button">Liquidity sweep</button>
+      </div>
+      <div class="feedback" id="boundaryFeedback" aria-live="polite">Choose the classification that best explains the full sequence.</div>
+      <button class="btn small" id="nextBoundaryQuiz" type="button" style="margin-top:10px;">New chart</button>
+    </article>
+
+    <article class="card card-pad">
+      <h3 style="margin-top:0;">What to write in your journal</h3>
+      <div class="lesson-list">
+        <div class="lesson-row">
+          <div class="num">1</div>
+          <div><strong>Define the range before the break</strong><span>Record the high, low, midpoint, and how many reactions make the boundaries meaningful.</span></div>
+        </div>
+        <div class="lesson-row">
+          <div class="num">2</div>
+          <div><strong>Record the closing behavior</strong><span>Did the candle close outside, at the edge, or back inside?</span></div>
+        </div>
+        <div class="lesson-row">
+          <div class="num">3</div>
+          <div><strong>Wait for the next evidence</strong><span>Continuation, acceptance, a retest, or immediate rejection determines the classification.</span></div>
+        </div>
+        <div class="lesson-row">
+          <div class="num">4</div>
+          <div><strong>State invalidation precisely</strong><span>Example: “The bullish breakout thesis fails if price re-enters and accepts below the old high.”</span></div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+
+    </main>
+
+    <footer class="footer">
+      <p><strong>Educational lab.</strong> Charts and numbers are synthetic examples—not live market data or trading signals.</p>
+      <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
+      <p><a href="https://geterdone.io">geterdone.io</a></p>
+    </footer>
+  </div>
+
+  <script>
+
+const NS = "http://www.w3.org/2000/svg";
+
+function svgNode(tag, attrs = {}, textContent = "") {
+  const node = document.createElementNS(NS, tag);
+  Object.entries(attrs).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) node.setAttribute(key, value);
+  });
+  if (textContent !== "") node.textContent = textContent;
+  return node;
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function formatPrice(value) {
+  return Number(value).toFixed(2);
+}
+
+function formatCompact(value) {
+  const n = Number(value);
+  if (Math.abs(n) >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+  if (Math.abs(n) >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return n.toFixed(0);
+}
+
+function deterministicNoise(index, salt = 1) {
+  const x = Math.sin((index + 1) * (12.9898 + salt * 0.19)) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+function candlesFromCloses(closes, overrides = {}, salt = 1) {
+  return closes.map((close, index) => {
+    const open = index === 0
+      ? close - (deterministicNoise(index, salt) - 0.45) * 1.2
+      : closes[index - 1] + (deterministicNoise(index, salt + 1) - 0.5) * 0.5;
+    const spread = 0.55 + deterministicNoise(index, salt + 2) * 0.8;
+    let high = Math.max(open, close) + spread;
+    let low = Math.min(open, close) - spread * (0.8 + deterministicNoise(index, salt + 3) * 0.4);
+    const custom = overrides[index] || {};
+    return {
+      o: custom.o ?? open,
+      h: custom.h ?? high,
+      l: custom.l ?? low,
+      c: custom.c ?? close,
+      v: custom.v ?? Math.round(700 + deterministicNoise(index, salt + 4) * 650),
+      label: custom.label || ""
+    };
+  });
+}
+
+function clearSvg(svg) {
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+}
+
+function attachTooltip(target, wrap, htmlFactory) {
+  const tooltip = wrap ? wrap.querySelector(".chart-tooltip") : null;
+  if (!tooltip) return;
+  target.addEventListener("pointermove", (event) => {
+    tooltip.innerHTML = htmlFactory();
+    tooltip.style.display = "block";
+    const bounds = wrap.getBoundingClientRect();
+    const left = clamp(event.clientX - bounds.left + 12, 8, bounds.width - 170);
+    const top = clamp(event.clientY - bounds.top - 58, 8, bounds.height - 90);
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  });
+  target.addEventListener("pointerleave", () => {
+    tooltip.style.display = "none";
+  });
+}
+
+function drawCandles(svg, data, options = {}) {
+  clearSvg(svg);
+  const W = options.width || 960;
+  const H = options.height || 430;
+  const margin = {
+    left: options.marginLeft ?? 58,
+    right: options.marginRight ?? 20,
+    top: options.marginTop ?? 20,
+    bottom: options.marginBottom ?? 38
+  };
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+  const visibleCount = clamp(options.visibleCount ?? data.length, 1, data.length);
+  const visible = data.slice(0, visibleCount);
+  const includeValues = options.includeValues || [];
+  let minPrice = Math.min(...visible.map(d => d.l), ...includeValues);
+  let maxPrice = Math.max(...visible.map(d => d.h), ...includeValues);
+  const rawRange = Math.max(0.01, maxPrice - minPrice);
+  minPrice -= rawRange * 0.09;
+  maxPrice += rawRange * 0.09;
+
+  const plot = {
+    left: margin.left,
+    right: W - margin.right,
+    top: margin.top,
+    bottom: H - margin.bottom
+  };
+  plot.width = plot.right - plot.left;
+  plot.height = plot.bottom - plot.top;
+
+  const xStep = plot.width / Math.max(data.length, 1);
+  const x = (index) => plot.left + xStep * index + xStep / 2;
+  const y = (price) => plot.bottom - ((price - minPrice) / (maxPrice - minPrice)) * plot.height;
+  const priceFromY = (pixel) => minPrice + ((plot.bottom - pixel) / plot.height) * (maxPrice - minPrice);
+
+  const defs = svgNode("defs");
+  const clip = svgNode("clipPath", { id: `${svg.id || "chart"}-clip` });
+  clip.appendChild(svgNode("rect", { x: plot.left, y: plot.top, width: plot.width, height: plot.height }));
+  defs.appendChild(clip);
+  svg.appendChild(defs);
+
+  for (let i = 0; i <= 5; i++) {
+    const yy = plot.top + (plot.height / 5) * i;
+    svg.appendChild(svgNode("line", {
+      x1: plot.left, y1: yy, x2: plot.right, y2: yy, class: "chart-grid"
+    }));
+    const price = maxPrice - ((maxPrice - minPrice) / 5) * i;
+    svg.appendChild(svgNode("text", {
+      x: plot.left - 9, y: yy + 4, "text-anchor": "end", class: "chart-axis"
+    }, price.toFixed(options.axisDecimals ?? 1)));
+  }
+
+  for (let i = 0; i <= 6; i++) {
+    const xx = plot.left + (plot.width / 6) * i;
+    svg.appendChild(svgNode("line", {
+      x1: xx, y1: plot.top, x2: xx, y2: plot.bottom, class: "chart-grid"
+    }));
+  }
+
+  const zoneLayer = svgNode("g", { "clip-path": `url(#${svg.id || "chart"}-clip)` });
+  (options.zones || []).forEach(zone => {
+    const topY = y(Math.max(zone.high, zone.low));
+    const bottomY = y(Math.min(zone.high, zone.low));
+    zoneLayer.appendChild(svgNode("rect", {
+      x: plot.left,
+      y: topY,
+      width: plot.width,
+      height: Math.max(1, bottomY - topY),
+      class: `zone tone-${zone.tone || "cyan"}`
+    }));
+    if (zone.label) {
+      svg.appendChild(svgNode("text", {
+        x: plot.right - 5,
+        y: topY + 13,
+        "text-anchor": "end",
+        class: `chart-label tone-${zone.tone || "cyan"}`
+      }, zone.label));
+    }
+  });
+  svg.appendChild(zoneLayer);
+
+  (options.focusWindows || []).forEach(windowDef => {
+    const startX = x(windowDef.start) - xStep * 0.48;
+    const endX = x(windowDef.end) + xStep * 0.48;
+    svg.appendChild(svgNode("rect", {
+      x: startX,
+      y: plot.top,
+      width: Math.max(xStep, endX - startX),
+      height: plot.height,
+      class: "focus-window"
+    }));
+    if (windowDef.label) {
+      svg.appendChild(svgNode("text", {
+        x: startX + 7, y: plot.top + 16, class: "chart-label tone-cyan"
+      }, windowDef.label));
+    }
+  });
+
+  const candleLayer = svgNode("g", { "clip-path": `url(#${svg.id || "chart"}-clip)` });
+  const candleWidth = Math.max(3, Math.min(17, xStep * 0.58));
+  const wrap = svg.closest(".chart-wrap");
+
+  visible.forEach((d, index) => {
+    const group = svgNode("g", {
+      class: d.c > d.o ? "candle-up" : d.c < d.o ? "candle-down" : "candle-flat"
+    });
+    group.appendChild(svgNode("line", {
+      x1: x(index), y1: y(d.h), x2: x(index), y2: y(d.l),
+      class: "wick", "stroke-width": 1.5
+    }));
+    const bodyTop = y(Math.max(d.o, d.c));
+    const bodyBottom = y(Math.min(d.o, d.c));
+    group.appendChild(svgNode("rect", {
+      x: x(index) - candleWidth / 2,
+      y: bodyTop,
+      width: candleWidth,
+      height: Math.max(2, bodyBottom - bodyTop),
+      rx: 1.5,
+      class: "body",
+      "fill-opacity": 0.86,
+      "stroke-width": 1
+    }));
+    const hit = svgNode("rect", {
+      x: x(index) - xStep / 2,
+      y: plot.top,
+      width: xStep,
+      height: plot.height,
+      fill: "transparent"
+    });
+    attachTooltip(hit, wrap, () =>
+      `<strong>Candle ${index + 1}</strong><span>O ${formatPrice(d.o)} · H ${formatPrice(d.h)}<br>L ${formatPrice(d.l)} · C ${formatPrice(d.c)}</span>`
+    );
+    group.appendChild(hit);
+    candleLayer.appendChild(group);
+
+    if (options.showCloses) {
+      candleLayer.appendChild(svgNode("circle", {
+        cx: x(index), cy: y(d.c), r: 3.4, class: "close-dot"
+      }));
+    }
+  });
+  svg.appendChild(candleLayer);
+
+  (options.levels || []).forEach(level => {
+    const yy = y(level.value);
+    svg.appendChild(svgNode("line", {
+      x1: plot.left, y1: yy, x2: plot.right, y2: yy,
+      class: `level-line tone-${level.tone || "cyan"}`,
+      "stroke-dasharray": level.solid ? "0" : (level.dash || "7 6"),
+      opacity: level.opacity ?? 0.9
+    }));
+    if (level.label) {
+      const anchor = level.side === "left" ? "start" : "end";
+      const xx = level.side === "left" ? plot.left + 6 : plot.right - 5;
+      svg.appendChild(svgNode("text", {
+        x: xx, y: yy - 7, "text-anchor": anchor,
+        class: `chart-label tone-${level.tone || "cyan"}`
+      }, level.label));
+    }
+  });
+
+  (options.annotations || []).forEach(annotation => {
+    if (annotation.index >= visibleCount) return;
+    const px = x(annotation.index);
+    const py = y(annotation.value ?? data[annotation.index].c);
+    const dy = annotation.position === "below" ? 18 : -12;
+    svg.appendChild(svgNode("circle", {
+      cx: px, cy: py, r: 4.5,
+      // .annot-dot is declared after the .tone-* rules so it wins the fill and
+      // leaves the tone class owning the stroke. A fill="var(--panel-solid)"
+      // presentation attribute would not be substituted in every engine, and
+      // would not follow the theme when it was.
+      class: `tone-${annotation.tone || "cyan"} annot-dot`,
+      "stroke-width": 2
+    }));
+    svg.appendChild(svgNode("text", {
+      x: px + (annotation.dx || 0),
+      y: py + dy + (annotation.dy || 0),
+      "text-anchor": annotation.anchor || "middle",
+      class: `chart-label tone-${annotation.tone || "cyan"}`
+    }, annotation.label));
+  });
+
+  if (typeof options.overlay === "function") {
+    options.overlay({ svg, x, y, priceFromY, plot, xStep, visibleCount, data, minPrice, maxPrice, W, H });
+  }
+
+  return { x, y, priceFromY, plot, xStep, minPrice, maxPrice, visibleCount };
+}
+
+function drawLineChart(svg, seriesList, options = {}) {
+  clearSvg(svg);
+  const W = options.width || 960;
+  const H = options.height || 320;
+  const margin = { left: 55, right: 20, top: 20, bottom: 34 };
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const allValues = seriesList.flatMap(s => s.values);
+  let minValue = Math.min(...allValues);
+  let maxValue = Math.max(...allValues);
+  const padding = Math.max(0.01, (maxValue - minValue) * 0.1);
+  minValue -= padding;
+  maxValue += padding;
+  const plot = { left: margin.left, right: W - margin.right, top: margin.top, bottom: H - margin.bottom };
+  plot.width = plot.right - plot.left;
+  plot.height = plot.bottom - plot.top;
+  const maxLen = Math.max(...seriesList.map(s => s.values.length));
+  const x = i => plot.left + (i / Math.max(1, maxLen - 1)) * plot.width;
+  const y = v => plot.bottom - ((v - minValue) / Math.max(0.001, maxValue - minValue)) * plot.height;
+
+  for (let i = 0; i <= 5; i++) {
+    const yy = plot.top + plot.height * i / 5;
+    svg.appendChild(svgNode("line", { x1: plot.left, y1: yy, x2: plot.right, y2: yy, class: "chart-grid" }));
+    const val = maxValue - (maxValue - minValue) * i / 5;
+    svg.appendChild(svgNode("text", { x: plot.left - 8, y: yy + 4, "text-anchor": "end", class: "chart-axis" }, val.toFixed(options.decimals ?? 1)));
+  }
+
+  seriesList.forEach((series, sIndex) => {
+    const pts = series.values.map((value, i) => `${x(i)},${y(value)}`).join(" ");
+    svg.appendChild(svgNode("polyline", {
+      points: pts,
+      fill: "none",
+      class: `tone-${series.tone || (sIndex === 0 ? "cyan" : "purple")}`,
+      stroke: "currentColor",
+      "stroke-width": series.width || 2.6,
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      opacity: series.opacity ?? 1
+    }));
+    if (series.label) {
+      const lastIndex = series.values.length - 1;
+      svg.appendChild(svgNode("text", {
+        x: x(lastIndex) - 4,
+        y: y(series.values[lastIndex]) - 9,
+        "text-anchor": "end",
+        class: `chart-label tone-${series.tone || "cyan"}`
+      }, series.label));
+    }
+  });
+
+  return { x, y, plot, minValue, maxValue };
+}
+
+const storage = {
+  get(key, fallback = null) {
+    try { return localStorage.getItem(key) ?? fallback; } catch (_) { return fallback; }
+  },
+  set(key, value) {
+    try { localStorage.setItem(key, String(value)); } catch (_) { /* Storage can be unavailable for local files. */ }
+  }
+};
+
+/* The stored choice was already read, validated against the 'light'/'dark'
+   allowlist, and applied by the pre-paint <head> script, so data-theme is
+   trustworthy by the time this runs. This block only owns the toggle and its
+   icon. No chart repaint is scheduled on a theme change on purpose: every
+   colour the SVG charts draw with comes from a CSS class bound to a token, so
+   the existing nodes re-theme themselves. Nothing here samples
+   getComputedStyle at draw time — if that ever changes, a repaint has to be
+   added to both branches below. */
+function setupTheme() {
+  const button = document.getElementById("themeToggle");
+  const lightQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+  // No explicit choice stored means the system preference decides, matching the CSS media block.
+  const effectiveTheme = () =>
+    document.documentElement.dataset.theme || (lightQuery && lightQuery.matches ? "light" : "dark");
+  const renderIcon = () => {
+    if (!button) return;
+    button.textContent = effectiveTheme() === "light" ? "☀" : "☾";
+  };
+  renderIcon();
+
+  button?.addEventListener("click", () => {
+    const next = effectiveTheme() === "light" ? "dark" : "light";
+    document.documentElement.dataset.theme = next;
+    storage.set("marketStructureTheme", next);
+    renderIcon();
+  });
+
+  if (lightQuery) {
+    const onSystemThemeChange = () => {
+      if (document.documentElement.dataset.theme) return; // an explicit toggle choice wins
+      renderIcon();
+    };
+    if (lightQuery.addEventListener) lightQuery.addEventListener("change", onSystemThemeChange);
+    else if (lightQuery.addListener) lightQuery.addListener(onSystemThemeChange);
+  }
+}
+
+setupTheme();
+
+
+
+const RANGE_HIGH = 110;
+const RANGE_LOW = 100;
+
+function buildBoundaryScenario(key) {
+  const shared = [104.2, 105.6, 107.8, 106.4, 103.8, 101.7, 103.1, 105.4, 108.2, 109.1, 107.0, 104.9, 102.4, 101.1, 103.0, 105.8, 108.7];
+  const definitions = {
+    rejection: {
+      title: "Range rejection",
+      summary: "The upper boundary rejects price without a confirmed close outside.",
+      closes: [...shared, 109.3, 108.6, 106.8, 104.8, 102.9, 101.6, 103.4, 105.6, 107.1, 105.0, 103.2],
+      overrides: { 17: { h: 110.25 }, 18: { h: 109.8 } },
+      answer: "rejection",
+      eventIndex: 17,
+      explanation: "Price tested the range high but did not close beyond it; the rotation remained inside the established range."
+    },
+    breakout: {
+      title: "Confirmed breakout",
+      summary: "Price closes above the high and continues building candles outside the old range.",
+      closes: [...shared, 109.5, 111.4, 112.3, 113.1, 112.7, 114.2, 115.0, 114.6, 116.1, 115.7, 116.8],
+      overrides: { 18: { h: 112.1, l: 108.6 }, 19: { l: 110.65 } },
+      answer: "breakout",
+      eventIndex: 18,
+      explanation: "The first close above the range is followed by continued acceptance and higher closes outside."
+    },
+    retest: {
+      title: "Breakout and retest",
+      summary: "Price exits the range, returns to the old high, holds it as support, and resumes upward.",
+      closes: [...shared, 109.5, 111.5, 113.0, 112.2, 110.5, 110.8, 112.4, 113.6, 114.5, 114.1, 115.3],
+      overrides: { 18: { h: 112.0 }, 21: { l: 109.88 }, 22: { l: 109.94 } },
+      answer: "retest",
+      eventIndex: 18,
+      retestIndex: 21,
+      explanation: "The old range high is tested from above and holds, converting former resistance into support."
+    },
+    highSweep: {
+      title: "High-side liquidity sweep",
+      summary: "A dramatic wick trades above the range high, but the candle closes back inside and price rotates lower.",
+      closes: [...shared, 109.2, 108.7, 106.4, 104.6, 102.8, 101.2, 100.7, 102.0, 103.6, 102.5, 101.4],
+      overrides: { 17: { h: 112.35, l: 108.35, c: 109.2 }, 18: { h: 109.4 } },
+      answer: "sweep",
+      eventIndex: 17,
+      explanation: "Price traded above the obvious high but failed to close outside. The rejection back into the range defines the sweep."
+    },
+    lowSweep: {
+      title: "Low-side liquidity sweep",
+      summary: "Price pierces the range low, closes back inside, and then rotates upward through the range.",
+      closes: [...shared.slice(0, 13), 101.0, 100.6, 101.4, 102.0, 100.8, 101.3, 103.7, 105.9, 107.6, 108.8, 107.4, 109.2, 108.3, 109.6, 108.9],
+      overrides: { 17: { l: 97.7, h: 102.0, c: 100.8 }, 18: { l: 100.4 } },
+      answer: "sweep",
+      eventIndex: 17,
+      explanation: "The low was pierced intrabar, but price reclaimed it before the close and subsequently held inside the range."
+    }
+  };
+  const def = definitions[key];
+  return {
+    ...def,
+    data: candlesFromCloses(def.closes, def.overrides, Object.keys(definitions).indexOf(key) + 10)
+  };
+}
+
+const boundaryState = {
+  scenario: "rejection",
+  step: 28,
+  playing: false,
+  timer: null,
+  score: 0,
+  attempts: 0,
+  quizKey: "highSweep",
+  quizAnswered: false
+};
+
+const boundaryChart = document.getElementById("boundaryChart");
+const boundaryStep = document.getElementById("boundaryStep");
+const boundaryStepLabel = document.getElementById("boundaryStepLabel");
+const playBoundary = document.getElementById("playBoundary");
+
+function boundaryEvidence(scenario, stepCount) {
+  const visible = scenario.data.slice(0, stepCount);
+  const eventReached = stepCount > scenario.eventIndex;
+  const crossedHigh = visible.some(d => d.h > RANGE_HIGH);
+  const crossedLow = visible.some(d => d.l < RANGE_LOW);
+  const crossed = crossedHigh || crossedLow;
+  const closedHigh = visible.some(d => d.c > RANGE_HIGH);
+  const closedLow = visible.some(d => d.c < RANGE_LOW);
+  const closedOutside = closedHigh || closedLow;
+
+  let hold = false;
+  if (scenario.answer === "breakout" && stepCount > scenario.eventIndex + 2) {
+    hold = visible.slice(scenario.eventIndex).filter(d => d.c > RANGE_HIGH).length >= 3;
+  }
+  if (scenario.answer === "retest" && stepCount > scenario.retestIndex + 1) {
+    hold = visible.slice(scenario.retestIndex).some(d => d.l <= RANGE_HIGH + 0.2 && d.c > RANGE_HIGH);
+  }
+
+  if (!eventReached) {
+    return {
+      crossed, closedOutside, hold,
+      verdict: "Range developing",
+      reason: "The decisive boundary interaction has not occurred yet.",
+      crossStatus: crossed ? "pass" : "",
+      closeStatus: closedOutside ? "pass" : "",
+      holdStatus: "",
+      crossText: crossed ? "Price has traded beyond a range boundary." : "No meaningful boundary violation yet.",
+      closeText: closedOutside ? "At least one candle closed outside." : "No candle has closed outside.",
+      holdText: "Wait for continuation, rejection, or a retest."
+    };
+  }
+
+  if (scenario.answer === "sweep") {
+    return {
+      crossed: true, closedOutside: false, hold: false,
+      verdict: "Liquidity sweep",
+      reason: "Price crossed the boundary intrabar but reclaimed the range before the close.",
+      crossStatus: "pass",
+      closeStatus: "fail",
+      holdStatus: "fail",
+      crossText: "The boundary was pierced.",
+      closeText: "The event candle closed back inside.",
+      holdText: "Price failed to establish acceptance outside."
+    };
+  }
+
+  if (scenario.answer === "rejection") {
+    return {
+      crossed, closedOutside: false, hold: false,
+      verdict: "Range still intact",
+      reason: "The test did not produce a close and acceptance outside the range.",
+      crossStatus: crossed ? "warn" : "",
+      closeStatus: "fail",
+      holdStatus: "fail",
+      crossText: crossed ? "Price briefly touched or crossed the edge." : "Price tested the high without a meaningful cross.",
+      closeText: "No confirmed close outside.",
+      holdText: "Rotation resumed within the range."
+    };
+  }
+
+  if (scenario.answer === "breakout") {
+    const enoughFollowThrough = stepCount > scenario.eventIndex + 2;
+    return {
+      crossed: true, closedOutside, hold,
+      verdict: enoughFollowThrough ? "Confirmed breakout" : "Breakout attempt",
+      reason: enoughFollowThrough
+        ? "The close outside was followed by sustained acceptance above the old high."
+        : "A close outside exists, but follow-through is still developing.",
+      crossStatus: "pass",
+      closeStatus: closedOutside ? "pass" : "warn",
+      holdStatus: hold ? "pass" : "warn",
+      crossText: "Price traded through the range high.",
+      closeText: closedOutside ? "A candle closed above the range." : "The close has not confirmed yet.",
+      holdText: hold ? "Multiple closes remain accepted outside." : "Wait for additional candles outside."
+    };
+  }
+
+  const retestReached = stepCount > scenario.retestIndex;
+  const resumed = stepCount > scenario.retestIndex + 2;
+  return {
+    crossed: true, closedOutside, hold,
+    verdict: resumed ? "Breakout + successful retest" : retestReached ? "Retest in progress" : "Breakout awaiting retest",
+    reason: resumed
+      ? "The old range high held from above and price resumed in the breakout direction."
+      : retestReached
+        ? "Price has returned to the old boundary; the next reaction matters."
+        : "The breakout is accepted so far, but the retest has not happened yet.",
+    crossStatus: "pass",
+    closeStatus: closedOutside ? "pass" : "warn",
+    holdStatus: hold ? "pass" : retestReached ? "warn" : "",
+    crossText: "Price exited through the range high.",
+    closeText: "The breakout candle closed outside.",
+    holdText: hold ? "The old high held as support." : retestReached ? "Retest is being evaluated." : "No retest yet."
+  };
+}
+
+function updateCheckRow(id, status, textId, text) {
+  const row = document.getElementById(id);
+  row.className = `check-row ${status || ""}`;
+  document.getElementById(textId).textContent = text;
+}
+
+function renderBoundary() {
+  const scenario = buildBoundaryScenario(boundaryState.scenario);
+  const count = boundaryState.step;
+  const labels = document.getElementById("showBoundaryLabels").checked;
+  const levels = document.getElementById("showRange").checked
+    ? [
+        { value: RANGE_HIGH, label: labels ? "Range high 110" : "", tone: "red" },
+        { value: RANGE_LOW, label: labels ? "Range low 100" : "", tone: "green" }
+      ]
+    : [];
+  const annotations = [];
+  if (labels && count > scenario.eventIndex) {
+    if (scenario.answer === "sweep") {
+      const side = boundaryState.scenario === "lowSweep" ? "below" : "above";
+      annotations.push({
+        index: scenario.eventIndex,
+        value: side === "below" ? scenario.data[scenario.eventIndex].l : scenario.data[scenario.eventIndex].h,
+        label: side === "below" ? "Sweep + reclaim" : "Sweep + rejection",
+        tone: "amber",
+        position: side
+      });
+    } else if (scenario.answer === "breakout" || scenario.answer === "retest") {
+      annotations.push({
+        index: scenario.eventIndex,
+        value: scenario.data[scenario.eventIndex].c,
+        label: "Close outside",
+        tone: "cyan"
+      });
+      if (scenario.answer === "retest" && count > scenario.retestIndex) {
+        annotations.push({
+          index: scenario.retestIndex,
+          value: RANGE_HIGH,
+          label: "Retest",
+          tone: "purple",
+          position: "below"
+        });
+      }
+    } else {
+      annotations.push({
+        index: scenario.eventIndex,
+        value: scenario.data[scenario.eventIndex].h,
+        label: "Rejected",
+        tone: "red"
+      });
+    }
+  }
+
+  drawCandles(boundaryChart, scenario.data, {
+    visibleCount: count,
+    includeValues: [RANGE_HIGH, RANGE_LOW],
+    levels,
+    annotations,
+    showCloses: document.getElementById("showCloses").checked
+  });
+
+  const evidence = boundaryEvidence(scenario, count);
+  document.getElementById("scenarioTitle").textContent = scenario.title;
+  document.getElementById("scenarioSummary").textContent = scenario.summary;
+  document.getElementById("boundaryVerdict").textContent = evidence.verdict;
+  document.getElementById("boundaryReason").textContent = evidence.reason;
+  updateCheckRow("checkCross", evidence.crossStatus, "checkCrossText", evidence.crossText);
+  updateCheckRow("checkClose", evidence.closeStatus, "checkCloseText", evidence.closeText);
+  updateCheckRow("checkHold", evidence.holdStatus, "checkHoldText", evidence.holdText);
+
+  boundaryStep.max = scenario.data.length;
+  boundaryStep.value = count;
+  boundaryStepLabel.textContent = `${count} / ${scenario.data.length}`;
+}
+
+function stopBoundaryPlayback() {
+  boundaryState.playing = false;
+  clearInterval(boundaryState.timer);
+  boundaryState.timer = null;
+  playBoundary.textContent = "▶ Play";
+}
+
+function startBoundaryPlayback() {
+  stopBoundaryPlayback();
+  const scenario = buildBoundaryScenario(boundaryState.scenario);
+  if (boundaryState.step >= scenario.data.length) boundaryState.step = 1;
+  boundaryState.playing = true;
+  playBoundary.textContent = "❚❚ Pause";
+  boundaryState.timer = setInterval(() => {
+    boundaryState.step += 1;
+    if (boundaryState.step >= scenario.data.length) {
+      boundaryState.step = scenario.data.length;
+      stopBoundaryPlayback();
+    }
+    renderBoundary();
+  }, 520);
+}
+
+document.getElementById("scenarioTabs").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-scenario]");
+  if (!button) return;
+  stopBoundaryPlayback();
+  boundaryState.scenario = button.dataset.scenario;
+  boundaryState.step = buildBoundaryScenario(boundaryState.scenario).data.length;
+  document.querySelectorAll("#scenarioTabs .tab").forEach(tab => tab.classList.toggle("active", tab === button));
+  renderBoundary();
+});
+
+boundaryStep.addEventListener("input", () => {
+  stopBoundaryPlayback();
+  boundaryState.step = Number(boundaryStep.value);
+  renderBoundary();
+});
+
+playBoundary.addEventListener("click", () => {
+  boundaryState.playing ? stopBoundaryPlayback() : startBoundaryPlayback();
+});
+
+["showRange", "showCloses", "showBoundaryLabels"].forEach(id => {
+  document.getElementById(id).addEventListener("change", renderBoundary);
+});
+
+const quizKeys = ["rejection", "breakout", "retest", "highSweep", "lowSweep"];
+let lastQuizIndex = 2;
+
+function newBoundaryQuiz() {
+  document.querySelectorAll("#boundaryChoices .choice").forEach(button => {
+    button.classList.remove("correct", "incorrect");
+    button.disabled = false;
+  });
+  boundaryState.quizAnswered = false;
+  lastQuizIndex = (lastQuizIndex + 1 + Math.floor(Math.random() * (quizKeys.length - 1))) % quizKeys.length;
+  boundaryState.quizKey = quizKeys[lastQuizIndex];
+  const scenario = buildBoundaryScenario(boundaryState.quizKey);
+  drawCandles(document.getElementById("boundaryQuizChart"), scenario.data, {
+    includeValues: [RANGE_HIGH, RANGE_LOW],
+    levels: [
+      { value: RANGE_HIGH, label: "Range high", tone: "red" },
+      { value: RANGE_LOW, label: "Range low", tone: "green" }
+    ],
+    height: 330,
+    showCloses: false
+  });
+  const feedback = document.getElementById("boundaryFeedback");
+  feedback.className = "feedback";
+  feedback.textContent = "Choose the classification that best explains the full sequence.";
+}
+
+document.getElementById("boundaryChoices").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-answer]");
+  if (!button || boundaryState.quizAnswered) return;
+  boundaryState.quizAnswered = true;
+  boundaryState.attempts += 1;
+  const scenario = buildBoundaryScenario(boundaryState.quizKey);
+  const correct = button.dataset.answer === scenario.answer;
+  if (correct) boundaryState.score += 1;
+  document.querySelectorAll("#boundaryChoices .choice").forEach(choice => {
+    choice.disabled = true;
+    if (choice.dataset.answer === scenario.answer) choice.classList.add("correct");
+  });
+  if (!correct) button.classList.add("incorrect");
+  document.getElementById("boundaryScore").textContent = `Score ${boundaryState.score} / ${boundaryState.attempts}`;
+  const feedback = document.getElementById("boundaryFeedback");
+  feedback.className = `feedback ${correct ? "good" : "bad"}`;
+  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${scenario.explanation}`;
+});
+
+document.getElementById("nextBoundaryQuiz").addEventListener("click", newBoundaryQuiz);
+
+renderBoundary();
+newBoundaryQuiz();
+
+  </script>
+</body>
+</html>
