@@ -299,7 +299,7 @@
         },
         "checks": {
           "type": "array",
-          "minItems": 13,
+          "minItems": 30,
           "uniqueItems": true,
           "items": {"$ref": "#/$defs/acceptanceCheck"},
           "allOf": [
@@ -313,11 +313,28 @@
             {"contains": {"properties": {"id": {"const": "lesson-invalidation-stops-risk-reward"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "lesson-volume-relative-strength"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "lesson-options-contract-selection"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-home"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-trade-thesis"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-support-resistance"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-confluence"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-breakout-setups"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-pullback-setups"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-reversal-setups"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-entry-confirmation"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-stop-loss-placement"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-profit-targets"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-risk-to-reward"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-position-sizing"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-trade-management"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-backtesting"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-trading-journal"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course2-lesson-performance-review"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "journal-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "unknown-path-404"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "self-containment"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "security-headers"}}, "required": ["id"]}}
           ],
-          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published page of the two-level URL space - the course catalog at /, the course home at /market-structure-lab/ (id course-home), and the seven labs at /market-structure-lab/<lesson>/ (lab 01 is id lesson-page). The retired flat /<lesson>/ URLs have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
+          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the two-level library - the learning path at /, a home per course (/market-structure-lab/ id course-home, /trade-setup-execution/ id course2-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; course 2 ids are course-scoped because a slug is unique only within a course), and the one published non-HTML asset, /trade-setup-execution/trade-journal-schema.json (id journal-schema), which is fetched and PARSED rather than asserted against page-shaped markers. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
         }
       }
     },

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Trade Journal Export",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "trade-journal-v1"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "exportedAt": {
+      "type": "string"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "date",
+          "symbol",
+          "setup",
+          "direction",
+          "resultR",
+          "executionScore",
+          "followedPlan"
+        ],
+        "properties": {
+          "id": {},
+          "date": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "setup": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "timeframe": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "entry": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "stop": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "target": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "resultR": {
+            "type": "number"
+          },
+          "executionScore": {
+            "type": "number"
+          },
+          "followedPlan": {
+            "type": "boolean"
+          },
+          "mistakes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "schema",
+    "entries"
+  ]
+}

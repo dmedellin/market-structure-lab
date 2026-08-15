@@ -45,15 +45,18 @@ jobs:
             echo "::error::external reference found in site/ -- refusing to publish"
             exit 1
           fi
-          # The published URL space, two levels deep: the course catalog at /,
-          # the course home at /market-structure-lab/, and the seven labs
-          # beneath it. Same map as REQUIRED_PAGES in
+          # The published URL space, two levels deep: the learning path at /,
+          # a home per course (/market-structure-lab/ and
+          # /trade-setup-execution/), and each course's lessons beneath its own
+          # home -- 25 pages, in course order -- plus one published non-HTML
+          # asset. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py and acceptance.checks in
           # release/contract.json. Publishing a tree that is missing a page
           # would 404 a live URL, so refuse instead.
-          # The seven flat /<lab>/ URLs are retired with no redirect stub; they
-          # are not listed here and must not come back.
+          # The seven flat /<lesson>/ URLs are retired with no redirect stub;
+          # they are not listed here and must not come back.
           missing=0
+          pages=0
           for page in index.html \
                       market-structure-lab/index.html \
                       market-structure-lab/market-structure/index.html \
@@ -62,14 +65,44 @@ jobs:
                       market-structure-lab/pullbacks-entry-models/index.html \
                       market-structure-lab/invalidation-stops-risk-reward/index.html \
                       market-structure-lab/volume-relative-strength/index.html \
-                      market-structure-lab/options-contract-selection/index.html ; do
+                      market-structure-lab/options-contract-selection/index.html \
+                      trade-setup-execution/index.html \
+                      trade-setup-execution/trade-thesis/index.html \
+                      trade-setup-execution/support-resistance/index.html \
+                      trade-setup-execution/confluence/index.html \
+                      trade-setup-execution/breakout-setups/index.html \
+                      trade-setup-execution/pullback-setups/index.html \
+                      trade-setup-execution/reversal-setups/index.html \
+                      trade-setup-execution/entry-confirmation/index.html \
+                      trade-setup-execution/stop-loss-placement/index.html \
+                      trade-setup-execution/profit-targets/index.html \
+                      trade-setup-execution/risk-to-reward/index.html \
+                      trade-setup-execution/position-sizing/index.html \
+                      trade-setup-execution/trade-management/index.html \
+                      trade-setup-execution/backtesting/index.html \
+                      trade-setup-execution/trading-journal/index.html \
+                      trade-setup-execution/performance-review/index.html ; do
+            pages=$((pages + 1))
             if [ ! -f "site/$page" ]; then
               echo "::error::missing site/$page -- refusing to publish an incomplete course"
               missing=1
             fi
           done
+          # Course 2 ships its trade journal exchange schema as a real published
+          # file: lesson 14 exports that shape, lesson 15 imports it, and the
+          # course home links to it. An unparseable one 404s nothing and breaks
+          # the handoff silently, so it is parsed here, not merely counted.
+          for asset in trade-setup-execution/trade-journal-schema.json ; do
+            if [ ! -f "site/$asset" ]; then
+              echo "::error::missing site/$asset -- refusing to publish an incomplete course"
+              missing=1
+            elif ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "site/$asset"; then
+              echo "::error::site/$asset does not parse as JSON -- refusing to publish"
+              missing=1
+            fi
+          done
           [ "$missing" -eq 0 ] || exit 1
-          echo "self-containment OK; all 9 pages present"
+          echo "self-containment OK; all $pages pages and 1 asset present"
 
       # NOTE: `enablement: true` was tried here and fails --- GITHUB_TOKEN
       # cannot create a Pages site ("Resource not accessible by integration").

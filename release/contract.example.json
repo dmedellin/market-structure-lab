@@ -2,7 +2,7 @@
   "schema_version": 1,
   "notes": [
     "EXAMPLE ONLY. This document is a shape reference that validates against release/contract.schema.json. It is not a release and must never be staged.",
-    "acceptance.checks enumerates the COMPLETE published URL space, which is two levels deep: the catalog of courses at /, the course home at /market-structure-lab/, and that course's seven labs at /market-structure-lab/<lesson>/ - one check id per page (the course home is course-home, lab 01 keeps the id lesson-page). The seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES and the COURSE_LESSONS table in scripts/smoke.py declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app and the image (org.opencontainers.image.title). The course home and lab 01 now share that title, so every check also asserts the page's OWN canonical path - a title alone cannot prove which document was served.",
+    "acceptance.checks enumerates the COMPLETE published URL space, which is two levels deep: the learning path at /, a home per course (/market-structure-lab/ id course-home, /trade-setup-execution/ id course2-home), and each course's lessons beneath its own home - one check id per page, 25 pages in all (course 1 lab 01 keeps the id lesson-page; course 2's ids are course-scoped because a lesson slug is only unique within a course). The one published non-HTML asset, /trade-setup-execution/trade-journal-schema.json, has its own check (id journal-schema) that fetches and PARSES it rather than asserting page-shaped markers against JSON. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served. The seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app and the image (org.opencontainers.image.title), not the library, which now holds two courses.",
     "Every hex value here is all-zero on purpose. An all-zero digest can never be a real registry digest, so no reader can mistake this for a deployable identity.",
     "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED placeholders. This app pins the internal port to the same integer as the host loopback port (deploy/Caddyfile binds it, Containerfile.release EXPOSEs it, and the Compose template publishes it on both sides), so all three are allocated together. Port and subnet allocation is explicitly forbidden to automate: a human must choose them and prove them free with a live host preflight (listeners, routes, and the root registry) before onboarding.",
     "build.base_images[].digest are __BASE_IMAGE_DIGEST__ because no base image digest has been verified against a registry from this workspace. A plausible-looking invented sha256 would be worse than this placeholder.",
@@ -124,7 +124,7 @@
       },
       {
         "id": "learn-index",
-        "description": "The course catalog is served at the site root and links to the Market Structure Lab course home.",
+        "description": "The learning path is served at the site root and links to BOTH course homes: Market Structure Lab and Trade Setup and Execution. A catalog that lists one course is a library with a course missing.",
         "scope": "public",
         "method": "GET",
         "path": "/",
@@ -133,8 +133,11 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/\"",
             "Market Structure Lab",
-            "market-structure-lab/"
+            "market-structure-lab/",
+            "Trade Setup and Execution",
+            "trade-setup-execution/"
           ],
           "headers": [
             {
@@ -155,7 +158,7 @@
       },
       {
         "id": "course-home",
-        "description": "The Market Structure Lab course home is served at /market-structure-lab/ and carries the course title, its own canonical path, and the educational-use disclaimer.",
+        "description": "Course 1 home, \"Market Structure Lab\", is served at /market-structure-lab/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/",
@@ -164,8 +167,8 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/\"",
             "Market Structure Lab",
-            "/market-structure-lab/",
             "Educational use only"
           ],
           "headers": [
@@ -182,7 +185,7 @@
       },
       {
         "id": "lesson-page",
-        "description": "Lab 01 \"Market Structure Lab\" is served at /market-structure-lab/market-structure/ and carries its title, its own canonical path, and the educational-use disclaimer.",
+        "description": "Course 1 lab 01 \"Market Structure\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/market-structure/",
@@ -191,9 +194,16 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/market-structure/\"",
             "Market Structure Lab",
-            "/market-structure-lab/market-structure/",
             "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
           ]
         },
         "timeout_seconds": 10,
@@ -202,7 +212,7 @@
       },
       {
         "id": "lesson-ranges-breakouts-liquidity",
-        "description": "Lab 02 \"Ranges, Breakouts & Liquidity Sweeps\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
+        "description": "Course 1 lab 02 \"Ranges, Breakouts & Liquidity Sweeps\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/ranges-breakouts-liquidity/",
@@ -211,9 +221,16 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/ranges-breakouts-liquidity/\"",
             "Liquidity Sweeps Lab",
-            "/market-structure-lab/ranges-breakouts-liquidity/",
             "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
           ]
         },
         "timeout_seconds": 10,
@@ -222,7 +239,7 @@
       },
       {
         "id": "lesson-multi-timeframe-market-structure",
-        "description": "Lab 03 \"Multi-Timeframe Market Structure\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
+        "description": "Course 1 lab 03 \"Multi-Timeframe Market Structure\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/multi-timeframe-market-structure/",
@@ -231,9 +248,16 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/multi-timeframe-market-structure/\"",
             "Multi-Timeframe Market Structure Lab",
-            "/market-structure-lab/multi-timeframe-market-structure/",
             "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
           ]
         },
         "timeout_seconds": 10,
@@ -242,7 +266,7 @@
       },
       {
         "id": "lesson-pullbacks-entry-models",
-        "description": "Lab 04 \"Pullbacks & Entry Models\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
+        "description": "Course 1 lab 04 \"Pullbacks & Entry Models\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/pullbacks-entry-models/",
@@ -251,9 +275,16 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/\"",
             "Entry Models Lab",
-            "/market-structure-lab/pullbacks-entry-models/",
             "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
           ]
         },
         "timeout_seconds": 10,
@@ -262,7 +293,7 @@
       },
       {
         "id": "lesson-invalidation-stops-risk-reward",
-        "description": "Lab 05 \"Invalidation, Stops & Reward-to-Risk\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
+        "description": "Course 1 lab 05 \"Invalidation, Stops & Reward-to-Risk\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/invalidation-stops-risk-reward/",
@@ -271,9 +302,16 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/invalidation-stops-risk-reward/\"",
             "Reward-to-Risk Lab",
-            "/market-structure-lab/invalidation-stops-risk-reward/",
             "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
           ]
         },
         "timeout_seconds": 10,
@@ -282,7 +320,7 @@
       },
       {
         "id": "lesson-volume-relative-strength",
-        "description": "Lab 06 \"Volume & Relative Strength\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
+        "description": "Course 1 lab 06 \"Volume & Relative Strength\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/volume-relative-strength/",
@@ -291,9 +329,16 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/volume-relative-strength/\"",
             "Relative Strength Lab",
-            "/market-structure-lab/volume-relative-strength/",
             "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
           ]
         },
         "timeout_seconds": 10,
@@ -302,7 +347,7 @@
       },
       {
         "id": "lesson-options-contract-selection",
-        "description": "Lab 07 \"Options Contract Selection\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
+        "description": "Course 1 lab 07 \"Options Contract Selection\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/options-contract-selection/",
@@ -311,9 +356,473 @@
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/options-contract-selection/\"",
             "Options Contract Selection Lab",
-            "/market-structure-lab/options-contract-selection/",
             "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-home",
+        "description": "Course 2 home, \"Trade Setup and Execution\", is served at /trade-setup-execution/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-trade-thesis",
+        "description": "Course 2 lesson 01 \"Trade Thesis\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/trade-thesis/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/trade-thesis/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-support-resistance",
+        "description": "Course 2 lesson 02 \"Support and Resistance\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/support-resistance/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/support-resistance/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-confluence",
+        "description": "Course 2 lesson 03 \"Confluence\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/confluence/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/confluence/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-breakout-setups",
+        "description": "Course 2 lesson 04 \"Breakout Setups\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/breakout-setups/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/breakout-setups/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-pullback-setups",
+        "description": "Course 2 lesson 05 \"Pullback Setups\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/pullback-setups/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/pullback-setups/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-reversal-setups",
+        "description": "Course 2 lesson 06 \"Reversal Setups\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/reversal-setups/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/reversal-setups/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-entry-confirmation",
+        "description": "Course 2 lesson 07 \"Entry Confirmation\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/entry-confirmation/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/entry-confirmation/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-stop-loss-placement",
+        "description": "Course 2 lesson 08 \"Stop-Loss Placement\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/stop-loss-placement/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/stop-loss-placement/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-profit-targets",
+        "description": "Course 2 lesson 09 \"Profit Targets\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/profit-targets/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/profit-targets/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-risk-to-reward",
+        "description": "Course 2 lesson 10 \"Risk-to-Reward\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/risk-to-reward/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/risk-to-reward/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-position-sizing",
+        "description": "Course 2 lesson 11 \"Position Sizing\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/position-sizing/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/position-sizing/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-trade-management",
+        "description": "Course 2 lesson 12 \"Trade Management\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/trade-management/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/trade-management/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-backtesting",
+        "description": "Course 2 lesson 13 \"Backtesting\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/backtesting/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/backtesting/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-trading-journal",
+        "description": "Course 2 lesson 14 \"Trading Journal\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/trading-journal/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/trading-journal/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course2-lesson-performance-review",
+        "description": "Course 2 lesson 15 \"Performance Review\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/performance-review/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trade-setup-execution/performance-review/\"",
+            "Trade Setup and Execution",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "journal-schema",
+        "description": "The trade journal exchange schema is served as JSON at /trade-setup-execution/trade-journal-schema.json, parses, and declares the trade-journal-v1 shape lesson 14 exports and lesson 15 imports. A 200 alone would not prove any of that.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trade-setup-execution/trade-journal-schema.json",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "\"const\": \"trade-journal-v1\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "json"
+            }
           ]
         },
         "timeout_seconds": 10,
@@ -336,7 +845,7 @@
       },
       {
         "id": "self-containment",
-        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the catalog, the course home and all seven labs - not just the path named here.",
+        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the learning path, both course homes and all 22 lessons - not just the path named here.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure-lab/market-structure/",

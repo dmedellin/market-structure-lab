@@ -111,7 +111,7 @@
       }
     }
 
-    /* Explicit choice (localStorage key: marketStructureTheme). Byte-identical
+    /* Explicit choice (localStorage key: learn-theme). Byte-identical
        values to the media block above — the two light paths must never disagree. */
     [data-theme="light"] {
       color-scheme: light;
@@ -425,6 +425,45 @@
       font-weight: 800;
       letter-spacing: 0.1em;
       text-transform: uppercase;
+    }
+
+    /* Learning-path card. This course is the first of two, so the page has to say
+       where it sits and where the reader goes next; the pager at the foot of
+       lesson 07 points back here, and this card is the hand-off it points at.
+       Built from the same tokens as .note-card so it reads as part of the page,
+       with the stronger border marking it as the one forward route.
+       Depth: this file is the COURSE home, so the next course is one level up
+       ("../trade-setup-execution/"), not a child of this directory. */
+    .path-card {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 20px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+    }
+    .path-copy { flex: 1 1 320px; }
+    .path-copy h3 { margin: 8px 0 6px; font-size: 1.05rem; }
+    .path-copy p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .path-step {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(54, 214, 231, 0.09);
+      border: 1px solid rgba(54, 214, 231, 0.18);
+      color: var(--cyan-2);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .path-card .btn { flex: none; }
+
+    @media (max-width: 720px) {
+      .path-card .btn { width: 100%; text-align: center; }
     }
 
     .count-chip {
@@ -809,7 +848,7 @@
        other theme. This is why it lives in <head> and not in the IIFE at the
        bottom of <body>: that runs after the first paint.
        SAME localStorage key as the library and every lesson
-       ('marketStructureTheme') so the toggle persists across the whole site. The
+       ('learn-theme') so the toggle persists across the whole site. The
        allowlist matters — a corrupt value would otherwise be written straight
        onto data-theme, matching no CSS while still counting as an explicit
        choice, which permanently mislabels the toggle and pins the page to the
@@ -817,7 +856,7 @@
        No stored value => CSS prefers-color-scheme decides. */
     (function () {
       try {
-        var t = localStorage.getItem('marketStructureTheme');
+        var t = localStorage.getItem('learn-theme');
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
     })();
@@ -850,6 +889,7 @@
         <a href="./" aria-current="page">Course home</a>
         <a href="#overview">Overview</a>
         <a href="#lessons">Lessons</a>
+        <a href="#next-course">Next course</a>
       </nav>
 
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
@@ -1449,6 +1489,26 @@
 
         </ol>
       </section>
+
+      <section class="section" id="next-course" aria-labelledby="next-course-title">
+        <div class="section-head">
+          <div>
+            <p class="kicker">Learning path</p>
+            <h2 id="next-course-title">After the seven lessons</h2>
+            <p>Market Structure Lab is course 1 of 2 in this library. It teaches you to read the chart; the next course turns that reading into a written, sized, and reviewed trade.</p>
+          </div>
+          <p class="count-chip">Course 1 of 2</p>
+        </div>
+
+        <article class="path-card">
+          <div class="path-copy">
+            <span class="path-step">Next · Course 2 of 2</span>
+            <h3>Trade Setup and Execution</h3>
+            <p>Fifteen lessons that pick up where lesson 07 ends: building a trade thesis, confirming the entry, placing the stop and the target, sizing the position, managing the trade, and journalling and reviewing the result. Work through these seven first — every setup there is described in the structure vocabulary taught here.</p>
+          </div>
+          <a class="btn primary" href="../trade-setup-execution/">Start course 2</a>
+        </article>
+      </section>
     </main>
 
     <footer>
@@ -1461,7 +1521,7 @@
     (function () {
       var root = document.documentElement;
       var toggle = document.getElementById('themeToggle');
-      var KEY = 'marketStructureTheme'; // shared with the library and every lesson — keep identical
+      var KEY = 'learn-theme'; // shared with the library and every lesson — keep identical
       var mql = window.matchMedia('(prefers-color-scheme: light)');
 
       function stored() {

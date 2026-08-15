@@ -109,7 +109,7 @@
   }
 }
 
-/* Explicit choice (localStorage key: marketStructureTheme). Byte-identical
+/* Explicit choice (localStorage key: learn-theme). Byte-identical
    values to the media block above — the two light paths must never disagree. */
 [data-theme="light"] {
   color-scheme: light;
@@ -277,6 +277,40 @@ svg { display: block; }
 .crumbs a:hover { color: var(--text); background: var(--line); }
 .crumb-sep { opacity: 0.5; }
 .crumb-current { color: var(--text); padding: 6px 9px; }
+
+/* Previous / next lesson pager. The sequence is the course order shown on the
+   course home; the last lesson points back at that home, which carries the
+   link on to the next course. Same shape and tokens as the pager in Trade
+   Setup and Execution so both courses page identically. Focus is handled by
+   the global :focus-visible rule above. */
+.lesson-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.lesson-link {
+  flex: 1 1 240px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+.lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.lesson-link.next { margin-left: auto; text-align: right; }
+
+/* One card per row once the topbar nav collapses; a two-up pager at 320px is
+   two unreadable columns. */
+@media (max-width: 720px) {
+  .lesson-link { flex-basis: 100%; }
+}
 
 .icon-btn {
   width: 39px;
@@ -1111,7 +1145,7 @@ td.bad { color: var(--red); font-weight: 800; }
        other theme. This is why it lives in <head> and not with the rest of the
        page script: that runs after the first paint.
        SAME localStorage key as site/index.html and every other lab
-       ('marketStructureTheme') so one choice persists across all seven pages.
+       ('learn-theme') so one choice persists across all seven pages.
        The allowlist matters — a corrupt value would otherwise be written
        straight onto data-theme, matching no CSS while still counting as an
        explicit choice, which permanently mislabels the toggle and pins the page
@@ -1119,7 +1153,7 @@ td.bad { color: var(--red); font-weight: 800; }
        No stored value => CSS prefers-color-scheme decides. */
     (function () {
       try {
-        var t = localStorage.getItem('marketStructureTheme');
+        var t = localStorage.getItem('learn-theme');
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
     })();
@@ -1411,6 +1445,17 @@ td.bad { color: var(--red); font-weight: 800; }
 
 
     </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../invalidation-stops-risk-reward/" rel="prev">
+        <span>Previous lesson</span>
+        <strong>05 &middot; Invalidation, Stops &amp; Reward-to-Risk</strong>
+      </a>
+      <a class="lesson-link next" href="../options-contract-selection/" rel="next">
+        <span>Next lesson</span>
+        <strong>07 &middot; Options Contract Selection</strong>
+      </a>
+    </nav>
 
     <footer class="footer">
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
@@ -1756,7 +1801,7 @@ function setupTheme() {
     const next = effectiveTheme() === "light" ? "dark" : "light";
     document.documentElement.dataset.theme = next;
     try {
-      localStorage.setItem("marketStructureTheme", next);
+      localStorage.setItem("learn-theme", next);
     } catch (_) {
       // Theme still works for the current page when storage is unavailable.
     }

@@ -3,14 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Interactive Technical Courses · Learn · geterdone.io</title>
-  <meta name="description" content="A small library of interactive, self-guided technical courses you work through in the browser. Every lesson is one self-contained page — interactive charts, worked explanations, and a way to test yourself. Published today: Market Structure Lab, seven lessons on how price moves." />
+  <title>Learning Path · Learn · geterdone.io</title>
+  <meta name="description" content="An ordered path through two free interactive courses, 22 lessons in total. Course 1, Market Structure Lab, teaches you to read what price is doing. Course 2, Trade Setup and Execution, turns that read into a plan you can size, place, manage, and review. Every lesson is one self-contained page." />
   <link rel="canonical" href="https://learn.geterdone.io/" />
+  <meta name="author" content="dmedellin" />
 
   <!-- Favicon: inline data-URI SVG, no external asset. Mirrors the lesson brand mark
-       (cyan gradient tile + dark ascending structure line). The lesson page ships its own
-       variant of this mark (dark tile) so the two pages are distinguishable in tabs. -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%238ff3ff'/><stop offset='1' stop-color='%2336d6e7'/></linearGradient></defs><rect width='64' height='64' rx='15' fill='url(%23g)'/><path d='M14 45L26 33L38 41L51 18' fill='none' stroke='%23041116' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/><g fill='%23041116'><circle cx='14' cy='45' r='4.5'/><circle cx='26' cy='33' r='4.5'/><circle cx='38' cy='41' r='4.5'/><circle cx='51' cy='18' r='4.5'/></g></svg>" />
+       (cyan gradient tile + dark ascending structure line). The course home ships a
+       seven-step variant and a lesson ships a dark tile, so the three levels of the
+       site stay distinguishable in a tab strip. Percent-escaped in full, matching
+       site/market-structure-lab/index.html. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M14 45L26 33L38 41L51 18' fill='none' stroke='%23041116' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='14' cy='45' r='4.5'/%3E%3Ccircle cx='26' cy='33' r='4.5'/%3E%3Ccircle cx='38' cy='41' r='4.5'/%3E%3Ccircle cx='51' cy='18' r='4.5'/%3E%3C/g%3E%3C/svg%3E" />
 
   <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#eef4f8" media="(prefers-color-scheme: light)" />
@@ -20,20 +23,20 @@
        og:image + twitter:card=summary_large_image once a real 1200x630 asset is committed. -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Learn · geterdone.io" />
-  <meta property="og:title" content="Interactive Technical Courses · Learn · geterdone.io" />
-  <meta property="og:description" content="A small library of interactive, self-guided technical courses. Every lesson is one self-contained page. Published today: Market Structure Lab — seven lessons on how price moves." />
+  <meta property="og:title" content="Learning Path · Learn · geterdone.io" />
+  <meta property="og:description" content="Two free interactive courses, 22 lessons, in one order. Read the market first, then plan and execute a trade. Every lesson is one self-contained page." />
   <meta property="og:url" content="https://learn.geterdone.io/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:url" content="https://learn.geterdone.io/" />
-  <meta name="twitter:title" content="Interactive Technical Courses · Learn · geterdone.io" />
-  <meta name="twitter:description" content="A small library of interactive, self-guided technical courses. Every lesson is one self-contained page. Published today: Market Structure Lab — seven lessons on how price moves." />
+  <meta name="twitter:title" content="Learning Path · Learn · geterdone.io" />
+  <meta name="twitter:description" content="Two free interactive courses, 22 lessons, in one order. Read the market first, then plan and execute a trade. Every lesson is one self-contained page." />
 
   <style>
     /* ---------------------------------------------------------------------
        DESIGN TOKENS — copied verbatim from
        site/market-structure-lab/market-structure/index.html so the library,
-       the course home, and the lessons read as one product. Do not fork this
+       the course homes, and the lessons read as one product. Do not fork this
        palette; change every file.
 
        THEME RULE, and the reason this block is the only place light values may
@@ -47,18 +50,18 @@
        cannot drift, because there is nothing per-path left to forget.
 
        Accents are re-declared for light because they are read AS TEXT
-       (.eyebrow, .kicker, .go, .topic-tag, the gradient headline) and because
-       the lesson's charts sample these very tokens with getComputedStyle at
-       draw time. Light values are contrast-checked against --bg (#eef4f8, the
-       darkest light surface): --cyan 4.99:1, --cyan-2 5.44:1, --green 4.95:1,
-       --red 5.15:1, --amber 5.34:1, --purple 5.45:1 — all >= 4.5:1. Note the
-       light --cyan-2 is DARKER than --cyan: --cyan-2 is the emphasis stop in
-       both themes, so it has to be the more readable one against the current
-       background, not simply the lighter hue.
+       (.eyebrow, .kicker, .go, .topic-tag, .step-num, the gradient headline)
+       and because the lesson's charts sample these very tokens with
+       getComputedStyle at draw time. Light values are contrast-checked against
+       --bg (#eef4f8, the darkest light surface): --cyan 4.99:1, --cyan-2
+       5.44:1, --green 4.95:1, --red 5.15:1, --amber 5.34:1, --purple 5.45:1 —
+       all >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is
+       the emphasis stop in both themes, so it has to be the more readable one
+       against the current background, not simply the lighter hue.
 
        --on-accent is the ink that sits ON a filled accent (.btn.primary,
-       .brand-mark, .skip-link). It has to flip with the theme because those
-       accent fills go dark in light mode.
+       .brand-mark, .skip-link, .step-num, .step-flag). It has to flip with the
+       theme because those accent fills go dark in light mode.
        --------------------------------------------------------------------- */
     :root {
       color-scheme: dark;
@@ -109,8 +112,8 @@
       }
     }
 
-    /* Explicit choice (localStorage key: marketStructureTheme). Byte-identical
-       values to the media block above — the two light paths must never disagree. */
+    /* Explicit choice (localStorage key: learn-theme). Byte-identical values to
+       the media block above — the two light paths must never disagree. */
     [data-theme="light"] {
       color-scheme: light;
       --bg: #eef4f8;
@@ -402,22 +405,111 @@
       white-space: nowrap;
     }
 
-    /* ---------- Course catalog ----------
-       This page lists COURSES, not lessons: one card per course, and the card
-       routes to that course's own home page, which owns its lesson list. The
-       grid is a single column until there is room for two cards, so one course
-       fills the row as a deliberate full-width card rather than sitting in a
-       half-empty gallery. Card #2 changes nothing here — auto-fit takes over
-       the moment a second <article> exists. */
-    .course-grid {
+    /* ---------- The learning path (the spine) ----------
+       This page is an ORDERED PATH, not a shelf: the courses are numbered, and
+       a rail connects them so the sequence is visible before a word is read.
+       The rail is drawn by .step::before rather than by a wrapper element, so
+       the markup for one step stays a single self-contained list item that can
+       be copy-pasted. It is suppressed on :last-child, which means the spine never
+       dangles past the final course and a new step needs no CSS at all. */
+    .path { list-style: none; margin: 0; padding: 0; }
+
+    .step {
+      --rail: 46px;
+      position: relative;
       display: grid;
-      gap: 20px;
-      /* min(420px, 100%) not a bare 420px: below a 420px viewport a fixed
-         minimum would make the track wider than the shell and scroll the whole
-         page sideways. */
-      grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+      grid-template-columns: var(--rail) minmax(0, 1fr);
+      column-gap: 18px;
+      padding-bottom: 30px;
+    }
+    .step:last-child { padding-bottom: 0; }
+
+    .step:not(:last-child)::before {
+      content: "";
+      position: absolute;
+      top: calc(var(--rail) + 10px);
+      bottom: 8px;
+      left: calc(var(--rail) / 2);
+      width: 2px;
+      margin-left: -1px;
+      border-radius: 2px;
+      /* Fades from the accent into the hairline as it travels to the next step:
+         the eye is pulled downward, in reading order. */
+      background: linear-gradient(180deg, var(--cyan), var(--line-strong));
     }
 
+    /* Explicit placement, because a .step has THREE children in a TWO-column
+       grid: left to auto-placement the course card would wrap onto column 1,
+       underneath the rail. The number spans both rows so `position: sticky` has
+       the whole height of the step to travel through — confined to row 1 it
+       would have almost nothing to stick within. `span 2` rather than `1 / -1`:
+       these rows are implicit, and -1 resolves against the EXPLICIT grid, which
+       would silently collapse the span back to one row. */
+    .step-head,
+    .step > .course-card { grid-column: 2; }
+
+    /* The step number is a filled accent, so its ink is --on-accent in both
+       themes. Sticky so it tracks alongside a tall course card; `top` clears
+       the sticky .topbar (12px offset + 62px tall). */
+    .step-num {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: start;
+      position: sticky;
+      top: 86px;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: var(--rail);
+      height: var(--rail);
+      border-radius: 50%;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      box-shadow: 0 8px 26px rgba(54, 214, 231, 0.28);
+      font-size: 1.05rem;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Sits in the second column, vertically centred against the number. */
+    .step-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      min-height: var(--rail);
+      margin-bottom: 12px;
+    }
+
+    .step-eyebrow {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* "Start here" — the single entry point into the path. Exactly one step
+       carries this; if a course 0 is ever prepended, move the flag, do not
+       add a second one. */
+    .step-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-size: 0.71rem;
+      font-weight: 850;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ---------- Course card ----------
+       Unchanged component: the path wraps it, it was not restyled. */
     .course-card {
       position: relative;
       display: grid;
@@ -509,13 +601,27 @@
 
     .course-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
 
-    /* The course's own one-line description, verbatim. Selector is class-qualified
+    /* The course's own one-line purpose, verbatim. Selector is class-qualified
        rather than !important so it simply outranks the .course-card p default. */
     .course-card p.tagline { color: var(--text); font-size: 1rem; font-weight: 650; }
 
+    /* Why this course sits where it sits in the path. A purple rule, so it never
+       reads as the amber .edu-note: that one is a legal notice, this one is
+       navigation. Class-qualified for the same reason .tagline is. */
+    .course-card p.prereq {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--purple);
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--panel-2) 70%, transparent);
+      color: var(--muted);
+      font-size: 0.845rem;
+    }
+    .course-card p.prereq strong { color: var(--text); }
+
     /* ---------- What is inside a course ----------
        A read-only table of contents. These titles are deliberately NOT links:
-       the library routes to the course home, and the course home owns the
+       the site index routes to the course home, and the course home owns the
        lesson links. One destination per card keeps the stretched-link hit
        target honest. */
     .contents {
@@ -588,10 +694,11 @@
 
     .level { color: var(--muted); font-size: 0.74rem; font-weight: 700; }
 
-    /* From 940px the card turns on its side — cover left, copy right — so a
-       single course reads as one wide, deliberate object instead of a tall
-       column. Below that it is the stacked card. */
-    @media (min-width: 940px) {
+    /* From 1000px the card turns on its side — cover left, copy right — so each
+       step reads as one wide, deliberate object instead of a tall column. The
+       threshold is 1000 rather than 940 because the spine now takes 64px out of
+       the row before the card gets any width. Below it, the stacked card. */
+    @media (min-width: 1000px) {
       .course-card { grid-template-columns: 400px minmax(0, 1fr); }
       .cover { padding: 0; border-bottom: 0; border-right: 1px solid var(--line); }
     }
@@ -640,8 +747,11 @@
 
     /* ---------- SVG theming (classes, not hardcoded hex, so both themes work) ----------
        Same vocabulary as the lesson pages. The per-lab thumbnail extensions
-       (sv-zone, sv-risk, sv-payoff, …) moved with the lesson list to the course
-       home; only the classes this page actually draws with live here. */
+       (sv-zone, sv-payoff, …) moved with the lesson list to the course home;
+       only the classes this page actually draws with live here. sv-stop /
+       sv-target / sv-entry are this page's additions, for the course 2 cover:
+       a trade plan needs a risk band, a reward band, and the entry between
+       them. They are tokens like everything else, so both themes follow. */
     .sv-grid { stroke: var(--line); stroke-width: 1; }
     .sv-up { fill: var(--green); }
     .sv-dn { fill: var(--red); }
@@ -655,6 +765,9 @@
     .sv-spark-live { stroke: var(--green); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .sv-chip { fill: var(--cyan); }
     .sv-chip-muted { fill: var(--muted); opacity: .45; }
+    .sv-stop { fill: var(--red); opacity: .18; }
+    .sv-target { fill: var(--green); opacity: .18; }
+    .sv-entry { stroke: var(--cyan-2); stroke-width: 2; stroke-dasharray: 5 5; fill: none; }
     .sv-text {
       fill: var(--muted);
       font-family: Inter, ui-sans-serif, system-ui, sans-serif;
@@ -697,8 +810,12 @@
       .section { padding: 27px 0; }
       .section-head { display: block; }
       .count-chip { display: inline-block; margin-top: 12px; }
-      .course-grid { grid-template-columns: minmax(0, 1fr); }
       .course-body { padding: 16px 16px 17px; }
+      /* The spine narrows but never collapses: the numbered sequence is the
+         whole point of this page, so it survives to the smallest viewport. */
+      .step { --rail: 32px; column-gap: 11px; padding-bottom: 22px; }
+      .step-num { top: 78px; font-size: 0.85rem; }
+      .step-head { margin-bottom: 10px; }
       footer { display: block; }
       footer p { margin: 0 0 6px; }
     }
@@ -727,12 +844,15 @@
 
   <script>
     /* Applied before first paint so an explicit theme choice never flashes.
-       SAME localStorage key as the course and lesson pages
-       ('marketStructureTheme') so the toggle persists across every page.
-       No stored value => CSS prefers-color-scheme decides. */
+       SAME localStorage key as every course home and lesson on this site
+       ('learn-theme') so the toggle persists across the whole library. The key
+       is deliberately course-neutral: the earlier per-course keys
+       ('marketStructureTheme', 'market-lab-theme') could not survive a
+       two-course site. Changing it resets a stored choice exactly once, which
+       is accepted. No stored value => CSS prefers-color-scheme decides. */
     (function () {
       try {
-        var t = localStorage.getItem('marketStructureTheme');
+        var t = localStorage.getItem('learn-theme');
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
     })();
@@ -758,7 +878,7 @@
 
       <nav class="topnav" aria-label="Primary">
         <a href="./" aria-current="page">Library</a>
-        <a href="#courses">Courses</a>
+        <a href="#path">The path</a>
       </nav>
 
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
@@ -767,7 +887,7 @@
     <noscript>
       <div class="noscript-note">
         <strong>JavaScript is off, so the theme toggle is hidden.</strong>
-        Everything else on this page — the course catalog, the contents of each
+        Everything else on this page — the learning path, the contents of each
         course, and the illustrations — is plain HTML and CSS and works normally.
         The page still follows your system's light or dark preference.
       </div>
@@ -777,181 +897,350 @@
       <section class="hero" aria-labelledby="hero-title">
         <div>
           <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Free · interactive · self-guided</span>
-          <h1 id="hero-title">A small library of <span class="gradient-text">interactive courses.</span></h1>
-          <p>Short technical courses you work through in the browser: interactive charts, worked explanations, and a way to test yourself as you go. Every lesson is one self-contained page — no accounts, no tracking, nothing to install, and it keeps working offline once loaded. One course is published today; the shelf grows as new ones are finished.</p>
+          <h1 id="hero-title">From reading the chart to <span class="gradient-text">placing the trade.</span></h1>
+          <p>Two interactive courses, 22 lessons, in one deliberate order. Course 1 teaches you to read what price is doing. Course 2 turns that read into a plan you can size, place, manage, and review. Every lesson is one self-contained page — no accounts, no tracking, nothing to install, and it keeps working offline once loaded.</p>
           <div class="hero-actions">
-            <a class="btn primary" href="./market-structure-lab/">Open Market Structure Lab</a>
-            <a class="btn ghost" href="#courses">Browse the library</a>
+            <a class="btn primary" href="./market-structure-lab/">Start with Course 1</a>
+            <a class="btn ghost" href="#path">See the whole path</a>
           </div>
         </div>
 
         <div class="hero-visual">
-          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of a course library: two shelf panels stacked behind one open course card, which shows a rising market-structure line above seven lesson markers, the first of them highlighted.">
-            <!-- the shelf: two panels of depth behind the published course -->
-            <rect class="sv-tile" x="86" y="34" width="348" height="42" rx="14" opacity=".4" />
-            <rect class="sv-tile" x="64" y="60" width="392" height="42" rx="14" opacity=".62" />
-
-            <!-- the one published course -->
-            <rect class="sv-tile-live" x="42" y="88" width="436" height="190" rx="20" />
-            <text class="sv-text sv-text-live" x="68" y="120">MARKET STRUCTURE LAB</text>
-            <line class="sv-axis" x1="68" y1="132" x2="452" y2="132" opacity=".6" />
-
-            <polyline class="sv-spark-live" points="70,232 112,204 142,216 192,172 232,192 278,150 314,166 366,124 404,138 452,102" />
+          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of a two-step learning path: a highlighted first panel labelled Course 1, Market Structure, showing a rising price line above seven lesson markers, connected by an arrow down and to the right into a second panel labelled Course 2, Trade Setup, showing an entry line between a stop band and a target band above fifteen lesson markers.">
+            <!-- STEP 1: the course you start with, drawn "live" (accent border) -->
+            <rect class="sv-tile-live" x="18" y="26" width="252" height="126" rx="20" />
+            <text class="sv-text" x="40" y="54">COURSE 1</text>
+            <text class="sv-text sv-text-live" x="40" y="74">READ THE MARKET</text>
+            <line class="sv-axis" x1="40" y1="86" x2="248" y2="86" opacity=".6" />
+            <polyline class="sv-spark-live" points="42,118 74,104 100,110 132,92 162,100 194,80 220,88 248,68" />
             <g class="sv-dot">
-              <circle cx="192" cy="172" r="5" />
-              <circle cx="278" cy="150" r="5" />
-              <circle cx="366" cy="124" r="5" />
-              <circle cx="452" cy="102" r="5" />
+              <circle cx="132" cy="92" r="4" />
+              <circle cx="194" cy="80" r="4" />
+              <circle cx="248" cy="68" r="4" />
+            </g>
+            <!-- seven lessons; the first is where a reader begins -->
+            <g>
+              <rect class="sv-chip" x="40" y="134" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="68" y="134" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="96" y="134" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="124" y="134" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="152" y="134" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="180" y="134" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="208" y="134" width="22" height="6" rx="3" />
             </g>
 
-            <!-- seven lesson markers; lesson 01 is where a reader starts -->
+            <!-- the path itself: step 1 feeds step 2 -->
+            <path class="sv-struct" d="M144 158 V 174 H 390 V 186" />
+            <path class="sv-struct" d="M383 180 L390 190 L397 180" />
+
+            <!-- STEP 2: what follows, drawn as a quieter tile -->
+            <rect class="sv-tile" x="264" y="194" width="238" height="104" rx="20" />
+            <text class="sv-text" x="286" y="220">COURSE 2</text>
+            <text class="sv-text sv-text-live" x="286" y="240">PLAN THE TRADE</text>
+            <rect class="sv-target" x="286" y="248" width="196" height="9" rx="4" />
+            <line class="sv-entry" x1="286" y1="264" x2="482" y2="264" />
+            <rect class="sv-stop" x="286" y="270" width="196" height="9" rx="4" />
+            <!-- fifteen lessons -->
             <g>
-              <rect class="sv-chip" x="68" y="252" width="48" height="7" rx="3.5" />
-              <rect class="sv-chip-muted" x="124" y="252" width="48" height="7" rx="3.5" />
-              <rect class="sv-chip-muted" x="180" y="252" width="48" height="7" rx="3.5" />
-              <rect class="sv-chip-muted" x="236" y="252" width="48" height="7" rx="3.5" />
-              <rect class="sv-chip-muted" x="292" y="252" width="48" height="7" rx="3.5" />
-              <rect class="sv-chip-muted" x="348" y="252" width="48" height="7" rx="3.5" />
-              <rect class="sv-chip-muted" x="404" y="252" width="48" height="7" rx="3.5" />
+              <rect class="sv-chip-muted" x="286" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="300" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="314" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="328" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="342" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="356" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="370" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="384" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="398" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="412" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="426" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="440" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="454" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="468" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="482" y="286" width="9" height="6" rx="3" />
             </g>
           </svg>
         </div>
       </section>
 
-      <section class="section" id="courses" aria-labelledby="courses-title">
+      <section class="section" id="path" aria-labelledby="path-title">
         <div class="section-head">
           <div>
-            <p class="kicker">Catalog</p>
-            <h2 id="courses-title">Courses</h2>
-            <p>Each course is an ordered set of interactive lessons on one subject, built so every lesson leans on the one before it. Open a course to see its lessons and start anywhere in the sequence.</p>
+            <p class="kicker">Learning path</p>
+            <h2 id="path-title">The path, in order</h2>
+            <p>Two courses, 22 lessons in total, meant to be taken front to back. Course 1 is the prerequisite: it teaches the chart-reading vocabulary — structure, ranges, timeframes, invalidation — that Course 2 assumes you already have. Course 2 then turns that read into an executable plan. Open a course to see its lessons and start anywhere inside it.</p>
           </div>
-          <p class="count-chip">1 course · 7 lessons</p>
+          <p class="count-chip">2 courses · 22 lessons</p>
         </div>
 
         <p class="edu-note">
           <strong>Educational use only — nothing here is trading advice.</strong>
-          Every chart, price, quote, and options figure on this site is a
-          synthetic example generated to illustrate a concept. No lesson
-          describes a real instrument or a real market session, and nothing on
-          these pages is a recommendation, a signal, or a forecast. Trading
-          carries the risk of losing money.
+          Every chart, price, quote, trade, fill, and performance figure on this
+          site is a synthetic example generated to illustrate a concept. No
+          lesson describes a real instrument or a real market session, and
+          nothing on these pages is a recommendation, a signal, or a forecast.
+          Trading carries the risk of losing money, and real outcomes can differ
+          from any illustration here because of spread, slippage, commissions,
+          gaps, taxes, liquidity, assignment, exercise, implied volatility, time
+          decay, and other factors.
         </p>
 
         <!-- ===================================================================
-             ADDING COURSE #2: copy the whole <article class="course-card"> block
-             below, paste it as the next child of .course-grid, then change only:
-               1. the href on .course-link  (a new ./<course-slug>/ directory,
+             ADDING COURSE #3: copy ONE <li class="step"> below — the whole
+             element, cover art and all — paste it as the next child of
+             <ol class="path">, then change only:
+               1. the number in .step-num, and the .step-eyebrow line
+               2. the href on .course-link (a new ./<course-slug>/ directory,
                   whose index.html is that course's home and owns its lesson
-                  links — the library never links a lesson directly)
-               2. the <h3> title, the .tagline, the supporting paragraph,
-                  .topic-tag, .time-tag, .level
-               3. the .contents-head id + the aria-labelledby that points at it
+                  links — the site index never links a lesson directly)
+               3. the <h3> title, the .tagline, the .prereq (what the new course
+                  assumes), the supporting paragraph, .topic-tag, .time-tag,
+                  .level
+               4. the .contents-head id + the aria-labelledby that points at it
                   (ids must stay unique), and the <li> items of .lesson-index
-               4. the inline SVG cover art and its aria-label
-             Nothing in the CSS changes: .course-grid is auto-fit, so the second
-             card lands beside the first the moment it exists, and the count-chip
-             above is the only other number to update. A new course home URL also
-             has to be registered in tests/test_site_invariants.py
-             (REQUIRED_PAGES) and in the release acceptance checks.
+               5. the inline SVG cover art and its aria-label
+             Nothing in the CSS changes. The connecting rail is drawn by
+             .step::before and suppressed on :last-child, so the spine re-ends
+             itself at the new final step automatically; do not hand-manage it.
+             Leave the "Start here" flag on step 1 — there is only ever one.
+             Then update: the .count-chip and the hero copy (course and lesson
+             totals), REQUIRED_PAGES in tests/test_site_invariants.py, the probe
+             list in scripts/smoke.py, and the release acceptance checks.
              =================================================================== -->
-        <div class="course-grid">
+        <ol class="path">
 
-          <article class="course-card">
-            <div class="cover">
-              <svg viewBox="0 0 400 272" role="img" aria-label="Cover art: a candlestick chart making higher highs and higher lows, with a structure line through the swing points, the last higher low held by a dashed level, and seven lesson markers along the bottom edge.">
-                <g class="sv-grid">
-                  <line x1="16" y1="60" x2="384" y2="60" />
-                  <line x1="16" y1="120" x2="384" y2="120" />
-                  <line x1="16" y1="180" x2="384" y2="180" />
-                </g>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">1</span>
 
-                <!-- candles: wick line + body rect -->
-                <g>
-                  <line class="sv-wick-dn" x1="32" y1="196" x2="32" y2="228" /><rect class="sv-dn" x="25" y="202" width="14" height="20" rx="2" />
-                  <line class="sv-wick-up" x1="64" y1="170" x2="64" y2="214" /><rect class="sv-up" x="57" y="182" width="14" height="26" rx="2" />
-                  <line class="sv-wick-up" x1="96" y1="150" x2="96" y2="192" /><rect class="sv-up" x="89" y="158" width="14" height="28" rx="2" />
-                  <line class="sv-wick-dn" x1="128" y1="138" x2="128" y2="178" /><rect class="sv-dn" x="121" y="146" width="14" height="24" rx="2" />
-                  <line class="sv-wick-dn" x1="160" y1="156" x2="160" y2="198" /><rect class="sv-dn" x="153" y="164" width="14" height="26" rx="2" />
-                  <line class="sv-wick-up" x1="192" y1="150" x2="192" y2="200" /><rect class="sv-up" x="185" y="160" width="14" height="30" rx="2" />
-                  <line class="sv-wick-up" x1="224" y1="108" x2="224" y2="160" /><rect class="sv-up" x="217" y="116" width="14" height="36" rx="2" />
-                  <line class="sv-wick-dn" x1="256" y1="100" x2="256" y2="146" /><rect class="sv-dn" x="249" y="112" width="14" height="26" rx="2" />
-                  <line class="sv-wick-dn" x1="288" y1="116" x2="288" y2="164" /><rect class="sv-dn" x="281" y="124" width="14" height="28" rx="2" />
-                  <line class="sv-wick-up" x1="320" y1="78" x2="320" y2="134" /><rect class="sv-up" x="313" y="86" width="14" height="40" rx="2" />
-                  <line class="sv-wick-up" x1="352" y1="52" x2="352" y2="100" /><rect class="sv-up" x="345" y="58" width="14" height="34" rx="2" />
-                </g>
-
-                <!-- the structure the course teaches you to read -->
-                <polyline class="sv-struct" points="24,228 128,138 192,196 256,100 288,160 360,52" />
-                <g class="sv-dot">
-                  <circle cx="128" cy="138" r="5" />
-                  <circle cx="192" cy="196" r="5" />
-                  <circle cx="256" cy="100" r="5" />
-                  <circle cx="288" cy="160" r="5" />
-                  <circle cx="360" cy="52" r="5" />
-                </g>
-
-                <!-- the protected higher low: where the read would be wrong -->
-                <line class="sv-level" x1="288" y1="160" x2="390" y2="160" />
-                <text class="sv-text" x="262" y="92">HH</text>
-                <text class="sv-text" x="294" y="180">HL</text>
-
-                <!-- seven lessons, first one first -->
-                <g>
-                  <rect class="sv-chip" x="22" y="250" width="44" height="6" rx="3" />
-                  <rect class="sv-chip-muted" x="74" y="250" width="44" height="6" rx="3" />
-                  <rect class="sv-chip-muted" x="126" y="250" width="44" height="6" rx="3" />
-                  <rect class="sv-chip-muted" x="178" y="250" width="44" height="6" rx="3" />
-                  <rect class="sv-chip-muted" x="230" y="250" width="44" height="6" rx="3" />
-                  <rect class="sv-chip-muted" x="282" y="250" width="44" height="6" rx="3" />
-                  <rect class="sv-chip-muted" x="334" y="250" width="44" height="6" rx="3" />
-                </g>
-              </svg>
+            <div class="step-head">
+              <p class="step-eyebrow">Step 1 · Read the market</p>
+              <span class="step-flag">Start here</span>
             </div>
 
-            <div class="course-body">
-              <div class="meta-row">
-                <span class="topic-tag">Technical analysis</span>
-                <span class="time-tag">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
-                    <circle cx="12" cy="12" r="9" />
-                    <path d="M12 7v5l3.5 2" />
-                  </svg>
-                  ~2 hr 40 min in total
-                </span>
+            <article class="course-card">
+              <div class="cover">
+                <svg viewBox="0 0 400 272" role="img" aria-label="Cover art for course 1: a candlestick chart making higher highs and higher lows, with a structure line through the swing points, the last higher low held by a dashed level, and seven lesson markers along the bottom edge.">
+                  <g class="sv-grid">
+                    <line x1="16" y1="60" x2="384" y2="60" />
+                    <line x1="16" y1="120" x2="384" y2="120" />
+                    <line x1="16" y1="180" x2="384" y2="180" />
+                  </g>
+
+                  <!-- candles: wick line + body rect -->
+                  <g>
+                    <line class="sv-wick-dn" x1="32" y1="196" x2="32" y2="228" /><rect class="sv-dn" x="25" y="202" width="14" height="20" rx="2" />
+                    <line class="sv-wick-up" x1="64" y1="170" x2="64" y2="214" /><rect class="sv-up" x="57" y="182" width="14" height="26" rx="2" />
+                    <line class="sv-wick-up" x1="96" y1="150" x2="96" y2="192" /><rect class="sv-up" x="89" y="158" width="14" height="28" rx="2" />
+                    <line class="sv-wick-dn" x1="128" y1="138" x2="128" y2="178" /><rect class="sv-dn" x="121" y="146" width="14" height="24" rx="2" />
+                    <line class="sv-wick-dn" x1="160" y1="156" x2="160" y2="198" /><rect class="sv-dn" x="153" y="164" width="14" height="26" rx="2" />
+                    <line class="sv-wick-up" x1="192" y1="150" x2="192" y2="200" /><rect class="sv-up" x="185" y="160" width="14" height="30" rx="2" />
+                    <line class="sv-wick-up" x1="224" y1="108" x2="224" y2="160" /><rect class="sv-up" x="217" y="116" width="14" height="36" rx="2" />
+                    <line class="sv-wick-dn" x1="256" y1="100" x2="256" y2="146" /><rect class="sv-dn" x="249" y="112" width="14" height="26" rx="2" />
+                    <line class="sv-wick-dn" x1="288" y1="116" x2="288" y2="164" /><rect class="sv-dn" x="281" y="124" width="14" height="28" rx="2" />
+                    <line class="sv-wick-up" x1="320" y1="78" x2="320" y2="134" /><rect class="sv-up" x="313" y="86" width="14" height="40" rx="2" />
+                    <line class="sv-wick-up" x1="352" y1="52" x2="352" y2="100" /><rect class="sv-up" x="345" y="58" width="14" height="34" rx="2" />
+                  </g>
+
+                  <!-- the structure the course teaches you to read -->
+                  <polyline class="sv-struct" points="24,228 128,138 192,196 256,100 288,160 360,52" />
+                  <g class="sv-dot">
+                    <circle cx="128" cy="138" r="5" />
+                    <circle cx="192" cy="196" r="5" />
+                    <circle cx="256" cy="100" r="5" />
+                    <circle cx="288" cy="160" r="5" />
+                    <circle cx="360" cy="52" r="5" />
+                  </g>
+
+                  <!-- the protected higher low: where the read would be wrong -->
+                  <line class="sv-level" x1="288" y1="160" x2="390" y2="160" />
+                  <text class="sv-text" x="262" y="92">HH</text>
+                  <text class="sv-text" x="294" y="180">HL</text>
+
+                  <!-- seven lessons, first one first -->
+                  <g>
+                    <rect class="sv-chip" x="22" y="250" width="44" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="74" y="250" width="44" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="126" y="250" width="44" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="178" y="250" width="44" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="230" y="250" width="44" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="282" y="250" width="44" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="334" y="250" width="44" height="6" rx="3" />
+                  </g>
+                </svg>
               </div>
 
-              <h3><a class="course-link" href="./market-structure-lab/">Market Structure Lab</a></h3>
+              <div class="course-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Technical analysis</span>
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~2 hr 40 min in total
+                  </span>
+                </div>
 
-              <p class="tagline">Simple, technical, and built for an interactive format.</p>
+                <h3><a class="course-link" href="./market-structure-lab/">Market Structure Lab</a></h3>
 
-              <p>Seven lessons on how price actually moves: read structure on a bare chart, then work through breakouts and liquidity, higher-timeframe context, entries, risk, participation, and finally the options contract that expresses the idea. Take them in order — each one leans on the one before it.</p>
+                <p class="tagline">Read the market — what price is doing, and where that read breaks.</p>
 
-              <div class="contents">
-                <p class="contents-head" id="msl-contents">Inside the course · 7 lessons, in order</p>
-                <ol class="lesson-index" aria-labelledby="msl-contents">
-                  <li><span class="ix-num"><span class="visually-hidden">Lesson </span>01</span> <span>Market Structure Lab</span></li>
-                  <li><span class="ix-num"><span class="visually-hidden">Lesson </span>02</span> <span>Ranges, Breakouts &amp; Liquidity Sweeps Lab</span></li>
-                  <li><span class="ix-num"><span class="visually-hidden">Lesson </span>03</span> <span>Multi-Timeframe Market Structure Lab</span></li>
-                  <li><span class="ix-num"><span class="visually-hidden">Lesson </span>04</span> <span>Pullbacks &amp; Entry Models Lab</span></li>
-                  <li><span class="ix-num"><span class="visually-hidden">Lesson </span>05</span> <span>Invalidation, Stops &amp; Reward-to-Risk Lab</span></li>
-                  <li><span class="ix-num"><span class="visually-hidden">Lesson </span>06</span> <span>Volume &amp; Relative Strength Lab</span></li>
-                  <li><span class="ix-num"><span class="visually-hidden">Lesson </span>07</span> <span>Options Contract Selection Lab</span></li>
-                </ol>
+                <p>Seven lessons on how price actually moves: read structure on a bare chart, then work through breakouts and liquidity, higher-timeframe context, entries, risk, participation, and finally the options contract that expresses the idea. Take them in order — each one leans on the one before it.</p>
+
+                <div class="contents">
+                  <p class="contents-head" id="msl-contents">Inside the course · 7 lessons, in order</p>
+                  <ol class="lesson-index" aria-labelledby="msl-contents">
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>01</span> <span>Market Structure Lab</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>02</span> <span>Ranges, Breakouts &amp; Liquidity Sweeps Lab</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>03</span> <span>Multi-Timeframe Market Structure Lab</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>04</span> <span>Pullbacks &amp; Entry Models Lab</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>05</span> <span>Invalidation, Stops &amp; Reward-to-Risk Lab</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>06</span> <span>Volume &amp; Relative Strength Lab</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>07</span> <span>Options Contract Selection Lab</span></li>
+                  </ol>
+                </div>
+
+                <div class="course-foot">
+                  <span class="go">
+                    Open the course
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Beginner → Advanced</span>
+                </div>
               </div>
+            </article>
+          </li>
 
-              <div class="course-foot">
-                <span class="go">
-                  Open the course
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                    <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
-                  </svg>
-                </span>
-                <span class="level">Beginner → Advanced</span>
-              </div>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">2</span>
+
+            <div class="step-head">
+              <p class="step-eyebrow">Step 2 · Plan and execute a trade</p>
             </div>
-          </article>
 
-        </div>
+            <article class="course-card">
+              <div class="cover">
+                <svg viewBox="0 0 400 272" role="img" aria-label="Cover art for course 2: a trade plan on a candlestick chart — a shaded target band above, a dashed entry line through the middle, and a shaded stop band below, with price pulling back to the entry and then running into the target, and fifteen lesson markers along the bottom edge.">
+                  <g class="sv-grid">
+                    <line x1="16" y1="60" x2="326" y2="60" />
+                    <line x1="16" y1="120" x2="326" y2="120" />
+                    <line x1="16" y1="180" x2="326" y2="180" />
+                  </g>
+
+                  <!-- the reward band and the risk band: the two sides of the plan -->
+                  <rect class="sv-target" x="16" y="48" width="310" height="34" rx="6" />
+                  <rect class="sv-stop" x="16" y="200" width="310" height="28" rx="6" />
+
+                  <!-- candles: base, advance, pullback to the entry, then the run -->
+                  <g>
+                    <line class="sv-wick-dn" x1="40" y1="194" x2="40" y2="228" /><rect class="sv-dn" x="33" y="200" width="14" height="22" rx="2" />
+                    <line class="sv-wick-up" x1="73" y1="178" x2="73" y2="214" /><rect class="sv-up" x="66" y="184" width="14" height="24" rx="2" />
+                    <line class="sv-wick-up" x1="106" y1="158" x2="106" y2="198" /><rect class="sv-up" x="99" y="166" width="14" height="26" rx="2" />
+                    <line class="sv-wick-up" x1="139" y1="140" x2="139" y2="176" /><rect class="sv-up" x="132" y="146" width="14" height="24" rx="2" />
+                    <line class="sv-wick-dn" x1="172" y1="136" x2="172" y2="172" /><rect class="sv-dn" x="165" y="142" width="14" height="22" rx="2" />
+                    <line class="sv-wick-dn" x1="205" y1="144" x2="205" y2="180" /><rect class="sv-dn" x="198" y="150" width="14" height="20" rx="2" />
+                    <line class="sv-wick-up" x1="238" y1="118" x2="238" y2="162" /><rect class="sv-up" x="231" y="126" width="14" height="30" rx="2" />
+                    <line class="sv-wick-up" x1="271" y1="90" x2="271" y2="134" /><rect class="sv-up" x="264" y="98" width="14" height="28" rx="2" />
+                    <line class="sv-wick-up" x1="304" y1="56" x2="304" y2="96" /><rect class="sv-up" x="297" y="64" width="14" height="26" rx="2" />
+                  </g>
+
+                  <!-- the entry, sitting between the two bands -->
+                  <line class="sv-entry" x1="16" y1="150" x2="326" y2="150" />
+
+                  <!-- the structure the plan is hung on: low, high, higher low, target -->
+                  <polyline class="sv-struct" points="30,226 139,140 205,180 304,56" />
+                  <g class="sv-dot">
+                    <circle cx="139" cy="140" r="5" />
+                    <circle cx="205" cy="180" r="5" />
+                    <circle cx="304" cy="56" r="5" />
+                  </g>
+
+                  <!-- labels sit in a clean right-hand gutter, clear of the candles -->
+                  <text class="sv-text" x="334" y="70">TARGET</text>
+                  <text class="sv-text" x="334" y="155">ENTRY</text>
+                  <text class="sv-text" x="334" y="219">STOP</text>
+
+                  <!-- fifteen lessons, first one first -->
+                  <g>
+                    <rect class="sv-chip" x="16" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="41" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="66" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="91" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="116" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="141" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="166" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="191" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="216" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="241" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="266" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="291" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="316" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="341" y="250" width="20" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="366" y="250" width="20" height="6" rx="3" />
+                  </g>
+                </svg>
+              </div>
+
+              <div class="course-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Execution &amp; risk</span>
+                  <!-- Duration is EXTRAPOLATED from course 1's published pace
+                       (~2 hr 40 min across 7 lessons) because course 2 shipped
+                       without an authored figure. Replace it with the course's
+                       own number when there is one. -->
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~5 hr 45 min in total
+                  </span>
+                </div>
+
+                <h3><a class="course-link" href="./trade-setup-execution/">Trade Setup and Execution</a></h3>
+
+                <p class="tagline">Plan and execute a trade — entry, stop, target, size, and review.</p>
+
+                <p class="prereq"><strong>Prerequisite: Course 1.</strong> This course assumes you can already find structure, ranges, and invalidation on a bare chart. It does not re-teach chart reading; it starts from the plan you build on top of it.</p>
+
+                <p>Fifteen lessons that turn a read into an executable plan: write a conditional thesis, mark the zones that matter, and weigh confluence before working through breakout, pullback, and reversal setups. From there it is mechanics — entry confirmation, stop placement, targets, reward-to-risk, position sizing, and managing a trade you are already in — closing with backtesting, a structured journal, and the performance review that tells you what to fix next.</p>
+
+                <div class="contents">
+                  <p class="contents-head" id="tse-contents">Inside the course · 15 lessons, in order</p>
+                  <ol class="lesson-index" aria-labelledby="tse-contents">
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>01</span> <span>Trade Thesis</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>02</span> <span>Support and Resistance</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>03</span> <span>Confluence</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>04</span> <span>Breakout Setups</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>05</span> <span>Pullback Setups</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>06</span> <span>Reversal Setups</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>07</span> <span>Entry Confirmation</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>08</span> <span>Stop-Loss Placement</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>09</span> <span>Profit Targets</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>10</span> <span>Risk-to-Reward</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>11</span> <span>Position Sizing</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>12</span> <span>Trade Management</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>13</span> <span>Backtesting</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>14</span> <span>Trading Journal</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>15</span> <span>Performance Review</span></li>
+                  </ol>
+                </div>
+
+                <div class="course-foot">
+                  <span class="go">
+                    Open the course
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Intermediate → Advanced</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+        </ol>
       </section>
     </main>
     <footer>
@@ -964,7 +1253,7 @@
     (function () {
       var root = document.documentElement;
       var toggle = document.getElementById('themeToggle');
-      var KEY = 'marketStructureTheme'; // shared with the course and lesson pages — keep identical
+      var KEY = 'learn-theme'; // shared with every course home and lesson — keep identical
       var mql = window.matchMedia('(prefers-color-scheme: light)');
 
       function stored() {

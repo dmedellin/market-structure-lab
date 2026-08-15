@@ -31,11 +31,13 @@ COPY site/ ./
 #     /srv/index.html                            -> learn.geterdone.io/
 #     /srv/<course>/index.html                   -> learn.geterdone.io/<course>/
 #     /srv/<course>/<lab>/index.html             -> learn.geterdone.io/<course>/<lab>/
-# There is exactly one course today, market-structure-lab, with the seven labs
-# listed in the RUN below (the same map as REQUIRED_PAGES in
-# tests/test_site_invariants.py and acceptance.checks in release/contract.json).
-# The seven FLAT /<lab>/ URLs this image used to publish are retired: no stub is
-# shipped for them and none may be re-added here.
+# There are two courses: market-structure-lab (seven lessons) and
+# trade-setup-execution (fifteen lessons), both listed in the RUN below, along
+# with the one published non-HTML asset. That is the same map as REQUIRED_PAGES
+# plus NON_HTML_ASSETS in tests/test_site_invariants.py and acceptance.checks in
+# release/contract.json.
+# The seven FLAT /<lesson>/ URLs this image used to publish are retired: no stub
+# is shipped for them and none may be re-added here.
 # The build fails loudly here rather than silently shipping an image whose URLs
 # do not match the registered canonical host. If the repo tree ever nests the
 # pages under an extra directory level, fix the tree (or this COPY) — do NOT
@@ -43,19 +45,39 @@ COPY site/ ./
 # Also normalize modes: the image runs as UID 1000 with a read-only rootfs, so
 # every published file must be world-readable and every directory traversable.
 RUN set -eu; \
-    test -f /srv/index.html || { echo "FATAL: missing /srv/index.html (course catalog)"; exit 1; }; \
+    test -f /srv/index.html || { echo "FATAL: missing /srv/index.html (the learning path)"; exit 1; }; \
     course=market-structure-lab; \
     test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (course home of the Market Structure Lab course)"; exit 1; }; \
-    for lab in market-structure \
+    for lesson in market-structure \
             ranges-breakouts-liquidity \
             multi-timeframe-market-structure \
             pullbacks-entry-models \
             invalidation-stops-risk-reward \
             volume-relative-strength \
             options-contract-selection; do \
-        test -f "/srv/$course/$lab/index.html" || { echo "FATAL: missing /srv/$course/$lab/index.html (lab of the Market Structure Lab course)"; exit 1; }; \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html (lesson of the Market Structure Lab course)"; exit 1; }; \
     done; \
-    test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: lab 01 is published at learn.geterdone.io/market-structure-lab/market-structure/, never learn.geterdone.io/learn/market-structure-lab/market-structure/. Move site/learn/* up one level."; exit 1; }; \
+    course=trade-setup-execution; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (course home of the Trade Setup and Execution course)"; exit 1; }; \
+    for lesson in trade-thesis \
+            support-resistance \
+            confluence \
+            breakout-setups \
+            pullback-setups \
+            reversal-setups \
+            entry-confirmation \
+            stop-loss-placement \
+            profit-targets \
+            risk-to-reward \
+            position-sizing \
+            trade-management \
+            backtesting \
+            trading-journal \
+            performance-review; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html (lesson of the Trade Setup and Execution course)"; exit 1; }; \
+    done; \
+    test -s "/srv/$course/trade-journal-schema.json" || { echo "FATAL: missing or empty /srv/$course/trade-journal-schema.json. It is a published URL: the course home links to it, lesson 14 exports that shape and lesson 15 imports it."; exit 1; }; \
+    test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: course 1 lesson 01 is published at learn.geterdone.io/market-structure-lab/market-structure/, never learn.geterdone.io/learn/market-structure-lab/market-structure/. Move site/learn/* up one level."; exit 1; }; \
     chmod -R a=rX /srv
 
 FROM docker.io/library/caddy@sha256:f43d8810c944e27e6f7ea80b165de11dbdab16cff15c8a80d83ae3e1a109a35d

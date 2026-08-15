@@ -9,22 +9,29 @@ It implements the blocking acceptance checks declared in release/contract.schema
 one-to-one onto a contract check:
 
     internal-health     /healthz is 200 and never cached
-    learn-index         / is 200 HTML and lists the course
-    course-home         /market-structure-lab/ is 200 and carries the course title
-    lesson-page         /market-structure-lab/market-structure/ is 200 and carries
-                        the lab title
-    lesson-<slug>       one check per remaining lab of the Market Structure Lab
-                        course: the lab URL is 200 HTML, carries its own title, its
-                        own canonical path, and the educational-use disclaimer
+    learn-index         / is 200 HTML and lists BOTH courses
+    course-home         /market-structure-lab/ is 200 and is that document
+    lesson-page         /market-structure-lab/market-structure/ is 200 and is that
+                        document
+    lesson-<slug>       one check per remaining lab of course 1, Market Structure
+                        Lab: 200 HTML, its own canonical tag, and the
+                        educational-use disclaimer
+    course2-home        /trade-setup-execution/ is 200 and is that document
+    course2-lesson-<slug>
+                        one check per lesson of course 2, Trade Setup and
+                        Execution, on the same terms
+    journal-schema      /trade-setup-execution/trade-journal-schema.json is 200,
+                        is served as JSON, and parses
     self-containment    served HTML references no origin but its own, on EVERY
                         published page
     security-headers    the application security header policy is present
     unknown-path-404    an unknown path is a real 404, not a soft 200 or a redirect
 
-The published URL space is two levels: the catalog of courses at /, one course
-home at /market-structure-lab/, and that course's seven labs beneath it. Checking
-one page and calling the site smoke-tested is how eight broken pages ship, so
-every published URL gets its own check id and its own line in the report.
+The published URL space is two levels: the learning path at /, a home per course
+(/market-structure-lab/ and /trade-setup-execution/), and each course's lessons
+beneath its own home -- 25 HTML pages, plus one published JSON asset. Checking
+one page and calling the site smoke-tested is how twenty-four broken pages ship,
+so every published URL gets its own check id and its own line in the report.
 
 Usage:
     python3 scripts/smoke.py https://learn.geterdone.io
@@ -59,79 +66,188 @@ import uuid
 MAX_BODY_BYTES = 8 * 1024 * 1024
 USER_AGENT = "market-structure-lab-smoke/1"
 
-# The published URL space is two levels deep -- a catalog of courses, then one
-# course, then that course's labs:
+# The published URL space is two levels deep -- a learning path, then a course,
+# then that course's lessons:
 #
-#     /                                          catalog of courses
-#     /market-structure-lab/                     course home
-#     /market-structure-lab/<lesson>/            the seven labs, in course order
+#     /                                          the learning path
+#     /market-structure-lab/                     course 1 home
+#     /market-structure-lab/<lesson>/            course 1's seven labs, in order
+#     /trade-setup-execution/                    course 2 home
+#     /trade-setup-execution/<lesson>/           course 2's fifteen lessons, in order
+#     /trade-setup-execution/trade-journal-schema.json   published JSON asset
 #
 # The seven FLAT lesson URLs this site used to serve are retired with no redirect
 # stub behind them. They are not probed here and must not be re-added: a path in
 # this file is a path that must answer 200.
 #
-# Below: (check id, URL path, markers that must appear VERBATIM in the served HTML
-# of that page). The ids are the acceptance-check ids in release/contract.json, so
-# one report line maps onto one contract check. tests/test_site_invariants.py
-# REQUIRED_PAGES declares the same URL space against the files on disk.
+# Below: (check id, URL path, markers that must appear VERBATIM in the served
+# body of that document). The ids are the acceptance-check ids in
+# release/contract.json, so one report line maps onto one contract check.
+# tests/test_site_invariants.py REQUIRED_PAGES and NON_HTML_ASSETS declare the
+# same URL space against the files on disk.
 #
-# Lab 01 is NOT listed in COURSE_LESSONS: it is addressed through
-# --lesson-path/--lesson-marker under the contract id "lesson-page", and the course
-# home through --course-path/--course-marker, so those flags keep working.
-#
-# Markers avoid "&" on purpose (a title may be served escaped or raw) and pair a
-# title fragment, which proves WHICH document was served, with the page's own
-# canonical path and the disclaimer every page of a trading course must carry.
+# Course 1's lab 01 is NOT listed in COURSE_1_LESSONS: it is addressed through
+# --lesson-path/--lesson-marker under the contract id "lesson-page", and course
+# 1's home through --course-path/--course-marker, so those flags keep working.
+# Course 2 arrived after those flags existed and is addressed only by the map.
 DISCLAIMER_MARKER = "Educational use only"
+CANONICAL_ORIGIN = "https://learn.geterdone.io"
 
 COURSE_PATH = "/market-structure-lab/"
 LESSON_01_PATH = COURSE_PATH + "market-structure/"
+COURSE_2_PATH = "/trade-setup-execution/"
+JOURNAL_SCHEMA_PATH = COURSE_2_PATH + "trade-journal-schema.json"
 
+
+def canonical_marker(path):
+    """The marker that proves WHICH document was served.
+
+    Course and lesson paths overlap by construction: /trade-setup-execution/ is a
+    prefix of /trade-setup-execution/confluence/, and every course home links to
+    every one of its lessons, so a bare path substring is satisfied by several
+    different documents -- the home passes the lesson's check and the lesson
+    passes the home's. A page has exactly ONE rel=canonical, and the closing
+    quote ends the prefix, so the full opening tag is satisfied by exactly one
+    document in the whole site. That is what makes these checks independent
+    evidence rather than a shared 200.
+    """
+    return '<link rel="canonical" href="%s%s"' % (CANONICAL_ORIGIN, path)
+
+
+def page_markers(path, *extra):
+    """Identity (the canonical tag), then whatever else the page must carry.
+
+    Every page below the learning path is trading material, so the
+    educational-use disclaimer is part of every page check, never an extra.
+    """
+    return (canonical_marker(path),) + tuple(extra) + (DISCLAIMER_MARKER,)
+
+
+COURSE_1_TITLE_MARKER = "Market Structure Lab"
+COURSE_2_TITLE_MARKER = "Trade Setup and Execution"
+
+# Course 1, labs 02-07. Lab titles avoid "&" on purpose: a title may be served
+# escaped or raw, and the marker must match the bytes either way.
 COURSE_LESSONS = (
     (
         "lesson-ranges-breakouts-liquidity",
         COURSE_PATH + "ranges-breakouts-liquidity/",
-        ("Liquidity Sweeps Lab", COURSE_PATH + "ranges-breakouts-liquidity/", DISCLAIMER_MARKER),
+        page_markers(COURSE_PATH + "ranges-breakouts-liquidity/", "Liquidity Sweeps Lab"),
     ),
     (
         "lesson-multi-timeframe-market-structure",
         COURSE_PATH + "multi-timeframe-market-structure/",
-        ("Multi-Timeframe Market Structure Lab", COURSE_PATH + "multi-timeframe-market-structure/", DISCLAIMER_MARKER),
+        page_markers(COURSE_PATH + "multi-timeframe-market-structure/",
+                     "Multi-Timeframe Market Structure Lab"),
     ),
     (
         "lesson-pullbacks-entry-models",
         COURSE_PATH + "pullbacks-entry-models/",
-        ("Entry Models Lab", COURSE_PATH + "pullbacks-entry-models/", DISCLAIMER_MARKER),
+        page_markers(COURSE_PATH + "pullbacks-entry-models/", "Entry Models Lab"),
     ),
     (
         "lesson-invalidation-stops-risk-reward",
         COURSE_PATH + "invalidation-stops-risk-reward/",
-        ("Reward-to-Risk Lab", COURSE_PATH + "invalidation-stops-risk-reward/", DISCLAIMER_MARKER),
+        page_markers(COURSE_PATH + "invalidation-stops-risk-reward/", "Reward-to-Risk Lab"),
     ),
     (
         "lesson-volume-relative-strength",
         COURSE_PATH + "volume-relative-strength/",
-        ("Relative Strength Lab", COURSE_PATH + "volume-relative-strength/", DISCLAIMER_MARKER),
+        page_markers(COURSE_PATH + "volume-relative-strength/", "Relative Strength Lab"),
     ),
     (
         "lesson-options-contract-selection",
         COURSE_PATH + "options-contract-selection/",
-        ("Options Contract Selection Lab", COURSE_PATH + "options-contract-selection/", DISCLAIMER_MARKER),
+        page_markers(COURSE_PATH + "options-contract-selection/",
+                     "Options Contract Selection Lab"),
+    ),
+)
+
+# Course 2, lessons 01-15, in course order. The check ids are course-scoped:
+# course 1's ids are unprefixed for historical reasons and cannot change without
+# invalidating recorded evidence, but a slug is only unique WITHIN a course, so
+# every later course names its course in the id. Two courses that both teach
+# "confluence" must not collide into one check.
+COURSE_2_LESSON_SLUGS = (
+    "trade-thesis",
+    "support-resistance",
+    "confluence",
+    "breakout-setups",
+    "pullback-setups",
+    "reversal-setups",
+    "entry-confirmation",
+    "stop-loss-placement",
+    "profit-targets",
+    "risk-to-reward",
+    "position-sizing",
+    "trade-management",
+    "backtesting",
+    "trading-journal",
+    "performance-review",
+)
+
+COURSE_2_LESSONS = tuple(
+    (
+        "course2-lesson-%s" % slug,
+        COURSE_2_PATH + slug + "/",
+        page_markers(COURSE_2_PATH + slug + "/", COURSE_2_TITLE_MARKER),
+    )
+    for slug in COURSE_2_LESSON_SLUGS
+)
+
+# (check id, URL path, markers) for every course home addressed by the map.
+# Course 1's home is not here: it comes from --course-path/--course-marker.
+COURSE_HOMES = (
+    (
+        "course2-home",
+        COURSE_2_PATH,
+        page_markers(COURSE_2_PATH, COURSE_2_TITLE_MARKER),
+    ),
+)
+
+# Published, and not a document. The lessons that export and import a trade
+# journal point the reader at this file, so it is a live URL like any other --
+# but an HTML-shaped assertion against a JSON body proves nothing, so it gets a
+# check that fits what it is: served as JSON, parses, and declares the schema id
+# the two lessons exchange. "trade-journal-v1" also discriminates: no HTML page
+# served by mistake at this path would contain it inside valid JSON.
+PUBLISHED_ASSETS = (
+    (
+        "journal-schema",
+        JOURNAL_SCHEMA_PATH,
+        ('"const": "trade-journal-v1"',),
     ),
 )
 
 
-def lesson_targets(args):
-    """(check id, path, markers) for every lab of the course, lab 01 first.
+def course_home_targets(args):
+    """(check id, path, markers) for every course home, course 1 first."""
+    targets = [("course-home", args.course_path, tuple(args.course_marker))]
+    seen = {args.course_path}
+    for check_id, path, markers in COURSE_HOMES:
+        if path in seen:
+            continue
+        seen.add(path)
+        targets.append((check_id, path, markers))
+    return targets
 
-    Lab 01 comes from --lesson-path/--lesson-marker so the flags still steer it;
-    the other six come from the published URL map.
+
+def asset_targets(args):
+    """(check id, path, markers) for every published non-HTML asset."""
+    return [(check_id, path, markers) for check_id, path, markers in PUBLISHED_ASSETS]
+
+
+def lesson_targets(args):
+    """(check id, path, markers) for every lesson of every course, in course order.
+
+    Course 1's lab 01 comes from --lesson-path/--lesson-marker so the flags still
+    steer it; every other lesson of both courses comes from the published URL map.
     """
     targets = [("lesson-page", args.lesson_path, tuple(args.lesson_marker))]
     seen = {args.lesson_path}
-    for check_id, path, markers in COURSE_LESSONS:
+    for check_id, path, markers in COURSE_LESSONS + COURSE_2_LESSONS:
         if path in seen:
-            # --lesson-path was pointed at a lab that is already in the map;
+            # --lesson-path was pointed at a lesson that is already in the map;
             # check it once rather than reporting two lines for one URL.
             continue
         seen.add(path)
@@ -140,13 +256,18 @@ def lesson_targets(args):
 
 
 def published_paths(args):
-    """Every published URL, catalog first: what a whole-site probe must cover.
+    """Every published PAGE, learning path first: what a whole-site probe covers.
 
     tests/test_site_invariants.py compares this against REQUIRED_PAGES, so a page
     that exists on disk but is missing here fails the suite rather than shipping
-    unprobed.
+    unprobed. Assets are deliberately not in this list: it feeds the HTML
+    self-containment sweep, and parsing JSON as HTML would be a check that cannot
+    fail rather than a check that passes.
     """
-    paths = ["/", args.course_path]
+    paths = ["/"]
+    for _, path, _ in course_home_targets(args):
+        if path not in paths:
+            paths.append(path)
     for _, path, _ in lesson_targets(args):
         if path not in paths:
             paths.append(path)
@@ -603,24 +724,25 @@ class Smoke:
         for marker in self.args.index_marker:
             self.assert_contains(check, response, marker, "catalog marker")
 
-    def check_course_home(self):
-        """The course's own page. It is a published URL, so it is probed like any
-        other: the catalog links to it and every lab links back up to it, so a 404
-        here breaks navigation across the whole course."""
-        path = self.args.course_path
-        check = self.new_check("course-home", "course home is served at its subpath", path)
-        try:
-            response = self.get(path, max_redirects=self.args.max_redirects)
-        except FetchError as exc:
-            check.fail(str(exc))
-            return
-        if not self.assert_same_origin_chain(check, response):
-            return
-        if not self.assert_status(check, response, 200):
-            return
-        self.assert_header(check, response, "Content-Type", "text/html", "contains")
-        for marker in self.args.course_marker:
-            self.assert_contains(check, response, marker, "course home marker")
+    def check_course_homes(self):
+        """Each course's own page. They are published URLs, so they are probed
+        like any other: the learning path links to them and every lesson links
+        back up to its own, so a 404 here breaks navigation across a whole
+        course."""
+        for check_id, path, markers in course_home_targets(self.args):
+            check = self.new_check(check_id, "course home is served at its subpath", path)
+            try:
+                response = self.get(path, max_redirects=self.args.max_redirects)
+            except FetchError as exc:
+                check.fail(str(exc))
+                continue
+            if not self.assert_same_origin_chain(check, response):
+                continue
+            if not self.assert_status(check, response, 200):
+                continue
+            self.assert_header(check, response, "Content-Type", "text/html", "contains")
+            for marker in markers:
+                self.assert_contains(check, response, marker, "course home marker")
 
     def check_lesson_pages(self):
         for check_id, path, markers in lesson_targets(self.args):
@@ -637,6 +759,34 @@ class Smoke:
             self.assert_header(check, response, "Content-Type", "text/html", "contains")
             for marker in markers:
                 self.assert_contains(check, response, marker, "lesson marker")
+
+    def check_published_assets(self):
+        """The published non-HTML assets, checked as what they are.
+
+        A JSON file that answers 200 with an HTML error page, or with truncated
+        bytes, is still "up" by every page-shaped assertion; parsing it is the
+        only check that can tell. Lesson 14 exports this schema's shape and
+        lesson 15 imports it, so a broken asset breaks a documented handoff
+        between two lessons.
+        """
+        for check_id, path, markers in asset_targets(self.args):
+            check = self.new_check(check_id, "published asset is served and parses", path)
+            try:
+                response = self.get(path, max_redirects=self.args.max_redirects)
+            except FetchError as exc:
+                check.fail(str(exc))
+                continue
+            if not self.assert_same_origin_chain(check, response):
+                continue
+            if not self.assert_status(check, response, 200):
+                continue
+            self.assert_header(check, response, "Content-Type", "json", "contains")
+            for marker in markers:
+                self.assert_contains(check, response, marker, "asset marker")
+            try:
+                json.loads(response.text())
+            except ValueError as exc:
+                check.fail("body does not parse as JSON: %s" % exc)
 
     def check_self_containment(self):
         paths = published_paths(self.args)
@@ -719,8 +869,9 @@ class Smoke:
     def run(self):
         self.check_internal_health()
         self.check_learn_index()
-        self.check_course_home()
+        self.check_course_homes()
         self.check_lesson_pages()
+        self.check_published_assets()
         self.check_self_containment()
         self.check_security_headers()
         self.check_unknown_path_404()
@@ -739,13 +890,15 @@ def parse_args(argv):
     parser.add_argument(
         "--course-path",
         default=COURSE_PATH,
-        help="the course home URL, checked as contract id course-home (default: %s)" % COURSE_PATH,
+        help="course 1's home URL, checked as contract id course-home (default: %s); "
+        "course 2's home is fixed by the published URL map" % COURSE_PATH,
     )
     parser.add_argument(
         "--lesson-path",
         default=LESSON_01_PATH,
-        help="lab 01's URL, checked as contract id lesson-page (default: %s); "
-        "the other six labs are fixed by the published URL map" % LESSON_01_PATH,
+        help="course 1 lab 01's URL, checked as contract id lesson-page (default: %s); "
+        "every other lesson of both courses is fixed by the published URL map"
+        % LESSON_01_PATH,
     )
     parser.add_argument("--unknown-path", default=None, help="override the 404 probe path (default: random)")
     parser.add_argument(
@@ -785,30 +938,28 @@ def parse_args(argv):
     parser.add_argument("--json", action="store_true", help="emit a machine-readable report")
     args = parser.parse_args(argv)
 
-    # The catalog lists courses, so it must name the course and link to its home.
-    # "market-structure-lab/" is deliberately the two-level link, not the retired
-    # flat lesson path: "market-structure/" would be satisfied by a dead URL.
+    # The learning path lists COURSES, so it must name both and link to both
+    # homes. The two-level links are deliberate, not the retired flat lesson
+    # paths: "market-structure/" would be satisfied by a dead URL.
     if args.index_marker is None:
-        args.index_marker = ["Market Structure Lab", "market-structure-lab/"]
-    # The course and lab 01 share the title "Market Structure Lab", so the title
-    # alone cannot tell their pages apart. Each check also demands the page's OWN
-    # canonical path, which is what makes the two lines independent evidence.
-    # The course home and lab 01 share a title ("Market Structure Lab") and the
-    # course path is a prefix of the lab path, so a bare path marker does NOT
-    # discriminate between them: each document satisfies the other's markers.
-    # The full canonical TAG does discriminate, because the closing quote stops
-    # the prefix overlap. Use it so these two checks can actually detect a
-    # document served at the wrong URL.
+        args.index_marker = [
+            canonical_marker("/"),
+            COURSE_1_TITLE_MARKER,
+            "market-structure-lab/",
+            COURSE_2_TITLE_MARKER,
+            "trade-setup-execution/",
+        ]
+    # Course 1's home and its lab 01 share the title "Market Structure Lab", and
+    # the course path is a prefix of the lab path, so neither a title nor a bare
+    # path marker discriminates between them: each document satisfies the other's
+    # markers. The full canonical TAG does discriminate, because the closing
+    # quote stops the prefix overlap. Every page check in this file is built that
+    # way (see canonical_marker), so any of them can detect a document served at
+    # the wrong URL.
     if args.course_marker is None:
-        args.course_marker = [
-            '<link rel="canonical" href="https://learn.geterdone.io%s"' % COURSE_PATH,
-            DISCLAIMER_MARKER,
-        ]
+        args.course_marker = list(page_markers(COURSE_PATH, COURSE_1_TITLE_MARKER))
     if args.lesson_marker is None:
-        args.lesson_marker = [
-            '<link rel="canonical" href="https://learn.geterdone.io%s"' % LESSON_01_PATH,
-            DISCLAIMER_MARKER,
-        ]
+        args.lesson_marker = list(page_markers(LESSON_01_PATH, COURSE_1_TITLE_MARKER))
     if args.allow_origin is None:
         args.allow_origin = ["learn.geterdone.io"]
 

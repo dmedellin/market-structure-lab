@@ -83,18 +83,23 @@ jobs:
         run: |
           set -euo pipefail
           # The public URL space is two levels deep — courses, then lessons:
-          #   /                                    catalog of courses
-          #   /market-structure-lab/               course home
-          #   /market-structure-lab/<lab>/         the seven labs, in course order
-          # Same map as REQUIRED_PAGES in tests/test_site_invariants.py,
-          # acceptance.checks in release/contract.json, the publish guard in
-          # pages.yml, and the build guard in Containerfile.release. A file
-          # missing here is a 404 on a live URL, so fail the pull request rather
-          # than let an incomplete course reach the publish step.
-          # The seven FLAT /<lab>/ URLs this site used to serve are retired with
-          # no redirect stub. They are deliberately absent from this list and
-          # must not be re-added.
+          #   /                                    the learning path
+          #   /market-structure-lab/               course 1 home
+          #   /market-structure-lab/<lesson>/      course 1's seven lessons
+          #   /trade-setup-execution/              course 2 home
+          #   /trade-setup-execution/<lesson>/     course 2's fifteen lessons
+          # 25 pages, in course order, plus one published non-HTML asset.
+          # Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
+          # tests/test_site_invariants.py, acceptance.checks in
+          # release/contract.json, the publish guard in pages.yml, and the build
+          # guard in Containerfile.release. A file missing here is a 404 on a
+          # live URL, so fail the pull request rather than let an incomplete
+          # course reach the publish step.
+          # The seven FLAT /<lesson>/ URLs this site used to serve are retired
+          # with no redirect stub. They are deliberately absent from this list
+          # and must not be re-added.
           missing=0
+          pages=0
           for page in index.html \
                       market-structure-lab/index.html \
                       market-structure-lab/market-structure/index.html \
@@ -103,14 +108,43 @@ jobs:
                       market-structure-lab/pullbacks-entry-models/index.html \
                       market-structure-lab/invalidation-stops-risk-reward/index.html \
                       market-structure-lab/volume-relative-strength/index.html \
-                      market-structure-lab/options-contract-selection/index.html ; do
+                      market-structure-lab/options-contract-selection/index.html \
+                      trade-setup-execution/index.html \
+                      trade-setup-execution/trade-thesis/index.html \
+                      trade-setup-execution/support-resistance/index.html \
+                      trade-setup-execution/confluence/index.html \
+                      trade-setup-execution/breakout-setups/index.html \
+                      trade-setup-execution/pullback-setups/index.html \
+                      trade-setup-execution/reversal-setups/index.html \
+                      trade-setup-execution/entry-confirmation/index.html \
+                      trade-setup-execution/stop-loss-placement/index.html \
+                      trade-setup-execution/profit-targets/index.html \
+                      trade-setup-execution/risk-to-reward/index.html \
+                      trade-setup-execution/position-sizing/index.html \
+                      trade-setup-execution/trade-management/index.html \
+                      trade-setup-execution/backtesting/index.html \
+                      trade-setup-execution/trading-journal/index.html \
+                      trade-setup-execution/performance-review/index.html ; do
+            pages=$((pages + 1))
             if [ ! -f "$WEB_ROOT/$page" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$page — the published URL space is incomplete"
               missing=1
             fi
           done
+          # Published, and not a page. Course 2's lesson 14 exports this shape
+          # and lesson 15 imports it, and the course home links to the file, so
+          # it is a live URL whose absence is a 404 like any other.
+          for asset in trade-setup-execution/trade-journal-schema.json ; do
+            if [ ! -f "$WEB_ROOT/$asset" ]; then
+              echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$asset — a published asset is missing"
+              missing=1
+            elif ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$WEB_ROOT/$asset"; then
+              echo "::error file=$WEB_ROOT/$asset::published JSON asset does not parse"
+              missing=1
+            fi
+          done
           [ "$missing" -eq 0 ] || exit 1
-          echo "Published URL space: 9/9 pages present under $WEB_ROOT."
+          echo "Published URL space: $pages/25 pages plus 1 asset present under $WEB_ROOT."
 
       - name: HTML is well-formed
         run: |
@@ -252,12 +286,18 @@ jobs:
           ALLOWED_LINK_ORIGINS = (SELF_ORIGIN, "https://geterdone.io",
                                   "https://www.optionseducation.org",
                                   "https://www.finra.org")
-          # 2. XML namespace identifiers. Never fetched; required by inline SVG
-          #    and document.createElementNS.
+          # 2. Schema and namespace IDENTIFIERS. These name a dialect; nothing
+          #    dereferences them. The w3.org URIs are required by inline SVG and
+          #    document.createElementNS. The json-schema.org URI is the "$schema"
+          #    dialect identifier of the published trade-journal-schema.json:
+          #    JSON Schema keys the dialect by URI and validators never fetch it.
+          #    Reviewed 2026-08-15. Each entry is matched as an EXACT string, so
+          #    this list allows those identifiers and nothing else on those hosts.
           NAMESPACE_URIS = ("http://www.w3.org/2000/svg",
                             "http://www.w3.org/1999/xlink",
                             "http://www.w3.org/1999/xhtml",
-                            "http://www.w3.org/2000/xmlns/")
+                            "http://www.w3.org/2000/xmlns/",
+                            "https://json-schema.org/draft/2020-12/schema")
           # 3. Same-origin metadata URLs in <link rel=canonical|alternate> and
           #    og:url/twitter:url, which describe the page rather than load it.
           METADATA_LINK_RELS = {"canonical", "alternate"}
