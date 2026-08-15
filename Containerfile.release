@@ -26,13 +26,16 @@ FROM docker.io/library/caddy@sha256:f43d8810c944e27e6f7ea80b165de11dbdab16cff15c
 WORKDIR /srv
 COPY site/ ./
 
-# Document-root contract. /srv IS the root of https://learn.geterdone.io, so the
-# tree must be published as:
-#     /srv/index.html                       -> learn.geterdone.io/
-#     /srv/<lab>/index.html                 -> learn.geterdone.io/<lab>/
-# for each of the seven labs of the Market Structure Course listed in the RUN
-# below (the same map as REQUIRED_PAGES in tests/test_site_invariants.py and
-# acceptance.checks in release/contract.json).
+# Document-root contract. /srv IS the root of https://learn.geterdone.io, and the
+# published URL space is two levels deep — courses, then lessons:
+#     /srv/index.html                            -> learn.geterdone.io/
+#     /srv/<course>/index.html                   -> learn.geterdone.io/<course>/
+#     /srv/<course>/<lab>/index.html             -> learn.geterdone.io/<course>/<lab>/
+# There is exactly one course today, market-structure-lab, with the seven labs
+# listed in the RUN below (the same map as REQUIRED_PAGES in
+# tests/test_site_invariants.py and acceptance.checks in release/contract.json).
+# The seven FLAT /<lab>/ URLs this image used to publish are retired: no stub is
+# shipped for them and none may be re-added here.
 # The build fails loudly here rather than silently shipping an image whose URLs
 # do not match the registered canonical host. If the repo tree ever nests the
 # pages under an extra directory level, fix the tree (or this COPY) — do NOT
@@ -40,7 +43,9 @@ COPY site/ ./
 # Also normalize modes: the image runs as UID 1000 with a read-only rootfs, so
 # every published file must be world-readable and every directory traversable.
 RUN set -eu; \
-    test -f /srv/index.html || { echo "FATAL: missing /srv/index.html (Learn index)"; exit 1; }; \
+    test -f /srv/index.html || { echo "FATAL: missing /srv/index.html (course catalog)"; exit 1; }; \
+    course=market-structure-lab; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (course home of the Market Structure Lab course)"; exit 1; }; \
     for lab in market-structure \
             ranges-breakouts-liquidity \
             multi-timeframe-market-structure \
@@ -48,9 +53,9 @@ RUN set -eu; \
             invalidation-stops-risk-reward \
             volume-relative-strength \
             options-contract-selection; do \
-        test -f "/srv/$lab/index.html" || { echo "FATAL: missing /srv/$lab/index.html (lab of the Market Structure Course)"; exit 1; }; \
+        test -f "/srv/$course/$lab/index.html" || { echo "FATAL: missing /srv/$course/$lab/index.html (lab of the Market Structure Lab course)"; exit 1; }; \
     done; \
-    test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: the lesson is published at learn.geterdone.io/market-structure/, never learn.geterdone.io/learn/market-structure/. Move site/learn/* up one level."; exit 1; }; \
+    test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: lab 01 is published at learn.geterdone.io/market-structure-lab/market-structure/, never learn.geterdone.io/learn/market-structure-lab/market-structure/. Move site/learn/* up one level."; exit 1; }; \
     chmod -R a=rX /srv
 
 FROM docker.io/library/caddy@sha256:f43d8810c944e27e6f7ea80b165de11dbdab16cff15c8a80d83ae3e1a109a35d

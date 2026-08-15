@@ -299,12 +299,13 @@
         },
         "checks": {
           "type": "array",
-          "minItems": 12,
+          "minItems": 13,
           "uniqueItems": true,
           "items": {"$ref": "#/$defs/acceptanceCheck"},
           "allOf": [
             {"contains": {"properties": {"id": {"const": "internal-health"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "learn-index"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course-home"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "lesson-page"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "lesson-ranges-breakouts-liquidity"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "lesson-multi-timeframe-market-structure"}}, "required": ["id"]}},
@@ -316,7 +317,7 @@
             {"contains": {"properties": {"id": {"const": "self-containment"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "security-headers"}}, "required": ["id"]}}
           ],
-          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published page of the seven-lab Market Structure Course (lab 01 is id lesson-page). scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
+          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published page of the two-level URL space - the course catalog at /, the course home at /market-structure-lab/ (id course-home), and the seven labs at /market-structure-lab/<lesson>/ (lab 01 is id lesson-page). The retired flat /<lesson>/ URLs have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
         }
       }
     },

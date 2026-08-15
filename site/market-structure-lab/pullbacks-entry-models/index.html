@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
   <title>Pullbacks & Entry Models Lab</title>
-  <link rel="canonical" href="https://learn.geterdone.io/pullbacks-entry-models/" />
+  <link rel="canonical" href="https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/" />
   <meta name="author" content="dmedellin" />
   <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#eef4f8" media="(prefers-color-scheme: light)" />
@@ -15,11 +15,12 @@
   <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Pullbacks &amp; Entry Models Lab" />
   <meta property="og:description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
-  <meta property="og:url" content="https://learn.geterdone.io/pullbacks-entry-models/" />
+  <meta property="og:url" content="https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/" />
   <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Pullbacks &amp; Entry Models Lab" />
   <meta name="twitter:description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071019'/%3E%3Cpath d='M10 46 L24 29 L34 39 L46 17' fill='none' stroke='%2336d6e7' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   <style>
 
@@ -223,6 +224,34 @@ svg { display: block; }
 }
 
 .topnav a:hover { color: var(--text); background: var(--line); }
+
+/* Breadcrumb. The lesson now sits two levels below the document root
+   (library -> course -> lesson), which is one level more than the topbar's
+   single back-link can express: that link reaches the COURSE home, so the
+   library needs its own route. Same type scale, colour tokens and hover
+   treatment as .topnav so the two read as one header. Deliberately NOT hidden
+   at the 720px breakpoint the way .topnav is - on a phone the topnav is gone
+   and this is the only way back to the library. */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: 10px 2px 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.crumbs a {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 6px 9px;
+  border-radius: 9px;
+}
+
+.crumbs a:hover { color: var(--text); background: var(--line); }
+.crumb-sep { opacity: 0.5; }
+.crumb-current { color: var(--text); padding: 6px 9px; }
 
 .brand-mark {
   width: 39px;
@@ -1073,21 +1102,29 @@ td.bad { color: var(--red); font-weight: 800; }
 
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="../" aria-label="Pullbacks and Entry Models Lab — back to the Learn library">
+      <a class="brand" href="../" aria-label="Back to the Market Structure Lab course home">
         <div class="brand-mark" aria-hidden="true">04</div>
         <div class="brand-copy">
-          <strong>Market Structure Course</strong>
+          <strong>Market Structure Lab</strong>
           <span>Standalone interactive learning lab</span>
         </div>
       </a>
       <nav class="topnav" aria-label="Primary">
-        <a href="../">Library</a>
+        <a href="../">Course home</a>
         <a href="#lab">Entry Lab</a>
         <a href="#sequence">Sequence</a>
         <a href="#practice">Practice</a>
       </nav>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
     </header>
+
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Market Structure Lab</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 04 &middot; Pullbacks &amp; Entry Models</span>
+    </nav>
 
     <noscript>
       <div class="noscript-note">

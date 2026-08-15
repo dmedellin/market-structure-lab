@@ -73,9 +73,44 @@ jobs:
           fi
           echo "Web root: $root"
           if [ ! -f "$root/index.html" ]; then
-            echo "::warning file=$root::No index.html at the web root; https://learn.geterdone.io/ (the Learn catalog landing) would 404."
+            echo "::warning file=$root::No index.html at the web root; https://learn.geterdone.io/ (the catalog of courses) would 404."
           fi
           echo "root=$root" >> "$GITHUB_OUTPUT"
+
+      - name: Published URL space is complete
+        env:
+          WEB_ROOT: ${{ steps.webroot.outputs.root }}
+        run: |
+          set -euo pipefail
+          # The public URL space is two levels deep — courses, then lessons:
+          #   /                                    catalog of courses
+          #   /market-structure-lab/               course home
+          #   /market-structure-lab/<lab>/         the seven labs, in course order
+          # Same map as REQUIRED_PAGES in tests/test_site_invariants.py,
+          # acceptance.checks in release/contract.json, the publish guard in
+          # pages.yml, and the build guard in Containerfile.release. A file
+          # missing here is a 404 on a live URL, so fail the pull request rather
+          # than let an incomplete course reach the publish step.
+          # The seven FLAT /<lab>/ URLs this site used to serve are retired with
+          # no redirect stub. They are deliberately absent from this list and
+          # must not be re-added.
+          missing=0
+          for page in index.html \
+                      market-structure-lab/index.html \
+                      market-structure-lab/market-structure/index.html \
+                      market-structure-lab/ranges-breakouts-liquidity/index.html \
+                      market-structure-lab/multi-timeframe-market-structure/index.html \
+                      market-structure-lab/pullbacks-entry-models/index.html \
+                      market-structure-lab/invalidation-stops-risk-reward/index.html \
+                      market-structure-lab/volume-relative-strength/index.html \
+                      market-structure-lab/options-contract-selection/index.html ; do
+            if [ ! -f "$WEB_ROOT/$page" ]; then
+              echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$page — the published URL space is incomplete"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+          echo "Published URL space: 9/9 pages present under $WEB_ROOT."
 
       - name: HTML is well-formed
         run: |

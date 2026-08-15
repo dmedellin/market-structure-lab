@@ -1,39 +1,71 @@
 # Market Structure Lab
 
-The **Market Structure Course**: a seven-part interactive course on how price
-actually moves, plus the **Learn** catalog page that indexes it. Every page is a
-single HTML file with its CSS, JavaScript, and graphics inline — it loads no
-fonts, no frameworks, no analytics, and no third-party requests of any kind.
+**Market Structure Lab** — *simple, technical, and fits an interactive format* —
+is a seven-part interactive course on how price actually moves, published behind
+a catalog of courses. Every page is a single HTML file with its CSS, JavaScript,
+and graphics inline — it loads no fonts, no frameworks, no analytics, and no
+third-party requests of any kind.
 
 ## URL layout
 
-The site is published under one subdomain, `learn.geterdone.io`:
+The site is published under one subdomain, `learn.geterdone.io`, and the URL
+space is **two levels deep: courses, then lessons**.
 
-| # | URL | Lab | Source |
+```text
+/                                   catalog of courses (one course today)
+└── /market-structure-lab/          course home — lists the seven labs
+    ├── /market-structure-lab/market-structure/                  lab 01
+    ├── … five more …
+    └── /market-structure-lab/options-contract-selection/        lab 07
+```
+
+Nine published URLs, and nothing else is served:
+
+| # | URL | Page | Source |
 | --- | --- | --- | --- |
-| — | `https://learn.geterdone.io/` | Learn catalog landing | `site/index.html` |
-| 01 | `https://learn.geterdone.io/market-structure/` | Market Structure Lab | `site/market-structure/index.html` |
-| 02 | `https://learn.geterdone.io/ranges-breakouts-liquidity/` | Ranges, Breakouts & Liquidity Sweeps | `site/ranges-breakouts-liquidity/index.html` |
-| 03 | `https://learn.geterdone.io/multi-timeframe-market-structure/` | Multi-Timeframe Market Structure | `site/multi-timeframe-market-structure/index.html` |
-| 04 | `https://learn.geterdone.io/pullbacks-entry-models/` | Pullbacks & Entry Models | `site/pullbacks-entry-models/index.html` |
-| 05 | `https://learn.geterdone.io/invalidation-stops-risk-reward/` | Invalidation, Stops & Reward-to-Risk | `site/invalidation-stops-risk-reward/index.html` |
-| 06 | `https://learn.geterdone.io/volume-relative-strength/` | Volume & Relative Strength | `site/volume-relative-strength/index.html` |
-| 07 | `https://learn.geterdone.io/options-contract-selection/` | Options Contract Selection | `site/options-contract-selection/index.html` |
+| — | `https://learn.geterdone.io/` | Catalog of courses | `site/index.html` |
+| — | `https://learn.geterdone.io/market-structure-lab/` | **Market Structure Lab** — course home | `site/market-structure-lab/index.html` |
+| 01 | `https://learn.geterdone.io/market-structure-lab/market-structure/` | Market Structure Lab | `site/market-structure-lab/market-structure/index.html` |
+| 02 | `https://learn.geterdone.io/market-structure-lab/ranges-breakouts-liquidity/` | Ranges, Breakouts & Liquidity Sweeps Lab | `site/market-structure-lab/ranges-breakouts-liquidity/index.html` |
+| 03 | `https://learn.geterdone.io/market-structure-lab/multi-timeframe-market-structure/` | Multi-Timeframe Market Structure Lab | `site/market-structure-lab/multi-timeframe-market-structure/index.html` |
+| 04 | `https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/` | Pullbacks & Entry Models Lab | `site/market-structure-lab/pullbacks-entry-models/index.html` |
+| 05 | `https://learn.geterdone.io/market-structure-lab/invalidation-stops-risk-reward/` | Invalidation, Stops & Reward-to-Risk Lab | `site/market-structure-lab/invalidation-stops-risk-reward/index.html` |
+| 06 | `https://learn.geterdone.io/market-structure-lab/volume-relative-strength/` | Volume & Relative Strength Lab | `site/market-structure-lab/volume-relative-strength/index.html` |
+| 07 | `https://learn.geterdone.io/market-structure-lab/options-contract-selection/` | Options Contract Selection Lab | `site/market-structure-lab/options-contract-selection/index.html` |
 
-`site/` **is** the document root: its tree maps one-to-one onto public paths.
+The course and lab 01 share the name *Market Structure Lab*: the course is the
+whole seven-lab sequence, lab 01 is its first lesson on structure itself. Both
+titles are authoritative and neither changes; navigation numbers the labs so a
+reader can tell them apart.
 
-That map is declared in four places, and all four must agree:
+`site/` **is** the document root: its tree maps one-to-one onto public paths, so
+a lesson lives one directory below its course both on disk and in the URL.
+
+Because a lesson is now two segments deep, its links up are `../` to the course
+home and `../../` to the catalog. Nothing may use a root-absolute `/…` path: the
+suite rejects them so the tree also previews correctly under a subpath.
+
+**The seven flat URLs (`/market-structure/`, `/ranges-breakouts-liquidity/`, …)
+are gone.** Retiring them was a deliberate, accepted break: there are no redirect
+stubs, nothing serves them, and no guard or contract lists them. A request for
+one is a plain 404. Do not re-add them to any page map — a path in these maps is
+a path that must exist.
+
+That map is declared in five places, and all five must agree:
 
 - `tests/test_site_invariants.py` → `REQUIRED_PAGES` (files on disk);
-- `scripts/smoke.py` → `COURSE_LESSONS` (served responses);
-- `release/contract.json` → `acceptance.checks`, one check id per page;
+- `scripts/smoke.py` → `COURSE_PATH` + `COURSE_LESSONS` (served responses);
+- `release/contract.json` → `acceptance.checks`, one check id per page
+  (`learn-index`, `course-home`, `lesson-page` for lab 01, `lesson-<slug>` for
+  the rest);
+- `.github/workflows/ci.yml` → the "Published URL space is complete" step;
 - `Containerfile.release` and `.github/workflows/pages.yml` (publish-time guards).
 
 A page added to one of them and not the others is a page nothing checks.
 
-Every lab is a standalone trading lesson and carries the same
-`Educational use only` disclaimer; the invariant suite fails the build if one
-loses it.
+Every page below the catalog — the course home as well as all seven labs — is
+trading material and carries the same `Educational use only` disclaimer; the
+invariant suite fails the build if one loses it.
 
 The apex `geterdone.io` is a separate, live GitHub Pages site. It is not part of
 this project and nothing here touches it.
@@ -47,8 +79,9 @@ python3 -m http.server 8000 --directory site
 ```
 
 Then open <http://127.0.0.1:8000/>. Directory URLs resolve to `index.html`, so
-`http://127.0.0.1:8000/market-structure/` previews a lab exactly as the public
-path will serve it.
+`http://127.0.0.1:8000/market-structure-lab/` previews the course home and
+`http://127.0.0.1:8000/market-structure-lab/market-structure/` previews lab 01,
+exactly as the public paths will serve them.
 
 Opening the HTML file directly with `file://` also works, but the local server is
 the accurate preview because it exercises the same directory-index behavior as
@@ -63,7 +96,7 @@ python3 scripts/validate_release_contract.py \
     release/contract.json release/contract.example.json
 ```
 
-`smoke.py` checks all eight published URLs. Against the plain
+`smoke.py` checks all nine published URLs. Against the plain
 `python3 -m http.server` preview the `internal-health` and `security-headers`
 checks fail by design: `/healthz` and the header policy come from the
 in-container Caddy (`deploy/Caddyfile`), not from anything in `site/`.
@@ -93,7 +126,7 @@ AGENTS.md                 working agreement — read before changing anything
 **1. GitHub Pages — live.** `.github/workflows/pages.yml` uploads `site/` on every
 push to `main` and deploys it to `learn.geterdone.io` (`site/CNAME` holds the
 custom domain). Before uploading it re-checks self-containment and asserts that
-all eight pages exist. This path does not touch platform-ops, the shared Caddy
+all nine pages exist. This path does not touch platform-ops, the shared Caddy
 edge, or any registry reservation, and it is **not** a shortcut around those
 gates — they govern the Hetzner platform, which is a different path.
 
@@ -128,7 +161,8 @@ The normative rules live in `dmedellin/platform-ops`
 ## STATUS
 
 **Deployed on GitHub Pages.** `https://learn.geterdone.io/` serves this `site/`
-tree — the catalog and all seven labs — from the `pages.yml` workflow.
+tree — the catalog, the course home, and all seven labs — from the `pages.yml`
+workflow.
 
 **The Hetzner container path remains UNBUILT.** No image of this repository has
 ever been built, deployed, or accepted on that platform. As of 2026-08-15, all of

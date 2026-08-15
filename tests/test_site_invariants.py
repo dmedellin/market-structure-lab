@@ -37,27 +37,47 @@ SITE_ROOT = Path(os.environ.get("SITE_ROOT") or (REPO_ROOT / "site")).resolve()
 CANONICAL_ORIGIN = "https://learn.geterdone.io"
 CANONICAL_HOST = "learn.geterdone.io"
 
-# The document root must publish exactly these URLs: the Learn catalog, then the
-# seven labs of the Market Structure Course in course order. Containerfile.release,
-# .github/workflows/pages.yml, release/contract.json (acceptance.checks) and
-# scripts/smoke.py all assert the same mapping; changing one without the others is
-# how a lesson silently stops being published.
+# The published URL space is two levels deep: the site index is a catalog of
+# COURSES, each course has a home page, and each course's lessons live under it.
+#
+#     /                                   catalog of courses
+#     /market-structure-lab/              course home (lists its seven labs)
+#     /market-structure-lab/<lesson>/     the seven labs, in course order
+#
+# The document root must publish exactly these nine URLs and nothing else.
+# Containerfile.release, .github/workflows/{ci,pages}.yml, release/contract.json
+# (acceptance.checks) and scripts/smoke.py all assert the same mapping; changing
+# one without the others is how a lesson silently stops being published.
+#
+# The seven FLAT URLs this course used to publish (/market-structure/ and its six
+# siblings) are deliberately gone. Breaking them was an accepted decision, there
+# are no redirect stubs, and they must not be re-added here: a path listed below
+# is a path that must exist.
+COURSE_HOME = "/market-structure-lab/"
+
+UNKNOWN_PATH_CHECK = "/release-smoke-unknown-path"
+
 REQUIRED_PAGES = {
     "/": "index.html",
-    "/market-structure/": "market-structure/index.html",
-    "/ranges-breakouts-liquidity/": "ranges-breakouts-liquidity/index.html",
-    "/multi-timeframe-market-structure/": "multi-timeframe-market-structure/index.html",
-    "/pullbacks-entry-models/": "pullbacks-entry-models/index.html",
-    "/invalidation-stops-risk-reward/": "invalidation-stops-risk-reward/index.html",
-    "/volume-relative-strength/": "volume-relative-strength/index.html",
-    "/options-contract-selection/": "options-contract-selection/index.html",
+    COURSE_HOME: "market-structure-lab/index.html",
+    "/market-structure-lab/market-structure/": "market-structure-lab/market-structure/index.html",
+    "/market-structure-lab/ranges-breakouts-liquidity/": "market-structure-lab/ranges-breakouts-liquidity/index.html",
+    "/market-structure-lab/multi-timeframe-market-structure/": "market-structure-lab/multi-timeframe-market-structure/index.html",
+    "/market-structure-lab/pullbacks-entry-models/": "market-structure-lab/pullbacks-entry-models/index.html",
+    "/market-structure-lab/invalidation-stops-risk-reward/": "market-structure-lab/invalidation-stops-risk-reward/index.html",
+    "/market-structure-lab/volume-relative-strength/": "market-structure-lab/volume-relative-strength/index.html",
+    "/market-structure-lab/options-contract-selection/": "market-structure-lab/options-contract-selection/index.html",
 }
 
-# "/" is the catalog; every other published URL is a trading lesson. All of them
-# are labs of the same course, so all of them carry the same disclaimer.
-LESSON_PAGES = {url: rel for url, rel in REQUIRED_PAGES.items() if url != "/"}
+# "/" is the catalog of courses; every other published URL is course material --
+# the course home and its seven labs. All of it teaches trading, so all of it
+# carries the same disclaimer. There is no exempt page below the catalog root.
+COURSE_PAGES = {url: rel for url, rel in REQUIRED_PAGES.items() if url != "/"}
 
-# Every lesson page (any page below the catalog root) must keep this disclaimer.
+# The seven labs alone, without the course home.
+LESSON_PAGES = {url: rel for url, rel in COURSE_PAGES.items() if url != COURSE_HOME}
+
+# Every course page (any page below the catalog root) must keep this disclaimer.
 DISCLAIMER_RE = re.compile(r"(?i)educational use only")
 
 SECRET_PATTERNS = [
@@ -219,15 +239,49 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
 
     REQUIRED_PAGES above is the on-disk declaration. scripts/smoke.py declares the
     same map for the SERVED responses and release/contract.json declares it as the
-    acceptance matrix. A lesson added to one and not the others is a live page that
-    nothing probes, which is exactly the hole these tests exist to close.
+    acceptance matrix. A page added to one and not the others is a live page that
+    nothing probes, which is exactly the hole these tests exist to close. The
+    course home counts: it is published, so it is probed.
     """
 
+    def test_declared_url_space_is_the_two_level_course_tree(self):
+        """Catalog, then one course home, then that course's lessons under it.
+
+        Nine URLs exactly: /, /market-structure-lab/, and seven labs beneath it.
+        The flat /<lesson>/ URLs were retired without redirects, so a two-segment
+        lesson path is the only shape a lesson may have; re-adding a one-segment
+        lesson here would declare a page that no longer exists on disk.
+        """
+        self.assertEqual(
+            9, len(REQUIRED_PAGES), "expected 9 published URLs, got %d" % len(REQUIRED_PAGES)
+        )
+        self.assertIn(COURSE_HOME, REQUIRED_PAGES, "the course home must be published")
+        self.assertEqual(
+            7, len(LESSON_PAGES), "the course is seven labs, got %d" % len(LESSON_PAGES)
+        )
+        for url, relative in sorted(REQUIRED_PAGES.items()):
+            with self.subTest(url=url):
+                self.assertTrue(url.startswith("/") and url.endswith("/"),
+                                "a published URL is a directory URL")
+                self.assertEqual(url.lstrip("/"), relative[: -len("index.html")],
+                                 "URL and source file disagree")
+        for url in sorted(LESSON_PAGES):
+            with self.subTest(url=url):
+                self.assertTrue(
+                    url.startswith(COURSE_HOME),
+                    "a lesson lives under its course home %s, got %s" % (COURSE_HOME, url),
+                )
+                self.assertEqual(
+                    2,
+                    url.strip("/").count("/") + 1,
+                    "a lesson URL is exactly <course>/<lesson>/, got %s" % url,
+                )
+
     def test_smoke_client_probes_every_published_page(self):
-        from smoke import COURSE_LESSONS, parse_args
+        from smoke import parse_args, published_paths
 
         args = parse_args([CANONICAL_ORIGIN])
-        probed = {"/", args.lesson_path} | {path for _, path, _ in COURSE_LESSONS}
+        probed = set(published_paths(args))
         self.assertEqual(
             set(REQUIRED_PAGES),
             probed,
@@ -255,6 +309,17 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
                     missing,
                     "release/%s declares no public acceptance check for %s; a release "
                     "would be accepted without ever fetching those pages" % (name, missing),
+                )
+                # Bidirectional on purpose: a one-way check would let a retired
+                # URL linger in the contract forever, quietly asserting a page
+                # that is no longer published.
+                stale = sorted(checked - set(REQUIRED_PAGES) - {UNKNOWN_PATH_CHECK})
+                self.assertEqual(
+                    [],
+                    stale,
+                    "release/%s declares public acceptance checks for %s, which the "
+                    "site does not publish; the contract has drifted from the tree"
+                    % (name, stale),
                 )
 
 
@@ -304,7 +369,7 @@ class TestSelfContainment(SiteFixture):
             "<!doctype html><html><head>"
             '<link rel="canonical" href="%s/">'
             "<style>body{background:url(data:image/png;base64,AAAA)}</style>"
-            "</head><body><a href=\"./market-structure/\">go</a>"
+            "</head><body><a href=\"./market-structure-lab/\">go</a>"
             "<script>var x=1;</script></body></html>" % CANONICAL_ORIGIN
         )
         self.assertEqual([], scan_self_containment(clean, {CANONICAL_HOST}))
@@ -402,29 +467,32 @@ class TestPageMetadata(SiteFixture):
 
 
 class TestContent(SiteFixture):
-    def test_lesson_pages_retain_the_disclaimer(self):
-        """All seven labs teach trading, so all seven must say educational use only.
+    def test_course_pages_retain_the_disclaimer(self):
+        """Everything below the catalog root teaches trading and must say so.
 
-        Checked two ways on purpose: every DECLARED lesson must be present (a lab
-        that vanished cannot pass by not being iterated), and every PUBLISHED
-        non-catalog page must carry the disclaimer (a lab added without touching
+        That is the course home as well as all seven labs: the course home is not
+        an exempt landing page, it sells the same material.
+
+        Checked two ways on purpose: every DECLARED course page must be present (a
+        lab that vanished cannot pass by not being iterated), and every PUBLISHED
+        non-catalog page must carry the disclaimer (a page added without touching
         REQUIRED_PAGES is still covered).
         """
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        missing = sorted(set(LESSON_PAGES) - set(by_url))
+        missing = sorted(set(COURSE_PAGES) - set(by_url))
         self.assertEqual(
             [],
             missing,
-            "declared lesson pages are not published: %s" % missing,
+            "declared course pages are not published: %s" % missing,
         )
-        lessons = [doc for url, doc in sorted(by_url.items()) if url != "/"]
-        self.assertTrue(lessons, "no lesson page found under %s" % SITE_ROOT)
-        for doc in lessons:
+        course_pages = [doc for url, doc in sorted(by_url.items()) if url != "/"]
+        self.assertTrue(course_pages, "no course page found under %s" % SITE_ROOT)
+        for doc in course_pages:
             with self.subTest(page=str(doc.path.relative_to(REPO_ROOT))):
                 self.assertRegex(
                     doc.text,
                     DISCLAIMER_RE,
-                    "lesson page lost its educational-use disclaimer",
+                    "course page lost its educational-use disclaimer",
                 )
 
     def test_no_secret_like_strings(self):

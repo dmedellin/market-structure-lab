@@ -7,13 +7,27 @@ agent) edits this repository and the platform that will eventually serve it.
 
 An educational static site published as **Learn** at `https://learn.geterdone.io`:
 
+The published URL space is two levels deep — courses, then lessons:
+
 | URL | Served from |
 | --- | --- |
-| `learn.geterdone.io/` | `site/index.html` — the Learn catalog landing |
-| `learn.geterdone.io/market-structure/` | `site/market-structure/index.html` — the Market Structure Lab lesson |
+| `learn.geterdone.io/` | `site/index.html` — the catalog of courses |
+| `learn.geterdone.io/market-structure-lab/` | `site/market-structure-lab/index.html` — the Market Structure Lab course home |
+| `learn.geterdone.io/market-structure-lab/<lesson>/` | `site/market-structure-lab/<lesson>/index.html` — one of the seven labs |
 
 `site/` is the document root. Whatever `site/` contains is exactly what `/` serves;
 an extra directory level in `site/` becomes an extra path segment in the public URL.
+
+The full nine-URL map is in [README.md](README.md#url-layout), and it is enforced
+in five places that must agree: `REQUIRED_PAGES` in `tests/test_site_invariants.py`,
+`scripts/smoke.py`, `acceptance.checks` in `release/contract.json`, the
+"Published URL space is complete" step in `.github/workflows/ci.yml`, and the
+publish guards in `.github/workflows/pages.yml` and `Containerfile.release`.
+
+The seven FLAT lesson URLs (`/market-structure/` and its siblings) were retired
+when the course moved under `/market-structure-lab/`. Breaking them was accepted
+deliberately: no redirect stubs exist, and no guard, test, or contract may list
+them again.
 
 The apex `geterdone.io` is a **separate, live GitHub Pages site that this repository
 does not control**. Do not deploy to it, reconfigure it, or write anything that

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "notes": [
     "COMMITTED CONTRACT SOURCE, and the single source of truth for __LOOPBACK_PORT__ and __APP_SUBNET__. .github/workflows/release.yml reads this document, renders the deployment inputs from its network block, overwrites only the fields a release run can prove, validates the result against release/contract.schema.json, and emits it as release-artifacts/release-contract.json. Every field the workflow does not overwrite is reviewed policy and is authoritative exactly as written here.",
-    "acceptance.checks enumerates the COMPLETE published URL space: the Learn catalog at / plus the seven labs of the Market Structure Course, one check id per page (lab 01 keeps the id lesson-page). tests/test_site_invariants.py REQUIRED_PAGES and the COURSE_LESSONS table in scripts/smoke.py declare the same map against the files on disk and the served responses. Adding a lesson to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app and the image (org.opencontainers.image.title), not the course.",
+    "acceptance.checks enumerates the COMPLETE published URL space, which is two levels deep: the catalog of courses at /, the course home at /market-structure-lab/, and that course's seven labs at /market-structure-lab/<lesson>/ - one check id per page (the course home is course-home, lab 01 keeps the id lesson-page). The seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES and the COURSE_LESSONS table in scripts/smoke.py declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app and the image (org.opencontainers.image.title). The course home and lab 01 now share that title, so every check also asserts the page's OWN canonical path - a title alone cannot prove which document was served.",
     "Fields only a release run can know carry all-zero sentinels: release_id, source.revision, image.digest, image.reference, build.timestamp, compose.template_sha256, compose.rendered_sha256 and invocation.workflow_run_id. An all-zero digest or revision can never be a real one, so this document can never be mistaken for a release.",
     "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED. The release workflow refuses to render or build while they hold placeholders, and names the allocation gate in the failure. Allocation is a human decision plus a live host preflight (platform-ops docs/APP_ONBOARDING.md section 2 reservation PR, section 4 bootstrap preflight, and docs/EDGE_ROUTING_CONTRACT.md section 5) and must never be automated here.",
     "build.base_images[].digest is __BASE_IMAGE_DIGEST__ because Containerfile.release is the only place a base image is pinned; the workflow copies the digests it actually built from there, so the two can never drift.",
@@ -11,9 +11,7 @@
   "unallocated": [
     "/network/loopback_port",
     "/network/internal_port",
-    "/network/subnet",
-    "/build/base_images/0/digest",
-    "/build/base_images/1/digest"
+    "/network/subnet"
   ],
   "release_id": "0000000000000000000000000000000000000000-000000000000",
   "application": {
@@ -126,7 +124,7 @@
       },
       {
         "id": "learn-index",
-        "description": "Learn catalog index is served at the site root and lists the lesson.",
+        "description": "The course catalog is served at the site root and links to the Market Structure Lab course home.",
         "scope": "public",
         "method": "GET",
         "path": "/",
@@ -136,7 +134,7 @@
           "same_origin_redirects_only": true,
           "body_contains": [
             "Market Structure Lab",
-            "market-structure/"
+            "market-structure-lab/"
           ],
           "headers": [
             {
@@ -156,17 +154,45 @@
         "blocking": true
       },
       {
-        "id": "lesson-page",
-        "description": "Lab 01 \"Market Structure Lab\" is served at its subpath and carries its title and the educational-use disclaimer.",
+        "id": "course-home",
+        "description": "The Market Structure Lab course home is served at /market-structure-lab/ and carries the course title, its own canonical path, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure/",
+        "path": "/market-structure-lab/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
             "Market Structure Lab",
+            "/market-structure-lab/",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "lesson-page",
+        "description": "Lab 01 \"Market Structure Lab\" is served at /market-structure-lab/market-structure/ and carries its title, its own canonical path, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/market-structure-lab/market-structure/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "Market Structure Lab",
+            "/market-structure-lab/market-structure/",
             "Educational use only"
           ]
         },
@@ -179,14 +205,14 @@
         "description": "Lab 02 \"Ranges, Breakouts & Liquidity Sweeps\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/ranges-breakouts-liquidity/",
+        "path": "/market-structure-lab/ranges-breakouts-liquidity/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
             "Liquidity Sweeps Lab",
-            "/ranges-breakouts-liquidity/",
+            "/market-structure-lab/ranges-breakouts-liquidity/",
             "Educational use only"
           ]
         },
@@ -199,14 +225,14 @@
         "description": "Lab 03 \"Multi-Timeframe Market Structure\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/multi-timeframe-market-structure/",
+        "path": "/market-structure-lab/multi-timeframe-market-structure/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
             "Multi-Timeframe Market Structure Lab",
-            "/multi-timeframe-market-structure/",
+            "/market-structure-lab/multi-timeframe-market-structure/",
             "Educational use only"
           ]
         },
@@ -219,14 +245,14 @@
         "description": "Lab 04 \"Pullbacks & Entry Models\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/pullbacks-entry-models/",
+        "path": "/market-structure-lab/pullbacks-entry-models/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
             "Entry Models Lab",
-            "/pullbacks-entry-models/",
+            "/market-structure-lab/pullbacks-entry-models/",
             "Educational use only"
           ]
         },
@@ -239,14 +265,14 @@
         "description": "Lab 05 \"Invalidation, Stops & Reward-to-Risk\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/invalidation-stops-risk-reward/",
+        "path": "/market-structure-lab/invalidation-stops-risk-reward/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
             "Reward-to-Risk Lab",
-            "/invalidation-stops-risk-reward/",
+            "/market-structure-lab/invalidation-stops-risk-reward/",
             "Educational use only"
           ]
         },
@@ -259,14 +285,14 @@
         "description": "Lab 06 \"Volume & Relative Strength\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/volume-relative-strength/",
+        "path": "/market-structure-lab/volume-relative-strength/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
             "Relative Strength Lab",
-            "/volume-relative-strength/",
+            "/market-structure-lab/volume-relative-strength/",
             "Educational use only"
           ]
         },
@@ -279,14 +305,14 @@
         "description": "Lab 07 \"Options Contract Selection\" is served at its subpath and carries its title, its own canonical path, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/options-contract-selection/",
+        "path": "/market-structure-lab/options-contract-selection/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
             "Options Contract Selection Lab",
-            "/options-contract-selection/",
+            "/market-structure-lab/options-contract-selection/",
             "Educational use only"
           ]
         },
@@ -310,10 +336,10 @@
       },
       {
         "id": "self-containment",
-        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the catalog and all seven labs - not just the path named here.",
+        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the catalog, the course home and all seven labs - not just the path named here.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure/",
+        "path": "/market-structure-lab/market-structure/",
         "expect": {
           "status": 200,
           "no_external_origins": true,

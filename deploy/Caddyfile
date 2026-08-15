@@ -1,6 +1,7 @@
 # market-structure-lab — IN-CONTAINER web server config (Caddy)
-# Public identity: https://learn.geterdone.io/  (Learn index)
-#                  https://learn.geterdone.io/market-structure/  (lesson)
+# Public identity: https://learn.geterdone.io/  (catalog of courses)
+#                  https://learn.geterdone.io/market-structure-lab/  (course home)
+#                  https://learn.geterdone.io/market-structure-lab/<lesson>/  (lesson)
 #
 # WHY THIS FILE EXISTS
 # The platform serves apps only as containers behind `reverse_proxy 127.0.0.1:<port>`
@@ -128,7 +129,7 @@
 	handle {
 		# Clean URLs. Deliberately does NOT include {path}/index.html: letting a
 		# directory request reach file_server is what produces the canonical 30x
-		# redirect /market-structure -> /market-structure/, so one page has one
+		# redirect /market-structure-lab -> /market-structure-lab/, so one page has one
 		# URL. Rewriting to index.html here instead would serve the same page at
 		# both URLs. {path}.html still allows /foo -> foo.html if a flat page is
 		# ever added.
