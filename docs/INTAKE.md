@@ -1,7 +1,7 @@
 # Onboarding a generated course
 
 The lesson generator produces good **content** and does not keep to this site's
-**standards**. Every one of the five packages that has arrived shipped the same
+**standards**. Every one of the seven packages that has arrived shipped the same
 defects, the first four were repaired by hand, and twice that repair drifted —
 at one point a single course carried three incompatible pager families.
 
@@ -10,9 +10,11 @@ standards to a fresh package so that onboarding a course is content work and
 nothing else.
 
 The generator does not emit one implementation of the theme control, either: it
-has emitted **two** so far, and the tool knows both by name. See
-[The generator's theme shapes](#the-generators-theme-shapes) — read that section
-before touching the tool for a sixth package.
+has emitted **three** so far and has never repeated itself. The tool no longer
+tries to memorize them. It reads the theme region statement by statement and
+classifies each statement by what it **does**. See
+[The theme block](#the-theme-block-classified-not-memorized) — read that section
+before touching the tool for the next package.
 
 ---
 
@@ -159,9 +161,9 @@ The tool writes no teaching copy and never will.
 | No `@media (prefers-color-scheme: light)` block | Writes one, value-identical to the toggle path |
 | No `color-scheme` | Declares `dark` for `:root` and `[data-theme="dark"]`, `light` in both light paths |
 | `[data-theme="light"] .foo { … }` component overrides | Lifts the colours into a custom property both light paths declare. **Values are unchanged** — see the note below |
-| Its own `localStorage` theme key — five distinct keys, one per package | Rewrites that shape's theme region to the pinned implementation on `learn-theme` |
-| Theme applied after first paint | Injects the pre-paint script last in `<head>`, plus a `<noscript>` rule that hides the JS-only toggle — and, for `SHAPE_SET_THEME`, **removes** the post-paint application so the stored theme is applied exactly once |
-| A toggle whose `aria-label` is rewritten from script, or whose id is the package's own (`themeBtn`) | Replaces it with the pinned, direction-neutral toggle, and points that shape's icon swap and click listener at the pinned id |
+| Its own `localStorage` theme key — **seven** distinct keys, one per package | Classifies the theme region statement by statement and rewrites it to the pinned implementation on `learn-theme` |
+| Theme applied after first paint | Injects the pre-paint script last in `<head>`, plus a `<noscript>` rule that hides the JS-only toggle — and **removes** the statement classified as *applies the stored theme at load*, so the stored theme is applied exactly once |
+| A toggle whose `aria-label` is rewritten from script, or whose id is the package's own (`themeBtn`) | Replaces **that button only** with the pinned, direction-neutral toggle, and points the icon swap and click listener at the pinned id. In courses 6–7 the button sits in a `.top-actions` div beside a `#resetBtn`: the reset button, its id and its handler are untouched |
 | Light values for tokens the palette does not pin (course 5 ships `--bg2`/`--panel2`/`--panel3`/`--line2` where courses 1–4 ship `--bg-2`/`--panel-2`/…) | Carries the package's own light declaration across verbatim, so rewriting the block does not delete it. No value is chosen — a token the package never gave a light value still has none |
 | No breadcrumb, no pager | Injects both, with correct first/last handling: the first lesson omits the prev anchor rather than shipping a disabled one, and the last lesson's forward link points at the course home with no `rel` |
 | A footer with no site identity | Keeps the generator's notice prose verbatim and adds the copyright, licence and library link |
@@ -189,107 +191,194 @@ judgement calls, and judgement calls belong to a person.
 
 ---
 
-## The generator's theme shapes
+## The theme block: classified, not memorized
 
 The generator is consistent about the defects and **not** consistent about the
-code that carries them. Five packages have produced two different theme
+code that carries them. Seven packages have produced **three** theme
 implementations, sharing no code and no names:
 
-| | `SHAPE_SETUP_THEME` (courses 1–4) | `SHAPE_SET_THEME` (course 5) |
-| --- | --- | --- |
-| Theme functions | one `function setupTheme(){…}` holding every storage call | `storedTheme()` + `setTheme(theme)` |
-| Toggle | `<button id="themeToggle">`, `aria-label` rewritten from script | `<button id="themeBtn">`, `textContent` swapped between `☀` and `☾` |
-| When the stored theme is applied | inside `setupTheme()` | `setTheme(storedTheme()||"dark")` at the **end of the script** — after first paint, so the page flashes |
-| Repaint hook | `onThemeChange()`, called only if the lesson defines one | `window.redrawLab()`, called unconditionally |
-| Storage key | one per package (`marketStructureTheme`, `market-lab-theme`, `options-course-theme`, `technical-indicators-theme`) | `vof-theme` — the fifth distinct key |
+| | courses 1–4 | course 5 | courses 6–7 |
+| --- | --- | --- | --- |
+| Toggle | `<button id="themeToggle">`, `aria-label` rewritten from script | `<button id="themeBtn">`, `textContent` swapped between `☀` and `☾` | `<button id="themeBtn">` **inside a `.top-actions` div beside a `#resetBtn`** |
+| Theme functions | one `function setupTheme(){…}` holding every storage call | `storedTheme()` + `setTheme(theme)` | `setTheme(theme)` collapsed to a **one-liner**, no reader function |
+| Reading the stored value | inside `setupTheme()` | `function storedTheme(){try{return localStorage.getItem("vof-theme")}catch{return null}}` | **inline**: `let saved=null;try{saved=localStorage.getItem('trm-theme')}catch{};` |
+| When the stored theme is applied | inside `setupTheme()` | `setTheme(storedTheme()\|\|"dark")` at the end of the script — after first paint, so the page flashes | `setTheme(saved\|\|'dark');` — same flash |
+| Repaint hook | `onThemeChange()`, called only if the lesson defines one | `window.redrawLab()` | `window.redrawLab()` |
+| Quote style | single | double | single |
+| Storage key | `marketStructureTheme`, `market-lab-theme`, `options-course-theme`, `technical-indicators-theme` | `vof-theme` | `trm-theme`, `bts-theme` |
 
-Each shape is a **named row** in `SHAPES` in `scripts/intake_course.py`, carrying
-its own signature, its own toggle pattern, its own preflight and its own rewrite.
-That is the whole design, and it is worth being blunt about why:
+Seven packages, seven keys. **The generator has never shipped this block twice
+the same way.**
 
-- **Detection is exact, not fuzzy.** A file must match exactly one signature,
-  exactly once. Matching none is a refusal. Matching two is a refusal. There is
-  no catch-all pattern that "probably" covers the next package, because a tool
-  that guesses is a tool that drifts, and drift is the thing this exists to
-  stop.
-- **A signature only says *which family*.** It is not evidence that the file is
-  safe to rewrite — that is the shape's preflight, which runs over the whole
-  package before a byte is written.
-- **Adding a shape never widens an existing one.** Two shapes are two rows.
+### Why sequence matching was abandoned
 
-### What `SHAPE_SET_THEME` gets, specifically
+Courses 1–5 were handled by matching fixed statement **sequences** — "these
+statements, in this order, and nothing between them". The instinct is right:
+never delete script you cannot name. The implementation cannot survive a
+generator that rewrites the block every time. Courses 6–7 broke it on three
+points at once, and the tool refused with:
 
-Rewritten, because it is shell: the storage key becomes `learn-theme`; the
-button becomes the pinned toggle and the icon swap and click listener follow it
-to the new id; the pre-paint script goes last in `<head>`; and the post-paint
-`setTheme(storedTheme()||"dark")` is **deleted**, so the stored theme is applied
-once, before paint, instead of twice.
+> the SHAPE_SET_THEME theme block is not the one this tool recognizes (expected
+> `storedTheme()` + `setTheme()` + the post-paint `setTheme(storedTheme()||"dark")`
+> + the toggle listener, in that order). It will not delete script it cannot
+> account for statement by statement.
 
-Carried across untouched, because it is the generator's: **`window.redrawLab()`**.
-The labs resolve every colour from CSS custom properties at draw time, so a
-canvas keeps the ink it was painted with until that hook runs. Dropping it would
-leave a course of charts painted in dark-theme ink on the light ground — and
-nothing would fail, in this suite or any other. It would just look broken. The
-rewrite asserts the call is still present afterwards for exactly that reason.
+That refusal was correct and nothing was written. But the fix could not be
+another row: a fourth package would break the fourth row, and the only way to
+make one pattern span the variants would be to loosen it until the tool started
+guessing — the exact failure the refusal exists to prevent.
 
-Also carried across: the light values the package declared for tokens
-`LIGHT_PALETTE` does not pin. The tool rewrites the light block wholesale, so
-anything it does not write, it deletes; course 5 names its neutrals `--bg2` /
-`--panel2` / `--panel3` / `--line2`, which carry the body gradient, every panel
-and every hover border. Their values are copied verbatim — nothing is chosen,
-invented or improved, and a token the package never gave a light value still
-does not have one.
+So the question asked of the region changed. It is no longer
 
-### When a sixth package brings a third shape
+> are these the statements I memorized, in that order?
 
-It will announce itself: the dry run fails, names the file, and prints every
-shape the tool knows. Nothing is written. Then:
+but, statement by statement,
 
-1. **Read the package's theme code first.** Find its storage key, its toggle
-   element and id, where it applies the stored theme, and what it calls to
-   repaint. That last one is the trap — course 5's `window.redrawLab()` is
-   invisible in a diff of the theme block and load-bearing for every chart.
-2. **Add a row to `SHAPES`.** A `ThemeShape` needs a name, a signature that
-   matches this family and only this family, the toggle pattern this package
-   ships, a preflight, and a rewrite. Do **not** edit an existing signature to
-   stretch over the new package: if two shapes both match, the tool refuses, and
-   that refusal is the design working.
-3. **Pin the replacement as its own constant**, next to `SETUP_THEME_JS` and
-   `SET_THEME_JS`. Do not try to make one implementation serve two packages —
-   they have different helpers (`byId` vs `$`) and different repaint hooks.
-4. **Recognize your own output.** The rewrite must return "no change" when handed
-   the text it just produced, and the shape's preflight must accept it. That is
-   what makes a second run a no-op instead of a failure. The usual way is a
-   check-then-repair: `if the pinned form is already here: return unchanged`.
-5. **Match statement by statement, not by region.** `SET_THEME_SOURCE_RE` names
-   each of the four statements it is allowed to delete and back-references the
-   key and the button id. A near-miss — a different glyph, a key that is read
-   and written differently — must fail rather than be deleted on a guess.
-6. **Prove all four things** before running it for real:
+> what does this one **do**, and can I account for every token in it?
+
+### The roles
+
+`plan_theme_region()` splits the page script into top-level statements and
+classifies each one. The roles are:
+
+| Role | Recognized by |
+| --- | --- |
+| reads the theme key from localStorage | `localStorage.getItem(<themeish key>)` |
+| writes the theme key to localStorage | `localStorage.setItem`/`removeItem(<themeish key>, …)` |
+| sets `document.documentElement.dataset.theme` | assignment to `.dataset.theme`, or `setAttribute("data-theme", …)` |
+| swaps the toggle glyph | `textContent`/`innerText` written on the toggle element |
+| registers the toggle click listener | `addEventListener("click", …)` on the toggle element |
+| applies the stored theme at load | a bare top-level call to a function the region defines — **the post-paint flash**, and the one role that is removed rather than reproduced |
+| calls a redraw hook | `window.<name>()`, discovered **by name** rather than assumed |
+| holds a value only the theme statements read | a declaration (`let saved=null`) referenced by classified statements and by nothing else |
+
+A statement is **classified** only when every role it performs is one of those
+**and** every identifier and string literal in it is one the tool can name
+(`THEME_VOCABULARY`, plus the names the scan discovers in the file itself:
+theme functions, theme-locals, the toggle id, the repaint hook). Classified
+statements are deleted and the pinned implementation is written once in their
+place. Order does not matter. Whitespace does not matter. Quote style does not
+matter.
+
+**Everything else in the region keeps its bytes and its offset.** Course 6 hangs
+`$('#resetBtn').addEventListener(…)` in the middle of its theme block; that
+handler is the generator's, not the tool's, and it comes through untouched.
+
+Two things follow that are worth stating plainly:
+
+- **The repaint hook is read, not assumed.** `window.redrawLab()` is the
+  generator's own hook — the labs resolve every colour from CSS custom
+  properties at draw time, so a canvas keeps the ink it was painted with until
+  that hook runs. Dropping it would leave a course of charts painted in
+  dark-theme ink on the light ground and nothing would fail; it would just look
+  broken. The classifier reads the hook's real name out of the statements it is
+  about to delete, writes that name into the pinned implementation
+  (`build_theme_js(hook)`), and asserts the call survived.
+- **The glyph is shell.** The tool already pins the character the button ships
+  with, so a package that picks different marks is normalized to `☀`/`☾` rather
+  than refused. Courses 6–7 also had the direction inverted (sun while dark);
+  the pinned implementation shows the sun in the light theme, as courses 1–5 do.
+
+Run `--explain-theme` to see the classification for every lesson before writing
+anything:
+
+```sh
+python3 scripts/intake_course.py --source <package> --slug <slug> \
+    --title "<Title>" --position N --dry-run --explain-theme
+```
+
+```
+01-risk-management-fundamentals.html [SHAPE_CLASSIFIED]
+  writes the theme key … + sets …dataset.theme + swaps the toggle glyph + calls a redraw hook
+                                     function setTheme(theme){document.documentElement…
+  holds a value only the theme statements read      let saved=null;
+  reads the theme key from localStorage             try{saved=localStorage.getItem('trm-theme')}catch{}
+  applies the stored theme at load                  setTheme(saved||'dark');
+  registers the toggle click listener               $('#themeBtn').addEventListener('click',…
+  toggle: #themeBtn | repaint hook: window.redrawLab()
+```
+
+### The two rows that are left
+
+`SHAPES` in `scripts/intake_course.py` still has rows, and a file must still
+match **exactly one** — matching none is a refusal, matching two is a refusal:
+
+- **`SHAPE_SETUP_THEME`** is recognized **by name**: courses 1–4 are published
+  with `function setupTheme(){…}` and that name is the family. Its pinned
+  implementation calls `byId()` and `onThemeChange()`, which the later packages
+  do not have, so it stays its own row and its own constant.
+- **`SHAPE_CLASSIFIED`** is recognized **by behaviour**. It has no signature to
+  widen. It deliberately **declines** any file carrying the `setupTheme`
+  signature, so a general recognizer sitting beside a specific one can never
+  turn into an ambiguity.
+
+`SHAPE_CLASSIFIED` is not a catch-all. It matches a file whose theme it can
+account for, or a file whose theme it can **see and cannot** account for — and
+the second case is a refusal that quotes the offending statement. A file with no
+theme region at all matches nothing and is still refused.
+
+### Finding the toggle
+
+The toggle is located from the **markup**: every `<button>` whose id,
+`aria-label` or `title` names the theme (`themeish_button_ids()`). That id must
+then agree with the element the classified statements address. Zero candidates,
+two candidates, or a disagreement between markup and script is a refusal —
+guessing which button is the theme control is exactly the guess that would strip
+course 6's reset button.
+
+### When the eighth package brings a fourth variant
+
+It probably will not need code. Re-ordered statements, a different quote style,
+a different glyph, a renamed local, an extra unrelated neighbour, a differently
+named repaint hook — all of those are already handled, because none of them
+changes what a statement *does*.
+
+If it does refuse, the message names the file and quotes the statement. Then:
+
+1. **Read the statement it quoted.** The refusal is a claim that this tool
+   cannot account for a piece of theme logic. Decide whether that is true.
+2. **If the statement performs a role the list above is missing**, add the role:
+   a detector in `_account_for()` and, if the pinned implementation must
+   reproduce it, a line in `THEME_JS_TEMPLATE`. Adding a role is a decision
+   about behaviour and belongs in a review.
+3. **If the statement is ordinary lesson code the vocabulary does not cover
+   yet**, extend `THEME_VOCABULARY` — but only for a token that genuinely
+   belongs to theme machinery. The vocabulary is what stops the classifier
+   deleting a statement it does not understand; every entry is a small promise.
+4. **Never** relax the toggle resolution or the repaint-hook assertion to get a
+   package through. Those two are the ones that fail silently in a browser
+   rather than loudly in CI.
+5. **Prove all four things** before running it for real:
 
    ```sh
    # 1. the new package normalizes
    python3 scripts/intake_course.py --source <package> --slug <slug> \
+       --title "<Title>" --position N --out /tmp/out --dry-run --explain-theme
+
+   # 2. it is idempotent: a second pass reports nothing, and so does a pass
+   #    over the normalized TREE
+   python3 scripts/intake_course.py --source /tmp/out/<slug> \
+       --manifest content/<slug>.manifest.json --slug <slug> \
        --title "<Title>" --position N --out /tmp/out --dry-run
 
-   # 2. it is idempotent: a second pass reports nothing
-   python3 scripts/intake_course.py --source <package> --slug <slug> \
-       --title "<Title>" --position N --out /tmp/out --dry-run
-
-   # 3. the shapes already known did not change: an already-published course
-   #    must still be a no-op
+   # 3. the courses already published did not move: still a no-op
    python3 scripts/intake_course.py --source site/technical-indicators \
        --manifest content/technical-indicators.manifest.json \
        --slug technical-indicators --title "Technical Indicators" \
        --position 4 --dry-run
+   python3 scripts/intake_course.py --source site/volume-and-order-flow \
+       --manifest content/volume-and-order-flow.manifest.json \
+       --slug volume-and-order-flow --title "Volume and Order Flow" \
+       --position 5 --dry-run
 
-   # 4. an unknown shape still fails loudly. Copy one lesson, rename its theme
-   #    function and its key, and confirm: exit 1, "nothing was written",
-   #    zero files under the output root.
+   # 4. a mangled theme block is still refused. Copy one lesson into a scratch
+   #    package, add `$('#themeBtn').classList.toggle('x')` to its theme block,
+   #    and confirm: exit 1, "nothing was written", the statement quoted, zero
+   #    files under the output root.
    ```
 
    Check 3 and check 4 are the ones worth being stubborn about. Check 3 says the
-   new row did not disturb the old ones; check 4 says the tool did not become
+   change did not disturb what is live; check 4 says the tool did not become
    permissive on the way in.
 
 ---
@@ -322,14 +411,24 @@ aborts the run with exit status 1 and **nothing written**:
 
 - **manifest / file-count mismatch** — a declared lesson with no file, or a file
   the manifest does not declare;
-- **an unknown theme shape** — the file matches none of the shapes in `SHAPES`,
-  or matches two of them. The error names every shape the tool knows;
-- **a known shape the tool cannot rewrite safely** — the theme storage calls
-  must be confined to the one region the tool replaces wholesale (`setupTheme()`
-  for `SHAPE_SETUP_THEME`, the `storedTheme()`/`setTheme()` block for
-  `SHAPE_SET_THEME`), and for `SHAPE_SET_THEME` that block must match statement
-  for statement. A theme key — or a call to `setTheme()` — from anywhere else is
-  content, and content is not the tool's to edit;
+- **an unknown theme shape** — the file matches none of the rows in `SHAPES`
+  (no theme control it can recognize at all), or matches two of them. The error
+  names every row the tool knows;
+- **a statement touching the theme that the tool cannot account for** — it
+  performs a role that is not in the list, or it names an identifier or a string
+  literal that belongs to no theme role. The error quotes the statement. This is
+  the refusal that matters most: *"I do not understand this theme statement"*
+  still stops the run, and a neighbouring statement that has nothing to do with
+  the theme no longer does;
+- **a toggle that cannot be located unambiguously** — no `<button>` whose id,
+  label or title names the theme, or two of them, or a markup button and a
+  script that address different elements;
+- **a repaint hook lost in the rewrite** — the hook the region called is not
+  called afterwards, or the region called two of them and the pinned
+  implementation calls one;
+- **a name the theme region defined and lesson code uses** — `storedTheme()`
+  called from a lab is content, and content is not the tool's to edit;
+- **a theme key outside every statement the tool classified** — same reason;
 - **an external resource reference** — scanned with `scripts/smoke.py`'s own
   scanner, the same one CI and the test suite use, so the on-disk verdict and
   the served verdict cannot disagree;
@@ -377,17 +476,28 @@ SITE_ROOT=/path/to/scratch-site python3 -m unittest discover -s tests
 `SITE_ROOT` must sit inside the repository — the suite reports paths relative to
 the repo root.
 
-**An unknown shape still refuses.** The tool knowing more shapes must never make
-it looser. Copy one lesson into a scratch package with a one-entry manifest,
-rename its theme function and its storage key to something it has never seen,
-and run it:
+**A theme it cannot account for still refuses.** The classifier being more
+tolerant of *irrelevant* statements must never make it looser about *theme*
+statements. Copy one lesson into a scratch package with a one-entry manifest and
+run it once per mutation:
 
 ```sh
 python3 scripts/intake_course.py --source /tmp/fixture --slug <slug> \
     --title "<Title>" --position N --out /tmp/fixture-out
 ```
 
-It must exit 1, print `nothing was written`, name every shape it knows, and
-leave `/tmp/fixture-out` empty. Vary the fixture: a third theme function, a file
-carrying **two** known signatures at once, and a known shape with one statement
-altered — all three are refusals, and each has its own message.
+Each must exit 1, print `nothing was written`, and leave `/tmp/fixture-out`
+empty. Five fixtures worth keeping, each with its own message:
+
+| Fixture | Expected refusal |
+| --- | --- |
+| `$('#themeBtn').classList.toggle('is-spinning')` added to the block | names `classList`, `toggle`, which is not part of any theme role |
+| a second `<button aria-label="Theme">` | the toggle element cannot be located unambiguously |
+| a second repaint hook inside `setTheme()` | the theme region calls 2 repaint hooks |
+| the theme block deleted outright | no theme control was found that this tool can recognize |
+| lesson code reading the theme key into a lab | the statement is quoted and refused |
+
+And the mirror image, which must **pass**: a statement that is none of the
+tool's business dropped into the middle of the theme block (course 6's
+`#resetBtn` handler is exactly this in the real package). It must normalize, and
+that statement must survive byte for byte at its own offset.

@@ -47,10 +47,11 @@ jobs:
           fi
           # The published URL space: the site index at /, the path page at
           # /paths/trading/, a home per course (/market-structure/,
-          # /trade-setup-execution/, /options-trading/, /technical-indicators/
-          # and /volume-and-order-flow/), and each course's lessons beneath its
-          # own home -- 77 pages, in path order -- plus four published non-HTML
-          # assets. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
+          # /trade-setup-execution/, /options-trading/, /technical-indicators/,
+          # /volume-and-order-flow/, /trading-risk-management/ and
+          # /backtesting-and-trading-systems/), and each course's lessons
+          # beneath its own home -- 111 pages, in path order -- plus six
+          # published non-HTML assets. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py and acceptance.checks in
           # release/contract.json. Publishing a tree that is missing a page
           # would 404 a live URL, so refuse instead.
@@ -137,26 +138,64 @@ jobs:
                       volume-and-order-flow/footprint-charts-and-bid-ask-delta/index.html \
                       volume-and-order-flow/cumulative-volume-delta/index.html \
                       volume-and-order-flow/order-book-and-market-depth/index.html \
-                      volume-and-order-flow/volume-and-order-flow-trading-rules/index.html ; do
+                      volume-and-order-flow/volume-and-order-flow-trading-rules/index.html \
+                      trading-risk-management/index.html \
+                      trading-risk-management/risk-management-fundamentals/index.html \
+                      trading-risk-management/account-risk-and-risk-budget/index.html \
+                      trading-risk-management/risk-per-trade/index.html \
+                      trading-risk-management/stop-loss-and-structural-invalidation/index.html \
+                      trading-risk-management/position-sizing/index.html \
+                      trading-risk-management/reward-to-risk-and-r-multiples/index.html \
+                      trading-risk-management/win-rate-average-win-loss-and-expectancy/index.html \
+                      trading-risk-management/losing-streaks-and-drawdown/index.html \
+                      trading-risk-management/risk-of-ruin/index.html \
+                      trading-risk-management/volatility-and-atr-based-risk/index.html \
+                      trading-risk-management/gap-slippage-liquidity-and-execution-risk/index.html \
+                      trading-risk-management/leverage-and-margin-risk/index.html \
+                      trading-risk-management/correlation-concentration-and-portfolio-exposure/index.html \
+                      trading-risk-management/options-risk-management/index.html \
+                      trading-risk-management/daily-and-weekly-risk-limits/index.html \
+                      trading-risk-management/trading-risk-plan/index.html \
+                      backtesting-and-trading-systems/index.html \
+                      backtesting-and-trading-systems/backtesting-fundamentals/index.html \
+                      backtesting-and-trading-systems/testable-trading-rules-and-hypotheses/index.html \
+                      backtesting-and-trading-systems/historical-data-and-data-quality/index.html \
+                      backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/index.html \
+                      backtesting-and-trading-systems/timeframes-sessions-and-bar-construction/index.html \
+                      backtesting-and-trading-systems/signal-timing-look-ahead-bias-and-data-leakage/index.html \
+                      backtesting-and-trading-systems/trade-execution-simulation/index.html \
+                      backtesting-and-trading-systems/position-sizing-and-portfolio-accounting/index.html \
+                      backtesting-and-trading-systems/transaction-costs-spread-slippage-and-liquidity/index.html \
+                      backtesting-and-trading-systems/trade-log-equity-curve-and-drawdown/index.html \
+                      backtesting-and-trading-systems/performance-metrics-and-expectancy/index.html \
+                      backtesting-and-trading-systems/benchmarking-and-risk-adjusted-performance/index.html \
+                      backtesting-and-trading-systems/in-sample-validation-and-out-of-sample-data/index.html \
+                      backtesting-and-trading-systems/walk-forward-testing/index.html \
+                      backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/index.html \
+                      backtesting-and-trading-systems/trading-system-specification-and-backtest-report/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "site/$page" ]; then
               echo "::error::missing site/$page -- refusing to publish an incomplete course"
               missing=1
             fi
           done
-          # Four courses ship an exchange schema as a real published file:
+          # Six courses ship an exchange schema as a real published file:
           # course 2's lesson 14 exports the journal shape and its lesson 15
           # imports it, course 3's lesson 16 exports the trade plan shape,
-          # course 4's lesson 16 exports the indicator rule shape, and course
-          # 5's lesson 16 exports the volume and order flow rule shape. Each
+          # course 4's lesson 16 exports the indicator rule shape, course
+          # 5's lesson 16 exports the volume and order flow rule shape, course
+          # 6's lesson 16 exports the trading risk plan shape, and course 7's
+          # lesson 16 exports the trading system specification shape. Each
           # course home links to its file. An unparseable one 404s nothing and
-          # breaks the handoff silently, so all four are parsed here, not merely
+          # breaks the handoff silently, so all six are parsed here, not merely
           # counted -- and declared as assets rather than pushed through the
           # page loop above, which asserts things only a document can have.
           for asset in trade-setup-execution/trade-journal-schema.json \
                        options-trading/options-trade-plan-schema.json \
                        technical-indicators/indicator-rule-schema.json \
-                       volume-and-order-flow/volume-order-flow-rule-schema.json ; do
+                       volume-and-order-flow/volume-order-flow-rule-schema.json \
+                       trading-risk-management/trading-risk-plan-schema.json \
+                       backtesting-and-trading-systems/trading-system-specification-schema.json ; do
             if [ ! -f "site/$asset" ]; then
               echo "::error::missing site/$asset -- refusing to publish an incomplete course"
               missing=1
@@ -166,7 +205,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "self-containment OK; all $pages pages and 4 assets present"
+          echo "self-containment OK; all $pages pages and 6 assets present"
 
       # NOTE: `enablement: true` was tried here and fails --- GITHUB_TOKEN
       # cannot create a Pages site ("Resource not accessible by integration").

@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trading-system-specification-schema.json",
+  "title": "Trading System Specification",
+  "type": "object",
+  "required": [
+    "schema",
+    "identity",
+    "hypothesis",
+    "data",
+    "rules",
+    "execution",
+    "validation",
+    "acceptance",
+    "reporting"
+  ],
+  "properties": {
+    "schema": {
+      "const": "trading-system-specification-v1"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "course": {
+          "type": "integer"
+        }
+      }
+    },
+    "hypothesis": {
+      "type": "object",
+      "required": [
+        "marketRegime",
+        "direction",
+        "statement"
+      ],
+      "properties": {
+        "marketRegime": {
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            "long",
+            "short"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "universe",
+        "timeframe",
+        "pointInTimeUniverse"
+      ],
+      "properties": {
+        "universe": {
+          "type": "string"
+        },
+        "timeframe": {
+          "type": "string"
+        },
+        "pointInTimeUniverse": {
+          "type": "boolean"
+        },
+        "corporateActions": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "required": [
+        "entry",
+        "exit",
+        "positionSizing"
+      ],
+      "properties": {
+        "entry": {
+          "type": "object"
+        },
+        "exit": {
+          "type": "object"
+        },
+        "positionSizing": {
+          "type": "object"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "commissionBps",
+        "spreadBps",
+        "slippageBpsPerSide"
+      ],
+      "properties": {
+        "commissionBps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "spreadBps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "slippageBpsPerSide": {
+          "type": "number",
+          "minimum": 0
+        },
+        "partialFills": {
+          "type": "string"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "inSamplePct",
+        "validationPct",
+        "outOfSamplePct",
+        "benchmark"
+      ],
+      "properties": {
+        "inSamplePct": {
+          "type": "number"
+        },
+        "validationPct": {
+          "type": "number"
+        },
+        "outOfSamplePct": {
+          "type": "number"
+        },
+        "walkForward": {
+          "type": "boolean"
+        },
+        "benchmark": {
+          "type": "string"
+        }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "required": [
+        "minimumTrades",
+        "maximumDrawdownPct",
+        "minimumExpectancyR"
+      ],
+      "properties": {
+        "minimumTrades": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maximumDrawdownPct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "minimumExpectancyR": {
+          "type": "number"
+        }
+      }
+    },
+    "reporting": {
+      "type": "object"
+    }
+  }
+}

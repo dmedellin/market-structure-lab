@@ -2,7 +2,7 @@
 
 `market-structure-lab` is the repository, the application slug and the image
 title. What it publishes at `https://learn.geterdone.io/` is a **library of
-learning paths** — five interactive courses and 70 lessons today, all of them on
+learning paths** — seven interactive courses and 102 lessons today, all of them on
 one subject, with more subjects planned. Every page is a single HTML file with
 its CSS, JavaScript and graphics inline — it loads no fonts, no frameworks, no
 analytics, and no third-party requests of any kind.
@@ -39,7 +39,10 @@ size, place, manage and review; course 3 takes that plan into options, where the
 instrument itself carries risk the stock chart does not show; course 4 is the
 indicator toolkit and how to state a rule precisely; course 5 is what traded
 volume and order flow show about participation, value and executed flow — and
-what they do not. A reader is expected to walk
+what they do not; course 6 decides what a trade may cost before it is taken, in
+risk budget, stop distance, position size, drawdown and ruin; course 7 asks
+whether the whole rule set ever worked, and what a backtest can and cannot
+establish. A reader is expected to walk
 them in order, which is why the courses share one theme setting, one visual
 system, one navigation model, and one set of guards — and why every course home
 says which number it is (`Course N of 8`) and links to its neighbours.
@@ -51,17 +54,17 @@ says which number it is (`Course N of 8`) and links to its neighbours.
 | 3 | Options Trading | 16 | `/options-trading/` | published |
 | 4 | Technical Indicators | 16 | `/technical-indicators/` | published |
 | 5 | Volume and Order Flow | 16 | `/volume-and-order-flow/` | published |
-| 6 | Trading Risk Management | — | — | **not yet available** |
-| 7 | Backtesting and Trading Systems | — | — | **not yet available** |
+| 6 | Trading Risk Management | 16 | `/trading-risk-management/` | published |
+| 7 | Backtesting and Trading Systems | 16 | `/backtesting-and-trading-systems/` | published |
 | 8 | Algorithmic and Automated Trading | — | — | **not yet available** |
 
-Courses 6 to 8 are **announced, not published**. They appear on the path page in
-order, clearly marked unavailable, and they are **not links**: nothing exists to
-open. Their number and their name are the only facts that exist about them, so
-no lesson count, description or date is invented for them anywhere in this
-repository — and `TestPathPage` fails the build if one appears. Course 5 left
-that group the day its pages landed; the move is one-way and happens when the
-pages exist, never in anticipation of them.
+Course 8 is **announced, not published**. It appears on the path page in
+order, clearly marked unavailable, and it is **not a link**: nothing exists to
+open. Its number and its name are the only facts that exist about it, so
+no lesson count, description or date is invented for it anywhere in this
+repository — and `TestPathPage` fails the build if one appears. Courses 5, 6 and
+7 each left that group the day their pages landed; the move is one-way and
+happens when the pages exist, never in anticipation of them.
 
 Course 1 was published at `/market-structure-lab/` until the paths layer landed.
 That slug names the repository and the application, not the course, so the course
@@ -179,7 +182,7 @@ observation into an unambiguous condition.
 
 Course 4 ships one supporting file, `indicator-rule-schema.json`. Lesson 16
 exports a rule specification as `technical-indicator-rule-v1` JSON; the schema
-documents that shape. Like the other three schemas it is published as a real URL
+documents that shape. Like the other five schemas it is published as a real URL
 and checked as JSON, never as a page.
 
 **Course 4's own scope and risk notice, stated on the page.** The course teaches
@@ -227,7 +230,7 @@ order book and market depth, and finally rules written from all of it.
 
 Course 5 ships one supporting file, `volume-order-flow-rule-schema.json`. Lesson
 16 exports a rule specification as `volume-order-flow-rule-v1` JSON; the schema
-documents that shape. Like the other three schemas it is published as a real URL
+documents that shape. Like the other five schemas it is published as a real URL
 and checked as JSON, never as a page.
 
 Course 5 carries outbound reference links to two further origins: CME Group
@@ -250,9 +253,106 @@ labelled as such, and the order book shows displayed liquidity, which can be
 added, consumed, moved or cancelled. Position risk, portfolio risk and
 risk-of-ruin belong to course 6; strategy validation belongs to course 7.
 
+### Course 6 — Trading Risk Management (16 lessons)
+
+`https://learn.geterdone.io/trading-risk-management/`
+
+What a trade is allowed to cost, decided before it is taken. Sixteen lessons:
+which risks can be controlled at all, the account risk budget and how it is
+spread across trades, days and weeks, risk per trade, stops placed where the
+thesis is invalid rather than where the loss feels tolerable, position sizing
+that follows from those two, R-multiples and expectancy, losing streaks,
+drawdown and risk of ruin, ATR-based sizing when volatility moves, gap,
+slippage and execution risk, leverage and margin, correlation and portfolio
+exposure, options-specific risk, hard daily and weekly limits, and a written
+risk plan built from all of it.
+
+| # | Lesson | What it does |
+| --- | --- | --- |
+| 01 | Risk Management Fundamentals | Understand which trading risks can be controlled, define a planned loss, and separate market uncertainty from account damage. |
+| 02 | Account Risk and Risk Budget | Allocate risk across individual trades, open positions, daily limits, and weekly limits without exceeding the account risk budget. |
+| 03 | Risk Per Trade | Measure how fixed-percentage risk changes account decay, losing-streak impact, and the return required to recover. |
+| 04 | Stop-Loss and Structural Invalidation | Place the stop where the trade thesis becomes invalid, then size the position to make that structural distance affordable. |
+| 05 | Position Sizing | Calculate shares or contracts from account risk, entry price, stop price, contract multiplier, and estimated execution cost. |
+| 06 | Reward-to-Risk and R-Multiples | Express trade outcomes in units of initial risk, compare targets consistently, and avoid confusing a large target with a high-quality setup. |
+| 07 | Win Rate, Average Win/Loss, and Expectancy | Combine win rate, average win, average loss, and trading costs to estimate the average outcome per trade. |
+| 08 | Losing Streaks and Drawdown | Measure peak-to-trough decline, understand recovery requirements, and distinguish normal strategy variance from unacceptable account damage. |
+| 09 | Risk of Ruin | Estimate how strategy expectancy, payoff, risk per trade, and sequence variance affect the probability of crossing a failure threshold. |
+| 10 | Volatility and ATR-Based Risk | Use recent price range and Average True Range to adapt stop distance and position size when market volatility changes. |
+| 11 | Gap, Slippage, Liquidity, and Execution Risk | Model the difference between the planned stop and the actual fill when price gaps, spreads widen, or available liquidity is insufficient. |
+| 12 | Leverage and Margin Risk | Understand how leverage magnifies equity changes, how margin requirements constrain positions, and why buying power is not a risk limit. |
+| 13 | Correlation, Concentration, and Portfolio Exposure | Measure how positions that share sector, market, or factor exposure can behave like one oversized trade during stress. |
+| 14 | Options Risk Management | Compare premium risk, assignment exposure, expiration behavior, volatility sensitivity, and defined versus undefined option risk. |
+| 15 | Daily and Weekly Risk Limits | Use hard session and weekly limits to stop adding exposure after losses, execution errors, or unfavorable market conditions. |
+| 16 | Trading Risk Plan | Combine account limits, position sizing, execution constraints, portfolio exposure, options rules, and review triggers into one testable risk specification. |
+
+Course 6 ships one supporting file, `trading-risk-plan-schema.json`. Lesson 16
+exports a risk plan as `trading-risk-plan-v1` JSON; the schema documents that
+shape. Like the other five schemas it is published as a real URL and checked as
+JSON, never as a page.
+
+**Course 6's own scope and risk notice, stated on the page.** The course teaches
+how risk is measured, sized and limited. It does **not** provide live market
+data, trading signals, execution access, profitability claims, or personalized
+investment advice. Every account curve, trade sequence, Monte Carlo path, option
+payoff and portfolio shock is a deterministic synthetic example. Fixed-percentage
+risk is applied to current equity, so dollar risk falls during a drawdown;
+recovery gain is computed as `1 / (1 - drawdown) - 1`; and position size is
+rounded down after entry-to-stop distance, contract multiplier and a slippage
+reserve are included. Margin rules, assignment procedures and contract
+specifications vary by broker and venue and must be verified independently.
+
+### Course 7 — Backtesting and Trading Systems (16 lessons)
+
+`https://learn.geterdone.io/backtesting-and-trading-systems/`
+
+Whether the rule set ever worked, and what a historical test can and cannot
+establish. Sixteen lessons: turning an idea into deterministic rules, historical
+data quality, survivorship and corporate actions, bar construction and session
+choice, look-ahead bias and data leakage, execution simulation, position sizing
+and portfolio accounting, transaction costs and slippage, the trade log, equity
+curve and drawdown, performance metrics and expectancy, benchmarking and
+risk-adjusted comparison, in-sample versus out-of-sample data, walk-forward
+testing, overfitting with sensitivity and Monte Carlo stress testing, and a
+versioned system specification with a backtest report.
+
+| # | Lesson | What it does |
+| --- | --- | --- |
+| 01 | Backtesting Fundamentals | Use historical data to simulate a defined strategy, separate assumptions from results, and understand what a backtest can and cannot establish. |
+| 02 | Testable Trading Rules and Hypotheses | Convert a market idea into deterministic entry, exit, sizing, and invalidation rules that produce the same decision from the same data. |
+| 03 | Historical Data and Data Quality | Detect missing bars, duplicates, stale values, timestamp errors, and price outliers before they create false signals or distorted returns. |
+| 04 | Survivorship, Selection, and Corporate Actions | Build a point-in-time universe, include failed and delisted instruments, and adjust splits and distributions without using information learned later. |
+| 05 | Timeframes, Sessions, and Bar Construction | Define how raw trades or quotes become bars, which sessions are eligible, and how timeframe choices change indicators, signals, and fills. |
+| 06 | Signal Timing, Look-Ahead Bias, and Data Leakage | Prevent the strategy from using future prices, completed-bar values, revised data, or preprocessing information that was unavailable at decision time. |
+| 07 | Trade Execution Simulation | Model market, limit, stop, stop-limit, target, and cancellation behavior using prices that could realistically execute in the tested sequence. |
+| 08 | Position Sizing and Portfolio Accounting | Track cash, equity, buying power, open positions, realized and unrealized P/L, rejected orders, and sizing rules throughout the test. |
+| 09 | Transaction Costs, Spread, Slippage, and Liquidity | Deduct commissions, fees, bid-ask spread, slippage, and size-dependent market impact from every simulated entry, exit, and rebalance. |
+| 10 | Trade Log, Equity Curve, and Drawdown | Create an auditable trade log, reconstruct portfolio equity through time, and measure peak-to-trough loss and recovery duration. |
+| 11 | Performance Metrics and Expectancy | Calculate win rate, average win, average loss, expectancy, profit factor, return, volatility, trade frequency, and sample size without relying on one metric. |
+| 12 | Benchmarking and Risk-Adjusted Performance | Compare the system with an appropriate benchmark and cash rate, then separate market exposure from independent performance and risk taken. |
+| 13 | In-Sample, Validation, and Out-of-Sample Data | Separate rule development, parameter selection, and final evaluation so the last dataset remains unseen until the system is fixed. |
+| 14 | Walk-Forward Testing | Repeat chronological training and test windows, choose parameters only from past data, and stitch the unseen test windows into one forward simulation. |
+| 15 | Overfitting, Sensitivity, Monte Carlo, and Stress Testing | Test nearby parameters, resample trade sequences, increase costs, remove favorable periods, and verify that the result is not dependent on one precise historical path. |
+| 16 | Trading System Specification and Backtest Report | Combine hypothesis, data, rules, execution, sizing, costs, validation, metrics, limits, and acceptance criteria into a versioned system specification and report. |
+
+Course 7 ships one supporting file, `trading-system-specification-schema.json`.
+Lesson 16 exports a system specification as `trading-system-specification-v1`
+JSON; the schema documents that shape. Like the other five schemas it is
+published as a real URL and checked as JSON, never as a page.
+
+**Course 7's own scope and risk notice, stated on the page.** The course teaches
+how a strategy is tested and reported. It does **not** provide live market data,
+trading signals, execution access, profitability claims, or personalized
+investment advice. Historical simulations are treated as hypothetical evidence,
+never as predictions: signals are separated from order submission and execution,
+and costs are applied at entries and exits rather than deducted from the final
+result. Every price path, trade, universe, fill, cost, fold and Monte Carlo path
+is a deterministic synthetic example, and a backtest result never establishes
+future performance.
+
 ### Data and risk notice
 
-All charts, trades, prices, fills, and performance results across all five
+All charts, trades, prices, fills, and performance results across all seven
 courses are synthetic educational examples. The pages contain no live data and no
 trading signals. Real outcomes can differ because of spread, slippage,
 commissions, gaps, taxes, liquidity, assignment, exercise, implied volatility,
@@ -277,7 +377,7 @@ has three kinds of page — the index, a path page, and a course with its lesson
 ```text
 /                                       the site index (paths + course search)
 ├── /paths/trading/                     the trading PATH PAGE — eight courses in
-│                                       order: five published, three announced
+│                                       order: seven published, one announced
 ├── /market-structure/                  course 1 home — lists its seven lessons
 │   ├── /market-structure/market-structure/                     lesson 1.01
 │   ├── … five more …
@@ -297,18 +397,28 @@ has three kinds of page — the index, a path page, and a course with its lesson
 │   ├── … fourteen more …
 │   ├── /technical-indicators/indicator-based-trading-rules/    lesson 4.16
 │   └── /technical-indicators/indicator-rule-schema.json        published asset
-└── /volume-and-order-flow/             course 5 home — lists its sixteen lessons
-    ├── /volume-and-order-flow/volume-fundamentals/             lesson 5.01
+├── /volume-and-order-flow/             course 5 home — lists its sixteen lessons
+│   ├── /volume-and-order-flow/volume-fundamentals/             lesson 5.01
+│   ├── … fourteen more …
+│   ├── /volume-and-order-flow/volume-and-order-flow-trading-rules/  lesson 5.16
+│   └── /volume-and-order-flow/volume-order-flow-rule-schema.json    published asset
+├── /trading-risk-management/           course 6 home — lists its sixteen lessons
+│   ├── /trading-risk-management/risk-management-fundamentals/  lesson 6.01
+│   ├── … fourteen more …
+│   ├── /trading-risk-management/trading-risk-plan/             lesson 6.16
+│   └── /trading-risk-management/trading-risk-plan-schema.json  published asset
+└── /backtesting-and-trading-systems/   course 7 home — lists its sixteen lessons
+    ├── /backtesting-and-trading-systems/backtesting-fundamentals/   lesson 7.01
     ├── … fourteen more …
-    ├── /volume-and-order-flow/volume-and-order-flow-trading-rules/  lesson 5.16
-    └── /volume-and-order-flow/volume-order-flow-rule-schema.json    published asset
+    ├── /backtesting-and-trading-systems/trading-system-specification-and-backtest-report/   lesson 7.16
+    └── /backtesting-and-trading-systems/trading-system-specification-schema.json  published asset
 ```
 
 `/paths/` belongs to the paths layer: no course may ever take that first segment,
 and nothing is served at `/paths/` itself — the list of paths is the site index.
-Courses 6 to 8 have no URLs at all; they exist only as entries on the path page.
+Course 8 has no URLs at all; it exists only as an entry on the path page.
 
-**77 pages and four assets. Nothing else is served:**
+**111 pages and six assets. Nothing else is served:**
 
 | # | URL | Page | Source |
 | --- | --- | --- | --- |
@@ -393,6 +503,42 @@ Courses 6 to 8 have no URLs at all; they exist only as entries on the path page.
 | 5.15 | `https://learn.geterdone.io/volume-and-order-flow/order-book-and-market-depth/` | Order Book and Market Depth | `site/volume-and-order-flow/order-book-and-market-depth/index.html` |
 | 5.16 | `https://learn.geterdone.io/volume-and-order-flow/volume-and-order-flow-trading-rules/` | Volume and Order Flow Trading Rules | `site/volume-and-order-flow/volume-and-order-flow-trading-rules/index.html` |
 | asset | `https://learn.geterdone.io/volume-and-order-flow/volume-order-flow-rule-schema.json` | Volume and order flow rule schema (JSON, not a page) | `site/volume-and-order-flow/volume-order-flow-rule-schema.json` |
+| — | `https://learn.geterdone.io/trading-risk-management/` | **Trading Risk Management** — course 6 home | `site/trading-risk-management/index.html` |
+| 6.01 | `https://learn.geterdone.io/trading-risk-management/risk-management-fundamentals/` | Risk Management Fundamentals | `site/trading-risk-management/risk-management-fundamentals/index.html` |
+| 6.02 | `https://learn.geterdone.io/trading-risk-management/account-risk-and-risk-budget/` | Account Risk and Risk Budget | `site/trading-risk-management/account-risk-and-risk-budget/index.html` |
+| 6.03 | `https://learn.geterdone.io/trading-risk-management/risk-per-trade/` | Risk Per Trade | `site/trading-risk-management/risk-per-trade/index.html` |
+| 6.04 | `https://learn.geterdone.io/trading-risk-management/stop-loss-and-structural-invalidation/` | Stop-Loss and Structural Invalidation | `site/trading-risk-management/stop-loss-and-structural-invalidation/index.html` |
+| 6.05 | `https://learn.geterdone.io/trading-risk-management/position-sizing/` | Position Sizing | `site/trading-risk-management/position-sizing/index.html` |
+| 6.06 | `https://learn.geterdone.io/trading-risk-management/reward-to-risk-and-r-multiples/` | Reward-to-Risk and R-Multiples | `site/trading-risk-management/reward-to-risk-and-r-multiples/index.html` |
+| 6.07 | `https://learn.geterdone.io/trading-risk-management/win-rate-average-win-loss-and-expectancy/` | Win Rate, Average Win/Loss, and Expectancy | `site/trading-risk-management/win-rate-average-win-loss-and-expectancy/index.html` |
+| 6.08 | `https://learn.geterdone.io/trading-risk-management/losing-streaks-and-drawdown/` | Losing Streaks and Drawdown | `site/trading-risk-management/losing-streaks-and-drawdown/index.html` |
+| 6.09 | `https://learn.geterdone.io/trading-risk-management/risk-of-ruin/` | Risk of Ruin | `site/trading-risk-management/risk-of-ruin/index.html` |
+| 6.10 | `https://learn.geterdone.io/trading-risk-management/volatility-and-atr-based-risk/` | Volatility and ATR-Based Risk | `site/trading-risk-management/volatility-and-atr-based-risk/index.html` |
+| 6.11 | `https://learn.geterdone.io/trading-risk-management/gap-slippage-liquidity-and-execution-risk/` | Gap, Slippage, Liquidity, and Execution Risk | `site/trading-risk-management/gap-slippage-liquidity-and-execution-risk/index.html` |
+| 6.12 | `https://learn.geterdone.io/trading-risk-management/leverage-and-margin-risk/` | Leverage and Margin Risk | `site/trading-risk-management/leverage-and-margin-risk/index.html` |
+| 6.13 | `https://learn.geterdone.io/trading-risk-management/correlation-concentration-and-portfolio-exposure/` | Correlation, Concentration, and Portfolio Exposure | `site/trading-risk-management/correlation-concentration-and-portfolio-exposure/index.html` |
+| 6.14 | `https://learn.geterdone.io/trading-risk-management/options-risk-management/` | Options Risk Management | `site/trading-risk-management/options-risk-management/index.html` |
+| 6.15 | `https://learn.geterdone.io/trading-risk-management/daily-and-weekly-risk-limits/` | Daily and Weekly Risk Limits | `site/trading-risk-management/daily-and-weekly-risk-limits/index.html` |
+| 6.16 | `https://learn.geterdone.io/trading-risk-management/trading-risk-plan/` | Trading Risk Plan | `site/trading-risk-management/trading-risk-plan/index.html` |
+| asset | `https://learn.geterdone.io/trading-risk-management/trading-risk-plan-schema.json` | Trading risk plan schema (JSON, not a page) | `site/trading-risk-management/trading-risk-plan-schema.json` |
+| — | `https://learn.geterdone.io/backtesting-and-trading-systems/` | **Backtesting and Trading Systems** — course 7 home | `site/backtesting-and-trading-systems/index.html` |
+| 7.01 | `https://learn.geterdone.io/backtesting-and-trading-systems/backtesting-fundamentals/` | Backtesting Fundamentals | `site/backtesting-and-trading-systems/backtesting-fundamentals/index.html` |
+| 7.02 | `https://learn.geterdone.io/backtesting-and-trading-systems/testable-trading-rules-and-hypotheses/` | Testable Trading Rules and Hypotheses | `site/backtesting-and-trading-systems/testable-trading-rules-and-hypotheses/index.html` |
+| 7.03 | `https://learn.geterdone.io/backtesting-and-trading-systems/historical-data-and-data-quality/` | Historical Data and Data Quality | `site/backtesting-and-trading-systems/historical-data-and-data-quality/index.html` |
+| 7.04 | `https://learn.geterdone.io/backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/` | Survivorship, Selection, and Corporate Actions | `site/backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/index.html` |
+| 7.05 | `https://learn.geterdone.io/backtesting-and-trading-systems/timeframes-sessions-and-bar-construction/` | Timeframes, Sessions, and Bar Construction | `site/backtesting-and-trading-systems/timeframes-sessions-and-bar-construction/index.html` |
+| 7.06 | `https://learn.geterdone.io/backtesting-and-trading-systems/signal-timing-look-ahead-bias-and-data-leakage/` | Signal Timing, Look-Ahead Bias, and Data Leakage | `site/backtesting-and-trading-systems/signal-timing-look-ahead-bias-and-data-leakage/index.html` |
+| 7.07 | `https://learn.geterdone.io/backtesting-and-trading-systems/trade-execution-simulation/` | Trade Execution Simulation | `site/backtesting-and-trading-systems/trade-execution-simulation/index.html` |
+| 7.08 | `https://learn.geterdone.io/backtesting-and-trading-systems/position-sizing-and-portfolio-accounting/` | Position Sizing and Portfolio Accounting | `site/backtesting-and-trading-systems/position-sizing-and-portfolio-accounting/index.html` |
+| 7.09 | `https://learn.geterdone.io/backtesting-and-trading-systems/transaction-costs-spread-slippage-and-liquidity/` | Transaction Costs, Spread, Slippage, and Liquidity | `site/backtesting-and-trading-systems/transaction-costs-spread-slippage-and-liquidity/index.html` |
+| 7.10 | `https://learn.geterdone.io/backtesting-and-trading-systems/trade-log-equity-curve-and-drawdown/` | Trade Log, Equity Curve, and Drawdown | `site/backtesting-and-trading-systems/trade-log-equity-curve-and-drawdown/index.html` |
+| 7.11 | `https://learn.geterdone.io/backtesting-and-trading-systems/performance-metrics-and-expectancy/` | Performance Metrics and Expectancy | `site/backtesting-and-trading-systems/performance-metrics-and-expectancy/index.html` |
+| 7.12 | `https://learn.geterdone.io/backtesting-and-trading-systems/benchmarking-and-risk-adjusted-performance/` | Benchmarking and Risk-Adjusted Performance | `site/backtesting-and-trading-systems/benchmarking-and-risk-adjusted-performance/index.html` |
+| 7.13 | `https://learn.geterdone.io/backtesting-and-trading-systems/in-sample-validation-and-out-of-sample-data/` | In-Sample, Validation, and Out-of-Sample Data | `site/backtesting-and-trading-systems/in-sample-validation-and-out-of-sample-data/index.html` |
+| 7.14 | `https://learn.geterdone.io/backtesting-and-trading-systems/walk-forward-testing/` | Walk-Forward Testing | `site/backtesting-and-trading-systems/walk-forward-testing/index.html` |
+| 7.15 | `https://learn.geterdone.io/backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/` | Overfitting, Sensitivity, Monte Carlo, and Stress Testing | `site/backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/index.html` |
+| 7.16 | `https://learn.geterdone.io/backtesting-and-trading-systems/trading-system-specification-and-backtest-report/` | Trading System Specification and Backtest Report | `site/backtesting-and-trading-systems/trading-system-specification-and-backtest-report/index.html` |
+| asset | `https://learn.geterdone.io/backtesting-and-trading-systems/trading-system-specification-schema.json` | Trading system specification schema (JSON, not a page) | `site/backtesting-and-trading-systems/trading-system-specification-schema.json` |
 
 Course 1 and its lesson 01 share the name *Market Structure*: the course is the
 whole seven-lesson sequence, lesson 01 is its first lesson on structure itself
@@ -430,26 +576,29 @@ That map is declared in five places, and all five must agree:
 - `release/contract.json` → `acceptance.checks`, one check id per URL
   (`learn-index`; `trading-path` for the path page; `course-home` and
   `lesson-page`/`lesson-<slug>` for course 1; `course2-home` and
-  `course2-lesson-<slug>` for course 2, and the same shape for courses 3, 4 and
-  5 — course-scoped because a slug is unique only within a course;
-  `journal-schema`, `trade-plan-schema`, `indicator-rule-schema` and
-  `volume-order-flow-rule-schema` for the four assets, each fetched and parsed as
-  JSON). `release/contract.schema.json` requires every one
+  `course2-lesson-<slug>` for course 2, and the same shape for courses 3 to
+  7 — course-scoped because a slug is unique only within a course (courses 2
+  and 6 both ship a `position-sizing` lesson);
+  `journal-schema`, `trade-plan-schema`, `indicator-rule-schema`,
+  `volume-order-flow-rule-schema`, `trading-risk-plan-schema` and
+  `trading-system-specification-schema` for the six assets, each fetched and
+  parsed as JSON). `release/contract.schema.json` requires every one
   of those ids by name, so a check cannot be quietly dropped;
 - `.github/workflows/ci.yml` → the "Published URL space is complete" step;
 - `Containerfile.release` and `.github/workflows/pages.yml` (publish-time guards).
 
 A page added to one of them and not the others is a page nothing checks.
 
-Further site-wide invariants exist because five courses now share one origin.
+Further site-wide invariants exist because seven courses now share one origin.
 Each of them is something a reader carries across a course boundary, so each is
-pinned once and asserted on all 77 pages (`TestPinnedConventions`):
+pinned once and asserted on all 111 pages (`TestPinnedConventions`):
 
 - **One theme key.** Every page persists the reader's light/dark choice under the
   single `localStorage` key `learn-theme`. The per-course keys the courses shipped
   with (`marketStructureTheme`, `market-lab-theme`, `options-course-theme`,
-  course 4's `technical-indicators-theme` and course 5's `vof-theme` — five
-  packages, five different keys) silently reset a reader's choice at every course
+  course 4's `technical-indicators-theme`, course 5's `vof-theme`, course 6's
+  `trm-theme` and course 7's `bts-theme` — seven
+  packages, seven different keys) silently reset a reader's choice at every course
   boundary; standardizing cost one stored preference, once, and the suite now
   fails any page that invents its own key.
 - **One complete pager per course, in one markup.** `prev`/`next` links must walk
@@ -481,9 +630,10 @@ from the courses:
   courses that page lists, not the frame.
 - **Every course knows its place.** A course home states `Course N of 8` and its
   `rel=prev`/`rel=next` links resolve to the adjacent course homes — course 1
-  ships no `prev`, and course 5 ships no `next` because course 6 is announced and
-  has no page (`TestPathPosition`). Course 4's forward link stopped being a
-  disabled span and became a real `rel="next"` anchor the day course 5 shipped.
+  ships no `prev`, and course 7 ships no `next` because course 8 is announced and
+  has no page (`TestPathPosition`). Each course's forward link stops being a
+  disabled span and becomes a real `rel="next"` anchor the day its successor
+  ships — course 4's when course 5 landed, course 5's when course 6 landed.
 
 The apex `geterdone.io` is a separate, live GitHub Pages site. It is not part of
 this project and nothing here touches it: every footer links to
@@ -517,11 +667,11 @@ python3 scripts/validate_release_contract.py \
     release/contract.json release/contract.example.json
 ```
 
-`smoke.py` checks all 77 published pages plus all four JSON assets — one report
+`smoke.py` checks all 111 published pages plus all six JSON assets — one report
 line per URL, each page demanding that document's own canonical tag and each
 asset fetched, typed and parsed as JSON. The path page has its own check id
 (`trading-path`) with its own markers: it is the only URL where the announced
-courses 6 to 8 appear at all, and its two course-name markers name the last
+course 8 appears at all, and its two course-name markers name the last
 published course and the first announced one, so both move forward at a launch. Against the plain
 `python3 -m http.server` preview the `internal-health` and `security-headers`
 checks fail by design: `/healthz` and the header policy come from the
@@ -553,7 +703,7 @@ AGENTS.md                 working agreement — read before changing anything
 **1. GitHub Pages — live.** `.github/workflows/pages.yml` uploads `site/` on every
 push to `main` and deploys it to `learn.geterdone.io` (`site/CNAME` holds the
 custom domain). Before uploading it re-checks self-containment, asserts that all
-77 pages exist, and parses all four published JSON assets. This path does not touch platform-ops, the shared Caddy
+111 pages exist, and parses all six published JSON assets. This path does not touch platform-ops, the shared Caddy
 edge, or any registry reservation, and it is **not** a shortcut around those
 gates — they govern the Hetzner platform, which is a different path.
 

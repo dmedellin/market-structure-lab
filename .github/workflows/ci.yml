@@ -96,7 +96,12 @@ jobs:
           #   /technical-indicators/<lesson>/      course 4's sixteen lessons
           #   /volume-and-order-flow/              course 5 home
           #   /volume-and-order-flow/<lesson>/     course 5's sixteen lessons
-          # 77 pages, in path order, plus four published non-HTML assets.
+          #   /trading-risk-management/            course 6 home
+          #   /trading-risk-management/<lesson>/   course 6's sixteen lessons
+          #   /backtesting-and-trading-systems/    course 7 home
+          #   /backtesting-and-trading-systems/<lesson>/
+          #                                        course 7's sixteen lessons
+          # 111 pages, in path order, plus six published non-HTML assets.
           # Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py, acceptance.checks in
           # release/contract.json, the publish guard in pages.yml, and the build
@@ -188,7 +193,41 @@ jobs:
                       volume-and-order-flow/footprint-charts-and-bid-ask-delta/index.html \
                       volume-and-order-flow/cumulative-volume-delta/index.html \
                       volume-and-order-flow/order-book-and-market-depth/index.html \
-                      volume-and-order-flow/volume-and-order-flow-trading-rules/index.html ; do
+                      volume-and-order-flow/volume-and-order-flow-trading-rules/index.html \
+                      trading-risk-management/index.html \
+                      trading-risk-management/risk-management-fundamentals/index.html \
+                      trading-risk-management/account-risk-and-risk-budget/index.html \
+                      trading-risk-management/risk-per-trade/index.html \
+                      trading-risk-management/stop-loss-and-structural-invalidation/index.html \
+                      trading-risk-management/position-sizing/index.html \
+                      trading-risk-management/reward-to-risk-and-r-multiples/index.html \
+                      trading-risk-management/win-rate-average-win-loss-and-expectancy/index.html \
+                      trading-risk-management/losing-streaks-and-drawdown/index.html \
+                      trading-risk-management/risk-of-ruin/index.html \
+                      trading-risk-management/volatility-and-atr-based-risk/index.html \
+                      trading-risk-management/gap-slippage-liquidity-and-execution-risk/index.html \
+                      trading-risk-management/leverage-and-margin-risk/index.html \
+                      trading-risk-management/correlation-concentration-and-portfolio-exposure/index.html \
+                      trading-risk-management/options-risk-management/index.html \
+                      trading-risk-management/daily-and-weekly-risk-limits/index.html \
+                      trading-risk-management/trading-risk-plan/index.html \
+                      backtesting-and-trading-systems/index.html \
+                      backtesting-and-trading-systems/backtesting-fundamentals/index.html \
+                      backtesting-and-trading-systems/testable-trading-rules-and-hypotheses/index.html \
+                      backtesting-and-trading-systems/historical-data-and-data-quality/index.html \
+                      backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/index.html \
+                      backtesting-and-trading-systems/timeframes-sessions-and-bar-construction/index.html \
+                      backtesting-and-trading-systems/signal-timing-look-ahead-bias-and-data-leakage/index.html \
+                      backtesting-and-trading-systems/trade-execution-simulation/index.html \
+                      backtesting-and-trading-systems/position-sizing-and-portfolio-accounting/index.html \
+                      backtesting-and-trading-systems/transaction-costs-spread-slippage-and-liquidity/index.html \
+                      backtesting-and-trading-systems/trade-log-equity-curve-and-drawdown/index.html \
+                      backtesting-and-trading-systems/performance-metrics-and-expectancy/index.html \
+                      backtesting-and-trading-systems/benchmarking-and-risk-adjusted-performance/index.html \
+                      backtesting-and-trading-systems/in-sample-validation-and-out-of-sample-data/index.html \
+                      backtesting-and-trading-systems/walk-forward-testing/index.html \
+                      backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/index.html \
+                      backtesting-and-trading-systems/trading-system-specification-and-backtest-report/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "$WEB_ROOT/$page" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$page — the published URL space is incomplete"
@@ -199,14 +238,18 @@ jobs:
           # shape and its lesson 15 imports it; course 3's lesson 16 exports the
           # trade plan shape; course 4's lesson 16 exports the indicator rule
           # shape; course 5's lesson 16 exports the volume and order flow rule
-          # shape. Each course home links to its file, so each is a live URL
+          # shape; course 6's lesson 16 exports the trading risk plan shape; and
+          # course 7's lesson 16 exports the trading system specification shape.
+          # Each course home links to its file, so each is a live URL
           # whose absence is a 404 like any other. Each asset is listed here
           # explicitly rather than folded into the page loop above: a page check
           # that also accepts JSON is a page check that proves nothing.
           for asset in trade-setup-execution/trade-journal-schema.json \
                        options-trading/options-trade-plan-schema.json \
                        technical-indicators/indicator-rule-schema.json \
-                       volume-and-order-flow/volume-order-flow-rule-schema.json ; do
+                       volume-and-order-flow/volume-order-flow-rule-schema.json \
+                       trading-risk-management/trading-risk-plan-schema.json \
+                       backtesting-and-trading-systems/trading-system-specification-schema.json ; do
             if [ ! -f "$WEB_ROOT/$asset" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$asset — a published asset is missing"
               missing=1
@@ -216,7 +259,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "Published URL space: $pages/77 pages plus 4 assets present under $WEB_ROOT."
+          echo "Published URL space: $pages/111 pages plus 6 assets present under $WEB_ROOT."
 
       - name: HTML is well-formed
         run: |

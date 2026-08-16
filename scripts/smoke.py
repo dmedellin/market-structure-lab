@@ -44,10 +44,11 @@ one-to-one onto a contract check:
 
 The published URL space: the site index at /, the path page at /paths/trading/,
 a home per course (/market-structure/, /trade-setup-execution/, /options-trading/,
-/technical-indicators/ and /volume-and-order-flow/), and each course's lessons
-beneath its own home -- 77 HTML pages, plus four published JSON assets. Checking
-one page and calling the site smoke-tested is how seventy-six broken pages ship,
-so every published URL gets its own check id and its own line in the report.
+/technical-indicators/, /volume-and-order-flow/, /trading-risk-management/ and
+/backtesting-and-trading-systems/), and each course's lessons beneath its own
+home -- 111 HTML pages, plus six published JSON assets. Checking one page and
+calling the site smoke-tested is how a hundred and ten broken pages ship, so
+every published URL gets its own check id and its own line in the report.
 
 Usage:
     python3 scripts/smoke.py https://learn.geterdone.io
@@ -101,11 +102,18 @@ USER_AGENT = "market-structure-lab-smoke/1"
 #     /volume-and-order-flow/                    course 5 home
 #     /volume-and-order-flow/<lesson>/           course 5's sixteen lessons, in order
 #     /volume-and-order-flow/volume-order-flow-rule-schema.json  published JSON asset
+#     /trading-risk-management/                  course 6 home
+#     /trading-risk-management/<lesson>/         course 6's sixteen lessons, in order
+#     /trading-risk-management/trading-risk-plan-schema.json     published JSON asset
+#     /backtesting-and-trading-systems/          course 7 home
+#     /backtesting-and-trading-systems/<lesson>/ course 7's sixteen lessons, in order
+#     /backtesting-and-trading-systems/trading-system-specification-schema.json
+#                                                published JSON asset
 #
 # The path page is NOT a course home and NOT a lesson. It is probed by its own
 # check id (trading-path) with its own markers, because it is the only page that
-# proves the ANNOUNCED courses render: courses 6 to 8 exist nowhere else in this
-# URL space and nothing else would notice if they silently vanished.
+# proves the ANNOUNCED course renders: course 8 exists nowhere else in this
+# URL space and nothing else would notice if it silently vanished.
 #
 # The seven FLAT lesson URLs this site used to serve are retired with no redirect
 # stub behind them, and so is course 1's old /market-structure-lab/ prefix (that
@@ -138,6 +146,10 @@ COURSE_4_PATH = "/technical-indicators/"
 INDICATOR_SCHEMA_PATH = COURSE_4_PATH + "indicator-rule-schema.json"
 COURSE_5_PATH = "/volume-and-order-flow/"
 VOLUME_RULE_SCHEMA_PATH = COURSE_5_PATH + "volume-order-flow-rule-schema.json"
+COURSE_6_PATH = "/trading-risk-management/"
+RISK_PLAN_SCHEMA_PATH = COURSE_6_PATH + "trading-risk-plan-schema.json"
+COURSE_7_PATH = "/backtesting-and-trading-systems/"
+SYSTEM_SPEC_SCHEMA_PATH = COURSE_7_PATH + "trading-system-specification-schema.json"
 
 
 def canonical_marker(path):
@@ -171,6 +183,8 @@ COURSE_2_TITLE_MARKER = "Trade Setup and Execution"
 COURSE_3_TITLE_MARKER = "Options Trading"
 COURSE_4_TITLE_MARKER = "Technical Indicators"
 COURSE_5_TITLE_MARKER = "Volume and Order Flow"
+COURSE_6_TITLE_MARKER = "Trading Risk Management"
+COURSE_7_TITLE_MARKER = "Backtesting and Trading Systems"
 
 # The path page's markers. They are NOT page_markers(): the path page is shared
 # chrome, not course material, so the educational-use disclaimer is not part of
@@ -181,14 +195,15 @@ COURSE_5_TITLE_MARKER = "Volume and Order Flow"
 #
 # These two titles MOVE as the path advances. They name the LAST published
 # course and the FIRST announced one, so they are the pair that changes at every
-# course launch: "Volume and Order Flow" was the announced marker until course 5
-# shipped, at which point leaving it here would have proved only that the page
-# still names a course -- not that the published/announced boundary rendered on
-# the correct side of it.
+# course launch: "Trading Risk Management" was the announced marker until course
+# 6 shipped and "Backtesting and Trading Systems" until course 7 shipped, at
+# which point leaving either here would have proved only that the page still
+# names a course -- not that the published/announced boundary rendered on the
+# correct side of it. Course 8 is now the only announced one.
 PATH_PAGE_MARKERS = (
     canonical_marker(PATH_PAGE_PATH),
-    COURSE_5_TITLE_MARKER,
-    "Trading Risk Management",
+    COURSE_7_TITLE_MARKER,
+    "Algorithmic and Automated Trading",
     "Not yet available",
 )
 
@@ -349,6 +364,67 @@ COURSE_5_LESSONS = tuple(
     for slug in COURSE_5_LESSON_SLUGS
 )
 
+# Course 6, lessons 01-16, in course order, on the same terms.
+COURSE_6_LESSON_SLUGS = (
+    "risk-management-fundamentals",
+    "account-risk-and-risk-budget",
+    "risk-per-trade",
+    "stop-loss-and-structural-invalidation",
+    "position-sizing",
+    "reward-to-risk-and-r-multiples",
+    "win-rate-average-win-loss-and-expectancy",
+    "losing-streaks-and-drawdown",
+    "risk-of-ruin",
+    "volatility-and-atr-based-risk",
+    "gap-slippage-liquidity-and-execution-risk",
+    "leverage-and-margin-risk",
+    "correlation-concentration-and-portfolio-exposure",
+    "options-risk-management",
+    "daily-and-weekly-risk-limits",
+    "trading-risk-plan",
+)
+
+# The check id carries the course number, not the slug alone: course 2 and
+# course 6 both ship a "position-sizing" lesson, and two checks with one id
+# would collapse into a single report line for two different URLs.
+COURSE_6_LESSONS = tuple(
+    (
+        "course6-lesson-%s" % slug,
+        COURSE_6_PATH + slug + "/",
+        page_markers(COURSE_6_PATH + slug + "/", COURSE_6_TITLE_MARKER),
+    )
+    for slug in COURSE_6_LESSON_SLUGS
+)
+
+# Course 7, lessons 01-16, in course order, on the same terms.
+COURSE_7_LESSON_SLUGS = (
+    "backtesting-fundamentals",
+    "testable-trading-rules-and-hypotheses",
+    "historical-data-and-data-quality",
+    "survivorship-selection-and-corporate-actions",
+    "timeframes-sessions-and-bar-construction",
+    "signal-timing-look-ahead-bias-and-data-leakage",
+    "trade-execution-simulation",
+    "position-sizing-and-portfolio-accounting",
+    "transaction-costs-spread-slippage-and-liquidity",
+    "trade-log-equity-curve-and-drawdown",
+    "performance-metrics-and-expectancy",
+    "benchmarking-and-risk-adjusted-performance",
+    "in-sample-validation-and-out-of-sample-data",
+    "walk-forward-testing",
+    "overfitting-sensitivity-monte-carlo-and-stress-testing",
+    "trading-system-specification-and-backtest-report",
+)
+
+COURSE_7_LESSONS = tuple(
+    (
+        "course7-lesson-%s" % slug,
+        COURSE_7_PATH + slug + "/",
+        page_markers(COURSE_7_PATH + slug + "/", COURSE_7_TITLE_MARKER),
+    )
+    for slug in COURSE_7_LESSON_SLUGS
+)
+
 # (check id, URL path, markers) for every course home addressed by the map.
 # Course 1's home is not here: it comes from --course-path/--course-marker.
 COURSE_HOMES = (
@@ -371,6 +447,16 @@ COURSE_HOMES = (
         "course5-home",
         COURSE_5_PATH,
         page_markers(COURSE_5_PATH, COURSE_5_TITLE_MARKER),
+    ),
+    (
+        "course6-home",
+        COURSE_6_PATH,
+        page_markers(COURSE_6_PATH, COURSE_6_TITLE_MARKER),
+    ),
+    (
+        "course7-home",
+        COURSE_7_PATH,
+        page_markers(COURSE_7_PATH, COURSE_7_TITLE_MARKER),
     ),
 )
 
@@ -401,6 +487,16 @@ PUBLISHED_ASSETS = (
         "volume-order-flow-rule-schema",
         VOLUME_RULE_SCHEMA_PATH,
         ('"const": "volume-order-flow-rule-v1"',),
+    ),
+    (
+        "trading-risk-plan-schema",
+        RISK_PLAN_SCHEMA_PATH,
+        ('"const": "trading-risk-plan-v1"',),
+    ),
+    (
+        "trading-system-specification-schema",
+        SYSTEM_SPEC_SCHEMA_PATH,
+        ('"const": "trading-system-specification-v1"',),
     ),
 )
 
@@ -436,7 +532,7 @@ def lesson_targets(args):
     """(check id, path, markers) for every lesson of every course, in course order.
 
     Course 1's lab 01 comes from --lesson-path/--lesson-marker so the flags still
-    steer it; every other lesson of all five courses comes from the published
+    steer it; every other lesson of all seven courses comes from the published
     URL map.
     """
     targets = [("lesson-page", args.lesson_path, tuple(args.lesson_marker))]
@@ -447,6 +543,8 @@ def lesson_targets(args):
         + COURSE_3_LESSONS
         + COURSE_4_LESSONS
         + COURSE_5_LESSONS
+        + COURSE_6_LESSONS
+        + COURSE_7_LESSONS
     ):
         if path in seen:
             # --lesson-path was pointed at a lesson that is already in the map;
@@ -1128,7 +1226,7 @@ def parse_args(argv):
         "--lesson-path",
         default=LESSON_01_PATH,
         help="course 1 lab 01's URL, checked as contract id lesson-page (default: %s); "
-        "every other lesson of all five courses is fixed by the published URL map"
+        "every other lesson of all seven courses is fixed by the published URL map"
         % LESSON_01_PATH,
     )
     parser.add_argument("--unknown-path", default=None, help="override the 404 probe path (default: random)")

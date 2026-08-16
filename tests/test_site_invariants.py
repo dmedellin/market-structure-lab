@@ -30,7 +30,7 @@ What is deliberately strict here:
     theme localStorage key is checked site-wide for exactly that reason: courses
     that each persist the reader's theme under their own key is a bug that looks
     like nothing until a reader crosses from one course to the next.
-  * Five courses share one origin, one visual system and one navigation model,
+  * Seven courses share one origin, one visual system and one navigation model,
     so the conventions that cross course boundaries -- the lesson pager markup,
     the light palette token VALUES, and the theme-toggle button -- are pinned in
     TestPinnedConventions. Each course inventing its own variant is invisible in
@@ -73,8 +73,13 @@ CANONICAL_HOST = "learn.geterdone.io"
 #     /technical-indicators/<lesson>/    course 4's sixteen lessons, in course order
 #     /volume-and-order-flow/            course 5 home, "Volume and Order Flow"
 #     /volume-and-order-flow/<lesson>/   course 5's sixteen lessons, in course order
+#     /trading-risk-management/          course 6 home, "Trading Risk Management"
+#     /trading-risk-management/<lesson>/ course 6's sixteen lessons, in course order
+#     /backtesting-and-trading-systems/  course 7 home, "Backtesting and Trading Systems"
+#     /backtesting-and-trading-systems/<lesson>/
+#                                        course 7's sixteen lessons, in course order
 #
-# That is 77 HTML pages. The document root publishes exactly four further
+# That is 111 HTML pages. The document root publishes exactly six further
 # things, all non-HTML assets -- one exchange schema per course that ships one --
 # declared separately in NON_HTML_ASSETS below.
 #
@@ -198,6 +203,51 @@ COURSE_5_LESSONS = (
     "volume-and-order-flow-trading-rules",
 )
 
+COURSE_6_HOME = "/trading-risk-management/"
+COURSE_6_LESSONS = (
+    "risk-management-fundamentals",
+    "account-risk-and-risk-budget",
+    "risk-per-trade",
+    "stop-loss-and-structural-invalidation",
+    "position-sizing",
+    "reward-to-risk-and-r-multiples",
+    "win-rate-average-win-loss-and-expectancy",
+    "losing-streaks-and-drawdown",
+    "risk-of-ruin",
+    "volatility-and-atr-based-risk",
+    "gap-slippage-liquidity-and-execution-risk",
+    "leverage-and-margin-risk",
+    "correlation-concentration-and-portfolio-exposure",
+    "options-risk-management",
+    "daily-and-weekly-risk-limits",
+    "trading-risk-plan",
+)
+
+COURSE_7_HOME = "/backtesting-and-trading-systems/"
+COURSE_7_LESSONS = (
+    "backtesting-fundamentals",
+    "testable-trading-rules-and-hypotheses",
+    "historical-data-and-data-quality",
+    "survivorship-selection-and-corporate-actions",
+    "timeframes-sessions-and-bar-construction",
+    "signal-timing-look-ahead-bias-and-data-leakage",
+    "trade-execution-simulation",
+    "position-sizing-and-portfolio-accounting",
+    "transaction-costs-spread-slippage-and-liquidity",
+    "trade-log-equity-curve-and-drawdown",
+    "performance-metrics-and-expectancy",
+    "benchmarking-and-risk-adjusted-performance",
+    "in-sample-validation-and-out-of-sample-data",
+    "walk-forward-testing",
+    "overfitting-sensitivity-monte-carlo-and-stress-testing",
+    "trading-system-specification-and-backtest-report",
+)
+
+# NOTE: course 6 ships a lesson slug "position-sizing" and so does course 2, and
+# course 7 ships "position-sizing-and-portfolio-accounting". Slugs are only ever
+# unique WITHIN a course -- they are resolved beneath their own course home, and
+# the uniqueness assertion below is per course for exactly that reason.
+
 # (course title, course home URL, lesson slugs in course order). The order of
 # this tuple IS the order of the path: index 0 is course 1. TestPathPosition
 # reads it that way, so a course inserted in the wrong place fails there.
@@ -207,21 +257,22 @@ COURSES = (
     ("Options Trading", COURSE_3_HOME, COURSE_3_LESSONS),
     ("Technical Indicators", COURSE_4_HOME, COURSE_4_LESSONS),
     ("Volume and Order Flow", COURSE_5_HOME, COURSE_5_LESSONS),
+    ("Trading Risk Management", COURSE_6_HOME, COURSE_6_LESSONS),
+    ("Backtesting and Trading Systems", COURSE_7_HOME, COURSE_7_LESSONS),
 )
 
-# The trading path is EIGHT courses long. Five are published; courses 6 to 8 are
-# announced, hold their place in the order, and are NOT links. The only facts
-# that exist about them are their number and their name -- no lesson count, no
+# The trading path is EIGHT courses long. Seven are published; course 8 is
+# announced, holds its place in the order, and is NOT a link. The only facts
+# that exist about it are its number and its name -- no lesson count, no
 # description, no date -- so those are the only facts recorded here, and
 # TestPathPage asserts that the page invents nothing more.
 #
-# Course 5 moved OUT of this tuple and into COURSES the day its pages landed.
-# That direction is one-way: an entry here is a promise with no page behind it,
-# so the move happens when the pages exist, never in anticipation of them.
+# Courses 5, 6 and 7 each moved OUT of this tuple and into COURSES the day their
+# pages landed. That direction is one-way: an entry here is a promise with no
+# page behind it, so the move happens when the pages exist, never in
+# anticipation of them.
 PATH_COURSE_COUNT = 8
 UPCOMING_COURSES = (
-    (6, "Trading Risk Management"),
-    (7, "Backtesting and Trading Systems"),
     (8, "Algorithmic and Automated Trading"),
 )
 
@@ -268,6 +319,10 @@ NON_HTML_ASSETS = {
         "technical-indicators/indicator-rule-schema.json",
     "/volume-and-order-flow/volume-order-flow-rule-schema.json":
         "volume-and-order-flow/volume-order-flow-rule-schema.json",
+    "/trading-risk-management/trading-risk-plan-schema.json":
+        "trading-risk-management/trading-risk-plan-schema.json",
+    "/backtesting-and-trading-systems/trading-system-specification-schema.json":
+        "backtesting-and-trading-systems/trading-system-specification-schema.json",
 }
 
 # Rides along inside the document root without being published content. CNAME
@@ -277,22 +332,23 @@ DELIVERY_CONTROL_FILES = frozenset({"CNAME"})
 
 COURSE_HOMES = tuple(home for _title, home, _slugs in COURSES)
 
-# Everything that is not shared chrome is course material -- all five course
-# homes as well as all 70 lessons. All of it teaches trading, so all of it
+# Everything that is not shared chrome is course material -- all seven course
+# homes as well as all 102 lessons. All of it teaches trading, so all of it
 # carries the same disclaimer. The two chrome pages are excluded BY NAME, not by
 # URL shape: /paths/trading/ looks exactly like a lesson URL.
 COURSE_PAGES = {
     url: rel for url, rel in REQUIRED_PAGES.items() if url not in SHARED_CHROME_PAGES
 }
 
-# The 70 lessons alone, without any course home.
+# The 102 lessons alone, without any course home.
 LESSON_PAGES = {url: rel for url, rel in COURSE_PAGES.items() if url not in COURSE_HOMES}
 
 # Every page of the library persists the reader's theme under ONE localStorage
 # key. Course 1 shipped "marketStructureTheme", course 2 shipped
 # "market-lab-theme", course 3 arrived with a third key, "options-course-theme",
 # course 4's source package arrived with a FOURTH, "technical-indicators-theme",
-# and course 5's arrived with a FIFTH, "vof-theme"; with several courses on one
+# course 5's arrived with a FIFTH, "vof-theme", and courses 6 and 7 arrived with
+# a SIXTH and SEVENTH, "trm-theme" and "bts-theme"; with several courses on one
 # origin that meant a reader's choice silently reset at every course boundary.
 # Every source package so far has invented its own key, which is why this is
 # checked site-wide rather than trusted. The site standardized on "learn-theme"
@@ -302,7 +358,7 @@ LESSON_PAGES = {url: rel for url, rel in COURSE_PAGES.items() if url not in COUR
 THEME_STORAGE_KEY = "learn-theme"
 RETIRED_THEME_KEYS = (
     "marketStructureTheme", "market-lab-theme", "options-course-theme",
-    "technical-indicators-theme", "vof-theme",
+    "technical-indicators-theme", "vof-theme", "trm-theme", "bts-theme",
 )
 
 # localStorage.getItem("k") / setItem("k", v) / removeItem("k") -- a literal key.
@@ -523,15 +579,15 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     acceptance matrix. A page added to one and not the others is a live page that
     nothing probes, which is exactly the hole these tests exist to close. The
     course homes count: they are published, so they are probed -- and so is the
-    path page, and so are all four non-HTML assets, each checked as JSON rather
+    path page, and so are all six non-HTML assets, each checked as JSON rather
     than as a page.
     """
 
     def test_declared_url_space_is_the_index_the_path_page_and_the_course_tree(self):
         """Site index, path page, then a home per course and that course's lessons.
 
-        77 URLs exactly: /, /paths/trading/, five course homes, and
-        7 + 15 + 16 + 16 + 16 lessons beneath them. The flat /<lesson>/ URLs and
+        111 URLs exactly: /, /paths/trading/, seven course homes, and
+        7 + 15 + 16 + 16 + 16 + 16 + 16 lessons beneath them. The flat /<lesson>/ URLs and
         the old /market-structure-lab/ course prefix were retired without
         redirects, so a two-segment lesson path under a declared course home is
         the only shape a lesson may have; re-adding either would declare a page
@@ -544,22 +600,24 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             + sum(len(slugs) for _t, _h, slugs in COURSES)
         )
         self.assertEqual(
-            77,
+            111,
             expected,
-            "the library is 1 + 1 + 5 + 7 + 15 + 16 + 16 + 16 = 77 pages, got %d"
-            % expected,
+            "the library is 1 + 1 + 7 + 7 + 15 + 16 + 16 + 16 + 16 + 16 = 111 pages, "
+            "got %d" % expected,
         )
         self.assertEqual(
             expected,
             len(REQUIRED_PAGES),
             "expected %d published URLs, got %d" % (expected, len(REQUIRED_PAGES)),
         )
-        self.assertEqual(5, len(COURSES), "the library publishes five courses")
+        self.assertEqual(7, len(COURSES), "the library publishes seven courses")
         self.assertEqual(7, len(COURSE_1_LESSONS), "course 1 is seven lessons")
         self.assertEqual(15, len(COURSE_2_LESSONS), "course 2 is fifteen lessons")
         self.assertEqual(16, len(COURSE_3_LESSONS), "course 3 is sixteen lessons")
         self.assertEqual(16, len(COURSE_4_LESSONS), "course 4 is sixteen lessons")
         self.assertEqual(16, len(COURSE_5_LESSONS), "course 5 is sixteen lessons")
+        self.assertEqual(16, len(COURSE_6_LESSONS), "course 6 is sixteen lessons")
+        self.assertEqual(16, len(COURSE_7_LESSONS), "course 7 is sixteen lessons")
         for index, (title, _home, slugs) in enumerate(COURSES, start=1):
             with self.subTest(course=title):
                 self.assertEqual(
@@ -622,18 +680,19 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     def test_declared_assets_are_not_pages(self):
         """The asset map exists so no page check has to be softened for it.
 
-        All four published schemas are declared here, one line each. Every new
+        All six published schemas are declared here, one line each. Every new
         one is the moment the temptation appears to relax an HTML assertion so a
         JSON file can slip through the page sweep; the fix for "this check cannot
         apply to that file" is another declaration, never a weaker check.
         """
         self.assertEqual(
-            4,
+            6,
             len(NON_HTML_ASSETS),
-            "all four published JSON schemas must stay declared: course 2's "
+            "all six published JSON schemas must stay declared: course 2's "
             "trade journal exchange schema, course 3's options trade plan "
-            "schema, course 4's indicator rule schema, and course 5's volume "
-            "and order flow rule schema",
+            "schema, course 4's indicator rule schema, course 5's volume "
+            "and order flow rule schema, course 6's trading risk plan schema, "
+            "and course 7's trading system specification schema",
         )
         for url, relative in sorted(NON_HTML_ASSETS.items()):
             with self.subTest(url=url):
@@ -859,7 +918,7 @@ class TestContent(SiteFixture):
     def test_course_pages_retain_the_disclaimer(self):
         """Every course page teaches trading and must say so.
 
-        That is all five course homes as well as all 70 lessons: a course home
+        That is all seven course homes as well as all 102 lessons: a course home
         is not an exempt landing page, it sells the same material.
 
         The two shared-chrome pages are excluded, and excluded BY NAME. They are
@@ -1549,7 +1608,7 @@ class TestPathPosition(SiteFixture):
                     position,
                     "%s does not say it is course %d of %d. The path is eight "
                     "courses long including the three that are not published "
-                    "yet, and a course home that states a position out of five "
+                    "yet, and a course home that states a position out of seven "
                     "would describe a path that does not exist."
                     % (home, index, PATH_COURSE_COUNT),
                 )
@@ -1634,8 +1693,8 @@ class TestPathPosition(SiteFixture):
 class TestPathPage(SiteFixture):
     """The path page is the ordered spine of one subject.
 
-    It is the only page that shows the WHOLE path: five published courses that
-    link to their homes, and three announced ones that hold their place in the
+    It is the only page that shows the WHOLE path: seven published courses that
+    link to their homes, and one announced course that holds its place in the
     order without pretending to be openable. Both halves are asserted, because
     each fails in its own way -- a missing link strands a published course, and
     an upcoming course rendered as a link is a 404 with a promise attached.
@@ -1757,7 +1816,7 @@ class TestPathPage(SiteFixture):
 # ---------------------------------------------------------------------------
 # The pinned cross-course conventions
 # ---------------------------------------------------------------------------
-# Five courses, authored at five different times, now share one origin. The
+# Seven courses, authored at seven different times, now share one origin. The
 # review before course 3 landed found all of them drifting in the same three
 # places, course 4's source package arrived drifting in all three again -- a
 # light block with no accent tokens and no prefers-color-scheme path, and a

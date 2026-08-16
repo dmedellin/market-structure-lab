@@ -1,0 +1,2503 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Backtesting and Trading Systems</title>
+  <meta name="description" content="Backtesting and Trading Systems is course 7 of the Learn library: sixteen interactive lessons that build from what a backtest can and cannot establish, through data quality, point-in-time universes, bar construction and signal timing, into execution simulation, portfolio accounting and costs, then the trade log, the metrics and the benchmark, out-of-sample and walk-forward validation, robustness testing, and a versioned system specification you can export. Every lesson is one self-contained page." />
+  <link rel="canonical" href="https://learn.geterdone.io/backtesting-and-trading-systems/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. Same mark family as the
+       rest of the site (cyan gradient tile, dark ink) with this course's own
+       motif — an equity curve crossing the dashed line that seals the
+       out-of-sample data — so course 7 is distinguishable in a tab strip from
+       the library (plain structure line), course 1 (rising candles), course 2
+       (crosshair on one level), course 3 (a payoff bending at a strike),
+       course 4 (an oscillator crossing two dashed thresholds) and course 5
+       (volume bars under a flat line of accepted value). -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M40 9V55' fill='none' stroke='%23041116' stroke-width='3' stroke-linecap='round' stroke-dasharray='4 6' opacity='.62'/%3E%3Cpath d='M9 45L17 36L24 42L32 26L40 31L48 19L56 24' fill='none' stroke='%23041116' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- Open Graph / Twitter. og:image is intentionally OMITTED: a share card needs an
+       absolute hosted image URL, and this page is deliberately self-contained. Add
+       og:image + twitter:card=summary_large_image once a real 1200x630 asset ships. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Learn · geterdone.io" />
+  <meta property="og:title" content="Backtesting and Trading Systems" />
+  <meta property="og:description" content="Course 7 — sixteen interactive lessons from what a backtest can establish, through data quality, bar construction and signal timing, execution, sizing and costs, the equity curve and its metrics, out-of-sample and walk-forward validation, robustness testing, and an exportable system specification." />
+  <meta property="og:url" content="https://learn.geterdone.io/backtesting-and-trading-systems/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Backtesting and Trading Systems" />
+  <meta name="twitter:description" content="Course 7 — sixteen interactive lessons from what a backtest can establish, through data quality, bar construction and signal timing, execution, sizing and costs, the equity curve and its metrics, out-of-sample and walk-forward validation, robustness testing, and an exportable system specification." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/backtesting-and-trading-systems/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS — the single place any theme-dependent colour may live.
+       The library index, the trading path page, courses 1-6 and every lesson of
+       this course declare the same palette in the same shape. One origin, one
+       product; do not fork it.
+
+       THEME RULE, and the reason this block is the only place light values may
+       live: the palette flips through TWO independent paths — the explicit
+       toggle ([data-theme="light"]) and the system preference (the media block
+       below, for the reader who never touches the toggle). A component-level
+       `[data-theme="light"] .foo {…}` override only ever reaches the first of
+       them, so a light-OS reader gets the light background with dark-theme
+       accents. There are no component-level theme rules on this page; every
+       component — including all sixteen thumbnail SVGs — reads a token instead.
+
+       Accents are re-declared for light, not just the neutrals, because they are
+       read AS TEXT (.eyebrow, .kicker, .go, .topic-tag, .stage-badge, the
+       gradient headline) and drawn as chart strokes on a light surface. Light
+       values are contrast-checked against --bg (#edf4f8, the darkest light
+       surface): --cyan 4.98:1, --cyan-2 5.43:1, --green 4.94:1, --red 5.14:1,
+       --amber 5.33:1, --purple 5.44:1, --blue 5.64:1, --muted 4.91:1 — all
+       >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the
+       emphasis stop in both themes, so it has to be the more readable one
+       against the current background, not simply the lighter hue.
+
+       --on-accent is the ink that sits ON a filled accent (.btn.primary,
+       .brand-mark, .skip-link). It has to flip with the theme because those
+       accent fills go dark in light mode.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff6e7d;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #76a8ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+
+    /* System preference, only when the reader has NOT made an explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       media block above — the two light paths must never disagree. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.92em;
+      color: var(--text);
+    }
+
+    /* Visible focus everywhere, in both themes. */
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      flex: none;
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      box-shadow: 0 8px 26px rgba(55, 215, 231, 0.28);
+    }
+    .brand-mark svg { width: 22px; height: 22px; display: block; }
+
+    .brand-copy { min-width: 0; }
+    .brand-copy strong { display: block; font-size: 0.96rem; letter-spacing: 0.01em; }
+    .brand-copy span { display: block; color: var(--muted); font-size: 0.75rem; }
+
+    .topnav { display: flex; align-items: center; gap: 4px; }
+
+    .topnav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.84rem;
+      padding: 8px 10px;
+      border-radius: 9px;
+      white-space: nowrap;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08))); }
+    .topnav a[aria-current="page"] {
+      color: var(--text);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      border: 1px solid var(--line);
+      padding: 7px 9px;
+    }
+
+    /* Breadcrumb. Same component as the lesson pages, one level shallower: this
+       page is the COURSE, so the trail is library -> path -> course. Same type
+       scale, colour tokens and hover treatment as .topnav so the two read as one
+       header. Deliberately NOT hidden at the 720px breakpoint the way .topnav is
+       — on a phone the topnav is gone and this is the only way back up. */
+    .crumbs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2px;
+      margin: 10px 2px 0;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .crumbs a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 6px 9px;
+      border-radius: 9px;
+    }
+
+    .crumbs a:hover { color: var(--text); background: var(--line); }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); padding: 6px 9px; }
+
+    .icon-btn {
+      flex: none;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      cursor: pointer;
+      transition: transform 150ms ease, border-color 150ms ease;
+    }
+    .icon-btn:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 26px;
+      padding: 82px 8px 38px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 11px;
+      color: var(--cyan-2);
+      border: 1px solid rgba(55, 215, 231, 0.28);
+      border-radius: 999px;
+      background: rgba(55, 215, 231, 0.08);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 5px rgba(55, 215, 231, 0.12);
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 18px 0 15px;
+      font-size: clamp(2.2rem, 5.6vw, 4.9rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+    }
+
+    /* Both stops are tokens, so the headline re-colours itself on BOTH light
+       paths. Light: #0b6d79 -> #6b46d6 (5.43:1 / 5.44:1 on --bg). */
+    .gradient-text {
+      background: linear-gradient(110deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* The course tagline. Sits between the headline and the overview paragraph,
+       so it is set larger than body copy but still in --muted. */
+    .tagline {
+      max-width: 690px;
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.2vw, 1.28rem);
+      font-weight: 650;
+    }
+
+    .hero p.lede {
+      max-width: 690px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(0.96rem, 2vw, 1.08rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 15px;
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 750;
+      font-size: 0.9rem;
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
+    .btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
+    .btn.ghost { background: transparent; }
+
+    .hero-visual {
+      position: relative;
+      min-height: 330px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(146, 180, 203, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(146, 180, 203, 0.05) 1px, transparent 1px),
+        var(--panel);
+      background-size: 32px 32px;
+      box-shadow: var(--shadow);
+    }
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 65% 32%, rgba(55, 215, 231, 0.18), transparent 45%);
+      pointer-events: none;
+    }
+    .hero-svg { position: absolute; inset: 18px; width: calc(100% - 36px); height: calc(100% - 36px); }
+
+    /* ---------- Sections ---------- */
+    .section { padding: 34px 0; scroll-margin-top: 88px; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.65rem, 3vw, 2.45rem);
+      letter-spacing: -0.035em;
+    }
+    .section-head p {
+      max-width: 610px;
+      margin: 7px 0 0;
+      color: var(--muted);
+    }
+
+    .kicker {
+      margin: 0 0 6px;
+      color: var(--cyan-2);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .count-chip {
+      flex: none;
+      margin: 0;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    /* ---------- Learning path ----------
+       Three positions, always in reading order: the course before this one, this
+       one, and what follows. The third card is NOT a link: course 8 is announced
+       and not yet published, so it is rendered as an upcoming entry — visible, in
+       sequence, and unmistakably unavailable. A greyed button that goes nowhere
+       would be worse than saying so plainly. */
+    .path-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .path-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+    }
+    .path-card.current { border-color: var(--line-strong, var(--line2, var(--line))); background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08))); }
+    .path-card h3 { margin: 0; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .path-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+    /* The unavailable course. A dashed edge and a flat, un-panelled surface mark
+       it as not-yet-material at a glance; the .path-flag below states it in
+       words for anyone who cannot see the border treatment. Colour is NOT the
+       signal, and the copy is never dimmed below the contrast the rest of the
+       page holds — an announcement a reader cannot read is not an announcement. */
+    .path-card.upcoming {
+      border-style: dashed;
+      border-color: var(--line-strong, var(--line2, var(--line)));
+      background: none;
+    }
+    .path-card.upcoming h3 { color: var(--muted); }
+
+    .path-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      align-self: flex-start;
+      padding: 5px 10px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 999px;
+      color: var(--amber);
+      font-size: 0.69rem;
+      font-weight: 850;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .path-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 850;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .path-card.current .path-tag { color: var(--cyan-2); }
+    .path-tag svg { width: 14px; height: 14px; flex: none; }
+
+    .path-card h3 a { text-decoration: none; }
+    .path-card h3 a::after { content: ""; position: absolute; inset: 0; }
+    .path-card:has(h3 a:focus-visible) { outline: 3px solid var(--cyan); outline-offset: 3px; }
+    @supports selector(:has(*)) {
+      .path-card h3 a:focus-visible { outline: none; }
+    }
+    .path-card:has(h3 a:hover) { border-color: var(--line-strong, var(--line2, var(--line))); }
+
+    /* ---------- Course overview ---------- */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .note-card {
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+    }
+    /* The sources card is a fourth card in a three-column grid, so it spans the
+       whole row rather than sitting alone in one column. */
+    .note-card.span { grid-column: 1 / -1; }
+    .note-icon {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--cyan-2);
+      background: rgba(55, 215, 231, 0.09);
+      border: 1px solid rgba(55, 215, 231, 0.18);
+    }
+    .note-icon svg { width: 17px; height: 17px; display: block; }
+    .note-card h3 { margin: 12px 0 5px; font-size: 0.98rem; }
+    .note-card p { margin: 0; color: var(--muted); font-size: 0.84rem; }
+    .note-card p + p { margin-top: 8px; }
+
+    /* ---------- Stage jump list ----------
+       Sixteen cards is far more than a reader will scroll through blind, so the
+       six stages are addressable from the top of the curriculum. Real in-page
+       links, so they work with JavaScript off. */
+    .stage-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 20px;
+      padding: 0;
+      list-style: none;
+    }
+    .stage-nav a {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+    .stage-nav a:hover { border-color: var(--line-strong, var(--line2, var(--line))); }
+    .stage-nav a span { color: var(--muted); font-size: 0.74rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+    /* ---------- Stages ---------- */
+    .stage { margin-top: 30px; scroll-margin-top: 88px; }
+    .stage:first-of-type { margin-top: 0; }
+
+    .stage-head {
+      margin: 0 0 16px;
+      padding: 2px 0 2px 14px;
+      border-left: 3px solid var(--cyan);
+    }
+    .stage-head h3 { margin: 4px 0 0; font-size: 1.3rem; letter-spacing: -0.025em; }
+    .stage-head p { margin: 7px 0 0; max-width: 720px; color: var(--muted); font-size: 0.88rem; }
+
+    .stage-badge {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      color: var(--cyan-2);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .stage-badge b { color: var(--muted); font-weight: 850; font-variant-numeric: tabular-nums; }
+
+    /* ---------- Ordered course track ----------
+       Sixteen lessons are a SEQUENCE, not a gallery, so each stage is a single
+       column <ol> with a numbered rail down the left: a reader sees position at a
+       glance, and assistive tech gets the same fact from the list element itself.
+       The rail numeral is decorative (aria-hidden) because each card states its
+       own "Lesson NN" in the link text. The <ol start> values continue 01 to 16
+       across the six lists, so the sequence never restarts. */
+    .course-track {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 16px;
+    }
+
+    .course-step {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .step-rail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* The connector that carries the eye to the next lesson. Dropped on the last
+       step of each stage so the stage visibly ends instead of trailing off. */
+    .step-rail::after {
+      content: "";
+      flex: 1 1 auto;
+      width: 2px;
+      min-height: 10px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, var(--line-strong), transparent);
+    }
+    .course-step:last-child .step-rail::after { background: none; }
+
+    .step-num {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      margin: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      color: var(--cyan-2);
+      font-size: 0.95rem;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .lesson-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.12);
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+    .lesson-card:hover { transform: translateY(-3px); border-color: var(--line-strong, var(--line2, var(--line))); }
+
+    /* The whole card is the hit target, but only ONE link exists in the a11y tree. */
+    .lesson-card:has(.lesson-link:focus-visible) {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+    }
+
+    .thumb {
+      position: relative;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(rgba(146, 180, 203, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(146, 180, 203, 0.05) 1px, transparent 1px),
+        var(--panel-3);
+      background-size: 26px 26px;
+    }
+    .thumb svg { display: block; width: 100%; height: auto; }
+
+    .lesson-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 10px;
+      padding: 16px 17px 17px;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .topic-tag {
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: var(--cyan-2);
+      background: rgba(55, 215, 231, 0.1);
+      border: 1px solid rgba(55, 215, 231, 0.22);
+      font-size: 0.69rem;
+      font-weight: 850;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .time-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .time-tag svg { width: 13px; height: 13px; flex: none; }
+
+    .lesson-card h4 { margin: 2px 0 0; font-size: 1.12rem; letter-spacing: -0.02em; }
+
+    /* Reading order inside the link: position first, then title — the ordinal is
+       part of the link's accessible name, not a decorative numeral beside it, so
+       "Lesson 14" is what a screen reader announces before "Walk-Forward
+       Testing". */
+    .lesson-ord {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .lesson-link { text-decoration: none; }
+    .lesson-link::after { content: ""; position: absolute; inset: 0; }
+    /* Only hand focus off to the card where :has() is supported; otherwise the
+       link keeps its own visible ring. */
+    @supports selector(:has(*)) {
+      .lesson-link:focus-visible { outline: none; }
+    }
+
+    .lesson-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    .lesson-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .go {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--cyan-2);
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+    .go svg { width: 15px; height: 15px; transition: transform 160ms ease; }
+    .lesson-card:hover .go svg { transform: translateX(3px); }
+
+    .level { color: var(--muted); font-size: 0.74rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* From 760px the card turns on its side — thumbnail left, copy right — so a
+       sixteen-item column stays scannable instead of becoming sixteen tall tiles.
+       Below that it is exactly the stacked card the library already ships. */
+    @media (min-width: 760px) {
+      .course-step .lesson-card { flex-direction: row; }
+      .course-step .thumb {
+        flex: none;
+        width: 296px;
+        display: grid;
+        place-items: center;
+        border-bottom: 0;
+        border-right: 1px solid var(--line);
+      }
+    }
+
+    /* ---------- Specification interop ---------- */
+    .interop {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .interop-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+    }
+    .interop-card h3 { margin: 0 0 8px; font-size: 1.02rem; }
+    .interop-card p { margin: 0 0 10px; color: var(--muted); font-size: 0.88rem; }
+    .interop-card p:last-child { margin-bottom: 0; }
+
+    .file-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+    .file-link {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      text-decoration: none;
+      transition: border-color 150ms ease, transform 150ms ease;
+    }
+    .file-link:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
+    .file-link svg { width: 17px; height: 17px; flex: none; color: var(--cyan-2); }
+    /* The schema filename is long enough to overrun a 360px card on its own, and
+       it is not inside a <p>, so it does not inherit the global wrap rule. */
+    .file-link strong { display: block; font-size: 0.87rem; overflow-wrap: anywhere; }
+    .file-link span { display: block; color: var(--muted); font-size: 0.77rem; overflow-wrap: anywhere; }
+
+    /* Standing disclaimer. Amber rule on a panel — the same aside shape as
+       .noscript-note below; unlike that one it is always visible, because this
+       page is where a reader starts the course. */
+    .edu-note {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .edu-note strong { color: var(--text); }
+    .edu-note p { margin: 0 0 9px; }
+    .edu-note p:last-child { margin-bottom: 0; }
+
+    /* Same note styling as the lesson pages. */
+    .noscript-note {
+      display: block;
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .noscript-note strong { display: block; margin-bottom: 4px; color: var(--text); }
+
+    /* ---------- Course-to-course navigation ----------
+       This is the COURSE pager and it is deliberately not the lesson one: that
+       one is .lesson-nav / .lesson-link and lives inside a lesson. A course with
+       nothing published after it ships the backward half alone rather than a
+       dead link forward. Every colour here is a token, so both light paths flip
+       it together. Depth: a course home is one level down, so a sibling course
+       is "../slug/". */
+    .path-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 34px 0 6px;
+    }
+
+    .path-move {
+      flex: 1 1 240px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 150ms ease, border-color 150ms ease;
+    }
+
+    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
+    .path-move span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+    .path-move.next { margin-left: auto; text-align: right; }
+
+    /* The forward half when there is nothing to move forward to. It is a span,
+       not an anchor, so it cannot be focused or followed; the dashed edge and
+       the words "not yet available" carry the same fact twice, for the reader
+       who sees the border and the reader who does not. */
+    .path-move.is-upcoming {
+      opacity: 0.72;
+      cursor: default;
+      border-style: dashed;
+      background: none;
+    }
+    .path-move.is-upcoming:hover { transform: none; border-color: var(--line); }
+
+    /* ---------- SVG theming ----------
+       Classes, never hardcoded hex, so every mark in every thumbnail re-paints on
+       BOTH light paths. This is the whole reason the thumbnails carry no inline
+       fill or stroke colours.
+
+       The colour grammar is fixed across all sixteen charts so a reader can read
+       any thumbnail without a legend: raw market data is neutral, the tested
+       system's own series (its equity curve, its net result, the walk-forward
+       stitch) is cyan, a benchmark or comparison series is purple, an amber
+       dashed rule is a BOUNDARY THE TESTER CHOSE (a data split, a session edge,
+       an order level), a blue dashed rule is a structural zero or a prior peak
+       that is not tunable, green is accepted/filled/net-positive and red is
+       rejected/leaked/deducted/drawn-down. */
+    .sv-grid { stroke: var(--line); stroke-width: 1; }
+    .sv-axis { stroke: var(--line-strong); stroke-width: 1.5; }
+    .sv-tile { fill: var(--panel-2); stroke: var(--line-strong); stroke-width: 1.5; }
+    .sv-tile-live { fill: var(--panel-solid); stroke: var(--cyan); stroke-width: 2; }
+    .sv-text {
+      fill: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .sv-text-live { fill: var(--text); }
+    /* Series lines. */
+    .sv-price { stroke: var(--muted); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
+    .sv-fast { stroke: var(--cyan); stroke-width: 2.9; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .sv-slow { stroke: var(--purple); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .sv-slow-dash { stroke: var(--purple); stroke-width: 2.4; stroke-dasharray: 6 5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .sv-step { stroke: var(--cyan); stroke-width: 2.6; fill: none; stroke-linejoin: round; }
+    .sv-up-line { stroke: var(--green); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .sv-dn-line { stroke: var(--red); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .sv-faint { stroke: var(--muted); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: .45; }
+    /* Reference rules: amber is a boundary the tester chose, blue is a
+       structural zero or prior peak that is not tunable. */
+    .sv-level { stroke: var(--amber); stroke-width: 1.75; stroke-dasharray: 7 6; fill: none; }
+    .sv-zero { stroke: var(--blue); stroke-width: 1.75; stroke-dasharray: 4 5; fill: none; }
+    .sv-link { stroke: var(--amber); stroke-width: 1.9; stroke-dasharray: 5 5; fill: none; stroke-linecap: round; }
+    /* Fills. */
+    .sv-fill { fill: var(--cyan); opacity: .12; }
+    .sv-fill-warm { fill: var(--muted); opacity: .16; }
+    .sv-fill-up { fill: var(--green); opacity: .16; }
+    .sv-fill-dn { fill: var(--red); opacity: .16; }
+    /* Bars. */
+    .sv-bar { fill: var(--muted); opacity: .45; }
+    .sv-bar-hi { fill: var(--cyan); }
+    .sv-bar-up { fill: var(--green); }
+    .sv-bar-dn { fill: var(--red); }
+    .sv-wick { stroke: var(--muted); stroke-width: 1.6; }
+    /* Markers. */
+    .sv-dot { fill: var(--panel-solid); stroke: var(--cyan-2); stroke-width: 2.5; }
+    .sv-dot-ok { fill: var(--panel-solid); stroke: var(--green); stroke-width: 2.5; }
+    .sv-dot-warn { fill: var(--panel-solid); stroke: var(--red); stroke-width: 2.5; }
+    .sv-flow { stroke: var(--muted); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: .8; }
+    .sv-check { stroke: var(--green); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .sv-cross { stroke: var(--red); stroke-width: 3; fill: none; stroke-linecap: round; }
+    .sv-ring { stroke: var(--cyan); stroke-width: 2.25; fill: none; }
+
+    /* ---------- Footer ---------- */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+      padding: 24px 4px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    footer p { margin: 0; }
+    footer .risk { flex: 1 1 100%; margin: 0 0 10px; max-width: 900px; }
+    footer .risk strong { color: var(--text); }
+    footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+    footer a:hover { color: var(--text); }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 960px) {
+      .hero { grid-template-columns: 1fr; padding-top: 58px; }
+      .hero-visual { min-height: 300px; }
+      .overview-grid { grid-template-columns: 1fr; }
+      .path-grid { grid-template-columns: 1fr; }
+      .interop { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .shell { width: min(100% - 18px, 1220px); padding-top: 9px; }
+      .topbar { top: 7px; }
+      .topnav { display: none; }
+      .hero { padding: 44px 4px 24px; }
+      .hero-visual { min-height: 250px; }
+      .section { padding: 27px 0; }
+      .section-head { display: block; }
+      .count-chip { display: inline-block; margin-top: 12px; }
+      .course-step { grid-template-columns: 38px minmax(0, 1fr); gap: 10px; }
+      .step-num { width: 38px; height: 38px; border-radius: 12px; font-size: 0.84rem; }
+      .stage-head { padding-left: 11px; }
+      .path-move { flex-basis: 100%; }
+      .path-move.next { text-align: left; }
+      footer { display: block; }
+      footer p { margin: 0 0 6px; }
+    }
+
+    @media (max-width: 400px) {
+      .brand-copy span { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives LAST in <head> and not in the IIFE at the
+       bottom of <body>: that runs after the first paint, which is exactly the
+       defect this course's source package shipped — a one-liner setTheme() fed
+       by an inline read that ran with the rest of the page script.
+       SAME localStorage key as the library, the path pages, courses 1-6 and every
+       lesson ('learn-theme') so the toggle persists across the whole site. This
+       course's source shipped its own key ('bts-theme') — the seventh distinct
+       key to arrive on one origin — which silently reset a reader's choice at
+       the course boundary; it is gone.
+       The allowlist matters — a corrupt value would otherwise be written straight
+       onto data-theme, matching no CSS while still counting as an explicit
+       choice, which permanently mislabels the toggle and pins the page to the
+       dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Backtesting and Trading Systems — course home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" focusable="false">
+            <path d="M40 9V55" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="4 6" opacity=".62" />
+            <path d="M9 45L17 36L24 42L32 26L40 31L48 19L56 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <strong>Backtesting and Trading Systems</strong>
+          <span>Course 7 · 16 lessons</span>
+        </span>
+      </a>
+
+      <nav class="topnav" aria-label="Primary">
+        <a href="../">Learn library</a>
+        <a href="../paths/trading/">Trading path</a>
+        <a href="./" aria-current="page">Course home</a>
+        <a href="#lessons">Lessons</a>
+        <a href="#spec">Specification</a>
+      </nav>
+
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+    </header>
+
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../paths/trading/">Trading path</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Backtesting and Trading Systems</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note">
+        <strong>JavaScript is off, so the theme toggle is hidden.</strong>
+        Everything else on this page — the path position, the course overview, the
+        lesson list, the specification section, and the illustrations — is plain HTML
+        and CSS and works normally. The page still follows your system's light or
+        dark preference.
+      </div>
+    </noscript>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Course 7 · 16 interactive lessons</span>
+          <h1 id="hero-title">Backtesting and <span class="gradient-text">Trading Systems</span></h1>
+          <p class="tagline">A backtest is an experiment, not a promise. The work is making the experiment honest enough that its result is worth anything at all.</p>
+          <p class="lede">Sixteen lessons that turn "it looks like this would have worked" into evidence you can defend. They start with what a historical simulation can and cannot establish, and with writing a market idea down as rules deterministic enough that the same data always produces the same decision. From there: the dataset and the clock — missing bars, stale prices, a point-in-time universe that still contains the companies that failed, how raw trades become bars, and the signal timing that keeps tomorrow's price out of today's decision. Then the account itself, simulated fill by fill: orders that could realistically have executed, cash and equity and rejected orders, and the commission, spread, slippage and impact deducted at every entry and exit. The last third is measurement and doubt: the trade log and the drawdown, expectancy alongside win rate, a benchmark and the risk taken to beat it, data held back until the system is fixed, walk-forward windows, and the sensitivity, resampling and stress tests that show whether a result survives away from one exact historical path. Lesson 16 writes the whole thing down as a versioned specification. Every lesson is one self-contained interactive page — no accounts, no tracking, nothing to install.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="./backtesting-fundamentals/">Start with lesson 01</a>
+            <a class="btn ghost" href="#lessons">See all 16 lessons</a>
+            <a class="btn ghost" href="../trading-risk-management/">Course 6 first</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of the course: a system's equity curve tracked against a flatter benchmark curve, cut by a dashed vertical boundary that separates in-sample data from the out-of-sample data held back, above six stage tiles — foundations for lessons 01 to 02, data and the clock for 03 to 06, execution and the account for 07 to 09, measurement for 10 to 12, validation and robustness for 13 to 15, and the exportable system specification at 16.">
+            <g class="sv-grid">
+              <line x1="16" y1="60" x2="504" y2="60" />
+              <line x1="16" y1="112" x2="504" y2="112" />
+            </g>
+
+            <rect class="sv-fill" x="300" y="26" width="204" height="150" />
+            <line class="sv-level" x1="300" y1="26" x2="300" y2="176" />
+
+            <path class="sv-slow" d="M20 158L52 154L78 157L104 148L132 153L158 144L186 149L214 140L240 147L268 138L300 143L330 134L358 139L386 130L414 135L444 128L472 133L500 125" />
+            <path class="sv-fast" d="M20 152L52 140L78 147L104 128L132 135L158 118L186 127L214 108L240 117L268 98L300 105L330 88L358 95L386 76L414 83L444 66L472 73L500 56" />
+            <circle class="sv-dot" cx="300" cy="105" r="5" />
+
+            <line class="sv-axis" x1="16" y1="176" x2="504" y2="176" />
+
+            <g class="sv-text">
+              <text class="sv-text-live" x="22" y="44">IN-SAMPLE</text>
+              <text class="sv-text-live" x="310" y="44">OUT-OF-SAMPLE</text>
+              <text x="22" y="170">SYSTEM</text>
+              <text x="96" y="170">BENCHMARK</text>
+            </g>
+
+            <rect class="sv-tile-live" x="16" y="194" width="156" height="50" rx="14" />
+            <g class="sv-tile">
+              <rect x="182" y="194" width="156" height="50" rx="14" />
+              <rect x="348" y="194" width="156" height="50" rx="14" />
+              <rect x="16" y="252" width="156" height="50" rx="14" />
+              <rect x="182" y="252" width="156" height="50" rx="14" />
+              <rect x="348" y="252" width="156" height="50" rx="14" />
+            </g>
+
+            <g class="sv-text">
+              <text class="sv-text-live" x="30" y="216">FOUNDATIONS</text>
+              <text x="30" y="234">01–02</text>
+              <text class="sv-text-live" x="196" y="216">DATA &amp; CLOCK</text>
+              <text x="196" y="234">03–06</text>
+              <text class="sv-text-live" x="362" y="216">EXECUTION</text>
+              <text x="362" y="234">07–09</text>
+              <text class="sv-text-live" x="30" y="274">MEASUREMENT</text>
+              <text x="30" y="292">10–12</text>
+              <text class="sv-text-live" x="196" y="274">VALIDATION</text>
+              <text x="196" y="292">13–15</text>
+              <text class="sv-text-live" x="362" y="274">SPECIFICATION</text>
+              <text x="362" y="292">16</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <section class="section" id="path" aria-labelledby="path-title">
+        <div class="section-head">
+          <div>
+            <p class="kicker">Learning path</p>
+            <h2 id="path-title">Where this course sits</h2>
+            <p>The trading path is an order, not a shelf. This is the seventh course on it: the first six taught you to read structure, plan a trade, price an option, compute an indicator, read the flow underneath the bar and size the risk — this one asks whether any of it actually holds up when you test it.</p>
+          </div>
+          <p class="count-chip">Course 7 of 8</p>
+        </div>
+
+        <div class="path-grid">
+          <article class="path-card">
+            <p class="path-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <path d="M19 12H6" /><path d="M12 5l-7 7 7 7" />
+              </svg>
+              Course 6 · Comes before this
+            </p>
+            <h3><a href="../trading-risk-management/">Trading Risk Management</a></h3>
+            <p>Sixteen lessons on surviving the sequence of trades: risk per trade, position sizing, stops and structural invalidation, volatility-based risk, reward-to-risk and R-multiples, expectancy, losing streaks and drawdown, risk of ruin, leverage, correlation, daily and weekly limits, and a written risk plan. This course assumes that vocabulary — R-multiples, drawdown and expectancy are measured here, not introduced here.</p>
+          </article>
+
+          <article class="path-card current">
+            <p class="path-tag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="8.4" /><circle cx="12" cy="12" r="2.6" fill="currentColor" />
+              </svg>
+              Course 7 · You are here
+            </p>
+            <h3>Backtesting and Trading Systems</h3>
+            <p>Sixteen lessons in six stages, from what a historical simulation can establish to a versioned specification precise enough to hand to another person or program. It is written to stand on its own — every lesson is a standalone page and nothing here loads anything from courses 1 to 6 — so a single lesson also works as a reference you come back to.</p>
+          </article>
+
+          <article class="path-card upcoming" aria-labelledby="next-course-title">
+            <p class="path-flag">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="8.4" /><path d="M12 7.5V12l3 2" />
+              </svg>
+              Not yet available
+            </p>
+            <p class="path-tag">Course 8 · Comes after this</p>
+            <h3 id="next-course-title">Algorithmic and Automated Trading</h3>
+            <p>Announced, not yet published — there is no page to open yet. It is named here because this course deliberately stops at the specification: defining a system and validating it is course 7's subject, and live data ingestion, schedulers, broker connections, alerting, deployment, monitoring and automated execution are reserved for course 8. A validated specification is not a running system, and this course never pretends otherwise.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="overview" aria-labelledby="overview-title">
+        <div class="section-head">
+          <div>
+            <p class="kicker">The course</p>
+            <h2 id="overview-title">What this course is</h2>
+            <p>One question, taken apart in the order you have to answer it: what exactly are the rules, what data were they tested on, what would the fills and the costs really have been, what did the result measure — and would it survive data the rules never saw?</p>
+          </div>
+          <p class="count-chip">16 lessons · 6 stages</p>
+        </div>
+
+        <div class="overview-grid">
+          <article class="note-card">
+            <span class="note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M3 17l5-6 4 3 4-6 5 4" /><path d="M3 21h18" />
+              </svg>
+            </span>
+            <h3>What it teaches</h3>
+            <p>What a backtest establishes and what it only suggests, and how to state an idea as entry, exit, sizing and invalidation rules that are deterministic (01–02). Then the dataset and the clock: gaps, duplicates, stale values and outliers; a point-in-time universe that keeps the delisted names and adjusts splits without hindsight; how trades become bars and which sessions count; and the signal timing that keeps future information out of a past decision (03–06). Then the simulated account: order behaviour and realistic fills, cash, equity, open positions and rejected orders, and commissions, spread, slippage and market impact charged at every entry and exit (07–09). Then measurement: an auditable trade log, the equity curve and its drawdown; win rate, average win and loss, expectancy, profit factor and sample size; and a benchmark that separates market exposure from independent performance (10–12). Then doubt, applied on purpose: in-sample, validation and out-of-sample splits, walk-forward windows, and sensitivity, resampling, higher costs and stress tests (13–15). Lesson 16 writes the whole system down and reports it.</p>
+          </article>
+
+          <article class="note-card">
+            <span class="note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <circle cx="9" cy="8" r="3.4" /><path d="M3 20c0-3.3 2.7-5.4 6-5.4s6 2.1 6 5.4" /><path d="M17 8.5h4M19 6.5v4" />
+              </svg>
+            </span>
+            <h3>Who it is for</h3>
+            <p>Anyone who has produced a beautiful equity curve and cannot say why it should be believed. It assumes you can read a chart, and that risk per trade, R-multiples, expectancy and drawdown already mean something to you — course 6 defines them. It assumes nothing about walk-forward analysis, Monte Carlo resampling or point-in-time data. It also suits the reader who has never written a backtest and wants to know what the result of one is worth: the honest answer is that a simulation is evidence about a past sequence, that costs and timing decide most of it, and that a curve fitted to the data it was chosen on is not evidence at all.</p>
+          </article>
+
+          <article class="note-card">
+            <span class="note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 6h11M4 12h9M4 18h13" /><path d="M17 15l3 3-3 3" />
+              </svg>
+            </span>
+            <h3>How to work through it</h3>
+            <p>In order, 01 to 16, one stage at a time. Each stage is the prerequisite for the next: the rules written in 02 are what the data in 03 to 06 is fed to, the fills in 07 and the costs in 09 are what the equity curve in 10 is made of, the metrics in 11 are meaningless without the sample size that lesson also insists on, and the split in 13 is what makes the walk-forward in 14 and the stress tests in 15 more than a second look at the same fitted result. One lesson per sitting is plenty. Stage 5 is where most readers discover that their best backtest was a search, not a test.</p>
+          </article>
+
+          <article class="note-card span">
+            <span class="note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 5.5h7a2 2 0 0 1 2 2V19a2 2 0 0 0-2-2H4z" /><path d="M20 5.5h-7a2 2 0 0 0-2 2V19a2 2 0 0 1 2-2h7z" />
+              </svg>
+            </span>
+            <h3>Where the definitions come from</h3>
+            <p>The labs are simplified on purpose, so each lesson closes with an official reading link to a primary source rather than to a vendor selling backtesting software: FINRA's investor explainer stating that historical backtesting is hypothetical and does not predict future performance, its guidance on online trading, and FINRA Rule 2210 on communications with the public, which restricts performance projections and misleading performance claims; CME Group for market data and for what a trading simulator is; and the SEC's investor.gov on understanding fees. Those are definitions from a regulator, a self-regulatory organization and the venue — the course's own synthetic examples are illustrations of them, never a substitute.</p>
+            <p>Every lesson still works with no network at all. Each page is entirely self-contained, and the reference links are the only things on it that point off the site.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="lessons" aria-labelledby="lessons-title">
+        <div class="section-head">
+          <div>
+            <p class="kicker">Curriculum</p>
+            <h2 id="lessons-title">The sixteen lessons, in order</h2>
+            <p>Six stages, grouped the way the sequence itself groups: what a backtest is and how a rule gets written, the data and the clock it runs on, the simulated account that produces the fills, the measurement of what came out, the validation that tries to break it, and the specification that records all of it. Each lesson is a single self-contained page of interactive charts, worked explanations, and practice. Start at 01 and work down.</p>
+          </div>
+          <p class="count-chip">Start at lesson 01</p>
+        </div>
+
+        <div class="edu-note">
+          <p>
+            <strong>Educational use only — nothing here is trading advice.</strong>
+            This course defines and validates trading systems. It does not provide
+            live market data, trading signals, profitability claims, personalized
+            investment advice, or an execution system. Live data ingestion,
+            schedulers, broker connections, alerting, deployment, monitoring, and
+            automated execution are reserved for course 8.
+          </p>
+          <p>
+            <strong>Data and results scope.</strong> All price paths, trades,
+            universes, fills, costs, folds, and Monte Carlo paths in these lessons
+            are deterministic synthetic examples. Historical simulations are
+            treated throughout as hypothetical evidence, never as predictions. The
+            course uses stated conventions — signals are separated from order
+            submission and execution; costs are applied at every entry and exit
+            rather than deducted once from the final result; time-series splits
+            remain chronological; out-of-sample and walk-forward results are
+            reported separately from training results; and robustness testing
+            means nearby parameters, resampled trade sequences, higher costs, and
+            the removal of favourable periods. A simulated result is not a
+            realized result: real outcomes vary by data source, vendor, venue,
+            asset class, session, liquidity, borrow, capacity, and the execution
+            you actually get.
+          </p>
+        </div>
+
+        <nav aria-label="Course stages">
+          <ul class="stage-nav">
+            <li><a href="#stage-basis">What a backtest is <span>01–02</span></a></li>
+            <li><a href="#stage-data">The data and the clock <span>03–06</span></a></li>
+            <li><a href="#stage-account">Simulating the account <span>07–09</span></a></li>
+            <li><a href="#stage-measure">Measuring the result <span>10–12</span></a></li>
+            <li><a href="#stage-validate">Validation and robustness <span>13–15</span></a></li>
+            <li><a href="#stage-spec">The specification <span>16</span></a></li>
+          </ul>
+        </nav>
+
+        <!-- ===================================================================
+             ADDING A LESSON: copy one whole <li class="course-step"> block, paste
+             it at the END of the right stage list, then change only:
+               1. the .step-num digits, the .lesson-ord text, and the .level count
+               2. the href on .lesson-link  (a new ./<slug>/ directory)
+               3. the <h4> title, the description <p>, and .topic-tag
+               4. the inline SVG thumbnail + its aria-label
+             Titles and descriptions are VERBATIM from
+             content/backtesting-and-trading-systems.manifest.json — that file is
+             the authority, not this page. Every following <ol start="NN"> has to
+             move with it, and the rail numbering, the connector and the last-step
+             rules follow from the lists themselves — no CSS changes needed. A new
+             URL also has to be registered in tests/test_site_invariants.py
+             (REQUIRED_PAGES), in scripts/smoke.py, and in the release acceptance
+             checks.
+             =================================================================== -->
+
+        <div class="stage" id="stage-basis">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 1 of 6 <b>Lessons 01–02</b></p>
+            <h3>What a backtest is</h3>
+            <p>Before any of the machinery: what a historical simulation actually establishes, and what it only ever suggests. A backtest is a claim about one recorded sequence under a set of assumptions you chose, so this stage separates the assumptions from the result — and then makes the strategy itself precise enough to test at all. An idea that a person has to interpret produces a different backtest every time it is run; rules that are deterministic produce the same decision from the same data, which is the minimum condition for everything that follows.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="1">
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">01</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line drawn across a shaded block of recorded history, stopping at a dashed vertical boundary beyond which the line continues only as a faint dashed guess, showing that a backtest describes the tested history and establishes nothing past it.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="30" x2="352" y2="30" />
+                      <line x1="8" y1="66" x2="352" y2="66" />
+                    </g>
+                    <rect class="sv-fill-warm" x="8" y="18" width="222" height="92" />
+                    <path class="sv-price" d="M14 92C40 84 56 70 82 74C108 78 124 60 150 56C176 52 192 66 218 58L230 54" />
+                    <path class="sv-slow-dash" d="M230 54C256 50 272 62 298 54C324 46 336 40 346 44" />
+                    <line class="sv-level" x1="230" y1="16" x2="230" y2="110" />
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="134">TESTED HISTORY</text>
+                      <text x="254" y="134">UNTESTED</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Foundations</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./backtesting-fundamentals/"><span class="lesson-ord">Lesson 01</span>Backtesting Fundamentals</a></h4>
+
+                  <p>Use historical data to simulate a defined strategy, separate assumptions from results, and understand what a backtest can and cannot establish.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">01 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">02</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Four stacked rule rows — entry, exit, sizing and invalidation — feeding through connectors into a single highlighted tile marked with a green check, showing that fully specified rules produce the same decision from the same data.">
+                    <g class="sv-tile">
+                      <rect x="8" y="12" width="128" height="20" rx="7" />
+                      <rect x="8" y="38" width="128" height="20" rx="7" />
+                      <rect x="8" y="64" width="128" height="20" rx="7" />
+                      <rect x="8" y="90" width="128" height="20" rx="7" />
+                    </g>
+                    <g class="sv-text">
+                      <text x="16" y="26">ENTRY</text>
+                      <text x="16" y="52">EXIT</text>
+                      <text x="16" y="78">SIZING</text>
+                      <text x="16" y="104">INVALIDATION</text>
+                    </g>
+                    <path class="sv-flow" d="M136 22H154V61H136" />
+                    <path class="sv-flow" d="M136 100H154V61" />
+                    <path class="sv-flow" d="M136 48H154" />
+                    <path class="sv-flow" d="M136 74H154" />
+                    <path class="sv-flow" d="M154 61H188" />
+                    <path class="sv-flow" d="M182 55l6 6-6 6" />
+                    <rect class="sv-tile-live" x="198" y="40" width="148" height="42" rx="12" />
+                    <path class="sv-check" d="M212 61l7 8 13-16" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="240" y="66">SAME DECISION</text>
+                      <text x="198" y="104">SAME DATA IN</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Rules</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./testable-trading-rules-and-hypotheses/"><span class="lesson-ord">Lesson 02</span>Testable Trading Rules and Hypotheses</a></h4>
+
+                  <p>Convert a market idea into deterministic entry, exit, sizing, and invalidation rules that produce the same decision from the same data.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">02 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-data">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 2 of 6 <b>Lessons 03–06</b></p>
+            <h3>The data and the clock</h3>
+            <p>Most backtests are wrong before a single rule runs, because of what was in the file and when the strategy was allowed to see it. This stage covers both halves. First the dataset: the defects that manufacture signals, and the universe question — a list of today's survivors, adjusted with today's knowledge, quietly guarantees a good result. Then the clock: how raw trades become the bars a rule reads, which sessions are eligible, and the timing discipline that keeps a completed bar's close, a later revision, or a statistic computed over the whole file out of a decision made before any of it existed.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="3">
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">03</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A price series interrupted by three defects, each ringed in red: a missing span bridged by a dashed line, a run of identical stale values, and a single outlier print far above the surrounding prices.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="34" x2="352" y2="34" />
+                      <line x1="8" y1="70" x2="352" y2="70" />
+                    </g>
+                    <path class="sv-price" d="M14 88L40 78L66 84L92 66" />
+                    <line class="sv-link" x1="92" y1="66" x2="144" y2="62" />
+                    <path class="sv-price" d="M144 62L170 62L196 62L222 62" />
+                    <path class="sv-price" d="M222 62L248 50L274 30L300 66L326 58L346 52" />
+                    <circle class="sv-dot-warn" cx="118" cy="64" r="6" />
+                    <circle class="sv-dot-warn" cx="183" cy="62" r="6" />
+                    <circle class="sv-dot-warn" cx="274" cy="30" r="6" />
+                    <line class="sv-axis" x1="8" y1="112" x2="352" y2="112" />
+                    <g class="sv-text">
+                      <text x="98" y="130">GAP</text>
+                      <text x="156" y="130">STALE</text>
+                      <text x="248" y="130">OUTLIER</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Data quality</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./historical-data-and-data-quality/"><span class="lesson-ord">Lesson 03</span>Historical Data and Data Quality</a></h4>
+
+                  <p>Detect missing bars, duplicates, stale values, timestamp errors, and price outliers before they create false signals or distorted returns.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">03 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">04</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="On the left, three instrument lifelines where one ends early at a red cross marking a delisting; on the right, a raw price series dropping vertically on a corporate action beside a continuous adjusted series that carries the same return across the event.">
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="22">POINT-IN-TIME UNIVERSE</text>
+                    </g>
+                    <path class="sv-flow" d="M14 44H172" />
+                    <path class="sv-flow" d="M14 66H172" />
+                    <path class="sv-dn-line" d="M14 88H118" />
+                    <path class="sv-cross" d="M124 82l12 12M136 82l-12 12" />
+                    <g class="sv-text">
+                      <text x="12" y="126">DELISTED, STILL IN THE TEST</text>
+                    </g>
+                    <line class="sv-level" x1="266" y1="18" x2="266" y2="104" />
+                    <path class="sv-price" d="M204 34L224 30L244 36L264 32L266 34L266 74L286 70L306 76L326 70L346 66" />
+                    <path class="sv-fast" d="M204 78L224 74L244 80L264 76L286 70L306 76L326 70L346 66" />
+                    <g class="sv-text">
+                      <text x="196" y="126">RAW</text>
+                      <text class="sv-text-live" x="240" y="126">ADJUSTED</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Universe</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./survivorship-selection-and-corporate-actions/"><span class="lesson-ord">Lesson 04</span>Survivorship, Selection, and Corporate Actions</a></h4>
+
+                  <p>Build a point-in-time universe, include failed and delisted instruments, and adjust splits and distributions without using information learned later.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">04 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">05</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A row of individual trade prints along the top being aggregated into four candles below, with the eligible session marked off between two dashed vertical boundaries and prints outside it left out of the bars.">
+                    <g class="sv-text">
+                      <text x="12" y="20">PRINTS</text>
+                    </g>
+                    <g class="sv-bar">
+                      <rect x="24" y="28" width="4" height="4" rx="1" />
+                      <rect x="44" y="30" width="4" height="4" rx="1" />
+                      <rect x="66" y="26" width="4" height="4" rx="1" />
+                      <rect x="90" y="31" width="4" height="4" rx="1" />
+                      <rect x="112" y="27" width="4" height="4" rx="1" />
+                      <rect x="136" y="30" width="4" height="4" rx="1" />
+                      <rect x="158" y="26" width="4" height="4" rx="1" />
+                      <rect x="182" y="29" width="4" height="4" rx="1" />
+                      <rect x="204" y="27" width="4" height="4" rx="1" />
+                      <rect x="228" y="31" width="4" height="4" rx="1" />
+                      <rect x="250" y="26" width="4" height="4" rx="1" />
+                      <rect x="274" y="30" width="4" height="4" rx="1" />
+                      <rect x="298" y="28" width="4" height="4" rx="1" />
+                      <rect x="322" y="30" width="4" height="4" rx="1" />
+                    </g>
+                    <rect class="sv-fill" x="56" y="44" width="248" height="62" />
+                    <line class="sv-level" x1="56" y1="40" x2="56" y2="110" />
+                    <line class="sv-level" x1="304" y1="40" x2="304" y2="110" />
+                    <g class="sv-wick">
+                      <line x1="88" y1="54" x2="88" y2="96" />
+                      <line x1="148" y1="50" x2="148" y2="88" />
+                      <line x1="212" y1="58" x2="212" y2="98" />
+                      <line x1="272" y1="46" x2="272" y2="84" />
+                    </g>
+                    <g class="sv-bar-up">
+                      <rect x="81" y="62" width="14" height="24" rx="3" />
+                      <rect x="265" y="54" width="14" height="22" rx="3" />
+                    </g>
+                    <g class="sv-bar-dn">
+                      <rect x="141" y="58" width="14" height="22" rx="3" />
+                      <rect x="205" y="66" width="14" height="24" rx="3" />
+                    </g>
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="128">BARS</text>
+                      <text x="66" y="128">ELIGIBLE SESSION ONLY</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Bars</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./timeframes-sessions-and-bar-construction/"><span class="lesson-ord">Lesson 05</span>Timeframes, Sessions, and Bar Construction</a></h4>
+
+                  <p>Define how raw trades or quotes become bars, which sessions are eligible, and how timeframe choices change indicators, signals, and fills.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">05 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">06</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Three candles: a signal marked at the close of the first, the fill marked at the open of the next across a dashed bar boundary, and a red arrow reaching back from a later bar into that decision, crossed out as data leakage.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="34" x2="352" y2="34" />
+                      <line x1="8" y1="74" x2="352" y2="74" />
+                    </g>
+                    <g class="sv-wick">
+                      <line x1="70" y1="40" x2="70" y2="96" />
+                      <line x1="170" y1="34" x2="170" y2="88" />
+                      <line x1="272" y1="30" x2="272" y2="80" />
+                    </g>
+                    <rect class="sv-bar" x="60" y="52" width="20" height="34" rx="4" />
+                    <rect class="sv-bar" x="160" y="46" width="20" height="32" rx="4" />
+                    <rect class="sv-bar" x="262" y="40" width="20" height="30" rx="4" />
+                    <line class="sv-level" x1="120" y1="24" x2="120" y2="104" />
+                    <circle class="sv-dot" cx="80" cy="52" r="6" />
+                    <circle class="sv-dot-ok" cx="160" cy="78" r="6" />
+                    <path class="sv-dn-line" d="M262 96H108" />
+                    <path class="sv-dn-line" d="M116 90l-8 6 8 6" />
+                    <path class="sv-cross" d="M178 90l12 12M190 90l-12 12" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="20">SIGNAL AT CLOSE</text>
+                      <text x="146" y="20">FILL NEXT OPEN</text>
+                      <text x="196" y="128">LEAKED FUTURE DATA</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Timing</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./signal-timing-look-ahead-bias-and-data-leakage/"><span class="lesson-ord">Lesson 06</span>Signal Timing, Look-Ahead Bias, and Data Leakage</a></h4>
+
+                  <p>Prevent the strategy from using future prices, completed-bar values, revised data, or preprocessing information that was unavailable at decision time.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">06 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-account">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 3 of 6 <b>Lessons 07–09</b></p>
+            <h3>Simulating the account</h3>
+            <p>A signal is not a trade. This stage builds the machinery between them: an order that only fills at a price the tested sequence could actually have traded, an account that tracks cash, equity, buying power and every open position bar by bar — including the orders it had to reject — and the costs charged on the way in and the way out. Costs are where most promising systems go: commissions, the spread you cross, the slippage you get instead of the price you wanted, and the impact of size the market never offered. They are deducted at every fill here, not subtracted once at the end, because that is the only version that answers what the strategy would have kept.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="7">
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">07</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A price path crossing three dashed order levels: it trades through the limit, marked with a green fill dot, never reaches the target above, marked with a red cross, and leaves the stop below untouched.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="56" x2="352" y2="56" />
+                      <line x1="8" y1="92" x2="352" y2="92" />
+                    </g>
+                    <line class="sv-level" x1="8" y1="32" x2="280" y2="32" />
+                    <line class="sv-level" x1="8" y1="76" x2="280" y2="76" />
+                    <line class="sv-level" x1="8" y1="104" x2="280" y2="104" />
+                    <path class="sv-price" d="M14 58L44 66L74 76L104 70L134 62L164 56L194 48L224 44L254 40L276 42" />
+                    <circle class="sv-dot-ok" cx="74" cy="76" r="6" />
+                    <path class="sv-cross" d="M234 26l12 12M246 26l-12 12" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="286" y="28">TARGET</text>
+                      <text class="sv-text-live" x="286" y="80">LIMIT</text>
+                      <text x="286" y="108">STOP</text>
+                      <text class="sv-text-live" x="12" y="134">FILLED AT LIMIT</text>
+                      <text x="150" y="134">TARGET NOT REACHED</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Execution</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./trade-execution-simulation/"><span class="lesson-ord">Lesson 07</span>Trade Execution Simulation</a></h4>
+
+                  <p>Model market, limit, stop, stop-limit, target, and cancellation behavior using prices that could realistically execute in the tested sequence.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">07 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">08</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="An account equity bar split into a cash portion and an open-position portion, above two tiles: one showing an order rejected with a red cross, and one highlighted tile showing the order that was sized by risk instead.">
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="22">ACCOUNT EQUITY</text>
+                    </g>
+                    <rect class="sv-bar" x="12" y="30" width="192" height="18" rx="4" />
+                    <rect class="sv-bar-hi" x="208" y="30" width="138" height="18" rx="4" />
+                    <g class="sv-text">
+                      <text x="12" y="64">CASH</text>
+                      <text class="sv-text-live" x="208" y="64">OPEN POSITIONS</text>
+                    </g>
+                    <rect class="sv-tile" x="12" y="78" width="186" height="32" rx="10" />
+                    <text class="sv-text" x="24" y="99">ORDER REJECTED</text>
+                    <path class="sv-cross" d="M164 88l12 12M176 88l-12 12" />
+                    <rect class="sv-tile-live" x="208" y="78" width="138" height="32" rx="10" />
+                    <text class="sv-text sv-text-live" x="220" y="99">SIZED BY RISK</text>
+                    <g class="sv-text">
+                      <text x="12" y="134">CASH · EQUITY · OPEN RISK, BAR BY BAR</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Accounting</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./position-sizing-and-portfolio-accounting/"><span class="lesson-ord">Lesson 08</span>Position Sizing and Portfolio Accounting</a></h4>
+
+                  <p>Track cash, equity, buying power, open positions, realized and unrealized P/L, rejected orders, and sizing rules throughout the test.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">08 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">09</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A waterfall: a tall green gross-profit column, then four descending red deductions bracketed together as costs charged at every fill — commission, spread, slippage and market impact — leaving a much shorter cyan net column.">
+                    <line class="sv-axis" x1="8" y1="112" x2="352" y2="112" />
+                    <rect class="sv-bar-up" x="16" y="34" width="40" height="78" rx="4" />
+                    <path class="sv-link" d="M76 32V26H260V32" />
+                    <rect class="sv-bar-dn" x="76" y="34" width="34" height="12" rx="3" />
+                    <rect class="sv-bar-dn" x="126" y="46" width="34" height="14" rx="3" />
+                    <rect class="sv-bar-dn" x="176" y="60" width="34" height="16" rx="3" />
+                    <rect class="sv-bar-dn" x="226" y="76" width="34" height="10" rx="3" />
+                    <rect class="sv-bar-hi" x="276" y="86" width="40" height="26" rx="4" />
+                    <g class="sv-text">
+                      <text x="82" y="20">CHARGED AT EVERY FILL</text>
+                      <text class="sv-text-live" x="14" y="130">GROSS</text>
+                      <text x="76" y="130">FEES · SPREAD · SLIPPAGE · IMPACT</text>
+                    </g>
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="274" y="76">NET</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Costs</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./transaction-costs-spread-slippage-and-liquidity/"><span class="lesson-ord">Lesson 09</span>Transaction Costs, Spread, Slippage, and Liquidity</a></h4>
+
+                  <p>Deduct commissions, fees, bid-ask spread, slippage, and size-dependent market impact from every simulated entry, exit, and rebalance.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">09 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-measure">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 4 of 6 <b>Lessons 10–12</b></p>
+            <h3>Measuring the result</h3>
+            <p>Now there is something to measure, and the question becomes what to measure it with. The trade log is the primary record — every entry, exit, size and cost, reconstructible into the equity curve, and from that curve the drawdown a real account would have had to sit through. Then the summary statistics, plural and on purpose: win rate says nothing without the average win and the average loss beside it, expectancy and profit factor say nothing without the number of trades behind them. And a return is only impressive relative to something — a benchmark and a cash rate, so that exposure to the market is not mistaken for skill at trading it.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="10">
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">10</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="An equity curve rising to a marked peak, falling away into a shaded drawdown that is measured from the dashed peak level down to a marked trough, and finally returning to that level at a green recovery marker.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="40" x2="352" y2="40" />
+                      <line x1="8" y1="82" x2="352" y2="82" />
+                    </g>
+                    <path class="sv-fill-dn" d="M142 58L174 74L206 88L238 96L270 80L310 58Z" />
+                    <line class="sv-zero" x1="142" y1="58" x2="310" y2="58" />
+                    <path class="sv-fast" d="M14 100L46 88L78 92L110 70L142 58L174 74L206 88L238 96L270 80L310 58L346 40" />
+                    <circle class="sv-dot" cx="142" cy="58" r="6" />
+                    <circle class="sv-dot-warn" cx="238" cy="96" r="6" />
+                    <circle class="sv-dot-ok" cx="310" cy="58" r="6" />
+                    <g class="sv-text">
+                      <text x="120" y="132">PEAK</text>
+                      <text x="180" y="132">DRAWDOWN</text>
+                      <text x="268" y="132">RECOVERY</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Equity curve</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./trade-log-equity-curve-and-drawdown/"><span class="lesson-ord">Lesson 10</span>Trade Log, Equity Curve, and Drawdown</a></h4>
+
+                  <p>Create an auditable trade log, reconstruct portfolio equity through time, and measure peak-to-trough loss and recovery duration.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">10 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">11</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Per-trade results drawn as green winning bars above and red losing bars below a dashed zero line, with a single cyan line just above zero marking the average result per trade across the whole sample.">
+                    <line class="sv-zero" x1="8" y1="76" x2="352" y2="76" />
+                    <g class="sv-bar-up">
+                      <rect x="20" y="46" width="12" height="30" rx="3" />
+                      <rect x="86" y="50" width="12" height="26" rx="3" />
+                      <rect x="130" y="42" width="12" height="34" rx="3" />
+                      <rect x="196" y="54" width="12" height="22" rx="3" />
+                      <rect x="240" y="46" width="12" height="30" rx="3" />
+                      <rect x="284" y="58" width="12" height="18" rx="3" />
+                      <rect x="328" y="50" width="12" height="26" rx="3" />
+                    </g>
+                    <g class="sv-bar-dn">
+                      <rect x="42" y="76" width="12" height="14" rx="3" />
+                      <rect x="64" y="76" width="12" height="14" rx="3" />
+                      <rect x="108" y="76" width="12" height="14" rx="3" />
+                      <rect x="152" y="76" width="12" height="14" rx="3" />
+                      <rect x="174" y="76" width="12" height="14" rx="3" />
+                      <rect x="218" y="76" width="12" height="14" rx="3" />
+                      <rect x="262" y="76" width="12" height="14" rx="3" />
+                      <rect x="306" y="76" width="12" height="14" rx="3" />
+                    </g>
+                    <path class="sv-fast" d="M12 66H346" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="22">R MULTIPLES PER TRADE</text>
+                      <text x="12" y="134">EXPECTANCY IS THE AVERAGE, OVER A SAMPLE</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Metrics</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./performance-metrics-and-expectancy/"><span class="lesson-ord">Lesson 11</span>Performance Metrics and Expectancy</a></h4>
+
+                  <p>Calculate win rate, average win, average loss, expectancy, profit factor, return, volatility, trade frequency, and sample size without relying on one metric.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">11 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">12</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Two curves from the same starting point: the system in cyan above and a benchmark in purple below, with the shaded band between them marking the excess that has to be judged against the risk taken to earn it.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="44" x2="352" y2="44" />
+                      <line x1="8" y1="80" x2="352" y2="80" />
+                    </g>
+                    <path class="sv-fill" d="M14 96L58 86L102 72L146 78L190 58L234 48L278 40L346 24L346 54L278 66L234 70L190 76L146 88L102 84L58 92Z" />
+                    <path class="sv-slow" d="M14 96L58 92L102 84L146 88L190 76L234 70L278 66L346 54" />
+                    <path class="sv-fast" d="M14 96L58 86L102 72L146 78L190 58L234 48L278 40L346 24" />
+                    <circle class="sv-dot" cx="14" cy="96" r="5" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="22">SYSTEM</text>
+                      <text x="82" y="22">BENCHMARK</text>
+                      <text x="12" y="134">EXCESS, AGAINST THE RISK TAKEN FOR IT</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Benchmark</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./benchmarking-and-risk-adjusted-performance/"><span class="lesson-ord">Lesson 12</span>Benchmarking and Risk-Adjusted Performance</a></h4>
+
+                  <p>Compare the system with an appropriate benchmark and cash rate, then separate market exposure from independent performance and risk taken.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">12 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-validate">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 5 of 6 <b>Lessons 13–15</b></p>
+            <h3>Validation and robustness</h3>
+            <p>A good result on the data you tuned on is not evidence — it is a description of that data. This stage is the part of the course that tries to break the system on purpose. First the split: rules developed on one period, parameters chosen on a second, and a final period left sealed until the system is fixed, in chronological order so the future never trains the past. Then walk-forward, which repeats that discipline through time and stitches the unseen windows into a single forward simulation. Then the stress: nearby parameter values, resampled trade sequences, higher costs, favourable periods removed — because a result that only exists at one exact setting on one exact history is a coincidence with a chart attached.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="13">
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">13</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="One chronological timeline divided by two dashed boundaries into an in-sample block, a validation block, and a final out-of-sample block marked with a padlock to show it stays sealed until the system is fixed.">
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="24">CHRONOLOGICAL SPLIT</text>
+                    </g>
+                    <rect class="sv-tile" x="8" y="40" width="344" height="40" rx="10" />
+                    <rect class="sv-fill-warm" x="10" y="42" width="126" height="36" />
+                    <rect class="sv-fill" x="139" y="42" width="87" height="36" />
+                    <line class="sv-level" x1="137" y1="32" x2="137" y2="88" />
+                    <line class="sv-level" x1="227" y1="32" x2="227" y2="88" />
+                    <path class="sv-ring" d="M283 57v-4a7 7 0 0 1 14 0v4" />
+                    <rect class="sv-tile-live" x="278" y="57" width="24" height="16" rx="5" />
+                    <g class="sv-text">
+                      <text x="12" y="104">IN-SAMPLE</text>
+                      <text x="142" y="104">VALIDATION</text>
+                      <text class="sv-text-live" x="232" y="104">OUT-OF-SAMPLE</text>
+                      <text x="120" y="130">SEALED UNTIL RULES ARE FIXED</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Data splits</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./in-sample-validation-and-out-of-sample-data/"><span class="lesson-ord">Lesson 13</span>In-Sample, Validation, and Out-of-Sample Data</a></h4>
+
+                  <p>Separate rule development, parameter selection, and final evaluation so the last dataset remains unseen until the system is fixed.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">13 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">14</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Three training windows stepping forward in time, each followed by its own shorter test window, with connectors carrying those three test windows down into one continuous stitched strip beneath them.">
+                    <g class="sv-text">
+                      <text x="16" y="16">TRAIN</text>
+                      <text class="sv-text-live" x="140" y="16">TEST</text>
+                    </g>
+                    <g class="sv-bar">
+                      <rect x="14" y="20" width="120" height="14" rx="4" />
+                      <rect x="58" y="44" width="120" height="14" rx="4" />
+                      <rect x="102" y="68" width="120" height="14" rx="4" />
+                    </g>
+                    <g class="sv-bar-hi">
+                      <rect x="138" y="20" width="44" height="14" rx="4" />
+                      <rect x="182" y="44" width="44" height="14" rx="4" />
+                      <rect x="226" y="68" width="44" height="14" rx="4" />
+                    </g>
+                    <path class="sv-flow" d="M160 36V94" />
+                    <path class="sv-flow" d="M204 60V94" />
+                    <path class="sv-flow" d="M248 84V94" />
+                    <g class="sv-bar-hi">
+                      <rect x="138" y="96" width="42" height="16" rx="4" />
+                      <rect x="182" y="96" width="42" height="16" rx="4" />
+                      <rect x="226" y="96" width="42" height="16" rx="4" />
+                    </g>
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="14" y="132">STITCHED FORWARD RESULT</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Walk-forward</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./walk-forward-testing/"><span class="lesson-ord">Lesson 14</span>Walk-Forward Testing</a></h4>
+
+                  <p>Repeat chronological training and test windows, choose parameters only from past data, and stitch the unseen test windows into one forward simulation.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">14 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">15</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="On the left, a fan of faint resampled equity paths spreading around one cyan path; on the right, a grid of neighbouring parameter settings with the chosen one highlighted at the centre and one adjacent setting shaded red where the result collapses.">
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="22">MONTE CARLO</text>
+                    </g>
+                    <path class="sv-faint" d="M14 96L50 88L86 84L122 72L158 66L196 58" />
+                    <path class="sv-faint" d="M14 96L50 92L86 90L122 86L158 88L196 82" />
+                    <path class="sv-faint" d="M14 96L50 84L86 74L122 60L158 46L196 34" />
+                    <path class="sv-faint" d="M14 96L50 90L86 82L122 76L158 72L196 66" />
+                    <path class="sv-fast" d="M14 96L50 88L86 80L122 70L158 62L196 52" />
+                    <circle class="sv-dot" cx="14" cy="96" r="5" />
+                    <g class="sv-tile">
+                      <rect x="216" y="32" width="34" height="22" rx="6" />
+                      <rect x="256" y="32" width="34" height="22" rx="6" />
+                      <rect x="296" y="32" width="34" height="22" rx="6" />
+                      <rect x="216" y="60" width="34" height="22" rx="6" />
+                      <rect x="296" y="60" width="34" height="22" rx="6" />
+                      <rect x="216" y="88" width="34" height="22" rx="6" />
+                      <rect x="256" y="88" width="34" height="22" rx="6" />
+                      <rect x="296" y="88" width="34" height="22" rx="6" />
+                    </g>
+                    <rect class="sv-tile-live" x="256" y="60" width="34" height="22" rx="6" />
+                    <rect class="sv-fill-dn" x="296" y="88" width="34" height="22" rx="6" />
+                    <path class="sv-cross" d="M307 94l12 10M319 94l-12 10" />
+                    <g class="sv-text">
+                      <text x="12" y="132">RESAMPLED PATHS</text>
+                      <text x="216" y="132">NEARBY SETTINGS</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Robustness</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./overfitting-sensitivity-monte-carlo-and-stress-testing/"><span class="lesson-ord">Lesson 15</span>Overfitting, Sensitivity, Monte Carlo, and Stress Testing</a></h4>
+
+                  <p>Test nearby parameters, resample trade sequences, increase costs, remove favorable periods, and verify that the result is not dependent on one precise historical path.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">15 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-spec">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 6 of 6 <b>Lesson 16</b></p>
+            <h3>The specification</h3>
+            <p>Everything above stays an anecdote until it is written down. The last lesson collects the hypothesis, the data and its point-in-time handling, the rules, the execution and cost assumptions, the sizing, the validation plan, the metrics and the limits into one versioned document, states the acceptance criteria the system has to meet before it is taken seriously, and exports the whole specification as a machine-readable file you can keep, diff and hand to someone else.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="16">
+
+            <li class="course-step">
+              <div class="step-rail">
+                <p class="step-num" aria-hidden="true">16</p>
+              </div>
+              <article class="lesson-card">
+                <div class="thumb">
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Six stacked specification sections — hypothesis, data, rules, execution, validation and acceptance — feeding an arrow into a highlighted document panel labelled as the versioned specification that is exported and reported.">
+                    <g class="sv-tile">
+                      <rect x="8" y="8" width="140" height="17" rx="6" />
+                      <rect x="8" y="27" width="140" height="17" rx="6" />
+                      <rect x="8" y="46" width="140" height="17" rx="6" />
+                      <rect x="8" y="65" width="140" height="17" rx="6" />
+                      <rect x="8" y="84" width="140" height="17" rx="6" />
+                      <rect x="8" y="103" width="140" height="17" rx="6" />
+                    </g>
+                    <g class="sv-text">
+                      <text x="16" y="21">HYPOTHESIS</text>
+                      <text x="16" y="40">DATA</text>
+                      <text x="16" y="59">RULES</text>
+                      <text x="16" y="78">EXECUTION</text>
+                      <text x="16" y="97">VALIDATION</text>
+                      <text x="16" y="116">ACCEPTANCE</text>
+                    </g>
+                    <path class="sv-flow" d="M150 62H188" />
+                    <path class="sv-flow" d="M182 56l6 6-6 6" />
+                    <rect class="sv-tile-live" x="194" y="24" width="152" height="76" rx="12" />
+                    <text class="sv-text sv-text-live" x="206" y="46">SPECIFICATION</text>
+                    <g class="sv-flow">
+                      <path d="M206 62H320" />
+                      <path d="M206 76H286" />
+                      <path d="M206 88H306" />
+                    </g>
+                    <g class="sv-text">
+                      <text x="200" y="132">VERSIONED EXPORT</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <div class="lesson-body">
+                  <div class="meta-row">
+                    <span class="topic-tag">Specification</span>
+                    <span class="time-tag">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
+                      </svg>
+                      Interactive lab
+                    </span>
+                  </div>
+
+                  <h4><a class="lesson-link" href="./trading-system-specification-and-backtest-report/"><span class="lesson-ord">Lesson 16</span>Trading System Specification and Backtest Report</a></h4>
+
+                  <p>Combine hypothesis, data, rules, execution, sizing, costs, validation, metrics, limits, and acceptance criteria into a versioned system specification and report.</p>
+
+                  <div class="lesson-foot">
+                    <span class="go">
+                      Start lesson
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                    <span class="level">16 of 16</span>
+                  </div>
+                </div>
+              </article>
+            </li>
+
+          </ol>
+        </div>
+      </section>
+
+      <section class="section" id="spec" aria-labelledby="spec-title">
+        <div class="section-head">
+          <div>
+            <p class="kicker">Interop</p>
+            <h2 id="spec-title">Lesson 16 exports a system specification</h2>
+            <p>The last lesson is not a quiz you pass and close. It turns the whole course into one document — what the system claims, what it was tested on, how it was filled and charged, how it was validated, and what it has to achieve to be accepted — and hands that document back to you as a file, so it can outlive the browser tab it was written in.</p>
+          </div>
+          <p class="count-chip">Format: trading-system-specification-v1</p>
+        </div>
+
+        <div class="interop">
+          <article class="interop-card">
+            <h3>What comes out of it</h3>
+            <p>
+              Lesson 16 takes the identity and version you gave the system, the
+              hypothesis with its market regime and direction, the data section —
+              universe, timeframe, point-in-time handling, corporate actions,
+              timezone — the entry, exit and position-sizing rules, the execution
+              assumptions in basis points for commission, spread and slippage per
+              side, the validation plan with its in-sample, validation and
+              out-of-sample percentages, its walk-forward flag and its benchmark,
+              the acceptance criteria, and the reporting commitments, and exports
+              the whole specification as a JSON document stamped
+              <span class="mono">trading-system-specification-v1</span>.
+            </p>
+            <p>
+              The schema linked beside this is the contract for that shape. It is
+              worth reading if you would rather keep your systems in your own
+              notebook or repository: match the shape and the same fields carry
+              over. All nine top-level members are required, so a specification
+              that omits its validation plan or its acceptance criteria does not
+              validate — those are the two sections a hopeful backtest leaves out
+              first. Note what the shape deliberately does NOT contain: a realized
+              result. The numbers under
+              <span class="mono">acceptance</span> —
+              <span class="mono">minimumTrades</span>,
+              <span class="mono">maximumDrawdownPct</span>,
+              <span class="mono">minimumExpectancyR</span> — are thresholds you
+              commit to in advance, not performance the system achieved, so a
+              system that is merely well specified is never mistaken for one that
+              has been shown to work. Deployment, monitoring and live execution
+              are course 8's subject. Everything runs in your browser — nothing is
+              uploaded, and there is no account anywhere in this course.
+            </p>
+          </article>
+
+          <div class="interop-card">
+            <h3>Go straight to the pieces</h3>
+            <ul class="file-list">
+              <li>
+                <a class="file-link" href="./trading-system-specification-and-backtest-report/">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M5 4h11l3 3v13H5z" /><path d="M8.5 10h7M8.5 14h4" /><path d="M13.5 15.5l2 2 3.5-4" />
+                  </svg>
+                  <span>
+                    <strong>Lesson 16 · Trading System Specification and Backtest Report</strong>
+                    <span>Builds the specification and exports it</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="file-link" href="./trading-system-specification-schema.json">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M9 5H7a2 2 0 0 0-2 2v3l-2 2 2 2v3a2 2 0 0 0 2 2h2" />
+                    <path d="M15 5h2a2 2 0 0 1 2 2v3l2 2-2 2v3a2 2 0 0 1-2 2h-2" />
+                  </svg>
+                  <span>
+                    <strong>trading-system-specification-schema.json</strong>
+                    <span>The export shape, as JSON Schema — opens as plain text</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="file-link" href="./in-sample-validation-and-out-of-sample-data/">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M3 6h18v12H3z" /><path d="M11 6v12M17 6v12" />
+                  </svg>
+                  <span>
+                    <strong>Lesson 13 · In-Sample, Validation, and Out-of-Sample Data</strong>
+                    <span>Where the validation percentages in the export come from</span>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <nav class="path-nav" aria-label="Course navigation">
+        <a class="path-move prev" href="../trading-risk-management/" rel="prev"><span>Previous course</span><strong>Course 6 &middot; Trading Risk Management</strong></a>
+        <!-- Course 8 has no page yet, so this is deliberately not an anchor: a disabled
+             span cannot be focused or followed, and aria-disabled tells a screen reader
+             why. Swap it for <a class="path-move next" href="../algorithmic-and-automated-trading/"
+             rel="next"> the moment that course ships. -->
+        <span class="path-move next is-upcoming" aria-disabled="true"><span>Next course</span><strong>Course 8 &middot; Algorithmic and Automated Trading &mdash; not yet available</strong></span>
+      </nav>
+    </main>
+
+    <footer>
+      <p class="risk"><strong>Educational course.</strong> This course defines and validates trading systems. It does not provide live market data, trading signals, execution access, profitability claims, or personalized investment advice, and it is not an execution system. Live data ingestion, schedulers, broker connections, alerting, deployment, monitoring and automated execution belong to course 8. All price paths, trades, universes, fills, costs, folds and Monte Carlo paths in these lessons are deterministic synthetic examples, and every historical simulation here is hypothetical evidence about a past sequence rather than a prediction: past performance, simulated or realized, does not indicate future results. Real outcomes vary by data source, vendor, venue, asset class, session, liquidity, capacity and the execution you actually get. Confirm the data, the cost assumptions, the validation and the risk before acting on anything you read here.</p>
+      <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme'; // shared with the library, the path pages, courses 1-6 and every lesson — keep identical
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() {
+        toggle.textContent = resolved() === 'light' ? '☀' : '☾';
+      }
+
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+
+      // Follow the OS only while the reader has made no explicit choice.
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+
+      paintIcon();
+    })();
+  </script>
+</body>
+</html>

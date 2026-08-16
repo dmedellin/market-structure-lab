@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trading-risk-plan-schema.json",
+  "title": "Trading Risk Plan",
+  "type": "object",
+  "required": [
+    "schema",
+    "name",
+    "account",
+    "lossLimits",
+    "portfolio",
+    "execution",
+    "options",
+    "actions",
+    "version"
+  ],
+  "properties": {
+    "schema": {
+      "const": "trading-risk-plan-v1"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "account": {
+      "type": "object",
+      "required": [
+        "referenceEquity",
+        "riskPerTradePct",
+        "maxOpenRiskPct",
+        "maxGrossLeverage"
+      ],
+      "properties": {
+        "referenceEquity": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "riskPerTradePct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxOpenRiskPct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxGrossLeverage": {
+          "type": "number",
+          "minimum": 1
+        }
+      }
+    },
+    "lossLimits": {
+      "type": "object",
+      "required": [
+        "dailyPct",
+        "weeklyPct",
+        "maximumDrawdownPct"
+      ],
+      "properties": {
+        "dailyPct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "weeklyPct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maximumDrawdownPct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "portfolio": {
+      "type": "object",
+      "required": [
+        "maxConcurrentPositions",
+        "maxCorrelatedPositions",
+        "maxSingleSectorRiskPct"
+      ],
+      "properties": {
+        "maxConcurrentPositions": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxCorrelatedPositions": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxSingleSectorRiskPct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "slippageReservePctOfInitialRisk",
+        "avoidScheduledEventMinutes"
+      ],
+      "properties": {
+        "slippageReservePctOfInitialRisk": {
+          "type": "number",
+          "minimum": 0
+        },
+        "avoidScheduledEventMinutes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "required": [
+        "allowUndefinedRisk",
+        "closeShortOptionsBeforeExpirationDays",
+        "requireAssignmentBuyingPower"
+      ],
+      "properties": {
+        "allowUndefinedRisk": {
+          "type": "boolean"
+        },
+        "closeShortOptionsBeforeExpirationDays": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "requireAssignmentBuyingPower": {
+          "type": "boolean"
+        }
+      }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "generatedAt": {
+      "type": "string"
+    }
+  }
+}

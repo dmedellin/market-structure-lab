@@ -230,10 +230,10 @@
       border-radius: 9px;
       white-space: nowrap;
     }
-    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a:hover { color: var(--text); background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08))); }
     .topnav a[aria-current="page"] {
       color: var(--text);
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       border: 1px solid var(--line);
       padding: 7px 9px;
     }
@@ -246,11 +246,11 @@
       border-radius: 11px;
       display: grid;
       place-items: center;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       cursor: pointer;
       transition: transform 150ms ease, border-color 150ms ease;
     }
-    .icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+    .icon-btn:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
 
     /* ---------- Hero ---------- */
     .hero {
@@ -319,7 +319,7 @@
       border: 1px solid var(--line);
       border-radius: 12px;
       padding: 11px 15px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--text);
       cursor: pointer;
       text-decoration: none;
@@ -327,7 +327,7 @@
       font-size: 0.9rem;
       transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
     }
-    .btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .btn:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
     .btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
     .btn.ghost { background: transparent; }
 
@@ -389,7 +389,7 @@
       padding: 8px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--muted);
       font-size: 0.78rem;
       font-weight: 750;
@@ -423,7 +423,7 @@
       box-shadow: 0 14px 38px rgba(0, 0, 0, 0.12);
       transition: transform 160ms ease, border-color 160ms ease;
     }
-    .path-card:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+    .path-card:hover { transform: translateY(-3px); border-color: var(--line-strong, var(--line2, var(--line))); }
 
     /* The whole card is the hit target, but only ONE link exists in the a11y tree. */
     .path-card:has(.path-link:focus-visible) {
@@ -670,7 +670,7 @@
       padding: 12px 14px;
       border: 1px solid var(--line-strong);
       border-radius: 12px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--text);
       font-size: 0.95rem;
     }
@@ -702,7 +702,7 @@
       background: color-mix(in srgb, var(--panel-2) 70%, transparent);
       transition: border-color 150ms ease, transform 150ms ease;
     }
-    .result:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+    .result:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-2px); }
     .result:has(.result-link:focus-visible) { outline: 3px solid var(--cyan); outline-offset: 3px; }
     @supports selector(:has(*)) {
       .result-link:focus-visible { outline: none; }
@@ -1005,7 +1005,7 @@
             <h2 id="paths-title">Paths</h2>
             <p>A path is an ordered sequence of courses on one subject, meant to be taken front to back. Each subject arrives as its own path, so a course always sits in a sequence rather than alone on a shelf. One path is open today; more are being written. Looking for a single course instead? <a href="#find">Search by title or topic</a>.</p>
           </div>
-          <p class="count-chip">1 path · 5 courses available</p>
+          <p class="count-chip">1 path · 7 courses available</p>
         </div>
 
         <!-- ===================================================================
@@ -1033,9 +1033,9 @@
 
           <li class="path-card">
             <div class="path-cover">
-              <svg viewBox="0 0 400 272" role="img" aria-label="Eight courses in order on one rail. The first five are drawn as solid bars whose length is that course's lesson count — 7, 15, 16, 16 and 16 lessons. The last three are drawn as dashed outlines, because they are not available yet.">
-                <line class="sv-rail-live" x1="34" y1="20" x2="34" y2="152" />
-                <line class="sv-rail" x1="34" y1="152" x2="34" y2="251" />
+              <svg viewBox="0 0 400 272" role="img" aria-label="Eight courses in order on one rail. The first seven are drawn as solid bars whose length is that course's lesson count — 7, 15, 16, 16, 16, 16 and 16 lessons. The last one is drawn as a dashed outline, because it is not available yet.">
+                <line class="sv-rail-live" x1="34" y1="20" x2="34" y2="218" />
+                <line class="sv-rail" x1="34" y1="218" x2="34" y2="251" />
 
                 <!-- Available: bar length = lesson count -->
                 <circle class="sv-node" cx="34" cy="20" r="11" />
@@ -1064,13 +1064,15 @@
                 <text class="sv-text" x="322" y="156">16</text>
 
                 <!-- Upcoming: uniform dashed outlines, so no length can be read as a count -->
-                <circle class="sv-node-soon" cx="34" cy="185" r="11" />
-                <text class="sv-num sv-num-soon" x="34" y="189">6</text>
-                <rect class="sv-bar-soon" x="54" y="179" width="110" height="12" rx="6" />
+                <circle class="sv-node" cx="34" cy="185" r="11" />
+                <text class="sv-num" x="34" y="189">6</text>
+                <rect class="sv-bar" x="54" y="179" width="260" height="12" rx="6" />
+                <text class="sv-text" x="322" y="189">16</text>
 
-                <circle class="sv-node-soon" cx="34" cy="218" r="11" />
-                <text class="sv-num sv-num-soon" x="34" y="222">7</text>
-                <rect class="sv-bar-soon" x="54" y="212" width="110" height="12" rx="6" />
+                <circle class="sv-node" cx="34" cy="218" r="11" />
+                <text class="sv-num" x="34" y="222">7</text>
+                <rect class="sv-bar" x="54" y="212" width="260" height="12" rx="6" />
+                <text class="sv-text" x="322" y="222">16</text>
 
                 <circle class="sv-node-soon" cx="34" cy="251" r="11" />
                 <text class="sv-num sv-num-soon" x="34" y="255">8</text>
@@ -1081,7 +1083,7 @@
             <div class="path-body">
               <div class="meta-row">
                 <span class="subject-tag">Subject · Trading</span>
-                <span class="meta-note">5 of 8 courses available</span>
+                <span class="meta-note">7 of 8 courses available</span>
               </div>
 
               <h3><a class="path-link" href="./paths/trading/">Trading</a></h3>
@@ -1095,17 +1097,17 @@
                 </div>
                 <div>
                   <dt>Available now</dt>
-                  <dd>5<small>70 lessons</small></dd>
+                  <dd>7<small>102 lessons</small></dd>
                 </div>
                 <div>
                   <dt>Upcoming</dt>
-                  <dd>3<small>not yet available</small></dd>
+                  <dd>1<small>not yet available</small></dd>
                 </div>
               </dl>
 
               <div class="meter" aria-hidden="true">
                 <span class="ready"></span><span class="ready"></span><span class="ready"></span><span class="ready"></span><span class="ready"></span>
-                <span></span><span></span><span></span>
+                <span class="ready"></span><span class="ready"></span><span></span>
               </div>
 
               <div class="strip">
@@ -1116,8 +1118,8 @@
                   <li><span class="cs-num"><span class="visually-hidden">Course </span>03</span> <span class="cs-title">Options Trading</span> <span class="cs-tag">16 lessons</span></li>
                   <li><span class="cs-num"><span class="visually-hidden">Course </span>04</span> <span class="cs-title">Technical Indicators</span> <span class="cs-tag">16 lessons</span></li>
                   <li><span class="cs-num"><span class="visually-hidden">Course </span>05</span> <span class="cs-title">Volume and Order Flow</span> <span class="cs-tag">16 lessons</span></li>
-                  <li><span class="cs-num soon"><span class="visually-hidden">Course </span>06</span> <span class="cs-title soon">Trading Risk Management</span> <span class="cs-tag soon">Upcoming</span></li>
-                  <li><span class="cs-num soon"><span class="visually-hidden">Course </span>07</span> <span class="cs-title soon">Backtesting and Trading Systems</span> <span class="cs-tag soon">Upcoming</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>06</span> <span class="cs-title">Trading Risk Management</span> <span class="cs-tag">16 lessons</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>07</span> <span class="cs-title">Backtesting and Trading Systems</span> <span class="cs-tag">16 lessons</span></li>
                   <li><span class="cs-num soon"><span class="visually-hidden">Course </span>08</span> <span class="cs-title soon">Algorithmic and Automated Trading</span> <span class="cs-tag soon">Upcoming</span></li>
                 </ol>
               </div>
@@ -1245,7 +1247,7 @@
        --------------------------------------------------------------------- */
     (function () {
       /* The individual courses a reader can open TODAY, in path order.
-         Trading courses 6 to 8 are deliberately absent: a result here is a link,
+         Trading course 8 is deliberately absent: a result here is a link,
          and a course that has no page yet has nothing to open — listing it would
          produce a search hit that goes nowhere. Add one the day its home page
          ships, not before. Titles and descriptions are what search matches. */
@@ -1289,6 +1291,22 @@
           position: 'Course 5',
           lessons: 16,
           href: './volume-and-order-flow/'
+        },
+        {
+          title: 'Trading Risk Management',
+          description: 'Decide what a trade may cost before you take it: the account risk budget, risk per trade, stop-loss placement at structural invalidation, position sizing, reward-to-risk and R-multiples, win rate and expectancy, losing streaks, drawdown and risk of ruin, ATR-based risk, gap, slippage and execution risk, leverage and margin, correlation and portfolio exposure, options risk, daily and weekly limits, and a written risk plan.',
+          path: 'Trading',
+          position: 'Course 6',
+          lessons: 16,
+          href: './trading-risk-management/'
+        },
+        {
+          title: 'Backtesting and Trading Systems',
+          description: 'Find out whether a rule set ever worked: testable hypotheses, historical data quality, survivorship and corporate actions, bar construction, look-ahead bias and data leakage, execution simulation, position sizing and portfolio accounting, transaction costs and slippage, the trade log, equity curve and drawdown, performance metrics, benchmarking, in-sample and out-of-sample data, walk-forward testing, overfitting and Monte Carlo stress testing, and a versioned system specification.',
+          path: 'Trading',
+          position: 'Course 7',
+          lessons: 16,
+          href: './backtesting-and-trading-systems/'
         }
       ];
 

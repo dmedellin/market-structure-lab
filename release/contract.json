@@ -2,7 +2,7 @@
   "schema_version": 1,
   "notes": [
     "COMMITTED CONTRACT SOURCE, and the single source of truth for __LOOPBACK_PORT__ and __APP_SUBNET__. .github/workflows/release.yml reads this document, renders the deployment inputs from its network block, overwrites only the fields a release run can prove, validates the result against release/contract.schema.json, and emits it as release-artifacts/release-contract.json. Every field the workflow does not overwrite is reviewed policy and is authoritative exactly as written here.",
-    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home), and each course's lessons beneath its own home - one check id per page, 77 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 5 are course-scoped because a lesson slug is only unique within a course). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the announced courses 6 to 8, so it carries its own check with its own markers rather than riding along on the index's. Its two course-name markers name the LAST published course and the FIRST announced one, so both move forward at every launch. The four published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema) and /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one path and five courses.",
+    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home, /trading-risk-management/ id course6-home, /backtesting-and-trading-systems/ id course7-home), and each course's lessons beneath its own home - one check id per page, 111 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 7 are course-scoped because a lesson slug is only unique within a course - course 2 and course 6 both ship a position-sizing lesson). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the announced course 8, so it carries its own check with its own markers rather than riding along on the index's. Its two course-name markers name the LAST published course and the FIRST announced one, so both move forward at every launch. The six published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), /trading-risk-management/trading-risk-plan-schema.json (id trading-risk-plan-schema) and /backtesting-and-trading-systems/trading-system-specification-schema.json (id trading-system-specification-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one path and seven courses.",
     "Fields only a release run can know carry all-zero sentinels: release_id, source.revision, image.digest, image.reference, build.timestamp, compose.template_sha256, compose.rendered_sha256 and invocation.workflow_run_id. An all-zero digest or revision can never be a real one, so this document can never be mistaken for a release.",
     "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED. The release workflow refuses to render or build while they hold placeholders, and names the allocation gate in the failure. Allocation is a human decision plus a live host preflight (platform-ops docs/APP_ONBOARDING.md section 2 reservation PR, section 4 bootstrap preflight, and docs/EDGE_ROUTING_CONTRACT.md section 5) and must never be automated here.",
     "build.base_images[].digest is __BASE_IMAGE_DIGEST__ because Containerfile.release is the only place a base image is pinned; the workflow copies the digests it actually built from there, so the two can never drift.",
@@ -170,8 +170,8 @@
           "same_origin_redirects_only": true,
           "body_contains": [
             "<link rel=\"canonical\" href=\"https://learn.geterdone.io/paths/trading/\"",
-            "Volume and Order Flow",
-            "Trading Risk Management",
+            "Backtesting and Trading Systems",
+            "Algorithmic and Automated Trading",
             "Not yet available"
           ],
           "headers": [
@@ -2212,6 +2212,924 @@
         "blocking": true
       },
       {
+        "id": "course6-home",
+        "description": "Course 6 home, \"Trading Risk Management\", is served at /trading-risk-management/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-risk-management-fundamentals",
+        "description": "Course 6 lesson 01 \"Risk Management Fundamentals\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/risk-management-fundamentals/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/risk-management-fundamentals/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-account-risk-and-risk-budget",
+        "description": "Course 6 lesson 02 \"Account Risk and Risk Budget\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/account-risk-and-risk-budget/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/account-risk-and-risk-budget/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-risk-per-trade",
+        "description": "Course 6 lesson 03 \"Risk Per Trade\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/risk-per-trade/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/risk-per-trade/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-stop-loss-and-structural-invalidation",
+        "description": "Course 6 lesson 04 \"Stop-Loss and Structural Invalidation\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/stop-loss-and-structural-invalidation/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/stop-loss-and-structural-invalidation/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-position-sizing",
+        "description": "Course 6 lesson 05 \"Position Sizing\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/position-sizing/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/position-sizing/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-reward-to-risk-and-r-multiples",
+        "description": "Course 6 lesson 06 \"Reward-to-Risk and R-Multiples\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/reward-to-risk-and-r-multiples/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/reward-to-risk-and-r-multiples/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-win-rate-average-win-loss-and-expectancy",
+        "description": "Course 6 lesson 07 \"Win Rate, Average Win/Loss, and Expectancy\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/win-rate-average-win-loss-and-expectancy/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/win-rate-average-win-loss-and-expectancy/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-losing-streaks-and-drawdown",
+        "description": "Course 6 lesson 08 \"Losing Streaks and Drawdown\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/losing-streaks-and-drawdown/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/losing-streaks-and-drawdown/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-risk-of-ruin",
+        "description": "Course 6 lesson 09 \"Risk of Ruin\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/risk-of-ruin/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/risk-of-ruin/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-volatility-and-atr-based-risk",
+        "description": "Course 6 lesson 10 \"Volatility and ATR-Based Risk\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/volatility-and-atr-based-risk/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/volatility-and-atr-based-risk/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-gap-slippage-liquidity-and-execution-risk",
+        "description": "Course 6 lesson 11 \"Gap, Slippage, Liquidity, and Execution Risk\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/gap-slippage-liquidity-and-execution-risk/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/gap-slippage-liquidity-and-execution-risk/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-leverage-and-margin-risk",
+        "description": "Course 6 lesson 12 \"Leverage and Margin Risk\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/leverage-and-margin-risk/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/leverage-and-margin-risk/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-correlation-concentration-and-portfolio-exposure",
+        "description": "Course 6 lesson 13 \"Correlation, Concentration, and Portfolio Exposure\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/correlation-concentration-and-portfolio-exposure/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/correlation-concentration-and-portfolio-exposure/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-options-risk-management",
+        "description": "Course 6 lesson 14 \"Options Risk Management\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/options-risk-management/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/options-risk-management/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-daily-and-weekly-risk-limits",
+        "description": "Course 6 lesson 15 \"Daily and Weekly Risk Limits\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/daily-and-weekly-risk-limits/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/daily-and-weekly-risk-limits/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course6-lesson-trading-risk-plan",
+        "description": "Course 6 lesson 16 \"Trading Risk Plan\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/trading-risk-plan/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/trading-risk-management/trading-risk-plan/\"",
+            "Trading Risk Management",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-home",
+        "description": "Course 7 home, \"Backtesting and Trading Systems\", is served at /backtesting-and-trading-systems/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-backtesting-fundamentals",
+        "description": "Course 7 lesson 01 \"Backtesting Fundamentals\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/backtesting-fundamentals/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/backtesting-fundamentals/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-testable-trading-rules-and-hypotheses",
+        "description": "Course 7 lesson 02 \"Testable Trading Rules and Hypotheses\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/testable-trading-rules-and-hypotheses/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/testable-trading-rules-and-hypotheses/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-historical-data-and-data-quality",
+        "description": "Course 7 lesson 03 \"Historical Data and Data Quality\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/historical-data-and-data-quality/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/historical-data-and-data-quality/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-survivorship-selection-and-corporate-actions",
+        "description": "Course 7 lesson 04 \"Survivorship, Selection, and Corporate Actions\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-timeframes-sessions-and-bar-construction",
+        "description": "Course 7 lesson 05 \"Timeframes, Sessions, and Bar Construction\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/timeframes-sessions-and-bar-construction/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/timeframes-sessions-and-bar-construction/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-signal-timing-look-ahead-bias-and-data-leakage",
+        "description": "Course 7 lesson 06 \"Signal Timing, Look-Ahead Bias, and Data Leakage\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/signal-timing-look-ahead-bias-and-data-leakage/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/signal-timing-look-ahead-bias-and-data-leakage/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-trade-execution-simulation",
+        "description": "Course 7 lesson 07 \"Trade Execution Simulation\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/trade-execution-simulation/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/trade-execution-simulation/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-position-sizing-and-portfolio-accounting",
+        "description": "Course 7 lesson 08 \"Position Sizing and Portfolio Accounting\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/position-sizing-and-portfolio-accounting/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/position-sizing-and-portfolio-accounting/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-transaction-costs-spread-slippage-and-liquidity",
+        "description": "Course 7 lesson 09 \"Transaction Costs, Spread, Slippage, and Liquidity\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/transaction-costs-spread-slippage-and-liquidity/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/transaction-costs-spread-slippage-and-liquidity/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-trade-log-equity-curve-and-drawdown",
+        "description": "Course 7 lesson 10 \"Trade Log, Equity Curve, and Drawdown\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/trade-log-equity-curve-and-drawdown/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/trade-log-equity-curve-and-drawdown/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-performance-metrics-and-expectancy",
+        "description": "Course 7 lesson 11 \"Performance Metrics and Expectancy\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/performance-metrics-and-expectancy/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/performance-metrics-and-expectancy/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-benchmarking-and-risk-adjusted-performance",
+        "description": "Course 7 lesson 12 \"Benchmarking and Risk-Adjusted Performance\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/benchmarking-and-risk-adjusted-performance/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/benchmarking-and-risk-adjusted-performance/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-in-sample-validation-and-out-of-sample-data",
+        "description": "Course 7 lesson 13 \"In-Sample, Validation, and Out-of-Sample Data\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/in-sample-validation-and-out-of-sample-data/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/in-sample-validation-and-out-of-sample-data/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-walk-forward-testing",
+        "description": "Course 7 lesson 14 \"Walk-Forward Testing\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/walk-forward-testing/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/walk-forward-testing/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-overfitting-sensitivity-monte-carlo-and-stress-testing",
+        "description": "Course 7 lesson 15 \"Overfitting, Sensitivity, Monte Carlo, and Stress Testing\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course7-lesson-trading-system-specification-and-backtest-report",
+        "description": "Course 7 lesson 16 \"Trading System Specification and Backtest Report\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/trading-system-specification-and-backtest-report/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/backtesting-and-trading-systems/trading-system-specification-and-backtest-report/\"",
+            "Backtesting and Trading Systems",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
         "id": "journal-schema",
         "description": "The trade journal exchange schema is served as JSON at /trade-setup-execution/trade-journal-schema.json, parses, and declares the trade-journal-v1 shape lesson 14 exports and lesson 15 imports. A 200 alone would not prove any of that.",
         "scope": "public",
@@ -2298,6 +3216,56 @@
           "same_origin_redirects_only": true,
           "body_contains": [
             "\"const\": \"volume-order-flow-rule-v1\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "json"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "trading-risk-plan-schema",
+        "description": "The trading risk plan schema is served as JSON at its published path, parses, and declares the trading-risk-plan-v1 shape course 6 lesson 16 exports. A 200 alone proves none of that; a page-shaped marker would prove less.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/trading-risk-management/trading-risk-plan-schema.json",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "\"const\": \"trading-risk-plan-v1\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "json"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "trading-system-specification-schema",
+        "description": "The trading system specification schema is served as JSON at its published path, parses, and declares the trading-system-specification-v1 shape course 7 lesson 16 exports. A 200 alone proves none of that; a page-shaped marker would prove less.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/backtesting-and-trading-systems/trading-system-specification-schema.json",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "\"const\": \"trading-system-specification-v1\""
           ],
           "headers": [
             {

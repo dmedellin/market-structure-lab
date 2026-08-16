@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Build a point-in-time universe, include failed and delisted instruments, and adjust splits and distributions without using information learned later." />
+  <title>Survivorship, Selection, and Corporate Actions · Backtesting and Trading Systems</title>
+  <link rel="canonical" href="https://learn.geterdone.io/backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/" />
+  <meta name="author" content="dmedellin" />
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="learn.geterdone.io" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Survivorship, Selection, and Corporate Actions · Backtesting and Trading Systems" />
+  <meta property="og:description" content="Build a point-in-time universe, include failed and delisted instruments, and adjust splits and distributions without using information learned later." />
+  <meta property="og:url" content="https://learn.geterdone.io/backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/" />
+  <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Survivorship, Selection, and Corporate Actions · Backtesting and Trading Systems" />
+  <meta name="twitter:description" content="Build a point-in-time universe, include failed and delisted instruments, and adjust splits and distributions without using information learned later." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/backtesting-and-trading-systems/survivorship-selection-and-corporate-actions/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M14 45L26 33L38 41L51 18' fill='none' stroke='%23041116' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='14' cy='45' r='4.5'/%3E%3Ccircle cx='26' cy='33' r='4.5'/%3E%3Ccircle cx='38' cy='41' r='4.5'/%3E%3Ccircle cx='51' cy='18' r='4.5'/%3E%3C/g%3E%3C/svg%3E" />
+  <style>
+:root{
+  --bg:#071019;--bg2:#0a1520;--panel:#0f1f2e;--panel2:#142638;--panel3:#192e42;
+  --text:#edf8ff;--muted:#93aabd;--line:rgba(174,204,226,.16);--line2:rgba(174,204,226,.3);
+  --cyan:#39d8e8;--cyan2:#9af6ff;--green:#42e39a;--red:#ff6f7e;--amber:#ffc85a;
+  --purple:#b59cff;--blue:#79aaff;--shadow:0 24px 70px rgba(0,0,0,.35);--radius:20px
+}
+:root { color-scheme: dark; }
+
+/* System preference, only when the reader has NOT made an explicit choice.
+   The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+   survive on a light-mode OS. Values are pinned in LIGHT_PALETTE
+   (tests/test_site_invariants.py) and written here by
+   scripts/intake_course.py. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #edf4f8;
+    --panel: rgba(255, 255, 255, 0.94);
+    --text: #102433;
+    --muted: #586c7c;
+    --line: rgba(24, 62, 88, 0.13);
+    --cyan: #0e7382;
+    --green: #10784f;
+    --red: #c22a34;
+    --amber: #8a5a06;
+    --purple: #6b46d6;
+    --blue: #1d5fd0;
+    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    --bg2: #f9fbfd;
+    --line2: rgba(24,62,88,.25);
+    --panel2: #f3f8fb;
+    --panel3: #eaf2f7;
+  }
+}
+
+/* Explicit choice (localStorage key: learn-theme). Value-identical to the
+   media block above - the two light paths must never disagree. */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #edf4f8;
+  --panel: rgba(255, 255, 255, 0.94);
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --cyan: #0e7382;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  --bg2: #f9fbfd;
+  --line2: rgba(24,62,88,.25);
+  --panel2: #f3f8fb;
+  --panel3: #eaf2f7;
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);
+  background:radial-gradient(circle at 12% 5%,rgba(57,216,232,.13),transparent 30rem),
+  radial-gradient(circle at 89% 10%,rgba(181,156,255,.11),transparent 28rem),
+  linear-gradient(180deg,var(--bg),var(--bg2));
+  font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{color:inherit}a{color:inherit}canvas{display:block;width:100%;height:auto}
+.shell{width:min(1220px,calc(100% - 28px));margin:auto;padding:22px 0 64px}
+.topbar{position:sticky;top:12px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--panel) 93%,transparent);
+  backdrop-filter:blur(18px);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.brand-mark{width:39px;height:39px;display:grid;place-items:center;
+  border-radius:12px;color:#041116;font-weight:950;background:linear-gradient(135deg,var(--cyan2),var(--cyan));
+  box-shadow:0 8px 26px rgba(57,216,232,.25)}
+.brand-copy strong,.brand-copy span{display:block}.brand-copy strong{font-size:.96rem}.brand-copy span{color:var(--muted);font-size:.75rem}
+.top-actions{display:flex;gap:8px}.icon-btn{width:39px;height:39px;border:1px solid var(--line);border-radius:11px;display:grid;
+  place-items:center;background:var(--panel2);cursor:pointer;transition:.15s}.icon-btn:hover{transform:translateY(-1px);border-color:var(--line2)}
+.hero{display:grid;grid-template-columns:1.12fr .88fr;gap:28px;align-items:center;padding:70px 8px 42px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;color:var(--cyan2);border:1px solid rgba(57,216,232,.28);
+  border-radius:999px;background:rgba(57,216,232,.08);font-size:.77rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 5px rgba(57,216,232,.12)}
+.hero>div,.hero-card{min-width:0}h1{max-width:850px;margin:18px 0 15px;font-size:clamp(2.45rem,5.6vw,5.15rem);line-height:.98;letter-spacing:-.058em;overflow-wrap:anywhere}
+.gradient-text{background:linear-gradient(110deg,var(--cyan2),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero>div>p{max-width:720px;margin:0;color:var(--muted);font-size:clamp(1rem,1.8vw,1.16rem)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.btn{border:1px solid var(--line);border-radius:12px;padding:11px 15px;background:var(--panel2);color:var(--text);cursor:pointer;
+  text-decoration:none;font-weight:780;font-size:.9rem;transition:.15s}.btn:hover{transform:translateY(-1px);border-color:var(--line2)}
+.btn.primary{color:#041116;border-color:transparent;background:linear-gradient(135deg,var(--cyan2),var(--cyan))}
+.btn.ghost{background:transparent}.btn.small{padding:8px 11px;font-size:.8rem;border-radius:10px}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.hero-card{position:relative;min-height:330px;border:1px solid var(--line);border-radius:28px;overflow:hidden;padding:24px;
+  background:linear-gradient(rgba(174,204,226,.055) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(174,204,226,.055) 1px,transparent 1px),var(--panel);
+  background-size:38px 38px,38px 38px,auto;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between}
+.hero-card:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-100px;top:-90px;
+  background:radial-gradient(circle,rgba(57,216,232,.22),transparent 67%)}
+.state-row{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.state-tag{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid var(--line2);
+  background:color-mix(in srgb,var(--panel2) 92%,transparent);font-weight:850;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+.market-icon{width:55px;height:55px;border-radius:16px;display:grid;place-items:center;background:rgba(57,216,232,.1);border:1px solid rgba(57,216,232,.22);
+  color:var(--cyan2);font-size:1.5rem;font-weight:900}
+.behavior-copy{position:relative;z-index:1}.behavior-copy h3{font-size:clamp(1.5rem,2.8vw,2.25rem);line-height:1.08;letter-spacing:-.035em;margin:0 0 11px}
+.behavior-copy p{color:var(--muted);margin:0}.pressure{position:relative;z-index:1;margin-top:20px}
+.pressure-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.pressure-track{height:9px;border-radius:999px;margin-top:7px;background:linear-gradient(90deg,var(--red),var(--panel3) 50%,var(--green));position:relative}
+.pressure-pin{position:absolute;top:50%;left:50%;width:17px;height:17px;border-radius:50%;transform:translate(-50%,-50%);background:var(--text);border:4px solid var(--cyan);box-shadow:0 0 0 4px rgba(57,216,232,.12)}
+.section{padding:34px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:17px}
+.section-head h2{margin:0;font-size:clamp(1.6rem,3vw,2.45rem);letter-spacing:-.04em}.section-head p{max-width:650px;margin:0;color:var(--muted)}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:20px;box-shadow:0 12px 34px rgba(0,0,0,.12)}
+.card-num{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(57,216,232,.1);color:var(--cyan2);font-weight:900;border:1px solid rgba(57,216,232,.2)}
+.card h3{margin:16px 0 7px;font-size:1.05rem}.card p{margin:0;color:var(--muted)}
+.lab{border:1px solid var(--line);border-radius:26px;background:var(--panel);overflow:hidden;box-shadow:var(--shadow)}
+.lab-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.lab-head h3{margin:0;font-size:1.13rem}.lab-head p{margin:3px 0 0;color:var(--muted);font-size:.82rem}
+.lab-body{display:grid;grid-template-columns:minmax(0,1fr) 310px;min-height:500px}
+.chart-pane{padding:18px;min-width:0}.chart-wrap{position:relative;border:1px solid var(--line);border-radius:17px;overflow:hidden;
+  background:linear-gradient(rgba(174,204,226,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(174,204,226,.05) 1px,transparent 1px),var(--bg);
+  background-size:42px 42px,42px 42px,auto}
+.chart-wrap canvas{aspect-ratio:16/9;min-height:360px}
+.chart-badge{position:absolute;left:14px;top:14px;padding:6px 9px;border:1px solid var(--line2);border-radius:9px;background:rgba(7,16,25,.82);color:#eef9ff;font-size:.72rem;font-weight:800}
+.controls{padding:18px;border-left:1px solid var(--line);background:color-mix(in srgb,var(--panel2) 58%,var(--panel))}
+.control{margin-bottom:17px}.control:last-child{margin-bottom:0}.control label{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px;font-size:.78rem;color:var(--muted);font-weight:780}
+.control label output{color:var(--text)}select,input[type=number],input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);padding:9px 10px}
+input[type=range]{width:100%;accent-color:var(--cyan)}.segmented{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.segmented.cols3{grid-template-columns:repeat(3,1fr)}.segmented button{border:1px solid var(--line);border-radius:10px;padding:9px 7px;background:var(--panel);cursor:pointer;font-size:.76rem;font-weight:780}
+.segmented button.active{border-color:rgba(57,216,232,.5);background:rgba(57,216,232,.12);color:var(--cyan2)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.kpi{padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.kpi span{display:block;color:var(--muted);font-size:.67rem;text-transform:uppercase;letter-spacing:.04em;font-weight:800}.kpi strong{display:block;margin-top:3px;font-size:.96rem}
+.market-read{margin-top:14px;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);position:relative;overflow:hidden}
+.market-read:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cyan)}
+.market-read.bull:before{background:var(--green)}.market-read.bear:before{background:var(--red)}.market-read.warn:before{background:var(--amber)}
+.market-read small{display:block;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.05em;font-size:.65rem}
+.market-read strong{display:block;margin:4px 0 5px}.market-read p{margin:0;color:var(--muted);font-size:.83rem}
+/* The participation reading: a subordinate second layer inside the same live
+   block, so the structural sentence and its reading are always rewritten
+   together. Tokens only, no new colour values, and deliberately NOT named
+   .reading -- this package already uses that class for the numbered
+   process cards in the "Process" section further down every lesson. */
+.market-read .participation{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line2)}
+.market-read .participation small{margin-bottom:3px}
+.mini-note{margin-top:12px;color:var(--muted);font-size:.76rem}.formula{padding:12px;border-radius:11px;background:var(--bg);border:1px solid var(--line);font:700 .78rem/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:auto}
+.reading-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.reading{display:flex;gap:13px;padding:17px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.reading b{flex:0 0 auto;width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:var(--panel3);color:var(--cyan2)}
+.reading h3{margin:0 0 4px;font-size:.92rem}.reading p{margin:0;color:var(--muted);font-size:.82rem}
+.quiz{display:grid;gap:12px}.question{padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+.question h3{margin:0 0 12px;font-size:.98rem}.choices{display:grid;gap:8px}.choice{border:1px solid var(--line);border-radius:11px;background:var(--panel2);padding:10px 12px;text-align:left;cursor:pointer}
+.choice:hover{border-color:var(--line2)}.choice.correct{border-color:rgba(66,227,154,.55);background:rgba(66,227,154,.11)}.choice.wrong{border-color:rgba(255,111,126,.55);background:rgba(255,111,126,.1)}
+.feedback{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);color:var(--muted);font-size:.82rem}.feedback.show{display:block}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}.list-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:19px}.list-card h3{margin:0 0 12px}
+.list-card ul{margin:0;padding-left:19px;color:var(--muted)}.list-card li+li{margin-top:8px}.list-card.good h3{color:var(--green)}.list-card.bad h3{color:var(--red)}
+.reference{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+.reference p{margin:0;color:var(--muted);font-size:.82rem}.reference a{color:var(--cyan2);text-decoration:none;font-weight:750}.reference a:hover{text-decoration:underline}
+.footer{margin-top:34px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:.76rem}
+.tape{height:360px;overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.tape-row{display:grid;grid-template-columns:70px 1fr 1fr 1fr;gap:8px;padding:7px 10px;border-bottom:1px solid var(--line);font:700 .76rem ui-monospace,SFMono-Regular,Menlo,monospace}
+.tape-row.ask{color:var(--green)}.tape-row.bid{color:var(--red)}.tape-row.mid{color:var(--muted)}
+.book{display:grid;grid-template-columns:1fr 1fr;gap:12px}.book-side{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.book-head,.book-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 10px}.book-head{font-size:.68rem;color:var(--muted);text-transform:uppercase;font-weight:850;background:var(--panel2)}
+.book-row{position:relative;border-top:1px solid var(--line);font:700 .78rem ui-monospace,SFMono-Regular,Menlo,monospace}.depth-bar{position:absolute;top:2px;bottom:2px;opacity:.13;z-index:0}
+.book-row>*{position:relative;z-index:1}.bidbar{right:0;background:var(--green)}.askbar{left:0;background:var(--red)}
+.footprint{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:10px}.fp-grid{display:grid;gap:3px;min-width:520px}.fp-row{display:grid;grid-template-columns:72px repeat(6,1fr);gap:3px}
+.fp-cell{padding:7px 5px;border-radius:6px;text-align:center;background:var(--panel2);font:700 .68rem ui-monospace,SFMono-Regular,Menlo,monospace}
+.fp-cell.price{color:var(--muted);background:transparent;text-align:right}.fp-cell.pos{background:rgba(66,227,154,.14)}.fp-cell.neg{background:rgba(255,111,126,.14)}.fp-cell.hot{outline:1px solid var(--amber)}
+.rule-output{white-space:pre-wrap;min-height:180px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font:700 .75rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan2)}
+.status{padding:10px 12px;border-radius:11px;border:1px solid var(--line);background:var(--panel);font-size:.8rem}.status.ok{border-color:rgba(66,227,154,.4);color:var(--green)}.status.warn{border-color:rgba(255,200,90,.4);color:var(--amber)}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:48px}.hero-card{min-height:280px}.grid-3,.reading-grid{grid-template-columns:1fr}.lab-body{grid-template-columns:1fr}.controls{border-left:0;border-top:1px solid var(--line)}.two-col{grid-template-columns:1fr}}
+@media(max-width:620px){.shell{width:min(100% - 18px,1220px);padding-top:9px}.topbar{top:7px}.brand-copy span{display:none}.hero{padding:42px 2px 28px}h1{font-size:clamp(2.35rem,14vw,3.5rem)}.section{padding:27px 0}.section-head{display:block}.section-head p{margin-top:7px}.lab-head{align-items:flex-start;flex-direction:column}.chart-pane{padding:10px}.chart-wrap canvas{min-height:310px;aspect-ratio:4/5}.controls{padding:14px}.kpis{grid-template-columns:1fr}.footer,.reference{display:block}.reference a{display:inline-block;margin-top:8px}.book{grid-template-columns:1fr}.segmented.cols3{grid-template-columns:1fr}.top-actions .icon-btn:first-child{display:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.risk-meter{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--panel2)}
+.risk-track{height:16px;border-radius:999px;overflow:hidden;background:var(--bg);border:1px solid var(--line);display:flex}
+.risk-track span{height:100%;display:block;transition:width .2s}.risk-track .used{background:var(--red)}.risk-track .open{background:var(--amber)}.risk-track .free{background:rgba(66,227,154,.55)}
+.risk-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:9px;color:var(--muted);font-size:.75rem}.risk-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:13px}.metric{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}.metric small{display:block;color:var(--muted);font-weight:800;text-transform:uppercase;font-size:.65rem;letter-spacing:.04em}.metric strong{display:block;font-size:1.05rem;margin-top:4px}
+.calc-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;overflow:hidden;border:1px solid var(--line);border-radius:13px}.calc-table th,.calc-table td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;font-size:.76rem}.calc-table th:first-child,.calc-table td:first-child{text-align:left}.calc-table tr:last-child td{border-bottom:0}.calc-table th{color:var(--muted);background:var(--panel2);text-transform:uppercase;letter-spacing:.04em;font-size:.64rem}
+.sequence{display:flex;gap:5px;flex-wrap:wrap;margin-top:14px}.trade-chip{min-width:38px;padding:7px 8px;text-align:center;border:1px solid var(--line);border-radius:8px;font:800 .72rem ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--panel2)}.trade-chip.win{color:var(--green);border-color:rgba(66,227,154,.3)}.trade-chip.loss{color:var(--red);border-color:rgba(255,111,126,.3)}.trade-chip.stop{color:var(--amber);border-color:rgba(255,200,90,.35)}
+.portfolio{display:grid;gap:7px;margin-top:14px}.position-row{display:grid;grid-template-columns:1.1fr .75fr .75fr .8fr;gap:7px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:.75rem}.position-row.head{color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.04em;background:transparent;border:0;padding:2px 9px}.position-row input{padding:7px 8px}
+.gauge{position:relative;height:22px;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--amber) 55%,var(--red));border:1px solid var(--line);margin-top:14px}.gauge-pin{position:absolute;top:50%;width:18px;height:30px;border-radius:8px;transform:translate(-50%,-50%);background:var(--text);border:4px solid var(--cyan);box-shadow:0 0 0 4px rgba(57,216,232,.12);transition:left .2s}
+.payoff-wrap{margin-top:14px;border:1px solid var(--line);border-radius:13px;padding:12px;background:var(--bg)}
+.inline-fields{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.inline-fields.three{grid-template-columns:repeat(3,1fr)}
+.schema-output{white-space:pre-wrap;min-height:210px;max-height:420px;overflow:auto;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font:700 .74rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan2)}
+.checks{display:grid;gap:7px;margin-top:12px}.check{padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);font-size:.77rem}.check.ok{color:var(--green);border-color:rgba(66,227,154,.35)}.check.warn{color:var(--amber);border-color:rgba(255,200,90,.35)}.check.bad{color:var(--red);border-color:rgba(255,111,126,.35)}
+.small-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}.small-grid div{padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);text-align:center}.small-grid small{display:block;color:var(--muted);font-size:.62rem;text-transform:uppercase;font-weight:800}.small-grid strong{font-size:.84rem}
+@media(max-width:620px){.metric-grid,.inline-fields,.inline-fields.three{grid-template-columns:1fr}.position-row{grid-template-columns:1fr 1fr}.position-row.head{display:none}.small-grid{grid-template-columns:1fr 1fr}.calc-table{display:block;overflow-x:auto;white-space:nowrap}}
+
+.data-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.data-table th,.data-table td{padding:9px 10px;border-bottom:1px solid var(--line);font-size:.75rem;text-align:right}.data-table th:first-child,.data-table td:first-child{text-align:left}.data-table tr:last-child td{border-bottom:0}.data-table th{color:var(--muted);background:var(--panel2);text-transform:uppercase;letter-spacing:.04em;font-size:.63rem}.data-table td.bad{color:var(--red)}.data-table td.good{color:var(--green)}.data-table td.warn{color:var(--amber)}
+.legend-row{display:flex;gap:13px;flex-wrap:wrap;margin-top:11px;color:var(--muted);font-size:.72rem}.legend-row span{display:inline-flex;align-items:center;gap:6px}.legend-row i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.split-strip{display:grid;grid-template-columns:50fr 25fr 25fr;overflow:hidden;border-radius:11px;border:1px solid var(--line);margin-top:13px}.split-strip span{padding:8px 9px;text-align:center;font-size:.68rem;font-weight:850;text-transform:uppercase;letter-spacing:.04em}.split-strip .train{background:rgba(57,216,232,.13);color:var(--cyan2)}.split-strip .validate{background:rgba(255,200,90,.13);color:var(--amber)}.split-strip .test{background:rgba(181,156,255,.13);color:var(--purple)}
+.check-line{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:.77rem}.check-line b{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;flex:0 0 auto}.check-line.ok b{background:rgba(66,227,154,.15);color:var(--green)}.check-line.warn b{background:rgba(255,200,90,.15);color:var(--amber)}.check-line.bad b{background:rgba(255,111,126,.15);color:var(--red)}
+.code-output{white-space:pre-wrap;min-height:130px;max-height:360px;overflow:auto;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font:700 .73rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan2)}
+.bar-stack{display:grid;gap:8px;margin-top:13px}.bar-row{display:grid;grid-template-columns:110px minmax(0,1fr) 62px;align-items:center;gap:8px;font-size:.72rem}.bar-row>span:first-child{color:var(--muted)}.bar-track{height:10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden}.bar-track i{display:block;height:100%;border-radius:999px}.bar-row strong{text-align:right}
+.fold-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:13px}.fold-card{padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}.fold-card small{display:block;color:var(--muted);font-size:.62rem;text-transform:uppercase;font-weight:850}.fold-card strong{display:block;margin-top:4px}
+.heatmap-wrap{margin-top:14px;border:1px solid var(--line);border-radius:13px;background:var(--bg);padding:10px;overflow:auto}.heatmap-grid{display:grid;gap:4px;min-width:440px}.heatmap-cell{padding:8px 4px;border-radius:7px;text-align:center;font:750 .66rem ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid rgba(255,255,255,.04)}
+.timeline-list{display:grid;gap:7px;margin-top:13px}.timeline-row{display:grid;grid-template-columns:62px 1fr 74px;gap:8px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:.73rem}.timeline-row span:first-child{color:var(--muted);font-weight:800}.timeline-row strong{text-align:right}
+.inline-note{margin-top:12px;padding:11px 12px;border-left:3px solid var(--cyan);border-radius:8px;background:var(--panel2);color:var(--muted);font-size:.78rem}
+@media(max-width:620px){.data-table{display:block;overflow-x:auto;white-space:nowrap}.fold-grid{grid-template-columns:1fr 1fr}.bar-row{grid-template-columns:82px minmax(0,1fr) 52px}.timeline-row{grid-template-columns:52px 1fr}.timeline-row strong{grid-column:2;text-align:left}}
+
+/* --- chrome owned by scripts/intake_course.py ---------------------------- */
+
+/* Breadcrumb. A lesson sits two levels below the document root
+   (library -> course -> lesson): "../" is this course's home and "../../" is
+   the library index. flex-wrap lets the crumbs fall onto a second line on a
+   phone instead of collapsing, which keeps the route back to the library
+   reachable at every width. */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: 10px 2px 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.crumbs a {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 6px 9px;
+  border-radius: 9px;
+}
+
+.crumbs a:hover { color: var(--text); background: var(--line); }
+.crumb-sep { opacity: 0.5; }
+.crumb-current { color: var(--text); padding: 6px 9px; }
+
+/* Previous / next lesson pager. The sequence is the course order the manifest
+   declares; the last lesson points back at the course home. Same shape and
+   tokens as the pagers in every other course so the whole library pages
+   identically. */
+.lesson-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.lesson-link {
+  flex: 1 1 240px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
+.lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+.lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.lesson-link.next { margin-left: auto; text-align: right; }
+
+/* One card per row on a phone; a two-up pager at 320px is two unreadable columns. */
+@media (max-width: 720px) {
+  .lesson-link { flex-basis: 100%; }
+}
+/* --- end chrome ---------------------------------------------------------- */
+</style>
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives LAST in <head> and not with the rest of
+       the page script at the bottom of <body>: that runs after the first paint.
+       SAME localStorage key as every other page in the library ('learn-theme')
+       so the choice persists across every course. The allowlist matters: a
+       corrupt value would otherwise be written straight onto data-theme,
+       matching no CSS while still counting as an explicit choice, which pins
+       the page to the dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">B</div><div class="brand-copy"><strong>Backtesting and Trading Systems</strong><span>Course 7 · Lesson 04</span></div></div>
+    <div class="top-actions"><button class="icon-btn" id="resetBtn" type="button" aria-label="Reset lab" title="Reset lab">↻</button><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
+  </header>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../">Learn library</a>
+    <span class="crumb-sep" aria-hidden="true">/</span>
+    <a href="../">Backtesting and Trading Systems</a>
+    <span class="crumb-sep" aria-hidden="true">/</span>
+    <span class="crumb-current" aria-current="page">Lesson 04 &middot; Survivorship, Selection, and Corporate Actions</span>
+  </nav>
+  <section class="hero">
+    <div><span class="eyebrow"><i class="pulse"></i> Lesson 04 of 16</span><h1>Survivorship, Selection, and Corporate Actions</h1><p>Build a point-in-time universe, include failed and delisted instruments, and adjust splits and distributions without using information learned later.</p><div class="hero-actions"><button class="btn primary" id="startLab" type="button">Open interactive lab</button><a class="btn ghost" href="#concepts">Review concepts</a></div></div>
+    <aside class="hero-card" aria-label="Market behavior summary"><div class="state-row"><span class="state-tag">Market behavior · Universe integrity</span><span class="market-icon">Σ</span></div><div class="behavior-copy"><h3>A historical universe must contain what was actually available at each point in time.</h3><p>Keeping only today’s survivors removes failures. Selecting assets after seeing returns makes the test know the future.</p></div><div class="pressure"><div class="pressure-labels"><span>Assumption</span><span>Evidence</span></div><div class="pressure-track"><i class="pressure-pin" style="left:31%"></i></div></div></aside>
+  </section>
+  <section class="section" id="concepts"><div class="section-head"><div><span class="eyebrow">Core concepts</span><h2>What to understand</h2></div><p>Keep each definition operational so it can be implemented and tested.</p></div><div class="grid-3"><article class="card"><div class="card-num">1</div><h3>Survivorship bias</h3><p>Exclude failed instruments and historical performance usually looks stronger.</p></article><article class="card"><div class="card-num">2</div><h3>Selection bias</h3><p>Choosing markets or periods after reviewing results changes the question being tested.</p></article><article class="card"><div class="card-num">3</div><h3>Corporate actions</h3><p>Splits, dividends, mergers, and delistings must be handled consistently with the strategy.</p></article></div></section>
+  <section class="section" id="lab"><div class="section-head"><div><span class="eyebrow">Interactive lab</span><h2>Universe and Corporate Actions Lab</h2></div><p>Toggle point-in-time membership, delisted symbols, and split adjustment. Compare the honest portfolio with the biased version.</p></div><div class="lab"><div class="lab-head"><div><h3>Universe and Corporate Actions Lab</h3><p>Deterministic synthetic educational data · no live market connection</p></div><button class="btn small" type="button" onclick="window.initLab()">Reset</button></div><div class="lab-body"><div class="chart-pane"><div class="chart-wrap"><span class="chart-badge" id="chartBadge">BACKTEST MODEL</span><canvas id="chart" aria-label="Interactive backtesting chart"></canvas></div><div id="extraVisual"></div><div class="kpis" id="kpis"></div><div class="market-read" id="marketRead"></div></div><aside class="controls" id="controls"></aside></div></div></section>
+  <section class="section"><div class="section-head"><div><span class="eyebrow">Process</span><h2>Reconstruct the investable set</h2></div><p>Universe membership is data, not a static list.</p></div><div class="reading-grid"><article class="reading"><b>1</b><div><h3>Date membership</h3><p>Record when each instrument entered and left the universe.</p></div></article><article class="reading"><b>2</b><div><h3>Include failures</h3><p>Retain delistings, bankruptcies, and unavailable periods.</p></div></article><article class="reading"><b>3</b><div><h3>Adjust correctly</h3><p>Separate price adjustment from actual cash distributions and trade execution.</p></div></article></div></section>
+  <section class="section"><div class="section-head"><div><span class="eyebrow">Knowledge check</span><h2>Check your understanding</h2></div><p>Select one answer for each question. Feedback appears immediately.</p></div><div class="quiz"><article class="question" data-correct="0"><h3>1. Testing only companies that exist today creates:</h3><div class="choices"><button class="choice" type="button">Survivorship bias</button><button class="choice" type="button">Slippage</button><button class="choice" type="button">Time diversification</button></div><div class="feedback">The test removes historical failures that were investable at the time.</div></article><article class="question" data-correct="0"><h3>2. A 2-for-1 split should generally cause an unadjusted price series to:</h3><div class="choices"><button class="choice" type="button">Show a false 50% loss</button><button class="choice" type="button">Double the real economic value</button><button class="choice" type="button">Create guaranteed profit</button></div><div class="feedback">Without adjustment, the mechanical price change looks like a large return.</div></article><article class="question" data-correct="0"><h3>3. Point-in-time universe data prevents the test from:</h3><div class="choices"><button class="choice" type="button">Using future membership knowledge</button><button class="choice" type="button">Calculating costs</button><button class="choice" type="button">Measuring drawdown</button></div><div class="feedback">The system should only know constituents available on that historical date.</div></article></div></section>
+  <section class="section"><div class="two-col"><article class="list-card good"><h3>Practical rules</h3><ul><li>Use point-in-time constituent membership.</li><li>Include delisting returns or a documented conservative treatment.</li><li>Verify whether vendor prices are raw or adjusted.</li></ul></article><article class="list-card bad"><h3>Common mistakes</h3><ul><li>Downloading today’s index members for a ten-year test.</li><li>Removing bankrupt symbols as bad data.</li><li>Mixing adjusted prices with unadjusted cash flows.</li></ul></article></div></section>
+  <section class="section"><div class="section-head"><div><span class="eyebrow">References</span><h2>Official reading</h2></div><p>The labs are simplified simulations. These sources cover historical performance, data, costs, or execution limitations.</p></div><div style="display:grid;gap:10px"><div class="reference"><p><strong>FINRA · Smart Beta—What You Need to Know</strong><br>Explains that historical backtesting is hypothetical and does not predict future performance.</p><a href="https://www.finra.org/investors/insights/smart-beta-what-you-need-know" target="_blank" rel="noopener noreferrer">Open official reference ↗</a></div><div class="reference"><p><strong>CME Group · Historical Market Data</strong><br>Describes historical market data used for market analysis and strategy validation.</p><a href="https://www.cmegroup.com/market-data.html" target="_blank" rel="noopener noreferrer">Open official reference ↗</a></div></div></section>
+  <nav class="lesson-nav" aria-label="Lesson navigation">
+    <a class="lesson-link prev" href="../historical-data-and-data-quality/" rel="prev"><span>Previous lesson</span><strong>03 &middot; Historical Data and Data Quality</strong></a>
+    <a class="lesson-link next" href="../timeframes-sessions-and-bar-construction/" rel="next"><span>Next lesson</span><strong>05 &middot; Timeframes, Sessions, and Bar Construction</strong></a>
+  </nav>
+
+  <footer class="footer">
+    <p><span>Course 7 · Backtesting and Trading Systems · Lesson 04</span><span>Educational synthetic examples only. Historical simulations do not predict future performance.</span></p>
+    <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
+    <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+  </footer>
+</main>
+<script>window.LESSON={"id": "04", "title": "Survivorship, Selection, and Corporate Actions", "lab": "biasUniverse"};</script>
+<script>
+const L=window.LESSON;
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmt=(v,d=2)=>Number(v).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
+const money=v=>(v<0?'-':'')+'$'+Math.abs(v).toLocaleString(undefined,{maximumFractionDigits:0});
+const pct=(v,d=1)=>(v>=0?'+':'')+fmt(v,d)+'%';
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const std=a=>{if(a.length<2)return 0;const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/(a.length-1))};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let activeCleanup=null;
+/* Theme control, pinned by scripts/intake_course.py.
+   The stored choice is applied BEFORE first paint by the script at the end of
+   <head>; nothing here applies it a second time. window.redrawLab() is this
+   package's own repaint hook and is called on every theme change on purpose:
+   the labs read their colours from CSS custom properties at draw time, so a
+   canvas painted under one theme keeps that theme's ink until it is redrawn. */
+const themeQuery=window.matchMedia?window.matchMedia("(prefers-color-scheme: light)"):null;
+const effectiveTheme=()=>document.documentElement.dataset.theme||(themeQuery&&themeQuery.matches?"light":"dark");
+const renderThemeIcon=()=>{const b=$("#themeToggle");if(b)b.textContent=effectiveTheme()==="light"?"☀":"☾"};
+function setTheme(theme){
+  document.documentElement.dataset.theme=theme;
+  try{localStorage.setItem("learn-theme",theme)}catch{}
+  renderThemeIcon();
+  if(window.redrawLab) window.redrawLab();
+}
+renderThemeIcon();
+$("#themeToggle").addEventListener("click",()=>setTheme(effectiveTheme()==="light"?"dark":"light"));
+if(themeQuery){
+  const onSystemThemeChange=()=>{if(document.documentElement.dataset.theme)return;renderThemeIcon();if(window.redrawLab) window.redrawLab()};
+  if(themeQuery.addEventListener)themeQuery.addEventListener("change",onSystemThemeChange);
+  else if(themeQuery.addListener)themeQuery.addListener(onSystemThemeChange);
+}
+$('#resetBtn').addEventListener('click',()=>window.initLab&&window.initLab(true));
+$('#startLab').addEventListener('click',()=>$('#lab').scrollIntoView({behavior:'smooth'}));
+$$('.question').forEach(q=>{const correct=Number(q.dataset.correct);$$('.choice',q).forEach((b,i)=>b.addEventListener('click',()=>{if(q.dataset.done)return;q.dataset.done='1';$$('.choice',q).forEach((x,j)=>{if(j===correct)x.classList.add('correct');else if(j===i)x.classList.add('wrong')});$('.feedback',q).classList.add('show')}))});
+function rng(seed){let x=(seed||1234567)>>>0;return()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return((x>>>0)%1000000)/1000000}}
+function normal(r){let u=0,v=0;while(u===0)u=r();while(v===0)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+function colors(){return{bg:css('--bg'),panel:css('--panel'),panel2:css('--panel2'),text:css('--text'),muted:css('--muted'),line:css('--line'),line2:css('--line2'),cyan:css('--cyan'),green:css('--green'),red:css('--red'),amber:css('--amber'),purple:css('--purple'),blue:css('--blue')}}
+function canvasContext(){const canvas=$('#chart'),rect=canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1),w=Math.max(320,rect.width),h=Math.max(310,rect.height);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);return{ctx,w,h}}
+function grid(ctx,x,y,w,h,c,rows=5,cols=7){ctx.save();ctx.strokeStyle=c.line;ctx.lineWidth=1;for(let i=0;i<=rows;i++){const yy=y+h*i/rows;ctx.beginPath();ctx.moveTo(x,yy);ctx.lineTo(x+w,yy);ctx.stroke()}for(let i=0;i<=cols;i++){const xx=x+w*i/cols;ctx.beginPath();ctx.moveTo(xx,y);ctx.lineTo(xx,y+h);ctx.stroke()}ctx.restore()}
+function label(ctx,text,x,y,color){ctx.save();ctx.font='800 10px system-ui';const width=ctx.measureText(text).width+12;ctx.globalAlpha=.17;ctx.fillStyle=color;ctx.fillRect(x,y-11,width,22);ctx.globalAlpha=1;ctx.strokeStyle=color;ctx.strokeRect(x,y-11,width,22);ctx.fillStyle=color;ctx.textBaseline='middle';ctx.fillText(text,x+6,y);ctx.restore()}
+function hline(ctx,y,x1,x2,color,text){ctx.save();ctx.strokeStyle=color;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.setLineDash([]);if(text)label(ctx,text,x1+5,y-14,color);ctx.restore()}
+function axes(ctx,area,min,max,c,formatter=v=>fmt(v,0)){ctx.save();ctx.fillStyle=c.muted;ctx.font='11px system-ui';ctx.textBaseline='middle';for(let i=0;i<=4;i++){const v=max-(max-min)*i/4;ctx.fillText(formatter(v),area.x+area.w+7,area.y+area.h*i/4)}ctx.restore()}
+function setBadge(t){$('#chartBadge').textContent=t}
+function setKPIs(items){$('#kpis').innerHTML=items.map(([k,v])=>`<div class="kpi"><span>${k}</span><strong>${v}</strong></div>`).join('')}
+/* ---------------------------------------------------------------------------
+   THE PARTICIPATION READING
+   A second layer beside the structural explanation: what the drawn structure is
+   conventionally READ AS. It is a table keyed in parallel with each lab's own
+   state keys, so a reading can never drift onto a state it was not written for
+   -- an unknown key renders nothing rather than the wrong sentence.
+
+   Every chart in this course is synthetic and deterministic. Nothing below
+   asserts what a participant did, who transacted, or what happens next, and
+   every number is read off the series the lab actually generates. In this
+   subject in particular:
+     - a backtest is a statement about ONE past sample under ONE ruleset, so a
+       reading of that sample is a reading of the sample and never evidence
+       about the market it was drawn to resemble.
+     - a curve built from trades -- equity, drawdown, gross versus net,
+       bootstrap paths -- is ACCOUNTING. It has no participants to read.
+     - a rule's markers are placed by arithmetic. Where a filter used bars that
+       had not printed yet, the markers describe the filter, not the market.
+
+   ONLY LABS THAT DRAW A PRICE SERIES HAVE AN ENTRY. That is the line, and it is
+   checkable: if the canvas renders candles or a price line, the reader can see
+   the structure the reading is about. Eight labs never do, and get nothing on
+   purpose -- these are correct outcomes, not gaps:
+     accounting    -- a portfolio ledger. Its seven signals carry fixed R
+       outcomes, no price series exists, and the curve is account equity.
+     costs         -- gross versus net equity. Its "market behavior" control
+       adds a constant to a per-trade return draw; no market is ever drawn.
+     equityLog     -- a hard-coded sequence of R multiples. Equity and drawdown
+       are the only curves it can show.
+     metrics       -- a distribution calculator driven by win rate and average
+       win and loss. Its trades come from those parameters, not from prices.
+     splits        -- draws account equity with the split boundaries shaded.
+       segmentedBars() is identical in all three states, so a keyed reading
+       would be one sentence printed under three different labels.
+     walkForward   -- the same: the chart is stitched forward-window equity and
+       market() does not change with the state.
+     robustness    -- a parameter curve, a bootstrap histogram and stress
+       equity. Resampling explores sequence under an assumed distribution;
+       there is no market structure on the canvas to read.
+     specification -- a pipeline diagram and a JSON contract. No market data.
+   Individual states are also absent where the generated series does not show
+   the pattern its own label names; see the comments on rules and dataQuality.
+--------------------------------------------------------------------------- */
+const PARTICIPATION={
+  fundamentals:{
+    bull:"Price finishes about 29% above where the sample opens and the deepest setback from a running high is roughly 3.5%. Normally read as buyers accepting higher prices for the whole window, each pullback ending above the one before it. A close back under 123.4, the low the final third has held, would end that reading &mdash; and a rule scored only here has been measured against a market that never made it necessary.",
+    bear:"Price ends about 16% lower, with the sample high of 103.82 at bar 48 never revisited and the low of 81.36 arriving at bar 186. Normally read as sellers accepting lower prices, each rally stopping under the previous one. A close back above 94.24, the highest price of the last third, would break it; a long-only rule scored on this sample is being measured mostly on how well it stays out.",
+    range:"Price ends about 1% from where it started after rotating between 95.72 and 106.11 for all 190 bars. The usual interpretation is that neither side is making the other give ground at these prices. It stops reading as balance when a close holds outside that band instead of turning back into it &mdash; and a trend rule scored only here is being measured on a market that never offered one.",
+    mixed:"Price advances about 19% into bar 53, gives it back through the middle of the sample, and finishes about 3% below where it opened after reaching 93.36 near bar 186. Normally read as three conditions inside one window rather than one condition. That is what makes the sample useful: a single net return over these 190 bars averages an advance, a rotation and a decline into one number that describes none of them.",
+    volatile:"Price runs about 30% higher into bar 90, then loses roughly 19% from its high of 132.94 and finishes at 112.70. Normally read as both sides moving price in size, with bar ranges wide enough that the distance between a signal and its fill stops being a rounding error. Direction is the least of it here &mdash; the same rule run on this sample and on the trending one is being asked two different questions."
+  },
+
+  /* rules: no entry for "bull". The option is labelled Bull trend, but
+     makeBars("bull",150,29) generates a series that FALLS about 10.3%, from
+     99.78 to 89.46 and lower in each of its three thirds. A reading written for
+     a rising market would sit under a falling chart, so the state stays empty
+     until the generated series matches the name it is offered under. */
+  rules:{
+    breakout:"The first seventy-two bars stay between 94.67 and 100.60; price then leaves that area and the remaining fifty-seven bars never trade back below 101.71. Normally read as acceptance above the old range rather than a probe through it, since the level that used to cap price became the floor of everything after it. A close back inside the old band would end the reading &mdash; and the rule you are composing knows none of this, because it fires on its own arithmetic and not on the shape.",
+    range:"Price rotates between 93.25 and 101.52 for all 150 bars and finishes about 2.6% below where it started. The usual interpretation is two-way trade at an agreed area with neither side holding the other's ground. It stops reading that way when a close holds outside the band; until then a breakout rule scored here is being measured almost entirely on how it treats signals that do not follow through.",
+    reversal:"Price holds between about 91.9 and 101.68 for the first seventy-two bars, then closes below that area and declines to 65.83, printing the lowest low of the sample on the final bar. Normally read as sellers accepting lower prices with no rally reaching back to the area price left. A close above 89.10, the highest price of the final sixty-three bars, would be the first thing to break it &mdash; the sample simply ends before anything of the kind is tested."
+  },
+
+  /* dataQuality: no entry for "clean:bull". The underlying-market select offers
+     Bull trend, but makeBars("bull",120,41) ends 1.3% BELOW where it opens,
+     99.52 to 98.19 with its low of 93.43 at bar 90. There is no advance on that
+     chart to read, so the state is left empty rather than described as one. */
+  dataQuality:{
+    "raw:outlier":"Every flagged bar closes about 28% above the bar before it, and the bar after prints straight back at the old level. A single bar like that is normally read as a violent repricing, which is exactly the trap: no trade produced it, the value was multiplied in. The tell is on the chart rather than in the number &mdash; a real repricing leaves the bars after it somewhere new, and these leave them where they were.",
+    "raw:missing":"The flagged bars carry no price at all, so the line stops and restarts around them. There is nothing to read as market behaviour, which makes this the least misleading defect to look at and the most misleading to compute on: every hole disqualifies the twelve bars that follow it, so the breakout count on the raw series is a fraction of the validated one &mdash; the signal difference in the row above is that gap. Absent data does not announce itself as absent in a result.",
+    "raw:duplicate":"The flagged bars repeat the previous bar's open, high, low and close exactly. Two identical bars are normally read as a pause, an area where price stopped making progress, and here they are one bar recorded twice. It moves the level by about a percent or less and leaves the breakout count essentially where it was, which is why it survives review: the damage is to the time axis and to anything that counts bars, not to the price.",
+    "raw:stale":"The flagged bars print the previous close as their open, high, low and close, so they have no range at all. A zero-range bar is normally read as a period nobody contested. Here it is a feed that stopped updating, and the distinction matters to anything measuring range or volatility: the level stays within about a percent of the clean series while the bar's range is understated all the way to zero.",
+    "raw:mixed":"The defects arrive in a fixed order as the count rises: a bar 28% above its neighbour, then a bar with no data, then a bar copied from the one before it, then a bar with no range. Only the first is readable as market behaviour at all, and it is the one that would be read as a violent repricing. The other three are not readable, which is where the quieter damage sits &mdash; they move the breakout count without ever looking like anything on the chart.",
+    "clean:range":"Repaired, the line tracks the clean reference: price rotates between about 93.5 and 101.7 and ends within a third of a percent of where it began. Normally read as two-way trade with neither side holding ground. Be precise about what has been established, though &mdash; the series is now consistent with the reference, which is a statement about the data and not evidence about the market.",
+    "clean:mixed":"Repaired, the series rises to about 107.8 near bar 54 and then declines to finish about 9% below where it opened. Normally read as one condition replacing another inside a single sample. Validation changed none of that; it removed four bars that were not measurements, which is the whole of what cleaning can claim."
+  },
+
+  /* biasUniverse: entries exist only for the four SINGLE-cause states -- the
+     point-in-time baseline and one bias at a time. Two biases at once render
+     nothing, because the drawn line then mixes two effects and no single
+     sentence could say which of them the reader is looking at. */
+  biasUniverse:{
+    "point/all/yes":"All eight names are carried for the whole window and the line ends 1.8% above where it began, having fallen from 108.1 to 97.2 in the single period FAIL loses 82% of its value. Normally read as a market that went almost nowhere. What the line cannot show is that seven of the eight names ended higher and the eighth was enough to take the window back &mdash; a breadth reading rather than a direction one, and the only version of this chart in which the failure is still counted.",
+    "current/all/yes":"The same eighty-three periods, with the one name that failed removed, end 16.2% higher and never set back more than 0.3%. Normally read as a broad and orderly advance, produced without a single price on the chart changing. The reading is made by the universe rather than by the market: excluding FAIL is a decision available only after period 55, and the test claims to have started at period 1.",
+    "point/top/yes":"Four of the eight names are held, chosen by their change across the whole window, and the line ends 22.5% higher with a deepest setback of 0.5%. Normally read as selection that worked. The smoothness is the giveaway: the ranking used each series' final value to decide what to hold from the first period, and an advance this clean is what sorting on an outcome produces, not what choosing under uncertainty produces.",
+    "point/all/no":"The line drops from 105.2 to 99.0 in one period at 42 and ends 4.6% below where it started. A six-point fall across an entire equal-weight universe is normally read as a broad sell-off. Nothing sold off: SPLT's quoted price halved in a two-for-one split and the holder's value did not move. It is the one defect here that a chart cannot tell from a real decline without the corporate-action record beside it."
+  },
+
+  bars:{
+    coarse:"At sixty minutes the regular session becomes seven bars and the average bar covers 2.12% of price, against 0.38% for that same session at five minutes. Take the bar beginning at minute 360: it opens at 110.04, trades between 109.99 and 112.25 and closes at 111.43, which is normally read as an up bar with a small tail &mdash; and it is exactly that. What it cannot say is order: a stop at 110 and a target at 112 both sit inside it, and the bar records that each was reached, not which was reached first.",
+    extended:"The added bars carry the minutes before 60 and after 449, which average 337 in volume against 1,994 during the session. Including them moves the last close on the chart from 110.34 to 106.19 &mdash; normally read as the market giving four points back, and it did trade there. The reading that matters is a different one: those prices are on the chart whether or not the system could act at them, and at the default interval and lookback they take the breakout count from 10 to 13.",
+    intraday:"The regular session opens at 99.95 and closes at 110.34, with its low of 99.88 in the first minutes and its high of 112.25 late. Between them, minutes 115 to 299 hold between 102.66 and 104.54. Normally read as higher prices being accepted in two legs with an acceptance area between them; a close back under that shelf would end the reading, and finer bars are what let a test place a signal or a fill inside it at all."
+  },
+
+  timing:{
+    "nextOpen/off":"The eight entry markers sit where a close exceeded the previous eighteen closes. Two of them, at bars 39 and 49, fire inside the balanced area that holds to bar 81, where an eighteen-bar high is only a local high; the other six fire after price leaves it, and from bar 106 onward no close returns below 109.71, which is normally read as acceptance above the old range. Every marker sits one bar after its signal, and that is the whole of what this chart claims: the rule acted on bars that had already printed.",
+    "sameClose/off":"Each marker has moved onto the bar whose own close produced the signal &mdash; bar 38 instead of 39, bar 47 instead of 49 &mdash; and there are nine of them instead of eight. The market underneath is unchanged and still reads as balance to bar 81 with acceptance above it afterwards. What changed is not the reading but the claim behind it: the fill price is a close that was not knowable until that bar had finished.",
+    "nextOpen/future":"Three of the eight breakouts still carry a marker, at bars 47, 94 and 136, and each is followed by a further 1.2% inside three bars. Normally read as a rule that found the breakouts which continued. It found nothing: the filter keeping them read the three bars after the signal, so those markers are placed by information that did not exist when the signal fired. At the default settings the selected return is 4.7% against 11.1% for the causal baseline &mdash; leakage does not have to flatter a result.",
+    "sameClose/future":"Both errors are on together: four markers, each on the bar whose close created the signal, each kept only because price added 1.2% within the next three bars. The market is the same one every other state on this page shows &mdash; balance to bar 81, then acceptance above it &mdash; so nothing about the chart's structure distinguishes this run. Only the selection differs, which is the point: there is no shape on a price chart that reveals a test which knew too much."
+  },
+
+  execution:{
+    unfilled:"The order level sits outside everything price does after bar 21: the long path covers 98.66 to 110.78 from there, the short path 94.37 to 103.65. There is no entry or exit on the chart to read, and that is the reading &mdash; a resting order is a request, and a level price never reaches is a level that never traded. Nothing about the market produced this outcome; the chosen level did.",
+    "normal-long":"From bar 21 price works from 99.80 up to a high of 110.78 at bar 37 and closes the sample at 109.49, with the deepest close-to-close setback along the way about 2.61 points. Normally read as higher prices being accepted once the order is active. Bar 26 is where the reading has to slow down: it opens at 102.87 and closes at 106.70, so any level inside that bar is credited or missed on an assumption about a path the bar itself does not record.",
+    "gap-long":"Bar 22 opens at 103.80 after bar 21 closed at 99.80, and its lowest trade is 103.51. Normally read as a four-point repricing between bars, which is what it is. The part to read carefully is the space it left behind: at the default stop and target the exit is booked at 103.09, a price that never traded on that bar, because the simulator fills a level the moment a bar's range spans it.",
+    "volatile-long":"Bars 20 to 31 have their highs and lows widened, taking the average bar range across that stretch from 1.81 points to 4.61 while every close stays exactly where it was. Normally read as volatility expanding into the entry. Be precise about what expanded: anything computed from closes sees an identical market, and only the touches change &mdash; the same target is reached a bar earlier here purely because a high was extended to it.",
+    "normal-short":"From bar 21 price first works against the short, reaching 103.65 at bar 26, before declining to 94.37 at bar 49 and closing the sample at 96.09. Normally read as an advance that fails and gives way to lower prices being accepted. The order of events is the reading: about three points of adverse movement arrive before any of the eight the decline eventually offers, so a stop placed inside that first stretch settles the trade before the market does anything the label describes.",
+    "gap-short":"Bar 22 opens at 95.73 after bar 21 closed at 99.73, and its lowest trade is 95.43. Normally read as a four-point repricing in the short's favour. It is also where a gap stops being a gift: at the default target of 94.80 the move is not enough to close the trade, bar 23 trades back up to 101.77, and the same gap that would have been read as confirmation is followed by the stop.",
+    "volatile-short":"Bars 20 to 31 have their highs and lows widened, taking the average bar range there from 1.68 points to 4.48 while every close stays exactly where it was. Normally read as volatility expanding into the entry. What expanded is the recorded extreme and not the path: a stop above the entry is touched by a high that was stretched to it, and a test reading closes alone would report the same market with a different outcome."
+  },
+
+  benchmark:{
+    bull:"The benchmark ends 6.7% above where it started, having reached 113.7 and traded as low as 96.3, with a deepest setback of 11.0%. Normally read as a market that ended higher; the word the line does not support is continued, since the index spent part of the window below its own opening level. That is what the comparison beside it runs against: a strategy is being scored on a path, not on the 6.7%.",
+    bear:"The benchmark ends 10.6% lower, reaching 106.9 early and 87.6 late, with a deepest setback of 18.1%. Normally read as lower prices being accepted across the whole market. Worth being exact about what carries that: 137 of the 252 steps close up, so the direction comes from the size of the down steps rather than their count, and a majority of up days under a falling index is not a contradiction.",
+    range:"The benchmark rotates between 93.1 and 107.5 and finishes 3.1% below where it began. Normally read as a market with no sustained direction to lend a strategy or to take away from it. Note also that a 13.4% setback still occurs here with no trend to attribute it to, which is what makes this the sample where an independent return is easiest to see as independent.",
+    volatile:"The benchmark covers 85.6 to 114.5 and ends 8.2% lower, with annualised volatility of 26.8% against 14.2% in the other samples and a largest single step of 3.89%. Normally read as both sides moving price in size without either holding it. The drift underneath is identical to the balanced sample and only the step size differs, which is precisely why return alone cannot separate the two and a risk-adjusted comparison exists at all."
+  }
+};
+function participationHTML(key){
+  const table=PARTICIPATION[L.lab];
+  const text=table&&key?table[key]:null;
+  return text?`<div class="participation"><small>What this is normally read as</small><p>${text}</p></div>`:'';
+}
+function marketRead(state,title,text,key){const e=$('#marketRead');e.className='market-read '+(state||'');e.innerHTML=`<small>What the market is doing</small><strong>${title}</strong><p>${text}</p>`+participationHTML(key)}
+function controlHTML(label,body){return `<div class="control"><label>${label}</label>${body}</div>`}
+function rangeControl(id,label,min,max,value,step=1,suffix=''){return `<div class="control"><label><span>${label}</span><output id="${id}Out">${value}${suffix}</output></label><input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`}
+function bindRange(id,cb,suffix=''){const e=$('#'+id);e.addEventListener('input',()=>{$('#'+id+'Out').textContent=e.value+suffix;cb(Number(e.value))})}
+function segmented(id,items,active){return `<div class="segmented ${items.length===3?'cols3':''}" id="${id}">${items.map(([v,t])=>`<button type="button" data-value="${v}" class="${v===active?'active':''}">${t}</button>`).join('')}</div>`}
+function bindSegment(id,cb){$$('#'+id+' button').forEach(b=>b.addEventListener('click',()=>{$$('#'+id+' button').forEach(x=>x.classList.remove('active'));b.classList.add('active');cb(b.dataset.value)}))}
+function resizeHandler(fn){window.redrawLab=fn;let t;const h=()=>{clearTimeout(t);t=setTimeout(fn,70)};window.addEventListener('resize',h);return()=>window.removeEventListener('resize',h)}
+function makeBars(regime='mixed',n=180,seed=7){const r=rng(seed);let p=100,anchor=100,out=[];for(let i=0;i<n;i++){let drift=0,vol=.68;if(regime==='bull'){drift=.16+(i%31>23?-.19:0)}else if(regime==='bear'){drift=-.15+(i%29>23?.17:0)}else if(regime==='range'){drift=(anchor-p)*.075;vol=.75}else if(regime==='volatile'){drift=(i<n*.48?.13:-.11);vol=1.55}else if(regime==='mixed'){drift=i<n*.34?.16:i<n*.62?(anchor+8-p)*.07:-.13;vol=i>n*.7?1.02:.72}else if(regime==='breakout'){drift=i<n*.48?(anchor-p)*.07:i<n*.62?.35:.14;vol=i>n*.45&&i<n*.63?1.05:.62}else if(regime==='reversal'){drift=i<n*.48?.15:i<n*.58?-.42:-.14;vol=i>n*.45&&i<n*.65?1.1:.68}else if(regime==='quiet'){drift=(anchor-p)*.04;vol=.35}const noise=normal(r)*vol;const o=p;let c=Math.max(4,o+drift+noise);if(regime==='volatile'&&i===Math.floor(n*.7))c-=5;if(regime==='breakout'&&i===Math.floor(n*.5))c+=2.7;const h=Math.max(o,c)+.18+r()*vol*.75,l=Math.min(o,c)-.18-r()*vol*.75;out.push({o,h,l,c,v:Math.round(500000*(.7+r()*.8)*(1+Math.abs(c-o)/3)),t:i});p=c}return out}
+function closes(b){return b.map(x=>x.c)}
+function sma(a,p){return a.map((_,i)=>i<p-1?null:mean(a.slice(i-p+1,i+1)))}
+function rollingHigh(a,p,i){if(i<p)return null;return Math.max(...a.slice(i-p,i))}
+function rollingLow(a,p,i){if(i<p)return null;return Math.min(...a.slice(i-p,i))}
+function maxDrawdown(eq){let peak=eq[0]||0,max=0,duration=0,longest=0,start=0,dd=[];eq.forEach((v,i)=>{if(v>=peak){peak=v;start=i;duration=0}else{duration=i-start;longest=Math.max(longest,duration)}const d=peak?1-v/peak:0;dd.push(d);max=Math.max(max,d)});return{max,duration:longest,series:dd}}
+function strategyMA(bars,fast=10,slow=30,costPct=0,shorts=false){
+  const p=closes(bars),f=sma(p,fast),s=sma(p,slow);
+  let pos=0,entry=0,eq=100000,trades=[],equity=[eq],signals=[];
+  for(let i=1;i<bars.length;i++){
+    let desired=pos;
+    if(f[i]!=null&&s[i]!=null)desired=f[i]>s[i]?1:(shorts&&f[i]<s[i]?-1:0);
+    if(desired!==pos){
+      if(pos!==0){
+        const fill=bars[i].o*(1-pos*costPct/100),ret=pos*(fill-entry)/entry;
+        eq*=1+ret;
+        trades.push({entryIndex:signals.at(-1)?.i??0,exitIndex:i,side:pos,pnlR:ret*10,ret});
+        signals.push({i,type:'exit',side:pos,price:fill});
+      }
+      pos=desired;
+      if(pos!==0){
+        entry=bars[i].o*(1+pos*costPct/100);
+        signals.push({i,type:'entry',side:pos,price:entry});
+      }
+    }
+    if(pos!==0){
+      const mark=1+pos*(bars[i].c-entry)/entry;
+      equity.push(eq*mark);
+    }else equity.push(eq);
+  }
+  if(pos!==0){
+    const i=bars.length-1,fill=bars[i].c*(1-pos*costPct/100),ret=pos*(fill-entry)/entry;
+    eq*=1+ret;
+    trades.push({exitIndex:i,side:pos,ret,pnlR:ret*10});
+    signals.push({i,type:'exit',side:pos,price:fill});
+    equity[equity.length-1]=eq;
+  }
+  return{equity,trades,signals,fast:f,slow:s};
+}
+function strategyBreakout(bars,lookback=20,hold=10,costPct=0,side='long'){const p=closes(bars);let eq=100000,pos=null,trades=[],signals=[],equity=[eq];for(let i=lookback;i<bars.length;i++){if(!pos){const trigger=side==='long'?p[i]>rollingHigh(p,lookback,i):p[i]<rollingLow(p,lookback,i);if(trigger&&i+1<bars.length){const dir=side==='long'?1:-1,fill=bars[i+1].o*(1+dir*costPct/100);pos={dir,entry:fill,start:i+1};signals.push({i:i+1,type:'entry',side:dir,price:fill})}}else{const age=i-pos.start;if(age>=hold){const fill=bars[i].o*(1-pos.dir*costPct/100),ret=pos.dir*(fill-pos.entry)/pos.entry;eq*=1+ret;trades.push({entryIndex:pos.start,exitIndex:i,side:pos.dir,ret,pnlR:ret*12});signals.push({i,type:'exit',side:pos.dir,price:fill});pos=null}}if(pos){equity.push(eq*(1+pos.dir*(bars[i].c-pos.entry)/pos.entry))}else equity.push(eq)}while(equity.length<bars.length)equity.unshift(100000);if(pos){const i=bars.length-1,fill=bars[i].c*(1-pos.dir*costPct/100),ret=pos.dir*(fill-pos.entry)/pos.entry;eq*=1+ret;trades.push({entryIndex:pos.start,exitIndex:i,side:pos.dir,ret,pnlR:ret*12});signals.push({i,type:'exit',side:pos.dir,price:fill});equity[equity.length-1]=eq}return{equity,trades,signals}}
+function computeTradeStats(trades,equity){const wins=trades.filter(t=>t.ret>0),losses=trades.filter(t=>t.ret<=0),grossWin=sum(wins.map(t=>t.ret)),grossLoss=Math.abs(sum(losses.map(t=>t.ret))),dd=maxDrawdown(equity);return{count:trades.length,winRate:trades.length?wins.length/trades.length:0,avgWin:wins.length?mean(wins.map(t=>t.ret)):0,avgLoss:losses.length?Math.abs(mean(losses.map(t=>t.ret))):0,profitFactor:grossLoss?grossWin/grossLoss:(grossWin?99:0),returnPct:(equity.at(-1)/equity[0]-1)*100,maxDD:dd.max*100}}
+function drawLines(lines,opts={}){const {ctx,w,h}=canvasContext(),c=colors(),area={x:24,y:24,w:w-86,h:h-58};const all=lines.flatMap(x=>x.values.filter(v=>v!=null&&Number.isFinite(v)));let mn=opts.min??Math.min(...all),mx=opts.max??Math.max(...all);if(!Number.isFinite(mn)||!Number.isFinite(mx)){mn=0;mx=1}if(mx===mn){mx+=1;mn-=1}const pad=(mx-mn)*.07;mn-=pad;mx+=pad;grid(ctx,area.x,area.y,area.w,area.h,c);if(opts.regions){opts.regions.forEach(r=>{ctx.save();ctx.globalAlpha=.08;ctx.fillStyle=r.color;ctx.fillRect(area.x+area.w*r.start/opts.length,area.y,area.w*(r.end-r.start)/opts.length,area.h);ctx.restore();label(ctx,r.label,area.x+area.w*r.start/opts.length+5,area.y+15,r.color)})}const sx=(i,n)=>area.x+area.w*i/Math.max(1,n-1),sy=v=>area.y+(mx-v)/(mx-mn)*area.h;lines.forEach((s,idx)=>{ctx.save();ctx.strokeStyle=s.color||[c.cyan,c.amber,c.purple,c.green,c.red][idx%5];ctx.lineWidth=s.width||2.4;ctx.setLineDash(s.dash||[]);ctx.beginPath();let started=false;s.values.forEach((v,i)=>{if(v==null||!Number.isFinite(v)){started=false;return}const x=sx(i,s.values.length),y=sy(v);if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y)});ctx.stroke();ctx.restore()});if(opts.hlines)opts.hlines.forEach(x=>hline(ctx,sy(x.value),area.x,area.x+area.w,x.color||c.amber,x.label));axes(ctx,area,mn,mx,c,opts.formatter||((v)=>fmt(v,1)));return{ctx,c,area,sy,sx:(i,n)=>sx(i,n),min:mn,max:mx}}
+function drawCandles(bars,opts={}){const {ctx,w,h}=canvasContext(),c=colors(),area={x:20,y:22,w:w-82,h:h-54};let mn=Math.min(...bars.map(d=>d.l)),mx=Math.max(...bars.map(d=>d.h));const pad=(mx-mn)*.08;mn-=pad;mx+=pad;grid(ctx,area.x,area.y,area.w,area.h,c);const sy=v=>area.y+(mx-v)/(mx-mn)*area.h,step=area.w/bars.length,bw=Math.max(2,Math.min(8,step*.62));bars.forEach((d,i)=>{const x=area.x+step*(i+.5),col=d.c>=d.o?c.green:c.red;ctx.strokeStyle=col;ctx.beginPath();ctx.moveTo(x,sy(d.h));ctx.lineTo(x,sy(d.l));ctx.stroke();ctx.fillStyle=col;ctx.fillRect(x-bw/2,Math.min(sy(d.o),sy(d.c)),bw,Math.max(1.5,Math.abs(sy(d.o)-sy(d.c))))});if(opts.lines)opts.lines.forEach(s=>{ctx.save();ctx.strokeStyle=s.color||c.amber;ctx.lineWidth=s.width||1.7;ctx.setLineDash(s.dash||[]);ctx.beginPath();let started=false;s.values.forEach((v,i)=>{if(v==null){started=false;return}const x=area.x+step*(i+.5),y=sy(v);if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y)});ctx.stroke();ctx.restore()});if(opts.levels)opts.levels.forEach(x=>hline(ctx,sy(x.value),area.x,area.x+area.w,x.color||c.amber,x.label));if(opts.markers)opts.markers.forEach(m=>{if(m.i<0||m.i>=bars.length)return;const x=area.x+step*(m.i+.5),y=sy(m.price??bars[m.i].c),col=m.color||((m.type==='entry')?c.cyan:c.amber);ctx.save();ctx.fillStyle=col;ctx.beginPath();if(m.type==='entry'){ctx.moveTo(x,y+12);ctx.lineTo(x-6,y+21);ctx.lineTo(x+6,y+21)}else{ctx.moveTo(x,y-12);ctx.lineTo(x-6,y-21);ctx.lineTo(x+6,y-21)}ctx.closePath();ctx.fill();ctx.restore()});axes(ctx,area,mn,mx,c,v=>fmt(v,1));return{ctx,c,area,sy,sx:i=>area.x+step*(i+.5),min:mn,max:mx}}
+function drawHistogram(vals,opts={}){const {ctx,w,h}=canvasContext(),c=colors(),area={x:26,y:24,w:w-80,h:h-58};const bins=opts.bins||18,mn=Math.min(...vals),mx=Math.max(...vals),counts=Array(bins).fill(0);vals.forEach(v=>counts[Math.min(bins-1,Math.max(0,Math.floor((v-mn)/Math.max(.000001,mx-mn)*bins)))]++);const ymax=Math.max(1,...counts);grid(ctx,area.x,area.y,area.w,area.h,c,4,6);counts.forEach((n,i)=>{const bw=area.w/bins*.78,x=area.x+area.w*i/bins+area.w/bins*.11,y=area.y+area.h*(1-n/ymax),mid=mn+(i+.5)*(mx-mn)/bins;ctx.fillStyle=mid<(opts.threshold??mean(vals))?c.red:c.cyan;ctx.globalAlpha=.72;ctx.fillRect(x,y,bw,area.y+area.h-y);ctx.globalAlpha=1});axes(ctx,area,mn,mx,c,opts.formatter||((v)=>fmt(v,1)));return{ctx,c,area,mn,mx}}
+function downloadJSON(name,obj){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function behaviorFor(regime){if(regime==='bull')return['warn','This sample is generated with an upward drift.','Whether it actually closes higher is a property of this sample, not of the label — read the series in front of you, because a rule has to be judged on the data it really ran over.'];if(regime==='bear')return['bear','Sellers continue accepting lower prices.','Rallies fail and supply keeps producing downward progress.'];if(regime==='range')return['warn','Buyers and sellers are balanced.','Price repeatedly trades both directions without sustained progress.'];if(regime==='volatile')return['warn','Price ranges are expanding quickly.','Both sides are active, fills can worsen, and stops can be crossed rapidly.'];if(regime==='breakout')return['bull','Buyers are moving through prior resistance.','Price is accepting higher levels after leaving the previous range.'];if(regime==='reversal')return['bear','Seller control replaces the prior buyer control.','The advance fails, lower prices are accepted, and rallies lose progress.'];return['warn','Market control changes across the sample.','Trending and balanced periods require the system to behave differently.']}
+
+
+function initLabSpecific(){let universe='point',selection='all',adjust='yes';
+  function assets(){const names=['ALFA','BETA','CORE','DELTA','FAIL','GROW','SPLT','VALUE'];return names.map((name,j)=>{const r=rng(80+j*17),vals=[100];for(let i=1;i<84;i++){let drift=[.35,.18,.12,-.03,-.12,.42,.20,.08][j],noise=(r()-.5)*2.1;let v=Math.max(1,vals.at(-1)*(1+(drift+noise)/100));if(name==='FAIL'&&i===55)v=vals.at(-1)*.18;if(name==='SPLT'&&i===42)v=vals.at(-1)*.5;vals.push(v)}return{name,vals,delisted:name==='FAIL',split:name==='SPLT',score:(name==='SPLT'?vals.at(-1)*2:vals.at(-1))/vals[0]-1}})}
+  function portfolio(){let a=assets();if(universe==='current')a=a.filter(x=>!x.delisted);if(selection==='top')a=[...a].sort((x,y)=>y.score-x.score).slice(0,4);const eq=[100];for(let i=1;i<84;i++){const rs=[];a.forEach(x=>{if(x.delisted&&i>55)return;let prev=x.vals[i-1],cur=x.vals[i];let ret=cur/prev-1;if(x.split&&i===42&&adjust==='yes')ret=0;rs.push(ret)});eq.push(eq.at(-1)*(1+(rs.length?mean(rs):0)))}return{eq,a}}
+  const draw=()=>{const p=portfolio(),c=colors(),biased=universe==='current'||selection==='top'||adjust==='no';drawLines([{values:p.eq,color:biased?c.amber:c.cyan}],{formatter:v=>fmt(v,0)});setBadge('EQUAL-WEIGHT HISTORICAL UNIVERSE');setKPIs([['Portfolio return',pct((p.eq.at(-1)/p.eq[0]-1)*100,1)],['Symbols included',p.a.length],['Bias status',biased?'Biased assumptions':'Point-in-time']]);marketRead(biased?'warn':'bull',biased?'The selected history makes buyer strength look broader than it was.':'The test includes both successful and failed historical instruments.',biased?'Removing failures, choosing winners later, or ignoring a split improves the chart using future knowledge.':'Strong assets contribute gains while failed assets and mechanical corporate actions remain part of the historical opportunity set.',universe+'/'+selection+'/'+adjust);$('#extraVisual').innerHTML=`<table class="data-table"><tr><th>Symbol</th><th>Status</th><th>Special event</th><th>Full-period change</th></tr>${p.a.map(x=>`<tr><td>${x.name}</td><td class="${x.delisted?'bad':'good'}">${x.delisted?'Delisted':'Survived'}</td><td>${x.split?'2-for-1 split':'—'}</td><td>${pct(x.score*100,1)}</td></tr>`).join('')}</table>`};
+  $('#controls').innerHTML=controlHTML('Historical universe',segmented('buUniverse',[['point','Point-in-time'],['current','Current survivors']],'point'))+controlHTML('Selection method',segmented('buSelection',[['all','All eligible'],['top','Top performers']],'all'))+controlHTML('Split adjustment',segmented('buAdjust',[['yes','Adjusted'],['no','Unadjusted']],'yes'));
+  bindSegment('buUniverse',v=>{universe=v;draw()});bindSegment('buSelection',v=>{selection=v;draw()});bindSegment('buAdjust',v=>{adjust=v;draw()});draw();return resizeHandler(draw)}
+
+
+window.initLab=()=>{if(activeCleanup){activeCleanup();activeCleanup=null}$('#controls').innerHTML='';$('#extraVisual').innerHTML='';$('#kpis').innerHTML='';window.redrawLab=null;activeCleanup=initLabSpecific()};
+window.initLab();
+</script>
+</body></html>

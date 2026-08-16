@@ -83,39 +83,55 @@ themselves. They are never re-typed here. A tool that duplicated the palette
 would be a fifth place for it to drift, which is the problem, not the fix.
 
 
-THE GENERATOR'S THEME SHAPES
-----------------------------
-The generator does not emit one implementation of the theme control; it has
-emitted two so far, and they share no code:
+THE THEME BLOCK: CLASSIFIED, NOT MEMORIZED
+------------------------------------------
+The generator does not emit one implementation of the theme control. Seven
+packages have produced THREE, sharing no code and no names:
 
-    SHAPE_SETUP_THEME  (courses 1-4)  one `function setupTheme(){...}` holding
-                                      every theme storage call, plus
-                                      <button id="themeToggle">.
-    SHAPE_SET_THEME    (course 5)     `storedTheme()` + `setTheme(theme)`, the
-                                      stored theme applied at the END of the
-                                      script -- i.e. AFTER first paint, which is
-                                      the flash -- repainting its canvases
-                                      through window.redrawLab(), plus
-                                      <button id="themeBtn"> whose textContent is
-                                      swapped between two glyphs.
+    courses 1-4   <button id="themeToggle"> and one `function setupTheme(){...}`
+                  holding every theme storage call.
+    course 5      <button id="themeBtn">, `storedTheme()` + `setTheme(theme)`,
+                  the stored theme applied at the END of the script -- after
+                  first paint, which is the flash -- repainting through
+                  window.redrawLab().
+    courses 6-7   <button id="themeBtn"> inside a .top-actions div BESIDE a
+                  #resetBtn, `setTheme()` collapsed to a one-liner, and the
+                  stored value read INLINE (`let saved=null;try{...}catch{};
+                  setTheme(saved||'dark');`), in single quotes.
 
-Each is a NAMED row in SHAPES with its own signature, its own preflight and its
-own rewrite, and detection is exact: a file must match exactly one row. There is
-no pattern that "probably" matches both, because a tool that guesses is a tool
-that drifts -- and drifting is the thing this exists to stop. A file that
-matches no row, or two, is REFUSED with nothing written, exactly as it was when
-this tool knew one shape.
+The first two were matched as fixed statement SEQUENCES -- "these statements,
+in this order". That is the right instinct (never delete script you cannot
+name) implemented in a way that cannot survive a generator which rewrites this
+block every time: courses 6-7 broke it on three points at once and the tool
+refused, correctly, for a reason no re-ordering could fix.
 
-For SHAPE_SET_THEME specifically, note what is rewritten and what is not: the
-storage key, the button id, and the post-paint application are shell and are
-replaced (the stored theme is applied once, in <head>, before paint).
-window.redrawLab() is the generator's own repaint hook and is carried across
-verbatim -- the labs resolve their colours at draw time, so dropping it would
-leave every canvas painted in dark-theme ink on the light ground with no test
-and no error to say so.
+So the question asked of the region changed. It is no longer "are these the
+statements I memorized?" but, statement by statement, "what does this one DO,
+and can I account for every token in it?". See plan_theme_region(): each
+top-level statement is classified by ROLE -- reads the key, writes the key,
+sets dataset.theme, swaps the glyph, registers the click listener, applies the
+stored theme at load, calls a redraw hook -- and a statement is deleted only
+when every role it performs is one of those AND every identifier and string
+literal in it is one this tool can name. Everything else in the region is
+carried through UNTOUCHED at its own offset: course 6's #resetBtn handler sits
+in the middle of the theme block and is none of this tool's business.
 
-A sixth package with a third shape adds a row. It does not widen an existing
-signature. See docs/INTAKE.md.
+The refusal is unchanged and is the point:
+
+    * a statement this tool cannot account for that touches the theme key, the
+      toggle element or dataset.theme is theme logic it does not understand;
+    * a toggle element that cannot be located unambiguously;
+    * a redraw hook present before the rewrite and absent after.
+
+Each of those aborts the run with nothing written. What changed is only that an
+IRRELEVANT NEIGHBOURING statement no longer causes any of them.
+
+window.redrawLab() is the generator's own repaint hook, is discovered by name
+rather than assumed, and is carried across -- the labs resolve their colours at
+draw time, so dropping it would leave every canvas painted in dark-theme ink on
+the light ground with no test and no error to say so.
+
+See docs/INTAKE.md.
 
 
 IDEMPOTENT BY CONSTRUCTION
@@ -136,9 +152,10 @@ these aborts the run with a non-zero exit and no output written:
 
     * manifest / file-count mismatch (a lesson the manifest does not declare, or
       a declared lesson with no file);
-    * a theme shape this tool does not know (see THE GENERATOR'S THEME SHAPES
-      below), or a known shape whose theme storage calls are not confined to the
-      region this tool replaces wholesale -- a key touched from lesson code is
+    * a theme shape this tool does not know (see THE THEME BLOCK above), a
+      statement touching the theme that it cannot account for token by token,
+      a toggle it cannot locate unambiguously, or theme storage calls outside
+      the statements it classified -- a key touched from lesson code is
       content, and content is not this tool's to edit;
     * a lesson that already references an external resource (scanned with
       scripts/smoke.py's own scanner, the same one CI and the test suite use);
@@ -338,17 +355,30 @@ SETUP_THEME_JS = """function setupTheme(){
 
 TOGGLE_ELEMENT = THEME_TOGGLE_MARKUP + "☾</button>"
 
-# The glyphs the toggle shows. Both packages chose the same two characters; they
-# are pinned here so a package that chooses different ones is REFUSED by the
-# recognizer below rather than silently re-glyphed.
+# The glyphs the toggle shows. The glyph is SHELL -- TOGGLE_ELEMENT above
+# already pins the character the button ships with -- so a package that picks
+# different marks is normalized to these rather than refused.
 SUN_GLYPH = "☀"
 MOON_GLYPH = "☾"
 
-# The runtime half of the toggle for SHAPE_SET_THEME (see the SHAPES registry).
+# The repaint hook the packages have shipped so far. It is a DEFAULT, not an
+# assumption: the classifier reads the hook's real name out of the statements it
+# is about to delete and writes that name into the pinned implementation, then
+# proves the call survived the rewrite.
+DEFAULT_REDRAW_HOOK = "redrawLab"
+
+# The JavaScript inside PREPAINT_SCRIPT. The classifier skips this script by
+# identity: it is this tool's own output, it reads the pinned key on purpose,
+# and it is injected BEFORE the theme step runs (see STEPS), so classifying it
+# would mean deleting it on the second pass.
+PREPAINT_JS = re.search(r"<script[^>]*>(.*?)</script>", PREPAINT_SCRIPT, re.S).group(1)
+
+# The runtime half of the toggle written for every CLASSIFIED page (courses 5,
+# 6, 7 and whatever the generator does next).
 #
 # This is deliberately NOT SETUP_THEME_JS. That implementation calls byId() and
-# onThemeChange(), and this package has neither: it repaints through
-# window.redrawLab(), which is the GENERATOR's hook -- the labs resolve every
+# onThemeChange(), and these packages have neither: they repaint through a hook
+# of the GENERATOR's own -- the labs resolve every
 # colour from CSS custom properties at draw time, so a canvas keeps the ink it
 # was painted with until that hook runs. Dropping the call would leave every
 # chart in a course of charts painted in dark-theme ink on the light ground, and
@@ -366,9 +396,9 @@ MOON_GLYPH = "☾"
 # With no stored choice the element carries no data-theme at all and CSS decides,
 # so the icon is derived from the EFFECTIVE theme (the attribute if there is one,
 # the media query otherwise) rather than from a hardcoded "dark".
-SET_THEME_JS = """/* Theme control, pinned by scripts/intake_course.py.
+THEME_JS_TEMPLATE = """/* Theme control, pinned by scripts/intake_course.py.
    The stored choice is applied BEFORE first paint by the script at the end of
-   <head>; nothing here applies it a second time. window.redrawLab() is this
+   <head>; nothing here applies it a second time. window.%(hook)s() is this
    package's own repaint hook and is called on every theme change on purpose:
    the labs read their colours from CSS custom properties at draw time, so a
    canvas painted under one theme keeps that theme's ink until it is redrawn. */
@@ -379,69 +409,63 @@ function setTheme(theme){
   document.documentElement.dataset.theme=theme;
   try{localStorage.setItem("%(key)s",theme)}catch{}
   renderThemeIcon();
-  if(window.redrawLab) window.redrawLab();
+  if(window.%(hook)s) window.%(hook)s();
 }
 renderThemeIcon();
 $("#themeToggle").addEventListener("click",()=>setTheme(effectiveTheme()==="light"?"dark":"light"));
 if(themeQuery){
-  const onSystemThemeChange=()=>{if(document.documentElement.dataset.theme)return;renderThemeIcon();if(window.redrawLab) window.redrawLab()};
+  const onSystemThemeChange=()=>{if(document.documentElement.dataset.theme)return;renderThemeIcon();if(window.%(hook)s) window.%(hook)s()};
   if(themeQuery.addEventListener)themeQuery.addEventListener("change",onSystemThemeChange);
   else if(themeQuery.addListener)themeQuery.addListener(onSystemThemeChange);
-}""" % {"key": THEME_STORAGE_KEY, "sun": SUN_GLYPH, "moon": MOON_GLYPH}
+}"""
 
-# The toggle each shape ships. SHAPE_SET_THEME's package names the button
-# themeBtn; themeToggle is accepted in the same pattern because that is what
-# THIS tool renames it to, and a second run must recognize its own output
-# instead of failing on it.
+
+def build_theme_js(hook=DEFAULT_REDRAW_HOOK):
+    """The pinned theme control, repainting through `hook`.
+
+    The DEFAULT must keep producing course 5's published text byte for byte, or
+    intake would stop being a no-op on a course that is already live.
+    """
+    return THEME_JS_TEMPLATE % {
+        "key": THEME_STORAGE_KEY,
+        "sun": SUN_GLYPH,
+        "moon": MOON_GLYPH,
+        "hook": hook,
+    }
+
+
+# The names the pinned implementation itself defines. A generator name that is
+# also one of these survives the rewrite, so lesson code calling it is not a
+# break; any OTHER name the region defined and lesson code uses is a refusal.
+PINNED_THEME_DEFINES = frozenset(
+    {"setTheme", "renderThemeIcon", "effectiveTheme", "themeQuery", "onSystemThemeChange"}
+)
+
+# This tool's own output, recognized as a literal with the hook name left free.
+# Matching it is what makes a second run a no-op instead of a re-classification
+# of text this tool already pinned.
+_HOOK_SENTINEL = "\x00hook\x00"
+_PINNED_PATTERN = re.escape(build_theme_js(_HOOK_SENTINEL))
+_PINNED_PATTERN = _PINNED_PATTERN.replace(
+    _HOOK_SENTINEL, r"(?P<hook>[A-Za-z_$][\w$]*)", 1
+).replace(_HOOK_SENTINEL, r"(?P=hook)")
+PINNED_THEME_RE = re.compile(_PINNED_PATTERN)
+
+# Courses 1-4 name the button themeToggle, which is also what THIS tool renames
+# every other package's button to, so a second run recognizes its own output
+# instead of failing on it. Every other shape locates its toggle semantically --
+# see themeish_button_ids() -- rather than from a list of ids seen so far.
 TOGGLE_RE_SETUP_THEME = re.compile(
     r'<button\b[^>]*\bid="themeToggle"[^>]*>.*?</button>', re.S
 )
-TOGGLE_RE_SET_THEME = re.compile(
-    r'<button\b[^>]*\bid="(?:themeBtn|themeToggle)"[^>]*>.*?</button>', re.S
-)
 
-# SHAPE_SET_THEME's theme block, AS THE GENERATOR SHIPS IT, statement by
-# statement and in order. Whitespace between tokens is free; the statements are
-# not. This is the pattern the tool is allowed to DELETE, so it names every
-# statement it deletes rather than matching a region and hoping:
-#
-#   1. function storedTheme(){...}            reads the key
-#   2. function setTheme(theme){...}          applies + stores + swaps + repaints
-#   3. setTheme(storedTheme()||"dark");       the POST-PAINT application
-#   4. $("#themeBtn").addEventListener(...)   the click handler
-#
-# The key is captured once and back-referenced, so a block that read one key and
-# wrote another is not this shape. So is the button id, so the icon swap and the
-# listener must address the same element. Anything else -- an extra statement,
-# a different glyph, a lab that also calls setTheme -- does not match, and a
-# file that does not match is refused by preflight with nothing written.
-_SET_THEME_SOURCE_STATEMENTS = (
-    r'function\s+storedTheme\s*\(\s*\)\s*\{\s*try\s*\{\s*return\s+localStorage\s*\.\s*'
-    r'getItem\s*\(\s*"(?P<key>[^"\n]*)"\s*\)\s*\}\s*catch\s*\{\s*return\s+null\s*\}\s*\}',
 
-    r'function\s+setTheme\s*\(\s*theme\s*\)\s*\{'
-    r'\s*document\s*\.\s*documentElement\s*\.\s*dataset\s*\.\s*theme\s*=\s*theme\s*;'
-    r'\s*try\s*\{\s*localStorage\s*\.\s*setItem\s*\(\s*"(?P=key)"\s*,\s*theme\s*\)\s*\}'
-    r'\s*catch\s*\{\s*\}'
-    r'\s*\$\(\s*"#(?P<button>[A-Za-z][\w-]*)"\s*\)\s*\.\s*textContent\s*=\s*theme\s*===\s*'
-    r'"dark"\s*\?\s*"☀"\s*:\s*"☾"\s*;'
-    r'\s*if\s*\(\s*window\s*\.\s*redrawLab\s*\)\s*window\s*\.\s*redrawLab\s*\(\s*\)\s*;'
-    r'\s*\}',
-
-    r'setTheme\s*\(\s*storedTheme\s*\(\s*\)\s*\|\|\s*"dark"\s*\)\s*;',
-
-    r'\$\(\s*"#(?P=button)"\s*\)\s*\.\s*addEventListener\s*\(\s*"click"\s*,\s*\(\s*\)\s*=>\s*'
-    r'setTheme\s*\(\s*document\s*\.\s*documentElement\s*\.\s*dataset\s*\.\s*theme\s*===\s*'
-    r'"dark"\s*\?\s*"light"\s*:\s*"dark"\s*\)\s*\)\s*;',
-)
-SET_THEME_SOURCE_RE = re.compile(r"\s*".join(_SET_THEME_SOURCE_STATEMENTS))
-
-# The signatures. A signature answers ONE question -- which family is this? --
-# and nothing more; the proof that the family is rewritable is the shape's
-# preflight. Each must match exactly once: two setupTheme() definitions is not a
-# stronger match, it is a file this tool does not understand.
+# The one signature left. It answers ONE question -- is this the setupTheme
+# family? -- and nothing more; the proof that the family is rewritable is the
+# shape's preflight. It must match exactly once: two setupTheme() definitions is
+# not a stronger match, it is a file this tool does not understand. Every other
+# package is recognized by what its statements DO, not by a name.
 SETUP_THEME_SIGNATURE_RE = re.compile(r"function\s+setupTheme\s*\(")
-SET_THEME_SIGNATURE_RE = re.compile(r"function\s+setTheme\s*\(")
 
 
 # CSS for the chrome this tool injects. Appended only when the page has none of
@@ -492,13 +516,13 @@ CHROME_CSS = """
   padding: 13px 15px;
   border: 1px solid var(--line);
   border-radius: 13px;
-  background: var(--panel-2);
+  background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
   color: var(--text);
   text-decoration: none;
   transition: transform 150ms ease, border-color 150ms ease;
 }
 
-.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
 .lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
 .lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
 .lesson-link.next { margin-left: auto; text-align: right; }
@@ -872,80 +896,847 @@ def rewrite_setup_theme(text):
     return new_text, True
 
 
-# -- SHAPE_SET_THEME: course 5 ---------------------------------------------
+# --------------------------------------------------------------------------
+# The theme region, read by SEMANTIC CLASSIFICATION
+# --------------------------------------------------------------------------
+#
+# WHY THIS IS NOT A SEQUENCE MATCH ANY MORE
+# -----------------------------------------
+# Seven packages have now arrived and the theme block has been written THREE
+# different ways -- see docs/INTAKE.md for the table. The first two were
+# matched as fixed statement SEQUENCES: "these statements, in this order,
+# whitespace free between them". That is the right instinct (never delete
+# script you cannot name) implemented in a way that cannot survive a generator
+# that rewrites this block every time. Course 6/7 broke it on three points at
+# once -- setTheme() collapsed to a one-liner, the stored value read INLINE
+# into a `let saved` instead of a storedTheme() function, and a `#resetBtn`
+# click handler sitting in the middle of the block -- and the tool refused,
+# correctly, but for a reason no amount of re-ordering could fix.
+#
+# So the question asked of the region changed. It is no longer
+#
+#     "are these the statements I memorized, in that order?"
+#
+# but, statement by statement,
+#
+#     "what does this one DO, and can I account for every token in it?"
+#
+# A statement is CLASSIFIED when every role it performs is one of the roles
+# below and every identifier and string literal in it is one this tool can name.
+# Classified statements are deleted and the pinned implementation is written
+# once in their place. Anything else in the region -- the reset button's
+# handler, a lab's bootstrap, a comment -- is carried through UNTOUCHED, at its
+# own offset, because it was never the tool's to edit.
+#
+# The refusal survives all of that, and is the point of the design:
+#
+#   * a statement this tool cannot account for that touches the theme key, the
+#     toggle element or dataset.theme is theme logic it does not understand --
+#     refuse, change nothing;
+#   * a toggle element that cannot be located unambiguously -- refuse;
+#   * a redraw hook present before the rewrite and absent after -- refuse.
+#
+# What changed is only this: a neighbouring statement that has nothing to do
+# with the theme no longer causes any of that.
 
-def set_theme_span(text):
-    """(start, end) of this shape's theme block: the generator's, or this tool's.
+ROLE_READ_KEY = "reads the theme key from localStorage"
+ROLE_WRITE_KEY = "writes the theme key to localStorage"
+ROLE_SET_ATTR = "sets document.documentElement.dataset.theme"
+ROLE_SWAP_GLYPH = "swaps the toggle glyph"
+ROLE_LISTEN = "registers the toggle click listener"
+ROLE_APPLY_STORED = "applies the stored theme at load"
+ROLE_REDRAW = "calls a redraw hook"
+ROLE_LOCAL = "holds a value only the theme statements read"
 
-    Both are recognized because a second run must find its OWN output and stop,
-    not fail on it. The generator's form is matched statement by statement
-    (SET_THEME_SOURCE_RE); this tool's form is matched as a literal, so a page
-    that has been edited since intake ran does not look pinned.
+# The two roles that MUST be present for a region to be the theme control at
+# all. A region that only reads a key is not a control, and replacing it with
+# the pinned implementation would be inventing behaviour rather than pinning it.
+REQUIRED_ROLES = (ROLE_SET_ATTR, ROLE_LISTEN)
+
+# -- the atoms a statement can be made of ----------------------------------
+
+STORAGE_CALL_RE = re.compile(
+    r"""localStorage\s*\.\s*(?:get|set|remove)Item\s*\(\s*(['"])([^'"\n]*)\1"""
+)
+DATASET_THEME_RE = re.compile(r"\.\s*dataset\s*\.\s*theme\b")
+DATASET_WRITE_RE = re.compile(r"\.\s*dataset\s*\.\s*theme\s*=(?!=)")
+DATA_THEME_ATTR_RE = re.compile(r"""(?:set|get)Attribute\s*\(\s*(['"])data-theme\1""")
+TEXT_CONTENT_WRITE_RE = re.compile(r"\.\s*(?:textContent|innerText)\s*=(?!=)")
+CLICK_LISTENER_RE = re.compile(r"""addEventListener\s*\(\s*(['"])click\1""")
+# querySelector("#id") / $("#id") / getElementById("id") / byId("id")
+ELEMENT_REF_RE = re.compile(
+    r"""(?:querySelector|\$)\s*\(\s*(['"])#([A-Za-z_$][\w$-]*)\1"""
+    r"""|(?:getElementById|byId)\s*\(\s*(['"])([A-Za-z_$][\w$-]*)\3"""
+)
+# A repaint hook CALLED AS AN EFFECT: `window.h()` on its own, and the guarded
+# forms the packages ship, `if(window.h)window.h()` and `window.h&&window.h()`.
+# The leading context matters. `dataset.theme = window.pickTheme()` is a hook
+# used as a VALUE, which is something else entirely -- excluding `=` here is what
+# makes that statement unaccountable, and therefore a refusal, instead of
+# quietly promoting it to the repaint hook.
+HOOK_CALL_RE = re.compile(
+    r"(?:\A|[;{}()&|,]|=>)\s*window\s*\.\s*([A-Za-z_$][\w$]*)\s*\(\s*\)"
+)
+# A declaration this tool may need to carry or delete: one declarator, simple name.
+SIMPLE_DECL_RE = re.compile(r"\A(?:let|var|const)\s+([A-Za-z_$][\w$]*)\s*=(?!=)")
+FUNCTION_DECL_RE = re.compile(r"\Afunction\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)")
+ARROW_DECL_RE = re.compile(
+    r"\A(?:let|var|const)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:\(([^)]*)\)|([A-Za-z_$][\w$]*))\s*=>"
+)
+CATCH_PARAM_RE = re.compile(r"catch\s*\(\s*([A-Za-z_$][\w$]*)\s*\)")
+IDENTIFIER_RE = re.compile(r"[A-Za-z_$][\w$]*")
+STRING_LITERAL_RE = re.compile(r"""(['"])((?:[^'"\\\n]|\\.)*)\1""")
+
+# Every identifier a theme statement is allowed to name. Anything outside this
+# set (plus the names the scan discovers in the file itself: the theme
+# functions, the theme-local variables, the toggle id and the redraw hooks) is
+# an operation this tool cannot account for, and an unaccountable operation on
+# the theme is a refusal rather than a guess.
+THEME_VOCABULARY = frozenset({
+    # language
+    "let", "var", "const", "function", "return", "if", "else", "try", "catch",
+    "finally", "typeof", "null", "undefined", "true", "false", "void", "new",
+    # the storage the key lives in
+    "localStorage", "getItem", "setItem", "removeItem",
+    # the attribute the theme is expressed as
+    "document", "documentElement", "dataset", "theme", "setAttribute",
+    "getAttribute", "removeAttribute",
+    # the toggle, how it is found, and what it shows. $ and byId are the
+    # generator's own one-line selector helpers; a theme statement is allowed to
+    # use them to reach the button and nothing else.
+    "window", "querySelector", "getElementById", "$", "byId",
+    "textContent", "innerText",
+    "addEventListener", "removeEventListener", "addListener", "removeListener",
+    # the system preference, which several packages consult
+    "matchMedia", "matches", "media",
+})
+
+# String literals a theme statement is allowed to contain. Everything else --
+# a class name, a URL, a lesson's copy -- means the statement is doing
+# something besides the theme, which this tool does not delete.
+THEME_LITERALS = frozenset({
+    "", "light", "dark", "click", "change", "data-theme",
+    "(prefers-color-scheme: light)", "(prefers-color-scheme:light)",
+    "(prefers-color-scheme: dark)", "(prefers-color-scheme:dark)",
+})
+# A glyph: one or two characters with no letters and no digits (the sun/moon
+# marks), or their \uXXXX escapes. The glyph is SHELL -- this tool already pins
+# the character the button ships with (TOGGLE_ELEMENT) -- so a package that
+# picks different marks is normalized rather than refused.
+GLYPH_LITERAL_RE = re.compile(r"\A(?:[^\w\s]|\\u[0-9a-fA-F]{4}|\\x[0-9a-fA-F]{2}){1,2}\Z")
+
+
+# -- a JavaScript statement splitter ---------------------------------------
+#
+# Not a parser. It finds the boundaries between TOP-LEVEL statements, which is
+# all the classifier needs, and it is deliberately conservative: strings,
+# template literals, comments and regex literals are skipped so a brace or a
+# semicolon inside one cannot move a boundary. A boundary it gets wrong merges
+# two statements, and a merged statement is one this tool cannot account for --
+# so the failure mode is a refusal, never a bad edit.
+
+_REGEX_MAY_FOLLOW = set("(,=:[!&|?{};+-*%~^<>\n")
+_REGEX_MAY_FOLLOW_WORDS = frozenset({
+    "return", "typeof", "instanceof", "in", "of", "new", "delete", "void",
+    "case", "do", "else", "yield", "await",
+})
+_BLOCK_KEYWORDS = frozenset({"function", "class", "if", "for", "while", "switch", "try", "do"})
+_CONTINUES_STATEMENT = frozenset({"else", "catch", "finally"})
+
+
+def _js_skip_quoted(js, i):
+    quote = js[i]
+    n = len(js)
+    i += 1
+    while i < n:
+        if js[i] == "\\":
+            i += 2
+            continue
+        if js[i] == quote:
+            return i + 1
+        i += 1
+    return n
+
+
+def _js_skip_template(js, i):
+    n = len(js)
+    i += 1
+    depth = 0
+    while i < n:
+        ch = js[i]
+        if ch == "\\":
+            i += 2
+            continue
+        if ch == "$" and i + 1 < n and js[i + 1] == "{":
+            depth += 1
+            i += 2
+            continue
+        if ch == "}" and depth:
+            depth -= 1
+            i += 1
+            continue
+        if ch == "`" and not depth:
+            return i + 1
+        i += 1
+    return n
+
+
+def _js_skip_regex(js, i):
+    n = len(js)
+    i += 1
+    in_class = False
+    while i < n:
+        ch = js[i]
+        if ch == "\\":
+            i += 2
+            continue
+        if ch == "[":
+            in_class = True
+        elif ch == "]":
+            in_class = False
+        elif ch == "/" and not in_class:
+            i += 1
+            while i < n and js[i].isalpha():
+                i += 1
+            return i
+        elif ch == "\n":
+            return i
+        i += 1
+    return n
+
+
+def _js_leading_word(text):
+    match = re.match(r"[A-Za-z_$][\w$]*", text)
+    return match.group(0) if match else ""
+
+
+def _js_next_word(js, i):
+    n = len(js)
+    while i < n:
+        if js[i].isspace():
+            i += 1
+            continue
+        if js.startswith("/*", i):
+            end = js.find("*/", i + 2)
+            i = n if end == -1 else end + 2
+            continue
+        if js.startswith("//", i):
+            end = js.find("\n", i)
+            i = n if end == -1 else end + 1
+            continue
+        break
+    return _js_leading_word(js[i:])
+
+
+def js_statements(js, offset=0):
+    """[(start, end)] of every top-level statement in `js`, offsets absolute.
+
+    Whitespace and comments BETWEEN statements are not covered by any span --
+    they belong to the file, not to a statement, and this tool does not tidy
+    whitespace it did not write.
     """
-    match = SET_THEME_SOURCE_RE.search(text)
-    if match:
-        return match.span()
-    if text.count(SET_THEME_JS) == 1:
-        at = text.index(SET_THEME_JS)
-        return at, at + len(SET_THEME_JS)
-    return None
+    spans = []
+    i, n = 0, len(js)
+    start = None
+    curly = paren = square = 0
+    prev = ""
+    prev_word = ""
+    while i < n:
+        ch = js[i]
+        if js.startswith("/*", i):
+            end = js.find("*/", i + 2)
+            i = n if end == -1 else end + 2
+            continue
+        if js.startswith("//", i):
+            end = js.find("\n", i)
+            i = n if end == -1 else end + 1
+            continue
+        if ch.isspace():
+            i += 1
+            continue
+        if start is None:
+            start = i
+        if ch in "'\"":
+            i = _js_skip_quoted(js, i)
+            prev, prev_word = ch, ""
+            continue
+        if ch == "`":
+            i = _js_skip_template(js, i)
+            prev, prev_word = ch, ""
+            continue
+        if ch == "/" and (prev in _REGEX_MAY_FOLLOW or prev == "" or prev_word in _REGEX_MAY_FOLLOW_WORDS):
+            i = _js_skip_regex(js, i)
+            prev, prev_word = "/", ""
+            continue
+        if ch.isalpha() or ch in "_$":
+            word = _js_leading_word(js[i:])
+            i += len(word)
+            prev, prev_word = word[-1], word
+            continue
+        if ch == "(":
+            paren += 1
+        elif ch == ")":
+            paren -= 1
+        elif ch == "[":
+            square += 1
+        elif ch == "]":
+            square -= 1
+        elif ch == "{":
+            curly += 1
+        elif ch == "}":
+            curly -= 1
+            if curly == 0 and paren == 0 and square == 0:
+                head = _js_leading_word(js[start:])
+                closes = head in _BLOCK_KEYWORDS
+                if closes:
+                    nxt = _js_next_word(js, i + 1)
+                    if nxt in _CONTINUES_STATEMENT or (head == "do" and nxt == "while"):
+                        closes = False
+                if closes:
+                    spans.append((start, i + 1))
+                    start = None
+                    prev, prev_word = "}", ""
+                    i += 1
+                    continue
+        elif ch == ";" and curly == 0 and paren == 0 and square == 0:
+            spans.append((start, i + 1))
+            start = None
+            prev, prev_word = ";", ""
+            i += 1
+            continue
+        prev, prev_word = ch, ""
+        i += 1
+    if start is not None and js[start:].strip():
+        spans.append((start, n))
+    return [(s + offset, e + offset) for s, e in spans]
 
 
-def preflight_set_theme(text):
-    """The theme block must be exactly the one this tool knows how to delete."""
-    problems = []
-    span = set_theme_span(text)
-    if span is None:
-        problems.append(
-            "the %s theme block is not the one this tool recognizes (expected "
-            "storedTheme() + setTheme() + the post-paint `setTheme(storedTheme()"
-            '||"dark")` + the toggle listener, in that order). It will not delete '
-            "script it cannot account for statement by statement" % SHAPE_SET_THEME
+def strip_js_literals(text):
+    """`text` with every string/template/regex literal blanked out.
+
+    Identifier scanning must not see the inside of a literal: 'lab-theme' is a
+    key, not a reference to a variable called `lab`.
+    """
+    out = []
+    i, n = 0, len(text)
+    prev = ""
+    prev_word = ""
+    while i < n:
+        ch = text[i]
+        if text.startswith("/*", i):
+            end = text.find("*/", i + 2)
+            end = n if end == -1 else end + 2
+            out.append(" " * (end - i))
+            i = end
+            continue
+        if text.startswith("//", i):
+            end = text.find("\n", i)
+            end = n if end == -1 else end
+            out.append(" " * (end - i))
+            i = end
+            continue
+        if ch in "'\"`":
+            end = _js_skip_quoted(text, i) if ch != "`" else _js_skip_template(text, i)
+            out.append(" " * (end - i))
+            i = end
+            prev, prev_word = ch, ""
+            continue
+        if ch == "/" and (prev in _REGEX_MAY_FOLLOW or prev == "" or prev_word in _REGEX_MAY_FOLLOW_WORDS):
+            end = _js_skip_regex(text, i)
+            out.append(" " * (end - i))
+            i = end
+            prev, prev_word = "/", ""
+            continue
+        if ch.isalpha() or ch in "_$":
+            word = _js_leading_word(text[i:])
+            out.append(word)
+            i += len(word)
+            prev, prev_word = word[-1], word
+            continue
+        out.append(ch)
+        prev, prev_word = ch, ""
+        i += 1
+    return "".join(out)
+
+
+def string_literals(text):
+    """Every string literal in `text`, as written (escapes not decoded)."""
+    return [m.group(2) for m in STRING_LITERAL_RE.finditer(text)]
+
+
+# -- locating the toggle ---------------------------------------------------
+
+BUTTON_RE = re.compile(r"<button\b([^>]*)>(.*?)</button>", re.S | re.I)
+SCRIPT_RE = re.compile(r"<script\b([^>]*)>(.*?)</script>", re.S | re.I)
+JS_SCRIPT_TYPES = frozenset({"text/javascript", "application/javascript", "module"})
+
+
+def themeish_button_ids(text):
+    """Ids of every <button> whose id, aria-label or title names the theme.
+
+    The toggle is located from the MARKUP rather than from whichever selector
+    the script happens to use, because the markup is what this tool replaces.
+    A package that ships two of them, or none, is ambiguous and is refused --
+    guessing which button is the theme control is exactly the guess that would
+    strip the reset button's handler out of course 6.
+    """
+    ids = []
+    for match in BUTTON_RE.finditer(text):
+        attrs = match.group(1)
+        found = re.search(r'\bid="([^"]*)"', attrs)
+        if not found:
+            continue
+        blob = found.group(1)
+        for attribute in ("aria-label", "title"):
+            value = re.search(r'\b%s="([^"]*)"' % attribute, attrs)
+            if value:
+                blob += " " + value.group(1)
+        if INV.THEMEISH_KEY_RE.search(blob):
+            ids.append(found.group(1))
+    return ids
+
+
+def classified_toggle_regex(text):
+    """(regex, label) for the toggle button of a semantically classified page."""
+    ids = sorted(set(themeish_button_ids(text)))
+    if not ids:
+        return (
+            re.compile(r'<button\b[^>]*\bid="[^"]*(?i:theme)[^"]*"[^>]*>.*?</button>', re.S),
+            "a button whose id or label names the theme",
         )
-        return problems
+    pattern = r'<button\b[^>]*\bid="(?:%s)"[^>]*>.*?</button>' % "|".join(
+        re.escape(i) for i in ids
+    )
+    return re.compile(pattern, re.S), ", ".join("#" + i for i in ids)
 
-    outside = text[: span[0]] + text[span[1] :]
+
+# -- the classification ----------------------------------------------------
+
+class ThemeStatement:
+    """One top-level JavaScript statement and what this tool makes of it."""
+
+    __slots__ = ("start", "end", "text", "bare", "roles", "candidate",
+                 "accounted", "reason", "declares", "names", "keys",
+                 "element_ids", "hooks")
+
+    def __init__(self, start, end, text):
+        self.start = start
+        self.end = end
+        self.text = text
+        self.bare = strip_js_literals(text)
+        self.roles = []
+        self.candidate = False
+        self.accounted = False
+        self.reason = None
+        self.declares = set()
+        self.names = set(IDENTIFIER_RE.findall(self.bare))
+        self.keys = {m.group(2) for m in STORAGE_CALL_RE.finditer(text)}
+        self.element_ids = {
+            m.group(2) or m.group(4) for m in ELEMENT_REF_RE.finditer(text)
+        }
+        self.hooks = set(HOOK_CALL_RE.findall(self.bare))
+
+    @property
+    def theme_keys(self):
+        return {k for k in self.keys if INV.THEMEISH_KEY_RE.search(k)}
+
+    def touches_dataset_theme(self):
+        return bool(DATASET_THEME_RE.search(self.bare)) or bool(
+            DATA_THEME_ATTR_RE.search(self.text)
+        )
+
+    def declared_names(self):
+        """Names this statement introduces: declarations, functions, params."""
+        names = set()
+        decl = FUNCTION_DECL_RE.match(self.text)
+        if decl:
+            names.add(decl.group(1))
+        arrow = ARROW_DECL_RE.match(self.text)
+        if arrow:
+            names.add(arrow.group(1))
+        simple = SIMPLE_DECL_RE.match(self.text)
+        if simple:
+            names.add(simple.group(1))
+        for m in re.finditer(r"\b(?:let|var|const)\s+([A-Za-z_$][\w$]*)", self.bare):
+            names.add(m.group(1))
+        return names
+
+    def local_names(self):
+        """Every name bound INSIDE this statement -- params included."""
+        names = self.declared_names()
+        decl = FUNCTION_DECL_RE.match(self.text)
+        if decl:
+            names.update(IDENTIFIER_RE.findall(decl.group(2)))
+        for m in re.finditer(r"(?:\(([^)|&;]*)\)|([A-Za-z_$][\w$]*))\s*=>", self.bare):
+            names.update(IDENTIFIER_RE.findall(m.group(1) or m.group(2) or ""))
+        for m in CATCH_PARAM_RE.finditer(self.bare):
+            names.add(m.group(1))
+        for m in re.finditer(r"function\s*(?:[A-Za-z_$][\w$]*)?\s*\(([^)]*)\)", self.bare):
+            names.update(IDENTIFIER_RE.findall(m.group(1)))
+        return names
+
+
+class ThemePlan:
+    """What the theme region is, and what may be done to it."""
+
+    __slots__ = ("pinned", "statements", "spans", "toggle_id", "toggle_ids",
+                 "hooks", "roles", "problems", "removed_names", "preserved")
+
+    def __init__(self):
+        self.pinned = False
+        self.statements = []
+        self.spans = []
+        self.toggle_id = None
+        self.toggle_ids = []
+        self.hooks = set()
+        self.roles = []
+        self.problems = []
+        self.removed_names = set()
+        self.preserved = []
+
+
+def theme_scripts(text):
+    """(start, end) of the JavaScript inside every script this tool may read.
+
+    The pre-paint script is skipped BY IDENTITY: it is this tool's own output,
+    it reads the pinned key on purpose, and it is written before this step runs
+    (see STEPS), so classifying it would mean deleting it on the second pass.
+    """
+    spans = []
+    for match in SCRIPT_RE.finditer(text):
+        attrs = match.group(1) or ""
+        if re.search(r"\bsrc\s*=", attrs, re.I):
+            continue
+        kind = re.search(r"""\btype\s*=\s*["']?([^"'\s>]+)""", attrs, re.I)
+        if kind and kind.group(1).lower() not in JS_SCRIPT_TYPES:
+            continue
+        if match.group(2).strip() == PREPAINT_JS.strip():
+            continue
+        spans.append((match.start(2), match.end(2)))
+    return spans
+
+
+def _literal_allowed(value, toggle_ids):
+    if value in THEME_LITERALS:
+        return True
+    if INV.THEMEISH_KEY_RE.search(value):
+        return True
+    if value.lstrip("#") in toggle_ids:
+        return True
+    return bool(GLYPH_LITERAL_RE.match(value))
+
+
+def _account_for(statement, vocabulary, toggle_ids):
+    """Can every token in this statement be named as theme machinery?
+
+    Returns (roles, reason). `reason` is None when the statement is fully
+    accounted for; otherwise it says, in words, what could not be named.
+    """
+    allowed = set(vocabulary) | statement.local_names() | statement.hooks | set(toggle_ids)
+    unknown = sorted(n for n in statement.names if n not in allowed)
+    if unknown:
+        return [], "names %s, which is not part of any theme role this tool knows" % (
+            ", ".join(repr(n) for n in unknown[:4])
+        )
+    stray = sorted(
+        v for v in string_literals(statement.text)
+        if not _literal_allowed(v, toggle_ids)
+    )
+    if stray:
+        return [], "carries the string literal(s) %s, which belong to no theme role" % (
+            ", ".join(repr(v) for v in stray[:4])
+        )
+
+    roles = []
+    for match in STORAGE_CALL_RE.finditer(statement.text):
+        if not INV.THEMEISH_KEY_RE.search(match.group(2)):
+            continue
+        role = ROLE_READ_KEY if "getItem" in match.group(0) else ROLE_WRITE_KEY
+        if role not in roles:
+            roles.append(role)
+    if DATASET_WRITE_RE.search(statement.bare) or DATA_THEME_ATTR_RE.search(statement.text):
+        roles.append(ROLE_SET_ATTR)
+    if TEXT_CONTENT_WRITE_RE.search(statement.bare):
+        roles.append(ROLE_SWAP_GLYPH)
+    if CLICK_LISTENER_RE.search(statement.text):
+        roles.append(ROLE_LISTEN)
+    if statement.hooks:
+        roles.append(ROLE_REDRAW)
+    return roles, None
+
+
+_PLAN_CACHE = {}
+
+
+def plan_theme_region(text):
+    """plan_theme_region_uncached(), memoized -- it is asked the same question
+    three times per lesson (detection, preflight, rewrite) and the answer is a
+    pure function of the text."""
+    plan = _PLAN_CACHE.get(text)
+    if plan is None:
+        if len(_PLAN_CACHE) > 64:
+            _PLAN_CACHE.clear()
+        plan = _PLAN_CACHE[text] = plan_theme_region_uncached(text)
+    return plan
+
+
+def plan_theme_region_uncached(text):
+    """Classify the theme region statement by statement. Never writes.
+
+    Every problem it finds is a REFUSAL: the caller reports them and writes
+    nothing. An empty plan (no theme statement anywhere) is not a problem here
+    -- it is how the shape registry decides this file is not its business.
+    """
+    plan = ThemePlan()
+    plan.toggle_ids = sorted(set(themeish_button_ids(text)))
+
+    # This tool's own output, recognized first so a second run is a no-op
+    # rather than a re-classification of text it already pinned.
+    already = list(PINNED_THEME_RE.finditer(text))
+    if already:
+        plan.pinned = True
+        plan.spans = [m.span() for m in already]
+        plan.hooks = {m.group("hook") for m in already}
+        plan.roles = [ROLE_SET_ATTR, ROLE_LISTEN]
+        if len(already) != 1:
+            plan.problems.append(
+                "the pinned theme block appears %d times; this tool writes exactly "
+                "one and will not choose between copies" % len(already)
+            )
+        return plan
+
+    statements = []
+    for js_start, js_end in theme_scripts(text):
+        for start, end in js_statements(text[js_start:js_end], js_start):
+            statements.append(ThemeStatement(start, end, text[start:end]))
+    plan.statements = statements
+    if not statements:
+        return plan
+
+    # Round 1: statements holding a HARD atom -- a theme key, dataset.theme, or
+    # a reference to the toggle element. These anchor everything else.
+    for statement in statements:
+        if (
+            statement.theme_keys
+            or statement.touches_dataset_theme()
+            or (statement.element_ids & set(plan.toggle_ids))
+        ):
+            statement.candidate = True
+
+    # Rounds 2..n: a statement that CALLS something the theme region defines is
+    # theme too (that is how `setTheme(saved||'dark')` is found), and a
+    # declaration whose name only the theme region reads belongs to it (that is
+    # how `let saved=null` is found). Iterate to a fixed point; the sets only
+    # grow, so it terminates.
+    for _round in range(6):
+        theme_names = set()
+        for statement in statements:
+            if statement.candidate:
+                theme_names |= statement.declared_names()
+        grew = False
+        for statement in statements:
+            if statement.candidate:
+                continue
+            if statement.names & theme_names:
+                statement.candidate = True
+                grew = True
+                continue
+            declared = SIMPLE_DECL_RE.match(statement.text)
+            if not declared:
+                continue
+            name = declared.group(1)
+            read_by_theme = any(
+                other.candidate and name in other.names for other in statements
+            )
+            read_by_others = any(
+                other is not statement and not other.candidate and name in other.names
+                for other in statements
+            )
+            if read_by_theme and not read_by_others:
+                statement.candidate = True
+                statement.roles.append(ROLE_LOCAL)
+                grew = True
+        if not grew:
+            break
+
+    if not any(s.candidate for s in statements):
+        return plan
+
+    vocabulary = set(THEME_VOCABULARY)
+    for statement in statements:
+        if statement.candidate:
+            vocabulary |= statement.declared_names()
+
+    for statement in statements:
+        if not statement.candidate:
+            plan.preserved.append(statement)
+            continue
+        roles, reason = _account_for(statement, vocabulary, plan.toggle_ids)
+        statement.roles.extend(r for r in roles if r not in statement.roles)
+        statement.accounted = reason is None
+        statement.reason = reason
+        if statement.accounted:
+            plan.hooks |= statement.hooks
+            plan.removed_names |= statement.declared_names()
+            plan.spans.append((statement.start, statement.end))
+            for role in statement.roles:
+                if role not in plan.roles:
+                    plan.roles.append(role)
+
+    # A bare call to a name the region defines, at the top level of the script,
+    # is the stored theme being applied AFTER first paint -- the flash this
+    # convention exists to prevent. It is named as its own role so the report
+    # says what was removed rather than only that something was.
+    for statement in statements:
+        if not (statement.candidate and statement.accounted):
+            continue
+        call = re.match(r"\A([A-Za-z_$][\w$]*)\s*\(", statement.text)
+        if call and call.group(1) in plan.removed_names:
+            if ROLE_APPLY_STORED not in statement.roles:
+                statement.roles.append(ROLE_APPLY_STORED)
+            if ROLE_APPLY_STORED not in plan.roles:
+                plan.roles.append(ROLE_APPLY_STORED)
+
+    # ---- the refusals -----------------------------------------------------
+
+    for statement in statements:
+        if statement.candidate and not statement.accounted:
+            plan.problems.append(
+                "a statement touching the theme cannot be accounted for, so it "
+                "will not be deleted: it %s.\n        %s"
+                % (statement.reason, _excerpt(statement.text))
+            )
+
+    if plan.problems:
+        return plan
+
+    missing = [role for role in REQUIRED_ROLES if role not in plan.roles]
+    if missing:
+        plan.problems.append(
+            "the theme region does not %s; this tool replaces a theme CONTROL "
+            "and what it found is not one" % " and does not ".join(missing)
+        )
+        return plan
+
+    referenced = set()
+    for statement in plan.preserved:
+        referenced |= statement.names
+    leaked = sorted((plan.removed_names & referenced) - PINNED_THEME_DEFINES)
+    if leaked:
+        plan.problems.append(
+            "%s defined by the theme region and used outside it; that is lesson "
+            "code, and lesson code is not this tool's to rewrite"
+            % ", ".join("%s()" % n for n in leaked)
+        )
+
+    addressed = set()
+    for statement in statements:
+        if statement.candidate and statement.accounted:
+            addressed |= statement.element_ids
+    both = sorted(addressed & set(plan.toggle_ids))
+    if len(both) != 1:
+        plan.problems.append(
+            "the toggle element cannot be located unambiguously: the markup "
+            "offers %s and the theme script addresses %s"
+            % (
+                ", ".join("#" + i for i in plan.toggle_ids) or "none",
+                ", ".join("#" + i for i in sorted(addressed)) or "none",
+            )
+        )
+    else:
+        plan.toggle_id = both[0]
+
+    if len(plan.hooks) > 1:
+        plan.problems.append(
+            "the theme region calls %d repaint hooks (%s); the pinned "
+            "implementation calls one, and dropping the others would silently "
+            "stop something repainting"
+            % (len(plan.hooks), ", ".join("window.%s()" % h for h in sorted(plan.hooks)))
+        )
+
+    return plan
+
+
+def _excerpt(text, width=140):
+    flat = re.sub(r"\s+", " ", text).strip()
+    return flat if len(flat) <= width else flat[: width - 1] + "…"
+
+
+def merge_adjacent_spans(text, spans):
+    """Join spans separated by nothing that matters, so the deletion is one cut.
+
+    Whitespace, and the stray empty statement the generator leaves behind
+    (`try{...}catch{};`) -- a `;` between two theme statements is not content.
+    A statement that IS content sits between them intact and stops the merge,
+    which is how the reset button's handler survives in the middle of the block.
+    """
+    merged = []
+    for start, end in sorted(spans):
+        if merged and not text[merged[-1][1] : start].strip(" \t\r\n;"):
+            merged[-1] = (merged[-1][0], end)
+        else:
+            merged.append((start, end))
+    return merged
+
+
+def preflight_classified(text):
+    """Everything that must hold before the theme region may be replaced."""
+    plan = plan_theme_region(text)
+    problems = list(plan.problems)
+    if plan.pinned or problems:
+        return problems
+    if not plan.spans:
+        return ["no theme statement was found to classify"]
+
+    covered = merge_adjacent_spans(text, plan.spans)
+    outside = text
+    for start, end in reversed(covered):
+        outside = outside[:start] + outside[end:]
     stray = theme_keys(outside) - {THEME_STORAGE_KEY}
     if stray:
         problems.append(
-            "theme key(s) %s used outside the theme block; that is content, not "
-            "shell, and this tool will not edit it"
+            "theme key(s) %s outside every statement this tool classified; that "
+            "is content, not shell, and this tool will not edit it"
             % ", ".join(sorted(repr(k) for k in stray))
         )
-    # The rewrite DELETES storedTheme() -- the pre-paint script in <head> is the
-    # only reader of the key now -- and keeps setTheme() as the toggle's entry
-    # point. Either name called from lesson code would be a silent break, so
-    # both are proved unused outside the block before anything is deleted.
-    for name in ("storedTheme", "setTheme"):
-        if re.search(r"\b%s\s*\(" % name, outside):
-            problems.append(
-                "%s() is called from outside the theme block this tool replaces; "
-                "that is lesson code, and lesson code is not this tool's to "
-                "rewrite" % name
-            )
     return problems
 
 
-def rewrite_set_theme(text):
-    """Swap the generator's theme block for the pinned one.
+def rewrite_classified(text):
+    """Replace the classified statements with the pinned implementation.
 
-    What changes: the storage key, the button id the icon swap and the listener
-    address, and the removal of the post-paint `setTheme(storedTheme()||"dark")`
-    -- the stored theme is applied once, in <head>, before first paint.
-    What does NOT change: window.redrawLab(), carried across so every canvas
-    still repaints when the theme changes.
+    Statements the classification did NOT claim keep their bytes and their
+    place: course 6 hangs its `#resetBtn` handler in the middle of the theme
+    block, and that handler is the generator's, not this tool's.
     """
-    if text.count(SET_THEME_JS) == 1 and theme_keys(text) == {THEME_STORAGE_KEY}:
+    plan = plan_theme_region(text)
+    if plan.pinned:
         return text, False
-    match = SET_THEME_SOURCE_RE.search(text)
-    if match is None:
-        raise IntakeError("no recognized %s theme block to replace" % SHAPE_SET_THEME)
-    new_text = text[: match.start()] + SET_THEME_JS + text[match.end() :]
-    assert_theme_key_pinned(new_text, "replacing the %s theme block" % SHAPE_SET_THEME)
-    if "window.redrawLab()" not in new_text:
+    if plan.problems:
+        raise IntakeError(plan.problems[0])
+    if not plan.spans:
+        raise IntakeError("no classified theme region to replace")
+
+    hook = sorted(plan.hooks)[0] if plan.hooks else DEFAULT_REDRAW_HOOK
+    pinned = build_theme_js(hook)
+    new_text = text
+    for index, (start, end) in reversed(list(enumerate(merge_adjacent_spans(text, plan.spans)))):
+        wide_start, wide_end = expand_to_full_lines(text, start, end)
+        replacement = ""
+        if index == 0:
+            replacement = pinned + ("\n" if (wide_start, wide_end) != (start, end) else "")
+        new_text = new_text[:wide_start] + replacement + new_text[wide_end:]
+
+    assert_theme_key_pinned(new_text, "replacing the classified theme region")
+    surviving = set()
+    for start, end in theme_scripts(new_text):
+        surviving |= set(HOOK_CALL_RE.findall(strip_js_literals(new_text[start:end])))
+    lost = sorted(plan.hooks - surviving)
+    if lost:
         raise IntakeError(
-            "the rewrite dropped window.redrawLab(); the labs would keep painting "
-            "in the other theme's ink"
+            "the rewrite dropped %s; the labs read their colours at draw time, so "
+            "every canvas would keep painting in the other theme's ink"
+            % ", ".join("window.%s()" % h for h in lost)
         )
     return new_text, True
 
@@ -953,76 +1744,111 @@ def rewrite_set_theme(text):
 # -- the registry ----------------------------------------------------------
 
 class ThemeShape:
-    """One generator's theme machinery, named and recognized explicitly.
+    """One way of recognizing a package's theme machinery, named explicitly.
 
-    Five packages have arrived and they have shipped TWO different theme
-    implementations. The value of this tool is that it cannot guess, so each one
-    is a NAMED row here rather than a loose pattern that covers both:
+    Seven packages have arrived and they have shipped THREE different theme
+    implementations. Two rows cover them, and the difference between the rows is
+    the whole design:
 
-      * SIGNATURE -- answers one question, "which family is this file?", and
-        must match exactly ONCE. It is not evidence that the file is safe to
-        rewrite; that is the preflight's job.
-      * TOGGLE -- the button element this family ships, so the pinned toggle
-        replaces the right element and preflight counts the right thing.
+      * SHAPE_SETUP_THEME is recognized BY NAME. Courses 1-4 are published with
+        `function setupTheme(){...}` and that name is the family.
+      * SHAPE_CLASSIFIED is recognized BY BEHAVIOUR. It has no signature to
+        widen, because widening a signature is what kept failing: it reads the
+        statements and classifies each one by what it DOES.
+
+    Each row carries:
+
+      * MATCHES -- one question, "is this file mine?", answered without deciding
+        whether it is safe to rewrite; that is the preflight's job. A file must
+        match exactly ONE row. Matching none is a refusal; matching two is a
+        refusal. SHAPE_CLASSIFIED deliberately DECLINES a file that carries the
+        setupTheme signature, so a general recognizer sitting beside a specific
+        one can never turn into an ambiguity.
+      * TOGGLE -- (pattern, label) for the button this file ships, computed per
+        FILE rather than fixed per shape, so the pinned toggle replaces the
+        right element and preflight counts the right thing.
       * PREFLIGHT -- what must be true before a byte is written.
       * REWRITE -- check-then-repair, and idempotent: handed its own output it
         reports no change.
 
-    Adding a shape adds a row. It must never widen the signature of an existing
-    one, and there is deliberately no catch-all that "probably" matches the next
-    package: a file that matches no row is refused, loudly, with nothing written.
-    See docs/INTAKE.md, "When a sixth package brings a third shape".
+    SHAPE_CLASSIFIED is not a catch-all. It matches a file whose theme it can
+    account for statement by statement, or whose theme it can see and cannot
+    account for -- and the second case is a refusal with the offending statement
+    quoted. A file with no theme at all matches nothing and is still refused.
+    See docs/INTAKE.md.
     """
 
-    __slots__ = ("name", "signature", "description", "toggle", "toggle_label",
-                 "preflight", "rewrite")
+    __slots__ = ("name", "description", "matcher", "toggle_for", "preflight", "rewrite")
 
-    def __init__(self, name, signature, description, toggle, toggle_label,
-                 preflight, rewrite):
+    def __init__(self, name, description, matcher, toggle_for, preflight, rewrite):
         self.name = name
-        self.signature = signature
         self.description = description
-        self.toggle = toggle
-        self.toggle_label = toggle_label
+        self.matcher = matcher
+        self.toggle_for = toggle_for
         self.preflight = preflight
         self.rewrite = rewrite
 
     def matches(self, text):
-        """Exactly one occurrence of the signature. Two is not a stronger match."""
-        return len(self.signature.findall(text)) == 1
+        return self.matcher(text)
+
+    def toggle(self, text):
+        """(compiled pattern, human label) for this file's toggle button."""
+        return self.toggle_for(text)
 
     def __repr__(self):  # pragma: no cover - diagnostics only
         return "<ThemeShape %s>" % self.name
 
 
 SHAPE_SETUP_THEME = "SHAPE_SETUP_THEME"
-SHAPE_SET_THEME = "SHAPE_SET_THEME"
+SHAPE_CLASSIFIED = "SHAPE_CLASSIFIED"
+
+
+def matches_setup_theme(text):
+    """Exactly one setupTheme(). Two is not a stronger match."""
+    return len(SETUP_THEME_SIGNATURE_RE.findall(text)) == 1
+
+
+def matches_classified(text):
+    """A theme region this tool can classify -- or can see and cannot.
+
+    The setupTheme family is claimed by name above and is declined here, so no
+    file can ever match both rows. Everything else is decided by reading the
+    statements: a file with a theme region matches (even when that region holds
+    something unaccountable, so the refusal can name it), and a file with no
+    theme region at all matches nothing and is refused as an unknown shape.
+    """
+    if SETUP_THEME_SIGNATURE_RE.search(text):
+        return False
+    plan = plan_theme_region(text)
+    return plan.pinned or bool(plan.spans) or bool(plan.problems)
+
 
 SHAPES = (
     ThemeShape(
         name=SHAPE_SETUP_THEME,
-        signature=SETUP_THEME_SIGNATURE_RE,
         description=(
             'courses 1-4: one `function setupTheme(){...}` holding every theme '
             'storage call, and <button id="themeToggle">'
         ),
-        toggle=TOGGLE_RE_SETUP_THEME,
-        toggle_label="#themeToggle",
+        matcher=matches_setup_theme,
+        toggle_for=lambda _text: (TOGGLE_RE_SETUP_THEME, "#themeToggle"),
         preflight=preflight_setup_theme,
         rewrite=rewrite_setup_theme,
     ),
     ThemeShape(
-        name=SHAPE_SET_THEME,
-        signature=SET_THEME_SIGNATURE_RE,
+        name=SHAPE_CLASSIFIED,
         description=(
-            'course 5: `storedTheme()` + `setTheme(theme)` applied AFTER paint '
-            'at the end of the script, repainting through window.redrawLab(), '
-            'and <button id="themeBtn"> whose textContent is the glyph'
+            "courses 5-7 and anything after them: the theme region is read "
+            "statement by statement and each statement is classified by what it "
+            "DOES (reads/writes the key, sets dataset.theme, swaps the glyph, "
+            "registers the listener, applies the stored theme, calls a redraw "
+            "hook). Statements it cannot account for that touch the theme are a "
+            "refusal; statements that are not about the theme are left alone"
         ),
-        toggle=TOGGLE_RE_SET_THEME,
-        toggle_label='#themeBtn (or #themeToggle, once this tool has renamed it)',
-        preflight=preflight_set_theme,
-        rewrite=rewrite_set_theme,
+        matcher=matches_classified,
+        toggle_for=classified_toggle_regex,
+        preflight=preflight_classified,
+        rewrite=rewrite_classified,
     ),
 )
 
@@ -1041,16 +1867,50 @@ def shape_refusal(text):
     )
     if not hits:
         return (
-            "no known theme shape matches this file. This tool knows:\n        %s\n"
-            "    A package with a third shape is not something to guess at: give it "
-            "its own row in SHAPES (signature, toggle, preflight, rewrite) -- see "
-            "docs/INTAKE.md -- rather than loosening one of these" % known
+            "no theme control was found that this tool can recognize. It knows:"
+            "\n        %s\n"
+            "    A file with no theme region at all is not something to guess at: "
+            "either it is not a lesson, or its theme lives somewhere this tool "
+            "does not read -- see docs/INTAKE.md" % known
         )
     return (
         "%d theme shapes match this file (%s), so which one it is cannot be "
         "decided; this tool will not choose between them"
         % (len(hits), ", ".join(hits))
     )
+
+
+def explain_theme(text):
+    """Human-readable classification of the theme region. Reads, never writes."""
+    plan = plan_theme_region(text)
+    lines = []
+    if plan.pinned:
+        return ["already pinned by this tool (repaint hook: %s)"
+                % ", ".join("window.%s()" % h for h in sorted(plan.hooks) or ["none"])]
+    claimed = [s for s in plan.statements if s.candidate]
+    if not claimed:
+        return ["no theme statement found"]
+    first = min(s.start for s in claimed)
+    last = max(s.end for s in claimed)
+    for statement in plan.statements:
+        if statement.candidate:
+            if statement.accounted:
+                label = " + ".join(statement.roles) or "theme-local"
+            else:
+                label = "UNCLASSIFIED: %s" % statement.reason
+        elif first <= statement.start < last and statement.text.strip(";"):
+            label = "preserved untouched (not theme)"
+        else:
+            continue
+        lines.append("%-64s %s" % (label, _excerpt(statement.text, 96)))
+    lines.append(
+        "toggle: %s | repaint hook: %s"
+        % (
+            "#" + plan.toggle_id if plan.toggle_id else "UNRESOLVED",
+            ", ".join("window.%s()" % h for h in sorted(plan.hooks)) or "none",
+        )
+    )
+    return lines
 
 
 def preflight_lesson(lesson, text):
@@ -1085,11 +1945,13 @@ def preflight_lesson(lesson, text):
     if shape is None:
         problems.append(shape_refusal(text))
     else:
-        toggles = len(shape.toggle.findall(text))
+        toggle_re, toggle_label = shape.toggle(text)
+        toggles = len(toggle_re.findall(text))
         if toggles != 1:
             problems.append(
-                "expected exactly one %s toggle button for %s, found %d"
-                % (shape.toggle_label, shape.name, toggles)
+                "the toggle element cannot be located unambiguously: expected "
+                "exactly one theme toggle button (%s) for %s, found %d"
+                % (toggle_label, shape.name, toggles)
             )
         # The theme key must be rewritable: this tool replaces a REGION of script
         # wholesale (that region is shell), so every theme storage call has to
@@ -1554,20 +2416,25 @@ def step_theme_toggle(text, ctx):
     """The pinned toggle, verbatim, whichever button the package shipped.
 
     Course 1-4's button names the NEXT state ("Use light theme") and has its
-    label rewritten from script on every click; course 5's is <button
-    id="themeBtn"> with a "Change theme" label. Both become the one pinned
+    label rewritten from script on every click; courses 5-7 ship <button
+    id="themeBtn"> with a "Change theme" label -- and in courses 6-7 it sits in
+    a .top-actions div NEXT TO a #resetBtn. All of them become the one pinned
     element, whose label is direction-neutral -- accurate in both states, so
-    nothing has to be rewritten at runtime. Which button to look for is the
-    shape's, not a pattern loose enough to match every id.
+    nothing has to be rewritten at runtime.
+
+    Only the theme button is replaced. The pattern comes from the shape, which
+    for a classified page derives it from the markup (themeish_button_ids()),
+    so the reset button beside it keeps its markup, its id and its handler.
     """
     if text.count(TOGGLE_ELEMENT) == 1:
         return text, False
     shape = ctx["shape"]
-    new_text, count = shape.toggle.subn(lambda _m: TOGGLE_ELEMENT, text)
+    toggle_re, toggle_label = shape.toggle(text)
+    new_text, count = toggle_re.subn(lambda _m: TOGGLE_ELEMENT, text)
     if count != 1:
         raise IntakeError(
-            "expected exactly one %s element for %s, replaced %d"
-            % (shape.toggle_label, shape.name, count)
+            "expected exactly one theme toggle element (%s) for %s, replaced %d"
+            % (toggle_label, shape.name, count)
         )
     return new_text, True
 
@@ -1576,7 +2443,7 @@ def step_theme_script(text, ctx):
     """Pin the theme machinery, dispatched on the shape preflight identified.
 
     Each shape rewrites its OWN region and only that region: setupTheme() for
-    SHAPE_SETUP_THEME, the storedTheme()/setTheme() block for SHAPE_SET_THEME.
+    SHAPE_SETUP_THEME, the statements it could classify for SHAPE_CLASSIFIED.
     Preflight has already proved, per shape, that every theme storage call site
     lives inside that region, so replacing it whole cannot touch lesson code.
     Both rewrites are check-then-repair, so a page that is already pinned is
@@ -1701,8 +2568,13 @@ STEPS = (
     ("light-palette", step_light_palette),
     ("chrome-css", step_chrome_css),
     ("prepaint-theme-script", step_theme_prepaint),
-    ("theme-toggle", step_theme_toggle),
+    # The SCRIPT is pinned before the BUTTON, and the order matters: the
+    # classifier locates the toggle by agreement between the markup and the
+    # statements addressing it, so the button must still be the generator's when
+    # the script is read. Swapped, the tool would be reading a page whose markup
+    # it had already renamed and whose script it had not.
     ("theme-storage-key", step_theme_script),
+    ("theme-toggle", step_theme_toggle),
     ("breadcrumb", step_breadcrumb),
     ("lesson-pager", step_pager),
     ("footer", step_footer),
@@ -1788,6 +2660,12 @@ def main(argv=None):
     parser.add_argument("--out", type=Path, default=REPO_ROOT / "site")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument(
+        "--explain-theme",
+        action="store_true",
+        help="print how the theme region of every lesson was classified, "
+             "statement by statement, and write nothing else",
+    )
+    parser.add_argument(
         "--diff",
         action="store_true",
         help="with --dry-run, print a unified diff for every changed file",
@@ -1823,6 +2701,12 @@ def main(argv=None):
                 "preflight failed on %d point(s):\n    %s"
                 % (len(failures), "\n    ".join(failures))
             )
+        if args.explain_theme:
+            for lesson in lessons:
+                print("  %s [%s]" % (lesson.source.name, shapes[lesson.slug].name))
+                for line in explain_theme(texts[lesson.slug]):
+                    print("      %s" % line)
+
         # Which shape each lesson is, is evidence: a package that is not uniform
         # is worth seeing in the report rather than discovering later.
         for name in sorted({shape.name for shape in shapes.values()}):

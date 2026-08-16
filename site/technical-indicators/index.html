@@ -254,10 +254,10 @@
       border-radius: 9px;
       white-space: nowrap;
     }
-    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a:hover { color: var(--text); background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08))); }
     .topnav a[aria-current="page"] {
       color: var(--text);
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       border: 1px solid var(--line);
       padding: 7px 9px;
     }
@@ -296,11 +296,11 @@
       border-radius: 11px;
       display: grid;
       place-items: center;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       cursor: pointer;
       transition: transform 150ms ease, border-color 150ms ease;
     }
-    .icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+    .icon-btn:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
 
     /* ---------- Hero ---------- */
     .hero {
@@ -379,7 +379,7 @@
       border: 1px solid var(--line);
       border-radius: 12px;
       padding: 11px 15px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--text);
       cursor: pointer;
       text-decoration: none;
@@ -387,7 +387,7 @@
       font-size: 0.9rem;
       transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
     }
-    .btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .btn:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
     .btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
     .btn.ghost { background: transparent; }
 
@@ -449,7 +449,7 @@
       padding: 8px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--muted);
       font-size: 0.78rem;
       font-weight: 750;
@@ -480,7 +480,7 @@
       border-radius: var(--radius-sm);
       background: var(--panel);
     }
-    .path-card.current { border-color: var(--line-strong); background: var(--panel-2); }
+    .path-card.current { border-color: var(--line-strong, var(--line2, var(--line))); background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08))); }
     .path-card h3 { margin: 0; font-size: 1.02rem; letter-spacing: -0.01em; }
     .path-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
 
@@ -509,7 +509,7 @@
     @supports selector(:has(*)) {
       .path-card h3 a:focus-visible { outline: none; }
     }
-    .path-card:has(h3 a:hover) { border-color: var(--line-strong); }
+    .path-card:has(h3 a:hover) { border-color: var(--line-strong, var(--line2, var(--line))); }
 
     /* ---------- Course overview ---------- */
     .overview-grid {
@@ -557,13 +557,13 @@
       padding: 8px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--text);
       text-decoration: none;
       font-size: 0.82rem;
       font-weight: 750;
     }
-    .stage-nav a:hover { border-color: var(--line-strong); }
+    .stage-nav a:hover { border-color: var(--line-strong, var(--line2, var(--line))); }
     .stage-nav a span { color: var(--muted); font-size: 0.74rem; font-weight: 800; font-variant-numeric: tabular-nums; }
 
     /* ---------- Stages ---------- */
@@ -641,7 +641,7 @@
       margin: 0;
       border: 1px solid var(--line-strong);
       border-radius: 14px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--cyan-2);
       font-size: 0.95rem;
       font-weight: 850;
@@ -661,7 +661,7 @@
       box-shadow: 0 14px 38px rgba(0, 0, 0, 0.12);
       transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
     }
-    .lesson-card:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+    .lesson-card:hover { transform: translateY(-3px); border-color: var(--line-strong, var(--line2, var(--line))); }
 
     /* The whole card is the hit target, but only ONE link exists in the a11y tree. */
     .lesson-card:has(.lesson-link:focus-visible) {
@@ -812,11 +812,11 @@
       padding: 11px 13px;
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       text-decoration: none;
       transition: border-color 150ms ease, transform 150ms ease;
     }
-    .file-link:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+    .file-link:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
     .file-link svg { width: 17px; height: 17px; flex: none; color: var(--cyan-2); }
     /* The schema filename is long enough to overrun a 360px card on its own, and
        neither is inside a <p>, so they do not inherit the global wrap rule. */
@@ -1000,12 +1000,12 @@
       padding: 13px 15px;
       border: 1px solid var(--line);
       border-radius: 13px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--text);
       text-decoration: none;
       transition: transform 150ms ease, border-color 150ms ease;
     }
-    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
     .path-move span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
     .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
     .path-move.next { margin-left: auto; text-align: right; }

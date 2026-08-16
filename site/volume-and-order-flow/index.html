@@ -252,10 +252,10 @@
       border-radius: 9px;
       white-space: nowrap;
     }
-    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a:hover { color: var(--text); background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08))); }
     .topnav a[aria-current="page"] {
       color: var(--text);
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       border: 1px solid var(--line);
       padding: 7px 9px;
     }
@@ -294,11 +294,11 @@
       border-radius: 11px;
       display: grid;
       place-items: center;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       cursor: pointer;
       transition: transform 150ms ease, border-color 150ms ease;
     }
-    .icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+    .icon-btn:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
 
     /* ---------- Hero ---------- */
     .hero {
@@ -377,7 +377,7 @@
       border: 1px solid var(--line);
       border-radius: 12px;
       padding: 11px 15px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--text);
       cursor: pointer;
       text-decoration: none;
@@ -385,7 +385,7 @@
       font-size: 0.9rem;
       transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
     }
-    .btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .btn:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
     .btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
     .btn.ghost { background: transparent; }
 
@@ -447,7 +447,7 @@
       padding: 8px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--muted);
       font-size: 0.78rem;
       font-weight: 750;
@@ -477,36 +477,15 @@
       border-radius: var(--radius-sm);
       background: var(--panel);
     }
-    .path-card.current { border-color: var(--line-strong); background: var(--panel-2); }
+    .path-card.current { border-color: var(--line-strong, var(--line2, var(--line))); background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08))); }
     .path-card h3 { margin: 0; font-size: 1.02rem; letter-spacing: -0.01em; }
     .path-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
 
-    /* The unavailable course. A dashed edge and a flat, un-panelled surface mark
-       it as not-yet-material at a glance; the .path-flag below states it in
-       words for anyone who cannot see the border treatment. Colour is NOT the
-       signal, and the copy is never dimmed below the contrast the rest of the
-       page holds — an announcement a reader cannot read is not an announcement. */
-    .path-card.upcoming {
-      border-style: dashed;
-      border-color: var(--line-strong);
-      background: none;
-    }
-    .path-card.upcoming h3 { color: var(--muted); }
-
-    .path-flag {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      align-self: flex-start;
-      padding: 5px 10px;
-      border: 1px dashed var(--line-strong);
-      border-radius: 999px;
-      color: var(--amber);
-      font-size: 0.69rem;
-      font-weight: 850;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
+    /* This page once styled an UNAVAILABLE next course (.path-card.upcoming,
+       .path-flag, .path-move.is-upcoming). Course 6 shipped, so the state and
+       its rules are gone: the forward link here is now an ordinary rel="next"
+       anchor. The disabled treatment lives on whichever course home is
+       currently last — never here on the strength of having needed it once. */
 
     .path-tag {
       display: inline-flex;
@@ -527,7 +506,7 @@
     @supports selector(:has(*)) {
       .path-card h3 a:focus-visible { outline: none; }
     }
-    .path-card:has(h3 a:hover) { border-color: var(--line-strong); }
+    .path-card:has(h3 a:hover) { border-color: var(--line-strong, var(--line2, var(--line))); }
 
     /* ---------- Course overview ---------- */
     .overview-grid {
@@ -579,13 +558,13 @@
       padding: 8px 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--text);
       text-decoration: none;
       font-size: 0.82rem;
       font-weight: 750;
     }
-    .stage-nav a:hover { border-color: var(--line-strong); }
+    .stage-nav a:hover { border-color: var(--line-strong, var(--line2, var(--line))); }
     .stage-nav a span { color: var(--muted); font-size: 0.74rem; font-weight: 800; font-variant-numeric: tabular-nums; }
 
     /* ---------- Stages ---------- */
@@ -663,7 +642,7 @@
       margin: 0;
       border: 1px solid var(--line-strong);
       border-radius: 14px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--cyan-2);
       font-size: 0.95rem;
       font-weight: 850;
@@ -683,7 +662,7 @@
       box-shadow: 0 14px 38px rgba(0, 0, 0, 0.12);
       transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
     }
-    .lesson-card:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+    .lesson-card:hover { transform: translateY(-3px); border-color: var(--line-strong, var(--line2, var(--line))); }
 
     /* The whole card is the hit target, but only ONE link exists in the a11y tree. */
     .lesson-card:has(.lesson-link:focus-visible) {
@@ -834,11 +813,11 @@
       padding: 11px 13px;
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       text-decoration: none;
       transition: border-color 150ms ease, transform 150ms ease;
     }
-    .file-link:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+    .file-link:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
     .file-link svg { width: 17px; height: 17px; flex: none; color: var(--cyan-2); }
     /* The schema filename is long enough to overrun a 360px card on its own, and
        it is not inside a <p>, so it does not inherit the global wrap rule. */
@@ -895,28 +874,16 @@
       padding: 13px 15px;
       border: 1px solid var(--line);
       border-radius: 13px;
-      background: var(--panel-2);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
       color: var(--text);
       text-decoration: none;
       transition: transform 150ms ease, border-color 150ms ease;
     }
 
-    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
     .path-move span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
     .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
     .path-move.next { margin-left: auto; text-align: right; }
-
-    /* The forward half when there is nothing to move forward to. It is a span,
-       not an anchor, so it cannot be focused or followed; the dashed edge and
-       the words "not yet available" carry the same fact twice, for the reader
-       who sees the border and the reader who does not. */
-    .path-move.is-upcoming {
-      opacity: 0.72;
-      cursor: default;
-      border-style: dashed;
-      background: none;
-    }
-    .path-move.is-upcoming:hover { transform: none; border-color: var(--line); }
 
     /* ---------- SVG theming ----------
        Classes, never hardcoded hex, so every mark in every thumbnail re-paints on
@@ -1228,16 +1195,15 @@
             <p>Sixteen lessons in six stages, from what volume counts to a rule set precise enough to hand to another person or program. It is written to stand on its own — every lesson is a standalone page and nothing here loads anything from courses 1 to 4 — so a single lesson also works as a reference you come back to.</p>
           </article>
 
-          <article class="path-card upcoming" aria-labelledby="next-course-title">
-            <p class="path-flag">
+          <article class="path-card" aria-labelledby="next-course-title">
+            <p class="path-tag">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="12" r="8.4" /><path d="M12 7.5V12l3 2" />
+                <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
               </svg>
-              Not yet available
+              Course 6 · Comes after this
             </p>
-            <p class="path-tag">Course 6 · Comes after this</p>
-            <h3 id="next-course-title">Trading Risk Management</h3>
-            <p>Announced, not yet published — there is no page to open yet. It is named here because this course deliberately stops at interpretation: position risk, portfolio risk, drawdown and risk-of-ruin are reserved for course 6, and strategy validation for course 7, Backtesting and Trading Systems. Reading flow well is not the same as sizing a position, and this course never pretends otherwise.</p>
+            <h3 id="next-course-title"><a href="../trading-risk-management/">Trading Risk Management</a></h3>
+            <p>Sixteen lessons on what a read costs you when it is wrong: account risk and the risk budget, risk per trade, stops placed at structural invalidation, position sizing, R-multiples and expectancy, drawdown and risk of ruin, ATR-based sizing, gap and slippage risk, leverage, correlation and portfolio exposure, options risk, and hard daily and weekly limits. It is named here because this course deliberately stops at interpretation: reading flow well is not the same as sizing a position, and this course never pretends otherwise. The path continues past it — the <a href="../paths/trading/">trading path</a> lists every course and marks the ones that are not published yet.</p>
           </article>
         </div>
       </section>
@@ -2471,11 +2437,7 @@
 
       <nav class="path-nav" aria-label="Course navigation">
         <a class="path-move prev" href="../technical-indicators/" rel="prev"><span>Previous course</span><strong>Course 4 &middot; Technical Indicators</strong></a>
-        <!-- Course 6 has no page yet, so this is deliberately not an anchor: a disabled
-             span cannot be focused or followed, and aria-disabled tells a screen reader
-             why. Swap it for <a class="path-move next" href="../trading-risk-management/"
-             rel="next"> the moment that course ships. -->
-        <span class="path-move next is-upcoming" aria-disabled="true"><span>Next course</span><strong>Course 6 &middot; Trading Risk Management &mdash; not yet available</strong></span>
+        <a class="path-move next" href="../trading-risk-management/" rel="next"><span>Next course</span><strong>Course 6 &middot; Trading Risk Management</strong></a>
       </nav>
     </main>
 
