@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "technical-indicator-rule-v1",
+  "title": "Technical Indicator Rule",
+  "type": "object",
+  "required": [
+    "schema",
+    "course",
+    "generatedAt",
+    "data",
+    "rule",
+    "diagnostics"
+  ],
+  "properties": {
+    "schema": {
+      "const": "technical-indicator-rule-v1"
+    },
+    "course": {
+      "const": "Technical Indicators"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "scenario",
+        "timeframe",
+        "barTiming",
+        "synthetic"
+      ],
+      "properties": {
+        "scenario": {
+          "type": "string"
+        },
+        "timeframe": {
+          "type": "string"
+        },
+        "barTiming": {
+          "type": "string"
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "required": [
+        "direction",
+        "trendFilter",
+        "entryTrigger",
+        "strengthFilter",
+        "volatilityFilter",
+        "exit",
+        "parameters",
+        "statePolicy"
+      ],
+      "properties": {
+        "direction": {
+          "enum": [
+            "long",
+            "short"
+          ]
+        },
+        "trendFilter": {
+          "enum": [
+            "above",
+            "below",
+            "none"
+          ]
+        },
+        "entryTrigger": {
+          "enum": [
+            "rsiUp",
+            "rsiDown",
+            "macdUp",
+            "macdDown",
+            "donUp",
+            "donDown"
+          ]
+        },
+        "strengthFilter": {
+          "enum": [
+            "adx",
+            "none"
+          ]
+        },
+        "volatilityFilter": {
+          "enum": [
+            "atr",
+            "none"
+          ]
+        },
+        "exit": {
+          "enum": [
+            "ema",
+            "macd",
+            "fixed"
+          ]
+        },
+        "statePolicy": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "object",
+          "required": [
+            "emaPeriod",
+            "rsiPeriod",
+            "rsiThreshold",
+            "donchianPeriod",
+            "adxThreshold",
+            "minimumAtrPercent",
+            "maximumHoldingBars"
+          ],
+          "properties": {
+            "emaPeriod": {
+              "type": "number"
+            },
+            "rsiPeriod": {
+              "type": "number"
+            },
+            "rsiThreshold": {
+              "type": "number"
+            },
+            "donchianPeriod": {
+              "type": "number"
+            },
+            "adxThreshold": {
+              "type": "number"
+            },
+            "minimumAtrPercent": {
+              "type": "number"
+            },
+            "maximumHoldingBars": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "required": [
+        "clarityScore",
+        "directionAligned",
+        "trendAligned",
+        "entryEvents",
+        "exitEvents",
+        "performanceEvaluated"
+      ],
+      "properties": {
+        "clarityScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "directionAligned": {
+          "type": "boolean"
+        },
+        "trendAligned": {
+          "type": "boolean"
+        },
+        "entryEvents": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "exitEvents": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "averageDurationBars": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "performanceEvaluated": {
+          "const": false
+        }
+      }
+    }
+  }
+}

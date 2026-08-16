@@ -4,58 +4,57 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="An interactive standalone lesson for defining structural invalidation, sizing positions, and comparing reward-to-risk." />
-  <title>Invalidation, Stops & Reward-to-Risk Lab</title>
-  <link rel="canonical" href="https://learn.geterdone.io/market-structure-lab/invalidation-stops-risk-reward/" />
+  <meta name="description" content="An interactive standalone lesson for interpreting price-volume behavior and comparative performance against a benchmark." />
+  <title>Volume & Relative Strength Lab</title>
+  <link rel="canonical" href="https://learn.geterdone.io/market-structure/volume-relative-strength/" />
   <meta name="author" content="dmedellin" />
   <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="learn.geterdone.io" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="Invalidation, Stops &amp; Reward-to-Risk Lab" />
-  <meta property="og:description" content="An interactive standalone lesson for defining structural invalidation, sizing positions, and comparing reward-to-risk." />
-  <meta property="og:url" content="https://learn.geterdone.io/market-structure-lab/invalidation-stops-risk-reward/" />
+  <meta property="og:title" content="Volume &amp; Relative Strength Lab" />
+  <meta property="og:description" content="An interactive standalone lesson for interpreting price-volume behavior and comparative performance against a benchmark." />
+  <meta property="og:url" content="https://learn.geterdone.io/market-structure/volume-relative-strength/" />
   <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Invalidation, Stops &amp; Reward-to-Risk Lab" />
-  <meta name="twitter:description" content="An interactive standalone lesson for defining structural invalidation, sizing positions, and comparing reward-to-risk." />
-  <meta name="twitter:url" content="https://learn.geterdone.io/market-structure-lab/invalidation-stops-risk-reward/" />
+  <meta name="twitter:title" content="Volume &amp; Relative Strength Lab" />
+  <meta name="twitter:description" content="An interactive standalone lesson for interpreting price-volume behavior and comparative performance against a benchmark." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/market-structure/volume-relative-strength/" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071019'/%3E%3Cpath d='M10 46 L24 29 L34 39 L46 17' fill='none' stroke='%2336d6e7' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   <style>
 
 /* ---------------------------------------------------------------------
-   DESIGN TOKENS — the only place a theme value may live.
+   DESIGN TOKENS. Same vocabulary as site/index.html and
+   site/market-structure/index.html so the catalog and every lab read as one
+   product.
 
-   THEME RULE: the palette flips through TWO independent paths, the explicit
-   toggle ([data-theme="light"]) and the system preference (the media block,
-   for the visitor who never touches the toggle). A component-level
-   `[data-theme="light"] .foo {…}` override only ever reaches the first of
-   them, so a light-OS visitor would get the light background with dark-theme
-   accents. There are no component-level theme rules on this page; every
-   component reads a token instead. Keep it that way and the two paths cannot
-   drift, because there is nothing per-path left to forget.
+   THEME RULE, and the reason these blocks are the ONLY place light values may
+   live: the palette flips through TWO independent paths — the explicit toggle
+   ([data-theme="light"]) and the system preference (the media block below, for
+   the visitor who never touches the toggle). A component-level
+   `[data-theme="light"] .foo {…}` override only ever reaches the first of them,
+   so a light-OS visitor would get the light background with dark-theme accents.
+   There are no component-level theme rules on this page; every component reads
+   a token instead. Keep it that way and the two paths cannot drift.
 
    Accents are re-declared for light because they are read AS TEXT (.eyebrow,
-   .concept-card .icon, .state-pill, td.good/.warn/.bad, .footer a, the
-   gradient headline, and every SVG .chart-label / .tone-* in the charts).
-   Light values are contrast-checked against --panel-3 (#eaf2f7, the darkest
-   light surface on this page): --cyan 4.89:1, --cyan-2 5.33:1, --green
-   4.85:1, --red 5.05:1, --amber 5.23:1, --purple 5.34:1, --blue 5.15:1 — all
-   >= 4.5:1, and every one is higher again on --bg and on --panel-solid.
-   Light --cyan-2 is DARKER than --cyan on purpose: --cyan-2 is the emphasis
-   stop in both themes, so it has to be the more readable one against the
-   current background, not simply the lighter hue.
+   .concept-card .icon, .state-pill, td.good/.warn/.bad, .excess-positive/
+   .excess-negative, the .chart-label and .tone-* classes that paint every SVG).
+   The charts here are styled entirely from these custom properties — nothing
+   samples getComputedStyle — so the tokens are the only lever that reaches
+   them. Light values are contrast-checked against --bg (#edf4f8, the darkest
+   light surface): --cyan 4.98:1, --cyan-2 5.43:1, --green 4.94:1, --red 5.14:1,
+   --amber 5.33:1, --purple 5.44:1, --blue 5.58:1, --muted 4.91:1 — all
+   >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the
+   emphasis stop in both themes, so it has to be the more readable one against
+   the current background, not simply the lighter hue.
 
-   --on-accent is the ink that sits ON a filled accent (.btn.primary,
-   .brand-mark, .tab.active, .check-dot, .lesson-row .num, .callout .mark,
-   .skip-link). It has to flip with the theme because those accent fills go
-   dark in light mode. White on each light accent measures >= 5.5:1; #041116
-   on each dark accent measures >= 7.0:1.
-
-   Light --muted is #586d7d rather than a lighter grey because .check-dot
-   paints muted text on --panel-3: 4.76:1 there, 4.85:1 on --bg, 5.39:1 on
-   --panel-solid.
+   --on-accent is the ink that sits ON a filled accent (.brand-mark,
+   .btn.primary, .tab.active, .check-dot, .lesson-row .num, .callout .mark,
+   .skip-link). It has to flip with the theme because those accent fills go dark
+   in light mode. It also repairs a real dark-theme failure: the fail dot used
+   to paint white on --red at 2.70:1; --on-accent makes it 7.09:1.
    --------------------------------------------------------------------- */
 :root {
   color-scheme: dark;
@@ -87,26 +86,26 @@
    survive on a light-mode OS. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    color-scheme: light;
-    --bg: #edf4f8;
-    --bg-2: #f9fbfd;
-    --panel: rgba(255, 255, 255, 0.94);
-    --panel-solid: #ffffff;
-    --panel-2: #f3f8fb;
-    --panel-3: #eaf2f7;
-    --text: #102433;
-    --muted: #586c7c;
-    --line: rgba(24, 62, 88, 0.13);
-    --line-strong: rgba(24, 62, 88, 0.24);
-    --cyan: #0e7382;
-    --cyan-2: #0b6d79;
-    --green: #10784f;
-    --red: #c22a34;
-    --amber: #8a5a06;
-    --purple: #6b46d6;
-    --blue: #1d5fd0;
-    --on-accent: #ffffff;
-    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  color-scheme: light;
+  --bg: #edf4f8;
+  --bg-2: #f9fbfd;
+  --panel: rgba(255, 255, 255, 0.94);
+  --panel-solid: #ffffff;
+  --panel-2: #f3f8fb;
+  --panel-3: #eaf2f7;
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --line-strong: rgba(24, 62, 88, 0.24);
+  --cyan: #0e7382;
+  --cyan-2: #0b6d79;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --on-accent: #ffffff;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
   }
 }
 
@@ -158,7 +157,7 @@ button { color: inherit; }
 a { color: inherit; }
 svg { display: block; }
 
-/* Visible focus everywhere, in both themes. Matches site/market-structure/. */
+/* Visible focus everywhere, in both themes. Matches site/market-structure/index.html. */
 :focus-visible {
   outline: 3px solid var(--cyan);
   outline-offset: 3px;
@@ -209,6 +208,30 @@ svg { display: block; }
   gap: 11px;
   min-width: 0;
   text-decoration: none;
+}
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--on-accent);
+  font-weight: 950;
+  background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+  box-shadow: 0 8px 26px rgba(55, 215, 231, 0.25);
+}
+
+.brand-copy strong {
+  display: block;
+  font-size: 0.96rem;
+  letter-spacing: 0.01em;
+}
+
+.brand-copy span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
 }
 
 .topnav {
@@ -287,30 +310,6 @@ svg { display: block; }
    two unreadable columns. */
 @media (max-width: 720px) {
   .lesson-link { flex-basis: 100%; }
-}
-
-.brand-mark {
-  width: 39px;
-  height: 39px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  color: var(--on-accent);
-  font-weight: 950;
-  background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
-  box-shadow: 0 8px 26px rgba(55, 215, 231, 0.25);
-}
-
-.brand-copy strong {
-  display: block;
-  font-size: 0.96rem;
-  letter-spacing: 0.01em;
-}
-
-.brand-copy span {
-  display: block;
-  color: var(--muted);
-  font-size: 0.75rem;
 }
 
 .icon-btn {
@@ -607,22 +606,7 @@ h1 {
   stroke-linejoin: round;
 }
 .zone { opacity: 0.08; }
-.focus-window {
-  fill: color-mix(in srgb, var(--cyan) 11%, transparent);
-  stroke: var(--cyan);
-  stroke-width: 1.4;
-  stroke-dasharray: 7 5;
-}
-
-/* Emitted by the risk-planner overlay. Without these rules the rects fall back
-   to SVG's default opaque black fill. */
-.reward-zone { fill: var(--green); fill-opacity: 0.1; }
-.risk-zone { fill: var(--red); fill-opacity: 0.1; }
-
-/* Hero diagram bands. Colour only — the geometry lives in the markup. */
-.hero-zone { fill: currentColor; fill-opacity: 0.1; stroke: currentColor; stroke-opacity: 0.42; }
-.hero-zone.reward { color: var(--green); }
-.hero-zone.risk { color: var(--red); }
+.focus-window { fill: rgba(55,215,231,0.09); stroke: var(--cyan); stroke-width: 1.4; stroke-dasharray: 7 5; }
 
 .control-strip {
   display: flex;
@@ -673,7 +657,24 @@ input[type="range"] {
 }
 
 .side-panel h3 { margin: 0; font-size: 1.08rem; }
-.side-panel > p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+.side-panel > p,
+.side-panel .live-readout > p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+/* ONE live region per side panel, not one per field. renderVolumeScenario()
+   and renderRelativeStrength() rewrite the summary, the verdict, every metric
+   and the checklist in a single handler; announcing them separately made a
+   screen reader read a verdict with no sentence behind it, and a live region
+   per field would have said it several times over. The wrapper is a grid so it
+   reproduces the .side-panel column gap exactly — it changes announcement
+   grouping, not layout. No aria-atomic: the panels are long, and re-reading all
+   of one on every checkbox tick would bury the part that actually changed. */
+.live-readout {
+  display: grid;
+  gap: 14px;
+}
+/* The drill's children already carry their own margins, so its live wrapper
+   must not add a second gap on top of them. */
+.live-readout.flow { gap: 0; }
 
 .verdict {
   padding: 15px;
@@ -1006,6 +1007,8 @@ td.bad { color: var(--red); font-weight: 800; }
 }
 
 .footer strong { color: var(--text); }
+.footer p { margin: 0 0 6px; }
+.footer p:last-child { margin-bottom: 0; }
 .footer a { color: var(--cyan-2); text-underline-offset: 3px; }
 
 .noscript-note {
@@ -1063,81 +1066,68 @@ td.bad { color: var(--red); font-weight: 800; }
 }
 
 
-.calc-panel {
-  padding: 18px;
+.pv-chart {
+  width: 100%;
+  min-height: 520px;
 }
-.calc-panel h3 { margin: 0 0 12px; }
-.calc-result {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
-  margin-top: 14px;
-}
-.calc-result .metric { min-height: 72px; }
-.risk-budget {
-  margin-top: 14px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(55,215,231,.08), rgba(182,156,255,.06));
-}
-.risk-budget .amount {
-  display: block;
-  margin-top: 3px;
-  font-size: 1.8rem;
-  font-weight: 950;
-  letter-spacing: -.04em;
-}
-.risk-budget p { margin: 5px 0 0; color: var(--muted); font-size: .78rem; }
-.r-ladder {
+.volume-up { fill: var(--green); opacity: .62; }
+.volume-down { fill: var(--red); opacity: .62; }
+.volume-average { stroke: var(--amber); stroke-width: 1.8; stroke-dasharray: 6 5; fill: none; }
+.chart-divider { stroke: var(--line-strong); stroke-width: 1; }
+.legend-row {
   display: flex;
-  gap: 6px;
   flex-wrap: wrap;
-}
-.r-chip {
-  padding: 6px 8px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: var(--panel-2);
-  font-size: .72rem;
-  font-weight: 850;
-}
-.drag-hint {
-  padding: 9px 12px;
-  border: 1px dashed var(--line-strong);
-  border-radius: 11px;
-  color: var(--muted);
-  font-size: .76rem;
-}
-.stop-candidate {
-  display: grid;
-  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
   align-items: center;
-  gap: 9px;
 }
-.stop-candidate .letter {
-  width: 32px;
-  height: 32px;
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: .74rem;
+  font-weight: 750;
+}
+.legend-line {
+  width: 22px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--cyan);
+}
+.legend-line.purple { background: var(--purple); }
+.legend-line.amber { background: var(--amber); }
+.rs-layout {
   display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: var(--panel-3);
-  font-weight: 950;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, .55fr);
+  gap: 16px;
 }
-.stop-candidate small { color: var(--muted); }
-.stop-candidate strong { font-size: .85rem; }
-
-.stop-candidate strong,
-.stop-candidate small {
-  display: block;
+.rs-chart-stack {
+  display: grid;
+  gap: 10px;
 }
-.stop-candidate small {
-  margin-top: 2px;
-  line-height: 1.35;
+.rs-chart-box {
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  overflow: hidden;
+  background: var(--panel-solid);
 }
-
-@media (max-width: 720px) {
-  .calc-result { grid-template-columns: 1fr; }
+.rs-chart-box header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: .75rem;
+  font-weight: 800;
+}
+.rs-chart-box .market-chart { min-height: 270px; }
+.rs-chart-box.small .market-chart { min-height: 170px; }
+.excess-positive { color: var(--green) !important; }
+.excess-negative { color: var(--red) !important; }
+@media (max-width: 900px) {
+  .rs-layout { grid-template-columns: 1fr; }
 }
 
   </style>
@@ -1152,14 +1142,15 @@ td.bad { color: var(--red); font-weight: 800; }
 
   <script>
     /* Applied before first paint so an explicit theme choice never flashes the
-       other theme. This is why it lives in <head> and not in the script at the
-       bottom of <body>: that one runs after the first paint.
-       SAME localStorage key as the rest of the course ('learn-theme')
-       so the choice persists across every lesson without a flash. The allowlist
-       matters - a corrupt value would otherwise be written straight onto
-       data-theme, matching no CSS while still counting as an explicit choice,
-       which permanently mislabels the toggle and pins the page to the dark
-       palette. No stored value => CSS prefers-color-scheme decides. */
+       other theme. This is why it lives in <head> and not with the rest of the
+       page script: that runs after the first paint.
+       SAME localStorage key as site/index.html and every other lab
+       ('learn-theme') so one choice persists across all seven pages.
+       The allowlist matters — a corrupt value would otherwise be written
+       straight onto data-theme, matching no CSS while still counting as an
+       explicit choice, which permanently mislabels the toggle and pins the page
+       to the dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
     (function () {
       try {
         var t = localStorage.getItem('learn-theme');
@@ -1173,17 +1164,18 @@ td.bad { color: var(--red); font-weight: 800; }
 
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="../" aria-label="Back to the Market Structure Lab course home">
-        <div class="brand-mark" aria-hidden="true">05</div>
+      <a class="brand" href="../" aria-label="Back to the Market Structure course home">
+        <div class="brand-mark" aria-hidden="true">06</div>
         <div class="brand-copy">
-          <strong>Market Structure Lab</strong>
+          <strong>Market Structure</strong>
           <span>Standalone interactive learning lab</span>
         </div>
       </a>
       <nav class="topnav" aria-label="Primary">
         <a href="../">Course home</a>
-        <a href="#lab">Risk planner</a>
-        <a href="#stop-quality">Stop drill</a>
+        <a href="#lab">Volume Lab</a>
+        <a href="#relative-strength">Relative Strength</a>
+        <a href="#practice">Practice</a>
       </nav>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
     </header>
@@ -1191,15 +1183,15 @@ td.bad { color: var(--red); font-weight: 800; }
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../../">Learn library</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <a href="../">Market Structure Lab</a>
+      <a href="../">Market Structure</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 05 &middot; Invalidation, Stops &amp; Reward-to-Risk</span>
+      <span class="crumb-current" aria-current="page">Lesson 06 &middot; Volume &amp; Relative Strength</span>
     </nav>
 
     <noscript>
       <div class="noscript-note">
         <strong>JavaScript is required for the interactive parts of this lesson.</strong>
-        The risk map, the position-size calculator, and the stop-quality drill are drawn and computed in your browser, so they stay blank while JavaScript is disabled. The written explanations and working rules below still read normally.
+        The price-and-volume chart, the relative-strength comparator, and the leadership drill are drawn in your browser, so they stay blank while JavaScript is disabled. The written explanations and the confirmation stack below still read normally.
       </div>
     </noscript>
 
@@ -1208,214 +1200,243 @@ td.bad { color: var(--red); font-weight: 800; }
 
 <section class="hero">
   <div>
-    <span class="eyebrow"><span class="pulse"></span>Lesson 05 · Risk</span>
-    <h1>Invalidation, stops &amp; <span class="gradient-text">reward-to-risk</span></h1>
+    <span class="eyebrow"><span class="pulse"></span>Lesson 06 · Participation</span>
+    <h1>Volume &amp; <span class="gradient-text">relative strength</span></h1>
     <p>
-      A stop should express where the trade idea is wrong—not where the loss becomes emotionally uncomfortable.
-      Position size adapts to the structural stop; the stop should not be squeezed to justify a larger position.
+      Price shows direction. Volume helps you judge participation. Relative strength asks whether the asset
+      is actually leading or lagging its benchmark—even when both charts are green or both are falling.
     </p>
     <div class="hero-actions">
-      <button class="btn primary" type="button" onclick="scrollToLab()">Open risk lab</button>
-      <a class="btn ghost" href="#stop-quality">Practice stop placement</a>
+      <button class="btn primary" type="button" onclick="scrollToLab()">Inspect price + volume</button>
+      <a class="btn ghost" href="#relative-strength">Compare against a benchmark</a>
     </div>
   </div>
-  <div class="hero-visual" aria-label="Entry, stop, target, and reward-to-risk zones">
-    <svg viewBox="0 0 520 330" role="img" aria-label="Entry, stop, target, and reward-to-risk zones">
-      <rect x="72" y="54" width="384" height="106" rx="16" class="hero-zone reward"/>
-      <rect x="72" y="160" width="384" height="65" rx="16" class="hero-zone risk"/>
-      <line x1="56" y1="160" x2="474" y2="160" stroke="var(--cyan)" stroke-width="3"/>
-      <line x1="56" y1="225" x2="474" y2="225" stroke="var(--red)" stroke-width="2" stroke-dasharray="8 6"/>
-      <line x1="56" y1="54" x2="474" y2="54" stroke="var(--green)" stroke-width="2" stroke-dasharray="8 6"/>
-      <text x="66" y="150" fill="var(--cyan-2)" font-size="12" font-weight="900">ENTRY</text>
-      <text x="66" y="245" fill="var(--red)" font-size="12" font-weight="900">INVALIDATION · 1R</text>
-      <text x="66" y="44" fill="var(--green)" font-size="12" font-weight="900">TARGET · 1.63R</text>
-      <polyline points="92,202 135,186 178,194 220,165 262,174 305,139 348,146 391,112 437,84"
-        fill="none" stroke="var(--purple)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <div class="hero-visual" aria-label="Price breakout with volume expansion and relative strength">
+    <svg viewBox="0 0 520 330" role="img" aria-label="Price breaking above a range high while volume bars expand">
+      <line x1="44" y1="130" x2="476" y2="130" stroke="var(--red)" stroke-width="2" stroke-dasharray="8 6"/>
+      <polyline points="48,225 88,190 124,208 164,168 205,186 244,146 282,163 318,125 350,94 388,73 430,58 476,42"
+        fill="none" stroke="var(--cyan)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <g opacity=".7">
+        <rect x="54" y="270" width="18" height="28" rx="3" fill="var(--green)"/>
+        <rect x="92" y="262" width="18" height="36" rx="3" fill="var(--red)"/>
+        <rect x="130" y="267" width="18" height="31" rx="3" fill="var(--green)"/>
+        <rect x="168" y="255" width="18" height="43" rx="3" fill="var(--green)"/>
+        <rect x="206" y="264" width="18" height="34" rx="3" fill="var(--red)"/>
+        <rect x="244" y="251" width="18" height="47" rx="3" fill="var(--green)"/>
+        <rect x="282" y="260" width="18" height="38" rx="3" fill="var(--red)"/>
+        <rect x="320" y="220" width="18" height="78" rx="3" fill="var(--green)"/>
+        <rect x="358" y="202" width="18" height="96" rx="3" fill="var(--green)"/>
+        <rect x="396" y="224" width="18" height="74" rx="3" fill="var(--green)"/>
+        <rect x="434" y="212" width="18" height="86" rx="3" fill="var(--green)"/>
+      </g>
+      <text x="46" y="118" fill="var(--red)" font-size="11" font-weight="900">RANGE HIGH</text>
+      <text x="350" y="188" fill="var(--green)" font-size="11" font-weight="900">VOLUME EXPANSION</text>
     </svg>
-    <div class="float-label" style="right:18px;bottom:18px;">Risk first; size second</div>
+    <div class="float-label" style="left:18px;top:18px;">Compare volume to its own baseline</div>
   </div>
 </section>
 
 <section class="section">
   <div class="section-head">
-    <div><h2>The risk chain</h2></div>
-    <p>Every number should derive from the thesis rather than from the profit you hope to make.</p>
+    <div><h2>What each lens contributes</h2></div>
+    <p>Neither volume nor relative strength replaces structure. They add evidence about participation and leadership.</p>
   </div>
   <div class="grid-3">
     <article class="card concept-card">
-      <div class="icon">X</div>
-      <h3>Invalidation</h3>
-      <p>The price event that disproves the setup: a protected swing breaks, a breakout fails, or acceptance returns inside a range.</p>
+      <div class="icon">V</div>
+      <h3>Volume context</h3>
+      <p>Compare current activity with the asset’s recent baseline. A large bar matters more when it is unusual for that market.</p>
     </article>
     <article class="card concept-card">
-      <div class="icon">#</div>
-      <h3>Position size</h3>
-      <p>Risk budget divided by risk per unit. Wider structural stops require fewer units; tighter valid stops allow more.</p>
+      <div class="icon">✓</div>
+      <h3>Follow-through</h3>
+      <p>High volume can accompany continuation or exhaustion. The next candles reveal whether the price move was accepted.</p>
     </article>
     <article class="card concept-card">
-      <div class="icon">R</div>
-      <h3>R multiple</h3>
-      <p>Potential reward divided by planned risk. It compares geometry, not the probability that the target will be reached.</p>
+      <div class="icon">RS</div>
+      <h3>Relative strength</h3>
+      <p>Normalize the asset and benchmark, then compare performance. This is not the RSI momentum indicator.</p>
     </article>
   </div>
 </section>
 
 <section class="section" id="lab">
   <div class="section-head">
-    <div><h2>Interactive risk planner</h2></div>
-    <p>Change entry, stop, target, and account risk. The visual and calculations update immediately.</p>
+    <div><h2>Price + volume laboratory</h2></div>
+    <p>Inspect the event bar, its volume relative to baseline, and what price does afterward.</p>
   </div>
 
   <div class="lab-layout">
     <article class="card chart-card">
       <div class="chart-toolbar">
         <div class="chart-title">
-          <strong id="riskChartTitle">Long setup risk map</strong>
-          <span>Linear instrument model · synthetic chart</span>
+          <strong id="volumeScenarioTitle">Healthy breakout</strong>
+          <span>Price and volume · synthetic data</span>
         </div>
-        <div class="r-ladder" id="rLadder"></div>
+        <div class="tab-row" id="volumeTabs">
+          <button class="tab active" data-scenario="healthyBreakout" type="button">Healthy breakout</button>
+          <button class="tab" data-scenario="weakBreakout" type="button">Weak breakout</button>
+          <button class="tab" data-scenario="accumulation" type="button">Accumulation</button>
+          <button class="tab" data-scenario="distribution" type="button">Distribution</button>
+        </div>
       </div>
-      <div class="chart-wrap">
-        <svg id="riskChart" class="market-chart" aria-label="Entry stop and target chart"></svg>
+      <div class="chart-wrap" style="min-height:520px;">
+        <svg id="priceVolumeChart" class="pv-chart" role="img" aria-label="Candlestick and volume chart"></svg>
         <div class="chart-tooltip"></div>
       </div>
       <div class="control-strip">
-        <div class="control-group grow">
-          <label for="stopSlider">Stop</label>
-          <input id="stopSlider" type="range" step="0.1" />
-          <strong id="stopSliderLabel">101.00</strong>
-        </div>
-        <div class="control-group grow">
-          <label for="targetSlider">Target</label>
-          <input id="targetSlider" type="range" step="0.1" />
-          <strong id="targetSliderLabel">113.00</strong>
-        </div>
-        <label class="check"><input id="showRLadder" type="checkbox" checked /> R ladder</label>
+        <label class="check"><input id="showVolumeAverage" type="checkbox" checked /> Volume baseline</label>
+        <label class="check"><input id="showVolumeLevel" type="checkbox" checked /> Structure level</label>
+        <label class="check"><input id="showVolumeLabels" type="checkbox" checked /> Event labels</label>
       </div>
     </article>
 
-    <aside class="card calc-panel">
-      <h3>Position-size calculator</h3>
-      <div class="form-grid">
-        <div class="field">
-          <label for="riskDirection">Direction</label>
-          <select id="riskDirection">
-            <option value="long">Long</option>
-            <option value="short">Short</option>
-          </select>
+    <aside class="card side-panel">
+      <h3>Participation diagnosis</h3>
+
+      <div class="live-readout" aria-live="polite">
+        <p id="volumeSummary">Price closes above the range on expanded volume and remains accepted outside.</p>
+
+        <div class="verdict">
+          <span class="label">Interpretation</span>
+          <strong id="volumeVerdict">Breakout supported</strong>
+          <p id="volumeReason">Participation expanded during the break and follow-through held above the old range.</p>
         </div>
-        <div class="field">
-          <label for="accountSize">Account size</label>
-          <input id="accountSize" type="number" min="1" step="100" value="25000" />
+
+        <div class="metric-grid">
+          <div class="metric"><span class="k">Event volume</span><span class="v" id="eventVolume">2.1K</span></div>
+          <div class="metric"><span class="k">Prior baseline</span><span class="v" id="baselineVolume">0.9K</span></div>
+          <div class="metric"><span class="k">Expansion</span><span class="v" id="volumeExpansion">2.3×</span></div>
         </div>
-        <div class="field">
-          <label for="riskPercent">Account risk (%)</label>
-          <input id="riskPercent" type="number" min="0.01" max="100" step="0.05" value="0.50" />
-        </div>
-        <div class="field">
-          <label for="pointValue">Value per 1.00 move / unit</label>
-          <input id="pointValue" type="number" min="0.0001" step="0.01" value="1" />
-        </div>
-        <div class="field">
-          <label for="riskEntry">Entry price</label>
-          <input id="riskEntry" type="number" step="0.1" value="105" />
-        </div>
-        <div class="field">
-          <label for="riskStop">Stop / invalidation</label>
-          <input id="riskStop" type="number" step="0.1" value="101" />
-        </div>
-        <div class="field">
-          <label for="riskTarget">Target price</label>
-          <input id="riskTarget" type="number" step="0.1" value="113" />
-        </div>
-        <div class="field">
-          <label for="lotSize">Round to unit lot</label>
-          <input id="lotSize" type="number" min="1" step="1" value="1" />
+
+        <div class="checklist">
+          <div class="check-row pass" id="volumeCheckPrice">
+            <div class="check-dot">1</div>
+            <div><strong>Price event</strong><span id="volumeCheckPriceText">Closed beyond the range.</span></div>
+          </div>
+          <div class="check-row pass" id="volumeCheckParticipation">
+            <div class="check-dot">2</div>
+            <div><strong>Participation</strong><span id="volumeCheckParticipationText">Volume expanded versus baseline.</span></div>
+          </div>
+          <div class="check-row pass" id="volumeCheckFollow">
+            <div class="check-dot">3</div>
+            <div><strong>Follow-through</strong><span id="volumeCheckFollowText">Price remained accepted outside.</span></div>
+          </div>
         </div>
       </div>
 
-      <!-- ONE live region wraps every JS-rewritten readout in this panel. Split
-           across the budget, each metric, and the verdict it would announce five
-           separate times per keystroke. -->
-      <div class="live-readout" aria-live="polite" aria-atomic="true">
-      <div class="risk-budget">
-        <span style="color:var(--muted);font-size:.7rem;font-weight:850;text-transform:uppercase;letter-spacing:.07em;">Planned risk budget</span>
-        <span class="amount" id="riskBudget">$125.00</span>
-        <p id="riskFormula">0.50% of a $25,000 account</p>
-      </div>
-
-      <div class="calc-result">
-        <div class="metric"><span class="k">Risk / unit</span><span class="v" id="riskPerUnit">$4.00</span></div>
-        <div class="metric"><span class="k">Position units</span><span class="v" id="positionUnits">31</span></div>
-        <div class="metric"><span class="k">Target P/L</span><span class="v" id="targetPL">$248.00</span></div>
-        <div class="metric"><span class="k">Reward / risk</span><span class="v" id="riskRR">2.00R</span></div>
-      </div>
-
-      <div class="feedback" id="riskValidation" style="margin-top:12px;">The stop is on the correct side of the entry.</div>
-      </div>
-
-      <div class="note" style="margin-top:12px;">
-        <strong>Scope:</strong> This calculator assumes linear price exposure. Options are nonlinear;
-        use option premium or an option-price exit plan rather than treating underlying price distance as exact contract risk.
+      <div class="note">
+        <strong>Caution:</strong> One large volume bar does not prove intent. Earnings, news, index rebalancing,
+        and closing auctions can distort activity. Always read volume with price structure and follow-through.
       </div>
     </aside>
   </div>
 </section>
 
-<section class="section" id="stop-quality">
+<section class="section" id="relative-strength">
   <div class="section-head">
-    <div><h2>Stop-quality drill</h2></div>
-    <p>The rule for this setup: the long thesis is invalid only when the protected low breaks with enough room for ordinary noise.</p>
+    <div><h2>Relative-strength comparator</h2></div>
+    <p>Both series start at 100, so their paths show percentage performance rather than raw price differences.</p>
   </div>
 
+  <div class="rs-layout">
+    <article class="card card-pad">
+      <div class="chart-toolbar" style="padding:0 0 14px;border:0;background:transparent;">
+        <div class="chart-title">
+          <strong id="rsScenarioTitle">Clear leader</strong>
+          <span>Normalized asset versus benchmark</span>
+        </div>
+        <div class="tab-row" id="rsTabs">
+          <button class="tab active" data-rs="leader" type="button">Leader</button>
+          <button class="tab" data-rs="follower" type="button">Follower</button>
+          <button class="tab" data-rs="hidden" type="button">Hidden strength</button>
+          <button class="tab" data-rs="weakening" type="button">Weakening</button>
+        </div>
+      </div>
+
+      <div class="rs-chart-stack">
+        <div class="rs-chart-box">
+          <header>
+            <span>Normalized performance</span>
+            <span class="legend-row">
+              <span class="legend-item"><span class="legend-line"></span>Asset</span>
+              <span class="legend-item"><span class="legend-line purple"></span>Benchmark</span>
+            </span>
+          </header>
+          <svg id="rsPerformanceChart" class="market-chart" role="img" aria-label="Normalized asset and benchmark performance"></svg>
+        </div>
+        <div class="rs-chart-box small">
+          <header><span>Relative-strength ratio · asset ÷ benchmark</span><span>Rising = improving leadership</span></header>
+          <svg id="rsRatioChart" class="market-chart" role="img" aria-label="Relative strength ratio"></svg>
+        </div>
+      </div>
+    </article>
+
+    <aside class="card side-panel">
+      <h3>Leadership summary</h3>
+
+      <div class="live-readout" aria-live="polite">
+        <p id="rsSummary">The asset rises faster than the benchmark, while the ratio trend confirms improving leadership.</p>
+        <div class="metric-grid">
+          <div class="metric"><span class="k">Asset return</span><span class="v" id="assetReturn">+18.0%</span></div>
+          <div class="metric"><span class="k">Benchmark</span><span class="v" id="benchmarkReturn">+8.0%</span></div>
+          <div class="metric"><span class="k">Excess</span><span class="v excess-positive" id="excessReturn">+10.0%</span></div>
+        </div>
+        <div class="verdict">
+          <span class="label">Relative-strength state</span>
+          <strong id="rsVerdict">Improving leader</strong>
+          <p id="rsReason">The asset/benchmark ratio is rising and finishes above its starting level.</p>
+        </div>
+      </div>
+
+      <label class="check"><input id="showBenchmark" type="checkbox" checked /> Show benchmark line</label>
+      <label class="check"><input id="showRsRatio" type="checkbox" checked /> Show ratio line</label>
+      <div class="note">
+        <strong>Not RSI:</strong> Relative strength here means comparative performance against another asset or benchmark.
+        RSI is a separate momentum oscillator.
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="practice">
   <div class="grid-2">
     <article class="card practice">
       <div class="practice-head">
-        <h3>Which stop expresses the thesis?</h3>
-        <span class="score" id="stopScore">Score 0 / 0</span>
+        <h3>Leadership drill</h3>
+        <span class="score" id="rsScore">Score 0 / 0</span>
       </div>
-      <div class="chart-wrap" style="min-height:330px;">
-        <svg id="stopQuizChart" class="market-chart" style="min-height:330px;" aria-label="Stop placement practice chart"></svg>
-        <div class="chart-tooltip"></div>
+      <div class="live-readout flow" aria-live="polite">
+      <p id="rsQuizPrompt" style="margin:0;color:var(--muted);font-size:.9rem;"></p>
+      <div class="choice-grid" id="rsChoices">
+        <button class="choice" data-answer="leader" type="button">Relative leader</button>
+        <button class="choice" data-answer="laggard" type="button">Relative laggard</button>
+        <button class="choice" data-answer="equal" type="button">Roughly equal performance</button>
+        <button class="choice" data-answer="unknown" type="button">Cannot compare</button>
       </div>
-      <div class="choice-grid" id="stopChoices">
-        <button class="choice stop-candidate" data-answer="A" type="button">
-          <span class="letter">A</span><span><strong>102.80</strong><small>Inside recent candle noise</small></span><span>tight</span>
-        </button>
-        <button class="choice stop-candidate" data-answer="B" type="button">
-          <span class="letter">B</span><span><strong>97.80</strong><small>Below the protected low</small></span><span>structural</span>
-        </button>
-        <button class="choice stop-candidate" data-answer="C" type="button">
-          <span class="letter">C</span><span><strong>91.00</strong><small>Far below with no stated reason</small></span><span>loose</span>
-        </button>
-        <button class="choice" data-answer="D" type="button">No stop; wait for recovery</button>
+      <div class="feedback" id="rsFeedback">Compare percentage performance, not whether each return is positive or negative.</div>
       </div>
-      <div class="feedback" id="stopFeedback" aria-live="polite">Choose the level that matches the stated structural rule.</div>
-      <button class="btn small" id="resetStopQuiz" type="button" style="margin-top:10px;">Reset drill</button>
+      <button class="btn small" id="nextRsQuiz" type="button" style="margin-top:10px;">New comparison</button>
     </article>
 
     <article class="card card-pad">
-      <h3 style="margin-top:0;">Three different stop problems</h3>
+      <h3 style="margin-top:0;">A practical confirmation stack</h3>
       <div class="lesson-list">
         <div class="lesson-row">
-          <div class="num">A</div>
-          <div><strong>Inside noise</strong><span>The stop can be hit while the original structure remains valid. Position size looks larger, but the stop does not express the thesis.</span></div>
+          <div class="num">1</div>
+          <div><strong>Structure first</strong><span>Define the trend, range boundary, breakout, or protected swing before interpreting volume.</span></div>
         </div>
         <div class="lesson-row">
-          <div class="num">B</div>
-          <div><strong>Beyond invalidation</strong><span>The stop sits past the protected swing with a deliberate buffer. The position is sized around this real distance.</span></div>
+          <div class="num">2</div>
+          <div><strong>Participation second</strong><span>Compare event volume with recent activity and note whether up or down candles attract more participation.</span></div>
         </div>
         <div class="lesson-row">
-          <div class="num">C</div>
-          <div><strong>Arbitrarily far</strong><span>A stop can be structurally unnecessary as well as too tight. Extra distance reduces size without adding a defined reason.</span></div>
+          <div class="num">3</div>
+          <div><strong>Leadership third</strong><span>Prefer assets whose performance is improving against the benchmark when that agrees with your directional thesis.</span></div>
         </div>
-      </div>
-
-      <div class="callout" style="margin-top:14px;">
-        <div class="mark">R</div>
-        <div>
-          <strong>A 3R target is not automatically superior to a 1.5R target.</strong>
-          <p>R describes payoff geometry. Setup quality, target realism, liquidity, gaps, and execution still matter.</p>
+        <div class="lesson-row">
+          <div class="num">4</div>
+          <div><strong>Follow-through decides</strong><span>A breakout with impressive volume can still fail; acceptance after the event remains essential.</span></div>
         </div>
       </div>
     </article>
@@ -1426,20 +1447,20 @@ td.bad { color: var(--red); font-weight: 800; }
     </main>
 
     <nav class="lesson-nav" aria-label="Lesson navigation">
-      <a class="lesson-link prev" href="../pullbacks-entry-models/" rel="prev">
+      <a class="lesson-link prev" href="../invalidation-stops-risk-reward/" rel="prev">
         <span>Previous lesson</span>
-        <strong>04 &middot; Pullbacks &amp; Entry Models</strong>
+        <strong>05 &middot; Invalidation, Stops &amp; Reward-to-Risk</strong>
       </a>
-      <a class="lesson-link next" href="../volume-relative-strength/" rel="next">
+      <a class="lesson-link next" href="../options-contract-selection/" rel="next">
         <span>Next lesson</span>
-        <strong>06 &middot; Volume &amp; Relative Strength</strong>
+        <strong>07 &middot; Options Contract Selection</strong>
       </a>
     </nav>
 
     <footer class="footer">
-      <p><strong>Educational lab.</strong> Charts and numbers are synthetic examples—not live market data or trading signals.</p>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
-      <p><a href="https://geterdone.io">geterdone.io</a></p>
+      <p><strong>Educational lab.</strong> Charts and numbers are synthetic examples—not live market data or trading signals.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
     </footer>
   </div>
 
@@ -1759,8 +1780,13 @@ function drawLineChart(svg, seriesList, options = {}) {
 // Theme. The stored choice was already read, validated against the
 // 'light'/'dark' allowlist, and applied by the pre-paint <head> script, so
 // data-theme is trustworthy by the time this runs. This block only owns the
-// toggle and its icon; every chart colour is a CSS token read live through
-// currentColor / var(), so nothing has to be redrawn when the theme flips.
+// toggle and its icon.
+// No chart repaint is wired here on purpose: every mark on this page is painted
+// from the custom properties via CSS (.tone-*, .chart-grid, .chart-axis,
+// .chart-label, .volume-up/.volume-down/.volume-average), and nothing samples
+// getComputedStyle at draw time, so the live SVGs re-theme themselves the
+// instant the token values change. If a future chart ever reads a token in JS,
+// it must be redrawn from here.
 function setupTheme() {
   const button = document.getElementById("themeToggle");
   const lightQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
@@ -1768,8 +1794,7 @@ function setupTheme() {
   const effectiveTheme = () => document.documentElement.dataset.theme || (lightQuery && lightQuery.matches ? "light" : "dark");
   const renderIcon = () => {
     if (!button) return;
-    const light = effectiveTheme() === "light";
-    button.textContent = light ? "☀" : "☾";
+    button.textContent = effectiveTheme() === "light" ? "☀" : "☾";
   };
   renderIcon();
   button?.addEventListener("click", () => {
@@ -1800,240 +1825,370 @@ setupTheme();
 
 
 
-const riskInputs = {
-  direction: document.getElementById("riskDirection"),
-  account: document.getElementById("accountSize"),
-  riskPercent: document.getElementById("riskPercent"),
-  pointValue: document.getElementById("pointValue"),
-  entry: document.getElementById("riskEntry"),
-  stop: document.getElementById("riskStop"),
-  target: document.getElementById("riskTarget"),
-  lot: document.getElementById("lotSize")
+function buildVolumeScenario(key) {
+  const scenarios = {
+    healthyBreakout: {
+      title: "Healthy breakout",
+      level: 108,
+      eventIndex: 17,
+      closes: [103.0,104.2,106.0,105.1,102.8,101.3,102.4,104.6,106.8,107.4,105.9,103.8,102.1,103.2,105.4,107.1,107.5,109.6,111.1,112.0,111.5,113.2,114.0,113.6,115.1],
+      volumes: [820,910,980,860,940,1040,880,920,990,1030,910,970,890,860,940,1010,960,2240,1880,1710,1320,1560,1490,1210,1380],
+      summary: "Price closes above the range on expanded volume and remains accepted outside.",
+      verdict: "Breakout supported",
+      reason: "Participation expanded during the break and follow-through held above the old range.",
+      checks: [
+        ["pass", "Closed beyond the range."],
+        ["pass", "Volume expanded versus baseline."],
+        ["pass", "Price remained accepted outside."]
+      ]
+    },
+    weakBreakout: {
+      title: "Weak breakout and failure",
+      level: 108,
+      eventIndex: 17,
+      closes: [103.1,104.5,106.2,105.4,103.0,101.6,102.7,104.8,106.9,107.5,106.1,104.0,102.3,103.5,105.6,107.2,107.6,108.9,108.4,107.5,106.2,105.1,104.3,103.8,104.6],
+      volumes: [850,900,970,880,930,1010,860,930,1000,1020,900,950,890,870,920,980,940,690,760,1180,1420,1260,1110,980,920],
+      summary: "Price briefly closes above the range on weak activity, then re-enters and accelerates lower.",
+      verdict: "Breakout not supported",
+      reason: "The break lacked participation and failed to maintain acceptance beyond the boundary.",
+      checks: [
+        ["pass", "A candle closed beyond the range."],
+        ["warn", "Event volume was below baseline."],
+        ["fail", "Price quickly re-entered the range."]
+      ]
+    },
+    accumulation: {
+      title: "Range accumulation",
+      level: 108,
+      eventIndex: 20,
+      closes: [102.0,103.7,102.8,104.5,103.4,105.2,104.0,105.9,104.6,106.2,105.0,106.8,105.7,107.1,106.0,107.4,106.5,107.6,107.0,107.7,109.2,110.4,111.3,110.8,112.1],
+      volumes: [760,1080,720,1160,700,1230,680,1320,650,1410,640,1480,620,1540,610,1610,600,1690,620,1760,2380,1940,1700,1310,1450],
+      summary: "Upswings inside the range repeatedly attract more volume than pullbacks before the final break.",
+      verdict: "Participation building",
+      reason: "The asymmetry between stronger up-volume and lighter pullback volume precedes the breakout.",
+      checks: [
+        ["pass", "Price repeatedly presses the upper boundary."],
+        ["pass", "Up candles attract expanding activity."],
+        ["pass", "The final break holds outside."]
+      ]
+    },
+    distribution: {
+      title: "Distribution and breakdown",
+      level: 100,
+      eventIndex: 20,
+      closes: [106.0,104.7,105.5,103.9,104.8,103.1,104.0,102.5,103.6,101.9,103.0,101.5,102.7,101.1,102.2,100.8,101.7,100.5,101.0,100.2,98.7,97.5,96.8,97.2,95.9],
+      volumes: [740,1090,700,1180,680,1260,660,1340,650,1420,630,1510,620,1580,610,1660,600,1740,620,1810,2450,2020,1780,1390,1510],
+      summary: "Downswings attract increasing participation before price breaks the lower boundary.",
+      verdict: "Bearish participation",
+      reason: "Selling activity expands, the range low breaks, and price remains accepted below.",
+      checks: [
+        ["pass", "Price repeatedly pressures the lower boundary."],
+        ["pass", "Down candles attract expanding activity."],
+        ["pass", "The breakdown holds below the range."]
+      ]
+    }
+  };
+  const s = scenarios[key];
+  const data = candlesFromCloses(s.closes, {}, 180 + Object.keys(scenarios).indexOf(key));
+  data.forEach((d, i) => { d.v = s.volumes[i]; });
+  return { ...s, data };
+}
+
+function drawPriceVolume(svg, scenario, options = {}) {
+  clearSvg(svg);
+  const W = 960;
+  const H = 530;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const pricePlot = { left: 58, right: 940, top: 20, bottom: 345 };
+  pricePlot.width = pricePlot.right - pricePlot.left;
+  pricePlot.height = pricePlot.bottom - pricePlot.top;
+  const volumePlot = { left: 58, right: 940, top: 382, bottom: 495 };
+  volumePlot.width = volumePlot.right - volumePlot.left;
+  volumePlot.height = volumePlot.bottom - volumePlot.top;
+
+  const data = scenario.data;
+  const include = [scenario.level];
+  let minPrice = Math.min(...data.map(d => d.l), ...include);
+  let maxPrice = Math.max(...data.map(d => d.h), ...include);
+  const pad = (maxPrice - minPrice) * 0.09;
+  minPrice -= pad;
+  maxPrice += pad;
+  const maxVolume = Math.max(...data.map(d => d.v)) * 1.08;
+  const xStep = pricePlot.width / data.length;
+  const x = i => pricePlot.left + xStep * i + xStep / 2;
+  const y = price => pricePlot.bottom - ((price - minPrice) / (maxPrice - minPrice)) * pricePlot.height;
+  const vy = volume => volumePlot.bottom - (volume / maxVolume) * volumePlot.height;
+
+  for (let i = 0; i <= 5; i++) {
+    const yy = pricePlot.top + pricePlot.height * i / 5;
+    svg.appendChild(svgNode("line", { x1: pricePlot.left, y1: yy, x2: pricePlot.right, y2: yy, class: "chart-grid" }));
+    const val = maxPrice - (maxPrice - minPrice) * i / 5;
+    svg.appendChild(svgNode("text", { x: pricePlot.left - 9, y: yy + 4, "text-anchor": "end", class: "chart-axis" }, val.toFixed(1)));
+  }
+  for (let i = 0; i <= 6; i++) {
+    const xx = pricePlot.left + pricePlot.width * i / 6;
+    svg.appendChild(svgNode("line", { x1: xx, y1: pricePlot.top, x2: xx, y2: volumePlot.bottom, class: "chart-grid" }));
+  }
+
+  svg.appendChild(svgNode("line", { x1: pricePlot.left, y1: 364, x2: pricePlot.right, y2: 364, class: "chart-divider" }));
+  svg.appendChild(svgNode("text", { x: pricePlot.left, y: 376, class: "chart-axis" }, "VOLUME"));
+
+  if (options.showLevel) {
+    const ly = y(scenario.level);
+    svg.appendChild(svgNode("line", {
+      x1: pricePlot.left, y1: ly, x2: pricePlot.right, y2: ly,
+      class: "level-line tone-amber"
+    }));
+    svg.appendChild(svgNode("text", {
+      x: pricePlot.right - 5, y: ly - 7, "text-anchor": "end", class: "chart-label tone-amber"
+    }, scenario.level === 100 ? "Range low" : "Range high"));
+  }
+
+  const candleWidth = Math.max(4, Math.min(17, xStep * 0.58));
+  const wrap = svg.closest(".chart-wrap");
+  data.forEach((d, i) => {
+    const up = d.c >= d.o;
+    const group = svgNode("g", { class: up ? "candle-up" : "candle-down" });
+    group.appendChild(svgNode("line", { x1: x(i), y1: y(d.h), x2: x(i), y2: y(d.l), class: "wick", "stroke-width": 1.5 }));
+    const top = y(Math.max(d.o, d.c));
+    const bottom = y(Math.min(d.o, d.c));
+    group.appendChild(svgNode("rect", {
+      x: x(i) - candleWidth / 2, y: top, width: candleWidth, height: Math.max(2, bottom - top),
+      rx: 1.5, class: "body", "fill-opacity": .86
+    }));
+    const hit = svgNode("rect", { x: x(i) - xStep / 2, y: pricePlot.top, width: xStep, height: volumePlot.bottom - pricePlot.top, fill: "transparent" });
+    attachTooltip(hit, wrap, () => `<strong>Candle ${i + 1}</strong><span>O ${formatPrice(d.o)} · H ${formatPrice(d.h)}<br>L ${formatPrice(d.l)} · C ${formatPrice(d.c)}<br>Volume ${formatCompact(d.v)}</span>`);
+    group.appendChild(hit);
+    svg.appendChild(group);
+
+    svg.appendChild(svgNode("rect", {
+      x: x(i) - candleWidth / 2,
+      y: vy(d.v),
+      width: candleWidth,
+      height: Math.max(2, volumePlot.bottom - vy(d.v)),
+      rx: 1.5,
+      class: up ? "volume-up" : "volume-down"
+    }));
+  });
+
+  const baselineStart = Math.max(0, scenario.eventIndex - 10);
+  const baselineValues = data.slice(baselineStart, scenario.eventIndex).map(d => d.v);
+  const baseline = baselineValues.reduce((a,b) => a + b, 0) / baselineValues.length;
+  if (options.showAverage) {
+    const avgY = vy(baseline);
+    svg.appendChild(svgNode("line", {
+      x1: volumePlot.left, y1: avgY, x2: volumePlot.right, y2: avgY, class: "volume-average"
+    }));
+    svg.appendChild(svgNode("text", {
+      x: volumePlot.right - 5, y: avgY - 6, "text-anchor": "end", class: "chart-label tone-amber"
+    }, "Prior volume baseline"));
+  }
+
+  if (options.showLabels) {
+    const event = data[scenario.eventIndex];
+    svg.appendChild(svgNode("circle", {
+      cx: x(scenario.eventIndex),
+      cy: y(event.c),
+      r: 6,
+      class: "tone-cyan",
+      fill: "var(--panel-solid)",
+      "stroke-width": 3
+    }));
+    svg.appendChild(svgNode("text", {
+      x: x(scenario.eventIndex),
+      y: y(event.c) - 13,
+      "text-anchor": "middle",
+      class: "chart-label tone-cyan"
+    }, scenario.title.includes("break") || scenario.title.includes("Break") ? "Event candle" : "Pressure event"));
+    svg.appendChild(svgNode("text", {
+      x: x(scenario.eventIndex),
+      y: vy(event.v) - 7,
+      "text-anchor": "middle",
+      class: "chart-label tone-purple"
+    }, `${(event.v / baseline).toFixed(1)}× baseline`));
+  }
+
+  return { baseline };
+}
+
+const volumeState = { scenario: "healthyBreakout" };
+
+function updateVolumeCheck(id, status, textId, text) {
+  const row = document.getElementById(id);
+  row.className = `check-row ${status}`;
+  document.getElementById(textId).textContent = text;
+}
+
+function renderVolumeScenario() {
+  const s = buildVolumeScenario(volumeState.scenario);
+  const result = drawPriceVolume(document.getElementById("priceVolumeChart"), s, {
+    showAverage: document.getElementById("showVolumeAverage").checked,
+    showLevel: document.getElementById("showVolumeLevel").checked,
+    showLabels: document.getElementById("showVolumeLabels").checked
+  });
+  const eventVolume = s.data[s.eventIndex].v;
+  document.getElementById("volumeScenarioTitle").textContent = s.title;
+  document.getElementById("volumeSummary").textContent = s.summary;
+  document.getElementById("volumeVerdict").textContent = s.verdict;
+  document.getElementById("volumeReason").textContent = s.reason;
+  document.getElementById("eventVolume").textContent = formatCompact(eventVolume);
+  document.getElementById("baselineVolume").textContent = formatCompact(result.baseline);
+  document.getElementById("volumeExpansion").textContent = `${(eventVolume / result.baseline).toFixed(1)}×`;
+  updateVolumeCheck("volumeCheckPrice", s.checks[0][0], "volumeCheckPriceText", s.checks[0][1]);
+  updateVolumeCheck("volumeCheckParticipation", s.checks[1][0], "volumeCheckParticipationText", s.checks[1][1]);
+  updateVolumeCheck("volumeCheckFollow", s.checks[2][0], "volumeCheckFollowText", s.checks[2][1]);
+}
+
+document.getElementById("volumeTabs").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-scenario]");
+  if (!button) return;
+  volumeState.scenario = button.dataset.scenario;
+  document.querySelectorAll("#volumeTabs .tab").forEach(tab => tab.classList.toggle("active", tab === button));
+  renderVolumeScenario();
+});
+
+["showVolumeAverage", "showVolumeLevel", "showVolumeLabels"].forEach(id => {
+  document.getElementById(id).addEventListener("change", renderVolumeScenario);
+});
+
+const rsScenarios = {
+  leader: {
+    title: "Clear leader",
+    asset: [100,101.5,102.2,104.0,103.4,106.1,107.8,108.4,111.0,112.6,114.1,113.5,116.2,118.0],
+    benchmark: [100,100.6,101.0,101.8,101.5,102.7,103.4,103.8,104.9,105.4,106.2,106.0,107.1,108.0],
+    summary: "The asset rises faster than the benchmark, while the ratio trend confirms improving leadership.",
+    verdict: "Improving leader",
+    reason: "The asset/benchmark ratio is rising and finishes above its starting level."
+  },
+  follower: {
+    title: "Positive return, relative laggard",
+    asset: [100,100.8,101.4,102.0,101.7,103.0,103.8,104.1,105.0,105.7,106.4,106.0,107.1,108.0],
+    benchmark: [100,101.2,102.1,103.5,103.0,105.0,106.4,107.0,109.1,110.4,112.0,111.5,114.1,116.0],
+    summary: "The asset is green, but the benchmark rises much faster, so comparative performance deteriorates.",
+    verdict: "Relative laggard",
+    reason: "A positive standalone return can still represent weak relative strength."
+  },
+  hidden: {
+    title: "Hidden strength in a falling market",
+    asset: [100,99.1,98.8,97.9,98.3,97.2,96.8,97.4,96.5,97.0,96.2,97.1,97.5,98.0],
+    benchmark: [100,98.7,97.4,96.0,96.4,94.5,93.1,93.8,92.0,91.5,90.7,90.2,90.8,91.0],
+    summary: "The asset still declines, but it falls much less than the benchmark and its ratio trends upward.",
+    verdict: "Relative strength improving",
+    reason: "Leadership can improve during a decline when the asset loses less than its benchmark."
+  },
+  weakening: {
+    title: "Leadership weakening",
+    asset: [100,102.0,104.1,106.4,108.0,109.2,108.7,108.1,107.5,107.9,107.2,106.8,106.2,105.8],
+    benchmark: [100,100.8,101.7,102.5,103.3,104.0,104.7,105.2,105.8,106.4,107.0,107.5,108.0,108.5],
+    summary: "The asset begins as the leader, then stalls while the benchmark continues higher.",
+    verdict: "Relative strength deteriorating",
+    reason: "The ratio rolls over even though the asset remains above its starting price."
+  }
 };
 
-function money(value) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(value);
+let rsKey = "leader";
+
+function percentReturn(values) {
+  return (values[values.length - 1] / values[0] - 1) * 100;
 }
 
-function numberValue(input, fallback = 0) {
-  const value = Number(input.value);
-  return Number.isFinite(value) ? value : fallback;
+function signedPct(value) {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(1)}%`;
 }
 
-function riskGeometry(direction, entry, stop, target) {
-  const riskDistance = direction === "long" ? entry - stop : stop - entry;
-  const rewardDistance = direction === "long" ? target - entry : entry - target;
-  return {
-    riskDistance,
-    rewardDistance,
-    valid: riskDistance > 0 && rewardDistance > 0,
-    rr: riskDistance > 0 ? rewardDistance / riskDistance : NaN
-  };
-}
+function renderRelativeStrength() {
+  const s = rsScenarios[rsKey];
+  const showBenchmark = document.getElementById("showBenchmark").checked;
+  const showRatio = document.getElementById("showRsRatio").checked;
+  const performanceSeries = [{ values: s.asset, tone: "cyan", label: "Asset" }];
+  if (showBenchmark) performanceSeries.push({ values: s.benchmark, tone: "purple", label: "Benchmark" });
+  drawLineChart(document.getElementById("rsPerformanceChart"), performanceSeries, { height: 310, decimals: 0 });
 
-function buildRiskCandles(direction, entry) {
-  const offsets = [-9.0,-7.1,-5.2,-6.0,-3.6,-1.5,0.5,-0.2,-2.0,-3.2,-1.6,-0.4,1.1,2.6,3.8,5.0,4.4,6.2];
-  const closes = offsets.map(offset => direction === "long" ? entry + offset : entry - offset);
-  return candlesFromCloses(closes, {}, direction === "long" ? 130 : 131);
-}
-
-function configureRiskSliders(direction, entry, stop, target) {
-  const stopSlider = document.getElementById("stopSlider");
-  const targetSlider = document.getElementById("targetSlider");
-  const span = Math.max(5, Math.abs(entry) * 0.2);
-
-  if (direction === "long") {
-    stopSlider.min = (entry - span).toFixed(2);
-    stopSlider.max = (entry - 0.1).toFixed(2);
-    targetSlider.min = (entry + 0.1).toFixed(2);
-    targetSlider.max = (entry + span * 1.5).toFixed(2);
+  const ratio = s.asset.map((value, i) => value / s.benchmark[i] * 100);
+  if (showRatio) {
+    drawLineChart(document.getElementById("rsRatioChart"), [{ values: ratio, tone: "amber", label: "RS ratio" }], { height: 200, decimals: 1 });
   } else {
-    stopSlider.min = (entry + 0.1).toFixed(2);
-    stopSlider.max = (entry + span).toFixed(2);
-    targetSlider.min = (entry - span * 1.5).toFixed(2);
-    targetSlider.max = (entry - 0.1).toFixed(2);
+    clearSvg(document.getElementById("rsRatioChart"));
+    const svg = document.getElementById("rsRatioChart");
+    svg.setAttribute("viewBox", "0 0 960 200");
+    svg.appendChild(svgNode("text", { x: 480, y: 104, "text-anchor": "middle", class: "chart-axis" }, "Relative-strength ratio hidden"));
   }
 
-  stopSlider.value = clamp(stop, Number(stopSlider.min), Number(stopSlider.max));
-  targetSlider.value = clamp(target, Number(targetSlider.min), Number(targetSlider.max));
-  document.getElementById("stopSliderLabel").textContent = formatPrice(stop);
-  document.getElementById("targetSliderLabel").textContent = formatPrice(target);
+  const assetRet = percentReturn(s.asset);
+  const benchmarkRet = percentReturn(s.benchmark);
+  const excess = assetRet - benchmarkRet;
+  document.getElementById("rsScenarioTitle").textContent = s.title;
+  document.getElementById("rsSummary").textContent = s.summary;
+  document.getElementById("rsVerdict").textContent = s.verdict;
+  document.getElementById("rsReason").textContent = s.reason;
+  document.getElementById("assetReturn").textContent = signedPct(assetRet);
+  document.getElementById("benchmarkReturn").textContent = signedPct(benchmarkRet);
+  const excessEl = document.getElementById("excessReturn");
+  excessEl.textContent = signedPct(excess);
+  excessEl.className = `v ${excess >= 0 ? "excess-positive" : "excess-negative"}`;
 }
 
-function renderRiskPlanner(syncSliders = true) {
-  const direction = riskInputs.direction.value;
-  const account = Math.max(0, numberValue(riskInputs.account));
-  const riskPct = Math.max(0, numberValue(riskInputs.riskPercent));
-  const pointValue = Math.max(0.000001, numberValue(riskInputs.pointValue, 1));
-  const entry = numberValue(riskInputs.entry, 100);
-  const stop = numberValue(riskInputs.stop, direction === "long" ? entry - 1 : entry + 1);
-  const target = numberValue(riskInputs.target, direction === "long" ? entry + 2 : entry - 2);
-  const lot = Math.max(1, Math.floor(numberValue(riskInputs.lot, 1)));
-  const geometry = riskGeometry(direction, entry, stop, target);
-  const budget = account * riskPct / 100;
-  const riskPerUnit = Math.abs(geometry.riskDistance) * pointValue;
-  const rawUnits = geometry.valid && riskPerUnit > 0 ? budget / riskPerUnit : 0;
-  const units = Math.max(0, Math.floor(rawUnits / lot) * lot);
-  const targetPL = geometry.valid ? units * geometry.rewardDistance * pointValue : 0;
+document.getElementById("rsTabs").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-rs]");
+  if (!button) return;
+  rsKey = button.dataset.rs;
+  document.querySelectorAll("#rsTabs .tab").forEach(tab => tab.classList.toggle("active", tab === button));
+  renderRelativeStrength();
+});
 
-  if (syncSliders) configureRiskSliders(direction, entry, stop, target);
+["showBenchmark", "showRsRatio"].forEach(id => {
+  document.getElementById(id).addEventListener("change", renderRelativeStrength);
+});
 
-  document.getElementById("riskChartTitle").textContent = `${direction === "long" ? "Long" : "Short"} setup risk map`;
-  document.getElementById("riskBudget").textContent = money(budget);
-  document.getElementById("riskFormula").textContent = `${riskPct.toFixed(2)}% of a ${money(account)} account`;
-  document.getElementById("riskPerUnit").textContent = geometry.riskDistance > 0 ? money(riskPerUnit) : "Invalid";
-  document.getElementById("positionUnits").textContent = geometry.valid ? units.toLocaleString() : "0";
-  document.getElementById("targetPL").textContent = geometry.valid ? money(targetPL) : "—";
-  document.getElementById("riskRR").textContent = geometry.valid ? `${geometry.rr.toFixed(2)}R` : "Invalid";
+const rsQuizItems = [
+  { prompt: "Asset: +4.2% · Benchmark: +6.0%. How did the asset perform relatively?", answer: "laggard", explanation: "The asset rose, but it underperformed the benchmark by 1.8 percentage points." },
+  { prompt: "Asset: −2.0% · Benchmark: −8.0%. How did the asset perform relatively?", answer: "leader", explanation: "The asset fell less, outperforming the benchmark by 6.0 percentage points." },
+  { prompt: "Asset: +7.1% · Benchmark: +7.0%. How did the asset perform relatively?", answer: "equal", explanation: "The difference is only 0.1 percentage point, so performance is roughly equal for this exercise." },
+  { prompt: "Asset raw price: $42 → $45. Benchmark raw price: 5,100 → 5,250. No percentage calculation is provided. What should you do?", answer: "unknown", explanation: "Raw point changes are not directly comparable. Normalize both series or calculate percentage returns." }
+];
 
-  const validation = document.getElementById("riskValidation");
-  if (!geometry.valid) {
-    validation.className = "feedback bad";
-    validation.innerHTML = `<strong>Invalid geometry.</strong> For a ${direction}, the stop and target must be on opposite, correct sides of the entry.`;
-  } else if (units === 0 && budget > 0) {
-    validation.className = "feedback bad";
-    validation.innerHTML = `<strong>Risk budget is smaller than one lot.</strong> Reduce the lot size, use fewer point-value units, or skip the trade.`;
-  } else {
-    const actualRisk = units * riskPerUnit;
-    validation.className = "feedback good";
-    validation.innerHTML = `<strong>Geometry is valid.</strong> Rounded position risk is ${money(actualRisk)}, leaving ${money(Math.max(0, budget - actualRisk))} unused.`;
-  }
+const rsQuizState = { index: 0, score: 0, attempts: 0, answered: false };
 
-  const data = buildRiskCandles(direction, entry);
-  const include = [entry, stop, target];
-  const levels = [
-    { value: entry, label: `Entry ${formatPrice(entry)}`, tone: "cyan", solid: true },
-    { value: stop, label: `Stop ${formatPrice(stop)}`, tone: "red", solid: true },
-    { value: target, label: `Target ${formatPrice(target)}`, tone: "green", solid: true }
-  ];
-
-  const rLevels = [];
-  if (geometry.riskDistance > 0 && document.getElementById("showRLadder").checked) {
-    [1, 2, 3].forEach(r => {
-      const value = direction === "long" ? entry + geometry.riskDistance * r : entry - geometry.riskDistance * r;
-      rLevels.push({ value, label: `${r}R`, tone: r === 1 ? "amber" : "purple", opacity: 0.6 });
-      include.push(value);
-    });
-  }
-
-  drawCandles(document.getElementById("riskChart"), data, {
-    includeValues: include,
-    levels: [...levels, ...rLevels],
-    annotations: [
-      {
-        index: 9,
-        value: direction === "long" ? data[9].l : data[9].h,
-        label: "Protected swing",
-        tone: "amber",
-        position: direction === "long" ? "below" : "above"
-      }
-    ],
-    overlay: ({ svg, x, y, plot, xStep }) => {
-      if (!geometry.valid) return;
-      const startX = x(10) - xStep * 0.45;
-      const rewardTop = Math.min(y(entry), y(target));
-      const rewardBottom = Math.max(y(entry), y(target));
-      const riskTop = Math.min(y(entry), y(stop));
-      const riskBottom = Math.max(y(entry), y(stop));
-      svg.insertBefore(svgNode("rect", {
-        x: startX, y: rewardTop, width: plot.right - startX, height: Math.max(2, rewardBottom - rewardTop), class: "reward-zone"
-      }), svg.children[1] || null);
-      svg.insertBefore(svgNode("rect", {
-        x: startX, y: riskTop, width: plot.right - startX, height: Math.max(2, riskBottom - riskTop), class: "risk-zone"
-      }), svg.children[1] || null);
-    }
+function renderRsQuiz() {
+  const q = rsQuizItems[rsQuizState.index];
+  rsQuizState.answered = false;
+  document.getElementById("rsQuizPrompt").textContent = q.prompt;
+  document.querySelectorAll("#rsChoices .choice").forEach(button => {
+    button.disabled = false;
+    button.classList.remove("correct", "incorrect");
   });
-
-  const ladder = document.getElementById("rLadder");
-  ladder.innerHTML = "";
-  if (geometry.riskDistance > 0) {
-    [1,2,3].forEach(r => {
-      const level = direction === "long" ? entry + geometry.riskDistance * r : entry - geometry.riskDistance * r;
-      const chip = document.createElement("span");
-      chip.className = "r-chip";
-      chip.textContent = `${r}R = ${formatPrice(level)}`;
-      ladder.appendChild(chip);
-    });
-  }
+  const feedback = document.getElementById("rsFeedback");
+  feedback.className = "feedback";
+  feedback.textContent = "Compare percentage performance, not whether each return is positive or negative.";
 }
 
-Object.values(riskInputs).forEach(input => {
-  input.addEventListener("input", () => renderRiskPlanner(true));
-  input.addEventListener("change", () => renderRiskPlanner(true));
-});
-
-document.getElementById("stopSlider").addEventListener("input", (event) => {
-  riskInputs.stop.value = Number(event.target.value).toFixed(1);
-  document.getElementById("stopSliderLabel").textContent = formatPrice(event.target.value);
-  renderRiskPlanner(false);
-});
-
-document.getElementById("targetSlider").addEventListener("input", (event) => {
-  riskInputs.target.value = Number(event.target.value).toFixed(1);
-  document.getElementById("targetSliderLabel").textContent = formatPrice(event.target.value);
-  renderRiskPlanner(false);
-});
-
-document.getElementById("showRLadder").addEventListener("change", () => renderRiskPlanner(false));
-
-const stopQuizData = candlesFromCloses(
-  [92,94,96,95,98,100,99,102,104,103,101,99.2,100.4,102.0,104.1,105.2,106.0],
-  { 11: { l: 98.45 } },
-  150
-);
-
-function renderStopQuiz() {
-  drawCandles(document.getElementById("stopQuizChart"), stopQuizData, {
-    height: 360,
-    includeValues: [105, 102.8, 98.5, 97.8, 91],
-    levels: [
-      { value: 105, label: "Entry", tone: "cyan", solid: true },
-      { value: 98.5, label: "Protected low", tone: "amber" },
-      { value: 102.8, label: "A · inside noise", tone: "red", opacity: 0.7 },
-      { value: 97.8, label: "B · structural", tone: "green", opacity: 0.9 },
-      { value: 91, label: "C · unexplained distance", tone: "purple", opacity: 0.7 }
-    ],
-    annotations: [
-      { index: 11, value: 98.45, label: "Protected swing", tone: "amber", position: "below" }
-    ]
-  });
-}
-
-let stopAnswered = false;
-let stopScore = 0;
-let stopAttempts = 0;
-
-document.getElementById("stopChoices").addEventListener("click", (event) => {
+document.getElementById("rsChoices").addEventListener("click", (event) => {
   const button = event.target.closest("[data-answer]");
-  if (!button || stopAnswered) return;
-  stopAnswered = true;
-  stopAttempts += 1;
-  const correct = button.dataset.answer === "B";
-  if (correct) stopScore += 1;
-  document.querySelectorAll("#stopChoices .choice").forEach(choice => {
+  if (!button || rsQuizState.answered) return;
+  rsQuizState.answered = true;
+  rsQuizState.attempts += 1;
+  const q = rsQuizItems[rsQuizState.index];
+  const correct = button.dataset.answer === q.answer;
+  if (correct) rsQuizState.score += 1;
+  document.querySelectorAll("#rsChoices .choice").forEach(choice => {
     choice.disabled = true;
-    if (choice.dataset.answer === "B") choice.classList.add("correct");
+    if (choice.dataset.answer === q.answer) choice.classList.add("correct");
   });
   if (!correct) button.classList.add("incorrect");
-  document.getElementById("stopScore").textContent = `Score ${stopScore} / ${stopAttempts}`;
-  const feedback = document.getElementById("stopFeedback");
+  document.getElementById("rsScore").textContent = `Score ${rsQuizState.score} / ${rsQuizState.attempts}`;
+  const feedback = document.getElementById("rsFeedback");
   feedback.className = `feedback ${correct ? "good" : "bad"}`;
-  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> B sits beyond the protected low and directly matches the stated invalidation rule. A can be hit while structure survives; C adds distance without a defined reason.`;
+  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${q.explanation}`;
 });
 
-document.getElementById("resetStopQuiz").addEventListener("click", () => {
-  stopAnswered = false;
-  document.querySelectorAll("#stopChoices .choice").forEach(choice => {
-    choice.disabled = false;
-    choice.classList.remove("correct", "incorrect");
-  });
-  const feedback = document.getElementById("stopFeedback");
-  feedback.className = "feedback";
-  feedback.textContent = "Choose the level that matches the stated structural rule.";
+document.getElementById("nextRsQuiz").addEventListener("click", () => {
+  rsQuizState.index = (rsQuizState.index + 1) % rsQuizItems.length;
+  renderRsQuiz();
 });
 
-renderRiskPlanner(true);
-renderStopQuiz();
+renderVolumeScenario();
+renderRelativeStrength();
+renderRsQuiz();
 
   </script>
 </body>

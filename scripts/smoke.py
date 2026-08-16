@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Production smoke client for market-structure-lab (learn.geterdone.io).
+"""Production smoke client for the learn.geterdone.io course library.
 
 Standard library only, by design: this runs on the production host and inside the
 release workflow, where installing third-party packages is not a permitted mutation.
@@ -9,12 +9,14 @@ It implements the blocking acceptance checks declared in release/contract.schema
 one-to-one onto a contract check:
 
     internal-health     /healthz is 200 and never cached
-    learn-index         / is 200 HTML and lists BOTH courses
-    course-home         /market-structure-lab/ is 200 and is that document
-    lesson-page         /market-structure-lab/market-structure/ is 200 and is that
+    learn-index         / is 200 HTML, is the site index, and links to the path
+    trading-path        /paths/trading/ is 200 and is that document: it lists the
+                        published courses AND the announced ones
+    course-home         /market-structure/ is 200 and is that document
+    lesson-page         /market-structure/market-structure/ is 200 and is that
                         document
-    lesson-<slug>       one check per remaining lab of course 1, Market Structure
-                        Lab: 200 HTML, its own canonical tag, and the
+    lesson-<slug>       one check per remaining lab of course 1, Market
+                        Structure: 200 HTML, its own canonical tag, and the
                         educational-use disclaimer
     course2-home        /trade-setup-execution/ is 200 and is that document
     course2-lesson-<slug>
@@ -24,21 +26,28 @@ one-to-one onto a contract check:
     course3-lesson-<slug>
                         one check per lesson of course 3, Options Trading, on
                         the same terms
+    course4-home        /technical-indicators/ is 200 and is that document
+    course4-lesson-<slug>
+                        one check per lesson of course 4, Technical Indicators,
+                        on the same terms
     journal-schema      /trade-setup-execution/trade-journal-schema.json is 200,
                         is served as JSON, and parses
     trade-plan-schema   /options-trading/options-trade-plan-schema.json is 200,
+                        is served as JSON, and parses
+    indicator-rule-schema
+                        /technical-indicators/indicator-rule-schema.json is 200,
                         is served as JSON, and parses
     self-containment    served HTML references no origin but its own, on EVERY
                         published page
     security-headers    the application security header policy is present
     unknown-path-404    an unknown path is a real 404, not a soft 200 or a redirect
 
-The published URL space is two levels: the learning path at /, a home per course
-(/market-structure-lab/, /trade-setup-execution/ and /options-trading/), and each
-course's lessons beneath its own home -- 42 HTML pages, plus two published JSON
-assets. Checking one page and calling the site smoke-tested is how forty-one
-broken pages ship, so every published URL gets its own check id and its own line
-in the report.
+The published URL space: the site index at /, the path page at /paths/trading/,
+a home per course (/market-structure/, /trade-setup-execution/, /options-trading/
+and /technical-indicators/), and each course's lessons beneath its own home --
+60 HTML pages, plus three published JSON assets. Checking one page and calling
+the site smoke-tested is how fifty-nine broken pages ship, so every published URL
+gets its own check id and its own line in the report.
 
 Usage:
     python3 scripts/smoke.py https://learn.geterdone.io
@@ -73,22 +82,32 @@ import uuid
 MAX_BODY_BYTES = 8 * 1024 * 1024
 USER_AGENT = "market-structure-lab-smoke/1"
 
-# The published URL space is two levels deep -- a learning path, then a course,
-# then that course's lessons:
+# The published URL space -- the site index, the paths layer, then a course, then
+# that course's lessons:
 #
-#     /                                          the learning path
-#     /market-structure-lab/                     course 1 home
-#     /market-structure-lab/<lesson>/            course 1's seven labs, in order
+#     /                                          the site index (paths + search)
+#     /paths/trading/                            the trading PATH PAGE
+#     /market-structure/                         course 1 home
+#     /market-structure/<lesson>/                course 1's seven labs, in order
 #     /trade-setup-execution/                    course 2 home
 #     /trade-setup-execution/<lesson>/           course 2's fifteen lessons, in order
 #     /trade-setup-execution/trade-journal-schema.json   published JSON asset
 #     /options-trading/                          course 3 home
 #     /options-trading/<lesson>/                 course 3's sixteen lessons, in order
 #     /options-trading/options-trade-plan-schema.json    published JSON asset
+#     /technical-indicators/                     course 4 home
+#     /technical-indicators/<lesson>/            course 4's sixteen lessons, in order
+#     /technical-indicators/indicator-rule-schema.json   published JSON asset
+#
+# The path page is NOT a course home and NOT a lesson. It is probed by its own
+# check id (trading-path) with its own markers, because it is the only page that
+# proves the ANNOUNCED courses render: courses 5 to 8 exist nowhere else in this
+# URL space and nothing else would notice if they silently vanished.
 #
 # The seven FLAT lesson URLs this site used to serve are retired with no redirect
-# stub behind them. They are not probed here and must not be re-added: a path in
-# this file is a path that must answer 200.
+# stub behind them, and so is course 1's old /market-structure-lab/ prefix (that
+# slug named the whole site, not the course). They are not probed here and must
+# not be re-added: a path in this file is a path that must answer 200.
 #
 # Below: (check id, URL path, markers that must appear VERBATIM in the served
 # body of that document). The ids are the acceptance-check ids in
@@ -104,12 +123,16 @@ USER_AGENT = "market-structure-lab-smoke/1"
 DISCLAIMER_MARKER = "Educational use only"
 CANONICAL_ORIGIN = "https://learn.geterdone.io"
 
-COURSE_PATH = "/market-structure-lab/"
+SITE_INDEX_PATH = "/"
+PATH_PAGE_PATH = "/paths/trading/"
+COURSE_PATH = "/market-structure/"
 LESSON_01_PATH = COURSE_PATH + "market-structure/"
 COURSE_2_PATH = "/trade-setup-execution/"
 JOURNAL_SCHEMA_PATH = COURSE_2_PATH + "trade-journal-schema.json"
 COURSE_3_PATH = "/options-trading/"
 TRADE_PLAN_SCHEMA_PATH = COURSE_3_PATH + "options-trade-plan-schema.json"
+COURSE_4_PATH = "/technical-indicators/"
+INDICATOR_SCHEMA_PATH = COURSE_4_PATH + "indicator-rule-schema.json"
 
 
 def canonical_marker(path):
@@ -130,15 +153,31 @@ def canonical_marker(path):
 def page_markers(path, *extra):
     """Identity (the canonical tag), then whatever else the page must carry.
 
-    Every page below the learning path is trading material, so the
-    educational-use disclaimer is part of every page check, never an extra.
+    Every course and lesson page is trading material, so the educational-use
+    disclaimer is part of every page check, never an extra. The site index and
+    the path page are shared chrome and are checked with their own markers: a
+    subject-specific disclaimer is not theirs to carry.
     """
     return (canonical_marker(path),) + tuple(extra) + (DISCLAIMER_MARKER,)
 
 
-COURSE_1_TITLE_MARKER = "Market Structure Lab"
+COURSE_1_TITLE_MARKER = "Market Structure"
 COURSE_2_TITLE_MARKER = "Trade Setup and Execution"
 COURSE_3_TITLE_MARKER = "Options Trading"
+COURSE_4_TITLE_MARKER = "Technical Indicators"
+
+# The path page's markers. They are NOT page_markers(): the path page is shared
+# chrome, not course material, so the educational-use disclaimer is not part of
+# its identity -- the same frame is meant to hold a mathematics path next. The
+# canonical tag proves WHICH document was served; the other three prove the two
+# halves of the path actually rendered: a published course, an announced one,
+# and the words that mark an announced one as unavailable.
+PATH_PAGE_MARKERS = (
+    canonical_marker(PATH_PAGE_PATH),
+    COURSE_4_TITLE_MARKER,
+    "Volume and Order Flow",
+    "Not yet available",
+)
 
 # Course 1, labs 02-07. Lab titles avoid "&" on purpose: a title may be served
 # escaped or raw, and the marker must match the bytes either way.
@@ -239,6 +278,35 @@ COURSE_3_LESSONS = tuple(
     for slug in COURSE_3_LESSON_SLUGS
 )
 
+# Course 4, lessons 01-16, in course order, on the same terms.
+COURSE_4_LESSON_SLUGS = (
+    "technical-indicator-fundamentals",
+    "moving-averages",
+    "moving-average-crossovers",
+    "relative-strength-index",
+    "stochastic-oscillator",
+    "macd",
+    "average-directional-index",
+    "average-true-range",
+    "bollinger-bands",
+    "keltner-channels",
+    "donchian-channels",
+    "rate-of-change-and-momentum",
+    "indicator-divergence",
+    "combining-indicators",
+    "indicator-selection-by-market-regime",
+    "indicator-based-trading-rules",
+)
+
+COURSE_4_LESSONS = tuple(
+    (
+        "course4-lesson-%s" % slug,
+        COURSE_4_PATH + slug + "/",
+        page_markers(COURSE_4_PATH + slug + "/", COURSE_4_TITLE_MARKER),
+    )
+    for slug in COURSE_4_LESSON_SLUGS
+)
+
 # (check id, URL path, markers) for every course home addressed by the map.
 # Course 1's home is not here: it comes from --course-path/--course-marker.
 COURSE_HOMES = (
@@ -251,6 +319,11 @@ COURSE_HOMES = (
         "course3-home",
         COURSE_3_PATH,
         page_markers(COURSE_3_PATH, COURSE_3_TITLE_MARKER),
+    ),
+    (
+        "course4-home",
+        COURSE_4_PATH,
+        page_markers(COURSE_4_PATH, COURSE_4_TITLE_MARKER),
     ),
 )
 
@@ -272,7 +345,22 @@ PUBLISHED_ASSETS = (
         TRADE_PLAN_SCHEMA_PATH,
         ('"const": "options-trade-plan-v1"',),
     ),
+    (
+        "indicator-rule-schema",
+        INDICATOR_SCHEMA_PATH,
+        ('"const": "technical-indicator-rule-v1"',),
+    ),
 )
+
+
+def path_page_targets(args):
+    """(check id, path, markers) for every PATH page the library publishes.
+
+    A path page is neither a course home nor a lesson, so it is not folded into
+    either list: those lists carry course-shaped markers (a course title, the
+    educational-use disclaimer) that a path page has no reason to satisfy.
+    """
+    return [("trading-path", PATH_PAGE_PATH, tuple(args.path_marker))]
 
 
 def course_home_targets(args):
@@ -296,12 +384,14 @@ def lesson_targets(args):
     """(check id, path, markers) for every lesson of every course, in course order.
 
     Course 1's lab 01 comes from --lesson-path/--lesson-marker so the flags still
-    steer it; every other lesson of all three courses comes from the published
+    steer it; every other lesson of all four courses comes from the published
     URL map.
     """
     targets = [("lesson-page", args.lesson_path, tuple(args.lesson_marker))]
     seen = {args.lesson_path}
-    for check_id, path, markers in COURSE_LESSONS + COURSE_2_LESSONS + COURSE_3_LESSONS:
+    for check_id, path, markers in (
+        COURSE_LESSONS + COURSE_2_LESSONS + COURSE_3_LESSONS + COURSE_4_LESSONS
+    ):
         if path in seen:
             # --lesson-path was pointed at a lesson that is already in the map;
             # check it once rather than reporting two lines for one URL.
@@ -312,7 +402,7 @@ def lesson_targets(args):
 
 
 def published_paths(args):
-    """Every published PAGE, learning path first: what a whole-site probe covers.
+    """Every published PAGE, site index first: what a whole-site probe covers.
 
     tests/test_site_invariants.py compares this against REQUIRED_PAGES, so a page
     that exists on disk but is missing here fails the suite rather than shipping
@@ -320,7 +410,10 @@ def published_paths(args):
     self-containment sweep, and parsing JSON as HTML would be a check that cannot
     fail rather than a check that passes.
     """
-    paths = ["/"]
+    paths = [SITE_INDEX_PATH]
+    for _, path, _ in path_page_targets(args):
+        if path not in paths:
+            paths.append(path)
     for _, path, _ in course_home_targets(args):
         if path not in paths:
             paths.append(path)
@@ -766,9 +859,11 @@ class Smoke:
         self.assert_header(check, response, "Cache-Control", "no-store", "contains")
 
     def check_learn_index(self):
-        check = self.new_check("learn-index", "course catalog is served at /", "/")
+        check = self.new_check(
+            "learn-index", "site index is served at /", SITE_INDEX_PATH
+        )
         try:
-            response = self.get("/", max_redirects=self.args.max_redirects)
+            response = self.get(SITE_INDEX_PATH, max_redirects=self.args.max_redirects)
         except FetchError as exc:
             check.fail(str(exc))
             return
@@ -778,11 +873,34 @@ class Smoke:
             return
         self.assert_header(check, response, "Content-Type", "text/html", "contains")
         for marker in self.args.index_marker:
-            self.assert_contains(check, response, marker, "catalog marker")
+            self.assert_contains(check, response, marker, "site index marker")
+
+    def check_path_pages(self):
+        """The path page: the ordered spine of one subject.
+
+        It is the only page in the URL space that mentions the ANNOUNCED
+        courses. If it 404s, or if it renders without them, the library still
+        looks complete from every other page -- which is exactly why it gets its
+        own check id rather than riding along on the index's.
+        """
+        for check_id, path, markers in path_page_targets(self.args):
+            check = self.new_check(check_id, "path page is served at its subpath", path)
+            try:
+                response = self.get(path, max_redirects=self.args.max_redirects)
+            except FetchError as exc:
+                check.fail(str(exc))
+                continue
+            if not self.assert_same_origin_chain(check, response):
+                continue
+            if not self.assert_status(check, response, 200):
+                continue
+            self.assert_header(check, response, "Content-Type", "text/html", "contains")
+            for marker in markers:
+                self.assert_contains(check, response, marker, "path page marker")
 
     def check_course_homes(self):
         """Each course's own page. They are published URLs, so they are probed
-        like any other: the learning path links to them and every lesson links
+        like any other: the path page links to them and every lesson links
         back up to its own, so a 404 here breaks navigation across a whole
         course."""
         for check_id, path, markers in course_home_targets(self.args):
@@ -925,6 +1043,7 @@ class Smoke:
     def run(self):
         self.check_internal_health()
         self.check_learn_index()
+        self.check_path_pages()
         self.check_course_homes()
         self.check_lesson_pages()
         self.check_published_assets()
@@ -937,7 +1056,7 @@ class Smoke:
 def parse_args(argv):
     parser = argparse.ArgumentParser(
         prog="smoke.py",
-        description="Blocking acceptance smoke checks for the market-structure-lab release.",
+        description="Blocking acceptance smoke checks for the learn.geterdone.io release.",
     )
     parser.add_argument("base_url", help="scheme://host[:port] of the deployment under test")
     parser.add_argument("--timeout", type=float, default=10.0, help="per-request timeout seconds (default: 10)")
@@ -953,7 +1072,7 @@ def parse_args(argv):
         "--lesson-path",
         default=LESSON_01_PATH,
         help="course 1 lab 01's URL, checked as contract id lesson-page (default: %s); "
-        "every other lesson of all three courses is fixed by the published URL map"
+        "every other lesson of all four courses is fixed by the published URL map"
         % LESSON_01_PATH,
     )
     parser.add_argument("--unknown-path", default=None, help="override the 404 probe path (default: random)")
@@ -977,6 +1096,13 @@ def parse_args(argv):
         "the other labs carry their own markers",
     )
     parser.add_argument(
+        "--path-marker",
+        action="append",
+        default=None,
+        help="string that must appear in the path page at %s (repeatable)"
+        % PATH_PAGE_PATH,
+    )
+    parser.add_argument(
         "--allow-origin",
         action="append",
         default=None,
@@ -994,23 +1120,29 @@ def parse_args(argv):
     parser.add_argument("--json", action="store_true", help="emit a machine-readable report")
     args = parser.parse_args(argv)
 
-    # The learning path lists COURSES, so it must name all three and link to all
-    # three homes. The two-level links are deliberate, not the retired flat
-    # lesson paths: "market-structure/" would be satisfied by a dead URL.
+    # The site index is the library's front door: it lists the PATHS and names
+    # the courses each one holds, and it is the only way a reader reaches a path
+    # at all -- so the link to the path page is a marker, not an assumption. The
+    # index does not link a course home directly (a course is opened from its
+    # path, or from a search result), which is why the course titles are checked
+    # as text rather than as links.
     if args.index_marker is None:
         args.index_marker = [
-            canonical_marker("/"),
+            canonical_marker(SITE_INDEX_PATH),
+            "paths/trading/",
             COURSE_1_TITLE_MARKER,
-            "market-structure-lab/",
             COURSE_2_TITLE_MARKER,
-            "trade-setup-execution/",
             COURSE_3_TITLE_MARKER,
-            "options-trading/",
+            COURSE_4_TITLE_MARKER,
         ]
-    # Course 1's home and its lab 01 share the title "Market Structure Lab", and
-    # the course path is a prefix of the lab path, so neither a title nor a bare
-    # path marker discriminates between them: each document satisfies the other's
-    # markers. The full canonical TAG does discriminate, because the closing
+    if args.path_marker is None:
+        args.path_marker = list(PATH_PAGE_MARKERS)
+    # Course 1's home and its lab 01 share the title "Market Structure", and the
+    # course path is a prefix of the lab path, so neither a title nor a bare path
+    # marker discriminates between them: each document satisfies the other's
+    # markers. /paths/trading/ shares no prefix with any course home, and it is
+    # built the same way regardless -- a marker set that discriminates only when
+    # the URLs happen to overlap is a marker set nobody can reason about. The full canonical TAG does discriminate, because the closing
     # quote stops the prefix overlap. Every page check in this file is built that
     # way (see canonical_marker), so any of them can detect a document served at
     # the wrong URL.
@@ -1041,7 +1173,8 @@ def parse_args(argv):
 
 def report_text(args, checks, stream):
     print(
-        "market-structure-lab smoke  base=%s  timeout=%.1fs" % (args.base_url.rstrip("/"), args.timeout),
+        "learn.geterdone.io smoke  base=%s  timeout=%.1fs"
+        % (args.base_url.rstrip("/"), args.timeout),
         file=stream,
     )
     for check in checks:

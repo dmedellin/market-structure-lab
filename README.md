@@ -1,22 +1,69 @@
 # Market Structure Lab
 
 `market-structure-lab` is the repository, the application slug and the image
-title. What it publishes at `https://learn.geterdone.io/` is a **library of three
-interactive courses**, 38 lessons in all, presented as one ordered learning path.
-Every page is a single HTML file with its CSS, JavaScript and graphics inline —
-it loads no fonts, no frameworks, no analytics, and no third-party requests of
-any kind.
+title. What it publishes at `https://learn.geterdone.io/` is a **library of
+learning paths** — four interactive courses and 54 lessons today, all of them on
+one subject, with more subjects planned. Every page is a single HTML file with
+its CSS, JavaScript and graphics inline — it loads no fonts, no frameworks, no
+analytics, and no third-party requests of any kind.
 
-## The learning path
+## The paths layer
 
-The site index is not a menu, it is a **sequence**. Course 1 teaches you to read
-what price is doing; course 2 turns that read into a plan you can size, place,
-manage and review; course 3 takes that plan into options, where the instrument
-itself carries risk the stock chart does not show. A reader is expected to walk
-them in order, which is why the three courses share one theme setting, one visual
-system, one navigation model, and one set of guards.
+A **path** is an ordered sequence of courses on one subject. The library is
+organized around that idea rather than around any one subject:
 
-### Course 1 — Market Structure Lab (7 lessons)
+| URL | What it is |
+| --- | --- |
+| `/` | the **site index**: every path, plus search across every published course |
+| `/paths/<subject>/` | one **path page**: that subject's courses, in order |
+| `/<course>/` | a **course home** |
+| `/<course>/<lesson>/` | a **lesson** |
+
+The site index and the path pages are **shared chrome and subject-agnostic**. The
+owner plans paths for mathematics, computer science and philosophy, and those
+paths reuse this frame unchanged: nothing in the index, in a path page, in a
+footer or in site metadata may assume the subject is trading. Only course and
+lesson pages are subject-specific. The invariant suite enforces exactly that
+(`TestSharedChromeIsSubjectAgnostic`), including the rule that the index never
+writes "the path" — it holds paths, plural.
+
+A path page is **neither a course home nor a lesson**, even though it sits two
+segments deep like a lesson does. Every guard declares it separately
+(`PATH_PAGE`) rather than classifying pages by URL shape.
+
+## The trading path — eight courses, four published
+
+`https://learn.geterdone.io/paths/trading/` is the ordered path. Course 1 teaches
+you to read what price is doing; course 2 turns that read into a plan you can
+size, place, manage and review; course 3 takes that plan into options, where the
+instrument itself carries risk the stock chart does not show; course 4 is the
+indicator toolkit and how to state a rule precisely. A reader is expected to walk
+them in order, which is why the courses share one theme setting, one visual
+system, one navigation model, and one set of guards — and why every course home
+says which number it is (`Course N of 8`) and links to its neighbours.
+
+| # | Course | Lessons | URL | Status |
+| --- | --- | --- | --- | --- |
+| 1 | Market Structure | 7 | `/market-structure/` | published |
+| 2 | Trade Setup and Execution | 15 | `/trade-setup-execution/` | published |
+| 3 | Options Trading | 16 | `/options-trading/` | published |
+| 4 | Technical Indicators | 16 | `/technical-indicators/` | published |
+| 5 | Volume and Order Flow | — | — | **not yet available** |
+| 6 | Trading Risk Management | — | — | **not yet available** |
+| 7 | Backtesting and Trading Systems | — | — | **not yet available** |
+| 8 | Algorithmic and Automated Trading | — | — | **not yet available** |
+
+Courses 5 to 8 are **announced, not published**. They appear on the path page in
+order, clearly marked unavailable, and they are **not links**: nothing exists to
+open. Their number and their name are the only facts that exist about them, so
+no lesson count, description or date is invented for them anywhere in this
+repository — and `TestPathPage` fails the build if one appears.
+
+Course 1 was published at `/market-structure-lab/` until the paths layer landed.
+That slug names the repository and the application, not the course, so the course
+took its own name. **The old URLs are gone**, with no redirect stubs.
+
+### Course 1 — Market Structure (7 lessons)
 
 How price actually moves: structure, ranges and liquidity, multi-timeframe
 alignment, entry models, invalidation and reward-to-risk, participation, and
@@ -96,15 +143,62 @@ non-commercial sources — the Options Industry Council (`optionseducation.org`)
 FINRA, the SEC's `investor.gov`, and Cboe. They are reviewed origins listed in
 `ci.yml`; a link navigates and loads nothing, so the pages stay self-contained.
 
+### Course 4 — Technical Indicators (16 lessons)
+
+`https://learn.geterdone.io/technical-indicators/`
+
+The measurement toolkit, and how to state a rule precisely enough to hand to a
+machine. Sixteen lessons: what an indicator is computed from, moving averages and
+their crossovers, RSI, the stochastic oscillator, MACD, ADX, average true range,
+Bollinger, Keltner and Donchian channels, rate of change, divergence, then how to
+combine indicators without redundancy, choose them by market regime, and turn an
+observation into an unambiguous condition.
+
+| # | Lesson | What it does |
+| --- | --- | --- |
+| 01 | Technical Indicator Fundamentals | Show how an indicator transforms historical price data, why lookback length changes responsiveness, and why a reading is only meaningful in context. |
+| 02 | Simple and Exponential Moving Averages | Calculate and compare simple and exponential moving averages, and see how source and lookback change responsiveness. |
+| 03 | Moving Average Trend Filters and Crossovers | Use fast and slow averages as a trend-state model, detect crossovers, and separate delayed confirmation from prediction. |
+| 04 | Relative Strength Index | Calculate RSI with Wilder smoothing and test threshold behaviour across regimes without treating extremes as reversal commands. |
+| 05 | Stochastic Oscillator | Measure where the close sits inside its recent range and compare %K and %D smoothing in trends and in ranges. |
+| 06 | Moving Average Convergence Divergence | Separate the MACD line, signal line and histogram, change the three periods, and identify zero-line and signal-line events. |
+| 07 | Average Directional Index and Directional Movement | Calculate +DI, −DI and ADX, and distinguish directional dominance from trend strength. |
+| 08 | Average True Range | Inspect true range, see how gaps affect volatility measurement, and keep volatility separate from direction. |
+| 09 | Bollinger Bands | Build a standard-deviation envelope, inspect band width and %B, and read contraction and expansion. |
+| 10 | Keltner Channels | Construct an EMA-centred ATR envelope, compare it with Bollinger Bands, and define channel-break conditions precisely. |
+| 11 | Donchian Channels | Track rolling highs and lows, compare current-bar and prior-channel calculations, and detect completed breakouts. |
+| 12 | Rate of Change and Momentum | Measure change over a fixed lookback in percentage and absolute terms, and separate momentum from direction. |
+| 13 | Indicator Divergence | Compare aligned price and indicator swings, classify regular divergence, and require price confirmation. |
+| 14 | Combining Indicators Without Redundancy | Group indicators by function, compare correlations, and avoid stacking transformations of the same behaviour. |
+| 15 | Indicator Selection by Market Regime | Classify regimes, select indicators suited to the decision, and see why one threshold behaves differently in each. |
+| 16 | Indicator-Based Trading Rules | Convert observations into deterministic conditions, detect contradictory rules, and export a machine-readable specification. |
+
+Course 4 ships one supporting file, `indicator-rule-schema.json`. Lesson 16
+exports a rule specification as `technical-indicator-rule-v1` JSON; the schema
+documents that shape. Like the other two schemas it is published as a real URL
+and checked as JSON, never as a page.
+
+**Course 4's own scope and risk notice, stated on the page.** The course teaches
+indicator calculation, interpretation and rule specification. It does **not**
+provide live data, trading signals, profitability claims, or personalized
+investment advice; backtesting, costs, robustness and automation belong to later
+courses. Indicators transform historical price data and do not guarantee future
+direction. All price series are synthetic and deterministic, and small
+differences from a charting platform can come from source, seed, rounding,
+missing-bar, adjustment or incomplete-bar conventions. Volume-derived tools
+(VWAP, OBV, volume profile, cumulative delta, footprint charts, order-book
+concepts) are deliberately reserved for course 5.
+
 ### Data and risk notice
 
-All charts, trades, prices, fills, and performance results across all three
+All charts, trades, prices, fills, and performance results across all four
 courses are synthetic educational examples. The pages contain no live data and no
 trading signals. Real outcomes can differ because of spread, slippage,
 commissions, gaps, taxes, liquidity, assignment, exercise, implied volatility,
-time decay, and other factors. Every page below the learning path carries an
+time decay, and other factors. Every course and lesson page carries an
 `Educational use only` disclaimer and the invariant suite fails the build if one
-loses it.
+loses it. The two shared-chrome pages are exempt by name, not by shape: a
+subject-specific notice is not theirs to carry.
 
 **Options carry their own risk notice, and course 3 states it on the page.**
 Options involve risk and are not suitable for every investor. Course 3 is
@@ -116,40 +210,52 @@ Contract specifications and broker procedures must be verified independently.
 
 ## URL layout
 
-The site is published under one subdomain, `learn.geterdone.io`, and the URL
-space is **two levels deep: courses, then lessons**.
+The site is published under one subdomain, `learn.geterdone.io`. The URL space
+has three kinds of page — the index, a path page, and a course with its lessons.
 
 ```text
-/                                       the learning path (all three courses)
-├── /market-structure-lab/              course 1 home — lists its seven lessons
-│   ├── /market-structure-lab/market-structure/                 lesson 1.01
+/                                       the site index (paths + course search)
+├── /paths/trading/                     the trading PATH PAGE — eight courses in
+│                                       order: four published, four announced
+├── /market-structure/                  course 1 home — lists its seven lessons
+│   ├── /market-structure/market-structure/                     lesson 1.01
 │   ├── … five more …
-│   └── /market-structure-lab/options-contract-selection/       lesson 1.07
+│   └── /market-structure/options-contract-selection/           lesson 1.07
 ├── /trade-setup-execution/             course 2 home — lists its fifteen lessons
 │   ├── /trade-setup-execution/trade-thesis/                    lesson 2.01
 │   ├── … thirteen more …
 │   ├── /trade-setup-execution/performance-review/              lesson 2.15
 │   └── /trade-setup-execution/trade-journal-schema.json        published asset
-└── /options-trading/                   course 3 home — lists its sixteen lessons
-    ├── /options-trading/options-contract-fundamentals/         lesson 3.01
+├── /options-trading/                   course 3 home — lists its sixteen lessons
+│   ├── /options-trading/options-contract-fundamentals/         lesson 3.01
+│   ├── … fourteen more …
+│   ├── /options-trading/options-trade-planning/                lesson 3.16
+│   └── /options-trading/options-trade-plan-schema.json         published asset
+└── /technical-indicators/              course 4 home — lists its sixteen lessons
+    ├── /technical-indicators/technical-indicator-fundamentals/ lesson 4.01
     ├── … fourteen more …
-    ├── /options-trading/options-trade-planning/                lesson 3.16
-    └── /options-trading/options-trade-plan-schema.json         published asset
+    ├── /technical-indicators/indicator-based-trading-rules/    lesson 4.16
+    └── /technical-indicators/indicator-rule-schema.json        published asset
 ```
 
-**42 pages and two assets. Nothing else is served:**
+`/paths/` belongs to the paths layer: no course may ever take that first segment,
+and nothing is served at `/paths/` itself — the list of paths is the site index.
+Courses 5 to 8 have no URLs at all; they exist only as entries on the path page.
+
+**60 pages and three assets. Nothing else is served:**
 
 | # | URL | Page | Source |
 | --- | --- | --- | --- |
-| — | `https://learn.geterdone.io/` | Learning path (catalog of courses) | `site/index.html` |
-| — | `https://learn.geterdone.io/market-structure-lab/` | **Market Structure Lab** — course 1 home | `site/market-structure-lab/index.html` |
-| 1.01 | `https://learn.geterdone.io/market-structure-lab/market-structure/` | Market Structure Lab | `site/market-structure-lab/market-structure/index.html` |
-| 1.02 | `https://learn.geterdone.io/market-structure-lab/ranges-breakouts-liquidity/` | Ranges, Breakouts & Liquidity Sweeps Lab | `site/market-structure-lab/ranges-breakouts-liquidity/index.html` |
-| 1.03 | `https://learn.geterdone.io/market-structure-lab/multi-timeframe-market-structure/` | Multi-Timeframe Market Structure Lab | `site/market-structure-lab/multi-timeframe-market-structure/index.html` |
-| 1.04 | `https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/` | Pullbacks & Entry Models Lab | `site/market-structure-lab/pullbacks-entry-models/index.html` |
-| 1.05 | `https://learn.geterdone.io/market-structure-lab/invalidation-stops-risk-reward/` | Invalidation, Stops & Reward-to-Risk Lab | `site/market-structure-lab/invalidation-stops-risk-reward/index.html` |
-| 1.06 | `https://learn.geterdone.io/market-structure-lab/volume-relative-strength/` | Volume & Relative Strength Lab | `site/market-structure-lab/volume-relative-strength/index.html` |
-| 1.07 | `https://learn.geterdone.io/market-structure-lab/options-contract-selection/` | Options Contract Selection Lab | `site/market-structure-lab/options-contract-selection/index.html` |
+| — | `https://learn.geterdone.io/` | Site index — the paths, plus course search | `site/index.html` |
+| path | `https://learn.geterdone.io/paths/trading/` | **Trading path** — the eight courses in order | `site/paths/trading/index.html` |
+| — | `https://learn.geterdone.io/market-structure/` | **Market Structure** — course 1 home | `site/market-structure/index.html` |
+| 1.01 | `https://learn.geterdone.io/market-structure/market-structure/` | Market Structure Lab | `site/market-structure/market-structure/index.html` |
+| 1.02 | `https://learn.geterdone.io/market-structure/ranges-breakouts-liquidity/` | Ranges, Breakouts & Liquidity Sweeps Lab | `site/market-structure/ranges-breakouts-liquidity/index.html` |
+| 1.03 | `https://learn.geterdone.io/market-structure/multi-timeframe-market-structure/` | Multi-Timeframe Market Structure Lab | `site/market-structure/multi-timeframe-market-structure/index.html` |
+| 1.04 | `https://learn.geterdone.io/market-structure/pullbacks-entry-models/` | Pullbacks & Entry Models Lab | `site/market-structure/pullbacks-entry-models/index.html` |
+| 1.05 | `https://learn.geterdone.io/market-structure/invalidation-stops-risk-reward/` | Invalidation, Stops & Reward-to-Risk Lab | `site/market-structure/invalidation-stops-risk-reward/index.html` |
+| 1.06 | `https://learn.geterdone.io/market-structure/volume-relative-strength/` | Volume & Relative Strength Lab | `site/market-structure/volume-relative-strength/index.html` |
+| 1.07 | `https://learn.geterdone.io/market-structure/options-contract-selection/` | Options Contract Selection Lab | `site/market-structure/options-contract-selection/index.html` |
 | — | `https://learn.geterdone.io/trade-setup-execution/` | **Trade Setup and Execution** — course 2 home | `site/trade-setup-execution/index.html` |
 | 2.01 | `https://learn.geterdone.io/trade-setup-execution/trade-thesis/` | Trade Thesis | `site/trade-setup-execution/trade-thesis/index.html` |
 | 2.02 | `https://learn.geterdone.io/trade-setup-execution/support-resistance/` | Support and Resistance | `site/trade-setup-execution/support-resistance/index.html` |
@@ -185,10 +291,29 @@ space is **two levels deep: courses, then lessons**.
 | 3.15 | `https://learn.geterdone.io/options-trading/exercise-assignment-and-expiration/` | Exercise, Assignment, and Expiration | `site/options-trading/exercise-assignment-and-expiration/index.html` |
 | 3.16 | `https://learn.geterdone.io/options-trading/options-trade-planning/` | Options Trade Planning | `site/options-trading/options-trade-planning/index.html` |
 | asset | `https://learn.geterdone.io/options-trading/options-trade-plan-schema.json` | Options trade plan schema (JSON, not a page) | `site/options-trading/options-trade-plan-schema.json` |
+| — | `https://learn.geterdone.io/technical-indicators/` | **Technical Indicators** — course 4 home | `site/technical-indicators/index.html` |
+| 4.01 | `https://learn.geterdone.io/technical-indicators/technical-indicator-fundamentals/` | Technical Indicator Fundamentals | `site/technical-indicators/technical-indicator-fundamentals/index.html` |
+| 4.02 | `https://learn.geterdone.io/technical-indicators/moving-averages/` | Simple and Exponential Moving Averages | `site/technical-indicators/moving-averages/index.html` |
+| 4.03 | `https://learn.geterdone.io/technical-indicators/moving-average-crossovers/` | Moving Average Trend Filters and Crossovers | `site/technical-indicators/moving-average-crossovers/index.html` |
+| 4.04 | `https://learn.geterdone.io/technical-indicators/relative-strength-index/` | Relative Strength Index | `site/technical-indicators/relative-strength-index/index.html` |
+| 4.05 | `https://learn.geterdone.io/technical-indicators/stochastic-oscillator/` | Stochastic Oscillator | `site/technical-indicators/stochastic-oscillator/index.html` |
+| 4.06 | `https://learn.geterdone.io/technical-indicators/macd/` | Moving Average Convergence Divergence | `site/technical-indicators/macd/index.html` |
+| 4.07 | `https://learn.geterdone.io/technical-indicators/average-directional-index/` | Average Directional Index and Directional Movement | `site/technical-indicators/average-directional-index/index.html` |
+| 4.08 | `https://learn.geterdone.io/technical-indicators/average-true-range/` | Average True Range | `site/technical-indicators/average-true-range/index.html` |
+| 4.09 | `https://learn.geterdone.io/technical-indicators/bollinger-bands/` | Bollinger Bands | `site/technical-indicators/bollinger-bands/index.html` |
+| 4.10 | `https://learn.geterdone.io/technical-indicators/keltner-channels/` | Keltner Channels | `site/technical-indicators/keltner-channels/index.html` |
+| 4.11 | `https://learn.geterdone.io/technical-indicators/donchian-channels/` | Donchian Channels | `site/technical-indicators/donchian-channels/index.html` |
+| 4.12 | `https://learn.geterdone.io/technical-indicators/rate-of-change-and-momentum/` | Rate of Change and Momentum | `site/technical-indicators/rate-of-change-and-momentum/index.html` |
+| 4.13 | `https://learn.geterdone.io/technical-indicators/indicator-divergence/` | Indicator Divergence | `site/technical-indicators/indicator-divergence/index.html` |
+| 4.14 | `https://learn.geterdone.io/technical-indicators/combining-indicators/` | Combining Indicators Without Redundancy | `site/technical-indicators/combining-indicators/index.html` |
+| 4.15 | `https://learn.geterdone.io/technical-indicators/indicator-selection-by-market-regime/` | Indicator Selection by Market Regime | `site/technical-indicators/indicator-selection-by-market-regime/index.html` |
+| 4.16 | `https://learn.geterdone.io/technical-indicators/indicator-based-trading-rules/` | Indicator-Based Trading Rules | `site/technical-indicators/indicator-based-trading-rules/index.html` |
+| asset | `https://learn.geterdone.io/technical-indicators/indicator-rule-schema.json` | Indicator rule schema (JSON, not a page) | `site/technical-indicators/indicator-rule-schema.json` |
 
-Course 1 and its lesson 01 share the name *Market Structure Lab*: the course is
-the whole seven-lesson sequence, lesson 01 is its first lesson on structure
-itself. Both titles are authoritative and neither changes; navigation numbers the
+Course 1 and its lesson 01 share the name *Market Structure*: the course is the
+whole seven-lesson sequence, lesson 01 is its first lesson on structure itself
+(and keeps its original *Market Structure Lab* page title). Both are
+authoritative and neither changes; navigation numbers the
 lessons so a reader can tell them apart, and every guard identifies a page by its
 own full `<link rel="canonical" …>` tag rather than by a title or a path
 fragment, because course and lesson paths overlap by prefix and a course home
@@ -197,45 +322,49 @@ links to all of its own lessons.
 `site/` **is** the document root: its tree maps one-to-one onto public paths, so
 a lesson lives one directory below its course both on disk and in the URL.
 
-Because a lesson is two segments deep, its links up are `../` to its own course
-home and `../../` to the learning path. Nothing may use a root-absolute `/…` path: the
-suite rejects them so the tree also previews correctly under a subpath.
+Both a lesson and a path page are two segments deep, so both link up with `../`
+and `../../`; a lesson's `../` is its own course home, a path page's is the paths
+layer. Nothing may use a root-absolute `/…` path: the suite rejects them so the
+tree also previews correctly under a subpath.
 
-**The seven flat URLs (`/market-structure/`, `/ranges-breakouts-liquidity/`, …)
-are gone.** Retiring them was a deliberate, accepted break: there are no redirect
-stubs, nothing serves them, and no guard or contract lists them. A request for
-one is a plain 404. Do not re-add them to any page map — a path in these maps is
-a path that must exist.
+**Two sets of URLs are retired, with no redirect stubs.** The seven flat lesson
+URLs course 1 published first (`/ranges-breakouts-liquidity/`, …) and then the
+whole `/market-structure-lab/…` prefix it used until the paths layer landed.
+Retiring both was a deliberate, accepted break: nothing serves them and no guard
+or contract lists them. A request for one is a plain 404. Do not re-add them to
+any page map — a path in these maps is a path that must exist.
 
 That map is declared in five places, and all five must agree:
 
-- `tests/test_site_invariants.py` → `REQUIRED_PAGES` (pages on disk) and
-  `NON_HTML_ASSETS` (both JSON schemas, each declared as an asset rather than by
-  loosening any page check);
-- `scripts/smoke.py` → `COURSE_PATH`, `COURSE_LESSONS`, `COURSE_2_PATH`,
-  `COURSE_2_LESSONS`, `COURSE_3_PATH`, `COURSE_3_LESSONS` and
-  `PUBLISHED_ASSETS` (served responses);
+- `tests/test_site_invariants.py` → `REQUIRED_PAGES` (pages on disk, including
+  `SITE_INDEX` and `PATH_PAGE`) and `NON_HTML_ASSETS` (all three JSON schemas,
+  each declared as an asset rather than by loosening any page check);
+- `scripts/smoke.py` → `PATH_PAGE_PATH`, `COURSE_PATH`, `COURSE_LESSONS`,
+  `COURSE_2_PATH`, `COURSE_2_LESSONS`, `COURSE_3_PATH`, `COURSE_3_LESSONS`,
+  `COURSE_4_PATH`, `COURSE_4_LESSONS` and `PUBLISHED_ASSETS` (served responses);
 - `release/contract.json` → `acceptance.checks`, one check id per URL
-  (`learn-index`; `course-home` and `lesson-page`/`lesson-<slug>` for course 1;
-  `course2-home` and `course2-lesson-<slug>` for course 2; `course3-home` and
-  `course3-lesson-<slug>` for course 3 — course-scoped because a slug is unique
-  only within a course; `journal-schema` and `trade-plan-schema` for the two
-  assets, each fetched and parsed as JSON);
+  (`learn-index`; `trading-path` for the path page; `course-home` and
+  `lesson-page`/`lesson-<slug>` for course 1; `course2-home` and
+  `course2-lesson-<slug>` for course 2, and the same shape for courses 3 and 4 —
+  course-scoped because a slug is unique only within a course; `journal-schema`,
+  `trade-plan-schema` and `indicator-rule-schema` for the three assets, each
+  fetched and parsed as JSON). `release/contract.schema.json` requires every one
+  of those ids by name, so a check cannot be quietly dropped;
 - `.github/workflows/ci.yml` → the "Published URL space is complete" step;
 - `Containerfile.release` and `.github/workflows/pages.yml` (publish-time guards).
 
 A page added to one of them and not the others is a page nothing checks.
 
-Further site-wide invariants exist because three courses now share one origin.
+Further site-wide invariants exist because four courses now share one origin.
 Each of them is something a reader carries across a course boundary, so each is
-pinned once and asserted on all 42 pages (`TestPinnedConventions`):
+pinned once and asserted on all 60 pages (`TestPinnedConventions`):
 
 - **One theme key.** Every page persists the reader's light/dark choice under the
-  single `localStorage` key `learn-theme`. The per-course keys the three courses
-  shipped with (`marketStructureTheme`, `market-lab-theme` and
-  `options-course-theme`) silently reset a reader's choice at every course
-  boundary; standardizing cost one stored preference, once, and the suite now
-  fails any page that invents its own key.
+  single `localStorage` key `learn-theme`. The per-course keys the courses shipped
+  with (`marketStructureTheme`, `market-lab-theme`, `options-course-theme` and
+  course 4's `technical-indicators-theme`) silently reset a reader's choice at
+  every course boundary; standardizing cost one stored preference, once, and the
+  suite now fails any page that invents its own key.
 - **One complete pager per course, in one markup.** `prev`/`next` links must walk
   each course in the order declared in `COURSES`, so a reordered syllabus and a
   reordered pager cannot disagree and no lesson becomes a dead end — and the
@@ -255,8 +384,23 @@ pinned once and asserted on all 42 pages (`TestPinnedConventions`):
   one, and the courses chose differently; a static label is accurate in both
   states and cannot diverge.
 
+Two further invariants come from the library being subject-agnostic rather than
+from the courses:
+
+- **The frame names no subject.** The masthead and footer of the site index and
+  of every path page carry no trading vocabulary, and the index never writes
+  "the path" — it lists paths (`TestSharedChromeIsSubjectAgnostic`). A
+  subject-scoped notice is marked `class="risk"` and is exempt: it describes the
+  courses that page lists, not the frame.
+- **Every course knows its place.** A course home states `Course N of 8` and its
+  `rel=prev`/`rel=next` links resolve to the adjacent course homes — course 1
+  ships no `prev`, and course 4 ships no `next` because course 5 is announced and
+  has no page (`TestPathPosition`).
+
 The apex `geterdone.io` is a separate, live GitHub Pages site. It is not part of
-this project and nothing here touches it.
+this project and nothing here touches it: every footer links to
+`https://learn.geterdone.io`, and `TestFooterSiteIdentity` fails any page whose
+footer points at the apex instead.
 
 ## Local preview
 
@@ -267,6 +411,7 @@ python3 -m http.server 8000 --directory site
 ```
 
 Then open <http://127.0.0.1:8000/>. Directory URLs resolve to `index.html`, so
+`http://127.0.0.1:8000/paths/trading/` previews the path page,
 `http://127.0.0.1:8000/trade-setup-execution/` previews course 2's home and
 `http://127.0.0.1:8000/trade-setup-execution/trade-thesis/` previews its lesson
 01, exactly as the public paths will serve them.
@@ -284,9 +429,11 @@ python3 scripts/validate_release_contract.py \
     release/contract.json release/contract.example.json
 ```
 
-`smoke.py` checks all 42 published pages plus both JSON assets — one report line
-per URL, each page demanding that document's own canonical tag and each asset
-fetched, typed and parsed as JSON. Against the plain
+`smoke.py` checks all 60 published pages plus all three JSON assets — one report
+line per URL, each page demanding that document's own canonical tag and each
+asset fetched, typed and parsed as JSON. The path page has its own check id
+(`trading-path`) with its own markers: it is the only URL where the announced
+courses 5 to 8 appear at all. Against the plain
 `python3 -m http.server` preview the `internal-health` and `security-headers`
 checks fail by design: `/healthz` and the header policy come from the
 in-container Caddy (`deploy/Caddyfile`), not from anything in `site/`.
@@ -295,6 +442,7 @@ in-container Caddy (`deploy/Caddyfile`), not from anything in `site/`.
 
 ```text
 site/                     the published document root — nothing else is served
+site/paths/<subject>/     one path page per subject (the paths layer)
 Containerfile.release     builds the release image (static files + Caddy)
 compose.template.yaml     immutable Compose template rendered by the deploy wrapper
 deploy/Caddyfile          in-container web server: headers, cache policy, /healthz
@@ -316,7 +464,7 @@ AGENTS.md                 working agreement — read before changing anything
 **1. GitHub Pages — live.** `.github/workflows/pages.yml` uploads `site/` on every
 push to `main` and deploys it to `learn.geterdone.io` (`site/CNAME` holds the
 custom domain). Before uploading it re-checks self-containment, asserts that all
-42 pages exist, and parses both published JSON assets. This path does not touch platform-ops, the shared Caddy
+60 pages exist, and parses all three published JSON assets. This path does not touch platform-ops, the shared Caddy
 edge, or any registry reservation, and it is **not** a shortcut around those
 gates — they govern the Hetzner platform, which is a different path.
 
@@ -351,9 +499,9 @@ The normative rules live in `dmedellin/platform-ops`
 ## STATUS
 
 **Deployed on GitHub Pages.** `https://learn.geterdone.io/` serves this `site/`
-tree — the learning path, all three course homes, all 38 lessons, the trade
-journal schema and the options trade plan schema — from the `pages.yml`
-workflow.
+tree — the site index, the trading path page, all four course homes, all 54
+lessons, and the trade journal, options trade plan and indicator rule schemas —
+from the `pages.yml` workflow.
 
 **The Hetzner container path remains UNBUILT.** No image of this repository has
 ever been built, deployed, or accepted on that platform. As of 2026-08-15, all of

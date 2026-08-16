@@ -45,27 +45,32 @@ jobs:
             echo "::error::external reference found in site/ -- refusing to publish"
             exit 1
           fi
-          # The published URL space, two levels deep: the learning path at /,
-          # a home per course (/market-structure-lab/, /trade-setup-execution/
-          # and /options-trading/), and each course's lessons beneath its own
-          # home -- 42 pages, in course order -- plus two published non-HTML
+          # The published URL space: the site index at /, the path page at
+          # /paths/trading/, a home per course (/market-structure/,
+          # /trade-setup-execution/, /options-trading/ and
+          # /technical-indicators/), and each course's lessons beneath its own
+          # home -- 60 pages, in path order -- plus three published non-HTML
           # assets. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py and acceptance.checks in
           # release/contract.json. Publishing a tree that is missing a page
           # would 404 a live URL, so refuse instead.
-          # The seven flat /<lesson>/ URLs are retired with no redirect stub;
-          # they are not listed here and must not come back.
+          # The path page is a page like any other here, and it is NOT a course:
+          # /paths/ belongs to the paths layer, and no course may take it.
+          # The seven flat /<lesson>/ URLs are retired with no redirect stub,
+          # and so is course 1's old /market-structure-lab/ prefix; neither is
+          # listed here and neither may come back.
           missing=0
           pages=0
           for page in index.html \
-                      market-structure-lab/index.html \
-                      market-structure-lab/market-structure/index.html \
-                      market-structure-lab/ranges-breakouts-liquidity/index.html \
-                      market-structure-lab/multi-timeframe-market-structure/index.html \
-                      market-structure-lab/pullbacks-entry-models/index.html \
-                      market-structure-lab/invalidation-stops-risk-reward/index.html \
-                      market-structure-lab/volume-relative-strength/index.html \
-                      market-structure-lab/options-contract-selection/index.html \
+                      paths/trading/index.html \
+                      market-structure/index.html \
+                      market-structure/market-structure/index.html \
+                      market-structure/ranges-breakouts-liquidity/index.html \
+                      market-structure/multi-timeframe-market-structure/index.html \
+                      market-structure/pullbacks-entry-models/index.html \
+                      market-structure/invalidation-stops-risk-reward/index.html \
+                      market-structure/volume-relative-strength/index.html \
+                      market-structure/options-contract-selection/index.html \
                       trade-setup-execution/index.html \
                       trade-setup-execution/trade-thesis/index.html \
                       trade-setup-execution/support-resistance/index.html \
@@ -98,22 +103,41 @@ jobs:
                       options-trading/vertical-debit-spreads/index.html \
                       options-trading/vertical-credit-spreads/index.html \
                       options-trading/exercise-assignment-and-expiration/index.html \
-                      options-trading/options-trade-planning/index.html ; do
+                      options-trading/options-trade-planning/index.html \
+                      technical-indicators/index.html \
+                      technical-indicators/technical-indicator-fundamentals/index.html \
+                      technical-indicators/moving-averages/index.html \
+                      technical-indicators/moving-average-crossovers/index.html \
+                      technical-indicators/relative-strength-index/index.html \
+                      technical-indicators/stochastic-oscillator/index.html \
+                      technical-indicators/macd/index.html \
+                      technical-indicators/average-directional-index/index.html \
+                      technical-indicators/average-true-range/index.html \
+                      technical-indicators/bollinger-bands/index.html \
+                      technical-indicators/keltner-channels/index.html \
+                      technical-indicators/donchian-channels/index.html \
+                      technical-indicators/rate-of-change-and-momentum/index.html \
+                      technical-indicators/indicator-divergence/index.html \
+                      technical-indicators/combining-indicators/index.html \
+                      technical-indicators/indicator-selection-by-market-regime/index.html \
+                      technical-indicators/indicator-based-trading-rules/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "site/$page" ]; then
               echo "::error::missing site/$page -- refusing to publish an incomplete course"
               missing=1
             fi
           done
-          # Two courses ship an exchange schema as a real published file:
+          # Three courses ship an exchange schema as a real published file:
           # course 2's lesson 14 exports the journal shape and its lesson 15
-          # imports it, and course 3's lesson 16 exports the trade plan shape.
-          # Each course home links to its file. An unparseable one 404s nothing
-          # and breaks the handoff silently, so both are parsed here, not merely
+          # imports it, course 3's lesson 16 exports the trade plan shape, and
+          # course 4's lesson 16 exports the indicator rule shape. Each course
+          # home links to its file. An unparseable one 404s nothing and breaks
+          # the handoff silently, so all three are parsed here, not merely
           # counted -- and declared as assets rather than pushed through the
           # page loop above, which asserts things only a document can have.
           for asset in trade-setup-execution/trade-journal-schema.json \
-                       options-trading/options-trade-plan-schema.json ; do
+                       options-trading/options-trade-plan-schema.json \
+                       technical-indicators/indicator-rule-schema.json ; do
             if [ ! -f "site/$asset" ]; then
               echo "::error::missing site/$asset -- refusing to publish an incomplete course"
               missing=1
@@ -123,7 +147,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "self-containment OK; all $pages pages and 2 assets present"
+          echo "self-containment OK; all $pages pages and 3 assets present"
 
       # NOTE: `enablement: true` was tried here and fails --- GITHUB_TOKEN
       # cannot create a Pages site ("Resource not accessible by integration").

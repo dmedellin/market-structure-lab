@@ -35,7 +35,7 @@
   <style>
     /* ---------------------------------------------------------------------
        DESIGN TOKENS — copied verbatim from site/index.html and
-       site/market-structure-lab/index.html so the library, every course home,
+       site/market-structure/index.html so the library, every course home,
        and every lesson read as one product. Do not fork this palette; change
        all of them.
 
@@ -278,6 +278,44 @@
     .crumbs a:hover { color: var(--text); background: var(--line); }
     .crumb-sep { opacity: 0.5; }
     .crumb-current { color: var(--text); padding: 6px 9px; }
+
+    /* COURSE-LEVEL PAGER. The same component, with the same markup, on every
+       course home, so stepping from one course to the next reads exactly like
+       stepping from one lesson to the next. It is deliberately NOT the lesson
+       pager: that one is .lesson-nav / .lesson-link and lives inside a lesson,
+       and the two must not be confused for one another. A course with nothing
+       before it ships the forward half alone rather than a disabled backward
+       one — the same rule the lesson pager follows at lesson 01. Every colour
+       here is a token, so both light paths flip it together.
+       Depth: a course home is one level down, so a sibling course is "../slug/". */
+    .path-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 34px 0 6px;
+    }
+
+    .path-move {
+      flex: 1 1 240px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-2);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 150ms ease, border-color 150ms ease;
+    }
+
+    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .path-move span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+    .path-move.next { margin-left: auto; text-align: right; }
+
+    /* One card per row once the topbar nav collapses; two columns at 320px is
+       two unreadable columns. */
+    @media (max-width: 720px) {
+      .path-move { flex-basis: 100%; }
+    }
 
     .icon-btn {
       flex: none;
@@ -1010,6 +1048,8 @@
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../">Learn library</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../paths/trading/">Trading path</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
       <span class="crumb-current" aria-current="page">Trade Setup and Execution</span>
     </nav>
 
@@ -1032,7 +1072,7 @@
           <div class="hero-actions">
             <a class="btn primary" href="./trade-thesis/">Start with lesson 01</a>
             <a class="btn ghost" href="#lessons">See all 15 lessons</a>
-            <a class="btn ghost" href="../market-structure-lab/">Course 1 first</a>
+            <a class="btn ghost" href="../market-structure/">Course 1 first</a>
           </div>
         </div>
 
@@ -1084,9 +1124,9 @@
           <div>
             <p class="kicker">Learning path</p>
             <h2 id="path-title">Where this course sits</h2>
-            <p>The library is a path, not a shelf. This is the second of the three courses on it: it assumes the first, and the third picks up where it stops.</p>
+            <p>The library is a path, not a shelf. This is the second course on the trading path: it assumes the first, and the third picks up where it stops. The full path runs to eight courses — see the <a href="../paths/trading/">trading path</a> for the whole order and for which of them are published.</p>
           </div>
-          <p class="count-chip">Course 2 of 3</p>
+          <p class="count-chip">Course 2 of 8</p>
         </div>
 
         <div class="path-grid">
@@ -1097,7 +1137,7 @@
               </svg>
               Course 1 · Prerequisite
             </p>
-            <h3><a href="../market-structure-lab/">Market Structure Lab</a></h3>
+            <h3><a href="../market-structure/">Market Structure</a></h3>
             <p>Seven lessons on reading price: swing structure and breaks of structure, ranges and liquidity sweeps, multi-timeframe context, entry models, invalidation and reward-to-risk, volume and relative strength, and options contract selection. Start there if <em>higher low</em> or <em>break of structure</em> is not yet a phrase you can point at on a chart — this course uses both without re-teaching them.</p>
           </article>
 
@@ -2260,11 +2300,16 @@
           </div>
         </div>
       </section>
+
+      <nav class="path-nav" aria-label="Course navigation">
+        <a class="path-move prev" href="../market-structure/" rel="prev"><span>Previous course</span><strong>Course 1 &middot; Market Structure</strong></a>
+        <a class="path-move next" href="../options-trading/" rel="next"><span>Next course</span><strong>Course 3 &middot; Options Trading</strong></a>
+      </nav>
     </main>
 
     <footer>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
-      <p><a href="https://geterdone.io">geterdone.io</a></p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
     </footer>
   </div>
 

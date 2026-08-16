@@ -73,7 +73,7 @@ jobs:
           fi
           echo "Web root: $root"
           if [ ! -f "$root/index.html" ]; then
-            echo "::warning file=$root::No index.html at the web root; https://learn.geterdone.io/ (the catalog of courses) would 404."
+            echo "::warning file=$root::No index.html at the web root; https://learn.geterdone.io/ (the library index) would 404."
           fi
           echo "root=$root" >> "$GITHUB_OUTPUT"
 
@@ -82,35 +82,44 @@ jobs:
           WEB_ROOT: ${{ steps.webroot.outputs.root }}
         run: |
           set -euo pipefail
-          # The public URL space is two levels deep — courses, then lessons:
-          #   /                                    the learning path
-          #   /market-structure-lab/               course 1 home
-          #   /market-structure-lab/<lesson>/      course 1's seven lessons
+          # The public URL space — the site index, the paths layer, then a
+          # course, then that course's lessons:
+          #   /                                    the site index (paths + search)
+          #   /paths/trading/                      the trading PATH PAGE
+          #   /market-structure/                   course 1 home
+          #   /market-structure/<lesson>/          course 1's seven lessons
           #   /trade-setup-execution/              course 2 home
           #   /trade-setup-execution/<lesson>/     course 2's fifteen lessons
           #   /options-trading/                    course 3 home
           #   /options-trading/<lesson>/           course 3's sixteen lessons
-          # 42 pages, in course order, plus two published non-HTML assets.
+          #   /technical-indicators/               course 4 home
+          #   /technical-indicators/<lesson>/      course 4's sixteen lessons
+          # 60 pages, in path order, plus three published non-HTML assets.
           # Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py, acceptance.checks in
           # release/contract.json, the publish guard in pages.yml, and the build
           # guard in Containerfile.release. A file missing here is a 404 on a
           # live URL, so fail the pull request rather than let an incomplete
           # course reach the publish step.
+          # The path page is listed like any other page and is NOT a course:
+          # /paths/ is the paths layer's own segment, so nothing under it may be
+          # treated as a course home or a lesson.
           # The seven FLAT /<lesson>/ URLs this site used to serve are retired
-          # with no redirect stub. They are deliberately absent from this list
-          # and must not be re-added.
+          # with no redirect stub, and so is course 1's old
+          # /market-structure-lab/ prefix. They are deliberately absent from
+          # this list and must not be re-added.
           missing=0
           pages=0
           for page in index.html \
-                      market-structure-lab/index.html \
-                      market-structure-lab/market-structure/index.html \
-                      market-structure-lab/ranges-breakouts-liquidity/index.html \
-                      market-structure-lab/multi-timeframe-market-structure/index.html \
-                      market-structure-lab/pullbacks-entry-models/index.html \
-                      market-structure-lab/invalidation-stops-risk-reward/index.html \
-                      market-structure-lab/volume-relative-strength/index.html \
-                      market-structure-lab/options-contract-selection/index.html \
+                      paths/trading/index.html \
+                      market-structure/index.html \
+                      market-structure/market-structure/index.html \
+                      market-structure/ranges-breakouts-liquidity/index.html \
+                      market-structure/multi-timeframe-market-structure/index.html \
+                      market-structure/pullbacks-entry-models/index.html \
+                      market-structure/invalidation-stops-risk-reward/index.html \
+                      market-structure/volume-relative-strength/index.html \
+                      market-structure/options-contract-selection/index.html \
                       trade-setup-execution/index.html \
                       trade-setup-execution/trade-thesis/index.html \
                       trade-setup-execution/support-resistance/index.html \
@@ -143,7 +152,24 @@ jobs:
                       options-trading/vertical-debit-spreads/index.html \
                       options-trading/vertical-credit-spreads/index.html \
                       options-trading/exercise-assignment-and-expiration/index.html \
-                      options-trading/options-trade-planning/index.html ; do
+                      options-trading/options-trade-planning/index.html \
+                      technical-indicators/index.html \
+                      technical-indicators/technical-indicator-fundamentals/index.html \
+                      technical-indicators/moving-averages/index.html \
+                      technical-indicators/moving-average-crossovers/index.html \
+                      technical-indicators/relative-strength-index/index.html \
+                      technical-indicators/stochastic-oscillator/index.html \
+                      technical-indicators/macd/index.html \
+                      technical-indicators/average-directional-index/index.html \
+                      technical-indicators/average-true-range/index.html \
+                      technical-indicators/bollinger-bands/index.html \
+                      technical-indicators/keltner-channels/index.html \
+                      technical-indicators/donchian-channels/index.html \
+                      technical-indicators/rate-of-change-and-momentum/index.html \
+                      technical-indicators/indicator-divergence/index.html \
+                      technical-indicators/combining-indicators/index.html \
+                      technical-indicators/indicator-selection-by-market-regime/index.html \
+                      technical-indicators/indicator-based-trading-rules/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "$WEB_ROOT/$page" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$page — the published URL space is incomplete"
@@ -152,12 +178,14 @@ jobs:
           done
           # Published, and not pages. Course 2's lesson 14 exports the journal
           # shape and its lesson 15 imports it; course 3's lesson 16 exports the
-          # trade plan shape. Both course homes link to their file, so each is a
-          # live URL whose absence is a 404 like any other. Each asset is listed
-          # here explicitly rather than folded into the page loop above: a page
-          # check that also accepts JSON is a page check that proves nothing.
+          # trade plan shape; course 4's lesson 16 exports the indicator rule
+          # shape. Each course home links to its file, so each is a live URL
+          # whose absence is a 404 like any other. Each asset is listed here
+          # explicitly rather than folded into the page loop above: a page check
+          # that also accepts JSON is a page check that proves nothing.
           for asset in trade-setup-execution/trade-journal-schema.json \
-                       options-trading/options-trade-plan-schema.json ; do
+                       options-trading/options-trade-plan-schema.json \
+                       technical-indicators/indicator-rule-schema.json ; do
             if [ ! -f "$WEB_ROOT/$asset" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$asset — a published asset is missing"
               missing=1
@@ -167,7 +195,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "Published URL space: $pages/42 pages plus 2 assets present under $WEB_ROOT."
+          echo "Published URL space: $pages/60 pages plus 3 assets present under $WEB_ROOT."
 
       - name: HTML is well-formed
         run: |
@@ -313,7 +341,13 @@ jobs:
           # page would not be. Every linked path was confirmed to return HTTP 200.
           #   investor.gov -- U.S. Securities and Exchange Commission, investor education
           #   cboe.com     -- Cboe Global Markets, the options exchange
-          ALLOWED_LINK_ORIGINS = (SELF_ORIGIN, "https://geterdone.io",
+          # https://geterdone.io was reviewed and allowed while the footer
+          # linked to it. It is REMOVED as of the paths layer: the apex is a
+          # separate live site this project does not control, the library's own
+          # home is https://learn.geterdone.io, and every footer names that.
+          # tests/test_site_invariants.py TestFooterSiteIdentity enforces the
+          # same rule against the files on disk.
+          ALLOWED_LINK_ORIGINS = (SELF_ORIGIN,
                                   "https://www.optionseducation.org",
                                   "https://www.finra.org",
                                   "https://www.investor.gov",

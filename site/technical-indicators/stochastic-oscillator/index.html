@@ -1,0 +1,1480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Measure where the close sits inside its recent high-low range, compare %K and %D smoothing, and understand why range position behaves differently in trends and sideways markets." />
+  <title>Stochastic Oscillator · Technical Indicators</title>
+  <link rel="canonical" href="https://learn.geterdone.io/technical-indicators/stochastic-oscillator/" />
+  <meta name="author" content="dmedellin" />
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="learn.geterdone.io" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Stochastic Oscillator · Technical Indicators" />
+  <meta property="og:description" content="Measure where the close sits inside its recent high-low range, compare %K and %D smoothing, and understand why range position behaves differently in trends and sideways markets." />
+  <meta property="og:url" content="https://learn.geterdone.io/technical-indicators/stochastic-oscillator/" />
+  <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Stochastic Oscillator · Technical Indicators" />
+  <meta name="twitter:description" content="Measure where the close sits inside its recent high-low range, compare %K and %D smoothing, and understand why range position behaves differently in trends and sideways markets." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/technical-indicators/stochastic-oscillator/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M14 45L26 33L38 41L51 18' fill='none' stroke='%23041116' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='14' cy='45' r='4.5'/%3E%3Ccircle cx='26' cy='33' r='4.5'/%3E%3Ccircle cx='38' cy='41' r='4.5'/%3E%3Ccircle cx='51' cy='18' r='4.5'/%3E%3C/g%3E%3C/svg%3E" />
+  <style>
+/* ---------------------------------------------------------------------------
+   DESIGN TOKENS - the single place any theme-dependent colour may live.
+   Courses 1-3 declare this same palette in this same shape; four courses on
+   one origin are one library, so it is not forked here.
+
+   THEME RULE: the palette flips through TWO independent paths - the explicit
+   toggle ([data-theme="light"]) and the system preference (the media block,
+   for the reader who never touches the toggle). A component-level
+   `[data-theme="light"] .foo {...}` override only ever reaches the FIRST of
+   them, so a light-OS reader would get the light ground with dark-theme ink on
+   that component alone. This page shipped two such overrides (.rule-output and
+   .json-preview) and both are gone: every component reads a token instead, so
+   the two paths cannot drift.
+
+   The ACCENTS are re-declared for light, not just the neutrals, because they
+   are read AS TEXT (.eyebrow, .concept-card .icon, .pill, .chart-axis, the
+   gradient headline, the .tone-* chart series) and the dark accents are far
+   too light to read on a light surface. This page shipped the neutrals only
+   and no system-preference path at all, which reads as "light mode is broken"
+   to every reader who never touches the toggle. Light values are contrast
+   checked against --bg (#edf4f8, the darkest light surface):
+     --cyan 4.98:1  --cyan-2 5.43:1  --green 4.94:1  --red 5.14:1
+     --amber 5.33:1 --purple 5.44:1  --blue 5.25:1   --muted 4.91:1
+   all >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the
+   emphasis stop in both themes, so it has to be the more readable one against
+   the current background, not simply the lighter hue.
+
+   --on-accent is the ink that sits ON a filled accent (.brand-mark,
+   .btn.primary, .tab.active, .seg-btn.active, .check-row .check-dot,
+   .lesson-row .num, .callout .mark, .timeline-step .step-no,
+   .rule-check .state, .tag-check input:checked + span, .skip-link). It has to
+   flip with the theme because those accent fills go dark in light mode.
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+  --bg: #071019;
+  --bg-2: #0b1622;
+  --panel: rgba(16, 31, 46, 0.91);
+  --panel-solid: #101f2e;
+  --panel-2: #142638;
+  --panel-3: #182d41;
+  --text: #edf7ff;
+  --muted: #95aabd;
+  --line: rgba(170, 202, 226, 0.16);
+  --line-strong: rgba(170, 202, 226, 0.3);
+  --cyan: #37d7e7;
+  --cyan-2: #91f4ff;
+  --green: #41e39b;
+  --red: #ff6e7d;
+  --amber: #ffc857;
+  --purple: #b69cff;
+  --blue: #76a8ff;
+  --on-accent: #041116;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+/* System preference, only when the reader has NOT made an explicit choice.
+   The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+   survive on a light-mode OS. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #edf4f8;
+    --bg-2: #f9fbfd;
+    --panel: rgba(255, 255, 255, 0.94);
+    --panel-solid: #ffffff;
+    --panel-2: #f3f8fb;
+    --panel-3: #eaf2f7;
+    --text: #102433;
+    --muted: #586c7c;
+    --line: rgba(24, 62, 88, 0.13);
+    --line-strong: rgba(24, 62, 88, 0.24);
+    --cyan: #0e7382;
+    --cyan-2: #0b6d79;
+    --green: #10784f;
+    --red: #c22a34;
+    --amber: #8a5a06;
+    --purple: #6b46d6;
+    --blue: #1d5fd0;
+    --on-accent: #ffffff;
+    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  }
+}
+
+/* Explicit choice (localStorage key: learn-theme). Value-identical to the
+   media block above - the two light paths must never disagree. */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #edf4f8;
+  --bg-2: #f9fbfd;
+  --panel: rgba(255, 255, 255, 0.94);
+  --panel-solid: #ffffff;
+  --panel-2: #f3f8fb;
+  --panel-3: #eaf2f7;
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --line-strong: rgba(24, 62, 88, 0.24);
+  --cyan: #0e7382;
+  --cyan-2: #0b6d79;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --on-accent: #ffffff;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+    radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+button, input, select { font: inherit; }
+button { color: inherit; }
+a { color: inherit; }
+svg { display: block; }
+
+.shell {
+  width: min(1220px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 22px 0 64px;
+}
+
+.topbar {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* Visible focus everywhere, in both themes. */
+:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Keyboard route past the sticky header, straight into <main id="main">. */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 60;
+  padding: 11px 15px;
+  border-radius: 12px;
+  color: var(--on-accent);
+  background: var(--cyan-2);
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: top 140ms ease;
+}
+.skip-link:focus-visible { top: 12px; }
+
+/* Breadcrumb. A lesson sits two levels below the document root
+   (library -> course -> lesson): "../" is this course's home and "../../" is
+   the library index. flex-wrap lets the crumbs fall onto a second line on a
+   phone instead of collapsing, which keeps the route back to the library
+   reachable at every width. */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: 10px 2px 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.crumbs a {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 6px 9px;
+  border-radius: 9px;
+}
+
+.crumbs a:hover { color: var(--text); background: var(--line); }
+.crumb-sep { opacity: 0.5; }
+.crumb-current { color: var(--text); padding: 6px 9px; }
+
+/* Previous / next lesson pager. The sequence is the course order shown on the
+   course home; the last lesson points back at that home. Same shape and tokens
+   as the pagers in the other three courses so the whole library pages
+   identically. Focus is handled by the global :focus-visible rule above. */
+.lesson-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.lesson-link {
+  flex: 1 1 240px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+.lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.lesson-link.next { margin-left: auto; text-align: right; }
+
+/* One card per row on a phone; a two-up pager at 320px is two unreadable columns. */
+@media (max-width: 720px) {
+  .lesson-link { flex-basis: 100%; }
+}
+
+.noscript-note {
+  display: block;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.noscript-note strong { display: block; margin-bottom: 4px; color: var(--text); }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--on-accent);
+  font-weight: 950;
+  background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+  box-shadow: 0 8px 26px rgba(55, 215, 231, 0.25);
+}
+
+.brand-copy strong {
+  display: block;
+  font-size: 0.96rem;
+  letter-spacing: 0.01em;
+}
+
+.brand-copy span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.icon-btn {
+  width: 39px;
+  height: 39px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--panel-2);
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.16fr 0.84fr;
+  gap: 28px;
+  align-items: center;
+  padding: 74px 8px 42px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  color: var(--cyan-2);
+  border: 1px solid rgba(55, 215, 231, 0.28);
+  border-radius: 999px;
+  background: rgba(55, 215, 231, 0.08);
+  font-size: 0.77rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 5px rgba(55, 215, 231, 0.12);
+}
+
+h1 {
+  max-width: 820px;
+  margin: 18px 0 15px;
+  font-size: clamp(2.55rem, 6vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.gradient-text {
+  background: linear-gradient(110deg, var(--cyan-2), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.8vw, 1.16rem);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 780;
+  font-size: 0.9rem;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 8px 11px; font-size: 0.8rem; border-radius: 10px; }
+.btn:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
+
+.hero-visual {
+  position: relative;
+  min-height: 330px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(170,202,226,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(170,202,226,0.06) 1px, transparent 1px),
+    radial-gradient(circle at 75% 20%, rgba(55,215,231,0.14), transparent 15rem),
+    var(--panel-solid);
+  background-size: 42px 42px, 42px 42px, auto, auto;
+  box-shadow: var(--shadow);
+}
+
+.hero-visual svg { width: 100%; height: 100%; min-height: 330px; }
+
+.float-label {
+  position: absolute;
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  font-size: 0.76rem;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.section {
+  padding: 34px 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.45rem);
+  letter-spacing: -0.04em;
+}
+
+.section-head p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 16px 42px rgba(0,0,0,0.12);
+}
+
+.card-pad { padding: 20px; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.concept-card {
+  min-height: 100%;
+  padding: 19px;
+}
+
+.concept-card .icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  font-weight: 900;
+  color: var(--cyan-2);
+}
+
+.concept-card h3 { margin: 0 0 7px; font-size: 1.02rem; }
+.concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+.lab-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(290px, 0.65fr);
+  gap: 16px;
+}
+
+.chart-card { overflow: hidden; }
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.chart-title strong { display: block; font-size: 0.92rem; }
+.chart-title span { display: block; color: var(--muted); font-size: 0.76rem; }
+
+.tab-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tab {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: var(--panel-2);
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 750;
+  font-size: 0.78rem;
+}
+
+.tab:hover { color: var(--text); border-color: var(--line-strong); }
+.tab.active { color: var(--on-accent); border-color: transparent; background: var(--cyan); }
+
+.chart-wrap {
+  position: relative;
+  min-height: 390px;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(55,215,231,0.07), transparent 19rem),
+    var(--panel-solid);
+}
+
+.market-chart {
+  width: 100%;
+  height: auto;
+  min-height: 390px;
+  touch-action: none;
+}
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 10;
+  display: none;
+  pointer-events: none;
+  min-width: 148px;
+  padding: 9px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel-solid);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.24);
+  color: var(--text);
+  font-size: 0.75rem;
+}
+
+.chart-tooltip strong { display: block; margin-bottom: 3px; }
+.chart-tooltip span { color: var(--muted); }
+
+.chart-grid { stroke: var(--line); stroke-width: 1; }
+.chart-axis { fill: var(--muted); font-size: 11px; }
+.candle-up .wick, .candle-up .body { stroke: var(--green); }
+.candle-up .body { fill: var(--green); }
+.candle-down .wick, .candle-down .body { stroke: var(--red); }
+.candle-down .body { fill: var(--red); }
+.candle-flat .wick, .candle-flat .body { stroke: var(--amber); }
+.candle-flat .body { fill: var(--amber); }
+.close-dot { fill: var(--cyan-2); stroke: var(--panel-solid); stroke-width: 2; }
+.level-line { stroke-width: 1.6; stroke-dasharray: 7 6; }
+.tone-cyan { stroke: var(--cyan); fill: var(--cyan); }
+.tone-green { stroke: var(--green); fill: var(--green); }
+.tone-red { stroke: var(--red); fill: var(--red); }
+.tone-amber { stroke: var(--amber); fill: var(--amber); }
+.tone-purple { stroke: var(--purple); fill: var(--purple); }
+.tone-blue { stroke: var(--blue); fill: var(--blue); }
+.chart-label {
+  font-size: 11px;
+  font-weight: 850;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.zone { opacity: 0.08; }
+.focus-window { fill: rgba(55,215,231,0.09); stroke: var(--cyan); stroke-width: 1.4; stroke-dasharray: 7 5; }
+
+.control-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.control-group.grow { flex: 1; }
+
+.control-group label {
+  color: var(--muted);
+  font-size: 0.77rem;
+  white-space: nowrap;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--cyan);
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.check input { accent-color: var(--cyan); }
+
+.side-panel {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.side-panel h3 { margin: 0; font-size: 1.08rem; }
+.side-panel > p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+.verdict {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-2);
+}
+
+.verdict .label {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.verdict strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 1.08rem;
+}
+
+.verdict p { margin: 6px 0 0; color: var(--muted); font-size: 0.82rem; }
+
+.checklist {
+  display: grid;
+  gap: 9px;
+}
+
+.check-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+}
+
+.check-dot {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--panel-3);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.check-row.pass .check-dot { color: var(--on-accent); background: var(--green); }
+.check-row.warn .check-dot { color: var(--on-accent); background: var(--amber); }
+.check-row.fail .check-dot { color: white; background: var(--red); }
+.check-row strong { display: block; font-size: 0.82rem; }
+.check-row span { display: block; color: var(--muted); font-size: 0.75rem; margin-top: 2px; }
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.metric {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+
+.metric .k {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric .v {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.03rem;
+  font-weight: 900;
+}
+
+.note {
+  padding: 13px 14px;
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 12px 12px 0;
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.note strong { color: var(--text); }
+
+.matrix {
+  display: grid;
+  gap: 8px;
+}
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.matrix-row > span:first-child {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.state-pill::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state-pill.bull { color: var(--green); }
+.state-pill.bear { color: var(--red); }
+.state-pill.range { color: var(--amber); }
+.state-pill.shift { color: var(--purple); }
+.state-pill.neutral { color: var(--muted); }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 760;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  outline: none;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.field input:focus,
+.field select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(55,215,231,0.1); }
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+th, td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+th {
+  color: var(--muted);
+  background: var(--panel-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+tr:last-child td { border-bottom: 0; }
+tr.selectable { cursor: pointer; }
+tr.selectable:hover td { background: rgba(55,215,231,0.05); }
+tr.selected td { background: rgba(55,215,231,0.1); }
+td.good { color: var(--green); font-weight: 800; }
+td.warn { color: var(--amber); font-weight: 800; }
+td.bad { color: var(--red); font-weight: 800; }
+
+.practice {
+  padding: 20px;
+}
+
+.practice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.practice-head h3 { margin: 0; }
+.score {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.choice {
+  min-height: 54px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-weight: 780;
+}
+
+.choice:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.choice.correct { border-color: var(--green); background: rgba(65,227,155,0.1); }
+.choice.incorrect { border-color: var(--red); background: rgba(255,110,125,0.1); }
+
+.feedback {
+  min-height: 56px;
+  margin-top: 12px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.feedback.good { border-color: rgba(65,227,155,0.45); background: rgba(65,227,155,0.07); }
+.feedback.bad { border-color: rgba(255,110,125,0.45); background: rgba(255,110,125,0.07); }
+.feedback strong { color: var(--text); }
+
+.lesson-list {
+  display: grid;
+  gap: 10px;
+}
+
+.lesson-row {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+}
+
+.lesson-row .num {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--cyan);
+  font-weight: 950;
+}
+
+.lesson-row strong { display: block; font-size: 0.88rem; }
+.lesson-row span { display: block; margin-top: 3px; color: var(--muted); font-size: 0.8rem; }
+
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid rgba(255,200,87,0.3);
+  border-radius: 15px;
+  background: rgba(255,200,87,0.07);
+}
+
+.callout .mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--amber);
+  font-weight: 950;
+}
+
+.callout strong { display: block; }
+.callout p { margin: 4px 0 0; color: var(--muted); font-size: 0.84rem; }
+
+.footer {
+  margin-top: 42px;
+  padding: 22px 4px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.footer strong { color: var(--text); }
+.footer a { color: var(--cyan-2); text-underline-offset: 3px; }
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; padding-top: 54px; }
+  .hero-visual { min-height: 290px; }
+  .lab-layout { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .shell { width: min(100% - 18px, 1220px); padding-top: 9px; }
+  .topbar { top: 7px; }
+  .brand-copy span { display: none; }
+  .hero { padding: 48px 2px 28px; }
+  h1 { font-size: clamp(2.35rem, 14vw, 4.3rem); }
+  .section { padding: 27px 0; }
+  .section-head { display: block; }
+  .section-head p { margin-top: 8px; }
+  .grid-2, .grid-3, .grid-4, .choice-grid, .form-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: 1fr; }
+  .chart-wrap, .market-chart { min-height: 320px; }
+  .control-strip { align-items: stretch; }
+  .control-group.grow { flex-basis: 100%; }
+  .matrix-row { grid-template-columns: 88px 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+}
+
+
+.entry-model-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.entry-model {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+  text-align: left;
+  cursor: pointer;
+}
+.entry-model:hover { border-color: var(--line-strong); }
+.entry-model.active { border-color: var(--cyan); background: rgba(55,215,231,.09); }
+.entry-model strong { display: block; font-size: .82rem; }
+.entry-model span { display: block; margin-top: 3px; color: var(--muted); font-size: .72rem; }
+.tradeoff-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+}
+.tradeoff-bar span {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line-strong);
+}
+.tradeoff-bar span.on { background: var(--cyan); }
+.rr-large {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.rr-large strong { font-size: 2rem; line-height: 1; letter-spacing: -.04em; }
+.rr-large span { color: var(--muted); font-size: .8rem; }
+.risk-zone { fill: var(--red); opacity: .08; }
+.reward-zone { fill: var(--green); opacity: .08; }
+.entry-marker {
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+.model-marker {
+  font-size: 12px;
+  font-weight: 900;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 4px;
+}
+@media (max-width: 720px) {
+  .entry-model-grid { grid-template-columns: 1fr; }
+}
+
+/* Course 2 shared additions */
+textarea { font: inherit; }
+.field textarea {
+  width: 100%; min-height: 96px; resize: vertical; padding: 10px 11px;
+  border: 1px solid var(--line); border-radius: 11px; outline: none;
+  background: var(--panel-2); color: var(--text);
+}
+.field textarea:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(55,215,231,0.1); }
+.full-span { grid-column: 1 / -1; }
+.stack { display: grid; gap: 12px; }
+.action-row { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.button-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.seg-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.seg-btn {
+  border: 1px solid var(--line); border-radius: 11px; padding: 9px 11px;
+  color: var(--muted); background: var(--panel-2); cursor: pointer; font-weight: 800; font-size: .79rem;
+}
+.seg-btn:hover { color: var(--text); border-color: var(--line-strong); }
+.seg-btn.active { color: var(--on-accent); border-color: transparent; background: var(--cyan); }
+.seg-btn.active.red { color: white; background: var(--red); }
+.seg-btn.active.green { color: var(--on-accent); background: var(--green); }
+.status-banner {
+  padding: 13px 14px; border: 1px solid var(--line); border-radius: 13px;
+  background: var(--panel-2); color: var(--muted); font-size: .84rem;
+}
+.status-banner strong { color: var(--text); }
+.status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
+.status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
+.status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
+.progress-track { height: 9px; border-radius: 999px; overflow: hidden; background: var(--panel-3); }
+.progress-fill { height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg,var(--cyan),var(--purple)); transition: width .2s ease; }
+.range-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; }
+.range-value { min-width: 78px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel-2); text-align: center; font-weight: 900; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.kpi { padding: 13px; border: 1px solid var(--line); border-radius: 13px; background: var(--panel-2); }
+.kpi span { display: block; color: var(--muted); font-size: .68rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.kpi strong { display: block; margin-top: 4px; font-size: 1.16rem; }
+.kpi small { display:block; margin-top:3px; color:var(--muted); font-size:.72rem; }
+.factor-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.factor {
+  position: relative; display: grid; grid-template-columns: 24px 1fr; gap: 9px; align-items: start;
+  padding: 11px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); cursor: pointer;
+}
+.factor input { margin-top: 2px; accent-color: var(--cyan); }
+.factor strong { display:block; font-size:.82rem; }
+.factor span { display:block; color:var(--muted); font-size:.73rem; margin-top:2px; }
+.factor.selected { border-color: var(--cyan); background: rgba(55,215,231,.08); }
+.factor.redundant { border-color: var(--amber); }
+.pill-list { display: flex; flex-wrap: wrap; gap: 7px; }
+.pill { padding: 6px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel-2); color: var(--muted); font-size: .74rem; font-weight: 800; }
+.pill.good { color:var(--green); border-color:rgba(65,227,155,.34); }
+.pill.bad { color:var(--red); border-color:rgba(255,110,125,.34); }
+.pill.warn { color:var(--amber); border-color:rgba(255,200,87,.34); }
+.rule-output {
+  min-height: 115px; padding: 13px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--bg); color: var(--text); font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size: .78rem; white-space: pre-wrap; line-height: 1.55;
+}
+.chart-instruction { position:absolute; left:12px; top:12px; z-index:5; padding:7px 9px; border:1px solid var(--line); border-radius:9px; background:var(--panel); color:var(--muted); font-size:.72rem; font-weight:800; pointer-events:none; }
+.draggable-line { cursor: ns-resize; stroke-width: 2.4; }
+.handle { cursor: ns-resize; stroke: var(--panel-solid); stroke-width: 3; }
+.click-capture { cursor: crosshair; }
+.bar-list { display:grid; gap:9px; }
+.bar-row { display:grid; grid-template-columns:110px minmax(0,1fr) 56px; gap:9px; align-items:center; }
+.bar-row > span:first-child { color:var(--muted); font-size:.76rem; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.bar-track { height:9px; border-radius:999px; background:var(--panel-3); overflow:hidden; }
+.bar-fill { height:100%; border-radius:inherit; background:var(--cyan); }
+.bar-fill.green { background:var(--green); }
+.bar-fill.red { background:var(--red); }
+.bar-fill.amber { background:var(--amber); }
+.bar-fill.purple { background:var(--purple); }
+.bar-row strong { text-align:right; font-size:.77rem; }
+.timeline { display:grid; gap:8px; }
+.timeline-step { display:grid; grid-template-columns:34px 1fr; gap:10px; align-items:start; padding:11px; border:1px solid var(--line); border-radius:12px; background:var(--panel-2); }
+.timeline-step .step-no { width:32px; height:32px; display:grid; place-items:center; border-radius:10px; background:var(--panel-3); color:var(--muted); font-weight:950; }
+.timeline-step.active { border-color:var(--cyan); background:rgba(55,215,231,.07); }
+.timeline-step.active .step-no { color:var(--on-accent); background:var(--cyan); }
+.timeline-step.done .step-no { color:var(--on-accent); background:var(--green); }
+.timeline-step strong { display:block; font-size:.83rem; }
+.timeline-step span { display:block; color:var(--muted); font-size:.74rem; margin-top:2px; }
+.data-table-actions { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.tag-grid { display:flex; flex-wrap:wrap; gap:7px; }
+.tag-check { position:relative; }
+.tag-check input { position:absolute; opacity:0; pointer-events:none; }
+.tag-check span { display:block; padding:7px 9px; border:1px solid var(--line); border-radius:999px; background:var(--panel-2); color:var(--muted); font-size:.73rem; font-weight:800; cursor:pointer; }
+.tag-check input:checked + span { color:var(--on-accent); border-color:transparent; background:var(--cyan); }
+.empty-state { padding:25px; text-align:center; color:var(--muted); font-size:.84rem; }
+.canvas-card { overflow:hidden; }
+.grid-2 > *, .grid-3 > *, .grid-4 > *, .lab-layout > * { min-width: 0; }
+.table-wrap { max-width: 100%; }
+.chart-legend { display:flex; flex-wrap:wrap; gap:10px; padding:10px 14px; border-top:1px solid var(--line); color:var(--muted); font-size:.72rem; }
+.legend-item { display:inline-flex; gap:6px; align-items:center; }
+.legend-dot { width:8px; height:8px; border-radius:50%; background:var(--cyan); }
+.legend-dot.green { background:var(--green); }.legend-dot.red { background:var(--red); }.legend-dot.amber { background:var(--amber); }.legend-dot.purple { background:var(--purple); }
+.small-copy { color:var(--muted); font-size:.79rem; }
+.big-number { font-size:2.1rem; line-height:1; letter-spacing:-.05em; font-weight:950; }
+.hidden { display:none !important; }
+@media (max-width:980px){ .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+@media (max-width:720px){ .button-grid,.factor-grid{grid-template-columns:1fr;} .kpi-grid{grid-template-columns:1fr 1fr;} .bar-row{grid-template-columns:88px minmax(0,1fr) 48px;} .full-span{grid-column:auto;} }
+@media (max-width:470px){ .kpi-grid{grid-template-columns:1fr;} }
+
+
+
+/* Course 3: Options Trading */
+.option-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.option-tile{padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--panel-2);min-width:0}.option-tile span{display:block;color:var(--muted);font-size:.68rem;font-weight:850;letter-spacing:.055em;text-transform:uppercase}.option-tile strong{display:block;margin-top:4px;font-size:1.08rem;overflow-wrap:anywhere}.option-tile small{display:block;margin-top:4px;color:var(--muted);font-size:.71rem;line-height:1.45}
+.contract-card{border:1px solid var(--line-strong);border-radius:16px;background:linear-gradient(145deg,rgba(55,215,231,.07),rgba(157,123,255,.06));overflow:hidden}.contract-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:15px;border-bottom:1px solid var(--line)}.contract-head strong{display:block;font-size:1rem}.contract-head span{display:block;margin-top:3px;color:var(--muted);font-size:.75rem}.contract-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line)}.contract-cell{padding:13px;background:var(--panel-solid);min-width:0}.contract-cell span{display:block;color:var(--muted);font-size:.66rem;font-weight:850;letter-spacing:.05em;text-transform:uppercase}.contract-cell strong{display:block;margin-top:4px;font-size:.91rem;overflow-wrap:anywhere}
+.matrix{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.matrix-card{appearance:none;text-align:left;padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--panel-2);color:var(--text);cursor:pointer;transition:.16s ease}.matrix-card:hover{border-color:var(--line-strong);transform:translateY(-1px)}.matrix-card.active{border-color:var(--cyan);background:rgba(55,215,231,.09);box-shadow:inset 3px 0 0 var(--cyan)}.matrix-card strong{display:block;font-size:.83rem}.matrix-card span{display:block;margin-top:4px;color:var(--muted);font-size:.72rem;line-height:1.45}
+.moneyness-badge{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:5px 8px;border:1px solid var(--line);border-radius:999px;font-size:.66rem;font-weight:950;letter-spacing:.05em}.moneyness-badge.itm{color:var(--green);background:rgba(65,227,155,.09);border-color:rgba(65,227,155,.35)}.moneyness-badge.atm{color:var(--amber);background:rgba(255,200,87,.09);border-color:rgba(255,200,87,.35)}.moneyness-badge.otm{color:var(--muted);background:var(--panel-3)}
+.chain-table{width:100%;border-collapse:collapse;min-width:720px}.chain-table th,.chain-table td{padding:10px 9px;border-bottom:1px solid var(--line);text-align:right;font-size:.74rem}.chain-table th{position:sticky;top:0;z-index:2;background:var(--panel-solid);color:var(--muted);font-size:.63rem;letter-spacing:.055em;text-transform:uppercase}.chain-table th:first-child,.chain-table td:first-child{text-align:left}.chain-table tbody tr{cursor:pointer;transition:background .14s ease}.chain-table tbody tr:hover{background:rgba(55,215,231,.05)}.chain-table tbody tr.selected{background:rgba(55,215,231,.10);box-shadow:inset 3px 0 0 var(--cyan)}.chain-table td.itm{background:rgba(65,227,155,.04)}.chain-table td.warn{color:var(--amber)}.chain-table td.bad{color:var(--red)}
+.value-stack{height:20px;display:flex;border-radius:7px;overflow:hidden;background:var(--panel-3)}.value-stack>span{height:100%;transition:width .2s ease}.value-stack .intrinsic{background:var(--green)}.value-stack .extrinsic{background:var(--purple)}
+.payoff-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.payoff-summary>div{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);min-width:0}.payoff-summary span{display:block;color:var(--muted);font-size:.66rem;font-weight:850;text-transform:uppercase;letter-spacing:.05em}.payoff-summary strong{display:block;margin-top:4px;font-size:.98rem;overflow-wrap:anywhere}
+.greeks-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.greek-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);min-width:0}.greek-card span{display:block;color:var(--muted);font-size:.65rem;font-weight:850;letter-spacing:.05em;text-transform:uppercase}.greek-card strong{display:block;margin-top:4px;font-size:1rem}.greek-card small{display:block;margin-top:3px;color:var(--muted);font-size:.68rem;line-height:1.4}
+.scenario-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.scenario-card{appearance:none;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);color:var(--text);cursor:pointer}.scenario-card:hover{border-color:var(--line-strong)}.scenario-card.active{border-color:var(--cyan);background:rgba(55,215,231,.08)}.scenario-card strong{display:block;font-size:.78rem}.scenario-card span{display:block;margin-top:3px;color:var(--muted);font-size:.69rem;line-height:1.4}
+.position-leg{display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}.position-leg .side{display:inline-flex;justify-content:center;padding:5px 7px;border-radius:8px;font-size:.65rem;font-weight:950;text-transform:uppercase}.position-leg .side.long{background:rgba(65,227,155,.14);color:var(--green)}.position-leg .side.short{background:rgba(255,110,125,.14);color:var(--red)}.position-leg strong{display:block;font-size:.8rem}.position-leg span{display:block;color:var(--muted);font-size:.7rem}
+.risk-box{padding:12px;border:1px solid rgba(255,200,87,.35);border-radius:12px;background:rgba(255,200,87,.07);font-size:.75rem;line-height:1.55;color:var(--muted)}.risk-box strong{color:var(--text)}
+.exercise-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.exercise-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}.exercise-card span{display:block;color:var(--muted);font-size:.66rem;font-weight:850;text-transform:uppercase}.exercise-card strong{display:block;margin-top:4px;font-size:.9rem}
+.plan-score{display:flex;align-items:center;gap:14px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel-2)}.plan-score .score-circle{width:74px;height:74px;display:grid;place-items:center;border-radius:50%;background:conic-gradient(var(--cyan) var(--score,0%),var(--panel-3) 0);position:relative;flex:none}.plan-score .score-circle:before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--panel-solid)}.plan-score .score-circle strong{position:relative;z-index:1;font-size:1.15rem}.plan-score p{margin:3px 0 0;color:var(--muted);font-size:.72rem;line-height:1.45}
+.rule-checks{display:grid;gap:7px}.rule-check{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}.rule-check .state{width:20px;height:20px;display:grid;place-items:center;border-radius:6px;background:var(--panel-3);font-size:.66rem;font-weight:950}.rule-check.good .state{background:var(--green);color:var(--on-accent)}.rule-check.warn .state{background:var(--amber);color:var(--on-accent)}.rule-check.bad .state{background:var(--red);color:white}.rule-check strong{display:block;font-size:.75rem}.rule-check span{display:block;margin-top:2px;color:var(--muted);font-size:.68rem;line-height:1.4}
+.reference-list{display:grid;gap:8px;margin-top:12px}.reference-list a{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);color:var(--text);text-decoration:none;font-size:.73rem;font-weight:800}.reference-list a:hover{border-color:var(--cyan)}.reference-list a span{color:var(--cyan-2);font-size:.65rem}
+.market-chart polyline{fill:none!important}.chart-note{padding:9px 14px 13px;color:var(--muted);font-size:.69rem;line-height:1.45}.chart-tooltip{pointer-events:none}.chart-crosshair{stroke:var(--line-strong);stroke-dasharray:4 4}.chart-focus{fill:var(--panel-solid);stroke-width:2.5}.chart-tooltip-box{fill:var(--panel-solid);stroke:var(--line-strong)}.chart-tooltip-text{fill:var(--text);font-size:11px;font-weight:850}.action-row{display:flex;flex-wrap:wrap;align-items:center;gap:9px}.stack{display:grid;gap:11px}.tab-row{display:flex;flex-wrap:wrap;gap:7px}.tab{appearance:none;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);color:var(--muted);padding:8px 10px;cursor:pointer;font-size:.73rem;font-weight:850}.tab.active{background:var(--cyan);border-color:transparent;color:var(--on-accent)}.pill{display:inline-flex;padding:5px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:.66rem;font-weight:850}.warning-card{padding:12px;border:1px solid rgba(255,110,125,.33);border-radius:12px;background:rgba(255,110,125,.06);color:var(--muted);font-size:.73rem;line-height:1.5}.warning-card strong{color:var(--text)}
+@media(max-width:980px){.contract-body{grid-template-columns:repeat(2,minmax(0,1fr))}.greeks-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.scenario-strip{grid-template-columns:1fr}.exercise-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.option-grid,.matrix,.payoff-summary{grid-template-columns:1fr}.contract-body{grid-template-columns:1fr 1fr}.position-leg{grid-template-columns:64px minmax(0,1fr)}.position-leg> :last-child{grid-column:2}.plan-score{align-items:flex-start}}
+@media(max-width:440px){.contract-body,.greeks-grid{grid-template-columns:1fr}}
+
+
+svg polyline{fill:none!important}
+.chart-stack{display:grid;gap:1px;background:var(--line)}
+.subchart{position:relative;background:var(--panel-solid);min-height:210px}
+.subchart.price{min-height:380px}
+.subchart svg{width:100%;height:auto;min-height:210px;touch-action:none}
+.subchart.price svg{min-height:380px}
+.subchart-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(170,202,226,.025)}
+.subchart-head strong{font-size:.78rem}.subchart-head span{color:var(--muted);font-size:.68rem}
+.formula-box{padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:var(--panel-2);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;line-height:1.65;overflow-wrap:anywhere}
+.formula-box strong{color:var(--cyan-2)}
+.window-values{display:grid;grid-template-columns:repeat(auto-fit,minmax(66px,1fr));gap:7px}
+.window-value{padding:9px 7px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);text-align:center;min-width:0}
+.window-value span{display:block;color:var(--muted);font-size:.62rem;font-weight:850;text-transform:uppercase;letter-spacing:.04em}
+.window-value strong{display:block;margin-top:3px;font-size:.8rem;overflow:hidden;text-overflow:ellipsis}
+.component-list{display:grid;gap:8px}.component-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--panel-2)}
+.component-row span{color:var(--muted);font-size:.74rem}.component-row strong{font-size:.82rem}
+.meter{height:8px;border-radius:999px;overflow:hidden;background:var(--panel-3)}.meter>span{display:block;height:100%;width:var(--value,0%);background:linear-gradient(90deg,var(--cyan),var(--purple));transition:width .2s ease}
+.inline-legend{display:flex;flex-wrap:wrap;gap:9px;color:var(--muted);font-size:.7rem}.inline-legend span{display:inline-flex;align-items:center;gap:6px}.legend-swatch{width:18px;height:3px;border-radius:999px;background:currentColor}
+.selection-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.selection-card{position:relative}.selection-card input{position:absolute;opacity:0;pointer-events:none}.selection-card label{display:block;height:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);cursor:pointer;transition:.16s ease}.selection-card label:hover{border-color:var(--line-strong)}.selection-card input:checked+label{border-color:var(--cyan);background:rgba(55,215,231,.09);box-shadow:inset 3px 0 0 var(--cyan)}.selection-card strong{display:block;font-size:.8rem}.selection-card span{display:block;margin-top:3px;color:var(--muted);font-size:.69rem;line-height:1.4}
+.score-panel{display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel-2)}
+.score-ring{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--cyan) var(--score,0%),var(--panel-3) 0);position:relative}.score-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--panel-solid)}.score-ring strong{position:relative;z-index:1;font-size:1.08rem}.score-panel p{margin:4px 0 0;color:var(--muted);font-size:.73rem;line-height:1.45}
+.signal-table{width:100%;border-collapse:collapse}.signal-table th,.signal-table td{padding:9px 8px;border-bottom:1px solid var(--line);font-size:.72rem;text-align:left}.signal-table th{color:var(--muted);font-size:.62rem;letter-spacing:.05em;text-transform:uppercase}.signal-table td:last-child,.signal-table th:last-child{text-align:right}
+.json-preview{max-height:260px;overflow:auto;margin:0;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.answer-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.answer-buttons .seg-btn{min-height:44px}
+.correlation-grid{display:grid;gap:6px}.correlation-row{display:grid;grid-template-columns:100px minmax(0,1fr) 54px;gap:8px;align-items:center}.correlation-row span{color:var(--muted);font-size:.69rem}.correlation-row strong{text-align:right;font-size:.72rem}
+.rule-builder{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rule-builder .full{grid-column:1/-1}
+.badge-row{display:flex;flex-wrap:wrap;gap:7px}.family-badge{padding:6px 8px;border-radius:999px;border:1px solid var(--line);background:var(--panel-2);font-size:.68rem;font-weight:850;color:var(--muted)}.family-badge.active{color:var(--cyan-2);border-color:rgba(55,215,231,.4);background:rgba(55,215,231,.07)}
+@media(max-width:720px){.selection-grid,.rule-builder,.answer-buttons{grid-template-columns:1fr}.score-panel{grid-template-columns:74px minmax(0,1fr)}.score-ring{width:70px;height:70px}.correlation-row{grid-template-columns:76px minmax(0,1fr) 44px}.subchart.price,.subchart.price svg{min-height:320px}}
+</style>
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives LAST in <head> and not with the rest of
+       the page script at the bottom of <body>: that runs after the first paint.
+       SAME localStorage key as every other page in the library ('learn-theme')
+       so the choice persists across all four courses; this course shipped its
+       own key - the fourth distinct key in the library - and that is what
+       stranded a reader's choice at the course boundary. The allowlist matters:
+       a corrupt value would otherwise be written straight onto data-theme,
+       matching no CSS while still counting as an explicit choice, which pins
+       the page to the dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Technical Indicators course home">
+        <div class="brand-mark" aria-hidden="true">05</div>
+        <div class="brand-copy"><strong>Technical Indicators</strong><span>Course 4 · Standalone interactive lesson</span></div>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Technical Indicators</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 05 &middot; Stochastic Oscillator</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note">
+        <strong>JavaScript is required for the interactive parts of this lesson.</strong>
+        The price and oscillator charts, the %K and %D readouts, the crossing count, and the practice questions are drawn in your browser, so they stay blank while JavaScript is disabled. The written explanations, the reading process, and the completion standard below still read normally.
+      </div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div><span class="eyebrow"><span class="pulse"></span>Course 4 · Lesson 05 · Momentum Indicators</span><h1>Stochastic Oscillator</h1><p>Measure where the close sits inside its recent high-low range, compare %K and %D smoothing, and understand why range position behaves differently in trends and sideways markets.</p><div class="hero-actions"><button class="btn primary" type="button" onclick="scrollToLab()">Open interactive lesson</button><a class="btn ghost" href="#process">Review the process</a></div></div>
+      <div class="hero-visual"><svg id="heroChart" viewBox="0 0 520 330" role="img" aria-label="Stochastic Oscillator visual"></svg><div class="float-label" style="left:18px;bottom:18px;">Synthetic educational data</div></div>
+    </section>
+    <section class="section"><div class="section-head"><div><h2>Core concepts</h2></div><p>Understand what the indicator calculates, how its parameters affect it, and what it cannot establish by itself.</p></div><div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Range position</h3><p>The raw stochastic value expresses the current close as a percentage of the selected recent high-low range.</p></article><article class="card concept-card"><div class="icon">2</div><h3>%K and %D</h3><p>%K is the faster line after optional smoothing. %D is a moving average of %K and reacts more slowly.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Regime sensitivity</h3><p>Crosses and extreme readings can be useful in ranges but may remain pinned during persistent trends.</p></article></div></section>
+    <section class="section" id="lab"><div class="section-head"><div><h2>Interactive lesson</h2></div><p>Change the inputs, inspect the calculation, and compare the indicator with the underlying price data.</p></div>
+<div class="lab-layout">
+ <article class="card chart-card">
+  <div class="chart-toolbar"><div class="chart-title"><strong>Price and stochastic oscillator</strong><span>%K, %D, extreme zones, and line crossings</span></div><div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>%K</span><span class="tone-purple"><i class="legend-swatch"></i>%D</span></div></div>
+  <div class="chart-stack"><div class="subchart price"><div class="subchart-head"><strong>Price</strong><span>High-low range drives the calculation</span></div><svg id="stochPrice" aria-label="Synthetic price chart"></svg></div><div class="subchart"><div class="subchart-head"><strong>Stochastic oscillator</strong><span id="stochLabel">14, 3, 3</span></div><svg id="stochChart" aria-label="Stochastic oscillator chart"></svg></div></div>
+ </article>
+ <aside class="card side-panel" aria-live="polite">
+  <h3>Change lookback and smoothing</h3><p>Short lookbacks and light smoothing produce more crossings; longer settings produce fewer, slower changes.</p>
+  <div class="field"><label for="stochScenario">Price series</label><select id="stochScenario"><option value="range">Range</option><option value="uptrend">Uptrend</option><option value="downtrend">Downtrend</option><option value="whipsaw">Whipsaw range</option></select></div>
+  <div><div class="range-row"><label class="small-copy" for="stochPeriod">Range lookback</label><span class="range-value" id="stochPeriodOut">14</span></div><input id="stochPeriod" type="range" min="5" max="30" value="14" /></div>
+  <div><div class="range-row"><label class="small-copy" for="stochKSmooth">%K smoothing</label><span class="range-value" id="stochKSmoothOut">3</span></div><input id="stochKSmooth" type="range" min="1" max="8" value="3" /></div>
+  <div><div class="range-row"><label class="small-copy" for="stochDSmooth">%D period</label><span class="range-value" id="stochDSmoothOut">3</span></div><input id="stochDSmooth" type="range" min="1" max="8" value="3" /></div>
+  <div class="kpi-grid"><div class="kpi"><span>Current %K</span><strong id="stochK">—</strong></div><div class="kpi"><span>Current %D</span><strong id="stochD">—</strong></div><div class="kpi"><span>Crosses</span><strong id="stochCrosses">—</strong></div><div class="kpi"><span>State</span><strong id="stochState">—</strong></div></div>
+  <div class="formula-box"><strong>%K raw</strong> = 100 × (close − lowest low) ÷ (highest high − lowest low)</div>
+  <div class="status-banner" id="stochStatus">Change the scenario or smoothing.</div>
+ </aside>
+</div></section>
+    <section class="section" id="process"><div class="section-head"><div><h2>Read the stochastic oscillator</h2></div><p>Separate range position, smoothing, and crossover events before assigning meaning.</p></div><div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Define the recent range</h3><p>Select the lookback used to find the highest high and lowest low.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Calculate raw position</h3><p>Measure where the current close sits between those boundaries.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Apply %K and %D smoothing</h3><p>Document each smoothing period because it changes signal timing.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Interpret the regime</h3><p>Use extreme readings and crossings differently in a range than in a persistent trend.</p></article></div></section>
+    <section class="section"><div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Stochastic range position</h3><span class="score" id="stochQuizScore">Score 0 / 0</span></div>
+        <p id="stochQuizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="stochQuizChoices"></div>
+        <div class="feedback" id="stochQuizFeedback" aria-live="polite">Choose the best answer.</div>
+        <button class="btn small" id="stochQuizNext" type="button" style="margin-top:10px;">Next question</button>
+      </article>
+      <article class="card card-pad"><h3 style="margin-top:0;">Lesson rule</h3><div class="rule-output" id="stochRule">The stochastic oscillator measures closing position inside a recent range; an extreme reading does not prove that the range boundary will hold.</div></article>
+    </div></section>
+    <section class="section"><div class="grid-2"><article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Confusing stochastic with price velocity</strong><span>It primarily measures range position, not a direct rate of change.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Buying or selling every extreme</strong><span>The oscillator can remain near 0 or 100 while a trend extends.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Ignoring smoothing settings</strong><span>Fast, slow, and full stochastic variants can produce materially different crossing behavior.</span></div></div></div></article><article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">✓</div><div><strong>Finish when you can reconstruct %K from the recent range.</strong><p>Identify the highest high, lowest low, and close; calculate raw %K; explain the effect of each smoothing input; and compare crossing behavior in a trend and a range.</p></div></div><div class="note" style="margin-top:12px;"><strong>Calculation note:</strong> This lesson calculates raw %K over the high-low lookback, applies a simple moving average for %K smoothing, then applies another simple moving average for %D. Platform variants may differ.</div></article></div></section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../relative-strength-index/" rel="prev"><span>Previous lesson</span><strong>04 &middot; Relative Strength Index</strong></a>
+      <a class="lesson-link next" href="../macd/" rel="next"><span>Next lesson</span><strong>06 &middot; Moving Average Convergence Divergence</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Educational course.</strong> Indicators transform historical price data; they do not guarantee future direction. All charts and values are synthetic. Confirm calculation settings, market context, execution costs, and risk before using an indicator in a trading decision.</p>
+      <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+function byId(id){return document.getElementById(id)}
+function setText(id,value){const el=byId(id);if(el)el.textContent=value}
+function setHTML(id,value){const el=byId(id);if(el)el.innerHTML=value}
+function num(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function money(value,digits=2){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:digits,maximumFractionDigits:digits}).format(num(value))}
+function pct(value,digits=1){return `${num(value).toFixed(digits)}%`}
+function signed(value,digits=2){const n=num(value);return `${n>0?'+':''}${n.toFixed(digits)}`}
+function escapeHTML(value){return String(value).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
+function average(values){const v=values.filter(Number.isFinite);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null}
+function lastValid(values){for(let i=values.length-1;i>=0;i--)if(Number.isFinite(values[i]))return values[i];return null}
+function validAt(values,i){return values&&Number.isFinite(values[i])?values[i]:null}
+function seeded(seed=17){let s=(seed>>>0)||1;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function sourceValues(data,source='close'){return data.map(d=>source==='typical'?(d.high+d.low+d.close)/3:source==='ohlc4'?(d.open+d.high+d.low+d.close)/4:d.close)}
+function makeSeries(kind='uptrend',n=120,seed=17){
+ const rand=seeded(seed+kind.split('').reduce((a,c)=>a+c.charCodeAt(0),0));let data=[],prev=100,shift=0;
+ for(let i=0;i<n;i++){
+  let base=100,noise=(rand()-.5)*1.25,vol=1;
+  if(kind==='uptrend')base=86+.29*i+3.1*Math.sin(i/5.7)+1.1*Math.sin(i/2.25);
+  else if(kind==='downtrend')base=126-.27*i+3.2*Math.sin(i/5.4)+1.0*Math.sin(i/2.1);
+  else if(kind==='range')base=104+5.8*Math.sin(i/8.1)+1.7*Math.sin(i/2.6);
+  else if(kind==='whipsaw'){base=103+4.8*Math.sin(i/3.05)+1.9*Math.sin(i/1.35);vol=1.25}
+  else if(kind==='breakout')base=i<72?100+2.7*Math.sin(i/5.4):102.5+.52*(i-72)+2.5*Math.sin(i/4.4);
+  else if(kind==='reversal')base=i<60?88+.42*i+2.8*Math.sin(i/5.1):113-.36*(i-60)+2.9*Math.sin(i/4.8);
+  else if(kind==='volatile'){base=105+.06*i+7.4*Math.sin(i/4.4)+3.2*Math.sin(i/1.7);vol=2.0}
+  else if(kind==='squeeze'){if(i<76){base=100+.9*Math.sin(i/5.2)+.35*Math.sin(i/1.8);vol=.34}else{base=100+.48*(i-76)+3.5*Math.sin(i/4.1);vol=1.45}}
+  else if(kind==='gap'){base=91+.22*i+2.6*Math.sin(i/5.6);if(i>=65)shift=8;base+=shift;vol=i===65?2.3:1}
+  else if(kind==='calm'){base=98+.09*i+.8*Math.sin(i/7)+.3*Math.sin(i/2);vol=.35}
+  else if(kind==='volatileRange'){base=105+7.5*Math.sin(i/5.1)+2.4*Math.sin(i/1.55);vol=1.8}
+  else if(kind==='bullDiv'||kind==='bearDiv'){
+   let divBase;
+   if(i<30)divBase=108+.12*i+.8*Math.sin(i/3);
+   else if(i<=55)divBase=112-.72*(i-30)+.35*Math.sin(i/2);
+   else if(i<=80)divBase=94+.56*(i-55)+.5*Math.sin(i/2.8);
+   else if(i<=140)divBase=108-.30*(i-80)+1.6*Math.sin(i/2.4);
+   else divBase=(108-.30*60+1.6*Math.sin(140/2.4))+.58*(i-140)+.5*Math.sin(i/3);
+   base=kind==='bullDiv'?divBase:210-divBase;vol=.28;
+  } else if(kind==='noDiv')base=118-.18*i+4.2*Math.sin(i/7.8)+1.1*Math.sin(i/2.3);
+  let close=base+noise*vol;
+  let open=i===0?close+(rand()-.5)*vol:prev+(rand()-.5)*.75*vol;
+  if(kind==='gap'&&i===65)open=prev+7.2+(rand()-.5);
+  const span=.55+rand()*1.2*vol,high=Math.max(open,close)+span,low=Math.min(open,close)-(.45+rand()*1.1*vol);
+  data.push({i,open,high,low,close});prev=close;
+ }
+ return data;
+}
+function sma(values,p){p=Math.max(1,Math.floor(p));const out=Array(values.length).fill(null);let q=[],sum=0;for(let i=0;i<values.length;i++){const v=values[i];if(!Number.isFinite(v)){q=[];sum=0;continue}q.push(v);sum+=v;if(q.length>p)sum-=q.shift();if(q.length===p)out[i]=sum/p}return out}
+function ema(values,p){p=Math.max(1,Math.floor(p));const out=Array(values.length).fill(null),a=2/(p+1);let seed=[],prev=null;for(let i=0;i<values.length;i++){const v=values[i];if(!Number.isFinite(v)){seed=[];prev=null;continue}if(prev===null){seed.push(v);if(seed.length===p){prev=average(seed);out[i]=prev}}else{prev=v*a+prev*(1-a);out[i]=prev}}return out}
+function wilder(values,p){p=Math.max(1,Math.floor(p));const out=Array(values.length).fill(null);let seed=[],prev=null;for(let i=0;i<values.length;i++){const v=values[i];if(!Number.isFinite(v)){if(prev===null)seed=[];continue}if(prev===null){seed.push(v);if(seed.length===p){prev=average(seed);out[i]=prev}}else{prev=(prev*(p-1)+v)/p;out[i]=prev}}return out}
+function stddev(values,p){p=Math.max(2,Math.floor(p));const out=Array(values.length).fill(null);for(let i=p-1;i<values.length;i++){const w=values.slice(i-p+1,i+1);if(w.every(Number.isFinite)){const m=average(w),v=average(w.map(x=>(x-m)**2));out[i]=Math.sqrt(v)}}return out}
+function rsi(values,p=14){const gains=Array(values.length).fill(null),losses=Array(values.length).fill(null);for(let i=1;i<values.length;i++){const d=values[i]-values[i-1];gains[i]=Math.max(0,d);losses[i]=Math.max(0,-d)}const ag=wilder(gains,p),al=wilder(losses,p);return values.map((_,i)=>{if(!Number.isFinite(ag[i])||!Number.isFinite(al[i]))return null;if(al[i]===0&&ag[i]===0)return 50;if(al[i]===0)return 100;return 100-(100/(1+ag[i]/al[i]))})}
+function trueRange(data){return data.map((d,i)=>i===0?d.high-d.low:Math.max(d.high-d.low,Math.abs(d.high-data[i-1].close),Math.abs(d.low-data[i-1].close)))}
+function atr(data,p=14){return wilder(trueRange(data),p)}
+function stochastic(data,p=14,kSmooth=3,dSmooth=3){const raw=Array(data.length).fill(null);for(let i=p-1;i<data.length;i++){const w=data.slice(i-p+1,i+1),hh=Math.max(...w.map(d=>d.high)),ll=Math.min(...w.map(d=>d.low));raw[i]=hh===ll?50:(data[i].close-ll)/(hh-ll)*100}const k=sma(raw,kSmooth),d=sma(k,dSmooth);return {raw,k,d}}
+function macd(values,fast=12,slow=26,signal=9){const f=ema(values,fast),s=ema(values,slow),line=values.map((_,i)=>Number.isFinite(f[i])&&Number.isFinite(s[i])?f[i]-s[i]:null),sig=ema(line,signal),hist=line.map((v,i)=>Number.isFinite(v)&&Number.isFinite(sig[i])?v-sig[i]:null);return {fast:f,slow:s,line,signal:sig,hist}}
+function adx(data,p=14){const tr=trueRange(data),plusDM=Array(data.length).fill(null),minusDM=Array(data.length).fill(null);for(let i=1;i<data.length;i++){const up=data[i].high-data[i-1].high,down=data[i-1].low-data[i].low;plusDM[i]=up>down&&up>0?up:0;minusDM[i]=down>up&&down>0?down:0}const a=wilder(tr,p),sp=wilder(plusDM,p),sm=wilder(minusDM,p),plusDI=a.map((v,i)=>Number.isFinite(v)&&v!==0?100*sp[i]/v:null),minusDI=a.map((v,i)=>Number.isFinite(v)&&v!==0?100*sm[i]/v:null),dx=plusDI.map((v,i)=>Number.isFinite(v)&&Number.isFinite(minusDI[i])&&v+minusDI[i]!==0?100*Math.abs(v-minusDI[i])/(v+minusDI[i]):null),adxv=wilder(dx,p);return {adx:adxv,plusDI,minusDI,dx}}
+function bollinger(values,p=20,m=2){const basis=sma(values,p),sd=stddev(values,p),upper=basis.map((v,i)=>Number.isFinite(v)&&Number.isFinite(sd[i])?v+m*sd[i]:null),lower=basis.map((v,i)=>Number.isFinite(v)&&Number.isFinite(sd[i])?v-m*sd[i]:null),width=basis.map((v,i)=>Number.isFinite(v)&&v!==0?100*(upper[i]-lower[i])/v:null),percentB=values.map((v,i)=>Number.isFinite(upper[i])&&upper[i]!==lower[i]?100*(v-lower[i])/(upper[i]-lower[i]):null);return {basis,upper,lower,width,percentB}}
+function keltner(data,emaP=20,atrP=10,m=2){const close=data.map(d=>d.close),basis=ema(close,emaP),a=atr(data,atrP),upper=basis.map((v,i)=>Number.isFinite(v)&&Number.isFinite(a[i])?v+m*a[i]:null),lower=basis.map((v,i)=>Number.isFinite(v)&&Number.isFinite(a[i])?v-m*a[i]:null),width=basis.map((v,i)=>Number.isFinite(v)&&v!==0?100*(upper[i]-lower[i])/v:null);return {basis,atr:a,upper,lower,width}}
+function donchian(data,p=20,includeCurrent=true){const upper=Array(data.length).fill(null),lower=Array(data.length).fill(null),mid=Array(data.length).fill(null);for(let i=0;i<data.length;i++){const end=includeCurrent?i:i-1,start=end-p+1;if(start<0||end<0)continue;const w=data.slice(start,end+1);upper[i]=Math.max(...w.map(d=>d.high));lower[i]=Math.min(...w.map(d=>d.low));mid[i]=(upper[i]+lower[i])/2}return {upper,lower,mid}}
+function roc(values,p=12){return values.map((v,i)=>i>=p&&values[i-p]!==0?100*(v-values[i-p])/values[i-p]:null)}
+function momentum(values,p=12){return values.map((v,i)=>i>=p?v-values[i-p]:null)}
+function crossIndices(a,b){const out=[];for(let i=1;i<a.length;i++){if(![a[i-1],b[i-1],a[i],b[i]].every(Number.isFinite))continue;if(a[i-1]<=b[i-1]&&a[i]>b[i])out.push({index:i,type:'bull'});else if(a[i-1]>=b[i-1]&&a[i]<b[i])out.push({index:i,type:'bear'})}return out}
+function thresholdCross(values,level,direction='above'){const out=[];for(let i=1;i<values.length;i++){if(!Number.isFinite(values[i-1])||!Number.isFinite(values[i]))continue;if(direction==='above'&&values[i-1]<=level&&values[i]>level)out.push(i);if(direction==='below'&&values[i-1]>=level&&values[i]<level)out.push(i)}return out}
+function normalizeSeries(values){const v=values.filter(Number.isFinite);if(!v.length)return values.map(()=>null);const lo=Math.min(...v),hi=Math.max(...v);return values.map(x=>Number.isFinite(x)?(hi===lo?50:(x-lo)/(hi-lo)*100):null)}
+function correlation(a,b){const pairs=[];for(let i=0;i<Math.min(a.length,b.length);i++)if(Number.isFinite(a[i])&&Number.isFinite(b[i]))pairs.push([a[i],b[i]]);if(pairs.length<3)return null;const ma=average(pairs.map(p=>p[0])),mb=average(pairs.map(p=>p[1]));let n=0,da=0,db=0;for(const [x,y] of pairs){n+=(x-ma)*(y-mb);da+=(x-ma)**2;db+=(y-mb)**2}return da&&db?n/Math.sqrt(da*db):0}
+function svgNode(tag,attrs={},text=''){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));if(text!==undefined&&text!=='')n.textContent=text;return n}
+function segments(values){const out=[];let cur=[];values.forEach((v,i)=>{if(Number.isFinite(v))cur.push([i,v]);else if(cur.length){out.push(cur);cur=[]}});if(cur.length)out.push(cur);return out}
+function chartScales(svg,n,minY,maxY,compact=false){const W=compact?520:960,H=compact?330:370,m=compact?{l:24,r:20,t:22,b:20}:{l:58,r:24,t:20,b:34};svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('preserveAspectRatio','xMidYMid meet');const left=m.l,right=W-m.r,top=m.t,bottom=H-m.b,x=i=>left+(n<=1?0:i/(n-1))*(right-left),y=v=>bottom-(v-minY)/(maxY-minY||1)*(bottom-top);return {W,H,left,right,top,bottom,x,y}}
+function drawAxes(svg,s,minY,maxY,levels=[],compact=false){if(compact)return;for(let i=0;i<=4;i++){const yy=s.top+(s.bottom-s.top)*i/4,val=maxY-(maxY-minY)*i/4;svg.appendChild(svgNode('line',{x1:s.left,y1:yy,x2:s.right,y2:yy,class:'chart-grid'}));svg.appendChild(svgNode('text',{x:s.left-8,y:yy+4,'text-anchor':'end',class:'chart-axis'},Math.abs(val)>=100?val.toFixed(0):val.toFixed(2)))}for(let i=0;i<=5;i++){const xx=s.left+(s.right-s.left)*i/5;svg.appendChild(svgNode('line',{x1:xx,y1:s.top,x2:xx,y2:s.bottom,class:'chart-grid'}));svg.appendChild(svgNode('text',{x:xx,y:s.bottom+20,'text-anchor':'middle',class:'chart-axis'},`${Math.round(i/5*100)}%`))}for(const l of levels){const yy=s.y(l.value);svg.appendChild(svgNode('line',{x1:s.left,y1:yy,x2:s.right,y2:yy,class:`level-line tone-${l.tone||'amber'}`,'stroke-dasharray':l.dash||'7 6',opacity:l.opacity||.8}));if(l.label)svg.appendChild(svgNode('text',{x:s.right-4,y:yy-5,'text-anchor':'end',class:`chart-label tone-${l.tone||'amber'}`},l.label))}}
+function addHover(svg,s,data,series,compact=false){if(compact)return;const old=svg.querySelector('[data-hover-layer]');if(old)old.remove();const overlay=svgNode('rect',{x:s.left,y:s.top,width:s.right-s.left,height:s.bottom-s.top,fill:'transparent','data-hover-layer':'1'});svg.appendChild(overlay);let g=null;overlay.addEventListener('pointermove',e=>{const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*s.W,idx=Math.round(clamp((px-s.left)/(s.right-s.left),0,1)*(data.length-1));if(g)g.remove();g=svgNode('g',{});g.appendChild(svgNode('line',{x1:s.x(idx),y1:s.top,x2:s.x(idx),y2:s.bottom,class:'chart-crosshair'}));const rows=[];if(data[idx]?.close!==undefined)rows.push(['Close',data[idx].close,'cyan']);for(const sr of series||[]){const v=sr.values?.[idx];if(Number.isFinite(v))rows.push([sr.label||'Value',v,sr.tone||'purple'])}const tx=px>s.W-180?s.x(idx)-172:s.x(idx)+9,ty=s.top+8,h=24+rows.length*16;g.appendChild(svgNode('rect',{x:clamp(tx,s.left,s.right-164),y:ty,width:164,height:h,rx:8,class:'chart-tooltip-box'}));rows.forEach((row,j)=>g.appendChild(svgNode('text',{x:clamp(tx,s.left,s.right-164)+9,y:ty+17+j*16,class:`chart-tooltip-text tone-${row[2]}`},`${row[0]}: ${num(row[1]).toFixed(2)}`)));svg.appendChild(g)});overlay.addEventListener('pointerleave',()=>{if(g){g.remove();g=null}})}
+function drawPriceChart(svg,data,opts={}){if(!svg||!data.length)return;svg.innerHTML='';const compact=!!opts.compact,overlays=opts.overlays||[],bands=opts.bands||[],vals=data.flatMap(d=>[d.low,d.high]);for(const o of overlays)for(const v of o.values||[])if(Number.isFinite(v))vals.push(v);for(const b of bands)for(const arr of [b.upper,b.lower])for(const v of arr||[])if(Number.isFinite(v))vals.push(v);let lo=Math.min(...vals),hi=Math.max(...vals),pad=(hi-lo)*.09||1;lo-=pad;hi+=pad;const s=chartScales(svg,data.length,lo,hi,compact);drawAxes(svg,s,lo,hi,opts.levels||[],compact);
+ for(const b of bands){const top=segments(b.upper||[]),bot=segments(b.lower||[]);if(top.length&&bot.length){const valid=[];for(let i=0;i<data.length;i++)if(Number.isFinite(b.upper[i])&&Number.isFinite(b.lower[i]))valid.push(i);if(valid.length){const pts=valid.map(i=>`${s.x(i)},${s.y(b.upper[i])}`).concat(valid.slice().reverse().map(i=>`${s.x(i)},${s.y(b.lower[i])}`)).join(' ');svg.appendChild(svgNode('polygon',{points:pts,class:`tone-${b.tone||'purple'}`,opacity:b.opacity||.08}))}}}
+ if(opts.focus&&Number.isFinite(opts.focus.start)&&Number.isFinite(opts.focus.end)){const x1=s.x(clamp(opts.focus.start,0,data.length-1)),x2=s.x(clamp(opts.focus.end,0,data.length-1));svg.appendChild(svgNode('rect',{x:Math.min(x1,x2),y:s.top,width:Math.max(2,Math.abs(x2-x1)),height:s.bottom-s.top,class:'focus-window'}))}
+ if(opts.lineOnly){const pts=data.map((d,i)=>`${s.x(i)},${s.y(d.close)}`).join(' ');svg.appendChild(svgNode('polyline',{points:pts,fill:'none',class:'tone-cyan','stroke-width':compact?3.2:2.5,'stroke-linecap':'round','stroke-linejoin':'round'}))}else{const cw=Math.max(1.5,(s.right-s.left)/data.length*.58);data.forEach((d,i)=>{const g=svgNode('g',{class:d.close>d.open?'candle-up':d.close<d.open?'candle-down':'candle-flat'});g.appendChild(svgNode('line',{x1:s.x(i),y1:s.y(d.high),x2:s.x(i),y2:s.y(d.low),class:'wick','stroke-width':1}));const y1=s.y(Math.max(d.open,d.close)),y2=s.y(Math.min(d.open,d.close));g.appendChild(svgNode('rect',{x:s.x(i)-cw/2,y:y1,width:cw,height:Math.max(1.2,y2-y1),rx:.7,class:'body',opacity:.78}));svg.appendChild(g)})}
+ for(const o of overlays){for(const seg of segments(o.values||[])){const pts=seg.map(([i,v])=>`${s.x(i)},${s.y(v)}`).join(' ');svg.appendChild(svgNode('polyline',{points:pts,fill:'none',class:`tone-${o.tone||'cyan'}`,'stroke-width':o.width||2.3,'stroke-dasharray':o.dash||'',opacity:o.opacity||1,'stroke-linejoin':'round','stroke-linecap':'round'}))}}
+ for(const m of opts.markers||[]){if(!Number.isFinite(m.index))continue;const v=Number.isFinite(m.value)?m.value:data[m.index]?.close;if(!Number.isFinite(v))continue;const cx=s.x(m.index),cy=s.y(v),tone=m.tone||'amber';svg.appendChild(svgNode('circle',{cx,cy,r:4.2,class:`tone-${tone}`,stroke:'var(--panel-solid)','stroke-width':2}));if(m.label)svg.appendChild(svgNode('text',{x:cx,y:cy+(m.position==='below'?18:-10),'text-anchor':'middle',class:`chart-label tone-${tone}`},m.label))}
+ if(opts.selectedIndex!==undefined){const idx=clamp(Math.round(opts.selectedIndex),0,data.length-1);svg.appendChild(svgNode('line',{x1:s.x(idx),y1:s.top,x2:s.x(idx),y2:s.bottom,class:'level-line tone-amber','stroke-dasharray':'4 4'}))}
+ addHover(svg,s,data,overlays,compact)
+}
+function drawLineChart(svg,series,opts={}){if(!svg)return;svg.innerHTML='';const n=Math.max(1,...series.map(s=>s.values?.length||0)),all=[];for(const sr of series)for(const v of sr.values||[])if(Number.isFinite(v))all.push(v);for(const l of opts.levels||[])all.push(l.value);let lo=Number.isFinite(opts.min)?opts.min:(all.length?Math.min(...all):0),hi=Number.isFinite(opts.max)?opts.max:(all.length?Math.max(...all):1);if(opts.includeZero){lo=Math.min(lo,0);hi=Math.max(hi,0)}const pad=opts.noPad?0:(hi-lo)*.09||1;lo-=pad;hi+=pad;const s=chartScales(svg,n,lo,hi,!!opts.compact);drawAxes(svg,s,lo,hi,opts.levels||[],!!opts.compact);
+ for(const z of opts.zones||[]){const y1=s.y(z.max),y2=s.y(z.min);svg.appendChild(svgNode('rect',{x:s.left,y:Math.min(y1,y2),width:s.right-s.left,height:Math.abs(y2-y1),class:`tone-${z.tone||'purple'}`,opacity:z.opacity||.06}))}
+ for(const sr of series){if(sr.type==='bar'){const bw=Math.max(1,(s.right-s.left)/n*.65),zero=s.y(sr.baseline??0);(sr.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const yv=s.y(v),tone=typeof sr.toneFn==='function'?sr.toneFn(v,i):(sr.tone||'cyan');svg.appendChild(svgNode('rect',{x:s.x(i)-bw/2,y:Math.min(zero,yv),width:bw,height:Math.max(1,Math.abs(zero-yv)),class:`tone-${tone}`,opacity:sr.opacity||.65}))})}else{for(const seg of segments(sr.values||[])){const pts=seg.map(([i,v])=>`${s.x(i)},${s.y(v)}`).join(' ');svg.appendChild(svgNode('polyline',{points:pts,fill:'none',class:`tone-${sr.tone||'cyan'}`,'stroke-width':sr.width||2.3,'stroke-dasharray':sr.dash||'','stroke-linejoin':'round','stroke-linecap':'round',opacity:sr.opacity||1}))}}}
+ for(const m of opts.markers||[]){if(!Number.isFinite(m.index)||!Number.isFinite(m.value))continue;const cx=s.x(m.index),cy=s.y(m.value),tone=m.tone||'amber';svg.appendChild(svgNode('circle',{cx,cy,r:4.2,class:`tone-${tone}`,stroke:'var(--panel-solid)','stroke-width':2}));if(m.label)svg.appendChild(svgNode('text',{x:cx,y:cy+(m.position==='below'?18:-10),'text-anchor':'middle',class:`chart-label tone-${tone}`},m.label))}
+ addHover(svg,s,Array.from({length:n},(_,i)=>({close:series[0]?.values?.[i]})),series,!!opts.compact)
+}
+function drawHero(kind='ma'){const svg=byId('heroChart');if(!svg)return;const data=makeSeries(kind==='oscillator'?'range':kind==='divergence'?'bullDiv':kind==='bands'?'squeeze':kind==='breakout'?'breakout':'uptrend',72,31);const close=data.map(d=>d.close);let overlays=[],bands=[];
+ if(['ma','cross','rules','combine','regime'].includes(kind)){overlays=[{values:ema(close,9),tone:'cyan',width:3},{values:ema(close,22),tone:'purple',width:3}]}
+ if(kind==='bands'){const b=bollinger(close,16,2);overlays=[{values:b.basis,tone:'cyan'}];bands=[{upper:b.upper,lower:b.lower,tone:'purple',opacity:.12}]}
+ if(kind==='breakout'){const d=donchian(data,14,false);overlays=[{values:d.upper,tone:'green'},{values:d.lower,tone:'red'}]}
+ if(kind==='atr'){const a=atr(data,10),norm=normalizeSeries(a).map(v=>Number.isFinite(v)?Math.min(...close)+(Math.max(...close)-Math.min(...close))*v/100:null);overlays=[{values:norm,tone:'amber'}]}
+ if(['oscillator','macd','trend','divergence'].includes(kind)){overlays=[{values:ema(close,10),tone:'cyan'},{values:ema(close,24),tone:'purple'}]}
+ drawPriceChart(svg,data,{overlays,bands,compact:true,lineOnly:true})}
+/* The pre-paint script in <head> has already applied any explicit choice, so
+   data-theme is trustworthy by the time this runs; this block owns only the
+   toggle, its icon and the chart repaint. The icon tracks the EFFECTIVE theme:
+   with no explicit choice stored the OS preference decides (matching the CSS
+   media block), so an OS change repaints the icon as well as the palette. The
+   accessible name is static markup and is never rewritten from here - a label
+   that names a state has to choose between the current one and the next one,
+   and the courses chose differently.
+   Every colour the SVG charts draw with is bound to a token through a CSS class
+   (.chart-grid, .chart-axis, .tone-*) or through var(--panel-solid), so the
+   existing nodes re-theme themselves; onThemeChange() still redraws them on
+   every theme change, so a chart that ever starts resolving a colour at draw
+   time cannot go stale. */
+function setupTheme(){
+ const btn=byId('themeToggle');
+ const lightQuery=window.matchMedia?window.matchMedia('(prefers-color-scheme: light)'):null;
+ const effectiveTheme=()=>document.documentElement.dataset.theme||(lightQuery&&lightQuery.matches?'light':'dark');
+ const renderIcon=()=>{if(btn)btn.textContent=effectiveTheme()==='light'?'\u2600':'\u263e'};
+ const repaint=()=>{if(typeof onThemeChange==='function')onThemeChange()};
+ renderIcon();
+ if(btn)btn.addEventListener('click',()=>{
+  const next=effectiveTheme()==='light'?'dark':'light';
+  document.documentElement.dataset.theme=next;
+  try{localStorage.setItem('learn-theme',next)}catch(e){}
+  renderIcon();repaint();
+ });
+ if(lightQuery){
+  const onSystemThemeChange=()=>{if(document.documentElement.dataset.theme)return;renderIcon();repaint()};
+  if(lightQuery.addEventListener)lightQuery.addEventListener('change',onSystemThemeChange);
+  else if(lightQuery.addListener)lightQuery.addListener(onSystemThemeChange);
+ }
+}
+function setupQuiz(config){const q=config.questions||[];let index=0,correct=0,answered=false;const prompt=byId(config.promptId),choices=byId(config.choicesId),feedback=byId(config.feedbackId),score=byId(config.scoreId),next=byId(config.nextId);function render(){answered=false;const item=q[index%q.length];prompt.textContent=item.prompt;choices.innerHTML=item.choices.map((c,i)=>`<button class="choice" type="button" data-index="${i}">${escapeHTML(c)}</button>`).join('');feedback.className='feedback';feedback.textContent='Choose the best answer.';next.disabled=true;score.textContent=`Score ${correct} / ${index}`};choices.addEventListener('click',e=>{const b=e.target.closest('[data-index]');if(!b||answered)return;answered=true;const item=q[index%q.length],chosen=Number(b.dataset.index),ok=chosen===item.answer;if(ok)correct++;choices.querySelectorAll('[data-index]').forEach((x,i)=>{x.disabled=true;if(i===item.answer)x.classList.add('correct');else if(i===chosen)x.classList.add('incorrect')});feedback.className=`feedback ${ok?'good':'bad'}`;feedback.innerHTML=`<strong>${ok?'Correct.':'Not quite.'}</strong> ${item.explanation}`;next.disabled=false;score.textContent=`Score ${correct} / ${index+1}`});next.addEventListener('click',()=>{index++;render()});render()}
+function bindSegment(id,callback){const c=byId(id);if(!c)return;c.addEventListener('click',e=>{const b=e.target.closest('[data-value]');if(!b)return;c.querySelectorAll('[data-value]').forEach(x=>x.classList.remove('active'));b.classList.add('active');callback(b.dataset.value,b)})}
+function scrollToLab(){byId('lab')?.scrollIntoView({behavior:'smooth',block:'start'})}
+function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)}
+function setScore(id,score){const el=byId(id);if(!el)return;const s=clamp(Math.round(score),0,100);el.style.setProperty('--score',`${s}%`);const strong=el.querySelector('strong');if(strong)strong.textContent=`${s}%`}
+
+
+function renderStoch(){
+ const kind=byId('stochScenario').value,p=Number(byId('stochPeriod').value),ks=Number(byId('stochKSmooth').value),ds=Number(byId('stochDSmooth').value),data=makeSeries(kind,120,55),o=stochastic(data,p,ks,ds),crosses=crossIndices(o.k,o.d),markers=crosses.map(c=>({index:c.index,value:data[c.index].close,label:c.type==='bull'?'K>D':'K<D',tone:c.type==='bull'?'green':'red',position:c.type==='bull'?'below':'above'}));
+ drawPriceChart(byId('stochPrice'),data,{markers});drawLineChart(byId('stochChart'),[{values:o.k,tone:'cyan',label:'%K'},{values:o.d,tone:'purple',label:'%D'}],{min:0,max:100,noPad:true,levels:[{value:80,label:'80',tone:'red'},{value:50,label:'50',tone:'amber'},{value:20,label:'20',tone:'green'}],zones:[{min:80,max:100,tone:'red',opacity:.05},{min:0,max:20,tone:'green',opacity:.05}]});
+ const k=lastValid(o.k),d=lastValid(o.d),state=k>=80?'Upper extreme':k<=20?'Lower extreme':k>d?'%K above %D':'%K below %D';setText('stochPeriodOut',p);setText('stochKSmoothOut',ks);setText('stochDSmoothOut',ds);setText('stochLabel',`${p}, ${ks}, ${ds}`);setText('stochK',k.toFixed(1));setText('stochD',d.toFixed(1));setText('stochCrosses',crosses.length);setText('stochState',state);
+ byId('stochStatus').className=`status-banner ${k>=80||k<=20?'warn':'good'}`;setHTML('stochStatus',`<strong>${state}:</strong> the close is ${k.toFixed(1)}% of the way from the recent lowest low to the highest high after smoothing. ${k>=80||k<=20?'An extreme can persist; require the price condition defined by the setup.':'The oscillator is away from the conventional extremes.'}`);setText('stochRule',`Stochastic ${p},${ks},${ds} · interpret %K/%D crossings only after defining the market regime and the required price confirmation.`)
+}
+function onThemeChange(){drawHero('oscillator');renderStoch();}
+['stochScenario','stochPeriod','stochKSmooth','stochDSmooth'].forEach(id=>byId(id).addEventListener('input',renderStoch));setupTheme();drawHero('oscillator');renderStoch();
+setupQuiz({promptId:'stochQuizPrompt',choicesId:'stochQuizChoices',feedbackId:'stochQuizFeedback',scoreId:'stochQuizScore',nextId:'stochQuizNext',questions:[{"prompt":"A raw stochastic value near 100 means what?","choices":["The close is near the highest high of the recent range","Price rose 100%","Volatility is zero","A reversal is guaranteed"],"answer":0,"explanation":"The calculation locates the close between the recent lowest low and highest high."},{"prompt":"What does %D usually represent?","choices":["A moving average of %K","The day count to expiration","A volatility estimate","The highest high"],"answer":0,"explanation":"%D is the slower signal line derived by smoothing %K."},{"prompt":"Why can stochastic remain above 80 in an uptrend?","choices":["The formula stops working","Closes repeatedly occur near the upper part of the rolling range","The range has no highs","Volume becomes negative"],"answer":1,"explanation":"Persistent strength can keep each new close near the recent range high."},{"prompt":"Increasing %K smoothing usually has what effect?","choices":["More jagged movement","Fewer and slower changes","No change","Future data enters the formula"],"answer":1,"explanation":"Additional smoothing reduces short-term variation and delays some crossings."}]});</script>
+</body>
+</html>

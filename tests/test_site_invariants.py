@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Machine-checkable form of the market-structure-lab site invariants.
+"""Machine-checkable form of the learn.geterdone.io site invariants.
 
 Standard library only. Run from the repository root:
 
@@ -19,19 +19,30 @@ What is deliberately strict here:
     Containerfile.release publishes site/ as the document root of
     https://learn.geterdone.io/ . An extra directory level silently changes every
     public URL.
-  * The site is a LIBRARY of courses now, so every invariant that used to be
-    "the course" is stated per course and asserted for every one of them. The
+  * The site is a subject-agnostic LIBRARY OF PATHS now. A path is an ordered
+    sequence of courses on one subject; the trading path is the first one, and
+    mathematics, computer science and philosophy are planned. So the shared
+    chrome -- the site index at / and the path page at /paths/<subject>/ -- is
+    tested for the things that must hold for ANY subject, and the trading
+    vocabulary is allowed only on the course and lesson pages themselves.
+  * Every invariant that used to be "the course" is stated per course and
+    asserted for every one of them. The
     theme localStorage key is checked site-wide for exactly that reason: courses
     that each persist the reader's theme under their own key is a bug that looks
     like nothing until a reader crosses from one course to the next.
-  * Three courses share one origin, one visual system and one navigation model,
+  * Four courses share one origin, one visual system and one navigation model,
     so the conventions that cross course boundaries -- the lesson pager markup,
     the light palette token VALUES, and the theme-toggle button -- are pinned in
     TestPinnedConventions. Each course inventing its own variant is invisible in
     review (every variant works inside its own course) and visible to a reader
     the moment they cross from one course into the next.
+  * The path page is NEITHER a course home NOR a lesson. It is declared on its
+    own line (PATH_PAGE) and every per-course collection is built by excluding
+    it, because it is two segments deep exactly like a lesson is and a guard
+    that classifies by URL SHAPE would demand a lesson pager on it.
 """
 
+import html
 import json
 import os
 import re
@@ -48,37 +59,54 @@ SITE_ROOT = Path(os.environ.get("SITE_ROOT") or (REPO_ROOT / "site")).resolve()
 CANONICAL_ORIGIN = "https://learn.geterdone.io"
 CANONICAL_HOST = "learn.geterdone.io"
 
-# The published URL space is two levels deep: the site index is the LEARNING
-# PATH (an ordered catalog of courses), each course has a home page, and each
-# course's lessons live under that home.
+# The published URL space:
 #
-#     /                                  the learning path (catalog of courses)
-#     /market-structure-lab/             course 1 home, "Market Structure Lab"
-#     /market-structure-lab/<lesson>/    course 1's seven lessons, in course order
+#     /                                  the site index (paths, plus course search)
+#     /paths/trading/                    the trading PATH PAGE: its ordered courses
+#     /market-structure/                 course 1 home, "Market Structure"
+#     /market-structure/<lesson>/        course 1's seven lessons, in course order
 #     /trade-setup-execution/            course 2 home, "Trade Setup and Execution"
 #     /trade-setup-execution/<lesson>/   course 2's fifteen lessons, in course order
 #     /options-trading/                  course 3 home, "Options Trading"
 #     /options-trading/<lesson>/         course 3's sixteen lessons, in course order
+#     /technical-indicators/             course 4 home, "Technical Indicators"
+#     /technical-indicators/<lesson>/    course 4's sixteen lessons, in course order
 #
-# That is 42 HTML pages. The document root publishes exactly two further things,
-# both non-HTML assets -- one exchange schema per course that ships one --
+# That is 60 HTML pages. The document root publishes exactly three further
+# things, all non-HTML assets -- one exchange schema per course that ships one --
 # declared separately in NON_HTML_ASSETS below.
 #
 # Containerfile.release, .github/workflows/{ci,pages}.yml, release/contract.json
 # (acceptance.checks) and scripts/smoke.py all assert the same mapping; changing
 # one without the others is how a lesson silently stops being published.
 #
-# The seven FLAT URLs course 1 used to publish (/market-structure/ and its six
-# siblings) are deliberately gone. Breaking them was an accepted decision, there
-# are no redirect stubs, and they must not be re-added here: a path listed below
-# is a path that must exist.
+# Course 1 was published at /market-structure-lab/ until the library became a
+# library of PATHS: the old slug named the whole site, not the course, so the
+# course took its own name. The old URLs are gone, there are no redirect stubs,
+# and the same is true of the seven FLAT lesson URLs course 1 published before
+# that. Neither may be re-added here: a path listed below is a path that must
+# exist.
 #
 # LESSON ORDER IS THE COURSE SEQUENCE, not alphabetical order. It is declared
 # once, here, and TestLessonChain walks the prev/next pager against it, so a
 # course whose pager disagrees with its own syllabus fails rather than shipping.
 SITE_INDEX = "/"
 
-COURSE_1_HOME = "/market-structure-lab/"
+# The path page. It is NEITHER a course home NOR a lesson, and no test may
+# classify it as either. It is two segments deep exactly like a lesson is
+# (/paths/trading/ has the same shape as /options-trading/moneyness/), so any
+# guard that infers "two segments means a lesson" would sweep it into the
+# per-course suites and demand a lesson pager, an owning course home, and the
+# course disclaimer -- none of which a path page has or should have. It is
+# therefore declared on its own line here, and every per-course collection below
+# is built by EXCLUDING it rather than by matching a URL shape.
+PATH_PAGE = "/paths/trading/"
+
+# The paths layer owns this first segment. A course may never claim it, or
+# /paths/ would answer for a course home and vice versa.
+PATHS_PREFIX = "/paths/"
+
+COURSE_1_HOME = "/market-structure/"
 COURSE_1_LESSONS = (
     "market-structure",
     "ranges-breakouts-liquidity",
@@ -128,11 +156,47 @@ COURSE_3_LESSONS = (
     "options-trade-planning",
 )
 
-# (course title, course home URL, lesson slugs in course order)
+COURSE_4_HOME = "/technical-indicators/"
+COURSE_4_LESSONS = (
+    "technical-indicator-fundamentals",
+    "moving-averages",
+    "moving-average-crossovers",
+    "relative-strength-index",
+    "stochastic-oscillator",
+    "macd",
+    "average-directional-index",
+    "average-true-range",
+    "bollinger-bands",
+    "keltner-channels",
+    "donchian-channels",
+    "rate-of-change-and-momentum",
+    "indicator-divergence",
+    "combining-indicators",
+    "indicator-selection-by-market-regime",
+    "indicator-based-trading-rules",
+)
+
+# (course title, course home URL, lesson slugs in course order). The order of
+# this tuple IS the order of the path: index 0 is course 1. TestPathPosition
+# reads it that way, so a course inserted in the wrong place fails there.
 COURSES = (
-    ("Market Structure Lab", COURSE_1_HOME, COURSE_1_LESSONS),
+    ("Market Structure", COURSE_1_HOME, COURSE_1_LESSONS),
     ("Trade Setup and Execution", COURSE_2_HOME, COURSE_2_LESSONS),
     ("Options Trading", COURSE_3_HOME, COURSE_3_LESSONS),
+    ("Technical Indicators", COURSE_4_HOME, COURSE_4_LESSONS),
+)
+
+# The trading path is EIGHT courses long. Four are published; courses 5 to 8 are
+# announced, hold their place in the order, and are NOT links. The only facts
+# that exist about them are their number and their name -- no lesson count, no
+# description, no date -- so those are the only facts recorded here, and
+# TestPathPage asserts that the page invents nothing more.
+PATH_COURSE_COUNT = 8
+UPCOMING_COURSES = (
+    (5, "Volume and Order Flow"),
+    (6, "Trading Risk Management"),
+    (7, "Backtesting and Trading Systems"),
+    (8, "Algorithmic and Automated Trading"),
 )
 
 UNKNOWN_PATH_CHECK = "/release-smoke-unknown-path"
@@ -148,7 +212,13 @@ def source_of(url):
     return url.lstrip("/") + "index.html"
 
 
-REQUIRED_PAGES = {SITE_INDEX: "index.html"}
+# The site index and the path page are SHARED CHROME: the same frame will hold
+# a mathematics path or a computer-science path without being rewritten. They
+# are published pages like any other, so every whole-tree invariant applies to
+# them -- but the per-course invariants do not, because neither is a course.
+SHARED_CHROME_PAGES = (SITE_INDEX, PATH_PAGE)
+
+REQUIRED_PAGES = {SITE_INDEX: "index.html", PATH_PAGE: source_of(PATH_PAGE)}
 for _title, _home, _slugs in COURSES:
     REQUIRED_PAGES[_home] = source_of(_home)
     for _slug in _slugs:
@@ -168,6 +238,8 @@ NON_HTML_ASSETS = {
         "trade-setup-execution/trade-journal-schema.json",
     "/options-trading/options-trade-plan-schema.json":
         "options-trading/options-trade-plan-schema.json",
+    "/technical-indicators/indicator-rule-schema.json":
+        "technical-indicators/indicator-rule-schema.json",
 }
 
 # Rides along inside the document root without being published content. CNAME
@@ -177,25 +249,30 @@ DELIVERY_CONTROL_FILES = frozenset({"CNAME"})
 
 COURSE_HOMES = tuple(home for _title, home, _slugs in COURSES)
 
-# "/" is the learning path; every other published page is course material --
-# all three course homes as well as all 38 lessons. All of it teaches trading, so
-# all of it carries the same disclaimer. There is no exempt page below the root.
-COURSE_PAGES = {url: rel for url, rel in REQUIRED_PAGES.items() if url != SITE_INDEX}
+# Everything that is not shared chrome is course material -- all four course
+# homes as well as all 54 lessons. All of it teaches trading, so all of it
+# carries the same disclaimer. The two chrome pages are excluded BY NAME, not by
+# URL shape: /paths/trading/ looks exactly like a lesson URL.
+COURSE_PAGES = {
+    url: rel for url, rel in REQUIRED_PAGES.items() if url not in SHARED_CHROME_PAGES
+}
 
-# The 38 lessons alone, without any course home.
+# The 54 lessons alone, without any course home.
 LESSON_PAGES = {url: rel for url, rel in COURSE_PAGES.items() if url not in COURSE_HOMES}
 
 # Every page of the library persists the reader's theme under ONE localStorage
 # key. Course 1 shipped "marketStructureTheme", course 2 shipped
-# "market-lab-theme" and course 3 arrived with a third key,
-# "options-course-theme"; with several courses on one origin that meant a
-# reader's choice silently reset at every course boundary. The site standardized
-# on "learn-theme" everywhere. Note the check below reads storage CALL SITES, not
-# prose: site/index.html names both retired keys in a comment that explains the
-# migration, and documenting the fix must not fail the build.
+# "market-lab-theme", course 3 arrived with a third key, "options-course-theme",
+# and course 4's source package arrived with a FOURTH, "technical-indicators-
+# theme"; with several courses on one origin that meant a reader's choice
+# silently reset at every course boundary. The site standardized on "learn-theme"
+# everywhere. Note the check below reads storage CALL SITES, not prose:
+# site/index.html names retired keys in a comment that explains the migration,
+# and documenting the fix must not fail the build.
 THEME_STORAGE_KEY = "learn-theme"
 RETIRED_THEME_KEYS = (
     "marketStructureTheme", "market-lab-theme", "options-course-theme",
+    "technical-indicators-theme",
 )
 
 # localStorage.getItem("k") / setItem("k", v) / removeItem("k") -- a literal key.
@@ -211,11 +288,14 @@ STORAGE_IDENT_KEY_RE = re.compile(
 THEMEISH_KEY_RE = re.compile(r"(?i)theme")
 
 # The pre-paint read every page must perform, with either quote style.
+HEAD_RE = re.compile(r"<head\b[^>]*>(.*?)</head>", re.S | re.I)
+
 PREPAINT_THEME_READ_RE = re.compile(
     r"""localStorage\s*\.\s*getItem\s*\(\s*(['"])%s\1\s*\)""" % THEME_STORAGE_KEY
 )
 
-# Every course page (any page below the catalog root) must keep this disclaimer.
+# Every course page (every page that is not shared chrome) must keep this
+# disclaimer.
 DISCLAIMER_RE = re.compile(r"(?i)educational use only")
 
 SECRET_PATTERNS = [
@@ -412,34 +492,42 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     same map for the SERVED responses and release/contract.json declares it as the
     acceptance matrix. A page added to one and not the others is a live page that
     nothing probes, which is exactly the hole these tests exist to close. The
-    course homes count: they are published, so they are probed -- and so are both
-    non-HTML assets, each checked as JSON rather than as a page.
+    course homes count: they are published, so they are probed -- and so is the
+    path page, and so are all three non-HTML assets, each checked as JSON rather
+    than as a page.
     """
 
-    def test_declared_url_space_is_the_two_level_course_tree(self):
-        """Learning path, then a home per course, then that course's lessons.
+    def test_declared_url_space_is_the_index_the_path_page_and_the_course_tree(self):
+        """Site index, path page, then a home per course and that course's lessons.
 
-        42 URLs exactly: /, three course homes, and 7 + 15 + 16 lessons beneath
-        them. The flat /<lesson>/ URLs were retired without redirects, so a
-        two-segment lesson path is the only shape a lesson may have; re-adding a
-        one-segment lesson here would declare a page that no longer exists on
-        disk.
+        60 URLs exactly: /, /paths/trading/, four course homes, and
+        7 + 15 + 16 + 16 lessons beneath them. The flat /<lesson>/ URLs and the
+        old /market-structure-lab/ course prefix were retired without redirects,
+        so a two-segment lesson path under a declared course home is the only
+        shape a lesson may have; re-adding either would declare a page that no
+        longer exists on disk.
         """
-        expected = 1 + len(COURSES) + sum(len(slugs) for _t, _h, slugs in COURSES)
+        expected = (
+            1  # the site index
+            + 1  # the path page
+            + len(COURSES)
+            + sum(len(slugs) for _t, _h, slugs in COURSES)
+        )
         self.assertEqual(
-            42,
+            60,
             expected,
-            "the library is 1 + 3 + 7 + 15 + 16 = 42 pages, got %d" % expected,
+            "the library is 1 + 1 + 4 + 7 + 15 + 16 + 16 = 60 pages, got %d" % expected,
         )
         self.assertEqual(
             expected,
             len(REQUIRED_PAGES),
             "expected %d published URLs, got %d" % (expected, len(REQUIRED_PAGES)),
         )
-        self.assertEqual(3, len(COURSES), "the library is three courses")
+        self.assertEqual(4, len(COURSES), "the library publishes four courses")
         self.assertEqual(7, len(COURSE_1_LESSONS), "course 1 is seven lessons")
         self.assertEqual(15, len(COURSE_2_LESSONS), "course 2 is fifteen lessons")
         self.assertEqual(16, len(COURSE_3_LESSONS), "course 3 is sixteen lessons")
+        self.assertEqual(16, len(COURSE_4_LESSONS), "course 4 is sixteen lessons")
         for index, (title, _home, slugs) in enumerate(COURSES, start=1):
             with self.subTest(course=title):
                 self.assertEqual(
@@ -448,6 +536,24 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         for _title, home, _slugs in COURSES:
             with self.subTest(course=home):
                 self.assertIn(home, REQUIRED_PAGES, "the course home must be published")
+        # The path page is published, and it is neither a course home nor a
+        # lesson. Stating that here means a future guard cannot quietly start
+        # classifying it by URL shape: it is two segments deep exactly like a
+        # lesson, and it lives under a first segment no course may take.
+        self.assertIn(PATH_PAGE, REQUIRED_PAGES, "the path page must be published")
+        self.assertNotIn(PATH_PAGE, COURSE_HOMES, "the path page is not a course home")
+        self.assertNotIn(PATH_PAGE, LESSON_PAGES, "the path page is not a lesson")
+        self.assertNotIn(PATH_PAGE, COURSE_PAGES, "the path page is not course material")
+        self.assertTrue(
+            PATH_PAGE.startswith(PATHS_PREFIX),
+            "the path page lives under %s" % PATHS_PREFIX,
+        )
+        for _title, home, _slugs in COURSES:
+            with self.subTest(course=home):
+                self.assertFalse(
+                    home.startswith(PATHS_PREFIX) or PATHS_PREFIX.startswith(home),
+                    "%s collides with the paths layer at %s" % (home, PATHS_PREFIX),
+                )
         # No course home may be a prefix of another: the first path segment
         # must identify the course on its own, or /a/ and /a-b/x/ start
         # answering for each other in guards that match on prefixes.
@@ -484,17 +590,17 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     def test_declared_assets_are_not_pages(self):
         """The asset map exists so no page check has to be softened for it.
 
-        Both published schemas are declared here, one line each. The second one
-        arriving with course 3 is the moment the temptation appears to relax an
-        HTML assertion so a JSON file can slip through the page sweep; the fix
-        for "this check cannot apply to that file" is another declaration, never
-        a weaker check.
+        All three published schemas are declared here, one line each. Every new
+        one is the moment the temptation appears to relax an HTML assertion so a
+        JSON file can slip through the page sweep; the fix for "this check cannot
+        apply to that file" is another declaration, never a weaker check.
         """
         self.assertEqual(
-            2,
+            3,
             len(NON_HTML_ASSETS),
-            "both published JSON schemas must stay declared: course 2's trade "
-            "journal exchange schema and course 3's options trade plan schema",
+            "all three published JSON schemas must stay declared: course 2's "
+            "trade journal exchange schema, course 3's options trade plan "
+            "schema, and course 4's indicator rule schema",
         )
         for url, relative in sorted(NON_HTML_ASSETS.items()):
             with self.subTest(url=url):
@@ -619,7 +725,7 @@ class TestSelfContainment(SiteFixture):
             "<!doctype html><html><head>"
             '<link rel="canonical" href="%s/">'
             "<style>body{background:url(data:image/png;base64,AAAA)}</style>"
-            "</head><body><a href=\"./market-structure-lab/\">go</a>"
+            "</head><body><a href=\"./market-structure/\">go</a>"
             "<script>var x=1;</script></body></html>" % CANONICAL_ORIGIN
         )
         self.assertEqual([], scan_self_containment(clean, {CANONICAL_HOST}))
@@ -718,15 +824,21 @@ class TestPageMetadata(SiteFixture):
 
 class TestContent(SiteFixture):
     def test_course_pages_retain_the_disclaimer(self):
-        """Everything below the learning path teaches trading and must say so.
+        """Every course page teaches trading and must say so.
 
-        That is all three course homes as well as all 38 lessons: a course home
+        That is all four course homes as well as all 54 lessons: a course home
         is not an exempt landing page, it sells the same material.
 
+        The two shared-chrome pages are excluded, and excluded BY NAME. They are
+        not trading material -- the same frame is meant to hold a mathematics
+        path next -- so a trading disclaimer is not theirs to carry, and a
+        subject-specific notice on a subject-agnostic page is precisely what
+        TestSharedChromeIsSubjectAgnostic forbids.
+
         Checked two ways on purpose: every DECLARED course page must be present (a
-        lab that vanished cannot pass by not being iterated), and every PUBLISHED
-        non-catalog page must carry the disclaimer (a page added without touching
-        REQUIRED_PAGES is still covered).
+        lesson that vanished cannot pass by not being iterated), and every
+        PUBLISHED page that is not chrome must carry the disclaimer (a page added
+        without touching REQUIRED_PAGES is still covered).
         """
         by_url = {served_path(doc.path): doc for doc in self.documents}
         missing = sorted(set(COURSE_PAGES) - set(by_url))
@@ -735,7 +847,11 @@ class TestContent(SiteFixture):
             missing,
             "declared course pages are not published: %s" % missing,
         )
-        course_pages = [doc for url, doc in sorted(by_url.items()) if url != "/"]
+        course_pages = [
+            doc
+            for url, doc in sorted(by_url.items())
+            if url not in SHARED_CHROME_PAGES
+        ]
         self.assertTrue(course_pages, "no course page found under %s" % SITE_ROOT)
         for doc in course_pages:
             with self.subTest(page=str(doc.path.relative_to(REPO_ROOT))):
@@ -868,13 +984,25 @@ class TestThemeKey(SiteFixture):
         return {key for key in cls.storage_keys(text) if THEMEISH_KEY_RE.search(key)}
 
     def test_every_page_reads_the_shared_theme_key_before_paint(self):
+        """The read must be in <head>, not merely somewhere in the document.
+
+        "Before paint" is a claim about POSITION. A page that reads the key from
+        a script at the end of <body> satisfies "reads the key" and still paints
+        the wrong theme first and snaps -- the exact defect course 1 shipped
+        with. Asserting against the whole document could never catch it, so
+        assert against the head.
+        """
         for doc in self.documents:
             with self.subTest(page=str(doc.path.relative_to(REPO_ROOT))):
+                head = HEAD_RE.search(doc.text)
+                self.assertIsNotNone(
+                    head, "page has no <head> to place the pre-paint script in"
+                )
                 self.assertRegex(
-                    doc.text,
+                    head.group(1),
                     PREPAINT_THEME_READ_RE,
-                    "page does not read localStorage[%r]; every page in the "
-                    "library applies the stored theme before first paint, or the "
+                    "page does not read localStorage[%r] inside <head>; every "
+                    "page applies the stored theme before first paint, or the "
                     "reader's choice flashes away on this page alone"
                     % THEME_STORAGE_KEY,
                 )
@@ -1030,11 +1158,576 @@ class TestLessonChain(SiteFixture):
 
 
 # ---------------------------------------------------------------------------
+# The library is subject-agnostic
+# ---------------------------------------------------------------------------
+# The site is a LIBRARY OF PATHS that currently holds one path. Mathematics,
+# computer science and philosophy are planned, and they will reuse this frame
+# unchanged. So two pages -- the site index and the path page -- are shared
+# chrome, and the checks below state the properties that must survive a subject
+# the site does not have yet.
+
+COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
+SCRIPT_OR_STYLE_RE = re.compile(r"<(script|style)\b[^>]*>.*?</\1>", re.S | re.I)
+TAG_RE = re.compile(r"<[^>]+>")
+ANCHOR_RE = re.compile(r"<a\b([^>]*)>(.*?)</a>", re.S | re.I)
+ELEMENT_RE_CACHE = {}
+
+# A risk / disclaimer notice, marked as such by its class. It is excluded from
+# the chrome sweep on purpose: a notice is attached to the COURSES a page shows,
+# not to the frame around them. A path of trading courses owes its reader a
+# trading risk notice; a mathematics path will carry a different one or none,
+# and neither fact says anything about whether the frame assumes a subject.
+NOTICE_ELEMENT_RE = re.compile(
+    r"""<(p|div|section|aside)\b[^>]*class="[^"]*\brisk\b[^"]*"[^>]*>.*?</\1>""",
+    re.S | re.I,
+)
+
+
+def elements(markup, tag):
+    """The outer markup of every non-nested <tag>...</tag> in the document."""
+    pattern = ELEMENT_RE_CACHE.get(tag)
+    if pattern is None:
+        pattern = ELEMENT_RE_CACHE[tag] = re.compile(
+            r"<%s\b[^>]*>.*?</%s>" % (tag, tag), re.S | re.I
+        )
+    return pattern.findall(markup)
+
+
+def visible_text(markup):
+    """Readable copy: no comments, no script or style, no tags, entities resolved.
+
+    Comments are dropped deliberately. A comment that DOCUMENTS one of the rules
+    below ("never write 'the path' here") is documentation, not copy, and the
+    build must not punish a page for explaining its own convention -- the same
+    reasoning TestThemeKey applies to storage call sites versus prose.
+    """
+    markup = COMMENT_RE.sub(" ", markup)
+    markup = SCRIPT_OR_STYLE_RE.sub(" ", markup)
+    return re.sub(r"\s+", " ", html.unescape(TAG_RE.sub(" ", markup))).strip()
+
+
+def anchor_texts(markup):
+    """The readable text of every <a> in the document."""
+    return [visible_text(body) for _attrs, body in ANCHOR_RE.findall(markup)]
+
+
+def footer_markup(text):
+    return "\n".join(elements(text, "footer"))
+
+
+def chrome_frame(text):
+    """The masthead and the footer, minus any subject-scoped notice.
+
+    That is the part of a shared page which will be byte-identical on the next
+    path added to this library: brand, primary navigation, the licence and
+    identity lines. If a subject leaks anywhere, it leaks here first.
+    """
+    frame = "\n".join(elements(text, "header") + elements(text, "footer"))
+    return visible_text(NOTICE_ELEMENT_RE.sub(" ", frame))
+
+
+def metadata_text(doc):
+    """<title> plus every <meta content> the page declares, as one string."""
+    values = [doc.title or "", doc.description or ""]
+    for match in re.finditer(r"<meta\b[^>]*>", doc.text, re.I):
+        content = re.search(r'content="([^"]*)"', match.group(0))
+        if content:
+            values.append(html.unescape(content.group(1)))
+    return " ".join(values)
+
+
+# Vocabulary that only makes sense if the subject is TRADING. The list is short
+# and made of JARGON on purpose, and the two exclusions matter as much as the
+# entries:
+#
+#   * The subject's NAME is not here. "trading", "trade", "market" and "course"
+#     are absent, because the trading path is called Trading, its courses are
+#     called "Options Trading" and "Trade Setup and Execution", and chrome that
+#     names the subject of the path it is currently showing is displaying its
+#     DATA, not assuming a subject. Banning the word would make the correct page
+#     unwritable.
+#   * Ordinary English that trading happens to reuse is not here either
+#     ("position", "value", "risk", "signal", "chart"), because a mathematics or
+#     computer-science path will legitimately use every one of them in the same
+#     frame.
+#
+# What remains is vocabulary with no meaning outside speculation on markets:
+# instruments, order handling, chart-reading technique, and the promise a
+# trading site makes and a learning library must not. If one of these appears in
+# the frame, that frame cannot be reused for the next subject as it stands.
+#
+# The SCOPE is the frame, not the page, and that is a deliberate line too. Both
+# chrome pages DISPLAY trading data -- a path card, a course list, course titles
+# ("Backtesting and Trading Systems" is a course NAME, and "backtest" is on the
+# list below) -- and displaying a subject's catalog is the job. What must not
+# assume a subject is the masthead, the navigation and the footer, which the
+# next path inherits unchanged. So chrome_frame() sweeps exactly those, minus
+# any notice marked class="risk".
+TRADING_VOCABULARY = (
+    "candlestick",
+    "ticker",
+    "broker",
+    "portfolio",
+    "stop-loss",
+    "position sizing",
+    "backtest",
+    "trade signal",
+)
+
+# The site index shows MANY paths (one today, more being written), so its copy
+# must never speak of "the path" as though there were one. This is a phrase, not
+# a word: "a path", "each path", "paths" and "the path page" are all correct and
+# must keep passing, which is why the check is anchored on the definite article
+# followed by the bare noun.
+SINGULAR_PATH_PHRASE_RE = re.compile(r"(?i)\bthe\s+path\b(?!\s+page\b)")
+
+
+class TestSharedChromeIsSubjectAgnostic(SiteFixture):
+    """The frame must not assume the subject is trading.
+
+    The site index and the path page are the two pages a second subject will
+    reuse: the index lists every path, and the path page is the template the
+    mathematics path will be written from. Course and lesson pages are exempt --
+    they ARE the trading material, and a lesson that avoided trading vocabulary
+    would be a broken lesson.
+    """
+
+    def chrome_documents(self):
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        pages = []
+        for url in SHARED_CHROME_PAGES:
+            doc = by_url.get(url)
+            self.assertIsNotNone(doc, "%s is not published" % url)
+            pages.append((url, doc))
+        return pages
+
+    def test_shared_chrome_frame_uses_no_trading_vocabulary(self):
+        for url, doc in self.chrome_documents():
+            frame = chrome_frame(doc.text).lower()
+            for word in TRADING_VOCABULARY:
+                with self.subTest(page=url, word=word):
+                    self.assertNotIn(
+                        word,
+                        frame,
+                        "the masthead/footer frame of %s uses trading vocabulary "
+                        "(%r). This frame is reused verbatim by the next path in "
+                        "the library -- mathematics, computer science -- so it "
+                        "must describe a LIBRARY, not a subject. Subject-specific "
+                        "wording belongs on the course and lesson pages, or "
+                        "inside a notice marked class=\"risk\", which is scoped to "
+                        "the courses the page lists and is not swept here."
+                        % (url, word),
+                    )
+
+    def test_site_index_metadata_names_no_subject_vocabulary(self):
+        """The index is the front door of the whole library, not of one path.
+
+        Its <title> and <meta> copy are what a search engine and a link preview
+        show for the SITE. A path page's own title and description name the
+        subject it presents, which is correct and is why only the index's
+        metadata is swept here.
+        """
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        doc = by_url.get(SITE_INDEX)
+        self.assertIsNotNone(doc, "the site index is not published")
+        metadata = metadata_text(doc).lower()
+        for word in TRADING_VOCABULARY:
+            with self.subTest(word=word):
+                self.assertNotIn(
+                    word, metadata, "the site index's metadata assumes a subject"
+                )
+
+    def test_site_index_copy_never_says_the_path(self):
+        """One index, many paths: "the path" presumes there is only one.
+
+        The index held a single ordered path before the paths layer existed, and
+        its copy said so. Now a path is one row of a catalog, so the copy has to
+        read "a path" / "each path" / "paths". Comments are not copy (see
+        visible_text), so a note explaining this rule does not fail the build.
+        """
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        doc = by_url.get(SITE_INDEX)
+        self.assertIsNotNone(doc, "the site index is not published")
+        copy = visible_text(doc.text) + " " + metadata_text(doc)
+        found = sorted({m.group(0) for m in SINGULAR_PATH_PHRASE_RE.finditer(copy)})
+        self.assertEqual(
+            [],
+            found,
+            "the site index copy says %s. The index lists paths in the plural; "
+            "write \"a path\", \"each path\" or \"paths\" instead." % found,
+        )
+
+    def test_chrome_scanners_are_not_inert(self):
+        """The two scanners above must detect what they forbid, and only that."""
+        planted = (
+            '<header><nav><a href="./">Candlestick basics</a></nav></header>'
+            "<footer><p>Ask your broker.</p></footer>"
+        )
+        frame = chrome_frame(planted).lower()
+        self.assertIn("candlestick", frame)
+        self.assertIn("broker", frame)
+
+        scoped = (
+            "<footer>"
+            '<p class="risk">Trading carries the risk of losing money; check with '
+            "your broker.</p>"
+            "<p>&copy; 2026 dmedellin</p>"
+            "</footer>"
+        )
+        self.assertNotIn(
+            "broker",
+            chrome_frame(scoped).lower(),
+            "a notice marked class=risk is scoped to the courses it describes",
+        )
+
+        documented = (
+            "<footer><!-- never write 'the path' here: the index lists paths -->"
+            "<p>Pick a path and take its courses in order.</p></footer>"
+        )
+        self.assertEqual(
+            [],
+            SINGULAR_PATH_PHRASE_RE.findall(visible_text(documented)),
+            "documenting the rule in a comment is not breaking it",
+        )
+        self.assertTrue(
+            SINGULAR_PATH_PHRASE_RE.search("Open the path and start at course 1."),
+            "the singular-path scanner must actually match",
+        )
+        self.assertFalse(
+            SINGULAR_PATH_PHRASE_RE.search("Every path is an ordered sequence."),
+            "the plural and the indefinite article are correct copy",
+        )
+        self.assertFalse(
+            SINGULAR_PATH_PHRASE_RE.search("Listed on the path page."),
+            '"the path page" names this site\'s page type, not a single path',
+        )
+
+
+class TestFooterSiteIdentity(SiteFixture):
+    """Every footer names this site, and names it at the right host.
+
+    geterdone.io is a SEPARATE live site that this project does not control;
+    learn.geterdone.io is the library. A footer link to the apex sends the reader
+    off this property from every page in the library at once, and it is the kind
+    of defect that survives forever because a link that 200s never looks broken.
+    The canonical tag is already pinned to the same host (see
+    TestPageMetadata.test_canonical_never_claims_the_apex); this closes the other
+    half, the visible link a reader can click. The rule is about WHERE a footer
+    link points: a footer that names no host at all is not this test's business,
+    and test_footer_scanner_is_not_inert keeps the check honest instead.
+    """
+
+    def footer_links(self, doc):
+        links = []
+        for attrs, _body in ANCHOR_RE.findall(footer_markup(doc.text)):
+            match = re.search(r'href="([^"]*)"', attrs)
+            if match:
+                links.append(html.unescape(match.group(1)).strip())
+        return links
+
+    def test_no_footer_links_to_another_geterdone_host(self):
+        for doc in self.documents:
+            page = str(doc.path.relative_to(REPO_ROOT))
+            for href in self.footer_links(doc):
+                host = (urllib.parse.urlsplit(href).hostname or "").lower()
+                if not host or not (
+                    host == "geterdone.io" or host.endswith(".geterdone.io")
+                ):
+                    continue
+                with self.subTest(page=page, href=href):
+                    self.assertEqual(
+                        CANONICAL_HOST,
+                        host,
+                        "the footer links to %s. This library lives at %s; %s is a "
+                        "different site this project does not control, so a footer "
+                        "on every page pointing there walks the reader off the "
+                        "library." % (href, CANONICAL_ORIGIN, host),
+                    )
+
+    def test_footer_scanner_is_not_inert(self):
+        """A guard that cannot fail is worse than no guard: it reads as coverage.
+
+        The rule above is about WHERE a footer link points, not about whether one
+        exists -- some lessons carry no site link at all, and that is a different
+        question. So the scanner is handed the defect it exists to catch, the
+        correct link it must accept, and a footer-shaped near miss.
+        """
+        planted = (
+            "<html><body><main>"
+            '<p><a href="https://geterdone.io">apex, outside the footer</a></p>'
+            "</main><footer>"
+            '<p><a href="https://geterdone.io">geterdone.io</a></p>'
+            "</footer></body></html>"
+        )
+
+        class _Doc:
+            text = planted
+
+        hosts = [
+            (urllib.parse.urlsplit(href).hostname or "").lower()
+            for href in self.footer_links(_Doc)
+        ]
+        self.assertEqual(
+            ["geterdone.io"],
+            hosts,
+            "the scanner must read the FOOTER's links, and only the footer's",
+        )
+        good = "<footer><p><a href=\"%s\">%s</a></p></footer>" % (
+            CANONICAL_ORIGIN,
+            CANONICAL_HOST,
+        )
+
+        class _Good:
+            text = good
+
+        self.assertEqual(
+            [CANONICAL_HOST],
+            [
+                (urllib.parse.urlsplit(href).hostname or "").lower()
+                for href in self.footer_links(_Good)
+            ],
+        )
+
+
+class TestPathPosition(SiteFixture):
+    """A course knows where it sits in the path, and how to leave in either direction.
+
+    The library is a path, not a shelf: course 3 assumes course 2. A reader who
+    lands on a course home from a search result has to be told which number they
+    are holding and what comes before and after it, or the ordering that the
+    whole path page exists to express is invisible one click deeper.
+    """
+
+    def course_pager(self, doc, direction):
+        return [href for rel, href, _line in doc.pager if rel == direction]
+
+    def test_every_course_home_declares_its_position_in_the_path(self):
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        for index, (title, home, _slugs) in enumerate(COURSES, start=1):
+            doc = by_url.get(home)
+            with self.subTest(course=title):
+                self.assertIsNotNone(doc, "%s is not published" % home)
+                position = re.compile(
+                    r"(?i)\bcourse\s+0?%d\s+of\s+%d\b" % (index, PATH_COURSE_COUNT)
+                )
+                self.assertRegex(
+                    visible_text(doc.text),
+                    position,
+                    "%s does not say it is course %d of %d. The path is eight "
+                    "courses long including the four that are not published yet, "
+                    "and a course home that states a position out of four would "
+                    "describe a path that does not exist."
+                    % (home, index, PATH_COURSE_COUNT),
+                )
+
+    def test_course_pager_points_at_the_adjacent_course_homes(self):
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        homes = [home for _title, home, _slugs in COURSES]
+        for index, (title, home, _slugs) in enumerate(COURSES):
+            doc = by_url.get(home)
+            with self.subTest(course=title):
+                self.assertIsNotNone(doc, "%s is not published" % home)
+                previous = self.course_pager(doc, "prev")
+                following = self.course_pager(doc, "next")
+
+                if index == 0:
+                    self.assertEqual(
+                        [],
+                        previous,
+                        "course 1 starts the path; nothing precedes it, so it "
+                        "ships the forward half of the pager alone rather than a "
+                        "disabled backward one",
+                    )
+                else:
+                    self.assertEqual(
+                        1,
+                        len(previous),
+                        'expected exactly one <a rel="prev"> on %s, got %d'
+                        % (home, len(previous)),
+                    )
+                    self.assertEqual(
+                        homes[index - 1],
+                        urllib.parse.urljoin(home, previous[0]),
+                        "prev must point at course %d's home" % index,
+                    )
+
+                if index == len(homes) - 1:
+                    self.assertEqual(
+                        [],
+                        following,
+                        "course %d is the last PUBLISHED course: course %d is "
+                        "announced but has no page, so there is nothing to link "
+                        "forward to. An upcoming course is listed on the path "
+                        "page and is never a link."
+                        % (len(homes), len(homes) + 1),
+                    )
+                else:
+                    self.assertEqual(
+                        1,
+                        len(following),
+                        'expected exactly one <a rel="next"> on %s, got %d'
+                        % (home, len(following)),
+                    )
+                    self.assertEqual(
+                        homes[index + 1],
+                        urllib.parse.urljoin(home, following[0]),
+                        "next must point at course %d's home" % (index + 2),
+                    )
+
+    def test_course_pager_targets_are_published_pages(self):
+        """The href has to resolve to a real page, not merely to the right string."""
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        for title, home, _slugs in COURSES:
+            doc = by_url.get(home)
+            if doc is None:
+                continue  # reported above
+            for direction in ("prev", "next"):
+                for href in self.course_pager(doc, direction):
+                    target = urllib.parse.urljoin(home, href)
+                    with self.subTest(course=title, rel=direction, href=href):
+                        self.assertIn(
+                            target,
+                            REQUIRED_PAGES,
+                            "the course pager points at %s, which the site does "
+                            "not publish" % target,
+                        )
+                        self.assertTrue(
+                            (SITE_ROOT / REQUIRED_PAGES[target]).is_file(),
+                            "%s is declared but missing on disk" % target,
+                        )
+
+
+class TestPathPage(SiteFixture):
+    """The path page is the ordered spine of one subject.
+
+    It is the only page that shows the WHOLE path: four published courses that
+    link to their homes, and four announced ones that hold their place in the
+    order without pretending to be openable. Both halves are asserted, because
+    each fails in its own way -- a missing link strands a published course, and
+    an upcoming course rendered as a link is a 404 with a promise attached.
+    """
+
+    def path_document(self):
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        doc = by_url.get(PATH_PAGE)
+        self.assertIsNotNone(doc, "%s is not published" % PATH_PAGE)
+        return doc
+
+    def test_the_path_page_links_to_every_published_course_home(self):
+        doc = self.path_document()
+        linked = {
+            urllib.parse.urljoin(PATH_PAGE, value.split("#", 1)[0])
+            for tag, attr, value, _line in doc.urls
+            if tag == "a" and attr == "href" and is_internal_relative(value)
+        }
+        missing = [home for _title, home, _slugs in COURSES if home not in linked]
+        self.assertEqual(
+            [], missing, "%s does not link to %s" % (PATH_PAGE, missing)
+        )
+
+    def test_the_site_index_links_to_the_path_page(self):
+        """The index is how a reader reaches a path at all."""
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        doc = by_url.get(SITE_INDEX)
+        self.assertIsNotNone(doc, "the site index is not published")
+        linked = {
+            urllib.parse.urljoin(SITE_INDEX, value.split("#", 1)[0])
+            for tag, attr, value, _line in doc.urls
+            if tag == "a" and attr == "href" and is_internal_relative(value)
+        }
+        self.assertIn(
+            PATH_PAGE,
+            linked,
+            "the site index does not link to %s; a path nothing links to is a "
+            "path nobody can open" % PATH_PAGE,
+        )
+
+    def test_all_eight_courses_appear_in_path_order(self):
+        doc = self.path_document()
+        copy = visible_text(doc.text)
+        expected = [title for _n, title in UPCOMING_COURSES]
+        names = [title for title, _home, _slugs in COURSES] + expected
+        self.assertEqual(
+            PATH_COURSE_COUNT,
+            len(names),
+            "the path is %d courses long" % PATH_COURSE_COUNT,
+        )
+        positions = []
+        for name in names:
+            index = copy.find(name)
+            with self.subTest(course=name):
+                self.assertNotEqual(
+                    -1,
+                    index,
+                    "%s names no course %r. Courses 5 to 8 are announced, so "
+                    "they are listed in order and marked unavailable rather than "
+                    "hidden until they exist." % (PATH_PAGE, name),
+                )
+            positions.append(index)
+        self.assertEqual(
+            sorted(positions),
+            positions,
+            "the courses are listed out of order: %s"
+            % list(zip(names, positions)),
+        )
+
+    def test_upcoming_courses_are_marked_and_are_not_links(self):
+        doc = self.path_document()
+        copy = visible_text(doc.text)
+        links = [text for text in anchor_texts(doc.text) if text]
+        for number, name in UPCOMING_COURSES:
+            with self.subTest(course=name):
+                self.assertNotIn(
+                    name,
+                    " | ".join(links),
+                    "course %d, %r, is rendered as a link. It is not published; "
+                    "there is nothing to open, and a link that 404s is worse than "
+                    "an entry that says so." % (number, name),
+                )
+                start = copy.find(name)
+                self.assertNotEqual(-1, start, "%r is not listed" % name)
+                window = copy[max(0, start - 260):start + 260].lower()
+                self.assertIn(
+                    "not yet available",
+                    window,
+                    "course %d, %r, is listed without saying it is unavailable. "
+                    "It must be unmistakable, next to the entry itself."
+                    % (number, name),
+                )
+
+    def test_upcoming_courses_declare_no_invented_lesson_count(self):
+        """Nothing is known about courses 5 to 8 but the number and the name.
+
+        A lesson count or a syllabus for an unwritten course is an invention,
+        and it is the kind that reads as fact forever. The window runs from the
+        course's name to the next entry, which is exactly where such a claim
+        would be written.
+        """
+        doc = self.path_document()
+        copy = visible_text(doc.text)
+        upcoming = [name for _number, name in UPCOMING_COURSES]
+        for index, name in enumerate(upcoming):
+            start = copy.find(name)
+            if start == -1:
+                continue  # reported above
+            end = copy.find(upcoming[index + 1]) if index + 1 < len(upcoming) else -1
+            window = copy[start:end] if end > start else copy[start:start + 420]
+            with self.subTest(course=name):
+                self.assertIsNone(
+                    re.search(r"(?i)\b\d+\s+lessons?\b", window),
+                    "%r is announced only: it has no published lesson count, so "
+                    "the path page must not state one." % name,
+                )
+
+
+# ---------------------------------------------------------------------------
 # The pinned cross-course conventions
 # ---------------------------------------------------------------------------
-# Three courses, authored at three different times, now share one origin. The
-# review before course 3 landed found all three drifting in the same three
-# places, and every variant looked correct inside its own course:
+# Four courses, authored at four different times, now share one origin. The
+# review before course 3 landed found all of them drifting in the same three
+# places, and course 4's source package arrived drifting in all three again --
+# a light block with no accent tokens and no prefers-color-scheme path, and a
+# fourth theme key. Every variant looked correct inside its own course:
 #
 #   * three incompatible pager families, so "the next lesson link" was a
 #     different component on each course;
@@ -1089,12 +1782,26 @@ CSS_VARIABLE_RE = re.compile(r"(--[A-Za-z0-9_-]+)\s*:\s*([^;{}]+);")
 
 # The lesson pager, verbatim. Class names are exactly lesson-nav /
 # lesson-link prev / lesson-link next; the retired families below are the ones
-# the three courses shipped separately and must never come back.
+# the courses shipped separately and must never come back.
 LESSON_NAV_MARKUP = '<nav class="lesson-nav" aria-label="Lesson navigation">'
 LESSON_NAV_RE = re.compile(r"<nav class=\"lesson-nav\"[^>]*>(.*?)</nav>", re.S)
 PAGER_ANCHOR_RE = re.compile(r"<a\s+([^>]*?)>(.*?)</a>", re.S)
 ATTRIBUTE_RE = re.compile(r"([A-Za-z_:][-\w:.]*)\s*=\s*\"([^\"]*)\"")
-PAGER_BODY_RE = re.compile(r"\A\s*<span>([^<]+)</span>\s*<strong>(.+?)</strong>\s*\Z", re.S)
+# The <strong> body is pinned to "NN &middot; Title", not merely "something".
+# Spec B mandates that exact shape, and a bare `.+?` let the separator drift to
+# "-" or "|" across courses without a single test noticing -- the precise class
+# of cross-course drift TestPinnedConventions exists to stop.
+PAGER_BODY_RE = re.compile(
+    r"\A\s*<span>([^<]+)</span>\s*<strong>(.+?)</strong>\s*\Z", re.S
+)
+# The <strong> label has exactly two legitimate shapes, and both are pinned so
+# the separator cannot drift to "-" or "|" across courses -- a bare `.+?` here
+# let precisely that happen once already.
+#   lesson -> lesson            "NN &middot; Title"
+#   last lesson -> course home  a plain label with no ordinal, because the
+#                               course home is not lesson number anything.
+PAGER_LABEL_RE = re.compile(r"\A\s*\d{2}\s*&middot;\s*\S.*\Z", re.S)
+PAGER_TERMINAL_LABEL_RE = re.compile(r"\A\s*[^<&]*\S[^<]*\Z", re.S)
 RETIRED_PAGER_MARKUP = (
     "lesson-pager", "pager-link",
     'class="prev"', 'class="next"', 'class="dir"', 'class="name"',
@@ -1359,6 +2066,15 @@ class TestPinnedConventions(SiteFixture):
                             PAGER_BODY_RE,
                             "a pager anchor is <span>direction</span> then "
                             "<strong>label</strong>; no other elements",
+                        )
+                        label = PAGER_BODY_RE.match(body).group(2)
+                        terminal = attrs.get("href") == "../"
+                        self.assertRegex(
+                            label,
+                            PAGER_TERMINAL_LABEL_RE if terminal else PAGER_LABEL_RE,
+                            "a lesson-to-lesson pager label is pinned to "
+                            "'NN &middot; Title'; only the link out to the course "
+                            "home may use a plain label (href=%r)" % attrs.get("href"),
                         )
 
     def test_pager_rel_asserts_only_true_document_relationships(self):

@@ -7,27 +7,39 @@ agent) edits this repository and the platform that will eventually serve it.
 
 An educational static site published as **Learn** at `https://learn.geterdone.io`:
 
-The published URL space is two levels deep — courses, then lessons:
+The site is a subject-agnostic LIBRARY OF PATHS. A path is an ordered sequence of
+courses on one subject; trading is the first, and more subjects are planned. The
+published URL space:
 
 | URL | Served from |
 | --- | --- |
-| `learn.geterdone.io/` | `site/index.html` — the catalog of courses |
-| `learn.geterdone.io/market-structure-lab/` | `site/market-structure-lab/index.html` — the Market Structure Lab course home |
-| `learn.geterdone.io/market-structure-lab/<lesson>/` | `site/market-structure-lab/<lesson>/index.html` — one of the seven labs |
+| `learn.geterdone.io/` | `site/index.html` — the site index: the paths, plus course search |
+| `learn.geterdone.io/paths/trading/` | `site/paths/trading/index.html` — the trading path page |
+| `learn.geterdone.io/<course>/` | `site/<course>/index.html` — one of the four course homes |
+| `learn.geterdone.io/<course>/<lesson>/` | `site/<course>/<lesson>/index.html` — one of the 54 lessons |
+
+The site index and the path pages are SHARED CHROME: they must not assume the
+subject is trading — not in copy, not in a footer, not in metadata. Only course
+and lesson pages are subject-specific. A path page is neither a course home nor a
+lesson, even though it is two segments deep like a lesson; every guard declares
+it separately rather than classifying pages by URL shape.
 
 `site/` is the document root. Whatever `site/` contains is exactly what `/` serves;
 an extra directory level in `site/` becomes an extra path segment in the public URL.
 
-The full nine-URL map is in [README.md](README.md#url-layout), and it is enforced
-in five places that must agree: `REQUIRED_PAGES` in `tests/test_site_invariants.py`,
-`scripts/smoke.py`, `acceptance.checks` in `release/contract.json`, the
-"Published URL space is complete" step in `.github/workflows/ci.yml`, and the
-publish guards in `.github/workflows/pages.yml` and `Containerfile.release`.
+The full 60-page map (plus three published JSON assets) is in
+[README.md](README.md#url-layout), and it is enforced in five places that must
+agree: `REQUIRED_PAGES` in `tests/test_site_invariants.py`, `scripts/smoke.py`,
+`acceptance.checks` in `release/contract.json`, the "Published URL space is
+complete" step in `.github/workflows/ci.yml`, and the publish guards in
+`.github/workflows/pages.yml` and `Containerfile.release`.
 
-The seven FLAT lesson URLs (`/market-structure/` and its siblings) were retired
-when the course moved under `/market-structure-lab/`. Breaking them was accepted
-deliberately: no redirect stubs exist, and no guard, test, or contract may list
-them again.
+Two sets of URLs are retired, with no redirect stubs: the seven FLAT lesson URLs
+course 1 published first, and the whole `/market-structure-lab/` prefix it used
+until the paths layer landed (that slug names the repository and the application,
+not the course, so the course took its own name — `/market-structure/`). Breaking
+both was accepted deliberately, and no guard, test, or contract may list them
+again.
 
 The apex `geterdone.io` is a **separate, live GitHub Pages site that this repository
 does not control**. Do not deploy to it, reconfigure it, or write anything that

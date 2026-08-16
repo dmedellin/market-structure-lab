@@ -2,7 +2,7 @@
   "schema_version": 1,
   "notes": [
     "COMMITTED CONTRACT SOURCE, and the single source of truth for __LOOPBACK_PORT__ and __APP_SUBNET__. .github/workflows/release.yml reads this document, renders the deployment inputs from its network block, overwrites only the fields a release run can prove, validates the result against release/contract.schema.json, and emits it as release-artifacts/release-contract.json. Every field the workflow does not overwrite is reviewed policy and is authoritative exactly as written here.",
-    "acceptance.checks enumerates the COMPLETE published URL space, which is two levels deep: the learning path at /, a home per course (/market-structure-lab/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home), and each course's lessons beneath its own home - one check id per page, 42 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 and 3 are course-scoped because a lesson slug is only unique within a course). The two published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema) and /options-trading/options-trade-plan-schema.json (id trade-plan-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a second asset is declared as a second check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served. The seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app and the image (org.opencontainers.image.title), not the library, which now holds three courses.",
+    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home), and each course's lessons beneath its own home - one check id per page, 60 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 4 are course-scoped because a lesson slug is only unique within a course). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the announced courses 5 to 8, so it carries its own check with its own markers rather than riding along on the index's. The three published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema) and /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one path and four courses.",
     "Fields only a release run can know carry all-zero sentinels: release_id, source.revision, image.digest, image.reference, build.timestamp, compose.template_sha256, compose.rendered_sha256 and invocation.workflow_run_id. An all-zero digest or revision can never be a real one, so this document can never be mistaken for a release.",
     "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED. The release workflow refuses to render or build while they hold placeholders, and names the allocation gate in the failure. Allocation is a human decision plus a live host preflight (platform-ops docs/APP_ONBOARDING.md section 2 reservation PR, section 4 bootstrap preflight, and docs/EDGE_ROUTING_CONTRACT.md section 5) and must never be automated here.",
     "build.base_images[].digest is __BASE_IMAGE_DIGEST__ because Containerfile.release is the only place a base image is pinned; the workflow copies the digests it actually built from there, so the two can never drift.",
@@ -124,7 +124,7 @@
       },
       {
         "id": "learn-index",
-        "description": "The learning path is served at the site root and links to ALL THREE course homes: Market Structure Lab, Trade Setup and Execution, and Options Trading. A catalog that lists two of three courses is a library with a course missing.",
+        "description": "The site index is served at the site root, links to the trading path page, and names all four published courses. The index is subject-agnostic chrome: it lists PATHS, so the link checked here is /paths/trading/, not any course home.",
         "scope": "public",
         "method": "GET",
         "path": "/",
@@ -134,12 +134,11 @@
           "same_origin_redirects_only": true,
           "body_contains": [
             "<link rel=\"canonical\" href=\"https://learn.geterdone.io/\"",
-            "Market Structure Lab",
-            "market-structure-lab/",
+            "paths/trading/",
+            "Market Structure",
             "Trade Setup and Execution",
-            "trade-setup-execution/",
             "Options Trading",
-            "options-trading/"
+            "Technical Indicators"
           ],
           "headers": [
             {
@@ -159,18 +158,46 @@
         "blocking": true
       },
       {
-        "id": "course-home",
-        "description": "Course 1 home, \"Market Structure Lab\", is served at /market-structure-lab/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "id": "trading-path",
+        "description": "The trading path page is served at /paths/trading/ and is provably that document: its own rel=canonical tag, the last PUBLISHED course, the first ANNOUNCED one, and the words marking an announced course unavailable.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/",
+        "path": "/paths/trading/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
-            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/\"",
-            "Market Structure Lab",
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/paths/trading/\"",
+            "Technical Indicators",
+            "Volume and Order Flow",
+            "Not yet available"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course-home",
+        "description": "Course 1 home, \"Market Structure\", is served at /market-structure/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer. Its old /market-structure-lab/ URL is retired.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/market-structure/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure/\"",
+            "Market Structure",
             "Educational use only"
           ],
           "headers": [
@@ -190,14 +217,14 @@
         "description": "Course 1 lab 01 \"Market Structure\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/market-structure/",
+        "path": "/market-structure/market-structure/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
-            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/market-structure/\"",
-            "Market Structure Lab",
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure/market-structure/\"",
+            "Market Structure",
             "Educational use only"
           ],
           "headers": [
@@ -217,13 +244,13 @@
         "description": "Course 1 lab 02 \"Ranges, Breakouts & Liquidity Sweeps\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/ranges-breakouts-liquidity/",
+        "path": "/market-structure/ranges-breakouts-liquidity/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
-            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/ranges-breakouts-liquidity/\"",
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure/ranges-breakouts-liquidity/\"",
             "Liquidity Sweeps Lab",
             "Educational use only"
           ],
@@ -244,13 +271,13 @@
         "description": "Course 1 lab 03 \"Multi-Timeframe Market Structure\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/multi-timeframe-market-structure/",
+        "path": "/market-structure/multi-timeframe-market-structure/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
-            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/multi-timeframe-market-structure/\"",
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure/multi-timeframe-market-structure/\"",
             "Multi-Timeframe Market Structure Lab",
             "Educational use only"
           ],
@@ -271,13 +298,13 @@
         "description": "Course 1 lab 04 \"Pullbacks & Entry Models\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/pullbacks-entry-models/",
+        "path": "/market-structure/pullbacks-entry-models/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
-            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/\"",
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure/pullbacks-entry-models/\"",
             "Entry Models Lab",
             "Educational use only"
           ],
@@ -298,13 +325,13 @@
         "description": "Course 1 lab 05 \"Invalidation, Stops & Reward-to-Risk\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/invalidation-stops-risk-reward/",
+        "path": "/market-structure/invalidation-stops-risk-reward/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
-            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/invalidation-stops-risk-reward/\"",
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure/invalidation-stops-risk-reward/\"",
             "Reward-to-Risk Lab",
             "Educational use only"
           ],
@@ -325,13 +352,13 @@
         "description": "Course 1 lab 06 \"Volume & Relative Strength\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/volume-relative-strength/",
+        "path": "/market-structure/volume-relative-strength/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
-            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/volume-relative-strength/\"",
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure/volume-relative-strength/\"",
             "Relative Strength Lab",
             "Educational use only"
           ],
@@ -352,13 +379,13 @@
         "description": "Course 1 lab 07 \"Options Contract Selection\" is served at its subpath and is provably that document: its own rel=canonical tag, its title, and the educational-use disclaimer.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/options-contract-selection/",
+        "path": "/market-structure/options-contract-selection/",
         "expect": {
           "status": 200,
           "max_redirects": 2,
           "same_origin_redirects_only": true,
           "body_contains": [
-            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure-lab/options-contract-selection/\"",
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/market-structure/options-contract-selection/\"",
             "Options Contract Selection Lab",
             "Educational use only"
           ],
@@ -1266,6 +1293,465 @@
         "blocking": true
       },
       {
+        "id": "course4-home",
+        "description": "Course 4 home, \"Technical Indicators\", is served at /technical-indicators/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-technical-indicator-fundamentals",
+        "description": "Course 4 lesson 01 \"Technical Indicator Fundamentals\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/technical-indicator-fundamentals/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/technical-indicator-fundamentals/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-moving-averages",
+        "description": "Course 4 lesson 02 \"Simple and Exponential Moving Averages\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/moving-averages/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/moving-averages/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-moving-average-crossovers",
+        "description": "Course 4 lesson 03 \"Moving Average Trend Filters and Crossovers\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/moving-average-crossovers/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/moving-average-crossovers/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-relative-strength-index",
+        "description": "Course 4 lesson 04 \"Relative Strength Index\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/relative-strength-index/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/relative-strength-index/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-stochastic-oscillator",
+        "description": "Course 4 lesson 05 \"Stochastic Oscillator\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/stochastic-oscillator/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/stochastic-oscillator/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-macd",
+        "description": "Course 4 lesson 06 \"Moving Average Convergence Divergence\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/macd/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/macd/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-average-directional-index",
+        "description": "Course 4 lesson 07 \"Average Directional Index and Directional Movement\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/average-directional-index/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/average-directional-index/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-average-true-range",
+        "description": "Course 4 lesson 08 \"Average True Range\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/average-true-range/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/average-true-range/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-bollinger-bands",
+        "description": "Course 4 lesson 09 \"Bollinger Bands\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/bollinger-bands/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/bollinger-bands/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-keltner-channels",
+        "description": "Course 4 lesson 10 \"Keltner Channels\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/keltner-channels/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/keltner-channels/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-donchian-channels",
+        "description": "Course 4 lesson 11 \"Donchian Channels\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/donchian-channels/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/donchian-channels/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-rate-of-change-and-momentum",
+        "description": "Course 4 lesson 12 \"Rate of Change and Momentum\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/rate-of-change-and-momentum/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/rate-of-change-and-momentum/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-indicator-divergence",
+        "description": "Course 4 lesson 13 \"Indicator Divergence\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/indicator-divergence/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/indicator-divergence/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-combining-indicators",
+        "description": "Course 4 lesson 14 \"Combining Indicators Without Redundancy\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/combining-indicators/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/combining-indicators/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-indicator-selection-by-market-regime",
+        "description": "Course 4 lesson 15 \"Indicator Selection by Market Regime\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/indicator-selection-by-market-regime/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/indicator-selection-by-market-regime/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course4-lesson-indicator-based-trading-rules",
+        "description": "Course 4 lesson 16 \"Indicator-Based Trading Rules\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/indicator-based-trading-rules/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/technical-indicators/indicator-based-trading-rules/\"",
+            "Technical Indicators",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
         "id": "journal-schema",
         "description": "The trade journal exchange schema is served as JSON at /trade-setup-execution/trade-journal-schema.json, parses, and declares the trade-journal-v1 shape lesson 14 exports and lesson 15 imports. A 200 alone would not prove any of that.",
         "scope": "public",
@@ -1316,6 +1802,31 @@
         "blocking": true
       },
       {
+        "id": "indicator-rule-schema",
+        "description": "The indicator rule schema is served as JSON at /technical-indicators/indicator-rule-schema.json, parses, and declares the technical-indicator-rule-v1 shape course 4 lesson 16 exports. A 200 alone proves none of that; a page-shaped marker would prove less.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/technical-indicators/indicator-rule-schema.json",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "\"const\": \"technical-indicator-rule-v1\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "json"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
         "id": "unknown-path-404",
         "description": "An unknown path returns a real 404 and never a soft 200 or a redirect to the index.",
         "scope": "public",
@@ -1331,10 +1842,10 @@
       },
       {
         "id": "self-containment",
-        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the learning path, both course homes and all 22 lessons - not just the path named here.",
+        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the site index, the path page, all four course homes and all 54 lessons - not just the path named here.",
         "scope": "public",
         "method": "GET",
-        "path": "/market-structure-lab/market-structure/",
+        "path": "/market-structure/market-structure/",
         "expect": {
           "status": 200,
           "no_external_origins": true,

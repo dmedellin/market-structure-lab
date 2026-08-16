@@ -4,56 +4,58 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
-  <title>Pullbacks & Entry Models Lab</title>
-  <link rel="canonical" href="https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/" />
+  <meta name="description" content="An interactive standalone lesson for defining structural invalidation, sizing positions, and comparing reward-to-risk." />
+  <title>Invalidation, Stops & Reward-to-Risk Lab</title>
+  <link rel="canonical" href="https://learn.geterdone.io/market-structure/invalidation-stops-risk-reward/" />
   <meta name="author" content="dmedellin" />
   <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#eef4f8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="learn.geterdone.io" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="Pullbacks &amp; Entry Models Lab" />
-  <meta property="og:description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
-  <meta property="og:url" content="https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/" />
+  <meta property="og:title" content="Invalidation, Stops &amp; Reward-to-Risk Lab" />
+  <meta property="og:description" content="An interactive standalone lesson for defining structural invalidation, sizing positions, and comparing reward-to-risk." />
+  <meta property="og:url" content="https://learn.geterdone.io/market-structure/invalidation-stops-risk-reward/" />
   <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Pullbacks &amp; Entry Models Lab" />
-  <meta name="twitter:description" content="An interactive standalone lesson for comparing aggressive, confirmation, and continuation entries." />
-  <meta name="twitter:url" content="https://learn.geterdone.io/market-structure-lab/pullbacks-entry-models/" />
+  <meta name="twitter:title" content="Invalidation, Stops &amp; Reward-to-Risk Lab" />
+  <meta name="twitter:description" content="An interactive standalone lesson for defining structural invalidation, sizing positions, and comparing reward-to-risk." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/market-structure/invalidation-stops-risk-reward/" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071019'/%3E%3Cpath d='M10 46 L24 29 L34 39 L46 17' fill='none' stroke='%2336d6e7' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   <style>
 
 /* ---------------------------------------------------------------------
-   DESIGN TOKENS — same vocabulary and the same light values as
-   site/market-structure/index.html, so the seven labs and the catalog read
-   as one product. Do not fork this palette.
+   DESIGN TOKENS — the only place a theme value may live.
 
-   THEME RULE, and the reason these blocks are the only place light values
-   may live: the palette flips through TWO independent paths — the explicit
-   toggle ([data-theme="light"]) and the system preference (the media block
-   below, for the visitor who never touches the toggle). A component-level
+   THEME RULE: the palette flips through TWO independent paths, the explicit
+   toggle ([data-theme="light"]) and the system preference (the media block,
+   for the visitor who never touches the toggle). A component-level
    `[data-theme="light"] .foo {…}` override only ever reaches the first of
-   them, so a light-OS visitor gets the light background with dark-theme
+   them, so a light-OS visitor would get the light background with dark-theme
    accents. There are no component-level theme rules on this page; every
-   component reads a token instead. Keep it that way and the two paths
-   cannot drift, because there is nothing per-path left to forget.
+   component reads a token instead. Keep it that way and the two paths cannot
+   drift, because there is nothing per-path left to forget.
 
-   Accents are re-declared for light because they are read AS TEXT
-   (.eyebrow, .concept-card .icon, .state-pill, td.good/.warn/.bad, the
-   gradient headline, and every SVG .tone-* chart label). Keeping the dark
-   accents on a light background measured 1.6-2.2:1. Light values are
-   contrast-checked against --bg (#eef4f8, the darkest light surface):
-   --cyan 4.99:1, --cyan-2 5.44:1, --green 4.95:1, --red 5.15:1,
-   --amber 5.34:1, --purple 5.45:1, --blue 5.26:1, --muted 4.57:1 — all
-   >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the
-   emphasis stop in both themes, so it has to be the more readable one
-   against the current background, not simply the lighter hue.
+   Accents are re-declared for light because they are read AS TEXT (.eyebrow,
+   .concept-card .icon, .state-pill, td.good/.warn/.bad, .footer a, the
+   gradient headline, and every SVG .chart-label / .tone-* in the charts).
+   Light values are contrast-checked against --panel-3 (#eaf2f7, the darkest
+   light surface on this page): --cyan 4.89:1, --cyan-2 5.33:1, --green
+   4.85:1, --red 5.05:1, --amber 5.23:1, --purple 5.34:1, --blue 5.15:1 — all
+   >= 4.5:1, and every one is higher again on --bg and on --panel-solid.
+   Light --cyan-2 is DARKER than --cyan on purpose: --cyan-2 is the emphasis
+   stop in both themes, so it has to be the more readable one against the
+   current background, not simply the lighter hue.
 
-   --on-accent is the ink that sits ON a filled accent (.brand-mark,
-   .btn.primary, .tab.active, .check-dot, .lesson-row .num, .callout .mark,
+   --on-accent is the ink that sits ON a filled accent (.btn.primary,
+   .brand-mark, .tab.active, .check-dot, .lesson-row .num, .callout .mark,
    .skip-link). It has to flip with the theme because those accent fills go
-   dark in light mode.
+   dark in light mode. White on each light accent measures >= 5.5:1; #041116
+   on each dark accent measures >= 7.0:1.
+
+   Light --muted is #586d7d rather than a lighter grey because .check-dot
+   paints muted text on --panel-3: 4.76:1 there, 4.85:1 on --bg, 5.39:1 on
+   --panel-solid.
    --------------------------------------------------------------------- */
 :root {
   color-scheme: dark;
@@ -85,26 +87,26 @@
    survive on a light-mode OS. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-  color-scheme: light;
-  --bg: #edf4f8;
-  --bg-2: #f9fbfd;
-  --panel: rgba(255, 255, 255, 0.94);
-  --panel-solid: #ffffff;
-  --panel-2: #f3f8fb;
-  --panel-3: #eaf2f7;
-  --text: #102433;
-  --muted: #586c7c;
-  --line: rgba(24, 62, 88, 0.13);
-  --line-strong: rgba(24, 62, 88, 0.24);
-  --cyan: #0e7382;
-  --cyan-2: #0b6d79;
-  --green: #10784f;
-  --red: #c22a34;
-  --amber: #8a5a06;
-  --purple: #6b46d6;
-  --blue: #1d5fd0;
-  --on-accent: #ffffff;
-  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    color-scheme: light;
+    --bg: #edf4f8;
+    --bg-2: #f9fbfd;
+    --panel: rgba(255, 255, 255, 0.94);
+    --panel-solid: #ffffff;
+    --panel-2: #f3f8fb;
+    --panel-3: #eaf2f7;
+    --text: #102433;
+    --muted: #586c7c;
+    --line: rgba(24, 62, 88, 0.13);
+    --line-strong: rgba(24, 62, 88, 0.24);
+    --cyan: #0e7382;
+    --cyan-2: #0b6d79;
+    --green: #10784f;
+    --red: #c22a34;
+    --amber: #8a5a06;
+    --purple: #6b46d6;
+    --blue: #1d5fd0;
+    --on-accent: #ffffff;
+    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
   }
 }
 
@@ -605,7 +607,22 @@ h1 {
   stroke-linejoin: round;
 }
 .zone { opacity: 0.08; }
-.focus-window { fill: rgba(55,215,231,0.09); stroke: var(--cyan); stroke-width: 1.4; stroke-dasharray: 7 5; }
+.focus-window {
+  fill: color-mix(in srgb, var(--cyan) 11%, transparent);
+  stroke: var(--cyan);
+  stroke-width: 1.4;
+  stroke-dasharray: 7 5;
+}
+
+/* Emitted by the risk-planner overlay. Without these rules the rects fall back
+   to SVG's default opaque black fill. */
+.reward-zone { fill: var(--green); fill-opacity: 0.1; }
+.risk-zone { fill: var(--red); fill-opacity: 0.1; }
+
+/* Hero diagram bands. Colour only — the geometry lives in the markup. */
+.hero-zone { fill: currentColor; fill-opacity: 0.1; stroke: currentColor; stroke-opacity: 0.42; }
+.hero-zone.reward { color: var(--green); }
+.hero-zone.risk { color: var(--red); }
 
 .control-strip {
   display: flex;
@@ -989,10 +1006,7 @@ td.bad { color: var(--red); font-weight: 800; }
 }
 
 .footer strong { color: var(--text); }
-.footer p { margin: 0 0 6px; }
-.footer p:last-child { margin-bottom: 0; }
 .footer a { color: var(--cyan-2); text-underline-offset: 3px; }
-.footer a:hover { color: var(--text); }
 
 .noscript-note {
   display: block;
@@ -1049,57 +1063,81 @@ td.bad { color: var(--red); font-weight: 800; }
 }
 
 
-.entry-model-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+.calc-panel {
+  padding: 18px;
 }
-.entry-model {
-  padding: 11px;
+.calc-panel h3 { margin: 0 0 12px; }
+.calc-result {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 14px;
+}
+.calc-result .metric { min-height: 72px; }
+.risk-budget {
+  margin-top: 14px;
+  padding: 14px;
   border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--panel-2);
-  text-align: left;
-  cursor: pointer;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(55,215,231,.08), rgba(182,156,255,.06));
 }
-.entry-model:hover { border-color: var(--line-strong); }
-.entry-model.active { border-color: var(--cyan); background: rgba(55,215,231,.09); }
-.entry-model strong { display: block; font-size: .82rem; }
-.entry-model span { display: block; margin-top: 3px; color: var(--muted); font-size: .72rem; }
-.tradeoff-bar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-  margin-top: 8px;
+.risk-budget .amount {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.8rem;
+  font-weight: 950;
+  letter-spacing: -.04em;
 }
-.tradeoff-bar span {
-  height: 5px;
-  border-radius: 999px;
-  background: var(--line-strong);
-}
-.tradeoff-bar span.on { background: var(--cyan); }
-.rr-large {
+.risk-budget p { margin: 5px 0 0; color: var(--muted); font-size: .78rem; }
+.r-ladder {
   display: flex;
-  align-items: baseline;
   gap: 6px;
+  flex-wrap: wrap;
 }
-.rr-large strong { font-size: 2rem; line-height: 1; letter-spacing: -.04em; }
-.rr-large span { color: var(--muted); font-size: .8rem; }
-.risk-zone { fill: var(--red); opacity: .08; }
-.reward-zone { fill: var(--green); opacity: .08; }
-.entry-marker {
-  stroke-width: 2;
-  stroke-dasharray: 5 4;
+.r-chip {
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel-2);
+  font-size: .72rem;
+  font-weight: 850;
 }
-.model-marker {
-  font-size: 12px;
-  font-weight: 900;
-  paint-order: stroke;
-  stroke: var(--panel-solid);
-  stroke-width: 4px;
+.drag-hint {
+  padding: 9px 12px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 11px;
+  color: var(--muted);
+  font-size: .76rem;
 }
+.stop-candidate {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: 9px;
+}
+.stop-candidate .letter {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--panel-3);
+  font-weight: 950;
+}
+.stop-candidate small { color: var(--muted); }
+.stop-candidate strong { font-size: .85rem; }
+
+.stop-candidate strong,
+.stop-candidate small {
+  display: block;
+}
+.stop-candidate small {
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
 @media (max-width: 720px) {
-  .entry-model-grid { grid-template-columns: 1fr; }
+  .calc-result { grid-template-columns: 1fr; }
 }
 
   </style>
@@ -1114,15 +1152,14 @@ td.bad { color: var(--red); font-weight: 800; }
 
   <script>
     /* Applied before first paint so an explicit theme choice never flashes the
-       other theme. This is why it lives in <head> and not with setupTheme() at
-       the bottom of <body>: that runs after the first paint.
-       SAME localStorage key as every other page in this course
-       ('learn-theme') so one toggle persists across all of them. The
-       allowlist matters — a corrupt value would otherwise be written straight
-       onto data-theme, matching no CSS while still counting as an explicit
-       choice, which permanently mislabels the toggle and pins the page to the
-       dark palette.
-       No stored value => CSS prefers-color-scheme decides. */
+       other theme. This is why it lives in <head> and not in the script at the
+       bottom of <body>: that one runs after the first paint.
+       SAME localStorage key as the rest of the course ('learn-theme')
+       so the choice persists across every lesson without a flash. The allowlist
+       matters - a corrupt value would otherwise be written straight onto
+       data-theme, matching no CSS while still counting as an explicit choice,
+       which permanently mislabels the toggle and pins the page to the dark
+       palette. No stored value => CSS prefers-color-scheme decides. */
     (function () {
       try {
         var t = localStorage.getItem('learn-theme');
@@ -1136,18 +1173,17 @@ td.bad { color: var(--red); font-weight: 800; }
 
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="../" aria-label="Back to the Market Structure Lab course home">
-        <div class="brand-mark" aria-hidden="true">04</div>
+      <a class="brand" href="../" aria-label="Back to the Market Structure course home">
+        <div class="brand-mark" aria-hidden="true">05</div>
         <div class="brand-copy">
-          <strong>Market Structure Lab</strong>
+          <strong>Market Structure</strong>
           <span>Standalone interactive learning lab</span>
         </div>
       </a>
       <nav class="topnav" aria-label="Primary">
         <a href="../">Course home</a>
-        <a href="#lab">Entry Lab</a>
-        <a href="#sequence">Sequence</a>
-        <a href="#practice">Practice</a>
+        <a href="#lab">Risk planner</a>
+        <a href="#stop-quality">Stop drill</a>
       </nav>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
     </header>
@@ -1155,15 +1191,15 @@ td.bad { color: var(--red); font-weight: 800; }
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../../">Learn library</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <a href="../">Market Structure Lab</a>
+      <a href="../">Market Structure</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 04 &middot; Pullbacks &amp; Entry Models</span>
+      <span class="crumb-current" aria-current="page">Lesson 05 &middot; Invalidation, Stops &amp; Reward-to-Risk</span>
     </nav>
 
     <noscript>
       <div class="noscript-note">
         <strong>JavaScript is required for the interactive parts of this lesson.</strong>
-        The pullback charts, the entry-model comparator, and the drill are drawn in your browser, so they stay blank while JavaScript is disabled. The written explanations and the common-mistakes list below still read normally.
+        The risk map, the position-size calculator, and the stop-quality drill are drawn and computed in your browser, so they stay blank while JavaScript is disabled. The written explanations and working rules below still read normally.
       </div>
     </noscript>
 
@@ -1172,207 +1208,214 @@ td.bad { color: var(--red); font-weight: 800; }
 
 <section class="hero">
   <div>
-    <span class="eyebrow"><span class="pulse"></span>Lesson 04 · Execution</span>
-    <h1>Pullbacks &amp; <span class="gradient-text">entry models</span></h1>
+    <span class="eyebrow"><span class="pulse"></span>Lesson 05 · Risk</span>
+    <h1>Invalidation, stops &amp; <span class="gradient-text">reward-to-risk</span></h1>
     <p>
-      A correct directional bias can still produce a poor trade when the entry is late, premature,
-      or structurally invalid. Compare earlier entries with confirmation-based and continuation entries.
+      A stop should express where the trade idea is wrong—not where the loss becomes emotionally uncomfortable.
+      Position size adapts to the structural stop; the stop should not be squeezed to justify a larger position.
     </p>
     <div class="hero-actions">
-      <button class="btn primary" type="button" onclick="scrollToLab()">Test entry models</button>
-      <a class="btn ghost" href="#sequence">See the entry sequence</a>
+      <button class="btn primary" type="button" onclick="scrollToLab()">Open risk lab</button>
+      <a class="btn ghost" href="#stop-quality">Practice stop placement</a>
     </div>
   </div>
-  <div class="hero-visual" aria-label="Pullback with aggressive, confirmation, and breakout entries">
-    <svg viewBox="0 0 520 330" role="img" aria-label="Pullback with aggressive, confirmation, and breakout entries">
-      <polyline points="34,254 78,218 112,226 150,180 190,194 230,135 270,155 306,112 340,168 368,186 396,156 424,123 458,92 490,72"
-        fill="none" stroke="var(--cyan)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-      <line x1="318" y1="168" x2="498" y2="168" stroke="var(--green)" stroke-width="2" stroke-dasharray="7 6"/>
-      <circle cx="368" cy="186" r="7" fill="var(--amber)"/>
-      <circle cx="396" cy="156" r="7" fill="var(--purple)"/>
-      <circle cx="458" cy="92" r="7" fill="var(--cyan)"/>
-      <text x="352" y="213" fill="var(--amber)" font-size="11" font-weight="900">EARLY</text>
-      <text x="390" y="145" fill="var(--purple)" font-size="11" font-weight="900">CONFIRM</text>
-      <text x="450" y="79" fill="var(--cyan-2)" font-size="11" font-weight="900">CONTINUE</text>
-      <text x="321" y="158" fill="var(--green)" font-size="11" font-weight="900">PRIOR BOS / SUPPORT</text>
+  <div class="hero-visual" aria-label="Entry, stop, target, and reward-to-risk zones">
+    <svg viewBox="0 0 520 330" role="img" aria-label="Entry, stop, target, and reward-to-risk zones">
+      <rect x="72" y="54" width="384" height="106" rx="16" class="hero-zone reward"/>
+      <rect x="72" y="160" width="384" height="65" rx="16" class="hero-zone risk"/>
+      <line x1="56" y1="160" x2="474" y2="160" stroke="var(--cyan)" stroke-width="3"/>
+      <line x1="56" y1="225" x2="474" y2="225" stroke="var(--red)" stroke-width="2" stroke-dasharray="8 6"/>
+      <line x1="56" y1="54" x2="474" y2="54" stroke="var(--green)" stroke-width="2" stroke-dasharray="8 6"/>
+      <text x="66" y="150" fill="var(--cyan-2)" font-size="12" font-weight="900">ENTRY</text>
+      <text x="66" y="245" fill="var(--red)" font-size="12" font-weight="900">INVALIDATION · 1R</text>
+      <text x="66" y="44" fill="var(--green)" font-size="12" font-weight="900">TARGET · 1.63R</text>
+      <polyline points="92,202 135,186 178,194 220,165 262,174 305,139 348,146 391,112 437,84"
+        fill="none" stroke="var(--purple)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <div class="float-label" style="left:18px;bottom:18px;">Earlier price ↔ less confirmation</div>
+    <div class="float-label" style="right:18px;bottom:18px;">Risk first; size second</div>
   </div>
 </section>
 
 <section class="section">
   <div class="section-head">
-    <div><h2>Three entry families</h2></div>
-    <p>None is universally best. Each exchanges entry price, confirmation, and distance to invalidation.</p>
+    <div><h2>The risk chain</h2></div>
+    <p>Every number should derive from the thesis rather than from the profit you hope to make.</p>
   </div>
   <div class="grid-3">
     <article class="card concept-card">
-      <div class="icon">A</div>
-      <h3>Aggressive</h3>
-      <p>Enter at the expected reaction zone before a lower-timeframe shift. Better location, but more false starts.</p>
+      <div class="icon">X</div>
+      <h3>Invalidation</h3>
+      <p>The price event that disproves the setup: a protected swing breaks, a breakout fails, or acceptance returns inside a range.</p>
     </article>
     <article class="card concept-card">
-      <div class="icon">C</div>
-      <h3>Confirmation</h3>
-      <p>Wait for a reaction, local structure shift, and a defined swing that can serve as invalidation.</p>
+      <div class="icon">#</div>
+      <h3>Position size</h3>
+      <p>Risk budget divided by risk per unit. Wider structural stops require fewer units; tighter valid stops allow more.</p>
     </article>
     <article class="card concept-card">
-      <div class="icon">B</div>
-      <h3>Continuation breakout</h3>
-      <p>Enter as price resumes through a continuation level. Stronger proof, but usually a later price and wider chase risk.</p>
+      <div class="icon">R</div>
+      <h3>R multiple</h3>
+      <p>Potential reward divided by planned risk. It compares geometry, not the probability that the target will be reached.</p>
     </article>
   </div>
 </section>
 
 <section class="section" id="lab">
   <div class="section-head">
-    <div><h2>Entry model comparator</h2></div>
-    <p>Switch the pullback, then compare how each entry changes price, invalidation, and reward-to-risk.</p>
+    <div><h2>Interactive risk planner</h2></div>
+    <p>Change entry, stop, target, and account risk. The visual and calculations update immediately.</p>
   </div>
 
   <div class="lab-layout">
     <article class="card chart-card">
       <div class="chart-toolbar">
         <div class="chart-title">
-          <strong id="pullbackTitle">Healthy bullish pullback</strong>
-          <span>Illustrative candles · synthetic data</span>
+          <strong id="riskChartTitle">Long setup risk map</strong>
+          <span>Linear instrument model · synthetic chart</span>
         </div>
-        <div class="tab-row" id="pullbackTabs">
-          <button class="tab active" data-scenario="healthyBull" type="button">Healthy bull</button>
-          <button class="tab" data-scenario="deepBull" type="button">Deep bull</button>
-          <button class="tab" data-scenario="failedBull" type="button">Failed bull</button>
-          <button class="tab" data-scenario="healthyBear" type="button">Healthy bear</button>
-        </div>
+        <div class="r-ladder" id="rLadder"></div>
       </div>
       <div class="chart-wrap">
-        <svg id="pullbackChart" class="market-chart" aria-label="Pullback and entry model chart"></svg>
+        <svg id="riskChart" class="market-chart" aria-label="Entry stop and target chart"></svg>
         <div class="chart-tooltip"></div>
       </div>
       <div class="control-strip">
-        <label class="check"><input id="showPullbackStructure" type="checkbox" checked /> Structure</label>
-        <label class="check"><input id="showEntryZones" type="checkbox" checked /> Risk / reward zones</label>
-        <label class="check"><input id="showAllEntries" type="checkbox" /> Compare all entry markers</label>
+        <div class="control-group grow">
+          <label for="stopSlider">Stop</label>
+          <input id="stopSlider" type="range" step="0.1" />
+          <strong id="stopSliderLabel">101.00</strong>
+        </div>
+        <div class="control-group grow">
+          <label for="targetSlider">Target</label>
+          <input id="targetSlider" type="range" step="0.1" />
+          <strong id="targetSliderLabel">113.00</strong>
+        </div>
+        <label class="check"><input id="showRLadder" type="checkbox" checked /> R ladder</label>
       </div>
     </article>
 
-    <aside class="card side-panel">
-      <h3>Select an entry model</h3>
-      <div class="entry-model-grid" id="entryModels">
-        <button class="entry-model" data-model="aggressive" type="button">
-          <strong>Aggressive</strong><span>At the reaction zone</span>
-          <div class="tradeoff-bar"><span class="on"></span><span></span><span></span></div>
-        </button>
-        <button class="entry-model active" data-model="confirmation" type="button">
-          <strong>Confirmation</strong><span>After local shift</span>
-          <div class="tradeoff-bar"><span class="on"></span><span class="on"></span><span></span></div>
-        </button>
-        <button class="entry-model" data-model="breakout" type="button">
-          <strong>Continuation</strong><span>On resumed BOS</span>
-          <div class="tradeoff-bar"><span class="on"></span><span class="on"></span><span class="on"></span></div>
-        </button>
+    <aside class="card calc-panel">
+      <h3>Position-size calculator</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="riskDirection">Direction</label>
+          <select id="riskDirection">
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="accountSize">Account size</label>
+          <input id="accountSize" type="number" min="1" step="100" value="25000" />
+        </div>
+        <div class="field">
+          <label for="riskPercent">Account risk (%)</label>
+          <input id="riskPercent" type="number" min="0.01" max="100" step="0.05" value="0.50" />
+        </div>
+        <div class="field">
+          <label for="pointValue">Value per 1.00 move / unit</label>
+          <input id="pointValue" type="number" min="0.0001" step="0.01" value="1" />
+        </div>
+        <div class="field">
+          <label for="riskEntry">Entry price</label>
+          <input id="riskEntry" type="number" step="0.1" value="105" />
+        </div>
+        <div class="field">
+          <label for="riskStop">Stop / invalidation</label>
+          <input id="riskStop" type="number" step="0.1" value="101" />
+        </div>
+        <div class="field">
+          <label for="riskTarget">Target price</label>
+          <input id="riskTarget" type="number" step="0.1" value="113" />
+        </div>
+        <div class="field">
+          <label for="lotSize">Round to unit lot</label>
+          <input id="lotSize" type="number" min="1" step="1" value="1" />
+        </div>
       </div>
 
-      <!-- ONE wrapping live region for everything renderPullback() rewrites in
-           this panel. Separate live regions on each readout would fire six
-           announcements per click; this fires one. -->
-      <div id="entryReadout" aria-live="polite">
-      <div class="verdict">
-        <span class="label">Model assessment</span>
-        <strong id="entryVerdict">Confirmation entry</strong>
-        <p id="entryReason">Waits for the pullback to shift upward, then uses the new local low as invalidation.</p>
+      <!-- ONE live region wraps every JS-rewritten readout in this panel. Split
+           across the budget, each metric, and the verdict it would announce five
+           separate times per keystroke. -->
+      <div class="live-readout" aria-live="polite" aria-atomic="true">
+      <div class="risk-budget">
+        <span style="color:var(--muted);font-size:.7rem;font-weight:850;text-transform:uppercase;letter-spacing:.07em;">Planned risk budget</span>
+        <span class="amount" id="riskBudget">$125.00</span>
+        <p id="riskFormula">0.50% of a $25,000 account</p>
       </div>
 
-      <div class="metric-grid">
-        <div class="metric"><span class="k">Entry</span><span class="v" id="entryPrice">110.40</span></div>
-        <div class="metric"><span class="k">Stop</span><span class="v" id="stopPrice">108.20</span></div>
-        <div class="metric"><span class="k">Target</span><span class="v" id="targetPrice">116.00</span></div>
+      <div class="calc-result">
+        <div class="metric"><span class="k">Risk / unit</span><span class="v" id="riskPerUnit">$4.00</span></div>
+        <div class="metric"><span class="k">Position units</span><span class="v" id="positionUnits">31</span></div>
+        <div class="metric"><span class="k">Target P/L</span><span class="v" id="targetPL">$248.00</span></div>
+        <div class="metric"><span class="k">Reward / risk</span><span class="v" id="riskRR">2.00R</span></div>
       </div>
 
-      <div class="verdict">
-        <span class="label">Illustrative reward-to-risk</span>
-        <div class="rr-large"><strong id="entryRR">2.55R</strong><span id="entryRiskText">2.20 points at risk</span></div>
+      <div class="feedback" id="riskValidation" style="margin-top:12px;">The stop is on the correct side of the entry.</div>
       </div>
 
-      <div class="note" id="entryNote">
-        <strong>Tradeoff:</strong> Confirmation sacrifices some entry price to gain evidence that the pullback has ended.
-      </div>
+      <div class="note" style="margin-top:12px;">
+        <strong>Scope:</strong> This calculator assumes linear price exposure. Options are nonlinear;
+        use option premium or an option-price exit plan rather than treating underlying price distance as exact contract risk.
       </div>
     </aside>
   </div>
 </section>
 
-<section class="section" id="sequence">
+<section class="section" id="stop-quality">
   <div class="section-head">
-    <div><h2>The entry sequence</h2></div>
-    <p>Direction alone is not an entry. Require a useful location, a reaction, a trigger, and an explicit invalidation.</p>
+    <div><h2>Stop-quality drill</h2></div>
+    <p>The rule for this setup: the long thesis is invalid only when the protected low breaks with enough room for ordinary noise.</p>
   </div>
-  <div class="grid-4">
-    <article class="card concept-card">
-      <div class="icon">1</div>
-      <h3>Trend</h3>
-      <p>Identify the active higher-timeframe structure and the protected swing that keeps the thesis alive.</p>
-    </article>
-    <article class="card concept-card">
-      <div class="icon">2</div>
-      <h3>Location</h3>
-      <p>Wait for price to reach a prior breakout, range edge, support/resistance zone, or another preplanned area.</p>
-    </article>
-    <article class="card concept-card">
-      <div class="icon">3</div>
-      <h3>Reaction + trigger</h3>
-      <p>Choose whether your model enters on touch, on a local shift, or only after continuation resumes.</p>
-    </article>
-    <article class="card concept-card">
-      <div class="icon">4</div>
-      <h3>Invalidation</h3>
-      <p>Define the price that proves the entry model wrong, then size the trade around that distance.</p>
-    </article>
-  </div>
-</section>
 
-<section class="section" id="practice">
   <div class="grid-2">
-    <!-- ONE wrapping live region for the drill. The chart inside opts out with
-         aria-live="off": it is redrawn on every question and its SVG <text>
-         labels would otherwise be read out as noise on each answer. -->
-    <article class="card practice" aria-live="polite">
+    <article class="card practice">
       <div class="practice-head">
-        <h3>Entry-model drill</h3>
-        <span class="score" id="entryScore">Score 0 / 0</span>
+        <h3>Which stop expresses the thesis?</h3>
+        <span class="score" id="stopScore">Score 0 / 0</span>
       </div>
-      <p id="entryQuizPrompt" style="margin:0;color:var(--muted);font-size:.88rem;"></p>
-      <div class="chart-wrap" style="min-height:300px;margin-top:12px;" aria-live="off">
-        <svg id="entryQuizChart" class="market-chart" style="min-height:300px;" aria-label="Entry model practice chart"></svg>
+      <div class="chart-wrap" style="min-height:330px;">
+        <svg id="stopQuizChart" class="market-chart" style="min-height:330px;" aria-label="Stop placement practice chart"></svg>
         <div class="chart-tooltip"></div>
       </div>
-      <div class="choice-grid" id="entryChoices">
-        <button class="choice" data-answer="aggressive" type="button">Aggressive entry</button>
-        <button class="choice" data-answer="confirmation" type="button">Confirmation entry</button>
-        <button class="choice" data-answer="breakout" type="button">Continuation breakout</button>
-        <button class="choice" data-answer="notrade" type="button">No trade</button>
+      <div class="choice-grid" id="stopChoices">
+        <button class="choice stop-candidate" data-answer="A" type="button">
+          <span class="letter">A</span><span><strong>102.80</strong><small>Inside recent candle noise</small></span><span>tight</span>
+        </button>
+        <button class="choice stop-candidate" data-answer="B" type="button">
+          <span class="letter">B</span><span><strong>97.80</strong><small>Below the protected low</small></span><span>structural</span>
+        </button>
+        <button class="choice stop-candidate" data-answer="C" type="button">
+          <span class="letter">C</span><span><strong>91.00</strong><small>Far below with no stated reason</small></span><span>loose</span>
+        </button>
+        <button class="choice" data-answer="D" type="button">No stop; wait for recovery</button>
       </div>
-      <div class="feedback" id="entryFeedback">Choose the entry model that matches the stated rule—not the one that looks best in hindsight.</div>
-      <button class="btn small" id="nextEntryQuiz" type="button" style="margin-top:10px;">Next rule</button>
+      <div class="feedback" id="stopFeedback" aria-live="polite">Choose the level that matches the stated structural rule.</div>
+      <button class="btn small" id="resetStopQuiz" type="button" style="margin-top:10px;">Reset drill</button>
     </article>
 
     <article class="card card-pad">
-      <h3 style="margin-top:0;">Common mistakes</h3>
+      <h3 style="margin-top:0;">Three different stop problems</h3>
       <div class="lesson-list">
         <div class="lesson-row">
-          <div class="num">1</div>
-          <div><strong>Buying because price “looks cheap”</strong><span>A deep pullback is not automatically attractive; it may already have invalidated the trend.</span></div>
+          <div class="num">A</div>
+          <div><strong>Inside noise</strong><span>The stop can be hit while the original structure remains valid. Position size looks larger, but the stop does not express the thesis.</span></div>
         </div>
         <div class="lesson-row">
-          <div class="num">2</div>
-          <div><strong>Waiting for so much proof that location disappears</strong><span>More confirmation can reduce uncertainty while also worsening entry price and reward-to-risk.</span></div>
+          <div class="num">B</div>
+          <div><strong>Beyond invalidation</strong><span>The stop sits past the protected swing with a deliberate buffer. The position is sized around this real distance.</span></div>
         </div>
         <div class="lesson-row">
-          <div class="num">3</div>
-          <div><strong>Moving the model after entry</strong><span>Choose touch, confirmation, or continuation before the setup occurs and evaluate that model consistently.</span></div>
+          <div class="num">C</div>
+          <div><strong>Arbitrarily far</strong><span>A stop can be structurally unnecessary as well as too tight. Extra distance reduces size without adding a defined reason.</span></div>
         </div>
-        <div class="lesson-row">
-          <div class="num">4</div>
-          <div><strong>Ignoring the failed pullback</strong><span>Once the protected structural level breaks, “waiting for a better entry” can become denial of invalidation.</span></div>
+      </div>
+
+      <div class="callout" style="margin-top:14px;">
+        <div class="mark">R</div>
+        <div>
+          <strong>A 3R target is not automatically superior to a 1.5R target.</strong>
+          <p>R describes payoff geometry. Setup quality, target realism, liquidity, gaps, and execution still matter.</p>
         </div>
       </div>
     </article>
@@ -1383,20 +1426,20 @@ td.bad { color: var(--red); font-weight: 800; }
     </main>
 
     <nav class="lesson-nav" aria-label="Lesson navigation">
-      <a class="lesson-link prev" href="../multi-timeframe-market-structure/" rel="prev">
+      <a class="lesson-link prev" href="../pullbacks-entry-models/" rel="prev">
         <span>Previous lesson</span>
-        <strong>03 &middot; Multi-Timeframe Market Structure</strong>
+        <strong>04 &middot; Pullbacks &amp; Entry Models</strong>
       </a>
-      <a class="lesson-link next" href="../invalidation-stops-risk-reward/" rel="next">
+      <a class="lesson-link next" href="../volume-relative-strength/" rel="next">
         <span>Next lesson</span>
-        <strong>05 &middot; Invalidation, Stops &amp; Reward-to-Risk</strong>
+        <strong>06 &middot; Volume &amp; Relative Strength</strong>
       </a>
     </nav>
 
     <footer class="footer">
       <p><strong>Educational lab.</strong> Charts and numbers are synthetic examples—not live market data or trading signals.</p>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
-      <p><a href="https://geterdone.io">geterdone.io</a></p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
     </footer>
   </div>
 
@@ -1715,22 +1758,18 @@ function drawLineChart(svg, seriesList, options = {}) {
 
 // Theme. The stored choice was already read, validated against the
 // 'light'/'dark' allowlist, and applied by the pre-paint <head> script, so
-// document.documentElement.dataset.theme is trustworthy by the time this runs.
-// This function only owns the toggle and its icon.
-//
-// No chart repaint is wired here on purpose: every SVG colour on this page comes
-// from a CSS class or a var() presentation attribute, so the charts retheme
-// themselves. Nothing samples a token with getComputedStyle, and calling the
-// renderers would reset the drill's answered state.
+// data-theme is trustworthy by the time this runs. This block only owns the
+// toggle and its icon; every chart colour is a CSS token read live through
+// currentColor / var(), so nothing has to be redrawn when the theme flips.
 function setupTheme() {
   const button = document.getElementById("themeToggle");
   const lightQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
   // No explicit choice stored means the system preference decides, matching the CSS media block.
-  const effectiveTheme = () =>
-    document.documentElement.dataset.theme || (lightQuery && lightQuery.matches ? "light" : "dark");
+  const effectiveTheme = () => document.documentElement.dataset.theme || (lightQuery && lightQuery.matches ? "light" : "dark");
   const renderIcon = () => {
     if (!button) return;
-    button.textContent = effectiveTheme() === "light" ? "☀" : "☾";
+    const light = effectiveTheme() === "light";
+    button.textContent = light ? "☀" : "☾";
   };
   renderIcon();
   button?.addEventListener("click", () => {
@@ -1761,330 +1800,240 @@ setupTheme();
 
 
 
-function buildPullbackScenario(key) {
-  const scenarios = {
-    healthyBull: {
-      title: "Healthy bullish pullback",
-      direction: "long",
-      valid: true,
-      closes: [100.0,101.6,103.4,102.7,105.2,107.4,106.7,109.2,111.0,110.4,109.2,108.5,109.1,110.3,111.6,113.0,114.2,113.7,115.4,116.2],
-      structure: [
-        { value: 108.0, label: "Prior BOS / support", tone: "green" },
-        { value: 107.4, label: "Protected low", tone: "red" }
-      ],
-      annotations: [
-        { index: 8, value: 111.0, label: "HH", tone: "cyan" },
-        { index: 11, value: 108.0, label: "Reaction", tone: "green", position: "below" },
-        { index: 14, value: 111.6, label: "Local shift", tone: "purple" }
-      ],
-      models: {
-        aggressive: {
-          label: "Aggressive entry",
-          entry: 108.6, stop: 107.2, target: 116.0, index: 11,
-          reason: "Enters at the support reaction before the local downtrend has fully shifted.",
-          note: "Better location and smaller price risk, but the pullback could continue through support."
-        },
-        confirmation: {
-          label: "Confirmation entry",
-          entry: 110.4, stop: 108.2, target: 116.0, index: 13,
-          reason: "Waits for the pullback to shift upward, then uses the new local low as invalidation.",
-          note: "Confirmation sacrifices some entry price to gain evidence that the pullback has ended."
-        },
-        breakout: {
-          label: "Continuation breakout",
-          entry: 112.0, stop: 109.7, target: 116.4, index: 15,
-          reason: "Enters only after price resumes through the continuation high.",
-          note: "Most confirmation, but the later entry reduces reward-to-risk and increases chase risk."
-        }
-      }
-    },
-    deepBull: {
-      title: "Deep bullish pullback",
-      direction: "long",
-      valid: true,
-      closes: [96.0,98.2,100.4,99.5,102.8,105.1,104.0,107.0,109.4,108.8,106.9,104.8,103.2,102.6,103.5,105.0,106.7,108.1,109.8,111.0],
-      structure: [
-        { value: 103.0, label: "Protected-low area", tone: "red" },
-        { value: 105.0, label: "Prior breakout", tone: "green" }
-      ],
-      annotations: [
-        { index: 8, value: 109.4, label: "HH", tone: "cyan" },
-        { index: 13, value: 102.6, label: "Deep test", tone: "amber", position: "below" },
-        { index: 17, value: 108.1, label: "Shift up", tone: "purple" }
-      ],
-      models: {
-        aggressive: {
-          label: "Aggressive entry",
-          entry: 103.2, stop: 102.1, target: 111.0, index: 13,
-          reason: "Attempts the reaction very near the protected low before clear confirmation.",
-          note: "The location is attractive, but the trend is close to structural failure; precision matters."
-        },
-        confirmation: {
-          label: "Confirmation entry",
-          entry: 105.3, stop: 102.4, target: 111.0, index: 15,
-          reason: "Requires the deep pullback to reclaim local structure before entering.",
-          note: "A deep pullback usually deserves more confirmation because the protected swing is nearby."
-        },
-        breakout: {
-          label: "Continuation breakout",
-          entry: 108.4, stop: 104.7, target: 112.0, index: 18,
-          reason: "Waits for broad continuation after the deep retracement.",
-          note: "The thesis is better confirmed, but most of the available move may already be consumed."
-        }
-      }
-    },
-    failedBull: {
-      title: "Failed bullish pullback",
-      direction: "long",
-      valid: false,
-      closes: [98.0,100.0,102.1,101.4,104.0,106.3,105.6,108.2,110.0,109.2,107.8,106.0,104.1,102.5,100.8,99.4,98.7,97.2,96.0,95.1],
-      structure: [
-        { value: 101.8, label: "Protected low", tone: "red" },
-        { value: 104.0, label: "Prior breakout", tone: "green" }
-      ],
-      annotations: [
-        { index: 8, value: 110.0, label: "HH", tone: "cyan" },
-        { index: 14, value: 100.8, label: "Structure broken", tone: "red", position: "below" }
-      ],
-      models: {
-        aggressive: { label: "No valid aggressive entry", entry: null, stop: null, target: null, index: 13, reason: "The expected support failed and price broke the protected bullish swing.", note: "A lower price is not a better entry after the structure that justified the trade has failed." },
-        confirmation: { label: "No confirmation", entry: null, stop: null, target: null, index: 15, reason: "No bullish structure shift forms after the protected low breaks.", note: "Do not manufacture confirmation by using smaller and smaller timeframes." },
-        breakout: { label: "No continuation", entry: null, stop: null, target: null, index: 17, reason: "Price continues lower instead of reclaiming the broken structure.", note: "The correct action for this model is no trade, not a later long entry." }
-      }
-    },
-    healthyBear: {
-      title: "Healthy bearish pullback",
-      direction: "short",
-      valid: true,
-      closes: [122.0,120.1,118.4,119.0,116.3,114.2,115.0,112.1,110.3,111.0,112.5,113.7,113.1,111.8,110.2,108.7,107.5,108.0,106.2,105.1],
-      structure: [
-        { value: 114.0, label: "Prior breakdown / resistance", tone: "red" },
-        { value: 115.2, label: "Protected high", tone: "red" }
-      ],
-      annotations: [
-        { index: 8, value: 110.3, label: "LL", tone: "red", position: "below" },
-        { index: 11, value: 113.7, label: "Reaction", tone: "amber" },
-        { index: 14, value: 110.2, label: "Local shift", tone: "purple", position: "below" }
-      ],
-      models: {
-        aggressive: {
-          label: "Aggressive short",
-          entry: 113.3, stop: 114.7, target: 105.5, index: 11,
-          reason: "Shorts the resistance reaction before the lower-timeframe bounce fully shifts down.",
-          note: "Earlier price, but the bounce can still extend toward the protected high."
-        },
-        confirmation: {
-          label: "Confirmation short",
-          entry: 111.6, stop: 114.0, target: 105.5, index: 13,
-          reason: "Waits for the bounce to form a lower high and break downward.",
-          note: "Gains bearish evidence while giving up some entry price."
-        },
-        breakout: {
-          label: "Continuation breakdown",
-          entry: 109.8, stop: 112.4, target: 104.8, index: 15,
-          reason: "Enters as the larger downtrend resumes below the continuation low.",
-          note: "Strongest confirmation, but reward-to-risk may compress after the move resumes."
-        }
-      }
-    }
-  };
-  const s = scenarios[key];
-  return { ...s, data: candlesFromCloses(s.closes, {}, 90 + Object.keys(scenarios).indexOf(key)) };
-}
-
-const pullbackState = {
-  scenario: "healthyBull",
-  model: "confirmation",
-  score: 0,
-  attempts: 0,
-  quizIndex: 0,
-  quizAnswered: false
+const riskInputs = {
+  direction: document.getElementById("riskDirection"),
+  account: document.getElementById("accountSize"),
+  riskPercent: document.getElementById("riskPercent"),
+  pointValue: document.getElementById("pointValue"),
+  entry: document.getElementById("riskEntry"),
+  stop: document.getElementById("riskStop"),
+  target: document.getElementById("riskTarget"),
+  lot: document.getElementById("lotSize")
 };
 
-function calculateRR(direction, entry, stop, target) {
-  if ([entry, stop, target].some(v => v === null || !Number.isFinite(v))) return null;
-  const risk = direction === "long" ? entry - stop : stop - entry;
-  const reward = direction === "long" ? target - entry : entry - target;
-  if (risk <= 0 || reward <= 0) return null;
-  return { risk, reward, rr: reward / risk };
+function money(value) {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(value);
 }
 
-function renderPullback() {
-  const s = buildPullbackScenario(pullbackState.scenario);
-  const model = s.models[pullbackState.model];
-  const showStructure = document.getElementById("showPullbackStructure").checked;
-  const showZones = document.getElementById("showEntryZones").checked;
-  const showAll = document.getElementById("showAllEntries").checked;
-  const levels = showStructure ? s.structure : [];
-  const annotations = showStructure ? s.annotations : [];
+function numberValue(input, fallback = 0) {
+  const value = Number(input.value);
+  return Number.isFinite(value) ? value : fallback;
+}
 
-  if (model.entry !== null) {
-    levels.push(
-      { value: model.entry, label: "Entry", tone: "cyan", solid: true },
-      { value: model.stop, label: "Invalidation", tone: "red", solid: true },
-      { value: model.target, label: "Target", tone: "green", solid: true }
-    );
+function riskGeometry(direction, entry, stop, target) {
+  const riskDistance = direction === "long" ? entry - stop : stop - entry;
+  const rewardDistance = direction === "long" ? target - entry : entry - target;
+  return {
+    riskDistance,
+    rewardDistance,
+    valid: riskDistance > 0 && rewardDistance > 0,
+    rr: riskDistance > 0 ? rewardDistance / riskDistance : NaN
+  };
+}
+
+function buildRiskCandles(direction, entry) {
+  const offsets = [-9.0,-7.1,-5.2,-6.0,-3.6,-1.5,0.5,-0.2,-2.0,-3.2,-1.6,-0.4,1.1,2.6,3.8,5.0,4.4,6.2];
+  const closes = offsets.map(offset => direction === "long" ? entry + offset : entry - offset);
+  return candlesFromCloses(closes, {}, direction === "long" ? 130 : 131);
+}
+
+function configureRiskSliders(direction, entry, stop, target) {
+  const stopSlider = document.getElementById("stopSlider");
+  const targetSlider = document.getElementById("targetSlider");
+  const span = Math.max(5, Math.abs(entry) * 0.2);
+
+  if (direction === "long") {
+    stopSlider.min = (entry - span).toFixed(2);
+    stopSlider.max = (entry - 0.1).toFixed(2);
+    targetSlider.min = (entry + 0.1).toFixed(2);
+    targetSlider.max = (entry + span * 1.5).toFixed(2);
+  } else {
+    stopSlider.min = (entry + 0.1).toFixed(2);
+    stopSlider.max = (entry + span).toFixed(2);
+    targetSlider.min = (entry - span * 1.5).toFixed(2);
+    targetSlider.max = (entry - 0.1).toFixed(2);
   }
 
-  drawCandles(document.getElementById("pullbackChart"), s.data, {
-    includeValues: [
-      ...s.structure.map(l => l.value),
-      ...(model.entry !== null ? [model.entry, model.stop, model.target] : [])
-    ],
-    levels,
-    annotations,
-    overlay: ({ svg, x, y, plot, xStep }) => {
-      if (model.entry !== null && showZones) {
-        const startX = x(model.index) - xStep * 0.45;
-        const endX = plot.right;
-        const rewardTop = Math.min(y(model.entry), y(model.target));
-        const rewardBottom = Math.max(y(model.entry), y(model.target));
-        const riskTop = Math.min(y(model.entry), y(model.stop));
-        const riskBottom = Math.max(y(model.entry), y(model.stop));
-        svg.insertBefore(svgNode("rect", {
-          x: startX, y: rewardTop, width: endX - startX, height: Math.max(2, rewardBottom - rewardTop), class: "reward-zone"
-        }), svg.children[1] || null);
-        svg.insertBefore(svgNode("rect", {
-          x: startX, y: riskTop, width: endX - startX, height: Math.max(2, riskBottom - riskTop), class: "risk-zone"
-        }), svg.children[1] || null);
+  stopSlider.value = clamp(stop, Number(stopSlider.min), Number(stopSlider.max));
+  targetSlider.value = clamp(target, Number(targetSlider.min), Number(targetSlider.max));
+  document.getElementById("stopSliderLabel").textContent = formatPrice(stop);
+  document.getElementById("targetSliderLabel").textContent = formatPrice(target);
+}
+
+function renderRiskPlanner(syncSliders = true) {
+  const direction = riskInputs.direction.value;
+  const account = Math.max(0, numberValue(riskInputs.account));
+  const riskPct = Math.max(0, numberValue(riskInputs.riskPercent));
+  const pointValue = Math.max(0.000001, numberValue(riskInputs.pointValue, 1));
+  const entry = numberValue(riskInputs.entry, 100);
+  const stop = numberValue(riskInputs.stop, direction === "long" ? entry - 1 : entry + 1);
+  const target = numberValue(riskInputs.target, direction === "long" ? entry + 2 : entry - 2);
+  const lot = Math.max(1, Math.floor(numberValue(riskInputs.lot, 1)));
+  const geometry = riskGeometry(direction, entry, stop, target);
+  const budget = account * riskPct / 100;
+  const riskPerUnit = Math.abs(geometry.riskDistance) * pointValue;
+  const rawUnits = geometry.valid && riskPerUnit > 0 ? budget / riskPerUnit : 0;
+  const units = Math.max(0, Math.floor(rawUnits / lot) * lot);
+  const targetPL = geometry.valid ? units * geometry.rewardDistance * pointValue : 0;
+
+  if (syncSliders) configureRiskSliders(direction, entry, stop, target);
+
+  document.getElementById("riskChartTitle").textContent = `${direction === "long" ? "Long" : "Short"} setup risk map`;
+  document.getElementById("riskBudget").textContent = money(budget);
+  document.getElementById("riskFormula").textContent = `${riskPct.toFixed(2)}% of a ${money(account)} account`;
+  document.getElementById("riskPerUnit").textContent = geometry.riskDistance > 0 ? money(riskPerUnit) : "Invalid";
+  document.getElementById("positionUnits").textContent = geometry.valid ? units.toLocaleString() : "0";
+  document.getElementById("targetPL").textContent = geometry.valid ? money(targetPL) : "—";
+  document.getElementById("riskRR").textContent = geometry.valid ? `${geometry.rr.toFixed(2)}R` : "Invalid";
+
+  const validation = document.getElementById("riskValidation");
+  if (!geometry.valid) {
+    validation.className = "feedback bad";
+    validation.innerHTML = `<strong>Invalid geometry.</strong> For a ${direction}, the stop and target must be on opposite, correct sides of the entry.`;
+  } else if (units === 0 && budget > 0) {
+    validation.className = "feedback bad";
+    validation.innerHTML = `<strong>Risk budget is smaller than one lot.</strong> Reduce the lot size, use fewer point-value units, or skip the trade.`;
+  } else {
+    const actualRisk = units * riskPerUnit;
+    validation.className = "feedback good";
+    validation.innerHTML = `<strong>Geometry is valid.</strong> Rounded position risk is ${money(actualRisk)}, leaving ${money(Math.max(0, budget - actualRisk))} unused.`;
+  }
+
+  const data = buildRiskCandles(direction, entry);
+  const include = [entry, stop, target];
+  const levels = [
+    { value: entry, label: `Entry ${formatPrice(entry)}`, tone: "cyan", solid: true },
+    { value: stop, label: `Stop ${formatPrice(stop)}`, tone: "red", solid: true },
+    { value: target, label: `Target ${formatPrice(target)}`, tone: "green", solid: true }
+  ];
+
+  const rLevels = [];
+  if (geometry.riskDistance > 0 && document.getElementById("showRLadder").checked) {
+    [1, 2, 3].forEach(r => {
+      const value = direction === "long" ? entry + geometry.riskDistance * r : entry - geometry.riskDistance * r;
+      rLevels.push({ value, label: `${r}R`, tone: r === 1 ? "amber" : "purple", opacity: 0.6 });
+      include.push(value);
+    });
+  }
+
+  drawCandles(document.getElementById("riskChart"), data, {
+    includeValues: include,
+    levels: [...levels, ...rLevels],
+    annotations: [
+      {
+        index: 9,
+        value: direction === "long" ? data[9].l : data[9].h,
+        label: "Protected swing",
+        tone: "amber",
+        position: direction === "long" ? "below" : "above"
       }
-
-      const modelsToShow = showAll
-        ? Object.entries(s.models).filter(([, m]) => m.entry !== null)
-        : [[pullbackState.model, model]].filter(([, m]) => m.entry !== null);
-
-      modelsToShow.forEach(([key, entryModel]) => {
-        const tone = key === "aggressive" ? "amber" : key === "confirmation" ? "purple" : "cyan";
-        const px = x(entryModel.index);
-        const py = y(entryModel.entry);
-        svg.appendChild(svgNode("circle", { cx: px, cy: py, r: 6, class: `tone-${tone}`, fill: "var(--panel-solid)", "stroke-width": 3 }));
-        svg.appendChild(svgNode("text", {
-          x: px, y: py - 12, "text-anchor": "middle", class: `model-marker tone-${tone}`
-        }, key === "aggressive" ? "A" : key === "confirmation" ? "C" : "B"));
-      });
+    ],
+    overlay: ({ svg, x, y, plot, xStep }) => {
+      if (!geometry.valid) return;
+      const startX = x(10) - xStep * 0.45;
+      const rewardTop = Math.min(y(entry), y(target));
+      const rewardBottom = Math.max(y(entry), y(target));
+      const riskTop = Math.min(y(entry), y(stop));
+      const riskBottom = Math.max(y(entry), y(stop));
+      svg.insertBefore(svgNode("rect", {
+        x: startX, y: rewardTop, width: plot.right - startX, height: Math.max(2, rewardBottom - rewardTop), class: "reward-zone"
+      }), svg.children[1] || null);
+      svg.insertBefore(svgNode("rect", {
+        x: startX, y: riskTop, width: plot.right - startX, height: Math.max(2, riskBottom - riskTop), class: "risk-zone"
+      }), svg.children[1] || null);
     }
   });
 
-  document.getElementById("pullbackTitle").textContent = s.title;
-  document.getElementById("entryVerdict").textContent = model.label;
-  document.getElementById("entryReason").textContent = model.reason;
-  document.getElementById("entryNote").innerHTML = `<strong>Tradeoff:</strong> ${model.note}`;
-
-  const rr = calculateRR(s.direction, model.entry, model.stop, model.target);
-  document.getElementById("entryPrice").textContent = model.entry === null ? "—" : formatPrice(model.entry);
-  document.getElementById("stopPrice").textContent = model.stop === null ? "—" : formatPrice(model.stop);
-  document.getElementById("targetPrice").textContent = model.target === null ? "—" : formatPrice(model.target);
-  document.getElementById("entryRR").textContent = rr ? `${rr.rr.toFixed(2)}R` : "No trade";
-  document.getElementById("entryRiskText").textContent = rr ? `${rr.risk.toFixed(2)} points at risk` : "Structure invalidated";
-
-  document.querySelectorAll("#entryModels .entry-model").forEach(button => {
-    button.classList.toggle("active", button.dataset.model === pullbackState.model);
-  });
-}
-
-document.getElementById("pullbackTabs").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-scenario]");
-  if (!button) return;
-  pullbackState.scenario = button.dataset.scenario;
-  document.querySelectorAll("#pullbackTabs .tab").forEach(tab => tab.classList.toggle("active", tab === button));
-  renderPullback();
-});
-
-document.getElementById("entryModels").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-model]");
-  if (!button) return;
-  pullbackState.model = button.dataset.model;
-  renderPullback();
-});
-
-["showPullbackStructure", "showEntryZones", "showAllEntries"].forEach(id => {
-  document.getElementById(id).addEventListener("change", renderPullback);
-});
-
-const entryQuizItems = [
-  {
-    scenario: "healthyBull",
-    prompt: "Your written rule says: enter at the planned support zone before a lower-timeframe structure shift. Which model is that?",
-    answer: "aggressive",
-    explanation: "That rule describes an aggressive touch/reaction entry. It prioritizes location over confirmation."
-  },
-  {
-    scenario: "healthyBull",
-    prompt: "Your rule requires a local higher low and a break of the pullback's last lower high, but not a new major high. Which model matches?",
-    answer: "confirmation",
-    explanation: "That is a confirmation entry: the pullback shifts first, then the trade uses the new local swing as invalidation."
-  },
-  {
-    scenario: "healthyBear",
-    prompt: "Your rule waits until price resumes through the prior continuation low before entering. Which model matches?",
-    answer: "breakout",
-    explanation: "That is a continuation breakout entry. It waits for the larger trend to resume."
-  },
-  {
-    scenario: "failedBull",
-    prompt: "The bullish protected low has broken and no reclaim or bullish shift appears. What does the plan require?",
-    answer: "notrade",
-    explanation: "The structure that justified the long thesis is gone. A cheaper price does not restore the setup."
+  const ladder = document.getElementById("rLadder");
+  ladder.innerHTML = "";
+  if (geometry.riskDistance > 0) {
+    [1,2,3].forEach(r => {
+      const level = direction === "long" ? entry + geometry.riskDistance * r : entry - geometry.riskDistance * r;
+      const chip = document.createElement("span");
+      chip.className = "r-chip";
+      chip.textContent = `${r}R = ${formatPrice(level)}`;
+      ladder.appendChild(chip);
+    });
   }
-];
+}
 
-function renderEntryQuiz() {
-  const q = entryQuizItems[pullbackState.quizIndex];
-  const s = buildPullbackScenario(q.scenario);
-  pullbackState.quizAnswered = false;
-  document.getElementById("entryQuizPrompt").textContent = q.prompt;
-  document.querySelectorAll("#entryChoices .choice").forEach(button => {
-    button.classList.remove("correct", "incorrect");
-    button.disabled = false;
-  });
-  const feedback = document.getElementById("entryFeedback");
-  feedback.className = "feedback";
-  feedback.textContent = "Choose the entry model that matches the stated rule—not the one that looks best in hindsight.";
+Object.values(riskInputs).forEach(input => {
+  input.addEventListener("input", () => renderRiskPlanner(true));
+  input.addEventListener("change", () => renderRiskPlanner(true));
+});
 
-  drawCandles(document.getElementById("entryQuizChart"), s.data, {
-    height: 330,
-    includeValues: s.structure.map(l => l.value),
-    levels: s.structure,
-    annotations: s.annotations,
-    overlay: ({ svg, x, y }) => {
-      if (q.scenario === "failedBull") return;
-      Object.entries(s.models).forEach(([key, model]) => {
-        if (model.entry === null) return;
-        const tone = key === "aggressive" ? "amber" : key === "confirmation" ? "purple" : "cyan";
-        const label = key === "aggressive" ? "A" : key === "confirmation" ? "C" : "B";
-        svg.appendChild(svgNode("circle", { cx: x(model.index), cy: y(model.entry), r: 6, class: `tone-${tone}`, fill: "var(--panel-solid)", "stroke-width": 3 }));
-        svg.appendChild(svgNode("text", { x: x(model.index), y: y(model.entry) - 12, "text-anchor": "middle", class: `model-marker tone-${tone}` }, label));
-      });
-    }
+document.getElementById("stopSlider").addEventListener("input", (event) => {
+  riskInputs.stop.value = Number(event.target.value).toFixed(1);
+  document.getElementById("stopSliderLabel").textContent = formatPrice(event.target.value);
+  renderRiskPlanner(false);
+});
+
+document.getElementById("targetSlider").addEventListener("input", (event) => {
+  riskInputs.target.value = Number(event.target.value).toFixed(1);
+  document.getElementById("targetSliderLabel").textContent = formatPrice(event.target.value);
+  renderRiskPlanner(false);
+});
+
+document.getElementById("showRLadder").addEventListener("change", () => renderRiskPlanner(false));
+
+const stopQuizData = candlesFromCloses(
+  [92,94,96,95,98,100,99,102,104,103,101,99.2,100.4,102.0,104.1,105.2,106.0],
+  { 11: { l: 98.45 } },
+  150
+);
+
+function renderStopQuiz() {
+  drawCandles(document.getElementById("stopQuizChart"), stopQuizData, {
+    height: 360,
+    includeValues: [105, 102.8, 98.5, 97.8, 91],
+    levels: [
+      { value: 105, label: "Entry", tone: "cyan", solid: true },
+      { value: 98.5, label: "Protected low", tone: "amber" },
+      { value: 102.8, label: "A · inside noise", tone: "red", opacity: 0.7 },
+      { value: 97.8, label: "B · structural", tone: "green", opacity: 0.9 },
+      { value: 91, label: "C · unexplained distance", tone: "purple", opacity: 0.7 }
+    ],
+    annotations: [
+      { index: 11, value: 98.45, label: "Protected swing", tone: "amber", position: "below" }
+    ]
   });
 }
 
-document.getElementById("entryChoices").addEventListener("click", (event) => {
+let stopAnswered = false;
+let stopScore = 0;
+let stopAttempts = 0;
+
+document.getElementById("stopChoices").addEventListener("click", (event) => {
   const button = event.target.closest("[data-answer]");
-  if (!button || pullbackState.quizAnswered) return;
-  pullbackState.quizAnswered = true;
-  pullbackState.attempts += 1;
-  const q = entryQuizItems[pullbackState.quizIndex];
-  const correct = button.dataset.answer === q.answer;
-  if (correct) pullbackState.score += 1;
-  document.querySelectorAll("#entryChoices .choice").forEach(choice => {
+  if (!button || stopAnswered) return;
+  stopAnswered = true;
+  stopAttempts += 1;
+  const correct = button.dataset.answer === "B";
+  if (correct) stopScore += 1;
+  document.querySelectorAll("#stopChoices .choice").forEach(choice => {
     choice.disabled = true;
-    if (choice.dataset.answer === q.answer) choice.classList.add("correct");
+    if (choice.dataset.answer === "B") choice.classList.add("correct");
   });
   if (!correct) button.classList.add("incorrect");
-  document.getElementById("entryScore").textContent = `Score ${pullbackState.score} / ${pullbackState.attempts}`;
-  const feedback = document.getElementById("entryFeedback");
+  document.getElementById("stopScore").textContent = `Score ${stopScore} / ${stopAttempts}`;
+  const feedback = document.getElementById("stopFeedback");
   feedback.className = `feedback ${correct ? "good" : "bad"}`;
-  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${q.explanation}`;
+  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> B sits beyond the protected low and directly matches the stated invalidation rule. A can be hit while structure survives; C adds distance without a defined reason.`;
 });
 
-document.getElementById("nextEntryQuiz").addEventListener("click", () => {
-  pullbackState.quizIndex = (pullbackState.quizIndex + 1) % entryQuizItems.length;
-  renderEntryQuiz();
+document.getElementById("resetStopQuiz").addEventListener("click", () => {
+  stopAnswered = false;
+  document.querySelectorAll("#stopChoices .choice").forEach(choice => {
+    choice.disabled = false;
+    choice.classList.remove("correct", "incorrect");
+  });
+  const feedback = document.getElementById("stopFeedback");
+  feedback.className = "feedback";
+  feedback.textContent = "Choose the level that matches the stated structural rule.";
 });
 
-renderPullback();
-renderEntryQuiz();
+renderRiskPlanner(true);
+renderStopQuiz();
 
   </script>
 </body>

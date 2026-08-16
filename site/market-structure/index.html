@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Market Structure Lab</title>
-  <meta name="description" content="Market Structure Lab is a free seven-lesson interactive course on reading price: market structure, ranges and liquidity sweeps, multi-timeframe context, entry models, invalidation and reward-to-risk, volume and relative strength, and options contract selection. Every lesson is one self-contained page." />
-  <link rel="canonical" href="https://learn.geterdone.io/market-structure-lab/" />
+  <title>Market Structure</title>
+  <meta name="description" content="Market Structure is a free seven-lesson interactive course on reading price: market structure, ranges and liquidity sweeps, multi-timeframe context, entry models, invalidation and reward-to-risk, volume and relative strength, and options contract selection. Every lesson is one self-contained page." />
+  <link rel="canonical" href="https://learn.geterdone.io/market-structure/" />
   <meta name="author" content="dmedellin" />
 
   <!-- Favicon: inline data-URI SVG, no external asset. Same mark family as the rest
@@ -22,19 +22,19 @@
        og:image + twitter:card=summary_large_image once a real 1200x630 asset ships. -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Learn · geterdone.io" />
-  <meta property="og:title" content="Market Structure Lab" />
+  <meta property="og:title" content="Market Structure" />
   <meta property="og:description" content="A seven-lesson interactive course on reading price — structure, ranges and sweeps, multi-timeframe context, entries, risk, volume, and options. Simple, technical, and fits an interactive format." />
-  <meta property="og:url" content="https://learn.geterdone.io/market-structure-lab/" />
+  <meta property="og:url" content="https://learn.geterdone.io/market-structure/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Market Structure Lab" />
+  <meta name="twitter:title" content="Market Structure" />
   <meta name="twitter:description" content="A seven-lesson interactive course on reading price — structure, ranges and sweeps, multi-timeframe context, entries, risk, volume, and options. Simple, technical, and fits an interactive format." />
-  <meta name="twitter:url" content="https://learn.geterdone.io/market-structure-lab/" />
+  <meta name="twitter:url" content="https://learn.geterdone.io/market-structure/" />
 
   <style>
     /* ---------------------------------------------------------------------
        DESIGN TOKENS — copied verbatim from site/index.html and
-       site/market-structure-lab/market-structure/index.html so the library, this
+       site/market-structure/market-structure/index.html so the library, this
        course home, and every lesson read as one product. Do not fork this
        palette; change all of them.
 
@@ -272,6 +272,44 @@
     .crumb-sep { opacity: 0.5; }
     .crumb-current { color: var(--text); padding: 6px 9px; }
 
+    /* COURSE-LEVEL PAGER. The same component, with the same markup, on every
+       course home, so stepping from one course to the next reads exactly like
+       stepping from one lesson to the next. It is deliberately NOT the lesson
+       pager: that one is .lesson-nav / .lesson-link and lives inside a lesson,
+       and the two must not be confused for one another. A course with nothing
+       before it ships the forward half alone rather than a disabled backward
+       one — the same rule the lesson pager follows at lesson 01. Every colour
+       here is a token, so both light paths flip it together.
+       Depth: a course home is one level down, so a sibling course is "../slug/". */
+    .path-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 34px 0 6px;
+    }
+
+    .path-move {
+      flex: 1 1 240px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-2);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 150ms ease, border-color 150ms ease;
+    }
+
+    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .path-move span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+    .path-move.next { margin-left: auto; text-align: right; }
+
+    /* One card per row once the topbar nav collapses; two columns at 320px is
+       two unreadable columns. */
+    @media (max-width: 720px) {
+      .path-move { flex-basis: 100%; }
+    }
+
     .icon-btn {
       flex: none;
       width: 38px;
@@ -427,7 +465,7 @@
       text-transform: uppercase;
     }
 
-    /* Learning-path card. This course is the first of three, so the page has to
+    /* Learning-path card. This course is the first on the path, so the page has to
        say where it sits and where the reader goes next; the pager at the foot of
        lesson 07 points back here, and this card is the hand-off it points at.
        Built from the same tokens as .note-card so it reads as part of the page,
@@ -637,9 +675,10 @@
     .lesson-card h3 { margin: 2px 0 0; font-size: 1.12rem; letter-spacing: -0.02em; }
 
     /* Reading order inside the link: position first, then title. Lesson 01 is
-       titled "Market Structure Lab", exactly like this course, so the ordinal is
-       what tells the two apart — which means it has to be part of the link's
-       accessible name, not a decorative numeral beside it. */
+       titled "Market Structure Lab", one word away from the course's own name
+       ("Market Structure"), so the ordinal is what tells the two apart — which
+       means it has to be part of the link's accessible name, not a decorative
+       numeral beside it. */
     .lesson-ord {
       display: block;
       margin-bottom: 3px;
@@ -867,7 +906,7 @@
 
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="./" aria-label="Market Structure Lab — course home">
+      <a class="brand" href="./" aria-label="Market Structure — course home">
         <span class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 64 64" focusable="false">
             <g fill="currentColor">
@@ -879,8 +918,8 @@
           </svg>
         </span>
         <span class="brand-copy">
-          <strong>Market Structure Lab</strong>
-          <span>Course · 7 lessons</span>
+          <strong>Market Structure</strong>
+          <span>Course 1 · 7 lessons</span>
         </span>
       </a>
 
@@ -898,7 +937,9 @@
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../">Learn library</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Market Structure Lab</span>
+      <a href="../paths/trading/">Trading path</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Market Structure</span>
     </nav>
 
     <noscript>
@@ -914,7 +955,7 @@
       <section class="hero" aria-labelledby="hero-title">
         <div>
           <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Course · 7 interactive lessons</span>
-          <h1 id="hero-title">Market <span class="gradient-text">Structure Lab</span></h1>
+          <h1 id="hero-title">Market <span class="gradient-text">Structure</span></h1>
           <p class="tagline">Market structure — simple, technical, and fits an interactive format.</p>
           <p class="lede">Seven lessons that teach you to read a bare chart: where structure is, where it breaks, how to enter it, how to be wrong cheaply, and how to express the idea. Every lesson is one self-contained interactive page — no accounts, no tracking, nothing to install.</p>
           <div class="hero-actions">
@@ -963,7 +1004,7 @@
           <div>
             <p class="kicker">The course</p>
             <h2 id="overview-title">What this course is</h2>
-            <p>One subject, taught in order. Market Structure Lab takes the parts of technical trading that can actually be shown on a chart and turns each one into a page you can click through.</p>
+            <p>One subject, taught in order. Market Structure takes the parts of technical trading that can actually be shown on a chart and turns each one into a page you can click through.</p>
           </div>
           <p class="count-chip">7 lessons · ~2 hr 40 min</p>
         </div>
@@ -1495,25 +1536,29 @@
           <div>
             <p class="kicker">Learning path</p>
             <h2 id="next-course-title">After the seven lessons</h2>
-            <p>Market Structure Lab is course 1 of 3 in this library. It teaches you to read the chart; course 2 turns that reading into a written, sized, and reviewed trade, and course 3 takes that same plan into options. Take them in order — each one assumes the one before it.</p>
+            <p>Market Structure is course 1 of the trading path. It teaches you to read the chart; course 2 turns that reading into a written, sized, and reviewed trade, course 3 takes the same plan into options, and course 4 adds indicators. The path runs to eight courses in all — the later ones are listed on the <a href="../paths/trading/">trading path</a> page, and the ones that are not published yet are marked there. Take them in order: each one assumes the one before it.</p>
           </div>
-          <p class="count-chip">Course 1 of 3</p>
+          <p class="count-chip">Course 1 of 8</p>
         </div>
 
         <article class="path-card">
           <div class="path-copy">
-            <span class="path-step">Next · Course 2 of 3</span>
+            <span class="path-step">Next · Course 2 of 8</span>
             <h3>Trade Setup and Execution</h3>
             <p>Fifteen lessons that pick up where lesson 07 ends: building a trade thesis, confirming the entry, placing the stop and the target, sizing the position, managing the trade, and journalling and reviewing the result. Work through these seven first — every setup there is described in the structure vocabulary taught here.</p>
           </div>
           <a class="btn primary" href="../trade-setup-execution/">Start course 2</a>
         </article>
       </section>
+
+      <nav class="path-nav" aria-label="Course navigation">
+        <a class="path-move next" href="../trade-setup-execution/" rel="next"><span>Next course</span><strong>Course 2 &middot; Trade Setup and Execution</strong></a>
+      </nav>
     </main>
 
     <footer>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
-      <p><a href="https://geterdone.io">geterdone.io</a></p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
     </footer>
   </div>
 

@@ -287,6 +287,44 @@
     .crumb-sep { opacity: 0.5; }
     .crumb-current { color: var(--text); padding: 6px 9px; }
 
+    /* COURSE-LEVEL PAGER. The same component, with the same markup, on every
+       course home, so stepping from one course to the next reads exactly like
+       stepping from one lesson to the next. It is deliberately NOT the lesson
+       pager: that one is .lesson-nav / .lesson-link and lives inside a lesson,
+       and the two must not be confused for one another. A course with nothing
+       before it ships the forward half alone rather than a disabled backward
+       one — the same rule the lesson pager follows at lesson 01. Every colour
+       here is a token, so both light paths flip it together.
+       Depth: a course home is one level down, so a sibling course is "../slug/". */
+    .path-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 34px 0 6px;
+    }
+
+    .path-move {
+      flex: 1 1 240px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-2);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 150ms ease, border-color 150ms ease;
+    }
+
+    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .path-move span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+    .path-move.next { margin-left: auto; text-align: right; }
+
+    /* One card per row once the topbar nav collapses; two columns at 320px is
+       two unreadable columns. */
+    @media (max-width: 720px) {
+      .path-move { flex-basis: 100%; }
+    }
+
     .icon-btn {
       flex: none;
       width: 38px;
@@ -457,9 +495,10 @@
 
     /* ---------- Learning path ----------
        Three positions, always in reading order: the course before this one, this
-       one, and what follows. The third card is NOT a link, because there is no
-       course 4 — an empty slot stated plainly is honest; a greyed "coming soon"
-       button that goes nowhere is not. */
+       one, and the one after it. All three are real published courses, so all
+       three are links; a position on the path that is not published yet is shown
+       on the trading path page as plain text rather than as a link that goes
+       nowhere. */
     .path-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1007,7 +1046,7 @@
        other theme. This is why it lives LAST in <head> and not in the IIFE at the
        bottom of <body>: that runs after the first paint.
        SAME localStorage key as the library, course 1, course 2 and every lesson
-       ('learn-theme') so the toggle persists across the whole three-course site.
+       ('learn-theme') so the toggle persists across every course in the library.
        This course's source shipped its own key ('options-course-theme'), which
        silently reset a reader's choice at the course boundary; it is gone.
        The allowlist matters — a corrupt value would otherwise be written straight
@@ -1055,6 +1094,8 @@
 
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../paths/trading/">Trading path</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
       <span class="crumb-current" aria-current="page">Options Trading</span>
     </nav>
@@ -1130,9 +1171,9 @@
           <div>
             <p class="kicker">Learning path</p>
             <h2 id="path-title">Where this course sits</h2>
-            <p>The library is a path, not a shelf. This is the third course on it, and it is the one that adds a second instrument to everything the first two taught about price.</p>
+            <p>The library is a path, not a shelf. This is the third course on the trading path, and it is the one that adds a second instrument to everything the first two taught about price. The full path runs to eight courses — see the <a href="../paths/trading/">trading path</a> for the whole order and for which of them are published.</p>
           </div>
-          <p class="count-chip">Course 3 of 3</p>
+          <p class="count-chip">Course 3 of 8</p>
         </div>
 
         <div class="path-grid">
@@ -1161,12 +1202,12 @@
           <article class="path-card">
             <p class="path-tag">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <path d="M12 4v9" /><path d="M8.5 9.5L12 13l3.5-3.5" /><circle cx="12" cy="18" r="2.2" />
+                <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
               </svg>
-              After lesson 16
+              Course 4 · Next
             </p>
-            <h3>The path continues here</h3>
-            <p>There is no course 4. This is the end of the published path, and lesson 16 is written as a loop rather than a cliff: the plan it scores names a thesis, a risk budget and an exit rule, and the honest next step is to run that same plan against the next idea — and against the official references below — instead of waiting for more material.</p>
+            <h3><a href="../technical-indicators/">Technical Indicators</a></h3>
+            <p>Sixteen lessons on the measurements themselves: what each indicator is computed from, moving averages and their crossovers, RSI, the stochastic oscillator, MACD, ADX, average true range, Bollinger, Keltner and Donchian channels, rate of change, divergence, and then how to combine them without redundancy, choose them by market regime, and turn them into written rules. The path continues past it — the <a href="../paths/trading/">trading path</a> lists every course and marks the ones that are not published yet.</p>
           </article>
         </div>
       </section>
@@ -2313,12 +2354,17 @@
           </a>
         </div>
       </section>
+
+      <nav class="path-nav" aria-label="Course navigation">
+        <a class="path-move prev" href="../trade-setup-execution/" rel="prev"><span>Previous course</span><strong>Course 2 &middot; Trade Setup and Execution</strong></a>
+        <a class="path-move next" href="../technical-indicators/" rel="next"><span>Next course</span><strong>Course 4 &middot; Technical Indicators</strong></a>
+      </nav>
     </main>
 
     <footer>
       <p class="risk"><strong>Educational course.</strong> Options involve risk and are not suitable for every investor. This course provides no personalized investment advice and no live trading signals. Prices, chains, scenarios and outcomes are synthetic, and theoretical values come from a simplified European Black–Scholes model that does not account for every listed-product feature, dividend, early-exercise decision, fee, tax, margin rule or market microstructure effect. Verify contract specifications, brokerage procedures, costs and the current Options Disclosure Document before trading.</p>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
-      <p><a href="https://geterdone.io">geterdone.io</a></p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
     </footer>
   </div>
 

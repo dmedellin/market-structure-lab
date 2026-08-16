@@ -299,12 +299,13 @@
         },
         "checks": {
           "type": "array",
-          "minItems": 48,
+          "minItems": 67,
           "uniqueItems": true,
           "items": {"$ref": "#/$defs/acceptanceCheck"},
           "allOf": [
             {"contains": {"properties": {"id": {"const": "internal-health"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "learn-index"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "trading-path"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "course-home"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "lesson-page"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "lesson-ranges-breakouts-liquidity"}}, "required": ["id"]}},
@@ -346,13 +347,31 @@
             {"contains": {"properties": {"id": {"const": "course3-lesson-vertical-credit-spreads"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "course3-lesson-exercise-assignment-and-expiration"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "course3-lesson-options-trade-planning"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-home"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-technical-indicator-fundamentals"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-moving-averages"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-moving-average-crossovers"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-relative-strength-index"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-stochastic-oscillator"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-macd"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-average-directional-index"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-average-true-range"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-bollinger-bands"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-keltner-channels"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-donchian-channels"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-rate-of-change-and-momentum"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-indicator-divergence"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-combining-indicators"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-indicator-selection-by-market-regime"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course4-lesson-indicator-based-trading-rules"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "journal-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "trade-plan-schema"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "indicator-rule-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "unknown-path-404"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "self-containment"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "security-headers"}}, "required": ["id"]}}
           ],
-          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the two-level library - the learning path at /, a home per course (/market-structure-lab/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; course 2 and course 3 ids are course-scoped because a slug is unique only within a course), and the two published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema) and /options-trading/options-trade-plan-schema.json (id trade-plan-schema), each of which is fetched and PARSED rather than asserted against page-shaped markers. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
+          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the library - the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 4 are course-scoped because a slug is unique only within a course), and the three published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema) and /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), each of which is fetched and PARSED rather than asserted against page-shaped markers. The path page is neither a course home nor a lesson and is checked as itself: it is the only published URL where the announced courses 5 to 8 appear. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs and course 1's retired /market-structure-lab/ prefix have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
         }
       }
     },
