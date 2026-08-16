@@ -657,6 +657,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1279,6 +1300,7 @@ textarea { font: inherit; }
   <article class="card chart-card">
     <div class="chart-toolbar"><div class="chart-title"><strong id="pullbackSetupTitle">Bullish trend pullback</strong><span>Change depth and evidence to see when a pullback remains valid</span></div><div class="tab-row" id="pullbackDirectionTabs"><button class="tab active" data-direction="long" type="button">Bullish</button><button class="tab" data-direction="short" type="button">Bearish</button></div></div>
     <div class="chart-wrap"><svg id="pullbackSetupChart" class="market-chart" aria-label="Dynamic pullback setup chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="pullbackReadingBlock" aria-live="polite"></div>
     <div class="control-strip"><div class="control-group grow"><label for="pullbackDepth">Retracement depth</label><input id="pullbackDepth" type="range" min="10" max="120" value="45" step="1" /><span class="range-value" id="pullbackDepthValue">45%</span></div><label class="check"><input id="pullbackReaction" type="checkbox" checked /> Reaction candle</label><label class="check"><input id="pullbackShift" type="checkbox" checked /> Local structure shift</label></div>
   </article>
   <aside class="card side-panel">
@@ -1838,10 +1860,46 @@ function drawBarChart(svg, items, options = {}) {
 }
 
 
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// This chart has no scenario table -- the series is synthesized from the live
+// controls -- so the reading is computed from the same values the assessment
+// uses: direction, depth class, reaction and shift. depth >= 100 IS the
+// invalidation, so the reading and its failure condition come from one source.
+const pullbackWords={
+ long:{move:"An advance from 100 to 112",protectedSwing:"100 low",builtOn:"low the advance was built on",sequence:"higher lows",side:"buyers",other:"sellers",wait:"a lower price",away:"high",relation:"well above the low the advance started from",extend:"deeper low"},
+ short:{move:"A decline from 112 to 100",protectedSwing:"112 high",builtOn:"high the decline was built on",sequence:"lower highs",side:"sellers",other:"buyers",wait:"a higher price",away:"low",relation:"well below the high the decline started from",extend:"higher high"}
+};
+function pullbackReading(d,a){
+ const w=pullbackWords[pullbackDirection];
+ const evidence=d.reaction&&d.shift?"a reaction candle and a local structure shift":d.reaction?"a reaction candle but no local structure shift":d.shift?"a local structure shift but no reaction candle":"neither a reaction candle nor a local structure shift";
+ const structure=`${w.move}, now retraced ${d.depth.toFixed(0)}% to about ${d.entryArea.toFixed(1)}. `
+  +(a.invalid?`The correction has closed through the ${w.protectedSwing} the move began from.`:`The last candles show ${evidence}.`);
+ if(a.invalid)return {structure,participation:`There is no pullback reading left to make: price has closed through the ${w.builtOn}, so the sequence of ${w.sequence} that defined the setup no longer exists. This is what invalidation looks like — the reading is not weakened, it is gone.`};
+ const byDepth=a.classification==="Shallow"
+  ?`A correction this shallow is normally read as ${w.side} unwilling to wait for ${w.wait}. Read honestly it also means price has barely separated from the ${w.away}, so very little sits between here and the level that would disprove the setup.`
+  :a.classification==="Normal"
+  ?`This is normally read as the correction being met ${w.relation}: ${w.other} have given back part of the move but not the part that would matter. The reading holds only while the ${w.protectedSwing} holds.`
+  :`A correction this deep is normally read as the move being given back almost entirely while the ${w.protectedSwing} still holds. The reading survives, but far less separates it from failure than in the shallower cases.`;
+ const byEvidence=d.reaction&&d.shift
+  ?" The reaction candle and the local shift are the first visible evidence that the correction has stopped."
+  :` Without both a reaction candle and a local shift, nothing on the chart yet shows the correction has finished; a ${w.extend} is still equally consistent with what is drawn.`;
+ return {structure,participation:byDepth+byEvidence};
+}
+
 let pullbackDirection="long",pullbackDecision="wait";
 function pullbackData(){const depth=num(document.getElementById("pullbackDepth").value,45);const reaction=document.getElementById("pullbackReaction").checked;const shift=document.getElementById("pullbackShift").checked;const low=100,high=112,range=12;const pull=high-range*depth/100;let closes=[100,101.8,103.7,103.0,105.6,107.8,107.1,109.8,112.0];const stages=4;for(let i=1;i<=stages;i++)closes.push(112+(pull-112)*i/stages);if(reaction)closes.push(pull+Math.max(.4,range*.035));else closes.push(pull-.35);if(shift){closes.push(pull+1.2,pull+2.3,pull+3.2);}else{closes.push(pull+.2,pull-.15,pull+.1);}if(pullbackDirection==="short")closes=closes.map(v=>212-v);return {closes,depth,reaction,shift,protectedLevel:pullbackDirection==="long"?100:112,entryArea:pullbackDirection==="long"?pull:212-pull,high:pullbackDirection==="long"?112:100};}
 function pullbackAssessment(d){const invalid=d.depth>=100;let classification=d.depth<25?"Shallow":d.depth<=65?"Normal":d.depth<100?"Deep":"Invalidated";let expected;if(invalid)expected="noTrade";else if(d.shift&&d.reaction)expected="trade";else expected="wait";let quality=invalid?10:(d.depth>=25&&d.depth<=65?55:d.depth<85?40:25)+(d.reaction?15:0)+(d.shift?25:0);quality=Math.min(100,quality);return {invalid,classification,expected,quality};}
-function renderPullbackSetup(){const d=pullbackData(),a=pullbackAssessment(d);const levels=pullbackDirection==="long"?[{value:100,label:"Protected low",tone:"red"},{value:112,label:"Impulse high",tone:"cyan"},{value:d.entryArea,label:"Current pullback",tone:"amber"}]:[{value:112,label:"Protected high",tone:"red"},{value:100,label:"Impulse low",tone:"cyan"},{value:d.entryArea,label:"Current pullback",tone:"amber"}];const last=d.closes.length-1;const annotations=[{index:8,value:d.closes[8],label:pullbackDirection==="long"?"HH":"LL",tone:"cyan"},{index:12,value:d.closes[12],label:"Pullback low/high",tone:"amber",position:pullbackDirection==="long"?"below":"above"}];if(d.shift)annotations.push({index:last,value:d.closes[last],label:"Local shift",tone:"purple"});drawCandles(document.getElementById("pullbackSetupChart"),candlesFromCloses(d.closes,{},51+(pullbackDirection==="short"?4:0)),{levels,annotations,includeValues:levels.map(l=>l.value)});setText("pullbackSetupTitle",pullbackDirection==="long"?"Bullish trend pullback":"Bearish trend pullback");setText("pullbackDepthValue",`${d.depth.toFixed(0)}%`);setText("pullbackDepthMetric",`${d.depth.toFixed(0)}%`);setText("pullbackClass",a.classification);setText("pullbackStructure",a.invalid?"Broken":"Valid");document.getElementById("pullbackQuality").style.width=`${a.quality}%`;}
+function renderPullbackSetup(){const d=pullbackData(),a=pullbackAssessment(d);const levels=pullbackDirection==="long"?[{value:100,label:"Protected low",tone:"red"},{value:112,label:"Impulse high",tone:"cyan"},{value:d.entryArea,label:"Current pullback",tone:"amber"}]:[{value:112,label:"Protected high",tone:"red"},{value:100,label:"Impulse low",tone:"cyan"},{value:d.entryArea,label:"Current pullback",tone:"amber"}];const last=d.closes.length-1;const annotations=[{index:8,value:d.closes[8],label:pullbackDirection==="long"?"HH":"LL",tone:"cyan"},{index:12,value:d.closes[12],label:"Pullback low/high",tone:"amber",position:pullbackDirection==="long"?"below":"above"}];if(d.shift)annotations.push({index:last,value:d.closes[last],label:"Local shift",tone:"purple"});drawCandles(document.getElementById("pullbackSetupChart"),candlesFromCloses(d.closes,{},51+(pullbackDirection==="short"?4:0)),{levels,annotations,includeValues:levels.map(l=>l.value)});setText("pullbackSetupTitle",pullbackDirection==="long"?"Bullish trend pullback":"Bearish trend pullback");setText("pullbackDepthValue",`${d.depth.toFixed(0)}%`);setText("pullbackDepthMetric",`${d.depth.toFixed(0)}%`);setText("pullbackClass",a.classification);setText("pullbackStructure",a.invalid?"Broken":"Valid");renderReading("pullbackReadingBlock",pullbackReading(d,a));document.getElementById("pullbackQuality").style.width=`${a.quality}%`;}
 function resetPullbackStatus(){const st=document.getElementById("pullbackStatus");st.className="status-banner";st.innerHTML="<strong>Setup not evaluated.</strong> Adjust the pullback and choose a decision.";}
 bindSegment("pullbackDecision",v=>pullbackDecision=v);
 ["pullbackDepth","pullbackReaction","pullbackShift"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{renderPullbackSetup();resetPullbackStatus();}));

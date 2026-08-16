@@ -1110,6 +1110,8 @@ textarea { font: inherit; }
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
+.status-banner .reading-note { margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line); }
+.status-banner .reading-note b { display: block; margin-bottom: 4px; color: var(--muted); font-size: .68rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
 .progress-track { height: 9px; border-radius: 999px; overflow: hidden; background: var(--panel-3); }
 .progress-fill { height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg,var(--cyan),var(--purple)); transition: width .2s ease; }
 .range-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; }
@@ -1460,6 +1462,11 @@ function scrollToLab(){byId('lab')?.scrollIntoView({behavior:'smooth',block:'sta
 function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)}
 function setScore(id,score){const el=byId(id);if(!el)return;const s=clamp(Math.round(score),0,100);el.style.setProperty('--score',`${s}%`);const strong=el.querySelector('strong');if(strong)strong.textContent=`${s}%`}
 
+// Participation reading: the standard interpretation of the price structure each scenario draws.
+// Interpretive copy only. It is keyed to the scenario, never to an indicator value, and asserts no order flow.
+const fundReading={uptrend:'Rising highs with rising lows is conventionally read as buyers stepping in earlier on each pullback: every decline has stopped above the low the previous advance began from, so nothing has been fully given back. That is a reading of what has already happened, not a forecast of the next bar. A close below the most recent higher low ends it.',range:'Price has turned back from a similar upper area and a similar lower area more than once, and neither edge has produced follow-through. Structurally this says the two sides are matched near the boundaries: sellers keep appearing near the top of the band and buyers near the bottom, and neither has held price beyond it. Acceptance outside an edge, rather than a single probe through it, would replace this reading.',breakout:'The first stretch is a narrow band that neither side could leave; the move that follows leaves it and keeps going. Read conventionally, one side has finally been able to move price beyond the level that had been capping it. Note what is absent: there is no run of rising lows building into the break and no return to test the old band afterwards, so nothing here shows pressure accumulating first, and a sustained move back inside that band would say the break was not accepted.',volatile:'Price has crossed the same broad band repeatedly, and each move to one edge has been given back to the other. That is normally read as two-sided activity with a large amplitude rather than direction: the swing size says how far price travels between turns and says nothing about which side is prevailing. There is a slight net drift across the window, but it is small beside the swings; read the width, not the direction.'};
+function fundReadingBlock(k){const t=fundReading[k];return t?`<div class="reading-note"><b>What this is normally read as</b>${t}</div>`:''}
+
 
 let fundData=[];
 function renderFund(){
@@ -1469,7 +1476,7 @@ function renderFund(){
  setText('fundPeriodOut',`${p} bars`);setText('fundIndexOut',`Bar ${idx+1}`);setText('fundClose',money(close[idx]));setText('fundValue',money(avg[idx]));setText('fundGap',signed(close[idx]-avg[idx],2));
  const window=close.slice(start,idx+1);setHTML('fundWindow',window.map((v,j)=>`<div class="window-value"><span>Bar ${start+j+1}</span><strong>${v.toFixed(2)}</strong></div>`).join(''));
  const total=window.reduce((a,b)=>a+b,0);setHTML('fundFormula',`<strong>SMA(${p})</strong> = (${window.map(v=>v.toFixed(2)).join(' + ')}) ÷ ${p}<br><strong>${total.toFixed(2)} ÷ ${p} = ${avg[idx].toFixed(2)}</strong>`);
- const lag=Math.abs(close[idx]-avg[idx]),tone=lag>(Math.max(...window)-Math.min(...window))*.35?'warn':'good';const response=p<=7?'fast and noisy':p>=22?'smooth and slower':'balanced for this demonstration';byId('fundStatus').className=`status-banner ${tone}`;setHTML('fundStatus',`<strong>${p}-bar window:</strong> ${response}. The selected value cannot exist until ${p} valid observations are available.`);
+ const lag=Math.abs(close[idx]-avg[idx]),tone=lag>(Math.max(...window)-Math.min(...window))*.35?'warn':'good';const response=p<=7?'fast and noisy':p>=22?'smooth and slower':'balanced for this demonstration';byId('fundStatus').className=`status-banner ${tone}`;setHTML('fundStatus',`<strong>${p}-bar window:</strong> ${response}. The selected value cannot exist until ${p} valid observations are available.${fundReadingBlock(kind)}`);
  setText('fundRule',`Input: close · calculation: SMA(${p}) · selected bar: ${idx+1} · output: ${avg[idx].toFixed(2)} · warm-up: ${p-1} bars.`)
 }
 ['fundScenario','fundPeriod','fundIndex'].forEach(id=>byId(id).addEventListener('input',renderFund));

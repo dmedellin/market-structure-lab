@@ -989,6 +989,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1388,18 +1400,30 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 
 let eaState={side:'long',type:'call',style:'american'};
+/* THE PARTICIPATION READING, keyed to the same five outcome branches the
+   simulator already computes. Structure is the operational outcome stated in
+   the cards above; this is how that outcome is normally READ between the two
+   sides of the contract. Every exercise has an assignment facing it, which is a
+   contractual fact rather than an inference about anyone. */
+const eaReading={
+ otm:'With no intrinsic value the right that was sold is simply not taken up, and the premium stays where the two sides agreed it. That is normally read as the price of the possibility having been settled in advance, with this outcome resolving it to nothing. It stops holding the moment intrinsic value appears, which is why the threshold is checked rather than assumed.',
+ longcall:'Exercising is normally read as taking up the right the premium bought, and a writer on the other side is assigned and must deliver at the strike. The cash required is the strike rather than the premium, so the obligation facing this choice is its mirror image. Whether the shares are wanted is a separate question from whether the option shows a gain.',
+ longput:'Exercising is normally read as taking up the right the premium bought, and a writer on the other side is assigned and must buy at the strike. Delivering shares is a real transfer, so this reading depends on the shares being available; without them the exercise creates a different position rather than a rounding error.',
+ shortcall:'Assignment is not a fee or an administrative detail: it is the obligation the premium was received for, taken up by the holder on the other side. The choice was given away when the contract was written, so delivery happens at the strike wherever the underlying finished. If the shares are not held, the reading that this position is covered fails.',
+ shortput:'Assignment is the obligation the premium was received for, taken up by the holder on the other side. This side agreed in advance to buy at the strike, so the purchase happens at that price regardless of where the underlying finished. The premium reduces the effective basis; it does not make the purchase optional.'
+};
 function renderEA(){
  const K=Math.max(1,num(document.getElementById('eaStrike').value,100)),S=Math.max(0,num(document.getElementById('eaFinal').value,105)),premium=Math.max(.01,num(document.getElementById('eaPremium').value,2)),contracts=Math.max(1,Math.floor(num(document.getElementById('eaContracts').value,1))),shares=contracts*100,owned=Math.max(0,Math.floor(num(document.getElementById('eaOwnedShares').value,0))),intrinsic=optionIntrinsic(eaState.type,S,K),itm=intrinsic>=.01,atm=Math.abs(S-K)<.01,sideSign=eaState.side==='long'?1:-1,pnl=(sideSign*(intrinsic-premium))*shares;
  setText('eaTitle',`${eaState.side==='long'?'Long':'Short'} ${eaState.type} expiration outcome`);let moneyLabel=atm?'At-the-money':itm?`In-the-money by ${money(intrinsic)}`:'Out-of-the-money';setText('eaMoney',moneyLabel);setText('eaMoneyText',itm?'Standard exercise-by-exception handling may apply when an option is at least $0.01 ITM, subject to contrary instructions and firm policy.':'It would generally not be exercised by exception, although a holder can provide exercise instructions under applicable rules and firm deadlines.');
- let action='',actionText='',result='',resultText='';
- if(!itm){action=eaState.side==='long'?'Likely expires without exercise':'Likely no assignment';actionText='No intrinsic value under the displayed expiration price.';result=`Resulting shares: ${owned}`;resultText='The option position ends without a modeled stock transaction.';}
- else if(eaState.side==='long'&&eaState.type==='call'){action=`Exercise: buy ${shares} shares`;actionText=`Cash required at strike: ${money(K*shares,0)}.`;result=`Resulting shares: +${owned+shares}`;resultText='The holder purchases the deliverable shares at the strike.';}
- else if(eaState.side==='long'&&eaState.type==='put'){action=`Exercise: sell ${shares} shares`;actionText=`Sale proceeds at strike: ${money(K*shares,0)}.`;result=`Resulting shares: ${owned-shares>=0?'+':''}${owned-shares}`;resultText=owned>=shares?'Owned shares can be delivered.':'Without sufficient shares, exercise may create a short-stock position or be restricted/handled by the broker.';}
- else if(eaState.side==='short'&&eaState.type==='call'){action=`Assignment: deliver ${shares} shares`;actionText=`Cash received at strike: ${money(K*shares,0)}.`;result=`Resulting shares: ${owned-shares>=0?'+':''}${owned-shares}`;resultText=owned>=shares?'The owned shares cover the delivery.':'An uncovered assignment may create short stock or require shares to be acquired, depending on the account and firm.';}
- else {action=`Assignment: buy ${shares} shares`;actionText=`Cash required at strike: ${money(K*shares,0)}.`;result=`Resulting shares: +${owned+shares}`;resultText='The short-put writer purchases the deliverable shares at the strike.';}
+ let action='',actionText='',result='',resultText='',reading='';
+ if(!itm){action=eaState.side==='long'?'Likely expires without exercise':'Likely no assignment';actionText='No intrinsic value under the displayed expiration price.';result=`Resulting shares: ${owned}`;resultText='The option position ends without a modeled stock transaction.';reading=eaReading.otm;}
+ else if(eaState.side==='long'&&eaState.type==='call'){action=`Exercise: buy ${shares} shares`;actionText=`Cash required at strike: ${money(K*shares,0)}.`;result=`Resulting shares: +${owned+shares}`;resultText='The holder purchases the deliverable shares at the strike.';reading=eaReading.longcall;}
+ else if(eaState.side==='long'&&eaState.type==='put'){action=`Exercise: sell ${shares} shares`;actionText=`Sale proceeds at strike: ${money(K*shares,0)}.`;result=`Resulting shares: ${owned-shares>=0?'+':''}${owned-shares}`;resultText=owned>=shares?'Owned shares can be delivered.':'Without sufficient shares, exercise may create a short-stock position or be restricted/handled by the broker.';reading=eaReading.longput;}
+ else if(eaState.side==='short'&&eaState.type==='call'){action=`Assignment: deliver ${shares} shares`;actionText=`Cash received at strike: ${money(K*shares,0)}.`;result=`Resulting shares: ${owned-shares>=0?'+':''}${owned-shares}`;resultText=owned>=shares?'The owned shares cover the delivery.':'An uncovered assignment may create short stock or require shares to be acquired, depending on the account and firm.';reading=eaReading.shortcall;}
+ else {action=`Assignment: buy ${shares} shares`;actionText=`Cash required at strike: ${money(K*shares,0)}.`;result=`Resulting shares: +${owned+shares}`;resultText='The short-put writer purchases the deliverable shares at the strike.';reading=eaReading.shortput;}
  setText('eaAction',action);setText('eaActionText',actionText);setText('eaStockResult',result);setText('eaStockText',resultText);setText('eaPnl',`Option P/L: ${pnl>=0?'+':''}${money(pnl,0)}`);document.getElementById('eaPnl').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';
  const min=Math.max(0,K*.55),max=K*1.45,points=payoffPoints(x=>sideSign*(optionIntrinsic(eaState.type,x,K)-premium)*shares,min,max);drawPayoffChart(document.getElementById('eaChart'),[{points,tone:'cyan'}],{verticals:[{value:K,label:'Strike',tone:'amber'},{value:S,label:'Expiration price',tone:'green'}],decimals:0,xDecimals:0});
- setHTML('eaStatus',`<strong>${eaState.style==='american'?'American-style':'European-style'}:</strong> ${eaState.style==='american'?'the holder may exercise before expiration and the writer can be assigned before expiration.':'exercise occurs only during the permitted expiration exercise period; early exercise is not available.'} This page models a physically settled equity-style outcome; index and cash-settled contracts can differ.`);['eaStep1','eaStep2','eaStep3','eaStep4'].forEach((id,i)=>{const el=document.getElementById(id);el.classList.toggle('done',i<3);el.classList.toggle('active',i===3);});setText('eaRule',`${eaState.side.toUpperCase()} ${eaState.type.toUpperCase()} · ${eaState.style.toUpperCase()} STYLE · strike ${money(K)} · expiration underlying ${money(S)} · ${moneyLabel.toUpperCase()} · modeled action: ${action}. Verify firm-specific exercise and liquidation procedures before expiration.`);
+ setHTML('eaStatus',`<strong>${eaState.style==='american'?'American-style':'European-style'}:</strong> ${eaState.style==='american'?'the holder may exercise before expiration and the writer can be assigned before expiration.':'exercise occurs only during the permitted expiration exercise period; early exercise is not available.'} This page models a physically settled equity-style outcome; index and cash-settled contracts can differ.<div class="reading-note"><b>What this is normally read as</b>${reading}</div>`);['eaStep1','eaStep2','eaStep3','eaStep4'].forEach((id,i)=>{const el=document.getElementById(id);el.classList.toggle('done',i<3);el.classList.toggle('active',i===3);});setText('eaRule',`${eaState.side.toUpperCase()} ${eaState.type.toUpperCase()} · ${eaState.style.toUpperCase()} STYLE · strike ${money(K)} · expiration underlying ${money(S)} · ${moneyLabel.toUpperCase()} · modeled action: ${action}. Verify firm-specific exercise and liquidation procedures before expiration.`);
 }
 bindSegment('eaSide',v=>{eaState.side=v;renderEA();});bindSegment('eaType',v=>{eaState.type=v;renderEA();});bindSegment('eaStyle',v=>{eaState.style=v;renderEA();});['eaStrike','eaFinal','eaPremium','eaContracts','eaOwnedShares'].forEach(id=>document.getElementById(id).addEventListener('input',renderEA));
 setupQuiz({promptId:'eaQuizPrompt',choicesId:'eaQuizChoices',feedbackId:'eaQuizFeedback',scoreId:'eaQuizScore',nextId:'eaQuizNext',questions:[

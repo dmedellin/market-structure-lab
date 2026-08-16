@@ -1101,6 +1101,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1408,12 +1420,18 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 
 let timeType='call';
+/* THE PARTICIPATION READING. ONE string, not a call/put table, because the
+   decay mechanic on this chart is identical for both types: the horizontal axis
+   is days remaining and the underlying is held FIXED, so there is no price
+   movement here to read directionally. The reading is confined to what is
+   actually visible, and opens by saying so. */
+const timeReading='The underlying is held still on this chart, so nothing on it is directional. The curve rises to the right because the x-axis is days REMAINING, so time passing walks the contract leftward down that slope: the extrinsic part of an agreed premium shrinks as the life left shortens, and that is normally read as value passing from the holder, who paid for time, to the writer, who was paid to carry the obligation. At zero days only intrinsic value is left, which is the one amount the two sides can still agree on.';
 function renderTime(){
  const S=Math.max(1,num(document.getElementById('timeStock').value,100)),K=Math.max(1,num(document.getElementById('timeStrike').value,100)),dte=Math.max(1,num(document.getElementById('timeDte').value,45)),iv=num(document.getElementById('timeIv').value,30)/100;setText('timeDteOut',dte.toFixed(0));setText('timeIvOut',pct(iv*100,0));
  const now=optionModel({type:timeType,S,K,dte,iv}),tom=dte<=1?{price:optionIntrinsic(timeType,S,K)}:optionModel({type:timeType,S,K,dte:dte-1,iv});setText('timePremium',money(now.price));setText('timeTomorrow',money(tom.price));setText('timeTheta',signed(now.theta));setText('timeExtrinsic',money(now.extrinsic));setText('timeExtrinsicPct',`${pct(now.extrinsic/Math.max(.001,now.price)*100,0)} of premium.`);setText('timeTitle',`Long ${timeType} value over remaining time`);
  const maxDays=Math.max(120,dte),pts=[];for(let day=0;day<=maxDays;day++){pts.push({x:day,y:day===0?optionIntrinsic(timeType,S,K):optionModel({type:timeType,S,K,dte:day,iv}).price});}
  drawPayoffChart(document.getElementById('timeChart'),[{points:pts,tone:'cyan'}],{verticals:[{value:dte,label:'Current DTE',tone:'green'},{value:7,label:'7 DTE',tone:'amber'}],decimals:2,xDecimals:0});
- const decay=Math.max(0,now.price-tom.price);setHTML('timeStatus',`<strong>${moneyness(timeType,S,K)} long ${timeType}:</strong> modeled one-day decay is ${money(decay)} per share at ${dte} DTE. Theta changes as stock, time, and IV change.`);setText('timeRule',`LONG ${timeType.toUpperCase()} · ${dte} DTE · premium ${money(now.price)} · intrinsic ${money(now.intrinsic)} · extrinsic ${money(now.extrinsic)} · theta ${signed(now.theta)} per day.`);
+ const decay=Math.max(0,now.price-tom.price);setHTML('timeStatus',`<strong>${moneyness(timeType,S,K)} long ${timeType}:</strong> modeled one-day decay is ${money(decay)} per share at ${dte} DTE. Theta changes as stock, time, and IV change.<div class="reading-note"><b>What this is normally read as</b>${timeReading}</div>`);setText('timeRule',`LONG ${timeType.toUpperCase()} · ${dte} DTE · premium ${money(now.price)} · intrinsic ${money(now.intrinsic)} · extrinsic ${money(now.extrinsic)} · theta ${signed(now.theta)} per day.`);
 }
 bindSegment('timeType',v=>{timeType=v;renderTime();});['timeStock','timeStrike','timeDte','timeIv'].forEach(id=>document.getElementById(id).addEventListener('input',renderTime));
 setupQuiz({promptId:'timeQuizPrompt',choicesId:'timeQuizChoices',feedbackId:'timeQuizFeedback',scoreId:'timeQuizScore',nextId:'timeQuizNext',questions:[

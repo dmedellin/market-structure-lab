@@ -699,6 +699,13 @@ input[type="range"] {
 
 .verdict p { margin: 6px 0 0; color: var(--muted); font-size: 0.82rem; }
 
+/* The participation reading: a subordinate second layer under a structural
+   statement -- what price and volume did, then how that shape is conventionally
+   read. Tokens only, no new colour values. */
+.reading { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
+.reading small { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+.reading p { margin: 5px 0 0; color: var(--muted); font-size: 0.82rem; }
+
 .checklist {
   display: grid;
   gap: 9px;
@@ -1301,6 +1308,10 @@ td.bad { color: var(--red); font-weight: 800; }
           <span class="label">Interpretation</span>
           <strong id="volumeVerdict">Breakout supported</strong>
           <p id="volumeReason">Participation expanded during the break and follow-through held above the old range.</p>
+          <div class="reading">
+            <small>What this is normally read as</small>
+            <p id="volumeParticipation">The bar that closed above 108 traded 2,240 against a baseline near 950, and no bar after it fell back to that baseline. Read conventionally, activity expanded at the new prices instead of drying up, which is what separates a break that holds from one that fades. A close back inside 108 would break the reading.</p>
+          </div>
         </div>
 
         <div class="metric-grid">
@@ -1836,6 +1847,7 @@ function buildVolumeScenario(key) {
       summary: "Price closes above the range on expanded volume and remains accepted outside.",
       verdict: "Breakout supported",
       reason: "Participation expanded during the break and follow-through held above the old range.",
+      participation: "The bar that closed above 108 traded 2,240 against a baseline near 950, and no bar after it fell back to that baseline. Read conventionally, activity expanded at the new prices instead of drying up, which is what separates a break that holds from one that fades. A close back inside 108 would break the reading.",
       checks: [
         ["pass", "Closed beyond the range."],
         ["pass", "Volume expanded versus baseline."],
@@ -1851,6 +1863,7 @@ function buildVolumeScenario(key) {
       summary: "Price briefly closes above the range on weak activity, then re-enters and accelerates lower.",
       verdict: "Breakout not supported",
       reason: "The break lacked participation and failed to maintain acceptance beyond the boundary.",
+      participation: "The bar that closed above 108 traded 690 — below its own baseline, and the quietest bar of the sequence at the moment that mattered most. The heavy bars, 1,180 and 1,420, arrived afterwards, while price was falling back inside. Read conventionally the expansion came against the break rather than with it, which is the exact inverse of the healthy case; a reclaim above 108 on bars of that size is what would undo the reading.",
       checks: [
         ["pass", "A candle closed beyond the range."],
         ["warn", "Event volume was below baseline."],
@@ -1866,6 +1879,7 @@ function buildVolumeScenario(key) {
       summary: "Upswings inside the range repeatedly attract more volume than pullbacks before the final break.",
       verdict: "Participation building",
       reason: "The asymmetry between stronger up-volume and lighter pullback volume precedes the breakout.",
+      participation: "What is on the chart is a volume asymmetry: from the second bar on, the up-closes inside the range carry steadily rising volume — 1,080 climbing to 1,760 — while the down-closes shrink the other way, from about 720 to about 600. The standard reading is that advances are attracting activity and pullbacks are not — the same prices, but a different amount of trading depending on direction. It identifies nobody and shows no intent, and a return back inside the range after the break would undercut it.",
       checks: [
         ["pass", "Price repeatedly presses the upper boundary."],
         ["pass", "Up candles attract expanding activity."],
@@ -1881,6 +1895,7 @@ function buildVolumeScenario(key) {
       summary: "Downswings attract increasing participation before price breaks the lower boundary.",
       verdict: "Bearish participation",
       reason: "Selling activity expands, the range low breaks, and price remains accepted below.",
+      participation: "The mirror of the previous chart: from the second bar on, the down-closes carry steadily rising volume — 1,090 climbing to 1,810 — while the up-closes shrink the other way, from about 700 to about 600. Read conventionally, declines are attracting activity and bounces are not, and the break below 100 came on the largest bar of the sequence. As before this measures trading, not intent, and a reclaim back inside the range would undercut it.",
       checks: [
         ["pass", "Price repeatedly pressures the lower boundary."],
         ["pass", "Down candles attract expanding activity."],
@@ -2031,6 +2046,7 @@ function renderVolumeScenario() {
   document.getElementById("volumeSummary").textContent = s.summary;
   document.getElementById("volumeVerdict").textContent = s.verdict;
   document.getElementById("volumeReason").textContent = s.reason;
+  document.getElementById("volumeParticipation").textContent = s.participation;
   document.getElementById("eventVolume").textContent = formatCompact(eventVolume);
   document.getElementById("baselineVolume").textContent = formatCompact(result.baseline);
   document.getElementById("volumeExpansion").textContent = `${(eventVolume / result.baseline).toFixed(1)}×`;

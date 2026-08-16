@@ -1004,6 +1004,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1398,11 +1410,20 @@ function scrollToLab(){byId('lab')?.scrollIntoView({behavior:'smooth',block:'sta
 function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)}
 
 
+/* THE PARTICIPATION READING, keyed to the same two states the status line
+   branches on. The status line states the STRUCTURE (whether the put is in the
+   money and what that implies operationally); this states how the structure is
+   normally READ. The purple series is the acquired-stock line, which is what
+   makes the counterparty framing concrete here. */
+const cspReading={
+ itm:'This position agreed in advance to be the buyer at the strike, and the premium is what the other side paid for the right to make that happen. The purple line is what is owned afterwards: the shares, from a basis reduced by the premium. The left tail is the cost of having agreed, because the obligation does not stop where the premium runs out.',
+ otm:'The premium was received for accepting the obligation to buy at the strike, and in this scenario the right that was sold goes unused. The payoff is flat at that premium because the premium is the whole of what was agreed, so there is no participation in the upside above it. Below the strike the obligation is unchanged, which is where the flat line ends.'
+};
 function renderCSP(){
  const stock=Math.max(1,num(document.getElementById('cspStock').value,100)),K=Math.max(1,num(document.getElementById('cspStrike').value,95)),premium=Math.max(.01,num(document.getElementById('cspPremium').value,2.25)),contracts=Math.max(1,Math.floor(num(document.getElementById('cspContracts').value,1))),shares=contracts*100,S=num(document.getElementById('cspFinal').value,90);document.getElementById('cspFinal').min=Math.max(0,Math.floor(stock*.4));document.getElementById('cspFinal').max=Math.ceil(stock*1.4);setText('cspFinalOut',money(S,0));
  const perShare=premium-Math.max(0,K-S),pnl=perShare*shares,cash=K*shares,basis=K-premium,maxProfit=premium*shares,maxLoss=basis*shares;setText('cspCash',money(cash,0));setText('cspBasis',money(basis));setText('cspMaxProfit',money(maxProfit,0));setText('cspPnl',`${pnl>=0?'+':''}${money(pnl,0)}`);document.getElementById('cspPnl').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';
  const min=Math.max(0,stock*.4),max=stock*1.4,shortPut=payoffPoints(x=>(premium-Math.max(0,K-x))*shares,min,max),acquired=payoffPoints(x=>(x-basis)*shares,min,max);drawPayoffChart(document.getElementById('cspChart'),[{points:shortPut,tone:'cyan'},{points:acquired,tone:'purple',width:2,opacity:.7}],{verticals:[{value:K,label:'Put strike',tone:'amber'},{value:basis,label:'Breakeven',tone:'cyan'},{value:S,label:'Scenario',tone:'green'}],decimals:0,xDecimals:0});
- setHTML('cspStatus',S<K?`<strong>Put is in-the-money.</strong> Standard expiration procedures may result in assignment to buy ${shares} shares at ${money(K)}. Economic basis after premium is ${money(basis)}.`:`<strong>Put is not in-the-money.</strong> The maximum expiration profit is the premium ${money(maxProfit,0)}; there is no additional upside participation.`);setText('cspRule',`SHORT ${contracts} CASH-SECURED PUT(S) strike ${money(K)} for ${money(premium)} · reserve ${money(cash,0)} · effective purchase price ${money(basis)} · max profit ${money(maxProfit,0)} · stock-to-zero max loss ${money(maxLoss,0)}.`);
+ setHTML('cspStatus',(S<K?`<strong>Put is in-the-money.</strong> Standard expiration procedures may result in assignment to buy ${shares} shares at ${money(K)}. Economic basis after premium is ${money(basis)}.`:`<strong>Put is not in-the-money.</strong> The maximum expiration profit is the premium ${money(maxProfit,0)}; there is no additional upside participation.`)+`<div class="reading-note"><b>What this is normally read as</b>${cspReading[S<K?'itm':'otm']}</div>`);setText('cspRule',`SHORT ${contracts} CASH-SECURED PUT(S) strike ${money(K)} for ${money(premium)} · reserve ${money(cash,0)} · effective purchase price ${money(basis)} · max profit ${money(maxProfit,0)} · stock-to-zero max loss ${money(maxLoss,0)}.`);
 }
 ['cspStock','cspStrike','cspPremium','cspContracts','cspFinal'].forEach(id=>document.getElementById(id).addEventListener('input',renderCSP));
 setupQuiz({promptId:'cspQuizPrompt',choicesId:'cspQuizChoices',feedbackId:'cspQuizFeedback',scoreId:'cspQuizScore',nextId:'cspQuizNext',questions:[

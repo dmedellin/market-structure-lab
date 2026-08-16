@@ -704,6 +704,14 @@ input[type="range"] {
 
 .verdict p { margin: 6px 0 0; color: var(--muted); font-size: 0.82rem; }
 
+/* The participation reading: a subordinate second layer under a structural
+   statement -- what price did, then how that shape is conventionally read.
+   Tokens only, no new colour values. Declared after .verdict so the shared
+   `p` rule resolves here inside the diagnosis card. */
+.reading { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
+.reading small { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+.reading p { margin: 5px 0 0; color: var(--muted); font-size: 0.82rem; }
+
 .checklist {
   display: grid;
   gap: 9px;
@@ -1237,6 +1245,10 @@ td.bad { color: var(--red); font-weight: 800; }
         <span class="label">Current diagnosis</span>
         <strong id="boundaryVerdict">Range still intact</strong>
         <p id="boundaryReason">Price tested the high but has not demonstrated acceptance above it.</p>
+        <div class="reading">
+          <small>What this is normally read as</small>
+          <p id="boundaryParticipation">Read as sellers still defending the high: price reached the boundary and no candle could hold a close above it, so the rotation stayed inside. A close above 110 that holds would break this reading.</p>
+        </div>
       </div>
 
       <div class="checklist">
@@ -1740,6 +1752,9 @@ function buildBoundaryScenario(key) {
       overrides: { 17: { h: 110.25 }, 18: { h: 109.8 } },
       answer: "rejection",
       eventIndex: 17,
+      // Full-sequence reading, shown only after the quiz is answered. The live
+      // panel uses the step-aware version in boundaryEvidence() instead.
+      participationSummary: "Read as sellers defending the high successfully: buyers reached the boundary and could not hold a close above it, and price rotated back down through the range. A held close above 110 would have been the opposite reading.",
       explanation: "Price tested the range high but did not close beyond it; the rotation remained inside the established range."
     },
     breakout: {
@@ -1749,6 +1764,7 @@ function buildBoundaryScenario(key) {
       overrides: { 18: { h: 112.1, l: 108.6 }, 19: { l: 110.65 } },
       answer: "breakout",
       eventIndex: 18,
+      participationSummary: "Read as buyers continuing to pay above the old boundary rather than treating it as a ceiling: closes keep landing outside instead of being pushed back inside. A close back below 110 would break the reading.",
       explanation: "The first close above the range is followed by continued acceptance and higher closes outside."
     },
     retest: {
@@ -1759,6 +1775,7 @@ function buildBoundaryScenario(key) {
       answer: "retest",
       eventIndex: 18,
       retestIndex: 21,
+      participationSummary: "Read as the old ceiling being defended as a floor: price left the range, came back to 110, held it, and continued. Same level, opposite side. A close back below 110 would take that reading back.",
       explanation: "The old range high is tested from above and holds, converting former resistance into support."
     },
     highSweep: {
@@ -1768,6 +1785,7 @@ function buildBoundaryScenario(key) {
       overrides: { 17: { h: 112.35, l: 108.35, c: 109.2 }, 18: { h: 109.4 } },
       answer: "sweep",
       eventIndex: 17,
+      participationSummary: "Read as buyers unable to hold the move above the boundary: price traded well past 110 and was back inside before the close, so the higher prices found no acceptance and the range kept governing.",
       explanation: "Price traded above the obvious high but failed to close outside. The rejection back into the range defines the sweep."
     },
     lowSweep: {
@@ -1777,6 +1795,7 @@ function buildBoundaryScenario(key) {
       overrides: { 17: { l: 97.7, h: 102.0, c: 100.8 }, 18: { l: 100.4 } },
       answer: "sweep",
       eventIndex: 17,
+      participationSummary: "Read as sellers unable to hold the move below the boundary: price traded under 100 and was back inside before the close, so the lower prices found no acceptance and the range kept governing.",
       explanation: "The low was pierced intrabar, but price reclaimed it before the close and subsequently held inside the range."
     }
   };
@@ -1826,6 +1845,16 @@ function boundaryEvidence(scenario, stepCount) {
       crossed, closedOutside, hold,
       verdict: "Range developing",
       reason: "The decisive boundary interaction has not occurred yet.",
+      // The participation reading is step-aware for the same reason the verdict
+      // is: a fixed per-scenario line would announce a resolved reading before
+      // the event candle is on the chart. These are readings of the drawn shape,
+      // not observations of order flow -- the candles are synthetic and carry no
+      // transaction data -- so each one names the close that would break it.
+      participation: closedOutside
+        ? "A candle has already closed beyond a boundary, but the sequence that decides what it meant is still filling in. There is nothing to read until you can see whether that close was held or given back."
+        : crossed
+          ? "Read as the boundaries still holding: price has poked past an edge without closing there, so neither side has made the new prices stick. What this becomes is decided by the closes that follow, not by the poke."
+          : "Too early to read. Price is rotating inside the boundaries with neither edge violated, so nothing yet separates buyers defending the low from sellers defending the high.",
       crossStatus: crossed ? "pass" : "",
       closeStatus: closedOutside ? "pass" : "",
       holdStatus: "",
@@ -1836,10 +1865,17 @@ function boundaryEvidence(scenario, stepCount) {
   }
 
   if (scenario.answer === "sweep") {
+    // Both sweeps share this branch, so the side is read off the event candle's
+    // own override rather than off `crossedHigh`, which a generated wick late in
+    // the low-side sequence can also set.
+    const sweptHigh = scenario.data[scenario.eventIndex].h > RANGE_HIGH;
     return {
       crossed: true, closedOutside: false, hold: false,
       verdict: "Liquidity sweep",
       reason: "Price crossed the boundary intrabar but reclaimed the range before the close.",
+      participation: sweptHigh
+        ? `Read as buyers unable to hold the move above the boundary: price traded through ${RANGE_HIGH} and was back inside before the close, so the higher prices found no acceptance. A close that stays above ${RANGE_HIGH} breaks the reading.`
+        : `Read as sellers unable to hold the move below the boundary: price traded through ${RANGE_LOW} and was back inside before the close, so the lower prices found no acceptance. A close that stays below ${RANGE_LOW} breaks the reading.`,
       crossStatus: "pass",
       closeStatus: "fail",
       holdStatus: "fail",
@@ -1854,6 +1890,7 @@ function boundaryEvidence(scenario, stepCount) {
       crossed, closedOutside: false, hold: false,
       verdict: "Range still intact",
       reason: "The test did not produce a close and acceptance outside the range.",
+      participation: `Read as sellers still defending the high: price reached the boundary and no candle could hold a close above it, so the rotation stayed inside. A close above ${RANGE_HIGH} that holds would break this reading.`,
       crossStatus: crossed ? "warn" : "",
       closeStatus: "fail",
       holdStatus: "fail",
@@ -1871,6 +1908,9 @@ function boundaryEvidence(scenario, stepCount) {
       reason: enoughFollowThrough
         ? "The close outside was followed by sustained acceptance above the old high."
         : "A close outside exists, but follow-through is still developing.",
+      participation: enoughFollowThrough
+        ? `Read as buyers continuing to pay above the old boundary: closes keep landing above ${RANGE_HIGH} rather than being pushed back inside, which is what separates acceptance from a single close. A close back below ${RANGE_HIGH} breaks the reading.`
+        : `Read as buyers taking price past the boundary for the first time, with nothing behind it yet. One close above ${RANGE_HIGH} is the weakest form of this evidence; a return inside would end it.`,
       crossStatus: "pass",
       closeStatus: closedOutside ? "pass" : "warn",
       holdStatus: hold ? "pass" : "warn",
@@ -1890,6 +1930,11 @@ function boundaryEvidence(scenario, stepCount) {
       : retestReached
         ? "Price has returned to the old boundary; the next reaction matters."
         : "The breakout is accepted so far, but the retest has not happened yet.",
+    participation: resumed
+      ? `Read as the old ceiling now being defended as a floor: price returned to ${RANGE_HIGH}, held it, and pushed on. The level did not change; the side being defended did. A close back below ${RANGE_HIGH} takes the reading back.`
+      : retestReached
+        ? `Price has come back to ${RANGE_HIGH} from above. What is being tested is whether buyers step in at the old ceiling, and reaching it settles nothing — only holding it does. A close back below ${RANGE_HIGH} would say it did not hold.`
+        : `Read as buyers holding the ground taken above ${RANGE_HIGH}, with the boundary not yet tested from the other side. Until price returns to it, there is no evidence about whether the old ceiling now acts as a floor.`,
     crossStatus: "pass",
     closeStatus: closedOutside ? "pass" : "warn",
     holdStatus: hold ? "pass" : retestReached ? "warn" : "",
@@ -1965,6 +2010,7 @@ function renderBoundary() {
   document.getElementById("scenarioSummary").textContent = scenario.summary;
   document.getElementById("boundaryVerdict").textContent = evidence.verdict;
   document.getElementById("boundaryReason").textContent = evidence.reason;
+  document.getElementById("boundaryParticipation").textContent = evidence.participation;
   updateCheckRow("checkCross", evidence.crossStatus, "checkCrossText", evidence.crossText);
   updateCheckRow("checkClose", evidence.closeStatus, "checkCloseText", evidence.closeText);
   updateCheckRow("checkHold", evidence.holdStatus, "checkHoldText", evidence.holdText);
@@ -2063,7 +2109,9 @@ document.getElementById("boundaryChoices").addEventListener("click", (event) => 
   document.getElementById("boundaryScore").textContent = `Score ${boundaryState.score} / ${boundaryState.attempts}`;
   const feedback = document.getElementById("boundaryFeedback");
   feedback.className = `feedback ${correct ? "good" : "bad"}`;
-  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${scenario.explanation}`;
+  // Structure and its reading are two different kinds of claim, so they render
+  // as two blocks rather than one run-on sentence.
+  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${scenario.explanation}<div class="reading"><small>What this is normally read as</small><p>${scenario.participationSummary}</p></div>`;
 });
 
 document.getElementById("nextBoundaryQuiz").addEventListener("click", newBoundaryQuiz);

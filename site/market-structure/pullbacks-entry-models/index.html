@@ -681,6 +681,16 @@ input[type="range"] {
 
 .verdict p { margin: 6px 0 0; color: var(--muted); font-size: 0.82rem; }
 
+/* The participation reading: a subordinate second layer under a structural
+   statement -- what price did, then how that shape is conventionally read.
+   Tokens only, no new colour values. */
+.reading { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
+.reading small { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.08em; text-transform: uppercase; }
+.reading p { margin: 5px 0 0; color: var(--muted); font-size: 0.82rem; }
+/* In the chart card it sits flush beneath the control strip, so it carries that
+   strip's padding and solid divider rather than the inline dashed rule. */
+.chart-card .reading { margin-top: 0; padding: 14px 15px; border-top: 1px solid var(--line); }
+
 .checklist {
   display: grid;
   gap: 9px;
@@ -1253,6 +1263,13 @@ td.bad { color: var(--red); font-weight: 800; }
         <label class="check"><input id="showEntryZones" type="checkbox" checked /> Risk / reward zones</label>
         <label class="check"><input id="showAllEntries" type="checkbox" /> Compare all entry markers</label>
       </div>
+      <!-- Polite, and written through a no-op guard, so switching entry model
+           (which does not change the chart) stays silent while switching
+           scenario (which does) is announced once. -->
+      <div class="reading" aria-live="polite">
+        <small>What this chart is normally read as</small>
+        <p id="pullbackParticipation">Read as buyers stepping in above the previous low again: the pullback's lowest close, 108.5, held above both the 108.0 breakout level and the 107.4 protected low, so sellers never reached the point the last advance began from. A close below 107.4 would break that reading.</p>
+      </div>
     </article>
 
     <aside class="card side-panel">
@@ -1767,6 +1784,12 @@ function buildPullbackScenario(key) {
       title: "Healthy bullish pullback",
       direction: "long",
       valid: true,
+      // Scenario-level, deliberately. Buyers and sellers did the same thing on
+      // this chart whichever entry model the reader selects; hanging the reading
+      // off a model would repeat it three times and imply it had changed.
+      // Readings of drawn shape only -- these candles are synthetic and carry no
+      // volume or transaction data.
+      participation: "Read as buyers stepping in above the previous low again: the pullback's lowest close, 108.5, held above both the 108.0 breakout level and the 107.4 protected low, so sellers never reached the point the last advance began from. A close below 107.4 would break that reading.",
       closes: [100.0,101.6,103.4,102.7,105.2,107.4,106.7,109.2,111.0,110.4,109.2,108.5,109.1,110.3,111.6,113.0,114.2,113.7,115.4,116.2],
       structure: [
         { value: 108.0, label: "Prior BOS / support", tone: "green" },
@@ -1802,6 +1825,7 @@ function buildPullbackScenario(key) {
       title: "Deep bullish pullback",
       direction: "long",
       valid: true,
+      participation: "Read more cautiously than the other bullish charts: the deep test closed at 102.6, below both the 104.0 reaction low and the marked 103.0 area, and price recovered only afterwards. That is a reclaim rather than a low that held — the level defining the trend was given up first and taken back second, which is weaker and more ambiguous evidence. The failed-pullback scenario is this same break without the recovery, and that is the whole difference between the two charts.",
       closes: [96.0,98.2,100.4,99.5,102.8,105.1,104.0,107.0,109.4,108.8,106.9,104.8,103.2,102.6,103.5,105.0,106.7,108.1,109.8,111.0],
       structure: [
         { value: 103.0, label: "Protected-low area", tone: "red" },
@@ -1837,6 +1861,7 @@ function buildPullbackScenario(key) {
       title: "Failed bullish pullback",
       direction: "long",
       valid: false,
+      participation: "Read as no defence at all: price went through the 104.0 breakout level and the 101.8 protected low without a single higher close on the way down. There is nothing here that reads as buyers arriving earlier — the condition that justified a long was gone at 101.8, and every price after that is cheaper rather than better.",
       closes: [98.0,100.0,102.1,101.4,104.0,106.3,105.6,108.2,110.0,109.2,107.8,106.0,104.1,102.5,100.8,99.4,98.7,97.2,96.0,95.1],
       structure: [
         { value: 101.8, label: "Protected low", tone: "red" },
@@ -1856,6 +1881,7 @@ function buildPullbackScenario(key) {
       title: "Healthy bearish pullback",
       direction: "short",
       valid: true,
+      participation: "Read as sellers meeting the bounce before it reaches the point the last decline began from: the highest close in the bounce, 113.7, stayed under the 114.0 breakdown level and well under the 115.2 protected high. A close above 115.2 would break that reading.",
       closes: [122.0,120.1,118.4,119.0,116.3,114.2,115.0,112.1,110.3,111.0,112.5,113.7,113.1,111.8,110.2,108.7,107.5,108.0,106.2,105.1],
       structure: [
         { value: 114.0, label: "Prior breakdown / resistance", tone: "red" },
@@ -1966,6 +1992,8 @@ function renderPullback() {
   });
 
   document.getElementById("pullbackTitle").textContent = s.title;
+  const participationNode = document.getElementById("pullbackParticipation");
+  if (participationNode.textContent !== s.participation) participationNode.textContent = s.participation;
   document.getElementById("entryVerdict").textContent = model.label;
   document.getElementById("entryReason").textContent = model.reason;
   document.getElementById("entryNote").innerHTML = `<strong>Tradeoff:</strong> ${model.note}`;
@@ -2024,7 +2052,8 @@ const entryQuizItems = [
     scenario: "failedBull",
     prompt: "The bullish protected low has broken and no reclaim or bullish shift appears. What does the plan require?",
     answer: "notrade",
-    explanation: "The structure that justified the long thesis is gone. A cheaper price does not restore the setup."
+    explanation: "The structure that justified the long thesis is gone. A cheaper price does not restore the setup.",
+    participation: "Read as no defence at all: the protected low went by without a single higher close after it. A reclaim is what would make this ambiguous again; without one there is nothing left of the bullish reading to trade."
   }
 ];
 
@@ -2075,7 +2104,10 @@ document.getElementById("entryChoices").addEventListener("click", (event) => {
   document.getElementById("entryScore").textContent = `Score ${pullbackState.score} / ${pullbackState.attempts}`;
   const feedback = document.getElementById("entryFeedback");
   feedback.className = `feedback ${correct ? "good" : "bad"}`;
-  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${q.explanation}`;
+  // Only the item that actually asks about the chart carries a reading; the
+  // others ask the reader to match a written rule to a model.
+  feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${q.explanation}`
+    + (q.participation ? `<div class="reading"><small>What this chart is normally read as</small><p>${q.participation}</p></div>` : "");
 });
 
 document.getElementById("nextEntryQuiz").addEventListener("click", () => {

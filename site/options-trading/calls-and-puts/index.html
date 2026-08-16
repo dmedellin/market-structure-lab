@@ -1107,6 +1107,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1421,6 +1433,19 @@ const cpMeta={
  shortCall:{title:'Short call',type:'call',side:-1,summary:'Obligation to sell if assigned. Uncovered loss can be theoretically unlimited.'},
  shortPut:{title:'Short put',type:'put',side:-1,summary:'Obligation to buy if assigned. Downside can be substantial if the stock falls.'}
 };
+/* THE PARTICIPATION READING. Deliberately a SECOND table, not extra text in
+   cpMeta: cpMeta says what the position IS (structure), cpReading says how that
+   structure is normally READ (participation). Two kinds of claim, rendered as
+   two blocks. These charts are synthetic payoff functions, not price paths, so
+   nothing here asserts order flow, identifies who transacted, or predicts. The
+   one participation fact an option chart genuinely carries is the counterparty:
+   every contract exists because two sides agreed a premium for an obligation. */
+const cpReading={
+ longCall:'A long call exists only because someone wrote it: the premium moved to a writer who accepted the obligation to sell at the strike. Breakeven is where the two sides come out even, so the premium is normally read as the price both agreed for the right, not as a view on direction. Below breakeven at expiration the holder paid more for that right than it turned out to be worth.',
+ longPut:'A long put exists only because someone wrote it: the premium moved to a writer who accepted the obligation to buy at the strike. The usual reading is that the premium is what both sides agreed the right to sell was worth, not a measure of how far price would fall. Above breakeven at expiration that right is worth less than it cost.',
+ shortCall:'This side received the premium and, in exchange, handed the holder the right to buy at the strike. Structurally that is why the line is flat below the strike and then falls away above it: the gain is capped at the premium agreed, while the obligation above the strike is not capped at all. The reading that the premium pays for the risk stops holding once price runs far enough past the strike.',
+ shortPut:'This side received the premium and handed the holder the right to sell at the strike. The line is flat above the strike and falls below it because the obligation to buy does not depend on where price ends up. Read the premium as lowering the effective purchase price, not as putting a floor under it.'
+};
 function cpPerShare(position,S,K,premium){const m=cpMeta[position],intrinsic=optionIntrinsic(m.type,S,K);return m.side*(intrinsic-premium);}
 function renderCP(){
  const K=Math.max(1,num(document.getElementById('cpStrike').value,100)),premium=Math.max(.01,num(document.getElementById('cpPremium').value,4)),S=num(document.getElementById('cpFinal').value,110),contracts=Math.max(1,Math.floor(num(document.getElementById('cpContracts').value,1))),m=cpMeta[cpPosition],mult=contracts*100;
@@ -1432,7 +1457,7 @@ function renderCP(){
  if(cpPosition==='shortCall'){maxLoss='Unlimited';maxProfit=money(premium*mult,0);}
  if(cpPosition==='shortPut'){maxLoss=money(Math.max(0,K-premium)*mult,0);maxProfit=money(premium*mult,0);}
  setText('cpIntrinsic',money(intrinsic));setText('cpPnl',`${pnl>0?'+':''}${money(pnl,0)}`);document.getElementById('cpPnl').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';setText('cpBreakEven',money(be));setText('cpMaxLoss',maxLoss);
- setHTML('cpStatus',`<strong>${m.title}:</strong> ${m.summary} Maximum profit: ${maxProfit}.`);
+ setHTML('cpStatus',`<strong>${m.title}:</strong> ${m.summary} Maximum profit: ${maxProfit}.<div class="reading-note"><b>What this is normally read as</b>${cpReading[cpPosition]}</div>`);
  const min=Math.max(0,K*.55),max=K*1.45; const points=payoffPoints(x=>cpPerShare(cpPosition,x,K,premium)*mult,min,max);
  drawPayoffChart(document.getElementById('cpChart'),[{points,tone:pnl>=0?'cyan':'purple'}],{verticals:[{value:K,label:'Strike',tone:'amber'},{value:be,label:'Breakeven',tone:'cyan'}],decimals:0,xDecimals:0});
  setText('cpRule',`${m.title.toUpperCase()} · strike ${money(K)} · premium ${money(premium)} · breakeven ${money(be)} · max loss ${maxLoss} · max profit ${maxProfit}.`);

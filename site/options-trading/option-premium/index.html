@@ -1107,6 +1107,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1408,11 +1420,19 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 
 let premiumType='call';
+/* THE PARTICIPATION READING. The status line states the STRUCTURE (how the
+   modelled premium splits into intrinsic and extrinsic). This states how that
+   split is normally READ. The cyan curve is a model output, not a quoted price,
+   so the copy commits only to the SHAPE of the gap between the curves. */
+const premiumReading={
+ intrinsic:'The distance between the two curves is extrinsic value: the part of a premium that is not already intrinsic. It is normally read as what the two sides would price for the possibility still remaining before expiration, since settling the contract now would return the intrinsic part alone. This curve is a theoretical estimate rather than a quoted market price, so read the shape of that gap and not the level.',
+ none:'With no intrinsic value, the whole modelled premium is the distance between the two curves. That distance is normally read as what the two sides would price for the movement still available before expiration, because settling at this stock price would return nothing. It is a model output rather than a quoted market price, so read the shape and not the level.'
+};
 function renderPremium(){
  const S=Math.max(1,num(document.getElementById('premiumStock').value,100)),K=Math.max(1,num(document.getElementById('premiumStrike').value,105)),dte=Math.max(1,num(document.getElementById('premiumDte').value,30)),iv=num(document.getElementById('premiumIv').value,30)/100;setText('premiumIvOut',pct(iv*100,0));
  const m=optionModel({type:premiumType,S,K,dte,iv});const total=Math.max(.0001,m.price),iPct=m.intrinsic/total*100,ePct=m.extrinsic/total*100;setText('premiumTotal',money(m.price));setText('premiumIntrinsic',money(m.intrinsic));setText('premiumExtrinsic',money(m.extrinsic));setText('premiumExpiry',money(m.intrinsic));
  const ib=document.getElementById('premiumIntrinsicBar'),eb=document.getElementById('premiumExtrinsicBar');ib.style.width=`${iPct}%`;eb.style.width=`${ePct}%`;ib.textContent=iPct>14?'Intrinsic':'';eb.textContent=ePct>14?'Extrinsic':'';
- setHTML('premiumStatus',m.intrinsic>0?`<strong>In-the-money.</strong> ${money(m.intrinsic)} is intrinsic and ${money(m.extrinsic)} is extrinsic in this theoretical estimate.`:`<strong>No intrinsic value.</strong> The theoretical premium of ${money(m.price)} is entirely extrinsic.`);setText('premiumChartTitle',`${premiumType==='call'?'Call':'Put'} value by stock price`);
+ setHTML('premiumStatus',(m.intrinsic>0?`<strong>In-the-money.</strong> ${money(m.intrinsic)} is intrinsic and ${money(m.extrinsic)} is extrinsic in this theoretical estimate.`:`<strong>No intrinsic value.</strong> The theoretical premium of ${money(m.price)} is entirely extrinsic.`)+`<div class="reading-note"><b>What this is normally read as</b>${premiumReading[m.intrinsic>0?'intrinsic':'none']}</div>`);setText('premiumChartTitle',`${premiumType==='call'?'Call':'Put'} value by stock price`);
  const min=Math.max(1,S*.55),max=S*1.45;const theoretical=payoffPoints(x=>optionModel({type:premiumType,S:x,K,dte,iv}).price,min,max),expiry=payoffPoints(x=>optionIntrinsic(premiumType,x,K),min,max);
  drawPayoffChart(document.getElementById('premiumChart'),[{points:theoretical,tone:'cyan'},{points:expiry,tone:'purple',width:2,opacity:.8}],{verticals:[{value:K,label:'Strike',tone:'amber'},{value:S,label:'Current stock',tone:'green'}],decimals:1,xDecimals:0});
  setText('premiumRule',`THEORETICAL PREMIUM ${money(m.price)} = INTRINSIC ${money(m.intrinsic)} + EXTRINSIC ${money(m.extrinsic)}. Inputs: stock ${money(S)}, strike ${money(K)}, ${dte} DTE, IV ${pct(iv*100,0)}.`);

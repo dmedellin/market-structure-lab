@@ -655,6 +655,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1265,6 +1286,7 @@ textarea { font: inherit; }
   <article class="card chart-card">
     <div class="chart-toolbar"><div class="chart-title"><strong id="targetTitle">Long trend continuation</strong><span>Place first and second targets relative to visible structural levels</span></div><div class="tab-row" id="targetTabs"><button class="tab active" data-scenario="longTrend" type="button">Long trend</button><button class="tab" data-scenario="shortBreak" type="button">Short breakdown</button><button class="tab" data-scenario="rangeLong" type="button">Range long</button></div></div>
     <div class="chart-wrap"><svg id="targetChart" class="market-chart" aria-label="Profit target placement chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="targetReading" aria-live="polite"></div>
     <div class="control-strip"><div class="control-group grow"><label for="targetOne">Target 1</label><input id="targetOne" type="range" step="0.1" /><span class="range-value" id="targetOneValue">—</span></div><div class="control-group grow"><label for="targetTwo">Target 2</label><input id="targetTwo" type="range" step="0.1" /><span class="range-value" id="targetTwoValue">—</span></div></div>
   </article>
   <aside class="card side-panel">
@@ -1834,10 +1856,40 @@ const targetScenarios={
  shortBreak:{title:"Short breakdown",direction:"short",closes:[110,108.8,109.5,107.2,105.9,106.8,104.4,103.1,104.0,101.7,100.5,99.2,98.0],entry:99.2,stop:101.8,levels:[96.0,92.5],range:[91,103]},
  rangeLong:{title:"Long from range support",direction:"long",closes:[100,102,104.3,106.0,104.2,102.1,100.0,98.9,100.4,102.0,103.3],entry:100.4,stop:98.2,levels:[105.8,106.5],range:[97,108]}
 };
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// Parallel to targetScenarios. Only rangeLong has a first objective that sits
+// inside the plotted series (105.8, where the earlier advance turned down);
+// longTrend 114.5 and shortBreak 96.0 lie beyond every candle drawn, so their
+// readings cover the entry side only and say so.
+const targetReadings={
+ longTrend:{
+  structure:"Higher highs at 108.1, 111.8 and 113.4, with higher lows at 103.4, 107.5 and 109.5. The 114.5 first objective sits above every candle on the chart.",
+  participation:"The entry side is readable: each correction has ended higher than the last, which is normally read as buyers acting at progressively higher prices. The objective is not readable from this chart — nothing has happened at 114.5 here, so it is an assumption carried in from elsewhere and should be treated as one."
+ },
+ shortBreak:{
+  structure:"Rallies end lower — 109.5, then 106.8, then 104.0 — and price closes down to 98.0. The 96.0 first objective sits below every candle on the chart.",
+  participation:"The entry side reads as sellers acting at steadily lower prices with buyers arriving only after each decline. The objective has no history here: nothing has reacted at 96.0 on this chart, so it carries none of the evidence the entry side does."
+ },
+ rangeLong:{
+  structure:"Price turns down from 106.0, falls to 98.9, and recovers to 103.3. The 105.8 first objective sits at the area that turned the earlier advance back.",
+  participation:"That earlier turn is why 105.8 is an obstacle rather than an arbitrary number: it is the one price on this chart where an advance has already been stopped. Placing the first target under it is a decision to take money off before price reaches the level that stopped the last attempt — not a claim that it will stop there again."
+ }
+};
+
 let targetKey="longTrend",targetMethod="single",target1=114.5,target2=118;
 function targetR(s,t){const risk=Math.abs(s.entry-s.stop),reward=s.direction==="long"?t-s.entry:s.entry-t;return reward/risk;}
 function resetTargets(){const s=targetScenarios[targetKey];target1=s.levels[0];target2=s.levels[1];const a=document.getElementById("targetOne"),b=document.getElementById("targetTwo");[a,b].forEach(input=>{input.min=s.range[0];input.max=s.range[1];});a.value=target1;b.value=target2;renderTargets();}
-function renderTargets(){const s=targetScenarios[targetKey];const levels=[{value:s.entry,label:"Entry",tone:"cyan"},{value:s.stop,label:"Stop",tone:"red"},{value:s.levels[0],label:"First structural objective",tone:"amber"},{value:s.levels[1],label:"Extended objective",tone:"purple"},{value:target1,label:"Your Target 1",tone:"green"},{value:target2,label:"Your Target 2",tone:"blue"}];drawCandles(document.getElementById("targetChart"),candlesFromCloses(s.closes,{},90+Object.keys(targetScenarios).indexOf(targetKey)),{levels,includeValues:levels.map(l=>l.value),overlay:({svg,y,plot})=>{const entryY=y(s.entry),stopY=y(s.stop),t1Y=y(target1);svg.appendChild(svgNode("rect",{x:plot.left,y:Math.min(entryY,stopY),width:plot.width,height:Math.abs(entryY-stopY),class:"risk-zone"}));svg.appendChild(svgNode("rect",{x:plot.left,y:Math.min(entryY,t1Y),width:plot.width,height:Math.abs(entryY-t1Y),class:"reward-zone"}));}});setText("targetTitle",s.title);setText("targetOneValue",target1.toFixed(2));setText("targetTwoValue",target2.toFixed(2));const r1=targetR(s,target1),r2=targetR(s,target2);setText("targetR1",`${r1.toFixed(2)}R`);setText("targetR2",`${r2.toFixed(2)}R`);setText("targetObstacle",s.levels[0].toFixed(2));const pct1=clamp(num(document.getElementById("targetScalePct").value,50),0,100)/100;const blended=targetMethod==="single"?r1:pct1*r1+(1-pct1)*r2;document.getElementById("targetBlended").value=`${blended.toFixed(2)}R`;}
+function renderTargets(){const s=targetScenarios[targetKey];const levels=[{value:s.entry,label:"Entry",tone:"cyan"},{value:s.stop,label:"Stop",tone:"red"},{value:s.levels[0],label:"First structural objective",tone:"amber"},{value:s.levels[1],label:"Extended objective",tone:"purple"},{value:target1,label:"Your Target 1",tone:"green"},{value:target2,label:"Your Target 2",tone:"blue"}];drawCandles(document.getElementById("targetChart"),candlesFromCloses(s.closes,{},90+Object.keys(targetScenarios).indexOf(targetKey)),{levels,includeValues:levels.map(l=>l.value),overlay:({svg,y,plot})=>{const entryY=y(s.entry),stopY=y(s.stop),t1Y=y(target1);svg.appendChild(svgNode("rect",{x:plot.left,y:Math.min(entryY,stopY),width:plot.width,height:Math.abs(entryY-stopY),class:"risk-zone"}));svg.appendChild(svgNode("rect",{x:plot.left,y:Math.min(entryY,t1Y),width:plot.width,height:Math.abs(entryY-t1Y),class:"reward-zone"}));}});setText("targetTitle",s.title);renderReading("targetReading",targetReadings[targetKey]);setText("targetOneValue",target1.toFixed(2));setText("targetTwoValue",target2.toFixed(2));const r1=targetR(s,target1),r2=targetR(s,target2);setText("targetR1",`${r1.toFixed(2)}R`);setText("targetR2",`${r2.toFixed(2)}R`);setText("targetObstacle",s.levels[0].toFixed(2));const pct1=clamp(num(document.getElementById("targetScalePct").value,50),0,100)/100;const blended=targetMethod==="single"?r1:pct1*r1+(1-pct1)*r2;document.getElementById("targetBlended").value=`${blended.toFixed(2)}R`;}
 bindSegment("targetMethod",value=>{targetMethod=value;document.getElementById("targetScalePct").disabled=value==="single";renderTargets();});document.getElementById("targetOne").addEventListener("input",e=>{target1=num(e.target.value);renderTargets();});document.getElementById("targetTwo").addEventListener("input",e=>{target2=num(e.target.value);renderTargets();});document.getElementById("targetScalePct").addEventListener("input",renderTargets);document.getElementById("targetTabs").addEventListener("click",event=>{const b=event.target.closest("[data-scenario]");if(!b)return;document.querySelectorAll("#targetTabs .tab").forEach(x=>x.classList.toggle("active",x===b));targetKey=b.dataset.scenario;resetTargets();});document.getElementById("evaluateTargets").addEventListener("click",()=>{const s=targetScenarios[targetKey],r1=targetR(s,target1),r2=targetR(s,target2);const directionOk=s.direction==="long"?target1>s.entry&&target2>=target1:target1<s.entry&&target2<=target1;const nearFirst=Math.abs(target1-s.levels[0])<=Math.abs(s.entry-s.stop)*.45;const extendedOk=targetMethod==="single"||Math.abs(target2-s.levels[1])<=Math.abs(s.entry-s.stop)*.75;const pass=directionOk&&nearFirst&&extendedOk&&r1>0;const st=document.getElementById("targetStatus");st.className=`status-banner ${pass?"good":directionOk?"warn":"bad"}`;st.innerHTML=pass?`<strong>Structurally grounded targets.</strong> Target 1 respects the first obstacle, and the extended plan matches the selected method.`:`<strong>Recheck target placement.</strong> Target 1 should be near ${s.levels[0].toFixed(2)}. ${targetMethod!=="single"?`The extended objective is near ${s.levels[1].toFixed(2)}.`:""} Current Target 1 is ${r1.toFixed(2)}R and Target 2 is ${r2.toFixed(2)}R.`;});
 setupQuiz({promptId:"targetQuizPrompt",choicesId:"targetQuizChoices",feedbackId:"targetQuizFeedback",scoreId:"targetQuizScore",nextId:"targetQuizNext",questions:[
  {prompt:"A long trade has major resistance at 1.4R and no clear structure until 3R. What is the first target consideration?",choices:[{value:"res",label:"The 1.4R resistance"},{value:"force",label:"Force a 3R target"},{value:"ignore",label:"Ignore all levels"},{value:"stop",label:"Move the stop to create 3R"}],answer:"res",explanation:"The first meaningful opposing level affects available reward and should be included in the plan."},

@@ -655,6 +655,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1265,6 +1286,7 @@ textarea { font: inherit; }
   <article class="card chart-card">
     <div class="chart-toolbar"><div class="chart-title"><strong id="confirmationTitle">Bullish pullback recovery</strong><span>Choose a confirmation model, then select the candle that permits entry</span></div><div class="tab-row" id="confirmationTabs"><button class="tab active" data-scenario="pullback" type="button">Pullback</button><button class="tab" data-scenario="breakout" type="button">Breakout retest</button><button class="tab" data-scenario="failed" type="button">Failed reaction</button></div></div>
     <div class="chart-wrap"><svg id="confirmationChart" class="market-chart" aria-label="Entry confirmation chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="confirmationReading" aria-live="polite"></div>
     <div class="control-strip"><div class="seg-row" id="confirmationModel"><button class="seg-btn" data-value="reaction" type="button">Reaction close</button><button class="seg-btn active" data-value="structure" type="button">Structure shift</button><button class="seg-btn" data-value="retest" type="button">Retest confirmation</button></div></div>
   </article>
   <aside class="card side-panel">
@@ -1834,8 +1856,37 @@ const confirmationScenarios={
  breakout:{title:"Breakout and retest",closes:[100,102,104.1,103,105.2,104,105.6,104.2,105.8,104.7,106.1,107.5,108.8,107.4,106.5,107.2,108.7,110.1],level:106.2,candidates:[{index:11,label:"A",event:"Breakout close"},{index:12,label:"B",event:"Acceptance"},{index:14,label:"C",event:"Retest touch"},{index:15,label:"D",event:"Retest confirmation"}],answers:{reaction:11,structure:12,retest:15},annotations:[{index:11,value:107.5,label:"A · Close",tone:"amber"},{index:12,value:108.8,label:"B · Accept",tone:"purple"},{index:14,value:106.5,label:"C · Test",tone:"amber",position:"below"},{index:15,value:107.2,label:"D · Hold",tone:"green"}]},
  failed:{title:"Reaction without structure recovery",closes:[100,102,104,103.1,105.8,108,107.1,109.8,111.4,110.2,108.8,107.5,108.4,107.9,106.8,105.7,104.6],level:107.3,candidates:[{index:12,label:"A",event:"Reaction close"},{index:13,label:"B",event:"Failure to break"},{index:14,label:"C",event:"New low"},{index:15,label:"D",event:"Continuation down"}],answers:{reaction:null,structure:null,retest:null},annotations:[{index:12,value:108.4,label:"A · Reaction",tone:"amber"},{index:13,value:107.9,label:"B · No shift",tone:"red"},{index:14,value:106.8,label:"C · Failure",tone:"red",position:"below"}]}
 };
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// Parallel to confirmationScenarios. Keyed by scenario, not by model: the
+// structure on screen is the same whichever confirmation rule is selected;
+// only which candle satisfies the rule changes.
+const confirmationReadings={
+ pullback:{
+  structure:"The advance to 112.0 corrects to 108.3, on the 108.2 decision area that capped the earlier advance. Price then closes at 110.8, back above the whole three-bar pullback, and the next dip stops at 110.1.",
+  participation:"Normally read as the correction ending where the previous advance began, followed by buyers closing price through the level that had been holding the recovery down. Candles A, B and C are three different quantities of that same evidence at three different prices, which is what the confirmation model is choosing between. A close back under 108.2 ends the reading."
+ },
+ breakout:{
+  structure:"Eleven candles rotate under the 106.2 area, then price closes at 107.5 and 108.8 above it. The pullback returns to 106.5 and the next close is 107.2, back away from the level.",
+  participation:"The usual reading is role reversal: the price that had capped every advance was revisited from above and held. Note that the break and the retest are two separate pieces of evidence, and the retest is the one that tests the level from the other side."
+ },
+ failed:{
+  structure:"After the high at 111.4 price declines to 107.5, bounces to 108.4, then closes at 107.9, 106.8, 105.7 and 104.6 — the last three below the 107.3 decision area, and none of them back above the earlier 108.8 close.",
+  participation:"The move to 108.4 is a reaction and nothing more: it never closed above the previous lower high, and price then made a lower low. Read the usual way that says the decline was interrupted rather than stopped, which is why no candle here satisfies any of the three models."
+ }
+};
+
 let confirmationKey="pullback",confirmationModel="structure",confirmationSelected=null;
-function renderConfirmation(){const s=confirmationScenarios[confirmationKey];const selected=s.candidates.find(c=>c.index===confirmationSelected);drawCandles(document.getElementById("confirmationChart"),candlesFromCloses(s.closes,{},70+Object.keys(confirmationScenarios).indexOf(confirmationKey)),{levels:[{value:s.level,label:"Decision area",tone:"green"}],annotations:s.annotations,includeValues:[s.level],overlay:({svg,x,y,plot})=>{if(selected){const d=s.closes[selected.index];svg.appendChild(svgNode("line",{x1:x(selected.index),y1:plot.top,x2:x(selected.index),y2:plot.bottom,class:"level-line tone-cyan","stroke-dasharray":"4 4"}));svg.appendChild(svgNode("circle",{cx:x(selected.index),cy:y(d),r:8,class:"tone-cyan",fill:"var(--panel-solid)","stroke-width":3}));}}});setText("confirmationTitle",s.title);setHTML("confirmationCandidates",s.candidates.map(c=>`<button class="choice ${confirmationSelected===c.index?"correct":""}" data-index="${c.index}" type="button"><strong>${c.label}</strong> · ${c.event}</button>`).join(""));setText("confirmationSelected",selected?selected.label:"—");setText("confirmationPrice",selected?s.closes[selected.index].toFixed(2):"—");setText("confirmationEvidence",confirmationModel==="reaction"?"Lower":confirmationModel==="structure"?"Medium":"Higher");}
+function renderConfirmation(){const s=confirmationScenarios[confirmationKey];const selected=s.candidates.find(c=>c.index===confirmationSelected);drawCandles(document.getElementById("confirmationChart"),candlesFromCloses(s.closes,{},70+Object.keys(confirmationScenarios).indexOf(confirmationKey)),{levels:[{value:s.level,label:"Decision area",tone:"green"}],annotations:s.annotations,includeValues:[s.level],overlay:({svg,x,y,plot})=>{if(selected){const d=s.closes[selected.index];svg.appendChild(svgNode("line",{x1:x(selected.index),y1:plot.top,x2:x(selected.index),y2:plot.bottom,class:"level-line tone-cyan","stroke-dasharray":"4 4"}));svg.appendChild(svgNode("circle",{cx:x(selected.index),cy:y(d),r:8,class:"tone-cyan",fill:"var(--panel-solid)","stroke-width":3}));}}});setText("confirmationTitle",s.title);renderReading("confirmationReading",confirmationReadings[confirmationKey]);setHTML("confirmationCandidates",s.candidates.map(c=>`<button class="choice ${confirmationSelected===c.index?"correct":""}" data-index="${c.index}" type="button"><strong>${c.label}</strong> · ${c.event}</button>`).join(""));setText("confirmationSelected",selected?selected.label:"—");setText("confirmationPrice",selected?s.closes[selected.index].toFixed(2):"—");setText("confirmationEvidence",confirmationModel==="reaction"?"Lower":confirmationModel==="structure"?"Medium":"Higher");}
 function clearConfirmation(){confirmationSelected=null;const st=document.getElementById("confirmationStatus");st.className="status-banner";st.innerHTML="<strong>No candle selected.</strong> Use the labels on the chart and the chosen confirmation rule.";renderConfirmation();}
 bindSegment("confirmationModel",value=>{confirmationModel=value;clearConfirmation();});
 document.getElementById("confirmationCandidates").addEventListener("click",event=>{const b=event.target.closest("[data-index]");if(!b)return;confirmationSelected=num(b.dataset.index);renderConfirmation();});document.getElementById("confirmationNoEntry").addEventListener("click",()=>{confirmationSelected="none";setText("confirmationSelected","None");setText("confirmationPrice","—");renderConfirmation();});document.getElementById("confirmationTabs").addEventListener("click",event=>{const b=event.target.closest("[data-scenario]");if(!b)return;document.querySelectorAll("#confirmationTabs .tab").forEach(x=>x.classList.toggle("active",x===b));confirmationKey=b.dataset.scenario;clearConfirmation();});document.getElementById("evaluateConfirmation").addEventListener("click",()=>{const s=confirmationScenarios[confirmationKey],expected=s.answers[confirmationModel],actual=confirmationSelected==="none"?null:confirmationSelected,ok=actual===expected,st=document.getElementById("confirmationStatus");st.className=`status-banner ${ok?"good":"bad"}`;const expectedText=expected===null?"no valid entry":`candle ${s.candidates.find(c=>c.index===expected).label}`;let reason=expected===null?"The scenario never completes the selected confirmation model.":confirmationModel==="reaction"?"This is the first qualifying reaction close.":confirmationModel==="structure"?"This is the first candle that completes the local structure shift or acceptance rule.":"This is the first candle confirming that the retest held.";st.innerHTML=`<strong>${ok?"Correct selection.":`Expected ${expectedText}.`}</strong> ${reason}`;});

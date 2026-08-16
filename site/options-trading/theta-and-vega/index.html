@@ -1004,6 +1004,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1400,11 +1412,17 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 
 let tvType='call';
+/* THE PARTICIPATION READING. ONE string for the same reason as the decay lesson:
+   the horizontal axis is days and the underlying is held FIXED across the
+   comparison, so no directional reading exists on this chart for either type.
+   The three curves are three ASSUMPTIONS about size of movement, never about
+   which way, and the copy states that limit first. */
+const tvReading='The underlying never moves across this comparison, so nothing here is directional. The three curves are the same contract priced under three different assumptions about how much it might move, so the vertical distance between them is what changing that assumption alone is worth. All three rise to the right because the x-axis is days REMAINING; walking leftward as time passes is the ordinary transfer of time value from the holder, who paid for the remaining life, to the writer, who was paid to carry the obligation.';
 function renderTV(){
  const S=Math.max(1,num(document.getElementById('tvStock').value,100)),K=Math.max(1,num(document.getElementById('tvStrike').value,100)),dte=Math.max(2,num(document.getElementById('tvDte').value,45)),ivPct=Math.max(5,num(document.getElementById('tvIv').value,35)),iv=ivPct/100;const daysEl=document.getElementById('tvDays');daysEl.max=Math.max(1,dte-1);if(num(daysEl.value)>dte-1)daysEl.value=dte-1;const days=Math.max(1,num(daysEl.value,5)),ivChange=num(document.getElementById('tvIvChange').value,-10),afterIv=Math.max(.01,(ivPct+ivChange)/100),afterDte=Math.max(.001,dte-days);
  const a=optionModel({type:tvType,S,K,dte,iv}),b=optionModel({type:tvType,S,K,dte:afterDte,iv:afterIv}),actual=(b.price-a.price)*100,thetaEstimate=a.theta*days*100,vegaEstimate=a.vega*ivChange*100,estimate=thetaEstimate+vegaEstimate;setText('tvTitle',`${tvType==='call'?'Call':'Put'} value by time under three IV assumptions`);setText('tvTheta',signed(a.theta));setText('tvVega',a.vega.toFixed(3));setText('tvActual',`${actual>=0?'+':''}${money(actual,0)}`);setText('tvEstimate',`${estimate>=0?'+':''}${money(estimate,0)}`);document.getElementById('tvActual').style.color=actual>0?'var(--green)':actual<0?'var(--red)':'var(--text)';
  const low=Math.max(.01,iv-.10),high=iv+.10;const makePts=v=>{const pts=[];for(let day=0;day<=dte;day++)pts.push({x:day,y:day===0?optionIntrinsic(tvType,S,K):optionModel({type:tvType,S,K,dte:day,iv:v}).price});return pts;};drawPayoffChart(document.getElementById('tvChart'),[{points:makePts(low),tone:'green',width:2},{points:makePts(iv),tone:'cyan',width:3},{points:makePts(high),tone:'purple',width:2}],{verticals:[{value:dte,label:'Start DTE',tone:'green'},{value:afterDte,label:'After time',tone:'amber'}],decimals:2,xDecimals:0});
- const timeWord=thetaEstimate<0?'time reduced value':'time increased value',ivWord=vegaEstimate<0?'IV change reduced value':'IV change increased value';setHTML('tvStatus',`<strong>Linear attribution:</strong> ${timeWord} by about ${money(Math.abs(thetaEstimate),0)} and ${ivWord} by about ${money(Math.abs(vegaEstimate),0)} per contract. The residual reflects changing Greeks and interaction.`);setText('tvRule',`START premium ${money(a.price)}, theta ${signed(a.theta)}, vega ${a.vega.toFixed(3)}. AFTER ${days} days and ${signed(ivChange,0)} IV points: premium ${money(b.price)}, modeled change ${signed(b.price-a.price)} per share.`);
+ const timeWord=thetaEstimate<0?'time reduced value':'time increased value',ivWord=vegaEstimate<0?'IV change reduced value':'IV change increased value';setHTML('tvStatus',`<strong>Linear attribution:</strong> ${timeWord} by about ${money(Math.abs(thetaEstimate),0)} and ${ivWord} by about ${money(Math.abs(vegaEstimate),0)} per contract. The residual reflects changing Greeks and interaction.<div class="reading-note"><b>What this is normally read as</b>${tvReading}</div>`);setText('tvRule',`START premium ${money(a.price)}, theta ${signed(a.theta)}, vega ${a.vega.toFixed(3)}. AFTER ${days} days and ${signed(ivChange,0)} IV points: premium ${money(b.price)}, modeled change ${signed(b.price-a.price)} per share.`);
 }
 bindSegment('tvType',v=>{tvType=v;renderTV();});['tvStock','tvStrike','tvDte','tvIv','tvDays','tvIvChange'].forEach(id=>document.getElementById(id).addEventListener('input',renderTV));
 setupQuiz({promptId:'tvQuizPrompt',choicesId:'tvQuizChoices',feedbackId:'tvQuizFeedback',scoreId:'tvQuizScore',nextId:'tvQuizNext',questions:[

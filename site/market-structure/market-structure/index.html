@@ -625,6 +625,14 @@
     .state-card strong { display: block; margin-top: 5px; font-size: 1.18rem; }
     .state-card p { margin: 6px 0 0; color: var(--muted); font-size: 0.8rem; }
 
+    /* The participation reading: a subordinate second layer under a structural
+       statement -- what price did, then how that shape is conventionally read.
+       Tokens only, no new colour values. Declared after .state-card and
+       .concept-card so the shared `p` rule resolves here inside either. */
+    .reading { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line-strong); }
+    .reading small { display: block; color: var(--muted); font-size: 0.69rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 800; }
+    .reading p { margin: 5px 0 0; color: var(--muted); font-size: 0.8rem; }
+
     .metric-list { display: grid; gap: 8px; margin-top: 12px; }
     .metric {
       display: flex;
@@ -1037,6 +1045,10 @@
               <g class="ill-node ill-bull" stroke-width="3"><circle cx="82" cy="42" r="5"/><circle cx="128" cy="80" r="5"/><circle cx="205" cy="25" r="5"/><circle cx="252" cy="60" r="5"/><circle cx="342" cy="12" r="5"/></g>
             </svg>
             <p>The latest meaningful higher low is usually the level buyers must defend.</p>
+            <div class="reading">
+              <small>What this is normally read as</small>
+              <p>Read as buyers willing to pay more than they did last time: each dip is met before it reaches the previous low. A close below the low being defended is what would end that reading.</p>
+            </div>
           </article>
 
           <article class="concept-card">
@@ -1048,6 +1060,10 @@
               <g class="ill-node ill-bear" stroke-width="3"><circle cx="82" cy="88" r="5"/><circle cx="132" cy="52" r="5"/><circle cx="207" cy="109" r="5"/><circle cx="259" cy="73" r="5"/><circle cx="342" cy="120" r="5"/></g>
             </svg>
             <p>The latest meaningful lower high is usually the level sellers must defend.</p>
+            <div class="reading">
+              <small>What this is normally read as</small>
+              <p>Read as sellers willing to accept less than they did last time: each bounce is capped before it reaches the previous high. A close above the high being defended is what would end that reading.</p>
+            </div>
           </article>
 
           <article class="concept-card">
@@ -1058,6 +1074,10 @@
               <polyline points="20,96 72,37 119,91 170,42 222,93 277,35 340,88" fill="none" class="ill-level" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <p>Inside a range, apparent trends often fail. The edges matter more than the middle.</p>
+            <div class="reading">
+              <small>What this is normally read as</small>
+              <p>Read as both sides defending the edges and neither defending the middle: buying appears near the low, selling near the high. It stops reading as a range when price closes beyond an edge instead of turning back inside.</p>
+            </div>
           </article>
         </div>
       </section>
@@ -1120,6 +1140,10 @@
                 <small>Current state</small>
                 <strong id="stateValue">Bullish</strong>
                 <p id="stateExplanation">Price is printing higher highs and higher lows.</p>
+                <div class="reading">
+                  <small>What this is normally read as</small>
+                  <p id="stateParticipation">Normally read as buyers stepping in at progressively higher prices: each pullback is bought before it reaches the previous low, and sellers have not been able to return price to where the last advance began. A close below 108 breaks that reading.</p>
+                </div>
               </div>
 
               <div class="metric-list">
@@ -1181,6 +1205,10 @@
               <text class="ill-level-text" x="357" y="134" font-size="11" font-family="system-ui" font-weight="800">DAILY PROTECTED LOW</text>
               <g fill="currentColor" font-family="system-ui" font-size="12" font-weight="800"><text x="101" y="71">H</text><text x="164" y="162">HL</text><text x="262" y="36">HH</text><text x="334" y="132">HL</text><text x="468" y="18">HH</text></g>
             </svg>
+            <div class="reading">
+              <small>What this is normally read as</small>
+              <p>Read as buyers defending each higher low on the daily: the start of the last advance has not been given back. A daily close below the marked protected low would end that reading.</p>
+            </div>
           </article>
 
           <article class="panel tf-card">
@@ -1192,6 +1220,10 @@
               <path d="M408 170 Q450 185 493 128" fill="none" class="ill-cyan" stroke-width="2" stroke-dasharray="5 5"/>
               <text class="ill-cyan-text" x="365" y="114" font-size="11" font-family="system-ui" font-weight="800">WAIT FOR SHIFT</text>
             </svg>
+            <div class="reading">
+              <small>What this is normally read as</small>
+              <p>Read as sellers controlling this pullback: each bounce stops below the previous hourly high while the daily low still holds. That is the two timeframes disagreeing, not the daily reading failing.</p>
+            </div>
           </article>
 
           <article class="panel alignment-box">
@@ -1445,6 +1477,49 @@
         return ['Developing', 'There is not enough structure to classify yet.'];
       }
 
+      // The participation reading: what the drawn structure is conventionally
+      // read as saying about buyers and sellers. It deliberately mirrors
+      // getState's step thresholds (4 / 7 / 9). A constant per-scenario string
+      // would print a confident bullish reading while the state still reads
+      // "Developing", and would call the reversal chart bearish while it is
+      // still printing higher highs.
+      //
+      // These candles are synthetic: no volume, no order flow, no transactions
+      // behind them. So each line states the standard READING of a shape and
+      // names what would break it. None asserts what a participant did, none
+      // says who transacted, and none forecasts the next swing. Levels are read
+      // back from getProtectedInfo so the invalidation quoted here is always the
+      // level the chart is actually drawing.
+      function getParticipation(key, step) {
+        const info = getProtectedInfo(key, step);
+        const level = info ? info.price : null;
+        if (key === 'bullish') {
+          if (step < 3) return 'Too early to read. One or two turning points only show that price moved; nothing yet shows whether buyers will step in above the previous low.';
+          if (step < 4) return 'The pullback has held above the first low — the start of a case that buyers are stepping in earlier than before. It is not a reading yet: only a break of the prior high would make this a sequence rather than one bounce.';
+          return `Normally read as buyers stepping in at progressively higher prices: each pullback is bought before it reaches the previous low, and sellers have not been able to return price to where the last advance began. A close below ${level} breaks that reading.`;
+        }
+        if (key === 'bearish') {
+          if (step < 3) return 'Too early to read. One or two turning points only show that price moved; nothing yet shows whether sellers will keep selling below the previous high.';
+          if (step < 4) return 'The bounce has stalled below the first high — the start of a case that sellers are accepting less than before. It is not a reading yet: only a break of the prior low would make this a sequence rather than one pullback.';
+          return `Normally read as sellers meeting every bounce at progressively lower prices: each rally stalls before it reaches the previous high, and buyers have not been able to return price to where the last decline began. A close above ${level} breaks that reading.`;
+        }
+        if (key === 'range') {
+          if (step < 3) return 'Too early to read. One or two turning points show only that price moved; a boundary means nothing until the same area produces a second reaction.';
+          if (step < 4) return 'Price has returned near the first low. If it turns here, the reading is that the same area is being defended a second time — but a matching reaction at the high is what would make this a range rather than a pullback.';
+          if (step < 6) return 'Normally read as both sides defending an edge and neither defending the middle: buying appears near the low, selling near the high, and the space between shows neither. Acceptance beyond an edge — closing there rather than wicking through — breaks that reading.';
+          if (step === 6) return 'Price has traded above the range high. Structurally this is an attempt to leave the range, not yet a successful one: the attempt only becomes acceptance if price holds and closes beyond the edge instead of turning back inside.';
+          return 'Price traded above the range high and came back inside. The usual reading is that the move beyond the edge found nothing behind it, and that the same boundary is again where price is being turned around.';
+        }
+        if (key === 'reversal') {
+          if (step < 3) return 'Too early to read. The opening swings show only that price moved; nothing yet shows whether buyers will step in above the previous low.';
+          if (step < 4) return 'The pullback has held above the first low — the start of a case that buyers are stepping in earlier than before. It is not a reading yet: only a break of the prior high would make this a sequence rather than one bounce.';
+          if (step < 7) return `Normally read as buyers stepping in at progressively higher prices: each pullback holds above the previous low, so sellers have not reached the start of the last advance. A close below ${level} breaks that reading.`;
+          if (step < 9) return `Price closed below ${level}, the low the last advance had been defending. The reading that buyers were arriving earlier at each pullback has failed. What replaces it is unsettled — a change of character is the first break in the old pattern, not a finished new one.`;
+          return `A lower high, then a lower low. Read as the mirror of the earlier condition: rallies now stall below the previous high, and the low that had been defended was not defended. A reclaim above ${level} breaks that reading.`;
+        }
+        return 'There is not enough structure to read yet.';
+      }
+
       function getNextConfirmation(key, step) {
         const data = scenarios[key];
         const a = data.anchors;
@@ -1637,6 +1712,7 @@
         const protectedInfo = getProtectedInfo(currentScenario, currentStep);
         $('#stateValue').textContent = state;
         $('#stateExplanation').textContent = explanation;
+        $('#stateParticipation').textContent = getParticipation(currentScenario, currentStep);
         $('#latestSwing').textContent = `${data.labels[stepIndex]} · ${data.anchors[stepIndex]}`;
         $('#protectedLevel').textContent = protectedInfo
           ? currentScenario === 'range'
@@ -1769,7 +1845,16 @@
           range: 'Price keeps rotating between similar upper and lower boundaries.',
           reversal: 'Bullish structure breaks, then a lower high and lower low confirm the transition.'
         };
-        $('#quizFeedback').innerHTML = `<strong>${correct ? 'Correct.' : `This chart is ${scenarios[quizKey].title.toLowerCase()}.`}</strong>${summary[quizKey]}`;
+        // Structure and its reading are two different kinds of claim -- what the
+        // line did, versus what that shape is conventionally taken to say about
+        // buyers and sellers -- so they render as two blocks, not one sentence.
+        const participation = {
+          bullish: 'Read as buyers stepping in at higher and higher prices: every pullback is met before it reaches the previous low. A close back below the last defended low breaks that reading.',
+          bearish: 'Read as sellers meeting every bounce at lower and lower prices: no rally reaches the previous high. A close back above the last defended high breaks that reading.',
+          range: 'Read as both sides defending the edges and neither defending the middle: price turns near the low, then again near the high. Closing beyond an edge, rather than wicking through it, breaks that reading.',
+          reversal: 'Read as the low buyers had been defending giving way, after which rallies stall below the previous high. That describes a pattern that has changed, not one that must continue: reclaiming the broken level would undo the reading.'
+        };
+        $('#quizFeedback').innerHTML = `<strong>${correct ? 'Correct.' : `This chart is ${scenarios[quizKey].title.toLowerCase()}.`}</strong>${summary[quizKey]}<div class="reading"><small>What this is normally read as</small><p>${participation[quizKey]}</p></div>`;
         $('#scoreValue').textContent = `${score} / ${attempts}`;
         $('#streakValue').textContent = bestStreak;
         renderChart(quizChart, quizKey, scenarios[quizKey].anchors.length, { seedOffset: quizSeed, forcePath: true, forceLabels: true, forceLevels: true, height: 450 });

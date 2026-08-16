@@ -655,6 +655,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1277,6 +1298,7 @@ textarea { font: inherit; }
   <article class="card chart-card">
     <div class="chart-toolbar"><div class="chart-title"><strong id="managementTitle">Trend continuation</strong><span>Choose one management action before revealing the next candle</span></div><div class="tab-row" id="managementTabs"><button class="tab active" data-scenario="trend" type="button">Trend continuation</button><button class="tab" data-scenario="shakeout" type="button">Volatility before target</button><button class="tab" data-scenario="failure" type="button">Failed setup</button></div></div>
     <div class="chart-wrap"><svg id="managementChart" class="market-chart" aria-label="Trade management simulation chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="managementReadingBlock" aria-live="polite"></div>
     <div class="control-strip"><button class="btn small" id="managementReset" type="button">Reset simulation</button><span class="pill" id="managementCandle">Candle 1</span><span class="pill" id="managementScore">Discipline 0 / 0</span></div>
   </article>
   <aside class="card side-panel" aria-live="polite">
@@ -1843,10 +1865,46 @@ const managementScenarios={
  shakeout:{title:"Volatility before target",path:[0,.35,.7,.2,-.45,.15,.65,1.1,.8,1.45,2.1,2.45],plan:"Keep the original stop until price first closes above +1R. Then move to break-even. Reduce 50% at +2R.",recommended:(state)=>state.current>=2&&state.qty>0.5?"reduce":state.current>=1&&state.stop<0?"breakeven":"hold"},
  failure:{title:"Failed setup",path:[0,.2,.45,.1,-.25,-.55,-.82,-1.05],plan:"Keep the original −1R stop. Do not widen it, average down, or redefine invalidation.",recommended:()=>"hold"}
 };
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// Reveal-gated. This chart hides future candles (visible = step + 1), and the
+// series is price expressed in R (closes = 100 + r * 2), so each scenario has
+// an `after` index -- the first candle at which its structural event is fully
+// on screen. Before that index the reading says only that too little is
+// visible, which is itself the point at the start of a trade.
+const managementReadings={
+ trend:{after:6,reading:{
+  structure:"Each dip has ended above the one before it, and each advance has carried further than the last.",
+  participation:"Normally read as buyers continuing to act at higher prices rather than waiting for a discount. It says nothing about where the move ends — the written plan decides that, not the reading."
+ }},
+ shakeout:{after:7,reading:{
+  structure:"Price fell back through entry to −0.45R, then recovered and closed above the +0.70R high it had made before that fall.",
+  participation:"The usual interpretation is that the decline did not attract continuation and the ground it took was given back. Note the reading only became available after the recovery: while price sat at −0.45R the same candles were equally consistent with the setup simply failing, which is why the stop rather than the reading is what protected the trade."
+ }},
+ failure:{after:5,reading:{
+  structure:"Price advanced to +0.45R and has closed lower on every candle since, through entry and below it. No rally has appeared in between.",
+  participation:"A one-way decline with no recovery attempt is normally read as nothing yet meeting the move at a higher price. The answer to that is the original stop — widening it would replace a reading that has failed with one that cannot fail."
+ }}
+};
+const managementEarlyReading={
+ structure:"Only the first candles are revealed.",
+ participation:"There is not enough structure on screen to read anything yet. That is the normal condition at the start of a trade, and it is exactly why the management plan is written before the evidence arrives rather than after."
+};
+function managementReading(key,visible){const r=managementReadings[key];return visible-1>=r.after?r.reading:managementEarlyReading;}
+
 let managementKey="trend",managementState=null;
 function newManagementState(){managementState={step:0,qty:1,realized:0,stop:-1,closed:false,correct:0,total:0,current:managementScenarios[managementKey].path[0],history:[]};renderManagement();}
 function managementTotalR(){return managementState.realized+(managementState.closed?0:managementState.qty*managementState.current);}
-function renderManagement(){const s=managementScenarios[managementKey],st=managementState;const closes=s.path.map(r=>100+r*2);const visible=Math.min(st.step+1,closes.length);drawCandles(document.getElementById("managementChart"),candlesFromCloses(closes,{},120+Object.keys(managementScenarios).indexOf(managementKey)),{visibleCount:visible,levels:[{value:100,label:"Entry · 0R",tone:"cyan"},{value:100+st.stop*2,label:`Current stop · ${st.stop.toFixed(2)}R`,tone:"red"},{value:104,label:"Management milestone · +2R",tone:"green"}],includeValues:[98,104,100+st.stop*2]});setText("managementTitle",s.title);setText("managementCandle",`Candle ${st.step+1} / ${s.path.length}`);setText("managementScore",`Discipline ${st.correct} / ${st.total}`);setText("managementQty",`${Math.round(st.qty*100)}%`);setText("managementOpen",st.closed?"Closed":`${st.current>=0?"+":""}${st.current.toFixed(2)}R`);setText("managementRealized",`${st.realized>=0?"+":""}${st.realized.toFixed(2)}R`);setText("managementStop",`${st.stop>=0?"+":""}${st.stop.toFixed(2)}R`);setHTML("managementPlan",`<strong>Plan:</strong> ${s.plan}`);document.querySelectorAll("#managementActions button").forEach(b=>b.disabled=st.closed||st.step>=s.path.length-1);}
+function renderManagement(){const s=managementScenarios[managementKey],st=managementState;const closes=s.path.map(r=>100+r*2);const visible=Math.min(st.step+1,closes.length);drawCandles(document.getElementById("managementChart"),candlesFromCloses(closes,{},120+Object.keys(managementScenarios).indexOf(managementKey)),{visibleCount:visible,levels:[{value:100,label:"Entry · 0R",tone:"cyan"},{value:100+st.stop*2,label:`Current stop · ${st.stop.toFixed(2)}R`,tone:"red"},{value:104,label:"Management milestone · +2R",tone:"green"}],includeValues:[98,104,100+st.stop*2]});setText("managementTitle",s.title);renderReading("managementReadingBlock",managementReading(managementKey,visible));setText("managementCandle",`Candle ${st.step+1} / ${s.path.length}`);setText("managementScore",`Discipline ${st.correct} / ${st.total}`);setText("managementQty",`${Math.round(st.qty*100)}%`);setText("managementOpen",st.closed?"Closed":`${st.current>=0?"+":""}${st.current.toFixed(2)}R`);setText("managementRealized",`${st.realized>=0?"+":""}${st.realized.toFixed(2)}R`);setText("managementStop",`${st.stop>=0?"+":""}${st.stop.toFixed(2)}R`);setHTML("managementPlan",`<strong>Plan:</strong> ${s.plan}`);document.querySelectorAll("#managementActions button").forEach(b=>b.disabled=st.closed||st.step>=s.path.length-1);}
 function applyManagementAction(action){const s=managementScenarios[managementKey],st=managementState;if(st.closed||st.step>=s.path.length-1)return;const expected=s.recommended(st);st.total+=1;if(action===expected)st.correct+=1;let actionNote="";if(action==="reduce"&&st.qty>0){const sold=st.qty*.5;st.realized+=sold*st.current;st.qty-=sold;actionNote=`Reduced ${Math.round(sold*100)}% at ${st.current.toFixed(2)}R.`;}else if(action==="breakeven"){st.stop=Math.max(st.stop,0);actionNote="Stop moved to break-even.";}else if(action==="trail"){st.stop=Math.max(st.stop,st.current-1);actionNote=`Stop trailed to ${st.stop.toFixed(2)}R.`;}else if(action==="exit"&&st.qty>0){st.realized+=st.qty*st.current;st.qty=0;st.closed=true;actionNote=`Exited at ${st.current.toFixed(2)}R.`;}else{actionNote="Position held without changing the plan.";}
  st.history.push({step:st.step,action,expected});if(!st.closed){st.step+=1;const next=s.path[st.step];if(next<=st.stop){st.realized+=st.qty*st.stop;st.qty=0;st.current=st.stop;st.closed=true;actionNote+=` Stop filled at ${st.stop.toFixed(2)}R.`;}else{st.current=next;}}
  const status=document.getElementById("managementStatus"),ok=action===expected;status.className=`status-banner ${ok?"good":"warn"}`;if(st.closed||st.step>=s.path.length-1){if(!st.closed&&st.qty>0){st.realized+=st.qty*st.current;st.qty=0;st.closed=true;}status.innerHTML=`<strong>Simulation complete: ${st.realized>=0?"+":""}${st.realized.toFixed(2)}R.</strong> Discipline score ${st.correct}/${st.total}. ${actionNote}`;}else{status.innerHTML=`<strong>${ok?"Plan followed.":`Plan expected: ${expected}.`}</strong> ${actionNote}`;}renderManagement();}

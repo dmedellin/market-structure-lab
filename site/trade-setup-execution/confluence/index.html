@@ -784,6 +784,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1302,6 +1323,7 @@ textarea { font: inherit; }
   <article class="card chart-card">
     <div class="chart-toolbar"><div class="chart-title"><strong id="confluenceTitle">Trend pullback at support</strong><span>Select evidence that is genuinely relevant to the setup</span></div><div class="tab-row" id="confluenceTabs"><button class="tab active" data-scenario="pullback" type="button">Pullback</button><button class="tab" data-scenario="breakout" type="button">Breakout</button><button class="tab" data-scenario="weak" type="button">Weak setup</button><button class="tab" data-scenario="redundant" type="button">Indicator overlap</button></div></div>
     <div class="chart-wrap"><svg id="confluenceChart" class="market-chart" aria-label="Confluence scenario chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="confluenceReading" aria-live="polite"></div>
     <div class="chart-legend"><span class="legend-item"><span class="legend-dot green"></span>Context / structure</span><span class="legend-item"><span class="legend-dot amber"></span>Location</span><span class="legend-item"><span class="legend-dot purple"></span>Trigger</span></div>
   </article>
   <aside class="card side-panel">
@@ -1895,9 +1917,43 @@ const confluenceScenarios={
  weak:{title:"Mid-range signal without location",closes:[100,101.8,103.2,104.4,103.1,101.9,100.8,102.0,103.6,104.0,102.7,102.1,103.0,103.4],levels:[{value:99.0,label:"Range low",tone:"green"},{value:106.0,label:"Range high",tone:"red"}],annotations:[{index:13,value:103.4,label:"Mid-range",tone:"amber"}],relevant:[],decision:"noTrade"},
  redundant:{title:"Multiple indicators measuring trend",closes:[98,99.5,101.0,102.4,103.6,104.9,106.1,107.2,108.4,109.5,110.4,111.0],levels:[],annotations:[{index:10,value:110.4,label:"Price above several MAs",tone:"cyan"}],relevant:["htf"],decision:"wait"}
 };
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// Parallel to confluenceScenarios. Note: the breakout tab annotates a volume
+// expansion but carries no volumes array, so no volume evidence is claimed
+// here; the redundant tab has no corrective swing at all, so no pullback
+// reading is claimed for it either.
+const confluenceReadings = {
+  pullback: {
+    structure: "Higher highs at 108, 112 and 113.5, with higher lows at 103.2 and 107.4. The correction from 112 ends at 108.4, on the 108.2 breakout level, and price then makes a new high.",
+    participation: "Normally read as buyers acting at successively higher prices, with the latest correction ending at the price the last advance began from rather than below it. That is one observation about location; it does not get stronger because a second tool measuring the same rising price agrees with it. A close below 108.2 ends the reading."
+  },
+  breakout: {
+    structure: "Price works up into the 106.3 range high over eleven candles, spending the later ones between 103.4 and 106.2, then closes above it at 107.6 — and the three closes after that stay above.",
+    participation: "The usual interpretation is that a price which had capped every advance stopped doing so, and that repeated closes outside are acceptance rather than a single probe. The volume label on this chart is a premise of the exercise — no volume is plotted here — so the evidence you claim and the evidence you can see have to be kept apart. A close back inside the range ends the reading."
+  },
+  weak: {
+    structure: "Price swings between 100.0 and 104.4 and finishes at 103.4. Neither the 99.0 range low nor the 106.0 range high is reached.",
+    participation: "There is no reading here, and that is the point: neither side has been tested anywhere that a reaction would mean something, so the swing says nothing about who gave way. A signal generated in the middle of a range is a signal about nothing in particular until price is somewhere that matters."
+  },
+  redundant: {
+    structure: "Every close in the series is higher than the one before it. There is no corrective swing anywhere on the chart.",
+    participation: "A one-way advance is normally read as buyers paying up without waiting for a discount — but because price has never pulled back, nothing here shows how it behaves when the trend is tested, which is usually where a reading comes from. Every moving average and oscillator drawn on this series is a transform of these same closes, so of course they agree; that agreement is one observation restated, not several."
+  }
+};
+
 let confluenceKey="pullback";let confluenceDecision="wait";
 function selectedFactors(){return [...document.querySelectorAll("#factorGrid input:checked")].map(x=>x.value);}
-function renderConfluence(){const s=confluenceScenarios[confluenceKey];drawCandles(document.getElementById("confluenceChart"),candlesFromCloses(s.closes,{},30+Object.keys(confluenceScenarios).indexOf(confluenceKey)),{levels:s.levels,annotations:s.annotations,includeValues:s.levels.map(l=>l.value)});setText("confluenceTitle",s.title);}
+function renderConfluence(){const s=confluenceScenarios[confluenceKey];drawCandles(document.getElementById("confluenceChart"),candlesFromCloses(s.closes,{},30+Object.keys(confluenceScenarios).indexOf(confluenceKey)),{levels:s.levels,annotations:s.annotations,includeValues:s.levels.map(l=>l.value)});setText("confluenceTitle",s.title);renderReading("confluenceReading",confluenceReadings[confluenceKey]);}
 function clearConfluence(){document.querySelectorAll("#factorGrid input").forEach(x=>{x.checked=false;x.closest(".factor").classList.remove("selected","redundant");});confluenceDecision="wait";document.querySelectorAll("#confluenceDecision [data-value]").forEach(b=>b.classList.toggle("active",b.dataset.value==="wait"));document.getElementById("confluenceMeter").style.width="0%";const st=document.getElementById("confluenceStatus");st.className="status-banner";st.innerHTML="<strong>No evaluation yet.</strong> Select only evidence visible in the scenario.";}
 document.getElementById("factorGrid").addEventListener("change",event=>{const f=event.target.closest(".factor");if(f)f.classList.toggle("selected",event.target.checked);});
 bindSegment("confluenceDecision",value=>{confluenceDecision=value;});

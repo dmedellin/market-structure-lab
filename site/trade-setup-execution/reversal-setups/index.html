@@ -657,6 +657,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1279,6 +1300,7 @@ textarea { font: inherit; }
   <article class="card chart-card">
     <div class="chart-toolbar"><div class="chart-title"><strong id="reversalTitle">Bearish-to-bullish reversal</strong><span>Advance through the evidence sequence before deciding</span></div><div class="tab-row" id="reversalTabs"><button class="tab active" data-scenario="bottom" type="button">Bottom reversal</button><button class="tab" data-scenario="top" type="button">Top reversal</button><button class="tab" data-scenario="failed" type="button">Failed reversal</button></div></div>
     <div class="chart-wrap"><svg id="reversalChart" class="market-chart" aria-label="Reversal evidence sequence chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="reversalReading" aria-live="polite"></div>
     <div class="control-strip"><div class="control-group grow"><label for="reversalStep">Evidence step</label><input id="reversalStep" type="range" min="1" max="5" value="1" step="1" /><span class="range-value" id="reversalStepValue">1 / 5</span></div><button class="btn small primary" id="reversalNext" type="button">Next step</button><button class="btn small" id="reversalReset" type="button">Reset</button></div>
   </article>
   <aside class="card side-panel">
@@ -1842,9 +1864,63 @@ const reversalScenarios={
  failed:{title:"Failed reversal attempt",closes:[112,110.7,111.3,109.0,107.4,108.1,105.8,104.2,105.0,102.9,101.4,99.8,101.1,102.0,101.2,100.1,98.7,97.5,96.3],stepEnds:[7,11,14,16,19],levels:[{value:100,label:"Support under test",tone:"amber"},{value:104.0,label:"Required structure break",tone:"purple"}],annotations:[{index:11,value:99.8,label:"Reaction",tone:"amber",position:"below"},{index:14,value:101.2,label:"Lower high remains",tone:"red"},{index:16,value:98.7,label:"Trend resumes",tone:"red",position:"below"}],valid:false}
 };
 const reversalSteps=["Mature prior trend","Key-level reaction or sweep","Countertrend structure break","Retest forms opposite-side swing","Continuation confirms new structure"];
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// One reading per scenario PER STEP, indexed by reversalStep - 1. This chart
+// reveals candles progressively (visible = stepEnds[step-1]), and the timeline
+// label runs one step ahead of the evidence, so every line below is written
+// against the candles actually on screen at that step, not against the label.
+const reversalReadings={
+ bottom:[
+  {structure:"Lower highs at 111.4 and 108.2, with lower lows at 107.5 and 105.7.",
+   participation:"A mature downtrend is normally read as sellers repeatedly able to act at lower prices while buyers appear only after a further decline. Nothing here is a reversal — this is the trend the rest of the sequence has to overturn."},
+  {structure:"The decline continues to 101.2, just above the 100 support line. No reaction is visible yet.",
+   participation:"Arriving at a level is not the same as reacting to it. All this says is that the trend has reached a price where a reaction would be meaningful if one appeared; so far none has."},
+  {structure:"Price closes at 99.4, below 100, then closes back above it at 100.6 and 102.4. The 104.0 structure level is untouched.",
+   participation:"Trading through a level and closing back above it is normally read as the move below failing to attract continuation. It is a reaction, not a change of structure: the most recent lower high still stands, and that is the difference between a bounce and a reversal."},
+  {structure:"The close at 104.2 is the first above the 104.0 lower high, and the pullback that follows stops at 103.1 — above the 99.4 low.",
+   participation:"That pair is what the model calls a change of character: buyers took price above the level that capped the most recent bounce, and the next decline ended higher than the last one instead of lower. A close back below 99.4 would end the reading."},
+  {structure:"Closes at 104.7, 106.3 and 108.0 carry price above the 104.2 swing high.",
+   participation:"Continuation past the prior swing high is normally read as the new sequence of higher highs and higher lows holding. It confirms what the earlier candles suggested; it says nothing about how far the move runs."}
+ ],
+ top:[
+  {structure:"Higher highs at 101.4, 104.7 and 106.4, with higher lows at 100.8 and 104.0.",
+   participation:"A mature advance is normally read as buyers repeatedly willing to pay higher prices. That is the trend the rest of the sequence has to overturn, not evidence of a top."},
+  {structure:"The advance continues to 110.8, just under the 112 resistance line. No reaction is visible yet.",
+   participation:"Arriving at a level is not reacting to it. All this says is that price has reached somewhere a reaction would mean something; so far none has appeared."},
+  {structure:"Price closes at 112.4, above 112, then closes back below it at 111.1 and 109.6. The swing low that the advance has been holding is still intact.",
+   participation:"Closing back under a level that was just exceeded is normally read as the push above failing to hold. It is a reaction, not a change of structure: the higher low that the advance is built on has not given way yet."},
+  {structure:"The close at 107.9 is the first below the 108.0 higher low, and the bounce that follows stops at 109.0 — under the 112.4 high.",
+   participation:"That pair is the change of character: sellers took price under a level that had held every prior dip, and the next rally ended lower than the last. A close back above 112.4 would end the reading."},
+  {structure:"Closes at 107.4, 105.8 and 104.2 carry price below the 107.9 swing low.",
+   participation:"Continuation past the prior swing low is normally read as the new sequence of lower highs and lower lows holding. It confirms the earlier evidence and says nothing about how far the decline runs."}
+ ],
+ failed:[
+  {structure:"Lower highs at 111.3 and 108.1, with lower lows at 107.4 and 105.8.",
+   participation:"A mature downtrend is normally read as sellers repeatedly able to act at lower prices while buyers appear only after a further decline. This is the trend the sequence has to overturn."},
+  {structure:"The decline continues to 101.4, just above the 100 support line. No reaction is visible yet.",
+   participation:"Arriving at a level is not the same as reacting to it. Price has reached somewhere a reaction would be meaningful; none has appeared so far."},
+  {structure:"Price closes at 99.8, below 100, then closes back above it at 101.1 and 102.0. The 104.0 level the model requires is untouched.",
+   participation:"So far this is indistinguishable from the bottom-reversal tab: a reaction at a level, with the last lower high still intact. Anyone reading a reversal here is reading it from the reaction alone."},
+  {structure:"The bounce stalls at 102.0, below the 104.0 level, and price closes back down at 101.2 and 100.1.",
+   participation:"The reaction never became a structure break, so the sequence of lower highs is unbroken. This is where the two readings separate, and the honest one is that nothing has changed."},
+  {structure:"Closes at 98.7, 97.5 and 96.3 take price below the 99.8 reaction low.",
+   participation:"New lows beneath the reaction low are normally read as the prior trend simply resuming. The reaction was real; the reversal was never established — which is why the model asks for a sequence rather than a reaction."}
+ ]
+};
+
 let reversalKey="bottom",reversalStep=1,reversalDecision="wait";
 function reversalExpected(s,step){if(!s.valid&&step>=3)return "noTrade";if(s.valid&&step>=4)return "trade";return "wait";}
-function renderReversal(){const s=reversalScenarios[reversalKey];const visible=s.stepEnds[reversalStep-1];setText("reversalTitle",s.title);setText("reversalStepValue",`${reversalStep} / 5`);document.getElementById("reversalStep").value=reversalStep;drawCandles(document.getElementById("reversalChart"),candlesFromCloses(s.closes,{},60+Object.keys(reversalScenarios).indexOf(reversalKey)),{visibleCount:visible,levels:s.levels,annotations:s.annotations,includeValues:s.levels.map(l=>l.value)});setHTML("reversalTimeline",reversalSteps.map((label,i)=>`<div class="timeline-step ${i+1<reversalStep?"done":i+1===reversalStep?"active":""}"><div class="step-no">${i+1}</div><div><strong>${label}</strong><span>${i+1<=reversalStep?(s.valid||i<2?"Evidence is visible.":"Required evidence failed."):"Not visible yet."}</span></div></div>`).join(""));}
+function renderReversal(){const s=reversalScenarios[reversalKey];const visible=s.stepEnds[reversalStep-1];setText("reversalTitle",s.title);setText("reversalStepValue",`${reversalStep} / 5`);document.getElementById("reversalStep").value=reversalStep;renderReading("reversalReading",reversalReadings[reversalKey][reversalStep-1]);drawCandles(document.getElementById("reversalChart"),candlesFromCloses(s.closes,{},60+Object.keys(reversalScenarios).indexOf(reversalKey)),{visibleCount:visible,levels:s.levels,annotations:s.annotations,includeValues:s.levels.map(l=>l.value)});setHTML("reversalTimeline",reversalSteps.map((label,i)=>`<div class="timeline-step ${i+1<reversalStep?"done":i+1===reversalStep?"active":""}"><div class="step-no">${i+1}</div><div><strong>${label}</strong><span>${i+1<=reversalStep?(s.valid||i<2?"Evidence is visible.":"Required evidence failed."):"Not visible yet."}</span></div></div>`).join(""));}
 bindSegment("reversalDecision",v=>reversalDecision=v);
 document.getElementById("reversalStep").addEventListener("input",e=>{reversalStep=num(e.target.value,1);renderReversal();});document.getElementById("reversalNext").addEventListener("click",()=>{reversalStep=Math.min(5,reversalStep+1);renderReversal();});document.getElementById("reversalReset").addEventListener("click",()=>{reversalStep=1;reversalDecision="wait";document.querySelectorAll("#reversalDecision [data-value]").forEach(b=>b.classList.toggle("active",b.dataset.value==="wait"));renderReversal();});document.getElementById("reversalTabs").addEventListener("click",event=>{const b=event.target.closest("[data-scenario]");if(!b)return;document.querySelectorAll("#reversalTabs .tab").forEach(x=>x.classList.toggle("active",x===b));reversalKey=b.dataset.scenario;reversalStep=1;renderReversal();});document.getElementById("evaluateReversal").addEventListener("click",()=>{const s=reversalScenarios[reversalKey],expected=reversalExpected(s,reversalStep),ok=expected===reversalDecision,st=document.getElementById("reversalStatus");st.className=`status-banner ${ok?"good":"bad"}`;const reason=expected==="trade"?"The prior structure has broken, the retest formed an opposite-side swing, and the model now has structural invalidation.":expected==="noTrade"?"The countertrend reaction failed to break structure and the prior trend resumed.":"The sequence has not yet established enough evidence for the reversal model.";st.innerHTML=`<strong>${ok?"Correct decision.":`Expected: ${expected}.`}</strong> ${reason}`;});
 setupQuiz({promptId:"reversalQuizPrompt",choicesId:"reversalQuizChoices",feedbackId:"reversalQuizFeedback",scoreId:"reversalQuizScore",nextId:"reversalQuizNext",questions:[

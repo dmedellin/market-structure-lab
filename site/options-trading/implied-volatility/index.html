@@ -1101,6 +1101,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1416,12 +1428,23 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 let ivType='call';
 const ivPresets={event:{before:60,after:30,stockAfter:104},rise:{before:25,after:45,stockAfter:101},calm:{before:30,after:30,stockAfter:104}};
+/* THE PARTICIPATION READING. Keyed to the MEASURED relation between the two IV
+   values, not to the preset button, so it stays true after the reader edits the
+   fields. This is the one lab in the course where "what the market is pricing"
+   is defensible: implied volatility is by definition the assumption backed out
+   of a transacted price. It is still an assumption about SIZE of movement, never
+   direction, and the copy never turns it into a forecast. */
+const ivReading={
+ contracted:'Implied volatility is the assumption backed out of the option price, so a fall in it is normally read as less uncertainty being priced than before: a repricing of the assumption, not a view on direction. That is why a favourable move in the underlying can still leave a long position worse off. Read the two contributions above as separate effects rather than as one signal.',
+ expanded:'Implied volatility is the assumption backed out of the option price, so a rise in it is normally read as more uncertainty being priced than before. It says the two sides now put a higher price on movement, and says nothing about which way that movement goes. A long position can gain from this alone even when the underlying barely moves.',
+ flat:'Holding implied volatility still isolates the underlying move, so whatever changes in the premium here is the directional contribution on its own. The usual reading is that the price of uncertainty stayed where it was while the price of the underlying did not. Any premium change you see is therefore not evidence about what is being assumed for future movement.'
+};
 function renderIV(){
  const S0=Math.max(1,num(document.getElementById('ivStockBefore').value,100)),S1=Math.max(1,num(document.getElementById('ivStockAfter').value,104)),K=Math.max(1,num(document.getElementById('ivStrike').value,100)),dte=Math.max(1,num(document.getElementById('ivDte').value,30)),iv0=Math.max(.01,num(document.getElementById('ivBefore').value,60)/100),iv1=Math.max(.01,num(document.getElementById('ivAfter').value,30)/100);
  const before=optionModel({type:ivType,S:S0,K,dte,iv:iv0}),directionOnly=optionModel({type:ivType,S:S1,K,dte,iv:iv0}),after=optionModel({type:ivType,S:S1,K,dte,iv:iv1});const change=(after.price-before.price)*100,dir=(directionOnly.price-before.price)*100,vol=(after.price-directionOnly.price)*100,expected=S0*iv0*Math.sqrt(dte/365);
  setText('ivTitle',`${ivType==='call'?'Call':'Put'} premium by implied volatility`);setText('ivPremiumBefore',money(before.price));setText('ivPremiumAfter',money(after.price));setText('ivPnl',`${change>0?'+':''}${money(change,0)}`);document.getElementById('ivPnl').style.color=change>0?'var(--green)':change<0?'var(--red)':'var(--text)';setText('ivExpected',`±${money(expected)}`);
  const minIv=5,maxIv=Math.max(120,Math.ceil(Math.max(iv0,iv1)*100+20)),pts=payoffPoints(v=>optionModel({type:ivType,S:S1,K,dte,iv:v/100}).price,minIv,maxIv,140);drawPayoffChart(document.getElementById('ivChart'),[{points:pts,tone:'purple'}],{verticals:[{value:iv0*100,label:'IV before',tone:'amber'},{value:iv1*100,label:'IV after',tone:'cyan'}],decimals:2,xDecimals:0});
- const relation=iv1<iv0?'contracted':iv1>iv0?'expanded':'was unchanged';setHTML('ivStatus',`<strong>IV ${relation}.</strong> Approximate directional contribution: ${dir>=0?'+':''}${money(dir,0)}; subsequent IV contribution: ${vol>=0?'+':''}${money(vol,0)} per contract. The order is a decomposition choice and interaction remains.`);setText('ivRule',`BEFORE: stock ${money(S0)}, IV ${pct(iv0*100,0)}, premium ${money(before.price)}. AFTER: stock ${money(S1)}, IV ${pct(iv1*100,0)}, premium ${money(after.price)}. CHANGE ${change>=0?'+':''}${money(change,0)} per contract.`);
+ const relation=iv1<iv0?'contracted':iv1>iv0?'expanded':'was unchanged';setHTML('ivStatus',`<strong>IV ${relation}.</strong> Approximate directional contribution: ${dir>=0?'+':''}${money(dir,0)}; subsequent IV contribution: ${vol>=0?'+':''}${money(vol,0)} per contract. The order is a decomposition choice and interaction remains.<div class="reading-note"><b>What this is normally read as</b>${ivReading[iv1<iv0?'contracted':iv1>iv0?'expanded':'flat']}</div>`);setText('ivRule',`BEFORE: stock ${money(S0)}, IV ${pct(iv0*100,0)}, premium ${money(before.price)}. AFTER: stock ${money(S1)}, IV ${pct(iv1*100,0)}, premium ${money(after.price)}. CHANGE ${change>=0?'+':''}${money(change,0)} per contract.`);
 }
 document.getElementById('ivScenarios').addEventListener('click',e=>{const b=e.target.closest('[data-scenario]');if(!b)return;document.querySelectorAll('#ivScenarios [data-scenario]').forEach(x=>x.classList.toggle('active',x===b));const p=ivPresets[b.dataset.scenario];document.getElementById('ivBefore').value=p.before;document.getElementById('ivAfter').value=p.after;document.getElementById('ivStockAfter').value=p.stockAfter;renderIV();});bindSegment('ivType',v=>{ivType=v;renderIV();});['ivStockBefore','ivStockAfter','ivStrike','ivDte','ivBefore','ivAfter'].forEach(id=>document.getElementById(id).addEventListener('input',renderIV));
 setupQuiz({promptId:'ivQuizPrompt',choicesId:'ivQuizChoices',feedbackId:'ivQuizFeedback',scoreId:'ivQuizScore',nextId:'ivQuizNext',questions:[

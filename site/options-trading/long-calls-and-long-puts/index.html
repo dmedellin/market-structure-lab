@@ -1004,6 +1004,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1402,11 +1414,18 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 
 let longType='call';
+/* THE PARTICIPATION READING. The status line states the STRUCTURE (entry debit,
+   modelled exit value, return on premium). This states how the distance between
+   the two drawn curves is normally READ. No order flow, no prediction. */
+const longReading={
+ aligns:'The gap between the two curves is extrinsic value: the part of the premium that still belongs to the time remaining, priced by both sides when the contract was opened. Closing early is normally read as selling that remaining time back rather than waiting for it to be spent. The gap does not close at expiration breakeven — at that vertical the two lines are still apart by whatever extrinsic value the contract has left. It closes only at expiry itself, when nothing but intrinsic value remains.',
+ conflicts:'The scenario sits on the unfavourable side of the strike for this position, so the modelled exit curve sits below the entry debit. What still separates the two curves is extrinsic value: what both sides price the remaining time at. That is the only thing between this position and the expiration line, and it reaches zero at expiration whatever the underlying does.'
+};
 function renderLong(){
  const S=Math.max(1,num(document.getElementById('longStock').value,100)),K=Math.max(1,num(document.getElementById('longStrike').value,100)),premium=Math.max(.01,num(document.getElementById('longPremium').value,4.5)),dte=Math.max(2,num(document.getElementById('longDte').value,45));const exitDteEl=document.getElementById('longExitDte');exitDteEl.max=dte-1;if(num(exitDteEl.value)>dte-1)exitDteEl.value=dte-1;const exitDte=Math.max(0,num(exitDteEl.value,20)),exitS=Math.max(.01,num(document.getElementById('longExitStock').value,108)),exitIv=Math.max(.01,num(document.getElementById('longExitIv').value,30)/100),contracts=Math.max(1,Math.floor(num(document.getElementById('longContracts').value,1))),mult=contracts*100;
  const be=longType==='call'?K+premium:K-premium,maxLoss=premium*mult,exitValue=exitDte===0?optionIntrinsic(longType,exitS,K):optionModel({type:longType,S:exitS,K,dte:exitDte,iv:exitIv}).price,pnl=(exitValue-premium)*mult;setText('longTitle',`Long ${longType} profit and loss`);setText('longBreakeven',money(be));setText('longMaxLoss',money(maxLoss,0));setText('longExitValue',money(exitValue));setText('longPnl',`${pnl>=0?'+':''}${money(pnl,0)}`);document.getElementById('longPnl').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';
  const min=Math.max(.01,S*.55),max=S*1.45,expiration=payoffPoints(x=>(optionIntrinsic(longType,x,K)-premium)*mult,min,max),early=payoffPoints(x=>((exitDte===0?optionIntrinsic(longType,x,K):optionModel({type:longType,S:x,K,dte:exitDte,iv:exitIv}).price)-premium)*mult,min,max);drawPayoffChart(document.getElementById('longChart'),[{points:early,tone:'cyan'},{points:expiration,tone:'purple',width:2}],{verticals:[{value:K,label:'Strike',tone:'amber'},{value:be,label:'Expiration breakeven',tone:'cyan'},{value:exitS,label:'Exit scenario',tone:'green'}],decimals:0,xDecimals:0});
- const targetSide=longType==='call'?exitS>S:exitS<S;setHTML('longStatus',`<strong>${targetSide?'Directional scenario aligns':'Directional scenario conflicts'}.</strong> Entry debit ${money(premium*mult,0)}; modeled exit value ${money(exitValue*mult,0)}; return on premium ${pct(pnl/Math.max(.01,maxLoss)*100,1)}. Actual fills can differ.`);setText('longRule',`LONG ${longType.toUpperCase()} · strike ${money(K)} · entry premium ${money(premium)} · ${dte} DTE · expiration breakeven ${money(be)} · maximum loss ${money(maxLoss,0)} · modeled exit at stock ${money(exitS)}, ${exitDte} DTE, IV ${pct(exitIv*100,0)} = ${pnl>=0?'+':''}${money(pnl,0)}.`);
+ const targetSide=longType==='call'?exitS>S:exitS<S;setHTML('longStatus',`<strong>${targetSide?'Directional scenario aligns':'Directional scenario conflicts'}.</strong> Entry debit ${money(premium*mult,0)}; modeled exit value ${money(exitValue*mult,0)}; return on premium ${pct(pnl/Math.max(.01,maxLoss)*100,1)}. Actual fills can differ.<div class="reading-note"><b>What this is normally read as</b>${longReading[targetSide?'aligns':'conflicts']}</div>`);setText('longRule',`LONG ${longType.toUpperCase()} · strike ${money(K)} · entry premium ${money(premium)} · ${dte} DTE · expiration breakeven ${money(be)} · maximum loss ${money(maxLoss,0)} · modeled exit at stock ${money(exitS)}, ${exitDte} DTE, IV ${pct(exitIv*100,0)} = ${pnl>=0?'+':''}${money(pnl,0)}.`);
 }
 bindSegment('longType',v=>{longType=v;renderLong();});['longStock','longStrike','longPremium','longDte','longExitStock','longExitDte','longExitIv','longContracts'].forEach(id=>document.getElementById(id).addEventListener('input',renderLong));
 setupQuiz({promptId:'longQuizPrompt',choicesId:'longQuizChoices',feedbackId:'longQuizFeedback',scoreId:'longQuizScore',nextId:'longQuizNext',questions:[

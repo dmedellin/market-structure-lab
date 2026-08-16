@@ -989,6 +989,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1381,12 +1393,21 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 
 let creditType='bullPut';
+/* THE PARTICIPATION READING. Attached to the VALID state only, keyed to the same
+   three outcome states the status line branches on; the invalid arm is a
+   data-entry message and gets nothing. Structure is the defined credit and
+   width; this is how the two drawn curves are normally READ. */
+const creditReading={
+ max:'The credit received is the price agreed for accepting the risk between the two strikes, and in this scenario the right that was sold goes unused. The flat top of the cyan line shows that this maximum was fixed by the agreement before any outcome was known. The purple line is the same obligation without a long leg of your own, and the distance between them is what that protection cost.',
+ min:'The loss stops here only because a counterparty was paid for the long leg, which is why the cyan line flattens where the purple one keeps falling away. The credit was the price agreed for accepting the obligation, not a buffer that grows with the size of the move. Reaching this level is an ordinary outcome of the structure rather than a failure of it.',
+ partial:'The scenario sits between the two strikes, so the right that was sold has a claim while the right that was bought does not yet. The credit is what the two sides agreed before any of this was known, and the cyan line shows what that agreement is worth at each expiration price. The purple line is the same obligation without a long leg, and the gap between them is what the defined risk cost.'
+};
 function renderCredit(){
  let shortK=Math.max(1,num(document.getElementById('creditShortStrike').value,100)),longK=Math.max(1,num(document.getElementById('creditLongStrike').value,90));const shortP=Math.max(.01,num(document.getElementById('creditShortPremium').value,4)),longP=Math.max(.01,num(document.getElementById('creditLongPremium').value,1.5)),contracts=Math.max(1,Math.floor(num(document.getElementById('creditContracts').value,1))),shares=contracts*100,S=Math.max(0,num(document.getElementById('creditFinal').value,103));const isBull=creditType==='bullPut',type=isBull?'put':'call';
  if(isBull&&longK>=shortK){longK=Math.max(1,shortK-5);document.getElementById('creditLongStrike').value=longK;}if(!isBull&&longK<=shortK){longK=shortK+5;document.getElementById('creditLongStrike').value=longK;}const width=Math.abs(longK-shortK),credit=Math.max(.01,shortP-longP),valid=shortP>longP&&credit<width;const perShare=credit-optionIntrinsic(type,S,shortK)+optionIntrinsic(type,S,longK),pnl=perShare*shares,be=isBull?shortK-credit:shortK+credit,maxProfit=credit*shares,maxLoss=Math.max(0,width-credit)*shares,unprotected=(shortP-optionIntrinsic(type,S,shortK))*shares;
  setText('creditTitle',`${isBull?'Bull put':'Bear call'} spread profit and loss`);setText('creditShortLeg',`${money(shortK)} ${type}`);setText('creditLongLeg',`${money(longK)} ${type}`);setText('creditShortLegText',`Receive ${money(shortP)}`);setText('creditLongLegText',`Pay ${money(longP)}`);setText('creditShortCash',`+${money(shortP*shares,0)}`);setText('creditLongCash',`−${money(longP*shares,0)}`);setText('creditNet',money(credit*shares,0));setText('creditMaxLoss',money(maxLoss,0));setText('creditBreakeven',money(be));setText('creditPnl',`${pnl>=0?'+':''}${money(pnl,0)}`);document.getElementById('creditPnl').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';
  const center=(shortK+longK)/2,min=Math.max(0,center-width*3.5),max=center+width*3.5,spread=payoffPoints(x=>(credit-optionIntrinsic(type,x,shortK)+optionIntrinsic(type,x,longK))*shares,min,max),naked=payoffPoints(x=>(shortP-optionIntrinsic(type,x,shortK))*shares,min,max);drawPayoffChart(document.getElementById('creditChart'),[{points:spread,tone:'cyan'},{points:naked,tone:'purple',width:2}],{verticals:[{value:shortK,label:'Short strike',tone:'red'},{value:longK,label:'Long strike',tone:'green'},{value:be,label:'Breakeven',tone:'amber'},{value:S,label:'Scenario',tone:'cyan'}],decimals:0,xDecimals:0});
- const el=document.getElementById('creditStatus');el.className=`status-banner ${valid?'good':'bad'}`;el.innerHTML=valid?`<strong>${pnl===maxProfit?'Maximum profit reached.':pnl<=-maxLoss?'Maximum loss reached.':'Partial outcome.'}</strong> Net credit ${money(maxProfit,0)} is maximum profit; strike width minus credit creates ${money(maxLoss,0)} maximum expiration loss.`:`<strong>Invalid credit structure.</strong> Short premium must exceed long premium, and credit must be below the ${money(width)} width.`;setText('creditRule',`${isBull?'BULL PUT':'BEAR CALL'} SPREAD · short ${money(shortK)} ${type} at ${money(shortP)} · long ${money(longK)} ${type} at ${money(longP)} · net credit ${money(credit)} · max profit ${money(maxProfit,0)} · max loss ${money(maxLoss,0)} · breakeven ${money(be)}.`);
+ const el=document.getElementById('creditStatus');el.className=`status-banner ${valid?'good':'bad'}`;el.innerHTML=valid?`<strong>${pnl===maxProfit?'Maximum profit reached.':pnl<=-maxLoss?'Maximum loss reached.':'Partial outcome.'}</strong> Net credit ${money(maxProfit,0)} is maximum profit; strike width minus credit creates ${money(maxLoss,0)} maximum expiration loss.<div class="reading-note"><b>What this is normally read as</b>${creditReading[pnl===maxProfit?'max':pnl<=-maxLoss?'min':'partial']}</div>`:`<strong>Invalid credit structure.</strong> Short premium must exceed long premium, and credit must be below the ${money(width)} width.`;setText('creditRule',`${isBull?'BULL PUT':'BEAR CALL'} SPREAD · short ${money(shortK)} ${type} at ${money(shortP)} · long ${money(longK)} ${type} at ${money(longP)} · net credit ${money(credit)} · max profit ${money(maxProfit,0)} · max loss ${money(maxLoss,0)} · breakeven ${money(be)}.`);
 }
 bindSegment('creditType',v=>{creditType=v;if(v==='bullPut'){document.getElementById('creditShortStrike').value=100;document.getElementById('creditLongStrike').value=90;}else{document.getElementById('creditShortStrike').value=100;document.getElementById('creditLongStrike').value=110;}renderCredit();});['creditShortStrike','creditLongStrike','creditShortPremium','creditLongPremium','creditContracts','creditFinal'].forEach(id=>document.getElementById(id).addEventListener('input',renderCredit));
 setupQuiz({promptId:'creditQuizPrompt',choicesId:'creditQuizChoices',feedbackId:'creditQuizFeedback',scoreId:'creditQuizScore',nextId:'creditQuizNext',questions:[

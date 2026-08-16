@@ -657,6 +657,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1279,6 +1300,7 @@ textarea { font: inherit; }
   <article class="card chart-card">
     <div class="chart-toolbar"><div class="chart-title"><strong id="breakoutTitle">Confirmed breakout</strong><span>Advance candle by candle; decide using only visible information</span></div><div class="tab-row" id="breakoutTabs"><button class="tab active" data-scenario="confirmed" type="button">Confirmed</button><button class="tab" data-scenario="retest" type="button">Breakout + retest</button><button class="tab" data-scenario="failed" type="button">Failed breakout</button><button class="tab" data-scenario="crowded" type="button">Limited room</button></div></div>
     <div class="chart-wrap"><svg id="breakoutChart" class="market-chart" aria-label="Breakout setup replay chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="breakoutReadingBlock" aria-live="polite"></div>
     <div class="control-strip"><button class="btn small" id="breakoutReset" type="button">Reset</button><button class="btn small primary" id="breakoutNext" type="button">Next candle</button><button class="btn small" id="breakoutPlay" type="button">Play</button><div class="control-group grow"><label for="breakoutStep">Visible candles</label><input id="breakoutStep" type="range" min="6" max="20" value="8" step="1" /><span class="range-value" id="breakoutStepValue">8 / 20</span></div></div>
   </article>
   <aside class="card side-panel">
@@ -1843,6 +1865,52 @@ const breakoutScenarios={
  failed:{title:"Failed breakout",closes:[100,102,104.3,103.1,105.5,104.0,105.8,103.9,105.6,104.4,106.0,107.3,105.7,104.8,103.9,102.7],boundary:106.2,target:111.0,breakIndex:11,acceptIndex:null,failIndex:12,decision:"noTrade",annotations:[{index:11,value:107.3,label:"Trades above",tone:"amber"},{index:12,value:105.7,label:"Closes inside",tone:"red"}]},
  crowded:{title:"Breakout with limited room",closes:[100,101.5,103,102.2,104.1,103.0,104.5,103.7,104.6,105.0,106.1,107.0,107.5,107.8],boundary:105.2,target:108.0,breakIndex:10,acceptIndex:11,failIndex:null,decision:"noTrade",annotations:[{index:10,value:106.1,label:"Breakout",tone:"purple"},{index:13,value:107.8,label:"Opposing level",tone:"red"}]}
 };
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// Reveal-aware. This chart hides future candles, so the reading is selected
+// from the same breakIndex / acceptIndex / failIndex the checklist uses and
+// can never describe a candle the reader has not uncovered.
+function breakoutPre(b){return {
+ structure:`Price is still rotating below the ${b.toFixed(1)} boundary. No close has settled beyond it yet.`,
+ participation:"As it stands this is normally read as the level still doing its job: every advance so far has ended below it rather than through it. The reading changes when a close settles on the other side — not when a candle merely trades there."
+};}
+function breakoutBroke(b){return {
+ structure:`A close has printed beyond ${b.toFixed(1)}, but price has neither held outside nor come back inside yet.`,
+ participation:"One close beyond a level is normally read as a claim rather than a settlement. Until the next candles show whether price stays out there, the same evidence is equally consistent with a level being probed and rejected."
+};}
+const breakoutReadings={
+ confirmed:{resolved:{
+  structure:"The closes after the break stay beyond the boundary.",
+  participation:"Continuing to trade on the far side is normally read as the level no longer being defended: buyers kept paying above a price that had capped them for the whole prior range. A close back inside the range would end that reading."
+ }},
+ retest:{resolved:{
+  structure:"Price broke out, returned to the boundary, and then closed away from it again.",
+  participation:"This is the reading a retest exists to produce: the old ceiling was revisited and behaved like a floor instead. It is more than the break alone because the level has now been tested from both sides — and a close back below it still ends it."
+ }},
+ failed:{resolved:{
+  structure:"Price traded beyond the boundary and then closed back inside the range.",
+  participation:"Normally read as the break failing to attract continuation: whatever pushed price out was not followed, and the level held after all. That is a statement about what has already happened, not a signal in the other direction."
+ }},
+ crowded:{resolved:{
+  structure:"The break holds — the closes after it stay above the boundary.",
+  participation:"Structurally this reads exactly as a confirmed break does: the level stopped capping price. The reason this tab is still not a trade is the opposing level immediately above, which is a question about room, not about whether the break was real."
+ }}
+};
+function breakoutReading(key,s,visible){const last=visible-1;const r=breakoutReadings[key];
+ if(s.failIndex!==null&&last>=s.failIndex)return r.resolved;
+ if(s.acceptIndex!==null&&last>=s.acceptIndex)return r.resolved;
+ if(last>=s.breakIndex)return breakoutBroke(s.boundary);
+ return breakoutPre(s.boundary);}
+
 let breakoutKey="confirmed",breakoutVisible=8,breakoutDecision="wait",breakoutTimer=null;
 function breakoutExpected(s,visible){const last=visible-1;if(s.failIndex!==null&&last>=s.failIndex)return "noTrade";if(s===breakoutScenarios.crowded&&last>=s.breakIndex)return "noTrade";if(s.acceptIndex!==null&&last>=s.acceptIndex)return s.decision;if(last>=s.breakIndex)return "wait";return "wait";}
 function breakoutChecks(s,visible){const last=visible-1;return [
@@ -1851,7 +1919,7 @@ function breakoutChecks(s,visible){const last=visible-1;return [
  {label:"Acceptance / retest",detail:s.failIndex!==null&&last>=s.failIndex?"Price returned inside the range.":s.acceptIndex!==null&&last>=s.acceptIndex?"Price accepted outside the range.":"Not confirmed yet.",state:s.failIndex!==null&&last>=s.failIndex?"fail":s.acceptIndex!==null&&last>=s.acceptIndex?"pass":"warn"},
  {label:"Room to target",detail:s===breakoutScenarios.crowded?"Opposing level is immediately above the break.":"Meaningful room remains to the next level.",state:s===breakoutScenarios.crowded?"fail":"pass"}
  ];}
-function renderBreakout(){const s=breakoutScenarios[breakoutKey];const candles=candlesFromCloses(s.closes,{},40+Object.keys(breakoutScenarios).indexOf(breakoutKey));document.getElementById("breakoutStep").max=s.closes.length;breakoutVisible=clamp(breakoutVisible,6,s.closes.length);document.getElementById("breakoutStep").value=breakoutVisible;setText("breakoutStepValue",`${breakoutVisible} / ${s.closes.length}`);setText("breakoutTitle",s.title);drawCandles(document.getElementById("breakoutChart"),candles,{visibleCount:breakoutVisible,levels:[{value:s.boundary,label:"Breakout boundary",tone:"amber"},{value:s.target,label:"Next opposing level",tone:"red"}],annotations:s.annotations,includeValues:[s.boundary,s.target]});const checks=breakoutChecks(s,breakoutVisible);setHTML("breakoutChecklist",checks.map(c=>`<div class="check-row ${c.state}"><div class="check-dot">${c.state==="pass"?"✓":c.state==="fail"?"×":"!"}</div><div><strong>${c.label}</strong><span>${c.detail}</span></div></div>`).join(""));}
+function renderBreakout(){const s=breakoutScenarios[breakoutKey];const candles=candlesFromCloses(s.closes,{},40+Object.keys(breakoutScenarios).indexOf(breakoutKey));document.getElementById("breakoutStep").max=s.closes.length;breakoutVisible=clamp(breakoutVisible,6,s.closes.length);document.getElementById("breakoutStep").value=breakoutVisible;setText("breakoutStepValue",`${breakoutVisible} / ${s.closes.length}`);setText("breakoutTitle",s.title);drawCandles(document.getElementById("breakoutChart"),candles,{visibleCount:breakoutVisible,levels:[{value:s.boundary,label:"Breakout boundary",tone:"amber"},{value:s.target,label:"Next opposing level",tone:"red"}],annotations:s.annotations,includeValues:[s.boundary,s.target]});renderReading("breakoutReadingBlock",breakoutReading(breakoutKey,s,breakoutVisible));const checks=breakoutChecks(s,breakoutVisible);setHTML("breakoutChecklist",checks.map(c=>`<div class="check-row ${c.state}"><div class="check-dot">${c.state==="pass"?"✓":c.state==="fail"?"×":"!"}</div><div><strong>${c.label}</strong><span>${c.detail}</span></div></div>`).join(""));}
 function stopBreakoutPlay(){if(breakoutTimer){clearInterval(breakoutTimer);breakoutTimer=null;setText("breakoutPlay","Play");}}
 bindSegment("breakoutDecision",value=>breakoutDecision=value);
 document.getElementById("breakoutStep").addEventListener("input",e=>{breakoutVisible=num(e.target.value,8);renderBreakout();});

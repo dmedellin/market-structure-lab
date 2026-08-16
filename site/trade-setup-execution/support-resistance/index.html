@@ -784,6 +784,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1305,6 +1326,7 @@ textarea { font: inherit; }
       <div class="tab-row" id="zoneTabs"><button class="tab active" data-scenario="range" type="button">Range</button><button class="tab" data-scenario="roleReversal" type="button">Role reversal</button><button class="tab" data-scenario="downtrend" type="button">Downtrend</button></div>
     </div>
     <div class="chart-wrap"><div class="chart-instruction">Select Support or Resistance, then click the chart</div><svg id="zoneChart" class="market-chart click-capture" aria-label="Support and resistance placement chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="zoneReading" aria-live="polite"></div>
     <div class="control-strip">
       <div class="seg-row" id="zoneMode"><button class="seg-btn active" data-value="support" data-tone="green" type="button">Place support</button><button class="seg-btn" data-value="resistance" data-tone="red" type="button">Place resistance</button></div>
       <div class="control-group grow"><label for="zoneWidth">Zone width</label><input id="zoneWidth" type="range" min="0.3" max="2.0" value="0.8" step="0.1" /><span class="range-value" id="zoneWidthValue">±0.8</span></div>
@@ -1891,6 +1913,36 @@ const zoneScenarios = {
   roleReversal:{title:"Former resistance becomes support",closes:[98,99.6,101.2,102.8,101.7,103.1,102.2,103.4,105.6,107.2,106.5,105.4,104.8,105.6,107.5,109.2,110.4],support:104.8,resistance:110.2},
   downtrend:{title:"Resistance in a downtrend",closes:[110,108.7,109.4,107.1,105.8,106.7,104.4,103.1,104.0,101.8,100.7,101.5,99.4,97.8,98.7,96.5],support:96.5,resistance:104.0}
 };
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// Parallel to zoneScenarios. Deliberately silent on two declared levels that
+// the candles do not support: roleReversal.resistance (110.2 has no prior
+// reaction in the series) and downtrend.support (96.5 is the final close and
+// is never tested twice). A reading of either would be invented.
+const zoneReadings = {
+  range: {
+    structure: "Price has turned down twice from the same upper area — 107.0 and 107.4 — and turned back up twice from the same lower area — 99.2 and 99.7. It is rising into that upper area again.",
+    participation: "Repeated reactions at the same two prices are normally read as both sides acting consistently in the same places: sellers meeting advances near the top, buyers meeting declines near the bottom. That describes what has already repeated — the next test is not obliged to behave like the last two, and a close well beyond either edge ends the reading."
+  },
+  roleReversal: {
+    structure: "Three attempts stall between 102.8 and 103.4. Price then closes above that area and stays above it, and the pullback that follows stops at 104.8 rather than returning below the old cap.",
+    participation: "The standard reading of that sequence is role reversal: the price that used to stop advances is now where declines stop instead. Only the behaviour has changed, not the price — which is why a close back below the old cap would end the reading."
+  },
+  downtrend: {
+    structure: "Every rally stops lower than the one before it — 109.4, 106.7, 104.0, 101.5, 98.7 — and each decline closes below the previous low.",
+    participation: "Read the usual way, this says sellers keep acting at lower and lower prices while buyers step in only after price has already fallen further; the 104.0 area is simply one of those caps, drawn because it is the one this chart marks, not a shelf the whole series respects. A close above the last lower high would break the sequence and end the reading."
+  }
+};
+
 let zoneKey="range";
 let zoneMode="support";
 let placed={support:null,resistance:null};
@@ -1907,6 +1959,7 @@ function renderZones(){
   const candles=candlesFromCloses(s.closes,{},20+Object.keys(zoneScenarios).indexOf(zoneKey));
   zoneChartMap=drawCandles(document.getElementById("zoneChart"),candles,{zones,includeValues:[s.support,s.resistance,...Object.values(placed).filter(v=>v!==null)]});
   setText("zoneScenarioTitle",s.title);
+  renderReading("zoneReading",zoneReadings[zoneKey]);
   setText("supportValue",placed.support===null?"—":placed.support.toFixed(2));
   setText("resistanceValue",placed.resistance===null?"—":placed.resistance.toFixed(2));
   setText("zoneRangeValue",placed.support!==null&&placed.resistance!==null?(placed.resistance-placed.support).toFixed(2):"—");

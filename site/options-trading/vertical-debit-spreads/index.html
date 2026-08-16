@@ -989,6 +989,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1381,13 +1393,21 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 
 let debitType='bullCall';
+/* THE PARTICIPATION READING. Attached to the VALID state only: the invalid arm
+   is a data-entry message, not a market state, and nothing is read onto it. The
+   status line states the STRUCTURE (defined max loss and max profit); this
+   states how the two drawn curves are normally READ. */
+const debitReading={
+ bullCall:'Both legs have counterparties: premium was paid for the long strike and received for the short one, and the net debit is what the two sides agreed for the difference. The purple line is the long option on its own: it keeps gaining above the short strike, while the cyan spread line goes flat there because that upside was sold. Far enough beyond the short strike the single option would have paid more, and the lower debit is what that was traded for.',
+ bearPut:'Both legs have counterparties: premium was paid for the long strike and received for the short one, and the net debit is what the two sides agreed for the difference. The purple line is the long option on its own: it keeps gaining below the short strike, while the cyan spread line goes flat there because that downside was sold. Far enough beyond the short strike the single option would have paid more, and the lower debit is what that was traded for.'
+};
 function renderDebit(){
  let longK=Math.max(1,num(document.getElementById('debitLongStrike').value,100)),shortK=Math.max(1,num(document.getElementById('debitShortStrike').value,110));const longP=Math.max(.01,num(document.getElementById('debitLongPremium').value,5.5)),shortP=Math.max(.01,num(document.getElementById('debitShortPremium').value,2)),contracts=Math.max(1,Math.floor(num(document.getElementById('debitContracts').value,1))),shares=contracts*100,S=Math.max(0,num(document.getElementById('debitFinal').value,108));
  const isBull=debitType==='bullCall',type=isBull?'call':'put';if(isBull&&shortK<=longK){shortK=longK+5;document.getElementById('debitShortStrike').value=shortK;}if(!isBull&&shortK>=longK){shortK=Math.max(1,longK-5);document.getElementById('debitShortStrike').value=shortK;}const width=Math.abs(shortK-longK),net=Math.max(.01,longP-shortP),valid=longP>shortP&&net<width;
  const spreadPer=optionIntrinsic(type,S,longK)-optionIntrinsic(type,S,shortK)-net,pnl=spreadPer*shares,be=isBull?longK+net:longK-net,maxLoss=net*shares,maxProfit=Math.max(0,width-net)*shares,longOnly=(optionIntrinsic(type,S,longK)-longP)*shares;
  setText('debitTitle',`${isBull?'Bull call':'Bear put'} spread profit and loss`);setText('debitLongLeg',`${money(longK)} ${type}`);setText('debitShortLeg',`${money(shortK)} ${type}`);setText('debitLongLegText',`Pay ${money(longP)}`);setText('debitShortLegText',`Receive ${money(shortP)}`);setText('debitLongCash',`−${money(longP*shares,0)}`);setText('debitShortCash',`+${money(shortP*shares,0)}`);setText('debitNet',money(net*shares,0));setText('debitMaxProfit',money(maxProfit,0));setText('debitBreakeven',money(be));setText('debitPnl',`${pnl>=0?'+':''}${money(pnl,0)}`);document.getElementById('debitPnl').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';
  const center=(longK+shortK)/2,min=Math.max(0,center-width*3.5),max=center+width*3.5,spread=payoffPoints(x=>(optionIntrinsic(type,x,longK)-optionIntrinsic(type,x,shortK)-net)*shares,min,max),longSeries=payoffPoints(x=>(optionIntrinsic(type,x,longK)-longP)*shares,min,max);drawPayoffChart(document.getElementById('debitChart'),[{points:spread,tone:'cyan'},{points:longSeries,tone:'purple',width:2}],{verticals:[{value:longK,label:'Long strike',tone:'green'},{value:shortK,label:'Short strike',tone:'red'},{value:be,label:'Breakeven',tone:'amber'},{value:S,label:'Scenario',tone:'cyan'}],decimals:0,xDecimals:0});
- const el=document.getElementById('debitStatus');el.className=`status-banner ${valid?'good':'bad'}`;el.innerHTML=valid?`<strong>Defined risk and reward.</strong> Maximum loss is the ${money(maxLoss,0)} debit; maximum profit is ${money(maxProfit,0)} when expiration finishes beyond the short strike in the favorable direction.`:`<strong>Invalid debit structure.</strong> Long premium must exceed short premium, and net debit must be less than the ${money(width)} strike width.`;setText('debitRule',`${isBull?'BULL CALL':'BEAR PUT'} SPREAD · long ${money(longK)} ${type} at ${money(longP)} · short ${money(shortK)} ${type} at ${money(shortP)} · net debit ${money(net)} · max loss ${money(maxLoss,0)} · max profit ${money(maxProfit,0)} · breakeven ${money(be)}.`);
+ const el=document.getElementById('debitStatus');el.className=`status-banner ${valid?'good':'bad'}`;el.innerHTML=valid?`<strong>Defined risk and reward.</strong> Maximum loss is the ${money(maxLoss,0)} debit; maximum profit is ${money(maxProfit,0)} when expiration finishes beyond the short strike in the favorable direction.<div class="reading-note"><b>What this is normally read as</b>${debitReading[debitType]}</div>`:`<strong>Invalid debit structure.</strong> Long premium must exceed short premium, and net debit must be less than the ${money(width)} strike width.`;setText('debitRule',`${isBull?'BULL CALL':'BEAR PUT'} SPREAD · long ${money(longK)} ${type} at ${money(longP)} · short ${money(shortK)} ${type} at ${money(shortP)} · net debit ${money(net)} · max loss ${money(maxLoss,0)} · max profit ${money(maxProfit,0)} · breakeven ${money(be)}.`);
 }
 bindSegment('debitType',v=>{debitType=v;if(v==='bullCall'){document.getElementById('debitLongStrike').value=100;document.getElementById('debitShortStrike').value=110;}else{document.getElementById('debitLongStrike').value=100;document.getElementById('debitShortStrike').value=90;}renderDebit();});['debitLongStrike','debitShortStrike','debitLongPremium','debitShortPremium','debitContracts','debitFinal'].forEach(id=>document.getElementById(id).addEventListener('input',renderDebit));
 setupQuiz({promptId:'debitQuizPrompt',choicesId:'debitQuizChoices',feedbackId:'debitQuizFeedback',scoreId:'debitQuizScore',nextId:'debitQuizNext',questions:[

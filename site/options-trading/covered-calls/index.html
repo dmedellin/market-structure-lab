@@ -1004,6 +1004,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1398,11 +1410,21 @@ function scrollToLab(){byId('lab')?.scrollIntoView({behavior:'smooth',block:'sta
 function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)}
 
 
+/* THE PARTICIPATION READING, keyed to the same three scenario states the status
+   line branches on. The status line states the STRUCTURE (where the scenario
+   sits against strike and breakeven); this states how that structure is
+   normally READ. The honest participation fact on a payoff chart is the
+   counterparty: the upside above the strike was sold to someone. */
+const coveredReading={
+ capped:'The cyan line flattens above the strike because the upside there was sold: someone paid premium for the right to buy these shares at that price. Structurally that is the trade that was agreed rather than a loss, and the purple stock-only line pulls ahead only once the move past the strike is worth more than the premium received. The reading holds only while the shares are actually held; without them the same obligation is a different position entirely.',
+ below:'The premium received is the price agreed for capping the upside, and it lowers the basis by exactly that amount and no more. It transfers none of the downside to anyone: the shares are still held, and the purple line shows the same decline with no premium against it. The common reading that a covered call is a conservative position fails here, because the position is long stock first.',
+ unexercised:'The short call is not in the money in this scenario, so the right that was sold has no claim on the shares and the premium is retained. Structurally the two sides agreed a price for that right before the outcome was known, so retaining it is the outcome and not the reason. Above the strike the cap applies again regardless of how the shares got there.'
+};
 function renderCovered(){
  const basis=Math.max(1,num(document.getElementById('coveredBasis').value,100)),K=Math.max(1,num(document.getElementById('coveredStrike').value,108)),premium=Math.max(.01,num(document.getElementById('coveredPremium').value,2.5)),contracts=Math.max(1,Math.floor(num(document.getElementById('coveredContracts').value,1))),shares=contracts*100,S=num(document.getElementById('coveredFinal').value,112);document.getElementById('coveredFinal').min=Math.max(0,Math.floor(basis*.5));document.getElementById('coveredFinal').max=Math.ceil(basis*1.5);setText('coveredFinalOut',money(S,0));
  const perShare=(S-basis)+premium-Math.max(0,S-K),pnl=perShare*shares,be=basis-premium,maxProfit=(K-basis+premium)*shares,maxLoss=(basis-premium)*shares;setText('coveredShares',shares.toLocaleString());setText('coveredBreakeven',money(be));setText('coveredMaxProfit',money(maxProfit,0));setText('coveredPnl',`${pnl>=0?'+':''}${money(pnl,0)}`);document.getElementById('coveredPnl').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';
  const min=Math.max(0,basis*.5),max=basis*1.5,covered=payoffPoints(x=>((x-basis)+premium-Math.max(0,x-K))*shares,min,max),stock=payoffPoints(x=>(x-basis)*shares,min,max);drawPayoffChart(document.getElementById('coveredChart'),[{points:covered,tone:'cyan'},{points:stock,tone:'purple',width:2}],{verticals:[{value:K,label:'Call strike',tone:'amber'},{value:be,label:'Breakeven',tone:'cyan'},{value:S,label:'Scenario',tone:'green'}],decimals:0,xDecimals:0});
- const state=S>=K?'The short call is in-the-money at expiration; assignment is likely under standard exercise procedures, though holder and broker instructions can differ.':S<be?'The premium reduced the loss, but the stock decline still produces a position loss.':'The short call expires out-of-the-money in this scenario and the premium is retained.';setHTML('coveredStatus',`<strong>${S>=K?'Upside capped.':S<be?'Below breakeven.':'Call below strike.'}</strong> ${state}`);setText('coveredRule',`OWN ${shares} SHARES at ${money(basis)} · SHORT ${contracts} CALL(S) strike ${money(K)} for ${money(premium)} · breakeven ${money(be)} · maximum profit ${money(maxProfit,0)} · maximum stock-to-zero loss ${money(maxLoss,0)}.`);
+ const state=S>=K?'The short call is in-the-money at expiration; assignment is likely under standard exercise procedures, though holder and broker instructions can differ.':S<be?'The premium reduced the loss, but the stock decline still produces a position loss.':'The short call expires out-of-the-money in this scenario and the premium is retained.';setHTML('coveredStatus',`<strong>${S>=K?'Upside capped.':S<be?'Below breakeven.':'Call below strike.'}</strong> ${state}<div class="reading-note"><b>What this is normally read as</b>${coveredReading[S>=K?'capped':S<be?'below':'unexercised']}</div>`);setText('coveredRule',`OWN ${shares} SHARES at ${money(basis)} · SHORT ${contracts} CALL(S) strike ${money(K)} for ${money(premium)} · breakeven ${money(be)} · maximum profit ${money(maxProfit,0)} · maximum stock-to-zero loss ${money(maxLoss,0)}.`);
 }
 ['coveredBasis','coveredStrike','coveredPremium','coveredContracts','coveredFinal'].forEach(id=>document.getElementById(id).addEventListener('input',renderCovered));
 setupQuiz({promptId:'coveredQuizPrompt',choicesId:'coveredQuizChoices',feedbackId:'coveredQuizFeedback',scoreId:'coveredQuizScore',nextId:'coveredQuizNext',questions:[

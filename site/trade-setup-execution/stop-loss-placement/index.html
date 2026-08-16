@@ -655,6 +655,27 @@ input[type="range"] {
 
 .note strong { color: var(--text); }
 
+.reading-strip {
+  display: grid;
+  gap: 9px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.81rem;
+}
+
+.reading-strip strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--text);
+  font-size: 0.71rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+
 .matrix {
   display: grid;
   gap: 8px;
@@ -1265,6 +1286,7 @@ textarea { font: inherit; }
   <article class="card chart-card">
     <div class="chart-toolbar"><div class="chart-title"><strong id="stopTitle">Long pullback</strong><span>Drag the stop line or use the slider</span></div><div class="tab-row" id="stopTabs"><button class="tab active" data-scenario="longPullback" type="button">Long pullback</button><button class="tab" data-scenario="shortBreakout" type="button">Short breakout</button><button class="tab" data-scenario="longReversal" type="button">Long reversal</button></div></div>
     <div class="chart-wrap"><div class="chart-instruction">Drag the red stop line vertically</div><svg id="stopChart" class="market-chart" aria-label="Draggable stop-loss placement chart"></svg><div class="chart-tooltip"></div></div>
+    <div class="reading-strip" id="stopReading" aria-live="polite"></div>
     <div class="control-strip"><div class="control-group grow"><label for="stopSlider">Stop price</label><input id="stopSlider" type="range" step="0.1" /><span class="range-value" id="stopSliderValue">—</span></div><label class="check"><input id="showStopReference" type="checkbox" /> Show reference area</label></div>
   </article>
   <aside class="card side-panel">
@@ -1834,9 +1856,39 @@ const stopScenarios={
  shortBreakout:{title:"Short breakout",direction:"short",closes:[108,106.9,107.6,105.4,104.2,105.0,103.2,102.3,103.4,102.1,101.5,100.1,99.2,98.0,96.8],entry:99.2,invalidation:101.5,ideal:102.0,atr:.7,target:95.2},
  longReversal:{title:"Long reversal",direction:"long",closes:[110,108.8,109.4,107.0,105.8,106.5,104.3,102.8,103.7,101.9,102.7,104.2,103.4,104.8,106.2,107.6],entry:104.8,invalidation:102.7,ideal:102.2,atr:.65,target:109.0}
 };
+
+// Participation reading. Two separate claims, rendered as two labelled
+// sub-blocks: what price DID, then the standard READING of that structure.
+// The reading is an interpretation of visible structure, never an assertion
+// about order flow, and never a forecast.
+function renderReading(id, r) {
+  if (!r) { setHTML(id, ""); return; }
+  setHTML(id, "<div><strong>Structure</strong>" + r.structure + "</div>"
+    + "<div><strong>What this is normally read as</strong>" + r.participation + "</div>");
+}
+
+// Parallel to stopScenarios. Scope is deliberately narrow: these explain why
+// the invalidation line sits where it does, which is this lesson's subject.
+// They are NOT written into #stopReason -- that element belongs to the
+// reader's own stop verdict and is rewritten on every drag.
+const stopReadings={
+ longPullback:{
+  structure:"The advance to 111.8 began from the 107.4 low. The correction that follows ends at 108.3, above that low, and the invalidation line sits just under it at 107.2.",
+  participation:"Each correction so far has ended higher than the last, which is normally read as buyers acting earlier on each pullback. The 107.2 line is where that specific reading stops being available: below the 107.4 swing there is no higher-low sequence left to read, which is why the stop belongs beyond it rather than inside the correction."
+ },
+ shortBreakout:{
+  structure:"Rallies end progressively lower — 107.6, then 105.0, then 103.4 — and price then closes down through 101.5 and 100.1 to the 99.2 entry.",
+  participation:"The usual interpretation is that sellers keep acting at lower prices while buyers appear only after each further decline. The 101.5 line marks where that reading fails: closing back above it means the ground given up in the breakdown has been taken back, and the reason the trade was entered no longer applies."
+ },
+ longReversal:{
+  structure:"A downtrend of lower highs — 109.4, 106.5, 103.7 — ends with a close at 104.2, the first above 103.7. The dip that follows stops at 103.4, above the 102.7 the break started from.",
+  participation:"That pair is normally read as a change of character rather than another bounce: one higher high in a downtrend would not be, but the higher low after it is. The 102.7 line is the price that makes the difference — below it the break has been given back and there is nothing left of the reading."
+ }
+};
+
 let stopKey="longPullback",stopPrice=106.7,stopMap=null,stopDragging=false;
 function stopAssessment(s,price){const distance=Math.abs(s.entry-price);const wrongSide=s.direction==="long"?price>=s.entry:price<=s.entry;const inside=s.direction==="long"?price>=s.invalidation:price<=s.invalidation;const buffer=Math.abs(price-s.invalidation);if(wrongSide)return {class:"Invalid",tone:"bad",reason:"The stop is not on the loss side of the entry."};if(inside)return {class:"Too tight",tone:"bad",reason:"The stop remains inside the structure that the setup expects to hold."};if(buffer>s.atr*2.2)return {class:"Too wide",tone:"warn",reason:"The stop is structurally safe but uses substantially more room than the reference volatility buffer."};return {class:"Structurally valid",tone:"good",reason:"The stop is beyond invalidation with a reasonable volatility buffer for this example."};}
-function renderStop(){const s=stopScenarios[stopKey];const min=Math.min(...s.closes,s.target,s.ideal)-3,max=Math.max(...s.closes,s.target,s.ideal)+3;const input=document.getElementById("stopSlider");input.min=min.toFixed(1);input.max=max.toFixed(1);input.value=stopPrice;setText("stopSliderValue",stopPrice.toFixed(2));const levels=[{value:s.entry,label:"Entry",tone:"green"},{value:s.invalidation,label:"Structural invalidation",tone:"amber"},{value:s.target,label:"Target",tone:"purple"}];if(document.getElementById("showStopReference").checked)levels.push({value:s.ideal,label:"Reference stop",tone:"blue"});stopMap=drawCandles(document.getElementById("stopChart"),candlesFromCloses(s.closes,{},80+Object.keys(stopScenarios).indexOf(stopKey)),{levels,includeValues:[s.entry,s.invalidation,s.target,stopPrice],overlay:({svg,y,plot})=>{const yy=y(stopPrice);svg.appendChild(svgNode("line",{x1:plot.left,y1:yy,x2:plot.right,y2:yy,class:"draggable-line tone-red","stroke-dasharray":"8 5"}));svg.appendChild(svgNode("circle",{cx:plot.right-18,cy:yy,r:8,class:"handle tone-red",fill:"var(--red)"}));svg.appendChild(svgNode("text",{x:plot.right-31,y:yy-9,"text-anchor":"end",class:"chart-label tone-red"},`STOP ${stopPrice.toFixed(2)}`));}});const a=stopAssessment(s,stopPrice);setText("stopTitle",s.title);setText("stopEntry",s.entry.toFixed(2));setText("stopDistance",Math.abs(s.entry-stopPrice).toFixed(2));setText("stopAtr",s.atr.toFixed(2));setText("stopClass",a.class);setText("stopReason",a.reason);const units=Math.floor(num(document.getElementById("stopRiskBudget").value,200)/Math.max(.01,Math.abs(s.entry-stopPrice)));document.getElementById("stopUnits").value=`${Math.max(0,units)} units`;}
+function renderStop(){const s=stopScenarios[stopKey];const min=Math.min(...s.closes,s.target,s.ideal)-3,max=Math.max(...s.closes,s.target,s.ideal)+3;const input=document.getElementById("stopSlider");input.min=min.toFixed(1);input.max=max.toFixed(1);input.value=stopPrice;setText("stopSliderValue",stopPrice.toFixed(2));const levels=[{value:s.entry,label:"Entry",tone:"green"},{value:s.invalidation,label:"Structural invalidation",tone:"amber"},{value:s.target,label:"Target",tone:"purple"}];if(document.getElementById("showStopReference").checked)levels.push({value:s.ideal,label:"Reference stop",tone:"blue"});stopMap=drawCandles(document.getElementById("stopChart"),candlesFromCloses(s.closes,{},80+Object.keys(stopScenarios).indexOf(stopKey)),{levels,includeValues:[s.entry,s.invalidation,s.target,stopPrice],overlay:({svg,y,plot})=>{const yy=y(stopPrice);svg.appendChild(svgNode("line",{x1:plot.left,y1:yy,x2:plot.right,y2:yy,class:"draggable-line tone-red","stroke-dasharray":"8 5"}));svg.appendChild(svgNode("circle",{cx:plot.right-18,cy:yy,r:8,class:"handle tone-red",fill:"var(--red)"}));svg.appendChild(svgNode("text",{x:plot.right-31,y:yy-9,"text-anchor":"end",class:"chart-label tone-red"},`STOP ${stopPrice.toFixed(2)}`));}});const a=stopAssessment(s,stopPrice);setText("stopTitle",s.title);renderReading("stopReading",stopReadings[stopKey]);setText("stopEntry",s.entry.toFixed(2));setText("stopDistance",Math.abs(s.entry-stopPrice).toFixed(2));setText("stopAtr",s.atr.toFixed(2));setText("stopClass",a.class);setText("stopReason",a.reason);const units=Math.floor(num(document.getElementById("stopRiskBudget").value,200)/Math.max(.01,Math.abs(s.entry-stopPrice)));document.getElementById("stopUnits").value=`${Math.max(0,units)} units`;}
 function setStopFromPointer(event){if(!stopMap)return;const p=svgPointFromEvent(document.getElementById("stopChart"),event);stopPrice=round(clamp(stopMap.priceFromY(p.y),stopMap.minPrice,stopMap.maxPrice),2);renderStop();}
 document.getElementById("stopChart").addEventListener("pointerdown",event=>{if(!stopMap)return;const p=svgPointFromEvent(event.currentTarget,event),yy=stopMap.y(stopPrice);if(Math.abs(p.y-yy)<20){stopDragging=true;event.currentTarget.setPointerCapture(event.pointerId);setStopFromPointer(event);}});document.getElementById("stopChart").addEventListener("pointermove",event=>{if(stopDragging)setStopFromPointer(event);});document.getElementById("stopChart").addEventListener("pointerup",event=>{stopDragging=false;try{event.currentTarget.releasePointerCapture(event.pointerId);}catch(_){}});document.getElementById("stopSlider").addEventListener("input",e=>{stopPrice=num(e.target.value);renderStop();});document.getElementById("showStopReference").addEventListener("change",renderStop);document.getElementById("stopRiskBudget").addEventListener("input",renderStop);document.getElementById("stopTabs").addEventListener("click",event=>{const b=event.target.closest("[data-scenario]");if(!b)return;document.querySelectorAll("#stopTabs .tab").forEach(x=>x.classList.toggle("active",x===b));stopKey=b.dataset.scenario;stopPrice=stopScenarios[stopKey].ideal;renderStop();});document.getElementById("evaluateStop").addEventListener("click",()=>{const a=stopAssessment(stopScenarios[stopKey],stopPrice),st=document.getElementById("stopStatus");st.className=`status-banner ${a.tone}`;st.innerHTML=`<strong>${a.class}.</strong> ${a.reason}`;});
 setupQuiz({promptId:"stopQuizPrompt",choicesId:"stopQuizChoices",feedbackId:"stopQuizFeedback",scoreId:"stopQuizScore",nextId:"stopQuizNext",questions:[

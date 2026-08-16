@@ -989,6 +989,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1280,6 +1292,7 @@ textarea { font: inherit; }
     <article class="card card-pad" aria-live="polite">
       <div style="display:flex;justify-content:space-between;align-items:end;gap:14px;"><div><span class="small-copy">Plan quality score</span><div class="plan-score" id="planScore">—</div></div><div class="pill" id="planGrade">Not evaluated</div></div>
       <div class="payoff-summary" style="margin-top:13px;"><div><span>Maximum planned risk</span><strong id="planMaxRisk">$450</strong></div><div><span>Risk budget</span><strong id="planRiskBudget">$500</strong></div><div><span>Breakeven</span><strong id="planBreakeven">$104.50</strong></div><div><span>P/L at target</span><strong id="planTargetPnl">+$750</strong></div></div>
+      <div class="reading-note" id="planReading"><b>What this is normally read as</b>A long call is premium paid to a writer who accepted the obligation to deliver at the strike, so the whole debit is at risk. Read the red invalidation line as the level that ends the plan, not as a stop the contract itself enforces.</div>
       <div class="rule-checks" id="planChecks" style="margin-top:13px;"></div>
       <div class="rule-output" id="planSummary" style="margin-top:13px;">Evaluate the plan to generate a rule-based summary.</div>
     </article>
@@ -1401,6 +1414,23 @@ const planPresets={
  bear:{label:'Bearish breakdown',direction:'bearish',strategy:'longPut',stock:100,target:88,invalidation:104,thesisDays:15,dte:40,strike:100,secondStrike:90,price:4.2,bid:4.05,ask:4.35,contracts:1,equity:50000,riskPct:1,iv:'normal',event:'none',exit:'stock'},
  event:{label:'High-IV event',direction:'bullish',strategy:'longCall',stock:100,target:104,invalidation:97,thesisDays:8,dte:7,strike:105,secondStrike:115,price:5.5,bid:4.7,ask:6.3,contracts:2,equity:25000,riskPct:1,iv:'high',event:'hold',exit:'none'}
 };
+/* THE PARTICIPATION READING, keyed to the STRATEGY actually selected rather
+   than to the preset button, so it stays true after the reader edits the plan.
+   Deliberately not keyed to the presets: the "event" preset exists to be
+   REJECTED by the checks, and a market reading attached to it would read as an
+   endorsement of a plan this lesson is teaching you to throw away. Every line
+   points at the red Invalidation vertical, which is the one place in this
+   course where a reading has a drawn level that can break it. */
+const planReading={
+ longCall:'A long call is premium paid to a writer who accepted the obligation to deliver at the strike, so the whole debit is at risk. Read the red invalidation line as the level that ends the plan, not as a stop the contract itself enforces.',
+ longPut:'A long put is premium paid to a writer who accepted the obligation to buy at the strike, so the whole debit is at risk. Read the red invalidation line as the level that ends the plan, not as a stop the contract itself enforces.',
+ bullCallDebit:'Two counterparties are involved: one leg was paid for, and part of its payoff was sold to the other. That is normally read as trading away the far side of the move to lower the debit, so the payoff stops at the short strike however far past it the underlying goes.',
+ bearPutDebit:'Two counterparties are involved: one leg was paid for, and part of its payoff was sold to the other. That is normally read as trading away the far side of the move to lower the debit, so the payoff stops at the short strike however far past it the underlying goes.',
+ coveredCall:'The upside beyond the short strike was sold to someone who paid premium for the right to buy the shares there. This plan is long stock first, so the red invalidation line rather than the premium is what defines where the downside thesis has failed.',
+ cashSecuredPut:'This plan agrees in advance to be the buyer at the strike, and the premium is what the other side paid for the right to make that happen. The gain is fixed at that premium, so read the red invalidation line as the level where being that buyer stops matching the thesis.',
+ bullPutCredit:'The credit is the price agreed for accepting the obligation between the two strikes, and the long leg is a counterparty paid to cap what that obligation can cost. The maximum is known from the agreement in advance, so read the red invalidation line as the level that ends the plan rather than as a limit the structure imposes.',
+ bearCallCredit:'The credit is the price agreed for accepting the obligation between the two strikes, and the long leg is a counterparty paid to cap what that obligation can cost. The maximum is known from the agreement in advance, so read the red invalidation line as the level that ends the plan rather than as a limit the structure imposes.'
+};
 const strategyLabels={longCall:'Long call',longPut:'Long put',bullCallDebit:'Bull call debit spread',bearPutDebit:'Bear put debit spread',coveredCall:'Covered call',cashSecuredPut:'Cash-secured put',bullPutCredit:'Bull put credit spread',bearCallCredit:'Bear call credit spread'};
 function readPlan(){return {direction:document.getElementById('planDirection').value,strategy:document.getElementById('planStrategy').value,stock:Math.max(1,num(document.getElementById('planStock').value,100)),target:Math.max(0,num(document.getElementById('planTarget').value,112)),invalidation:Math.max(0,num(document.getElementById('planInvalidation').value,96)),thesisDays:Math.max(1,num(document.getElementById('planThesisDays').value,20)),dte:Math.max(1,num(document.getElementById('planDte').value,45)),strike:Math.max(1,num(document.getElementById('planStrike').value,100)),secondStrike:Math.max(1,num(document.getElementById('planSecondStrike').value,110)),price:Math.max(.01,num(document.getElementById('planNetPrice').value,4.5)),bid:Math.max(0,num(document.getElementById('planBid').value,4.3)),ask:Math.max(.01,num(document.getElementById('planAsk').value,4.7)),contracts:Math.max(1,Math.floor(num(document.getElementById('planContracts').value,1))),equity:Math.max(1,num(document.getElementById('planEquity').value,50000)),riskPct:Math.max(.1,num(document.getElementById('planRiskPct').value,1)),iv:document.getElementById('planIvContext').value,event:document.getElementById('planEvent').value,exit:document.getElementById('planExit').value};}
 function planMetrics(p){
@@ -1416,7 +1446,7 @@ function planMetrics(p){
  return {valid,reason,be,maxLoss,maxProfit,payoff,alignment,width,targetPnl:payoff(p.target)};
 }
 function renderPlan(evaluated=false){
- const p=readPlan(),m=planMetrics(p),riskBudget=p.equity*p.riskPct/100,mid=(p.bid+p.ask)/2,spread=Math.max(0,p.ask-p.bid),spreadPct=spread/Math.max(.01,mid)*100;setText('planPayoffTitle',`${strategyLabels[p.strategy]} expiration P/L`);setText('planMaxRisk',money(m.maxLoss,0));setText('planRiskBudget',money(riskBudget,0));setText('planBreakeven',money(m.be));setText('planTargetPnl',`${m.targetPnl>=0?'+':''}${money(m.targetPnl,0)}`);document.getElementById('planTargetPnl').style.color=m.targetPnl>0?'var(--green)':m.targetPnl<0?'var(--red)':'var(--text)';
+ const p=readPlan(),m=planMetrics(p),riskBudget=p.equity*p.riskPct/100,mid=(p.bid+p.ask)/2,spread=Math.max(0,p.ask-p.bid),spreadPct=spread/Math.max(.01,mid)*100;setText('planPayoffTitle',`${strategyLabels[p.strategy]} expiration P/L`);setText('planMaxRisk',money(m.maxLoss,0));setText('planRiskBudget',money(riskBudget,0));setText('planBreakeven',money(m.be));setText('planTargetPnl',`${m.targetPnl>=0?'+':''}${money(m.targetPnl,0)}`);document.getElementById('planTargetPnl').style.color=m.targetPnl>0?'var(--green)':m.targetPnl<0?'var(--red)':'var(--text)';setHTML('planReading',`<b>What this is normally read as</b>${planReading[p.strategy]}`);
  const min=Math.max(0,Math.min(p.stock,p.target,p.invalidation,p.strike,p.secondStrike)*.75),max=Math.max(p.stock,p.target,p.invalidation,p.strike,p.secondStrike)*1.25;drawPayoffChart(document.getElementById('planChart'),[{points:payoffPoints(m.payoff,min,max),tone:'cyan'}],{verticals:[{value:p.stock,label:'Stock now',tone:'purple'},{value:p.target,label:'Target',tone:'green'},{value:p.invalidation,label:'Invalidation',tone:'red'},{value:m.be,label:'Breakeven',tone:'amber'}],decimals:0,xDecimals:0});
  if(!evaluated)return;
  const longPremium=['longCall','longPut','bullCallDebit','bearPutDebit'].includes(p.strategy);const checks=[

@@ -1107,6 +1107,18 @@ textarea { font: inherit; }
   background: var(--panel-2); color: var(--muted); font-size: .84rem;
 }
 .status-banner strong { color: var(--text); }
+/* The participation reading: a subordinate sub-block under a structural
+   statement. Two different kinds of claim -- what the geometry IS, then how
+   that geometry is normally READ -- so they are separated visually rather
+   than run together. Tokens only; no colour of its own. */
+.reading-note {
+  margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.8rem; line-height: 1.55;
+}
+.reading-note b {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 0.62rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase;
+}
 .status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
 .status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
 .status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
@@ -1417,6 +1429,17 @@ function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,nu
 
 
 let fundSide='long',fundType='call';
+/* THE PARTICIPATION READING -- its own table, keyed by side+type. The status
+   line above states the STRUCTURE (who holds which right or obligation and what
+   this expiration scenario pays). This states how that structure is normally
+   READ. Synthetic payoff geometry: no order flow is asserted, no participant is
+   identified, nothing is predicted. */
+const fundReading={
+ longcall:'Two sides exist here by construction: the premium was paid to a writer who accepted the obligation to sell at the strike. Structurally the premium is the price the two sides agreed for that right, not a forecast of what the underlying does. The reading fails at expiration below breakeven, where the right is worth less than what was paid for it.',
+ longput:'Two sides exist here by construction: the premium was paid to a writer who accepted the obligation to buy at the strike. The usual reading is that the premium is what both sides agreed the right to sell was worth, not a measure of how far price would fall. Above breakeven at expiration that right is worth less than its cost.',
+ shortcall:'The premium received is the price agreed for accepting an obligation; it is not profit yet. This side is short the right the holder bought, so above the strike the holder decides and delivery is required wherever price goes. The reading that the premium compensates the risk stops holding once the move past the strike exceeds it.',
+ shortput:'The premium received is the price agreed for accepting the obligation to buy at the strike. This side sold the holder the right to put shares at that price, so below the strike the purchase happens whatever the market price is. Read the premium as cushioning the basis, not as flooring it.'
+};
 function fundPayoff(S,K,premium){const sign=fundSide==='long'?1:-1;return sign*(optionIntrinsic(fundType,S,K)-premium)}
 function renderFund(){
  const S=Math.max(0,num(byId('fundStock').value,110)),K=Math.max(1,num(byId('fundStrike').value,100)),premium=Math.max(.01,num(byId('fundPremium').value,4)),contracts=Math.max(1,Math.floor(num(byId('fundContracts').value,1))),mult=contracts*100,sign=fundSide==='long'?1:-1;
@@ -1424,7 +1447,7 @@ function renderFund(){
  const action=fundType==='call'?(isLong?'buy':'sell'):(isLong?'sell':'buy'),role=isLong?'right':'obligation';
  setText('fundTitle',`${isLong?'Long':'Short'} ${fundType} contract`);setText('fundContract',`${isLong?'Buy':'Sell'} ${contracts} ${fundType}${contracts>1?'s':''}`);setText('fundRight',`${role[0].toUpperCase()+role.slice(1)} to ${action} ${mult} shares at ${money(K)}`);setText('fundStockOut',money(S));setText('fundStrikeOut',money(K));setText('fundPremiumOut',money(premium));setText('fundSharesOut',`${mult} shares`);setText('fundCashOut',`${isLong?'−':'+'}${money(premium*mult,0)}`);setText('fundPnlOut',`${pnl>=0?'+':'−'}${money(Math.abs(pnl),0)}`);byId('fundPnlOut').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';setText('fundIntrinsic',money(intrinsic));setText('fundBE',money(be));
  let maxLoss,maxProfit;if(isLong&&fundType==='call'){maxLoss=money(premium*mult,0);maxProfit='Unlimited'}else if(isLong){maxLoss=money(premium*mult,0);maxProfit=money(Math.max(0,K-premium)*mult,0)}else if(fundType==='call'){maxLoss='Unlimited';maxProfit=money(premium*mult,0)}else{maxLoss=money(Math.max(0,K-premium)*mult,0);maxProfit=money(premium*mult,0)}setText('fundMaxLoss',maxLoss);setText('fundMaxProfit',maxProfit);
- const mn=moneyness(fundType,S,K),badge=byId('fundBadge');badge.className=`moneyness-badge ${mn.toLowerCase()}`;badge.textContent=mn;setHTML('fundStatus',`<strong>${isLong?'Holder':'Writer'} ${role}:</strong> ${action} ${mult} shares at ${money(K)} if the contract is exercised and assigned as applicable. This expiration scenario produces ${pnl>=0?'a gain':'a loss'} of ${money(Math.abs(pnl),0)}.`);setText('fundRule',`${isLong?'LONG':'SHORT'} ${fundType.toUpperCase()} · ${contracts} contract${contracts>1?'s':''} · ${mult} shares · premium ${money(premium*mult,0)} · breakeven ${money(be)} · maximum loss ${maxLoss}.`);
+ const mn=moneyness(fundType,S,K),badge=byId('fundBadge');badge.className=`moneyness-badge ${mn.toLowerCase()}`;badge.textContent=mn;setHTML('fundStatus',`<strong>${isLong?'Holder':'Writer'} ${role}:</strong> ${action} ${mult} shares at ${money(K)} if the contract is exercised and assigned as applicable. This expiration scenario produces ${pnl>=0?'a gain':'a loss'} of ${money(Math.abs(pnl),0)}.<div class="reading-note"><b>What this is normally read as</b>${fundReading[fundSide+fundType]}</div>`);setText('fundRule',`${isLong?'LONG':'SHORT'} ${fundType.toUpperCase()} · ${contracts} contract${contracts>1?'s':''} · ${mult} shares · premium ${money(premium*mult,0)} · breakeven ${money(be)} · maximum loss ${maxLoss}.`);
  const min=Math.max(0,K*.55),max=K*1.45;drawPayoffChart(byId('fundChart'),[{points:payoffPoints(x=>fundPayoff(x,K,premium)*mult,min,max),tone:'cyan'}],{verticals:[{value:K,label:'Strike',tone:'amber'},{value:be,label:'Breakeven',tone:'cyan'},{value:S,label:'Scenario',tone:'green'}],decimals:0,xDecimals:0});
 }
 bindSegment('fundSide',v=>{fundSide=v;renderFund()});bindSegment('fundType',v=>{fundType=v;renderFund()});['fundStock','fundStrike','fundPremium','fundContracts'].forEach(id=>byId(id).addEventListener('input',renderFund));
