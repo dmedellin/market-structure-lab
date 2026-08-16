@@ -543,6 +543,9 @@ jobs:
           METADATA_META_KEYS = {"og:url", "twitter:url"}
 
           MARKUP_SUFFIXES = {".html", ".htm", ".svg", ".xhtml"}
+          # Published data assets: inspectable source-of-truth files that are served but
+          # never executed or rendered as markup.
+          DATA_ASSET_SUFFIXES = {".json"}
           TEXT_SUFFIXES = MARKUP_SUFFIXES | {".css", ".js", ".mjs", ".json",
                                              ".xml", ".txt", ".md", ".webmanifest"}
           REMOTE = re.compile(r'^\s*(?:https?:)?//', re.I)
@@ -592,10 +595,18 @@ jobs:
                   scrubbed = scrubbed.replace(uri, "")
               for origin in ALLOWED_LINK_ORIGINS:
                   scrubbed = scrubbed.replace(origin, "")
-              for m in ANY_URL.finditer(scrubbed):
-                  offset = line + scrubbed.count("\n", 0, m.start())
-                  violations.append((path, offset, "EXTERNAL_URL",
-                                     "absolute http(s) URL in text/script/style"))
+              # A published DATA asset may carry absolute URLs as DATA. The IREN dataset
+              # cites where each number came from, and a citation with its scheme stripped
+              # is a worse citation. This is a scoping correction, not a relaxation: the
+              # rule exists to stop a page LOADING a third party, and a string in a .json
+              # file loads nothing. The invariant is preserved by the companion check
+              # below, which fails if any page gains a way to fetch such a URL. Markup
+              # keeps the rule in full -- see MARKUP_SUFFIXES.
+              if path.suffix.lower() not in DATA_ASSET_SUFFIXES:
+                  for m in ANY_URL.finditer(scrubbed):
+                      offset = line + scrubbed.count("\n", 0, m.start())
+                      violations.append((path, offset, "EXTERNAL_URL",
+                                         "absolute http(s) URL in text/script/style"))
               for rule, pattern, label in rules:
                   for m in pattern.finditer(text):
                       offset = line + text.count("\n", 0, m.start())

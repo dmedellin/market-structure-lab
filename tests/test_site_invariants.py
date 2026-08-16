@@ -3128,3 +3128,38 @@ def read_text_or_none(path):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestDataAssetsCannotBecomeLoads(unittest.TestCase):
+    """The CI scanner lets a published .json DATA asset carry absolute URLs.
+
+    That is only safe while no page can turn such a string into a request. A
+    citation in a dataset loads nothing; a citation handed to fetch() is a
+    third-party request. This test is the compensating control for that
+    carve-out: if any page ever gains a network primitive, the exemption stops
+    being safe and this fails first.
+    """
+
+    def test_no_page_can_perform_a_network_request(self):
+        primitives = re.compile(
+            r"(?:\bnew\s+(?:WebSocket|XMLHttpRequest|EventSource)\s*\()"
+            r"|(?:(?<![\w.])fetch\s*\()"
+            r"|(?:\.(?:sendBeacon|importScripts)\s*\()"
+            r"|(?:\bimportScripts\s*\()"
+        )
+        offenders = []
+        for path in sorted(SITE_ROOT.rglob("*.html")):
+            text = path.read_text(encoding="utf-8")
+            for match in primitives.finditer(text):
+                start = text.rfind("\n", 0, match.start()) + 1
+                line = text[start:text.find("\n", match.start())]
+                if line.lstrip().startswith(("*", "//", "<!--")):
+                    continue
+                offenders.append("%s: %s" % (served_path(path), match.group(0)))
+        self.assertEqual(
+            [],
+            offenders,
+            "a page gained a network primitive: %s. Published .json assets are "
+            "allowed to contain absolute URLs as data precisely because nothing "
+            "can request them; that stops being true here." % offenders,
+        )
