@@ -7,16 +7,17 @@ reproducible offline). Nothing here fetches, and nothing here needs a build step
 
 WHY THIS EXISTS
 ---------------
-Four course packages have arrived from the generator. Every one of them shipped
-the same five defects, and every one of them was fixed by hand:
+Five course packages have arrived from the generator. Every one of them shipped
+the same defects, and the first four were fixed by hand:
 
     1. a light palette with the neutrals but none of the accents, so every
        accent that is read AS TEXT stayed at its dark-theme value on a light
        ground;
     2. no `@media (prefers-color-scheme: light)` block at all, so the reader who
        never touches the toggle got no light theme;
-    3. its own localStorage theme key -- four distinct keys so far -- so a
-       reader's explicit choice silently reset at every course boundary;
+    3. its own localStorage theme key -- FIVE distinct keys so far, one per
+       package -- so a reader's explicit choice silently reset at every course
+       boundary;
     4. no cross-page navigation: no breadcrumb, no prev/next pager;
     5. placeholder meta descriptions ("Interactive standalone lesson: X.");
     6. component rules scoped to `[data-theme="light"] .foo`, which reach the
@@ -82,6 +83,41 @@ themselves. They are never re-typed here. A tool that duplicated the palette
 would be a fifth place for it to drift, which is the problem, not the fix.
 
 
+THE GENERATOR'S THEME SHAPES
+----------------------------
+The generator does not emit one implementation of the theme control; it has
+emitted two so far, and they share no code:
+
+    SHAPE_SETUP_THEME  (courses 1-4)  one `function setupTheme(){...}` holding
+                                      every theme storage call, plus
+                                      <button id="themeToggle">.
+    SHAPE_SET_THEME    (course 5)     `storedTheme()` + `setTheme(theme)`, the
+                                      stored theme applied at the END of the
+                                      script -- i.e. AFTER first paint, which is
+                                      the flash -- repainting its canvases
+                                      through window.redrawLab(), plus
+                                      <button id="themeBtn"> whose textContent is
+                                      swapped between two glyphs.
+
+Each is a NAMED row in SHAPES with its own signature, its own preflight and its
+own rewrite, and detection is exact: a file must match exactly one row. There is
+no pattern that "probably" matches both, because a tool that guesses is a tool
+that drifts -- and drifting is the thing this exists to stop. A file that
+matches no row, or two, is REFUSED with nothing written, exactly as it was when
+this tool knew one shape.
+
+For SHAPE_SET_THEME specifically, note what is rewritten and what is not: the
+storage key, the button id, and the post-paint application are shell and are
+replaced (the stored theme is applied once, in <head>, before paint).
+window.redrawLab() is the generator's own repaint hook and is carried across
+verbatim -- the labs resolve their colours at draw time, so dropping it would
+leave every canvas painted in dark-theme ink on the light ground with no test
+and no error to say so.
+
+A sixth package with a third shape adds a row. It does not widen an existing
+signature. See docs/INTAKE.md.
+
+
 IDEMPOTENT BY CONSTRUCTION
 --------------------------
 Every step is a CHECK first and a REPAIR second. The check is the invariant
@@ -100,9 +136,10 @@ these aborts the run with a non-zero exit and no output written:
 
     * manifest / file-count mismatch (a lesson the manifest does not declare, or
       a declared lesson with no file);
-    * a theme key shape this tool cannot safely rewrite -- the storage calls must
-      be confined to one `function setupTheme(){...}`, which is shell this tool
-      replaces wholesale; a key used anywhere else is content it will not touch;
+    * a theme shape this tool does not know (see THE GENERATOR'S THEME SHAPES
+      below), or a known shape whose theme storage calls are not confined to the
+      region this tool replaces wholesale -- a key touched from lesson code is
+      content, and content is not this tool's to edit;
     * a lesson that already references an external resource (scanned with
       scripts/smoke.py's own scanner, the same one CI and the test suite use);
     * structural surprises: no <head>, no <style>, more than one <header>,
@@ -300,6 +337,112 @@ SETUP_THEME_JS = """function setupTheme(){
 }""" % {"key": THEME_STORAGE_KEY}
 
 TOGGLE_ELEMENT = THEME_TOGGLE_MARKUP + "☾</button>"
+
+# The glyphs the toggle shows. Both packages chose the same two characters; they
+# are pinned here so a package that chooses different ones is REFUSED by the
+# recognizer below rather than silently re-glyphed.
+SUN_GLYPH = "☀"
+MOON_GLYPH = "☾"
+
+# The runtime half of the toggle for SHAPE_SET_THEME (see the SHAPES registry).
+#
+# This is deliberately NOT SETUP_THEME_JS. That implementation calls byId() and
+# onThemeChange(), and this package has neither: it repaints through
+# window.redrawLab(), which is the GENERATOR's hook -- the labs resolve every
+# colour from CSS custom properties at draw time, so a canvas keeps the ink it
+# was painted with until that hook runs. Dropping the call would leave every
+# chart in a course of charts painted in dark-theme ink on the light ground, and
+# nothing would fail; it would just look broken. So the hook is carried across
+# verbatim and only the SHELL around it is rewritten:
+#
+#   * the storage key becomes the pinned one;
+#   * the icon swap and the click listener address the pinned toggle id;
+#   * the POST-PAINT application of the stored theme is GONE. The package ran
+#     setTheme(storedTheme()||"dark") at the end of its script, after first
+#     paint, which is the flash this whole convention exists to prevent. The
+#     stored choice is applied by PREPAINT_SCRIPT in <head> and never again
+#     here, so it is applied exactly once.
+#
+# With no stored choice the element carries no data-theme at all and CSS decides,
+# so the icon is derived from the EFFECTIVE theme (the attribute if there is one,
+# the media query otherwise) rather than from a hardcoded "dark".
+SET_THEME_JS = """/* Theme control, pinned by scripts/intake_course.py.
+   The stored choice is applied BEFORE first paint by the script at the end of
+   <head>; nothing here applies it a second time. window.redrawLab() is this
+   package's own repaint hook and is called on every theme change on purpose:
+   the labs read their colours from CSS custom properties at draw time, so a
+   canvas painted under one theme keeps that theme's ink until it is redrawn. */
+const themeQuery=window.matchMedia?window.matchMedia("(prefers-color-scheme: light)"):null;
+const effectiveTheme=()=>document.documentElement.dataset.theme||(themeQuery&&themeQuery.matches?"light":"dark");
+const renderThemeIcon=()=>{const b=$("#themeToggle");if(b)b.textContent=effectiveTheme()==="light"?"%(sun)s":"%(moon)s"};
+function setTheme(theme){
+  document.documentElement.dataset.theme=theme;
+  try{localStorage.setItem("%(key)s",theme)}catch{}
+  renderThemeIcon();
+  if(window.redrawLab) window.redrawLab();
+}
+renderThemeIcon();
+$("#themeToggle").addEventListener("click",()=>setTheme(effectiveTheme()==="light"?"dark":"light"));
+if(themeQuery){
+  const onSystemThemeChange=()=>{if(document.documentElement.dataset.theme)return;renderThemeIcon();if(window.redrawLab) window.redrawLab()};
+  if(themeQuery.addEventListener)themeQuery.addEventListener("change",onSystemThemeChange);
+  else if(themeQuery.addListener)themeQuery.addListener(onSystemThemeChange);
+}""" % {"key": THEME_STORAGE_KEY, "sun": SUN_GLYPH, "moon": MOON_GLYPH}
+
+# The toggle each shape ships. SHAPE_SET_THEME's package names the button
+# themeBtn; themeToggle is accepted in the same pattern because that is what
+# THIS tool renames it to, and a second run must recognize its own output
+# instead of failing on it.
+TOGGLE_RE_SETUP_THEME = re.compile(
+    r'<button\b[^>]*\bid="themeToggle"[^>]*>.*?</button>', re.S
+)
+TOGGLE_RE_SET_THEME = re.compile(
+    r'<button\b[^>]*\bid="(?:themeBtn|themeToggle)"[^>]*>.*?</button>', re.S
+)
+
+# SHAPE_SET_THEME's theme block, AS THE GENERATOR SHIPS IT, statement by
+# statement and in order. Whitespace between tokens is free; the statements are
+# not. This is the pattern the tool is allowed to DELETE, so it names every
+# statement it deletes rather than matching a region and hoping:
+#
+#   1. function storedTheme(){...}            reads the key
+#   2. function setTheme(theme){...}          applies + stores + swaps + repaints
+#   3. setTheme(storedTheme()||"dark");       the POST-PAINT application
+#   4. $("#themeBtn").addEventListener(...)   the click handler
+#
+# The key is captured once and back-referenced, so a block that read one key and
+# wrote another is not this shape. So is the button id, so the icon swap and the
+# listener must address the same element. Anything else -- an extra statement,
+# a different glyph, a lab that also calls setTheme -- does not match, and a
+# file that does not match is refused by preflight with nothing written.
+_SET_THEME_SOURCE_STATEMENTS = (
+    r'function\s+storedTheme\s*\(\s*\)\s*\{\s*try\s*\{\s*return\s+localStorage\s*\.\s*'
+    r'getItem\s*\(\s*"(?P<key>[^"\n]*)"\s*\)\s*\}\s*catch\s*\{\s*return\s+null\s*\}\s*\}',
+
+    r'function\s+setTheme\s*\(\s*theme\s*\)\s*\{'
+    r'\s*document\s*\.\s*documentElement\s*\.\s*dataset\s*\.\s*theme\s*=\s*theme\s*;'
+    r'\s*try\s*\{\s*localStorage\s*\.\s*setItem\s*\(\s*"(?P=key)"\s*,\s*theme\s*\)\s*\}'
+    r'\s*catch\s*\{\s*\}'
+    r'\s*\$\(\s*"#(?P<button>[A-Za-z][\w-]*)"\s*\)\s*\.\s*textContent\s*=\s*theme\s*===\s*'
+    r'"dark"\s*\?\s*"☀"\s*:\s*"☾"\s*;'
+    r'\s*if\s*\(\s*window\s*\.\s*redrawLab\s*\)\s*window\s*\.\s*redrawLab\s*\(\s*\)\s*;'
+    r'\s*\}',
+
+    r'setTheme\s*\(\s*storedTheme\s*\(\s*\)\s*\|\|\s*"dark"\s*\)\s*;',
+
+    r'\$\(\s*"#(?P=button)"\s*\)\s*\.\s*addEventListener\s*\(\s*"click"\s*,\s*\(\s*\)\s*=>\s*'
+    r'setTheme\s*\(\s*document\s*\.\s*documentElement\s*\.\s*dataset\s*\.\s*theme\s*===\s*'
+    r'"dark"\s*\?\s*"light"\s*:\s*"dark"\s*\)\s*\)\s*;',
+)
+SET_THEME_SOURCE_RE = re.compile(r"\s*".join(_SET_THEME_SOURCE_STATEMENTS))
+
+# The signatures. A signature answers ONE question -- which family is this? --
+# and nothing more; the proof that the family is rewritable is the shape's
+# preflight. Each must match exactly once: two setupTheme() definitions is not a
+# stronger match, it is a file this tool does not understand.
+SETUP_THEME_SIGNATURE_RE = re.compile(r"function\s+setupTheme\s*\(")
+SET_THEME_SIGNATURE_RE = re.compile(r"function\s+setTheme\s*\(")
+
 
 # CSS for the chrome this tool injects. Appended only when the page has none of
 # it: the class names are this tool's, so there is nothing of the generator's to
@@ -664,8 +807,259 @@ def theme_keys(text):
     return {k for k in theme_storage_sites(text) if INV.THEMEISH_KEY_RE.search(k)}
 
 
+def assert_theme_key_pinned(text, how):
+    """Post-condition for every rewrite: exactly the pinned key survives.
+
+    Each rewrite deletes a region it located by scanning, so this is the check
+    that the scan did not stop short. A retired key that survives here fails the
+    run; the alternative is that it fails at publish, on a reader's browser, as
+    a theme choice that silently resets at the course boundary.
+    """
+    survivors = theme_keys(text)
+    if survivors != {THEME_STORAGE_KEY}:
+        raise IntakeError(
+            "after %s the page still uses theme key(s) %s; the region boundaries "
+            "could not be determined safely"
+            % (how, ", ".join(sorted(repr(k) for k in survivors)))
+        )
+
+
+# -- SHAPE_SETUP_THEME: courses 1-4 ----------------------------------------
+
+def preflight_setup_theme(text):
+    """The theme key must live entirely inside the one function this replaces."""
+    problems = []
+    keys = theme_keys(text)
+    if keys - {THEME_STORAGE_KEY}:
+        span = find_function_span(text, "setupTheme")
+        if span is None:
+            problems.append(
+                "theme key(s) %s but no `function setupTheme(){...}` to rewrite"
+                % ", ".join(sorted(repr(k) for k in keys))
+            )
+        else:
+            outside = text[: span[0]] + text[span[1] :]
+            stray = theme_keys(outside) - {THEME_STORAGE_KEY}
+            if stray:
+                problems.append(
+                    "theme key(s) %s used outside setupTheme(); that is content, "
+                    "not shell, and this tool will not edit it"
+                    % ", ".join(sorted(repr(k) for k in stray))
+                )
+    return problems
+
+
+def rewrite_setup_theme(text):
+    """Replace setupTheme() with the pinned implementation.
+
+    This is the storage-key fix and the scripted-aria-label fix at once.
+    Preflight has already proved that every theme storage call site lives inside
+    this one function, so replacing it whole cannot touch lesson code.
+    """
+    keys = theme_keys(text)
+    scripted = [
+        m.group(0)
+        for m in INV.SCRIPTED_LABEL_RE.finditer(text)
+        if INV.THEMEISH_KEY_RE.search(m.group(2) or "")
+    ]
+    if keys == {THEME_STORAGE_KEY} and not scripted:
+        return text, False
+    span = find_function_span(text, "setupTheme")
+    if span is None:
+        raise IntakeError("no `function setupTheme(){...}` to replace")
+    new_text = text[: span[0]] + SETUP_THEME_JS + text[span[1] :]
+    assert_theme_key_pinned(new_text, "replacing setupTheme()")
+    return new_text, True
+
+
+# -- SHAPE_SET_THEME: course 5 ---------------------------------------------
+
+def set_theme_span(text):
+    """(start, end) of this shape's theme block: the generator's, or this tool's.
+
+    Both are recognized because a second run must find its OWN output and stop,
+    not fail on it. The generator's form is matched statement by statement
+    (SET_THEME_SOURCE_RE); this tool's form is matched as a literal, so a page
+    that has been edited since intake ran does not look pinned.
+    """
+    match = SET_THEME_SOURCE_RE.search(text)
+    if match:
+        return match.span()
+    if text.count(SET_THEME_JS) == 1:
+        at = text.index(SET_THEME_JS)
+        return at, at + len(SET_THEME_JS)
+    return None
+
+
+def preflight_set_theme(text):
+    """The theme block must be exactly the one this tool knows how to delete."""
+    problems = []
+    span = set_theme_span(text)
+    if span is None:
+        problems.append(
+            "the %s theme block is not the one this tool recognizes (expected "
+            "storedTheme() + setTheme() + the post-paint `setTheme(storedTheme()"
+            '||"dark")` + the toggle listener, in that order). It will not delete '
+            "script it cannot account for statement by statement" % SHAPE_SET_THEME
+        )
+        return problems
+
+    outside = text[: span[0]] + text[span[1] :]
+    stray = theme_keys(outside) - {THEME_STORAGE_KEY}
+    if stray:
+        problems.append(
+            "theme key(s) %s used outside the theme block; that is content, not "
+            "shell, and this tool will not edit it"
+            % ", ".join(sorted(repr(k) for k in stray))
+        )
+    # The rewrite DELETES storedTheme() -- the pre-paint script in <head> is the
+    # only reader of the key now -- and keeps setTheme() as the toggle's entry
+    # point. Either name called from lesson code would be a silent break, so
+    # both are proved unused outside the block before anything is deleted.
+    for name in ("storedTheme", "setTheme"):
+        if re.search(r"\b%s\s*\(" % name, outside):
+            problems.append(
+                "%s() is called from outside the theme block this tool replaces; "
+                "that is lesson code, and lesson code is not this tool's to "
+                "rewrite" % name
+            )
+    return problems
+
+
+def rewrite_set_theme(text):
+    """Swap the generator's theme block for the pinned one.
+
+    What changes: the storage key, the button id the icon swap and the listener
+    address, and the removal of the post-paint `setTheme(storedTheme()||"dark")`
+    -- the stored theme is applied once, in <head>, before first paint.
+    What does NOT change: window.redrawLab(), carried across so every canvas
+    still repaints when the theme changes.
+    """
+    if text.count(SET_THEME_JS) == 1 and theme_keys(text) == {THEME_STORAGE_KEY}:
+        return text, False
+    match = SET_THEME_SOURCE_RE.search(text)
+    if match is None:
+        raise IntakeError("no recognized %s theme block to replace" % SHAPE_SET_THEME)
+    new_text = text[: match.start()] + SET_THEME_JS + text[match.end() :]
+    assert_theme_key_pinned(new_text, "replacing the %s theme block" % SHAPE_SET_THEME)
+    if "window.redrawLab()" not in new_text:
+        raise IntakeError(
+            "the rewrite dropped window.redrawLab(); the labs would keep painting "
+            "in the other theme's ink"
+        )
+    return new_text, True
+
+
+# -- the registry ----------------------------------------------------------
+
+class ThemeShape:
+    """One generator's theme machinery, named and recognized explicitly.
+
+    Five packages have arrived and they have shipped TWO different theme
+    implementations. The value of this tool is that it cannot guess, so each one
+    is a NAMED row here rather than a loose pattern that covers both:
+
+      * SIGNATURE -- answers one question, "which family is this file?", and
+        must match exactly ONCE. It is not evidence that the file is safe to
+        rewrite; that is the preflight's job.
+      * TOGGLE -- the button element this family ships, so the pinned toggle
+        replaces the right element and preflight counts the right thing.
+      * PREFLIGHT -- what must be true before a byte is written.
+      * REWRITE -- check-then-repair, and idempotent: handed its own output it
+        reports no change.
+
+    Adding a shape adds a row. It must never widen the signature of an existing
+    one, and there is deliberately no catch-all that "probably" matches the next
+    package: a file that matches no row is refused, loudly, with nothing written.
+    See docs/INTAKE.md, "When a sixth package brings a third shape".
+    """
+
+    __slots__ = ("name", "signature", "description", "toggle", "toggle_label",
+                 "preflight", "rewrite")
+
+    def __init__(self, name, signature, description, toggle, toggle_label,
+                 preflight, rewrite):
+        self.name = name
+        self.signature = signature
+        self.description = description
+        self.toggle = toggle
+        self.toggle_label = toggle_label
+        self.preflight = preflight
+        self.rewrite = rewrite
+
+    def matches(self, text):
+        """Exactly one occurrence of the signature. Two is not a stronger match."""
+        return len(self.signature.findall(text)) == 1
+
+    def __repr__(self):  # pragma: no cover - diagnostics only
+        return "<ThemeShape %s>" % self.name
+
+
+SHAPE_SETUP_THEME = "SHAPE_SETUP_THEME"
+SHAPE_SET_THEME = "SHAPE_SET_THEME"
+
+SHAPES = (
+    ThemeShape(
+        name=SHAPE_SETUP_THEME,
+        signature=SETUP_THEME_SIGNATURE_RE,
+        description=(
+            'courses 1-4: one `function setupTheme(){...}` holding every theme '
+            'storage call, and <button id="themeToggle">'
+        ),
+        toggle=TOGGLE_RE_SETUP_THEME,
+        toggle_label="#themeToggle",
+        preflight=preflight_setup_theme,
+        rewrite=rewrite_setup_theme,
+    ),
+    ThemeShape(
+        name=SHAPE_SET_THEME,
+        signature=SET_THEME_SIGNATURE_RE,
+        description=(
+            'course 5: `storedTheme()` + `setTheme(theme)` applied AFTER paint '
+            'at the end of the script, repainting through window.redrawLab(), '
+            'and <button id="themeBtn"> whose textContent is the glyph'
+        ),
+        toggle=TOGGLE_RE_SET_THEME,
+        toggle_label='#themeBtn (or #themeToggle, once this tool has renamed it)',
+        preflight=preflight_set_theme,
+        rewrite=rewrite_set_theme,
+    ),
+)
+
+
+def detect_shape(text):
+    """The one shape this file is, or None. None is a refusal, never a default."""
+    hits = [shape for shape in SHAPES if shape.matches(text)]
+    return hits[0] if len(hits) == 1 else None
+
+
+def shape_refusal(text):
+    """Why detect_shape() returned None, in words a person can act on."""
+    hits = [shape.name for shape in SHAPES if shape.matches(text)]
+    known = "\n        ".join(
+        "%s -- %s" % (shape.name, shape.description) for shape in SHAPES
+    )
+    if not hits:
+        return (
+            "no known theme shape matches this file. This tool knows:\n        %s\n"
+            "    A package with a third shape is not something to guess at: give it "
+            "its own row in SHAPES (signature, toggle, preflight, rewrite) -- see "
+            "docs/INTAKE.md -- rather than loosening one of these" % known
+        )
+    return (
+        "%d theme shapes match this file (%s), so which one it is cannot be "
+        "decided; this tool will not choose between them"
+        % (len(hits), ", ".join(hits))
+    )
+
+
 def preflight_lesson(lesson, text):
-    """Problems that make this page unsafe to normalize. Empty list means go."""
+    """Problems that make this page unsafe to normalize, and the shape it is.
+
+    Returns (problems, shape). `shape` is None when the file matches no known
+    theme shape, which is itself a problem: an unrecognized shape is refused
+    with nothing written, and adding a second shape did not change that.
+    """
     problems = []
 
     violations = scan_self_containment(text, {CANONICAL_HOST})
@@ -683,30 +1077,26 @@ def preflight_lesson(lesson, text):
         found = len(re.findall(re.escape(tag) + r"\b", text))
         if found != count:
             problems.append("expected exactly %d %s>, found %d" % (count, tag, found))
-    toggles = len(re.findall(r"<button\b[^>]*\bid=\"themeToggle\"", text))
-    if toggles != 1:
-        problems.append("expected exactly one #themeToggle button, found %d" % toggles)
-
-    # The theme key must be rewritable. This tool replaces setupTheme() whole --
-    # it is shell -- so every theme storage call has to live inside it. A key
-    # used from anywhere else is content, and content is not this tool's to edit.
-    keys = theme_keys(text)
-    if keys - {THEME_STORAGE_KEY}:
-        span = find_function_span(text, "setupTheme")
-        if span is None:
+    # WHICH THEME SHAPE IS THIS? Everything theme-related below is dispatched on
+    # the answer, and there is no default: a file that matches no known shape is
+    # refused here, before a byte is written, exactly as it was when this tool
+    # knew one shape.
+    shape = detect_shape(text)
+    if shape is None:
+        problems.append(shape_refusal(text))
+    else:
+        toggles = len(shape.toggle.findall(text))
+        if toggles != 1:
             problems.append(
-                "theme key(s) %s but no `function setupTheme(){...}` to rewrite; "
-                "this shape cannot be normalized safely"
-                % ", ".join(sorted(repr(k) for k in keys))
+                "expected exactly one %s toggle button for %s, found %d"
+                % (shape.toggle_label, shape.name, toggles)
             )
-        else:
-            outside = text[: span[0]] + text[span[1] :]
-            stray = theme_keys(outside) - {THEME_STORAGE_KEY}
-            if stray:
-                problems.append(
-                    "theme key(s) %s used outside setupTheme(); this shape cannot "
-                    "be normalized safely" % ", ".join(sorted(repr(k) for k in stray))
-                )
+        # The theme key must be rewritable: this tool replaces a REGION of script
+        # wholesale (that region is shell), so every theme storage call has to
+        # live inside it. A key touched from anywhere else is content, and
+        # content is not this tool's to edit. Which region, and what else must
+        # hold, is the shape's own business.
+        problems.extend("%s: %s" % (shape.name, p) for p in shape.preflight(text))
 
     retired = [m for m in RETIRED_PAGER_MARKUP if m in text]
     if retired:
@@ -739,7 +1129,7 @@ def preflight_lesson(lesson, text):
                 "the light @media block holds %s, not just the palette; this tool "
                 "will not rewrite it blind" % (rules or "nothing")
             )
-    return problems
+    return problems, shape
 
 
 HEAD_ALLOWED_RE = re.compile(
@@ -1035,6 +1425,36 @@ def light_palette_is_pinned(text):
     return True
 
 
+def carried_light_tokens(text):
+    """Light values the page ALREADY declares for tokens LIGHT_PALETTE does not pin.
+
+    LIGHT_PALETTE is the library's contract for the tokens it names, and this
+    tool rewrites the light block wholesale -- so anything in that block it does
+    not write, it deletes. Courses 1-4 name their neutrals --bg-2 / --panel-2 /
+    --panel-3 / --line-strong, which the palette pins; course 5's package names
+    the same roles --bg2 / --panel2 / --panel3 / --line2, which it does not.
+    Those tokens carry the body gradient, every panel and every hover border, so
+    rewriting from LIGHT_PALETTE alone would hand the reader a light ground with
+    dark panels on it -- a page that renders wrong with nothing to fail.
+
+    So the generator's own light declaration for an unpinned token is carried
+    across VERBATIM. Nothing here chooses, invents or improves a colour -- same
+    rule as the component-override extraction -- and a token the page never gave
+    a light value still does not have one, because inventing that value is a
+    judgement call and judgement calls belong to a person.
+    """
+    span = find_rule_span(text, INV.LIGHT_TOGGLE_SELECTOR)
+    if span is None:
+        return {}
+    inner = text[span[0] : span[1]]
+    body = inner[inner.index("{") + 1 : -1]
+    return {
+        name: value
+        for name, value in split_declarations(body)
+        if name.startswith("--") and name not in LIGHT_PALETTE
+    }
+
+
 def build_light_blocks(text, extra=None):
     """Both light paths, value-identical, from LIGHT_PALETTE plus any extras.
 
@@ -1042,8 +1462,16 @@ def build_light_blocks(text, extra=None):
     They are page-local rather than pinned, so the suite only requires that the
     library agrees on them -- which it does, because every page they appear on
     got them from the same generator output through this same function.
+
+    Unpinned tokens the page already declared a light value for are carried
+    across too (carried_light_tokens); an extracted token wins over a carried one
+    of the same name, which is what keeps a second run from declaring it twice.
     """
+    carried = carried_light_tokens(text)
+    for name in extra or {}:
+        carried.pop(name, None)
     values = [(t, LIGHT_PALETTE[t]) for t in LIGHT_PALETTE if t in declared_root_tokens(text)]
+    values += sorted(carried.items())
     values += sorted((extra or {}).items())
     body = "".join("    %s: %s;\n" % (name, value) for name, value in values)
     body_flat = "".join("  %s: %s;\n" % (name, value) for name, value in values)
@@ -1123,52 +1551,38 @@ def step_theme_prepaint(text, ctx):
 
 
 def step_theme_toggle(text, ctx):
-    """The pinned toggle, verbatim.
+    """The pinned toggle, verbatim, whichever button the package shipped.
 
-    The generated button names the NEXT state ("Use light theme") and has its
-    label rewritten from script on every click. The pinned label is
-    direction-neutral, so it is accurate in both states and nothing has to be
-    rewritten at runtime.
+    Course 1-4's button names the NEXT state ("Use light theme") and has its
+    label rewritten from script on every click; course 5's is <button
+    id="themeBtn"> with a "Change theme" label. Both become the one pinned
+    element, whose label is direction-neutral -- accurate in both states, so
+    nothing has to be rewritten at runtime. Which button to look for is the
+    shape's, not a pattern loose enough to match every id.
     """
     if text.count(TOGGLE_ELEMENT) == 1:
         return text, False
-    pattern = re.compile(r"<button\b[^>]*\bid=\"themeToggle\"[^>]*>.*?</button>", re.S)
-    new_text, count = pattern.subn(lambda _m: TOGGLE_ELEMENT, text)
+    shape = ctx["shape"]
+    new_text, count = shape.toggle.subn(lambda _m: TOGGLE_ELEMENT, text)
     if count != 1:
-        raise IntakeError("expected exactly one #themeToggle element, replaced %d" % count)
+        raise IntakeError(
+            "expected exactly one %s element for %s, replaced %d"
+            % (shape.toggle_label, shape.name, count)
+        )
     return new_text, True
 
 
 def step_theme_script(text, ctx):
-    """Replace setupTheme() with the pinned implementation.
+    """Pin the theme machinery, dispatched on the shape preflight identified.
 
-    This is the storage-key fix (defect 3) and the scripted-aria-label fix at
-    once. Preflight has already proved that every theme storage call site lives
-    inside this one function, so replacing it whole cannot touch lesson code.
+    Each shape rewrites its OWN region and only that region: setupTheme() for
+    SHAPE_SETUP_THEME, the storedTheme()/setTheme() block for SHAPE_SET_THEME.
+    Preflight has already proved, per shape, that every theme storage call site
+    lives inside that region, so replacing it whole cannot touch lesson code.
+    Both rewrites are check-then-repair, so a page that is already pinned is
+    returned untouched.
     """
-    keys = theme_keys(text)
-    scripted = [
-        m.group(0)
-        for m in INV.SCRIPTED_LABEL_RE.finditer(text)
-        if INV.THEMEISH_KEY_RE.search(m.group(2) or "")
-    ]
-    if keys == {THEME_STORAGE_KEY} and not scripted:
-        return text, False
-    span = find_function_span(text, "setupTheme")
-    if span is None:
-        raise IntakeError("no `function setupTheme(){...}` to replace")
-    new_text = text[: span[0]] + SETUP_THEME_JS + text[span[1] :]
-    # Post-condition, because the replacement depends on a brace scan: if the
-    # scan cut the function short, a retired key would survive here rather than
-    # at publish time.
-    survivors = theme_keys(new_text)
-    if survivors != {THEME_STORAGE_KEY}:
-        raise IntakeError(
-            "after replacing setupTheme() the page still uses theme key(s) %s; "
-            "the function boundaries could not be determined safely"
-            % ", ".join(sorted(repr(k) for k in survivors))
-        )
-    return new_text, True
+    return ctx["shape"].rewrite(text)
 
 
 def build_breadcrumb(ctx, indent="    "):
@@ -1396,16 +1810,25 @@ def main(argv=None):
 
         # -- preflight: read everything, decide nothing is written on failure --
         texts = {}
+        shapes = {}
         failures = []
         for lesson in lessons:
             text = lesson.source.read_text(encoding="utf-8")
             texts[lesson.slug] = text
-            for problem in preflight_lesson(lesson, text):
+            problems, shapes[lesson.slug] = preflight_lesson(lesson, text)
+            for problem in problems:
                 failures.append("%s: %s" % (lesson.source.name, problem))
         if failures:
             raise IntakeError(
                 "preflight failed on %d point(s):\n    %s"
                 % (len(failures), "\n    ".join(failures))
+            )
+        # Which shape each lesson is, is evidence: a package that is not uniform
+        # is worth seeing in the report rather than discovering later.
+        for name in sorted({shape.name for shape in shapes.values()}):
+            notes.append(
+                "theme shape %s on %d lesson(s)"
+                % (name, sum(1 for s in shapes.values() if s.name == name))
             )
 
         # -- normalize in memory --
@@ -1418,6 +1841,7 @@ def main(argv=None):
                 "course_title": args.title,
                 "slug": args.slug,
                 "canonical": "%s/%s/%s/" % (CANONICAL_ORIGIN, args.slug, lesson.slug),
+                "shape": shapes[lesson.slug],
             }
             try:
                 new_text, changed = normalize(texts[lesson.slug], ctx)

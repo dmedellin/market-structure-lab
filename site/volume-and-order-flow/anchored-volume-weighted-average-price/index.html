@@ -1,0 +1,1319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Start VWAP from a selected event and evaluate whether price is accepted above or below the event’s average traded value." />
+  <title>Anchored Volume-Weighted Average Price · Volume and Order Flow</title>
+  <link rel="canonical" href="https://learn.geterdone.io/volume-and-order-flow/anchored-volume-weighted-average-price/" />
+  <meta name="author" content="dmedellin" />
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="learn.geterdone.io" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Anchored Volume-Weighted Average Price · Volume and Order Flow" />
+  <meta property="og:description" content="Start VWAP from a selected event and evaluate whether price is accepted above or below the event’s average traded value." />
+  <meta property="og:url" content="https://learn.geterdone.io/volume-and-order-flow/anchored-volume-weighted-average-price/" />
+  <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Anchored Volume-Weighted Average Price · Volume and Order Flow" />
+  <meta name="twitter:description" content="Start VWAP from a selected event and evaluate whether price is accepted above or below the event’s average traded value." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/volume-and-order-flow/anchored-volume-weighted-average-price/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M14 45L26 33L38 41L51 18' fill='none' stroke='%23041116' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='14' cy='45' r='4.5'/%3E%3Ccircle cx='26' cy='33' r='4.5'/%3E%3Ccircle cx='38' cy='41' r='4.5'/%3E%3Ccircle cx='51' cy='18' r='4.5'/%3E%3C/g%3E%3C/svg%3E" />
+  <style>
+:root{
+  --bg:#071019;--bg2:#0a1520;--panel:#0f1f2e;--panel2:#142638;--panel3:#192e42;
+  --text:#edf8ff;--muted:#93aabd;--line:rgba(174,204,226,.16);--line2:rgba(174,204,226,.3);
+  --cyan:#39d8e8;--cyan2:#9af6ff;--green:#42e39a;--red:#ff6f7e;--amber:#ffc85a;
+  --purple:#b59cff;--blue:#79aaff;--shadow:0 24px 70px rgba(0,0,0,.35);--radius:20px
+}
+:root { color-scheme: dark; }
+
+/* System preference, only when the reader has NOT made an explicit choice.
+   The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+   survive on a light-mode OS. Values are pinned in LIGHT_PALETTE
+   (tests/test_site_invariants.py) and written here by
+   scripts/intake_course.py. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #edf4f8;
+    --panel: rgba(255, 255, 255, 0.94);
+    --text: #102433;
+    --muted: #586c7c;
+    --line: rgba(24, 62, 88, 0.13);
+    --cyan: #0e7382;
+    --green: #10784f;
+    --red: #c22a34;
+    --amber: #8a5a06;
+    --purple: #6b46d6;
+    --blue: #1d5fd0;
+    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    --bg2: #f9fbfd;
+    --line2: rgba(24,62,88,.25);
+    --panel2: #f3f8fb;
+    --panel3: #eaf2f7;
+  }
+}
+
+/* Explicit choice (localStorage key: learn-theme). Value-identical to the
+   media block above - the two light paths must never disagree. */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #edf4f8;
+  --panel: rgba(255, 255, 255, 0.94);
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --cyan: #0e7382;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  --bg2: #f9fbfd;
+  --line2: rgba(24,62,88,.25);
+  --panel2: #f3f8fb;
+  --panel3: #eaf2f7;
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);
+  background:radial-gradient(circle at 12% 5%,rgba(57,216,232,.13),transparent 30rem),
+  radial-gradient(circle at 89% 10%,rgba(181,156,255,.11),transparent 28rem),
+  linear-gradient(180deg,var(--bg),var(--bg2));
+  font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{color:inherit}a{color:inherit}canvas{display:block;width:100%;height:auto}
+.shell{width:min(1220px,calc(100% - 28px));margin:auto;padding:22px 0 64px}
+.topbar{position:sticky;top:12px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--panel) 93%,transparent);
+  backdrop-filter:blur(18px);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.brand-mark{width:39px;height:39px;display:grid;place-items:center;
+  border-radius:12px;color:#041116;font-weight:950;background:linear-gradient(135deg,var(--cyan2),var(--cyan));
+  box-shadow:0 8px 26px rgba(57,216,232,.25)}
+.brand-copy strong,.brand-copy span{display:block}.brand-copy strong{font-size:.96rem}.brand-copy span{color:var(--muted);font-size:.75rem}
+.top-actions{display:flex;gap:8px}.icon-btn{width:39px;height:39px;border:1px solid var(--line);border-radius:11px;display:grid;
+  place-items:center;background:var(--panel2);cursor:pointer;transition:.15s}.icon-btn:hover{transform:translateY(-1px);border-color:var(--line2)}
+.hero{display:grid;grid-template-columns:1.12fr .88fr;gap:28px;align-items:center;padding:70px 8px 42px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;color:var(--cyan2);border:1px solid rgba(57,216,232,.28);
+  border-radius:999px;background:rgba(57,216,232,.08);font-size:.77rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 5px rgba(57,216,232,.12)}
+.hero>div,.hero-card{min-width:0}h1{max-width:850px;margin:18px 0 15px;font-size:clamp(2.45rem,5.6vw,5.15rem);line-height:.98;letter-spacing:-.058em;overflow-wrap:anywhere}
+.gradient-text{background:linear-gradient(110deg,var(--cyan2),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero>div>p{max-width:720px;margin:0;color:var(--muted);font-size:clamp(1rem,1.8vw,1.16rem)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.btn{border:1px solid var(--line);border-radius:12px;padding:11px 15px;background:var(--panel2);color:var(--text);cursor:pointer;
+  text-decoration:none;font-weight:780;font-size:.9rem;transition:.15s}.btn:hover{transform:translateY(-1px);border-color:var(--line2)}
+.btn.primary{color:#041116;border-color:transparent;background:linear-gradient(135deg,var(--cyan2),var(--cyan))}
+.btn.ghost{background:transparent}.btn.small{padding:8px 11px;font-size:.8rem;border-radius:10px}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.hero-card{position:relative;min-height:330px;border:1px solid var(--line);border-radius:28px;overflow:hidden;padding:24px;
+  background:linear-gradient(rgba(174,204,226,.055) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(174,204,226,.055) 1px,transparent 1px),var(--panel);
+  background-size:38px 38px,38px 38px,auto;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between}
+.hero-card:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-100px;top:-90px;
+  background:radial-gradient(circle,rgba(57,216,232,.22),transparent 67%)}
+.state-row{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.state-tag{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid var(--line2);
+  background:color-mix(in srgb,var(--panel2) 92%,transparent);font-weight:850;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+.market-icon{width:55px;height:55px;border-radius:16px;display:grid;place-items:center;background:rgba(57,216,232,.1);border:1px solid rgba(57,216,232,.22);
+  color:var(--cyan2);font-size:1.5rem;font-weight:900}
+.behavior-copy{position:relative;z-index:1}.behavior-copy h3{font-size:clamp(1.5rem,2.8vw,2.25rem);line-height:1.08;letter-spacing:-.035em;margin:0 0 11px}
+.behavior-copy p{color:var(--muted);margin:0}.pressure{position:relative;z-index:1;margin-top:20px}
+.pressure-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.pressure-track{height:9px;border-radius:999px;margin-top:7px;background:linear-gradient(90deg,var(--red),var(--panel3) 50%,var(--green));position:relative}
+.pressure-pin{position:absolute;top:50%;left:50%;width:17px;height:17px;border-radius:50%;transform:translate(-50%,-50%);background:var(--text);border:4px solid var(--cyan);box-shadow:0 0 0 4px rgba(57,216,232,.12)}
+.section{padding:34px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:17px}
+.section-head h2{margin:0;font-size:clamp(1.6rem,3vw,2.45rem);letter-spacing:-.04em}.section-head p{max-width:650px;margin:0;color:var(--muted)}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:20px;box-shadow:0 12px 34px rgba(0,0,0,.12)}
+.card-num{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(57,216,232,.1);color:var(--cyan2);font-weight:900;border:1px solid rgba(57,216,232,.2)}
+.card h3{margin:16px 0 7px;font-size:1.05rem}.card p{margin:0;color:var(--muted)}
+.lab{border:1px solid var(--line);border-radius:26px;background:var(--panel);overflow:hidden;box-shadow:var(--shadow)}
+.lab-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.lab-head h3{margin:0;font-size:1.13rem}.lab-head p{margin:3px 0 0;color:var(--muted);font-size:.82rem}
+.lab-body{display:grid;grid-template-columns:minmax(0,1fr) 310px;min-height:500px}
+.chart-pane{padding:18px;min-width:0}.chart-wrap{position:relative;border:1px solid var(--line);border-radius:17px;overflow:hidden;
+  background:linear-gradient(rgba(174,204,226,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(174,204,226,.05) 1px,transparent 1px),var(--bg);
+  background-size:42px 42px,42px 42px,auto}
+.chart-wrap canvas{aspect-ratio:16/9;min-height:360px}
+.chart-badge{position:absolute;left:14px;top:14px;padding:6px 9px;border:1px solid var(--line2);border-radius:9px;background:rgba(7,16,25,.82);color:#eef9ff;font-size:.72rem;font-weight:800}
+.controls{padding:18px;border-left:1px solid var(--line);background:color-mix(in srgb,var(--panel2) 58%,var(--panel))}
+.control{margin-bottom:17px}.control:last-child{margin-bottom:0}.control label{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px;font-size:.78rem;color:var(--muted);font-weight:780}
+.control label output{color:var(--text)}select,input[type=number],input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);padding:9px 10px}
+input[type=range]{width:100%;accent-color:var(--cyan)}.segmented{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.segmented.cols3{grid-template-columns:repeat(3,1fr)}.segmented button{border:1px solid var(--line);border-radius:10px;padding:9px 7px;background:var(--panel);cursor:pointer;font-size:.76rem;font-weight:780}
+.segmented button.active{border-color:rgba(57,216,232,.5);background:rgba(57,216,232,.12);color:var(--cyan2)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.kpi{padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.kpi span{display:block;color:var(--muted);font-size:.67rem;text-transform:uppercase;letter-spacing:.04em;font-weight:800}.kpi strong{display:block;margin-top:3px;font-size:.96rem}
+.market-read{margin-top:14px;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);position:relative;overflow:hidden}
+.market-read:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cyan)}
+.market-read.bull:before{background:var(--green)}.market-read.bear:before{background:var(--red)}.market-read.warn:before{background:var(--amber)}
+.market-read small{display:block;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.05em;font-size:.65rem}
+.market-read strong{display:block;margin:4px 0 5px}.market-read p{margin:0;color:var(--muted);font-size:.83rem}
+/* The participation reading: a subordinate second layer inside the same live
+   block, so the structural sentence and its reading are always rewritten
+   together. Tokens only, no new colour values, and deliberately NOT named
+   .reading -- this package already uses that class for the numbered
+   "Reading process" cards further down the page. */
+.market-read .participation{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line2)}
+.market-read .participation small{margin-bottom:3px}
+.mini-note{margin-top:12px;color:var(--muted);font-size:.76rem}.formula{padding:12px;border-radius:11px;background:var(--bg);border:1px solid var(--line);font:700 .78rem/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:auto}
+.reading-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.reading{display:flex;gap:13px;padding:17px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.reading b{flex:0 0 auto;width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:var(--panel3);color:var(--cyan2)}
+.reading h3{margin:0 0 4px;font-size:.92rem}.reading p{margin:0;color:var(--muted);font-size:.82rem}
+.quiz{display:grid;gap:12px}.question{padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+.question h3{margin:0 0 12px;font-size:.98rem}.choices{display:grid;gap:8px}.choice{border:1px solid var(--line);border-radius:11px;background:var(--panel2);padding:10px 12px;text-align:left;cursor:pointer}
+.choice:hover{border-color:var(--line2)}.choice.correct{border-color:rgba(66,227,154,.55);background:rgba(66,227,154,.11)}.choice.wrong{border-color:rgba(255,111,126,.55);background:rgba(255,111,126,.1)}
+.feedback{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);color:var(--muted);font-size:.82rem}.feedback.show{display:block}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}.list-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:19px}.list-card h3{margin:0 0 12px}
+.list-card ul{margin:0;padding-left:19px;color:var(--muted)}.list-card li+li{margin-top:8px}.list-card.good h3{color:var(--green)}.list-card.bad h3{color:var(--red)}
+.reference{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+.reference p{margin:0;color:var(--muted);font-size:.82rem}.reference a{color:var(--cyan2);text-decoration:none;font-weight:750}.reference a:hover{text-decoration:underline}
+.footer{margin-top:34px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:.76rem}
+.tape{height:360px;overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.tape-row{display:grid;grid-template-columns:70px 1fr 1fr 1fr;gap:8px;padding:7px 10px;border-bottom:1px solid var(--line);font:700 .76rem ui-monospace,SFMono-Regular,Menlo,monospace}
+.tape-row.ask{color:var(--green)}.tape-row.bid{color:var(--red)}.tape-row.mid{color:var(--muted)}
+.book{display:grid;grid-template-columns:1fr 1fr;gap:12px}.book-side{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.book-head,.book-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 10px}.book-head{font-size:.68rem;color:var(--muted);text-transform:uppercase;font-weight:850;background:var(--panel2)}
+.book-row{position:relative;border-top:1px solid var(--line);font:700 .78rem ui-monospace,SFMono-Regular,Menlo,monospace}.depth-bar{position:absolute;top:2px;bottom:2px;opacity:.13;z-index:0}
+.book-row>*{position:relative;z-index:1}.bidbar{right:0;background:var(--green)}.askbar{left:0;background:var(--red)}
+.footprint{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:10px}.fp-grid{display:grid;gap:3px;min-width:520px}.fp-row{display:grid;grid-template-columns:72px repeat(6,1fr);gap:3px}
+.fp-cell{padding:7px 5px;border-radius:6px;text-align:center;background:var(--panel2);font:700 .68rem ui-monospace,SFMono-Regular,Menlo,monospace}
+.fp-cell.price{color:var(--muted);background:transparent;text-align:right}.fp-cell.pos{background:rgba(66,227,154,.14)}.fp-cell.neg{background:rgba(255,111,126,.14)}.fp-cell.hot{outline:1px solid var(--amber)}
+.rule-output{white-space:pre-wrap;min-height:180px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font:700 .75rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan2)}
+.status{padding:10px 12px;border-radius:11px;border:1px solid var(--line);background:var(--panel);font-size:.8rem}.status.ok{border-color:rgba(66,227,154,.4);color:var(--green)}.status.warn{border-color:rgba(255,200,90,.4);color:var(--amber)}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:48px}.hero-card{min-height:280px}.grid-3,.reading-grid{grid-template-columns:1fr}.lab-body{grid-template-columns:1fr}.controls{border-left:0;border-top:1px solid var(--line)}.two-col{grid-template-columns:1fr}}
+@media(max-width:620px){.shell{width:min(100% - 18px,1220px);padding-top:9px}.topbar{top:7px}.brand-copy span{display:none}.hero{padding:42px 2px 28px}h1{font-size:clamp(2.35rem,14vw,3.5rem)}.section{padding:27px 0}.section-head{display:block}.section-head p{margin-top:7px}.lab-head{align-items:flex-start;flex-direction:column}.chart-pane{padding:10px}.chart-wrap canvas{min-height:310px;aspect-ratio:4/5}.controls{padding:14px}.kpis{grid-template-columns:1fr}.footer,.reference{display:block}.reference a{display:inline-block;margin-top:8px}.book{grid-template-columns:1fr}.segmented.cols3{grid-template-columns:1fr}.top-actions .icon-btn:first-child{display:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* --- chrome owned by scripts/intake_course.py ---------------------------- */
+
+/* Breadcrumb. A lesson sits two levels below the document root
+   (library -> course -> lesson): "../" is this course's home and "../../" is
+   the library index. flex-wrap lets the crumbs fall onto a second line on a
+   phone instead of collapsing, which keeps the route back to the library
+   reachable at every width. */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: 10px 2px 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.crumbs a {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 6px 9px;
+  border-radius: 9px;
+}
+
+.crumbs a:hover { color: var(--text); background: var(--line); }
+.crumb-sep { opacity: 0.5; }
+.crumb-current { color: var(--text); padding: 6px 9px; }
+
+/* Previous / next lesson pager. The sequence is the course order the manifest
+   declares; the last lesson points back at the course home. Same shape and
+   tokens as the pagers in every other course so the whole library pages
+   identically. */
+.lesson-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.lesson-link {
+  flex: 1 1 240px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+.lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.lesson-link.next { margin-left: auto; text-align: right; }
+
+/* One card per row on a phone; a two-up pager at 320px is two unreadable columns. */
+@media (max-width: 720px) {
+  .lesson-link { flex-basis: 100%; }
+}
+/* --- end chrome ---------------------------------------------------------- */
+</style>
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives LAST in <head> and not with the rest of
+       the page script at the bottom of <body>: that runs after the first paint.
+       SAME localStorage key as every other page in the library ('learn-theme')
+       so the choice persists across every course. The allowlist matters: a
+       corrupt value would otherwise be written straight onto data-theme,
+       matching no CSS while still counting as an explicit choice, which pins
+       the page to the dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">V</div>
+      <div class="brand-copy"><strong>Volume and Order Flow</strong><span>Course 5 · Lesson 08</span></div>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" id="resetBtn" type="button" aria-label="Reset lab" title="Reset lab">↻</button>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+    </div>
+  </header>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../">Learn library</a>
+    <span class="crumb-sep" aria-hidden="true">/</span>
+    <a href="../">Volume and Order Flow</a>
+    <span class="crumb-sep" aria-hidden="true">/</span>
+    <span class="crumb-current" aria-current="page">Lesson 08 &middot; Anchored Volume-Weighted Average Price</span>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <span class="eyebrow"><i class="pulse"></i> Lesson 08 of 16</span>
+      <h1>Anchored Volume-Weighted Average Price</h1>
+      <p>Start VWAP from a selected event and evaluate whether price is accepted above or below the event’s average traded value.</p>
+      <div class="hero-actions">
+        <button class="btn primary" id="startLab" type="button">Open interactive lab</button>
+        <a class="btn ghost" href="#concepts">Review concepts</a>
+      </div>
+    </div>
+    <aside class="hero-card" aria-label="Market behavior summary">
+      <div class="state-row">
+        <span class="state-tag">Market behavior · Event-based value</span>
+        <span class="market-icon">↕</span>
+      </div>
+      <div class="behavior-copy">
+        <h3>Anchored VWAP measures average value since a chosen market event.</h3>
+        <p>Above a rising anchor, buyers since the event are generally holding favorable price location. Below a falling anchor, sellers maintain control relative to that event.</p>
+      </div>
+      <div class="pressure">
+        <div class="pressure-labels"><span>Seller progress</span><span>Buyer progress</span></div>
+        <div class="pressure-track"><i class="pressure-pin"></i></div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section" id="concepts">
+    <div class="section-head"><div><span class="eyebrow">Core concepts</span><h2>What to understand</h2></div><p>Keep the interpretation direct: participation, aggressive side, and actual price progress.</p></div>
+    <div class="grid-3"><article class="card"><div class="card-num">1</div><h3>Anchor</h3><p>A defined starting bar such as a major low, high, gap, earnings event, or breakout.</p></article>
+<article class="card"><div class="card-num">2</div><h3>Calculation</h3><p>The same cumulative price-volume formula as VWAP, beginning at the anchor.</p></article>
+<article class="card"><div class="card-num">3</div><h3>Interpretation</h3><p>Price location shows whether trading since the anchor is accepted above or below average value.</p></article></div>
+  </section>
+
+  <section class="section" id="lab">
+    <div class="section-head"><div><span class="eyebrow">Interactive lab</span><h2>Change the market conditions</h2></div><p>Use the controls and read the “What the market is doing” explanation after each change.</p></div>
+    <div class="lab">
+      <div class="lab-head"><div><h3>Anchored Volume-Weighted Average Price Lab</h3><p>Synthetic educational data · no live market connection</p></div><button class="btn small" type="button" onclick="window.initLab()">Reset</button></div>
+      <div class="lab-body">
+        <div class="chart-pane">
+          <div class="chart-wrap"><span class="chart-badge" id="chartBadge">MARKET DATA</span><canvas id="chart" aria-label="Interactive market chart"></canvas></div>
+          <div id="extraVisual"></div>
+          <div class="kpis" id="kpis"></div>
+          <div class="market-read" id="marketRead"></div>
+        </div>
+        <aside class="controls" id="controls"></aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="eyebrow">Reading process</span><h2>Read it in order</h2></div><p>Do not jump from one number to a trade. Describe the evidence first.</p></div>
+    <div class="reading-grid"><article class="reading"><b>1</b><div><h3>Choose the event first</h3><p>The anchor must answer a specific market question.</p></div></article>
+<article class="reading"><b>2</b><div><h3>Inspect slope and location</h3><p>Look for sustained acceptance above or below the anchored average.</p></div></article>
+<article class="reading"><b>3</b><div><h3>Watch the reaction</h3><p>A reclaim, rejection, or repeated crossing reveals changing control.</p></div></article></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="eyebrow">Knowledge check</span><h2>Check your interpretation</h2></div><p>Select one answer for each question. Feedback appears immediately.</p></div>
+    <div class="quiz"><article class="question" data-correct="1">
+          <h3>1. What changes between session VWAP and anchored VWAP?</h3>
+          <div class="choices"><button class="choice" type="button">The price formula</button><button class="choice" type="button">The starting point</button><button class="choice" type="button">Volume is removed</button></div>
+          <div class="feedback">Anchored VWAP begins at a user-defined event rather than a fixed session boundary.</div>
+        </article>
+<article class="question" data-correct="1">
+          <h3>2. Price reclaims a falling AVWAP once. Is buyer control confirmed?</h3>
+          <div class="choices"><button class="choice" type="button">Yes automatically</button><button class="choice" type="button">No; acceptance and follow-through are still needed</button><button class="choice" type="button">AVWAP cannot be crossed</button></div>
+          <div class="feedback">A single cross is evidence, but sustained trade and structure provide confirmation.</div>
+        </article>
+<article class="question" data-correct="1">
+          <h3>3. A good anchor is:</h3>
+          <div class="choices"><button class="choice" type="button">Chosen after the result to make the chart fit</button><button class="choice" type="button">Tied to a meaningful event and question</button><button class="choice" type="button">Always the first visible candle</button></div>
+          <div class="feedback">The anchor should have an objective market rationale.</div>
+        </article></div>
+  </section>
+
+  <section class="section">
+    <div class="two-col">
+      <article class="list-card good"><h3>Practical rules</h3><ul><li>Do not move the anchor to fit the desired result.</li>
+<li>Use objectively significant events.</li>
+<li>An anchor is context, not a standalone entry trigger.</li></ul></article>
+      <article class="list-card bad"><h3>Common mistakes</h3><ul><li>Anchoring every minor pivot.</li>
+<li>Using hindsight to select the perfect anchor.</li>
+<li>Assuming all participants entered exactly at AVWAP.</li></ul></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><span class="eyebrow">References</span><h2>Official reading</h2></div><p>The lab is simplified; these sources provide the underlying market and execution definitions.</p></div>
+    <div style="display:grid;gap:10px"><div class="reference">
+      <p><strong>Nasdaq · VWAP Definition</strong><br>Official glossary definition of volume-weighted average price.</p>
+      <a href="https://www.nasdaq.com/glossary/v/vwap" target="_blank" rel="noopener noreferrer">Open official reference ↗</a>
+    </div>
+<div class="reference">
+      <p><strong>CME Group · What is Volume?</strong><br>Official overview of how futures volume is counted and interpreted.</p>
+      <a href="https://www.cmegroup.com/education/courses/introduction-to-futures/what-is-volume" target="_blank" rel="noopener noreferrer">Open official reference ↗</a>
+    </div></div>
+  </section>
+
+  <nav class="lesson-nav" aria-label="Lesson navigation">
+    <a class="lesson-link prev" href="../volume-weighted-average-price/" rel="prev"><span>Previous lesson</span><strong>07 &middot; Volume-Weighted Average Price</strong></a>
+    <a class="lesson-link next" href="../volume-profile/" rel="next"><span>Next lesson</span><strong>09 &middot; Volume Profile</strong></a>
+  </nav>
+
+  <footer class="footer">
+    <p><span>Course 5 · Volume and Order Flow · Lesson 08</span>
+    <span>Educational synthetic examples only. Not live data, investment advice, or an execution system.</span></p>
+    <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
+    <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+  </footer>
+</main>
+<script>window.LESSON={"id":"08","title":"Anchored Volume-Weighted Average Price","lab":"anchoredVwap"};</script>
+<script>
+const L = window.LESSON;
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmt=(v,d=2)=>Number(v).toLocaleString(undefined,{maximumFractionDigits:d,minimumFractionDigits:d});
+const compact=v=>Intl.NumberFormat(undefined,{notation:"compact",maximumFractionDigits:1}).format(v);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+let activeCleanup=null;
+/* Theme control, pinned by scripts/intake_course.py.
+   The stored choice is applied BEFORE first paint by the script at the end of
+   <head>; nothing here applies it a second time. window.redrawLab() is this
+   package's own repaint hook and is called on every theme change on purpose:
+   the labs read their colours from CSS custom properties at draw time, so a
+   canvas painted under one theme keeps that theme's ink until it is redrawn. */
+const themeQuery=window.matchMedia?window.matchMedia("(prefers-color-scheme: light)"):null;
+const effectiveTheme=()=>document.documentElement.dataset.theme||(themeQuery&&themeQuery.matches?"light":"dark");
+const renderThemeIcon=()=>{const b=$("#themeToggle");if(b)b.textContent=effectiveTheme()==="light"?"☀":"☾"};
+function setTheme(theme){
+  document.documentElement.dataset.theme=theme;
+  try{localStorage.setItem("learn-theme",theme)}catch{}
+  renderThemeIcon();
+  if(window.redrawLab) window.redrawLab();
+}
+renderThemeIcon();
+$("#themeToggle").addEventListener("click",()=>setTheme(effectiveTheme()==="light"?"dark":"light"));
+if(themeQuery){
+  const onSystemThemeChange=()=>{if(document.documentElement.dataset.theme)return;renderThemeIcon();if(window.redrawLab) window.redrawLab()};
+  if(themeQuery.addEventListener)themeQuery.addEventListener("change",onSystemThemeChange);
+  else if(themeQuery.addListener)themeQuery.addListener(onSystemThemeChange);
+}
+$("#resetBtn").addEventListener("click",()=>window.initLab&&window.initLab(true));
+$("#startLab").addEventListener("click",()=>$("#lab").scrollIntoView({behavior:"smooth"}));
+
+$$(".question").forEach(q=>{
+  const correct=Number(q.dataset.correct);
+  $$(".choice",q).forEach((b,i)=>b.addEventListener("click",()=>{
+    if(q.dataset.done) return;
+    q.dataset.done="1";
+    $$(".choice",q).forEach((x,j)=>{if(j===correct)x.classList.add("correct");else if(j===i)x.classList.add("wrong")});
+    $(".feedback",q).classList.add("show");
+  }));
+});
+
+function hashSeed(str){
+  let h=2166136261;
+  for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}
+  return h>>>0;
+}
+function rng(seed){
+  let x=seed||123456789;
+  return()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return((x>>>0)%1000000)/1000000}
+}
+function makeSeries(kind="bull", n=54, seed=1){
+  const r=rng(seed+hashSeed(kind)); let p=100, out=[];
+  for(let i=0;i<n;i++){
+    let drift=0;
+    if(kind.includes("bull")||kind.includes("up")) drift=.22;
+    if(kind.includes("bear")||kind.includes("down")) drift=-.22;
+    if(kind.includes("range")||kind.includes("balance")) drift=(100-p)*.08;
+    if(kind.includes("breakout")) drift=i>Math.floor(n*.62)?.48:(100-p)*.06;
+    if(kind.includes("failed")) drift=i>Math.floor(n*.62)&&i<Math.floor(n*.73)?.55:i>=Math.floor(n*.73)?-.45:(100-p)*.05;
+    if(kind.includes("reclaim")) drift=i<Math.floor(n*.45)?-.17:i<Math.floor(n*.62)?.08:.40;
+    if(kind.includes("absorb")) drift=.03;
+    const noise=(r()-.5)*.78;
+    const o=p; const c=o+drift+noise;
+    const h=Math.max(o,c)+.18+r()*.55; const l=Math.min(o,c)-.18-r()*.55;
+    let base=1000+(r()-.5)*260;
+    if(kind.includes("volumeup")) base*=.72+i/n*.95;
+    if(kind.includes("volumedown")) base*=1.55-i/n*.8;
+    if(kind.includes("spike") && i===Math.floor(n*.72)) base*=4.2;
+    if(kind.includes("climax") && i>Math.floor(n*.68)) base*=1+(i-Math.floor(n*.68))*.32;
+    if(kind.includes("breakout") && i>=Math.floor(n*.62)) base*=1.65;
+    if(kind.includes("failed") && i>=Math.floor(n*.62)&&i<Math.floor(n*.75)) base*=2.0;
+    if(kind.includes("absorb") && i>Math.floor(n*.60)) base*=2.4;
+    out.push({o,h,l,c,v:Math.max(120,Math.round(base)),ask:0,bid:0});
+    p=c;
+  }
+  out.forEach((d,i)=>{
+    const body=d.c-d.o; const bias=clamp(.5+body*.22,.18,.82);
+    d.ask=Math.round(d.v*bias);d.bid=d.v-d.ask;d.delta=d.ask-d.bid;
+  });
+  return out;
+}
+function smooth(values,p){
+  return values.map((_,i)=>i<p-1?null:values.slice(i-p+1,i+1).reduce((a,b)=>a+b,0)/p);
+}
+function vwap(series,anchor=0){
+  let pv=0,v=0;return series.map((d,i)=>{
+    if(i<anchor)return null;
+    const tp=(d.h+d.l+d.c)/3; pv+=tp*d.v;v+=d.v;return pv/v;
+  });
+}
+function obv(series){
+  let total=0;return series.map((d,i)=>{if(i){if(d.c>series[i-1].c)total+=d.v;else if(d.c<series[i-1].c)total-=d.v}return total});
+}
+function cmf(series,p=14){
+  const mfv=series.map(d=>(((d.c-d.l)-(d.h-d.c))/Math.max(.001,d.h-d.l))*d.v);
+  let ad=0; const adline=mfv.map(x=>ad+=x);
+  const cmf=series.map((_,i)=>{if(i<p-1)return null;let a=0,b=0;for(let j=i-p+1;j<=i;j++){a+=mfv[j];b+=series[j].v}return b?a/b:0});
+  return{mfv,adline,cmf};
+}
+function cvd(series){
+  let x=0;return series.map(d=>x+=d.delta);
+}
+
+function canvasContext(){
+  const canvas=$("#chart");
+  const rect=canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+  const w=Math.max(320,rect.width),h=Math.max(310,rect.height);
+  if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}
+  const ctx=canvas.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+  return{canvas,ctx,w,h,dpr};
+}
+function colors(){return{bg:css("--bg"),panel:css("--panel"),panel2:css("--panel2"),text:css("--text"),muted:css("--muted"),line:css("--line"),line2:css("--line2"),cyan:css("--cyan"),green:css("--green"),red:css("--red"),amber:css("--amber"),purple:css("--purple"),blue:css("--blue")}}
+function grid(ctx,x,y,w,h,c,rows=5,cols=7){
+  ctx.save();ctx.strokeStyle=c.line;ctx.lineWidth=1;
+  for(let i=0;i<=rows;i++){let yy=y+h*i/rows;ctx.beginPath();ctx.moveTo(x,yy);ctx.lineTo(x+w,yy);ctx.stroke()}
+  for(let i=0;i<=cols;i++){let xx=x+w*i/cols;ctx.beginPath();ctx.moveTo(xx,y);ctx.lineTo(xx,y+h);ctx.stroke()}
+  ctx.restore();
+}
+function extent(arr,accessors,pad=.08){
+  let vals=[];accessors.forEach(fn=>arr.forEach((d,i)=>{let v=fn(d,i);if(v!=null&&Number.isFinite(v))vals.push(v)}));
+  let mn=Math.min(...vals),mx=Math.max(...vals);if(mn===mx){mn-=1;mx+=1}const p=(mx-mn)*pad;return[mn-p,mx+p];
+}
+function drawAxes(ctx,area,min,max,c,formatter=v=>fmt(v,2)){
+  ctx.save();ctx.fillStyle=c.muted;ctx.font="11px system-ui";ctx.textAlign="left";ctx.textBaseline="middle";
+  for(let i=0;i<=4;i++){const v=max-(max-min)*i/4;ctx.fillText(formatter(v),area.x+area.w+7,area.y+area.h*i/4)}
+  ctx.restore();
+}
+function drawCandles(ctx,series,area,min,max,c){
+  const n=series.length,step=area.w/n,bw=Math.max(2,Math.min(10,step*.62));
+  const sy=v=>area.y+(max-v)/(max-min)*area.h;
+  series.forEach((d,i)=>{
+    const x=area.x+step*(i+.5),up=d.c>=d.o,col=up?c.green:c.red;
+    ctx.strokeStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,sy(d.h));ctx.lineTo(x,sy(d.l));ctx.stroke();
+    const y1=sy(d.o),y2=sy(d.c);ctx.fillStyle=col;ctx.fillRect(x-bw/2,Math.min(y1,y2),bw,Math.max(1.5,Math.abs(y2-y1)));
+  });
+}
+function drawBars(ctx,values,area,c,opts={}){
+  const max=opts.max||Math.max(...values.map(v=>Math.abs(v||0)),1),min=opts.min??0,step=area.w/values.length,bw=Math.max(2,step*.72);
+  const sy=v=>area.y+(max-v)/(max-min)*area.h;
+  values.forEach((v,i)=>{
+    if(v==null)return; const x=area.x+step*(i+.5);
+    const zero=sy(0),yy=sy(v);ctx.fillStyle=opts.colors?opts.colors[i]:(v>=0?c.green:c.red);
+    ctx.globalAlpha=opts.alpha||.72;ctx.fillRect(x-bw/2,Math.min(zero,yy),bw,Math.max(1,Math.abs(zero-yy)));ctx.globalAlpha=1;
+  });
+}
+function drawLine(ctx,values,area,min,max,color,width=2){
+  const step=area.w/Math.max(1,values.length-1),sy=v=>area.y+(max-v)/(max-min)*area.h;
+  ctx.save();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineJoin="round";ctx.lineCap="round";ctx.beginPath();let started=false;
+  values.forEach((v,i)=>{if(v==null)return;const x=area.x+step*i,y=sy(v);if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y)});
+  ctx.stroke();ctx.restore();
+}
+function drawLabel(ctx,text,x,y,color){
+  ctx.save();ctx.font="800 11px system-ui";const m=ctx.measureText(text),w=m.width+14,h=23;
+  ctx.fillStyle=color;ctx.globalAlpha=.16;ctx.fillRect(x,y-h/2,w,h);ctx.globalAlpha=1;ctx.strokeStyle=color;ctx.strokeRect(x,y-h/2,w,h);
+  ctx.fillStyle=color;ctx.textBaseline="middle";ctx.fillText(text,x+7,y);ctx.restore();
+}
+function drawHorizontal(ctx,y,x1,x2,color,label){
+  ctx.save();ctx.strokeStyle=color;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.setLineDash([]);
+  if(label)drawLabel(ctx,label,x1+4,y-14,color);ctx.restore()
+}
+function standardChart(series,opts={}){
+  const {ctx,w,h}=canvasContext(),c=colors();const m={l:18,r:58,t:18,b:24};
+  const total={x:m.l,y:m.t,w:w-m.l-m.r,h:h-m.t-m.b};
+  const volH=opts.noVolume?0:Math.max(82,total.h*.25),gap=opts.noVolume?0:13;
+  const price={x:total.x,y:total.y,w:total.w,h:total.h-volH-gap};
+  const volume={x:total.x,y:price.y+price.h+gap,w:total.w,h:volH};
+  grid(ctx,price.x,price.y,price.w,price.h,c);
+  let [mn,mx]=extent(series,[d=>d.l,d=>d.h],.09);drawCandles(ctx,series,price,mn,mx,c);drawAxes(ctx,price,mn,mx,c);
+  if(!opts.noVolume){
+    const vmax=Math.max(...series.map(d=>d.v))*1.12;
+    const cols=series.map(d=>d.c>=d.o?c.green:c.red);drawBars(ctx,series.map(d=>d.v),volume,c,{max:vmax,colors:cols,alpha:.5});
+    ctx.fillStyle=c.muted;ctx.font="10px system-ui";ctx.fillText("VOLUME",volume.x,volume.y+10);
+  }
+  return{ctx,w,h,c,price,volume,min:mn,max:mx,sy:v=>price.y+(mx-v)/(mx-mn)*price.h,sx:i=>price.x+price.w*(i+.5)/series.length};
+}
+function linePanel(ctx,values,area,c,opts={}){
+  let valid=values.filter(v=>v!=null),mn=opts.min??Math.min(...valid),mx=opts.max??Math.max(...valid);
+  if(mn===mx){mn-=1;mx+=1}const pad=(mx-mn)*.1;mn-=pad;mx+=pad;grid(ctx,area.x,area.y,area.w,area.h,c,3,7);
+  if(opts.zero&&mn<0&&mx>0){const y=area.y+(mx)/(mx-mn)*area.h;drawHorizontal(ctx,y,area.x,area.x+area.w,c.line2,"0")}
+  drawLine(ctx,values,area,mn,mx,opts.color||c.cyan,2);return{min:mn,max:mx,sy:v=>area.y+(mx-v)/(mx-mn)*area.h}
+}
+function setBadge(text){$("#chartBadge").textContent=text}
+function setKPIs(items){
+  $("#kpis").innerHTML=items.map(([k,v])=>`<div class="kpi"><span>${k}</span><strong>${v}</strong></div>`).join("");
+}
+/* ---------------------------------------------------------------------------
+   THE PARTICIPATION READING
+   A second layer beside the structural explanation: what the drawn structure is
+   conventionally READ AS in terms of buyers and sellers. Kept as a table keyed
+   in parallel with each lab's own state keys, so a reading can never drift onto
+   a state it was not written for -- an unknown key renders nothing rather than
+   the wrong sentence.
+
+   These charts are synthetic. Nothing here asserts what a participant did, who
+   transacted, or what happens next. In this subject in particular:
+     - volume counts CONTRACTS TRADED. Every one of them had both sides. It is
+       never net buying or net selling.
+     - delta / at-bid / at-ask are CLASSIFICATIONS of where a print landed
+       against the quote -- an inference about the aggressor, not a measurement
+       of intent.
+     - displayed book size is CANCELLABLE. It is an intention, not a commitment.
+     - OBV, A/D, CMF, VWAP and CVD are transforms of the same price and volume
+       drawn above them, not independent evidence.
+   Every line is derived from the actual series this lab generates, and states
+   what would break the reading wherever that is natural.
+
+   Labs with no entry get no reading, deliberately:
+     ruleBuilder -- a rule composer and validator. Its chart illustrates the
+       spec being written; there is no market state to read.
+   Individual states are also absent where the generated data does not show the
+   pattern the state is named for; see the comments on priceVolume and obv.
+--------------------------------------------------------------------------- */
+const PARTICIPATION = {
+  volumeBasics: {
+    bull: "Price finishes about 13% above where the window opened while the last fourteen bars average close to twice the volume of the first fourteen. Normally read as buyers accepting higher prices with more contracts changing hands as they do &mdash; though the volume half is participation only, since every one of those contracts had a seller on the other side. The direction in this reading is carried by the price progress; a close back under the lows the advance started from would leave the same volume with none of it.",
+    bear: "Price finishes about 13% lower with the same expansion in participation, roughly 1.9 times the opening bars by the close of the window. Normally read as sellers accepting lower prices while more contracts trade. Expanding volume is not bearish by itself &mdash; it counts trades, both sides of each &mdash; so a reclaim of the highs the decline began from would end the reading without the volume changing at all.",
+    balance: "Participation rises through the window while price ends within half a percent of where it started, rotating in a band of roughly two and a half points. The usual interpretation is that both sides are active at these prices and neither is making the other give ground; heavy volume here is evidence of a contest, not of a result. It stops reading as balance when a close holds outside the band rather than turning back into it.",
+    absorb: "Volume in the closing stretch runs about three times the earlier bars while price covers a little over a point. Normally read as absorption: aggressive orders arriving into resting size that is willing to take the other side at these prices. It is a reading about what has happened so far and nothing more &mdash; it fails as a description the moment price begins making sustained progress on that same volume."
+  },
+
+  /* priceVolume: no entry for "upDown". The tab is labelled Price up / Volume
+     down, but makeSeries("bull-volumedown") matches the kind.includes("down")
+     branch and applies a negative drift, so the series that renders falls about
+     10.5%. A participation reading written for a rising market would be
+     attached to a falling chart, and one written for the falling chart would
+     contradict the tab and the explanation above it. Left empty until the
+     generated series matches the state it is named for. */
+  priceVolume: {
+    upUp: "Price gains about 15% and the last fourteen bars average roughly 83% more volume than the first fourteen. Normally read as buyers accepting higher prices with participation expanding behind them. The volume is the count of contracts, not a net side, so it is the price progress that makes this directional; a close back under the level the advance began from would end the reading with the volume unchanged.",
+    downUp: "Price loses about 11% while volume in the closing bars runs about 84% above the opening bars. Normally read as sellers accepting lower prices with participation expanding. Expanding volume is not itself bearish &mdash; every one of those trades had a buyer &mdash; and the reading ends where price stops making downward progress on the same activity.",
+    downDown: "Price falls about 12% while the last fourteen bars average roughly 40% less volume than the first fourteen. Normally read as a decline fewer participants are taking part in: the usual caution is that a move on contracting participation has less evidence behind it, not that it must turn. Volume expanding again without price making a new low would be the first thing to break the reading."
+  },
+
+  relativeVolume: {
+    expansion: "The marked bar trades about 4.7 times the twenty-bar baseline and the sixteen bars after it carry price roughly four and a half points higher. Normally read as a burst of participation the market then followed through on &mdash; and it is the follow-through, not the height of the bar, that makes it readable. A stall or a return back under the spike bar would leave the same 4.7x print saying nothing in particular.",
+    climax: "Participation keeps expanding after the marked bar, reaching close to six times baseline on the final bars, while price stops advancing and gives back about a point. Normally read as a climax: the heaviest activity of the window arriving where price can no longer make progress on it. The failure to advance is the whole reading &mdash; price simply resuming higher on that same volume is what would remove it.",
+    absorption: "The marked bar trades about seven times baseline and price ends the following seventeen bars roughly where it started them, inside a one and a half point band. Normally read as absorption, aggressive orders meeting resting size content to take the other side here. The spike itself says nothing directional; sustained progress away from this area on comparable volume is what would end the reading.",
+    balanced: "About four times baseline volume prints inside a range price never leaves, and the seventeen bars after it close within roughly seven tenths of a point of one another. Normally read as heavy two-way trade at an agreed price rather than a directional event. It stops reading that way when a close holds outside the range this activity has been contained in."
+  },
+
+  volumeConfirmation: {
+    strong: "The bar that closes above 101.10 carries about 1.6 times the prior eighteen-bar average, and all five of the most recent closes are still above the level. Normally read as acceptance rather than a probe: the level stopped capping price and the bars since have held above it without needing to retest whether it does. A close back under 101.10 is what would return this to a failed break.",
+    weak: "The break bar carries only about 1.2 times the prior baseline, with the volume trend through the window falling, yet price holds above 101.10 on all five recent closes. The usual reading is that the level gave way with thin evidence of participation behind it, so acceptance is being shown by price alone &mdash; the weaker of the two. Volume expanding on a pullback that then closes back inside would settle it the other way.",
+    failed: "Price closes above 101.10 on about 1.8 times the prior baseline, reaches 103.41, then closes below the level for the rest of the window and finishes near 95.35 &mdash; under the range it broke out of. Normally read as a failed break: participation at the level did not convert into acceptance above it. Reclaiming 101.10 and holding there is what would break this reading in turn.",
+    range: "No bar in the window closes above 101.10; the highest high reaches 100.96. Structurally this says the level has not been tested to completion, so the volume trading inside the range is participation with no decision attached to it. The reading begins when a close appears on the other side of the level, not before."
+  },
+
+  /* obv: no entries for "bearDiv" or "bullDiv". Both tabs are named for a
+     divergence the generated series does not contain. bearDiv builds from
+     makeSeries("bull-volumedown"), which the kind.includes("down") branch turns
+     into a downtrend, so price falls about 15.6% and OBV falls with it to its
+     low; bullDiv falls about 16.4% with OBV likewise ending near its low. In
+     neither chart do price and OBV disagree, so there is no divergence to read. */
+  obv: {
+    confirmBull: "Price finishes about 14% higher and OBV ends at its high for the window, having risen through nearly all of it. Normally read as up-closing bars carrying the larger share of the volume &mdash; but OBV is built from these same closes and these same volumes, so it restates the chart above it rather than adding evidence to it. OBV turning down while price keeps making highs is the condition that would make it worth a second look.",
+    confirmBear: "Price finishes about 15% lower and OBV falls with it to its low for the window. Normally read as down-closing bars carrying the larger share of the volume. The caveat is in the construction: OBV assigns a bar's entire volume to the direction of its close, so a bar that closed a cent lower after trading both ways counts wholly as selling, and OBV flattening while price keeps making lows is what would put the reading in question."
+  },
+
+  cmf: {
+    "accum/pos": "Every bar closes in the upper part of its own range, averaging near 78% of the bar, which holds CMF around +0.55 at any lookback the slider offers. Normally read as persistent buying pressure; what is actually measured is closing location weighted by that bar's volume, not who transacted. CMF cannot contradict this chart &mdash; it is computed from the same highs, lows, closes and volumes drawn above it.",
+    "distrib/neg": "Every bar closes in the lower part of its range, averaging near 21% of the bar, and CMF stays around -0.6 for every available lookback. The usual interpretation is persistent selling pressure. The measurement behind it is closing location weighted by volume, so a bar dragged to its low by one late print counts the same as one that spent the whole period there.",
+    "balanced/neg": "Closes average around 42% of their bars, just below the midpoint, and price ends the window within a third of a percent of where it began. Normally read as no persistent closing pressure either way: the mildly negative value reflects closes fractionally below mid rather than a one-sided window. This is also where the indicator's limit shows, since a reading near zero can mean balance or two opposite halves cancelling out."
+  },
+
+  vwap: {
+    trendUp: "All sixty-four bars close above session VWAP and the line is never crossed. Normally read as the session's business being done above its own volume-weighted average price &mdash; a statement about where trade has occurred, since VWAP is an average of this same series rather than an independent level. The first close back below it is what would end the reading.",
+    trendDown: "No bar in the window closes above VWAP and the line falls throughout. Normally read as the session's trade taking place entirely below its own volume-weighted average, with each attempt back toward the line turned away before a close prints above it. A close above VWAP that holds is what would break it.",
+    twoWay: "Price crosses VWAP thirteen times and finishes twenty-seven of sixty-four bars above it, with the line moving about a tenth of a point over the last ten bars. Normally read as trade rotating around an agreed average rather than either side holding an edge: the line is being used as a pivot, not defended. It stops reading that way when closes stop returning through it.",
+    reclaim: "Price spends the first two thirds of the window below VWAP, crosses once near bar forty-five, then closes above it for all nineteen remaining bars while the line itself turns from falling to rising. Normally read as a reclaim rather than a bounce &mdash; a single cross is an event, but a volume-weighted average changes direction only when enough trade occurs at the higher prices. A close back below VWAP, particularly one that flattens the line again, is what would undo it."
+  },
+
+  /* anchoredVwap: no entry for the unaligned state. Across all three anchor
+     events and every position of the anchor slider, this series never produces
+     the flat-or-crossing case that branch is written for. */
+  anchoredVwap: {
+    above: "Price is above the anchored average and the average is rising, so trade since the chosen event has on balance occurred below where price is now. Normally read as favourable location for anything initiated after that event &mdash; a claim about one anchor, not about the market, since moving the anchor moves the line and the reading with it. A close below the anchored line, with the line flattening, is what would end it.",
+    below: "Price is below the anchored average and the average is falling, so trade since the chosen event has on balance occurred above where price is now. The usual interpretation is favourable location for the other side, and it is tied entirely to the anchor &mdash; which is why the anchor is chosen before the reading rather than moved until one appears. A close back above the line, with the line turning up, is what would end it."
+  },
+
+  volumeProfile: {
+    range: "The heaviest bins sit in the middle of the window and the outermost bins hold no volume at all, with roughly 70% of the traded volume fitting into about a point and a quarter around the POC. Structurally this says where trade concentrated, not where price is meant to go &mdash; a POC is a record of agreement, not a target. It stops describing the market when volume starts building outside the value area instead of returning into it.",
+    trend: "The busiest bins sit near the top of the window: the POC prints around 111.7 in a 99.4 to 115.8 range, so volume built at the higher prices rather than at the ones price left behind. Normally read as higher prices being accepted rather than merely visited, since time and volume followed the move instead of staying where it began. Volume rebuilding down at the old prices is what would take that reading away.",
+    breakout: "About 61% of the window's volume trades after price leaves the old range, but it is spread across twelve points instead of concentrating, so the profile still shows a single node low down where the first forty bars sat and thin bins all the way up. Normally read as an excursion that has not yet built value &mdash; the second distribution that would make it acceptance has not formed. Those upper bins beginning to fill in is what would turn this into the two-distribution profile the pattern is named for."
+  },
+
+  valueArea: {
+    inside: "The current line sits between the value-area low and high, in the band that took about 70% of the window's volume. Normally read as trade at an agreed price: both sides are transacting where they have been transacting, so location alone is not saying that anyone is giving way. The reading changes when price starts spending time outside the area rather than passing through it.",
+    acceptHigh: "The line is above the value-area high, but the profile behind it has not changed: every bin above the area still holds less than half the volume of the busiest one. Normally read as an excursion above value, and what would make it acceptance is volume building up there &mdash; a second node forming above the old area, not a line drawn above it. Price returning inside is what ends an excursion without it ever becoming acceptance.",
+    rejectHigh: "The line sits just under the value-area high, back inside the band holding most of the window's volume, while the bins above it are among the thinnest on the profile. Structurally this says the higher prices exist on the chart but attracted little trade. Normally read as those prices being rejected rather than a level being defended, and it stops reading that way if trade starts filling those bins in.",
+    acceptLow: "The line is below the value-area low, in bins holding a fraction of the volume the busiest band holds. Normally read as an excursion below value, with the same test as the upside case: acceptance would mean volume beginning to build down there, not price merely visiting. A return into the value area leaves the excursion as an excursion.",
+    lvn: "The line sits at the lower edge of the value area, just above the thin bins where this window recorded little trade. Normally read as a transition area &mdash; prices the market moved through rather than settled at, which is why movement across them is often quick. Quick is not the same as certain: a thin area can equally be traded back through, and a low-volume node describes the past rather than a speed to come."
+  },
+
+  orderTypes: {
+    normal: "The two sides show comparable displayed size, about 3,940 bid against 4,070 offered across five levels, with a two-cent spread. Normally read as an orderly book: a 700-lot market buy fills at roughly 100.015 against a 100.01 best offer, so the cost of demanding immediacy here is about half a tick. None of that displayed size is a commitment &mdash; it is what is currently shown, and any line of it can be pulled before a trade reaches it.",
+    thin: "Every level holds roughly a quarter of the size it did in the normal book while the quoted spread stays at two cents. Structurally this says spread and depth are separate things: the same 700-lot market buy now walks four levels for an average near 100.029, and 3,000 would exhaust the displayed offers entirely. The reading is about impact, not direction &mdash; a thin book says nothing about which way price goes next.",
+    bidWall: "A single displayed bid of 4,200 sits one cent under the best bid, more size than the entire offer side of the book. Normally read as support, which is exactly the inference this subject warns about: a resting order is an intention, cancellable at no cost, and nothing is committed until size trades against it. Note also what it does to execution rather than to price &mdash; it changes nothing about the cost of buying, because a buyer never touches it.",
+    askWall: "A displayed offer of 4,300 sits one cent above the best offer, nearly doubling the ask side of the book. Normally read as resistance, but to anyone buying it is the opposite of an obstacle: a 3,000-lot market buy averages about 100.019 here against roughly 100.030 in the normal book, because that size is liquidity to consume. It can also simply be cancelled, at which point the level it appeared to defend was never tested."
+  },
+
+  timeSales: {
+    buyProgress: "Twenty-five of the forty-two prints classify at the ask, carrying 8,110 shares against 5,139 at the bid, and price walks from 100.01 to 100.17 without giving any of it back. Normally read as buyers paying the offer and the offer moving up to meet them &mdash; with the caveat that at-bid and at-ask describe where a print landed relative to the quote, not who initiated it. The price progress is what carries the reading: the same split with price unchanged would say the opposite.",
+    sellProgress: "Twenty-six prints classify at the bid, carrying 6,665 shares against 4,798 at the ask, and price works from 100.00 down to 99.79. Normally read as sellers hitting the bid and the bid stepping lower each time it is taken. It would stop reading that way the moment the same bid-side flow arrived without price following it.",
+    buyAbsorb: "Thirty-three of forty-two prints land at the ask and ask-classified volume runs about 2.7 times the bid side, yet price covers four cents across the entire tape. Normally read as absorption: resting size is willing to keep selling at these prices for as long as the buying keeps arriving. What would break the reading is simply price starting to travel on the same flow, which so far it has not.",
+    sellAbsorb: "Bid-classified volume runs about five and a half times the ask side over forty-two prints while price falls four cents. The usual interpretation is that resting buyers are taking the other side of everything being sold here. To be precise about it, those 10,452 shares are not net selling &mdash; every one of them was bought by someone &mdash; and it reads as absorption only while price refuses to move.",
+    balance: "The print count is nearly even but the size is not: 7,714 shares classify at the bid against 5,800 at the ask, and the whole tape stays inside a six-cent band. Normally read as two-way trade at an agreed price, and it is a useful demonstration that a thirty percent classification imbalance can produce essentially no movement. Classification imbalance is not direction; price progress is what would make it directional."
+  },
+
+  footprint: {
+    alignedBuy: "Every candle in the window carries positive delta and closes above its open, with the selected one showing delta at roughly a fifth to a third of its own volume. Normally read as ask-side aggression that price is following. Delta is an inference from where each print landed against the quote rather than a measurement of who initiated, so a positive-delta candle that closes at or below its open is what would separate the aggression from the result.",
+    alignedSell: "Every candle carries negative delta and closes below its open. Normally read as bid-side aggression that price is following down, with the same caveat: the classification describes prints against the quote and can be wrong on any individual one. The reading holds only while the two agree.",
+    buyAbsorb: "All six candles carry positive delta &mdash; the largest is about 45% of its own candle's volume &mdash; and every one closes at or below its open. Normally read as absorption at the ask: buying is arriving and being met by resting size without price being pushed. This is the case that makes the point about delta, since a strongly positive number and a lower close belong to the same candle, and it is the close that shows the aggression did not work.",
+    sellAbsorb: "All six candles carry negative delta while closing at or above their opens. Normally read as absorption at the bid: the selling is being taken by resting size and is not moving price. As in the mirror case the delta figure alone would have read as one-sided; only the close shows that what was resting on the other side was enough."
+  },
+
+  cvd: {
+    alignedBull: "Price gains 14.09 points and cumulative delta rises from zero to about +14,000 without ever turning negative. Normally read as ask-classified aggression and price progress agreeing &mdash; the least surprising case, since both are driven by the same up-closing bars. CVD is a running sum of an estimate: classification, venue, aggregation and the reset bar all move the line without a single trade changing.",
+    alignedBear: "Price loses 14.08 points and cumulative delta falls to about -14,100, never turning positive. Normally read as bid-classified aggression tracking the decline. Because the two agree, this chart says little on its own; the informative cases are the ones where they do not.",
+    buyAbsorb: "Cumulative delta climbs to roughly +18,400, the largest reading of any case here, while price finishes 0.82 points higher inside a three-point range. Normally read as absorption: the ask-classified aggression is arriving into resting size that is taking it at these prices. The invalidation is direct &mdash; price beginning to travel on that same slope would make it an ordinary advance instead.",
+    sellAbsorb: "Cumulative delta falls to about -17,400 while price ends the window six hundredths of a point below where it started. Normally read as absorption on the bid side, the aggression being taken without price being moved. Note what the number is not: -17,400 is not net selling, since every one of those contracts was bought by someone, it is an estimate of which side crossed the spread.",
+    bearDiv: "Price rises 16.39 points while cumulative delta ends near -7,700 and never turns positive. Normally read as price advancing without the ask-classified aggression usually seen alongside it &mdash; which is as much a reason to distrust the estimate as the move, since passive buying does not register as positive delta at all. It is a divergence to note rather than a signal: the two can re-converge in either direction.",
+    bullDiv: "Price falls 16.10 points while cumulative delta ends near +7,600 and never turns negative. The usual interpretation is that the decline is happening without matching bid-classified aggression, either because the selling is passive and sitting on the offer rather than crossing the spread, or because the classification is missing it. A divergence describes a disagreement between a price and an estimate; it does not settle which of them is wrong."
+  },
+
+  marketDepth: {
+    untested: "Nothing on this book has been tested yet. Structurally that is the whole content of the state: displayed size is what participants are currently willing to show, and until an order arrives there is no way to separate showing from meaning it. Everything readable about depth comes from what happens next &mdash; whether the size is executed, replenished, or cancelled.",
+    bidWall: "Eight hundred lots trade against the 4,200 displayed at 99.98, and the level is back to 4,500 by the next event and 4,600 after that, larger than before it was hit. Normally read as a bid being defended, since size that replenishes after being taken is doing something a cancelled order cannot. The invalidation is the one that matters for depth: the level can be withdrawn rather than taken, and a bid that is cancelled was never support.",
+    askWall: "Nine hundred lots are lifted from the 4,300 displayed at 100.02, and the level returns to 4,600 and then 4,700 with the best offer never moving. Normally read as an offer being defended, replenishment being the part that distinguishes it from resting size nobody has tested. The same caution applies in reverse: it can be pulled instead of traded, and an offer that is cancelled never resisted anything.",
+    wallCancel: "The large level is gone and nothing traded against it &mdash; near-touch depth drops from about 6,000 to 2,300 between events without a single fill. Structurally this says what displayed size is: an intention, revocable at no cost, and therefore not evidence of anything until it is executed. It is the reason depth is read as available liquidity rather than as support or resistance.",
+    thin: "The order eats through the front of a book holding roughly a fifth of the normal size per level, and the best offer walks from 100.01 to 100.03 while the spread widens from two cents to four. Normally read as price impact rather than as a move: nothing about the market changed, one order simply cost more because there was less to trade against. Depth returning at the new prices would leave the impact temporary; it not returning is what turns impact into a repricing.",
+    normalConsumed: "The 99.99 bid was added to, then sold into, then finished: the best bid is now 99.98 and the spread has widened to three cents. Normally read as a level consumed rather than withdrawn &mdash; the version of the story where displayed size did mean something, because it was there, it traded, and it is gone. What it does not say is where price goes next, only that the price at which buying was resting has moved down a cent."
+  }
+};
+function participationHTML(key){
+  const table=PARTICIPATION[L.lab];
+  const text=table&&key?table[key]:null;
+  return text?`<div class="participation"><small>What this is normally read as</small><p>${text}</p></div>`:"";
+}
+function marketRead(state,title,text,key){
+  const el=$("#marketRead");el.className="market-read "+(state||"");el.innerHTML=`<small>What the market is doing</small><strong>${title}</strong><p>${text}</p>`+participationHTML(key);
+}
+function controlHTML(label,body){return`<div class="control"><label>${label}</label>${body}</div>`}
+function segmented(id,items,active){
+  return`<div class="segmented ${items.length===3?"cols3":""}" id="${id}">${items.map(([v,t])=>`<button type="button" data-value="${v}" class="${v===active?"active":""}">${t}</button>`).join("")}</div>`
+}
+function bindSegment(id,cb){
+  $$("#"+id+" button").forEach(b=>b.addEventListener("click",()=>{$$("#"+id+" button").forEach(x=>x.classList.remove("active"));b.classList.add("active");cb(b.dataset.value)}))
+}
+function rangeControl(id,label,min,max,value,step=1,suffix=""){
+  return controlHTML(`<span>${label}</span><output id="${id}Out">${value}${suffix}</output>`,`<input id="${id}" type="range" min="${min}" max="${max}" value="${value}" step="${step}">`);
+}
+function bindRange(id,cb,suffix=""){
+  $("#"+id).addEventListener("input",e=>{$("#"+id+"Out").textContent=e.target.value+suffix;cb(Number(e.target.value))})
+}
+function resizeHandler(fn){
+  let t;const h=()=>{clearTimeout(t);t=setTimeout(fn,70)};window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)
+}
+
+function initVolumeBasics(){
+  let scenario="bull",activity=100,series;
+  const draw=()=>{
+    const kind=scenario==="bull"?"bull-volumeup":scenario==="bear"?"bear-volumeup":scenario==="balance"?"range-volumeup":"absorb-volumeup";
+    series=makeSeries(kind,54,101).map(d=>({...d,v:Math.round(d.v*activity/100)}));
+    const ch=standardChart(series);setBadge("PRICE + VOLUME");
+    const avg=series.slice(-20).reduce((a,d)=>a+d.v,0)/20,last=series.at(-1),change=(last.c-series[0].o)/series[0].o*100;
+    setKPIs([["Price change",(change>=0?"+":"")+fmt(change,1)+"%"],["Avg volume",compact(avg)],["State",scenario==="bull"?"Buyer control":scenario==="bear"?"Seller control":scenario==="balance"?"Balance":"Absorption"]]);
+    if(scenario==="bull")marketRead("bull","Buyers are accepting higher prices.","Price is progressing upward while activity expands. Buyers are paying increasingly higher offers, although continuation is not guaranteed.",scenario);
+    else if(scenario==="bear")marketRead("bear","Sellers are accepting lower prices.","Price is progressing downward while activity expands. Sellers are repeatedly hitting lower bids.",scenario);
+    else if(scenario==="balance")marketRead("","Neither side is making durable progress.","Trading activity is present, but price keeps returning toward the middle of the range.",scenario);
+    else marketRead("warn","Orders are active, but price is not progressing.","High participation with little price movement suggests opposing passive liquidity is absorbing aggression.",scenario);
+  };
+  $("#controls").innerHTML=controlHTML("Market state",segmented("stateSeg",[["bull","Bullish"],["bear","Bearish"],["balance","Balanced"],["absorb","Absorption"]],"bull"))+
+    rangeControl("activity","Participation",55,170,100,5,"%")+
+    `<div class="formula">Volume = completed shares or contracts traded<br>Direction = observed price progress</div><p class="mini-note">Every transaction has both a buyer and a seller. “Control” refers to the side successfully moving price.</p>`;
+  bindSegment("stateSeg",v=>{scenario=v;draw()});bindRange("activity",v=>{activity=v;draw()},"%");
+  draw();return resizeHandler(draw);
+}
+function initPriceVolume(){
+  let mode="upUp";const labels={upUp:"Price ↑ / Volume ↑",upDown:"Price ↑ / Volume ↓",downUp:"Price ↓ / Volume ↑",downDown:"Price ↓ / Volume ↓"};
+  const draw=()=>{
+    const priceUp=mode.startsWith("up"),volUp=mode.endsWith("Up");
+    const kind=(priceUp?"bull":"bear")+"-"+(volUp?"volumeup":"volumedown");
+    const s=makeSeries(kind,56,202);standardChart(s);setBadge(labels[mode]);
+    const v1=s.slice(0,14).reduce((a,d)=>a+d.v,0)/14,v2=s.slice(-14).reduce((a,d)=>a+d.v,0)/14;
+    const pchg=(s.at(-1).c-s[0].o)/s[0].o*100;
+    setKPIs([["Price",(pchg>=0?"+":"")+fmt(pchg,1)+"%"],["Volume trend",(v2/v1>=1?"+":"")+fmt((v2/v1-1)*100,0)+"%"],["Evidence",volUp?"Expanding":"Contracting"]]);
+    if(priceUp&&volUp)marketRead("bull","Buyers are making upward progress with expanding participation.","More activity is supporting higher prices. This confirms current buying pressure, not future continuation.",mode);
+    if(priceUp&&!volUp)marketRead("warn","Buyers are moving price higher with less participation.","Upward progress continues, but fewer trades support the move. Evidence is weaker.",mode);
+    if(!priceUp&&volUp)marketRead("bear","Sellers are making downward progress with expanding participation.","More activity is supporting lower prices as sellers continue accepting lower bids.",mode);
+    if(!priceUp&&!volUp)marketRead("warn","Sellers are moving price lower with less participation.","Price is falling, but selling participation is contracting. The decline has weaker confirmation.",mode);
+  };
+  $("#controls").innerHTML=controlHTML("Relationship",segmented("pvSeg",[["upUp","Price ↑ · Vol ↑"],["upDown","Price ↑ · Vol ↓"],["downUp","Price ↓ · Vol ↑"],["downDown","Price ↓ · Vol ↓"]],"upUp"))+
+    `<div class="formula">Read in this order:<br>1. Price direction<br>2. Volume change<br>3. Price response</div>`;
+  bindSegment("pvSeg",v=>{mode=v;draw()});draw();return resizeHandler(draw);
+}
+function initRelativeVolume(){
+  let mode="expansion",threshold=1.5;
+  const draw=()=>{
+    let kind=mode==="expansion"?"bull-spike":mode==="climax"?"bull-climax":mode==="absorption"?"absorb-spike":"range-spike";
+    let s=makeSeries(kind,58,303);const spike=Math.floor(s.length*.72);
+    if(mode==="climax"){for(let i=spike+1;i<s.length;i++){s[i].c-=Math.pow(i-spike,1.25)*.08;s[i].h=Math.max(s[i].o,s[i].c)+.3;s[i].l=Math.min(s[i].o,s[i].c)-.35}}
+    const ch=standardChart(s);setBadge("RELATIVE VOLUME");
+    const baseline=s.slice(Math.max(0,spike-20),spike).reduce((a,d)=>a+d.v,0)/20,rvol=s[spike].v/baseline;
+    const y=ch.volume.y+ch.volume.h*(1-(baseline*threshold)/(Math.max(...s.map(d=>d.v))*1.12));drawHorizontal(ch.ctx,y,ch.volume.x,ch.volume.x+ch.volume.w,ch.c.amber,`${threshold.toFixed(1)}× baseline`);
+    drawLabel(ch.ctx,"SPIKE",Math.min(ch.price.x+ch.price.w-54,ch.sx(spike)-20),ch.price.y+18,ch.c.amber);
+    setKPIs([["Spike RVOL",fmt(rvol,2)+"×"],["Threshold",threshold.toFixed(1)+"×"],["Response",mode==="expansion"?"Progress":mode==="climax"?"Reversal":mode==="absorption"?"No progress":"Two-way"]]);
+    if(mode==="expansion")marketRead("bull","Buyers increased activity and continued moving price higher.","The spike produced upward follow-through, so buy-side aggression made price progress.",mode);
+    else if(mode==="climax")marketRead("warn","Buying activity became extreme, then price stopped progressing.","The spike did not sustain higher prices and was followed by reversal. It behaved like a climax, not confirmation.",mode);
+    else if(mode==="absorption")marketRead("warn","Aggressive activity increased, but price stayed nearly flat.","Opposing liquidity absorbed the orders. High volume did not produce control.",mode);
+    else marketRead("","Activity spiked inside a balanced auction.","Both sides traded heavily, but neither maintained progress outside the range.",mode);
+  };
+  $("#controls").innerHTML=controlHTML("Spike response",segmented("rvSeg",[["expansion","Expansion"],["climax","Climax"],["absorption","Absorption"],["balanced","Balanced"]],"expansion"))+
+    rangeControl("rvThreshold","RVOL threshold",1,3,1.5,.1,"×")+
+    `<div class="formula">RVOL = current volume ÷ comparable baseline volume</div>`;
+  bindSegment("rvSeg",v=>{mode=v;draw()});bindRange("rvThreshold",v=>{threshold=v;draw()},"×");draw();return resizeHandler(draw);
+}
+function initVolumeConfirmation(){
+  let mode="strong",baseN=18;
+  const draw=()=>{
+    const kind=mode==="strong"?"breakout-volumeup":mode==="weak"?"breakout-volumedown":mode==="failed"?"failed-volumeup":"range-volumeup";
+    const s=makeSeries(kind,60,404);const level=101.1;
+    if(mode!=="range"){
+      const pivot=Math.floor(s.length*.62);
+      for(let i=0;i<pivot;i++){const shift=level-.35-s[i].c;s[i].o+=shift*.45;s[i].c+=shift*.45;s[i].h+=shift*.45;s[i].l+=shift*.45}
+    }
+    const ch=standardChart(s);setBadge("BREAKOUT + VOLUME");
+    const sy=ch.sy(level);drawHorizontal(ch.ctx,sy,ch.price.x,ch.price.x+ch.price.w,ch.c.amber,"RESISTANCE");
+    const breakIdx=s.findIndex((d,i)=>i>baseN&&d.c>level);
+    const priorStart=Math.max(0,(breakIdx>=0?breakIdx:s.length-1)-baseN),priorEnd=breakIdx>=0?breakIdx:s.length-1;
+    const base=s.slice(priorStart,priorEnd).reduce((a,d)=>a+d.v,0)/Math.max(1,priorEnd-priorStart);
+    const ratio=breakIdx>=0?s[breakIdx].v/base:0; const accepted=s.slice(-5).filter(d=>d.c>level).length;
+    setKPIs([["Break volume",breakIdx>=0?fmt(ratio,2)+"×":"None"],["Closes above",accepted+"/5"],["Result",mode==="strong"?"Accepted":mode==="weak"?"Low confirmation":mode==="failed"?"Failed":"No break"]]);
+    if(mode==="strong")marketRead("bull","Buyers broke resistance and kept accepting higher prices.","Volume expanded at the break, and price stayed above the level. Buyers made and maintained upward progress.",mode);
+    else if(mode==="weak")marketRead("warn","Buyers moved above resistance, but participation did not expand.","Price is outside the range, but volume confirmation is weak. More acceptance evidence is needed.",mode);
+    else if(mode==="failed")marketRead("bear","Buyers crossed resistance but could not maintain higher prices.","High activity appeared at the break, then price returned inside. The attempted move was rejected.",mode);
+    else marketRead("","Neither side has broken the range.","Volume is active inside the boundary, but buyers have not established acceptance above resistance.",mode);
+  };
+  $("#controls").innerHTML=controlHTML("Breakout case",segmented("vcSeg",[["strong","Confirmed"],["weak","Weak volume"],["failed","Failed"],["range","No break"]],"strong"))+
+    rangeControl("baseN","Baseline bars",10,30,18,1,"")+
+    `<div class="formula">Confirmation = level break + participation + acceptance</div>`;
+  bindSegment("vcSeg",v=>{mode=v;draw()});bindRange("baseN",v=>{baseN=v;draw()});draw();return resizeHandler(draw);
+}
+function initOBV(){
+  let mode="confirmBull",period=8;
+  const draw=()=>{
+    let kind=mode.includes("Bull")?"bull-volumeup":"bear-volumeup";let s=makeSeries(kind,62,505);
+    if(mode==="bearDiv"){s=makeSeries("bull-volumedown",62,506)}
+    if(mode==="bullDiv"){s=makeSeries("bear-volumedown",62,507)}
+    let vals=obv(s);
+    const {ctx,w,h}=canvasContext(),c=colors(),m={l:18,r:58,t:18,b:20},totalH=h-m.t-m.b,gap=18,priceH=totalH*.58;
+    const price={x:m.l,y:m.t,w:w-m.l-m.r,h:priceH},panel={x:m.l,y:m.t+priceH+gap,w:w-m.l-m.r,h:totalH-priceH-gap};
+    grid(ctx,price.x,price.y,price.w,price.h,c);let[mn,mx]=extent(s,[d=>d.l,d=>d.h]);drawCandles(ctx,s,price,mn,mx,c);drawAxes(ctx,price,mn,mx,c);
+    linePanel(ctx,vals,panel,c,{color:c.cyan});ctx.fillStyle=c.muted;ctx.font="10px system-ui";ctx.fillText("ON-BALANCE VOLUME",panel.x,panel.y+11);setBadge("PRICE + OBV");
+    const pchg=(s.at(-1).c-s[0].o)/s[0].o*100,ochg=vals.at(-1)-vals[Math.max(0,vals.length-period-1)];
+    setKPIs([["Price trend",pchg>=0?"Higher":"Lower"],["OBV change",(ochg>=0?"+":"")+compact(ochg)],["Relationship",mode.startsWith("confirm")?"Confirmation":"Divergence"]]);
+    if(mode==="confirmBull")marketRead("bull","Up-closing bars are carrying more cumulative volume as price rises.","Price and OBV agree: buyers are making upward progress with supporting volume participation.",mode);
+    else if(mode==="confirmBear")marketRead("bear","Down-closing bars are carrying more cumulative volume as price falls.","Price and OBV agree: sellers are making downward progress with supporting volume participation.",mode);
+    else if(mode==="bearDiv")marketRead("warn","Price rises, but OBV participation fails to confirm.","Buyers are still making price progress, but volume is increasingly associated with down closes. This is a warning, not an automatic short.");
+    else marketRead("warn","Price falls, but OBV selling participation fails to confirm.","Sellers are making price progress, but cumulative down-close volume is weakening. This is a warning, not an automatic long.");
+  };
+  $("#controls").innerHTML=controlHTML("Relationship",segmented("obvSeg",[["confirmBull","Bull confirm"],["confirmBear","Bear confirm"],["bearDiv","Bear divergence"],["bullDiv","Bull divergence"]],"confirmBull"))+
+    rangeControl("obvLook","Comparison window",5,20,8,1," bars")+
+    `<div class="formula">If close ↑: OBV += volume<br>If close ↓: OBV −= volume</div><p class="mini-note">OBV is a closing-direction proxy, not trade-by-trade aggressor data.</p>`;
+  bindSegment("obvSeg",v=>{mode=v;draw()});bindRange("obvLook",v=>{period=v;draw()}," bars");draw();return resizeHandler(draw);
+}
+function initCMF(){
+  let mode="accum",period=14;
+  const draw=()=>{
+    let s=makeSeries(mode==="accum"?"bull-volumeup":mode==="distrib"?"bear-volumeup":"range-volumeup",64,606);
+    s=s.map((d,i)=>{
+      if(mode==="accum")d.c=d.l+(d.h-d.l)*(.66+.25*Math.sin(i*.5)**2);
+      else if(mode==="distrib")d.c=d.l+(d.h-d.l)*(.08+.26*Math.sin(i*.5)**2);
+      else d.c=d.l+(d.h-d.l)*(.42+.16*Math.sin(i));
+      return d;
+    });
+    const {cmf:vals}=cmf(s,period);const {ctx,w,h}=canvasContext(),c=colors(),m={l:18,r:58,t:18,b:20},gap=18,priceH=(h-m.t-m.b)*.58;
+    const price={x:m.l,y:m.t,w:w-m.l-m.r,h:priceH},panel={x:m.l,y:m.t+priceH+gap,w:w-m.l-m.r,h:h-m.t-m.b-priceH-gap};
+    grid(ctx,price.x,price.y,price.w,price.h,c);let[mn,mx]=extent(s,[d=>d.l,d=>d.h]);drawCandles(ctx,s,price,mn,mx,c);drawAxes(ctx,price,mn,mx,c);
+    linePanel(ctx,vals,panel,c,{color:c.purple,min:-.55,max:.55,zero:true});ctx.fillStyle=c.muted;ctx.font="10px system-ui";ctx.fillText(`CMF (${period})`,panel.x,panel.y+11);setBadge("PRICE + CMF");
+    const last=vals.filter(v=>v!=null).at(-1)||0;
+    setKPIs([["CMF",fmt(last,3)],["Closing pressure",last>.08?"Positive":last<-.08?"Negative":"Balanced"],["Lookback",period+" bars"]]);
+    if(last>.08)marketRead("bull","High-volume bars are generally closing nearer their highs.","The calculation shows persistent positive closing pressure. Buyers are maintaining stronger closes, though this is inferred rather than trade-by-trade flow.",mode+"/pos");
+    else if(last<-.08)marketRead("bear","High-volume bars are generally closing nearer their lows.","The calculation shows persistent negative closing pressure. Sellers are maintaining weaker closes.",mode+"/neg");
+    else marketRead("","Closing pressure is balanced over the lookback.","Positive and negative money-flow contributions are offsetting. Neither side has persistent closing control.",mode+"/flat");
+  };
+  $("#controls").innerHTML=controlHTML("Market behavior",segmented("cmfSeg",[["accum","Accumulation"],["distrib","Distribution"],["balanced","Balanced"]],"accum"))+
+    rangeControl("cmfPeriod","CMF period",8,30,14,1,"")+
+    `<div class="formula">Multiplier = ((Close−Low)−(High−Close)) ÷ (High−Low)<br>CMF = Σ(multiplier × volume) ÷ Σvolume</div>`;
+  bindSegment("cmfSeg",v=>{mode=v;draw()});bindRange("cmfPeriod",v=>{period=v;draw()});draw();return resizeHandler(draw);
+}
+function initVWAP(){
+  let mode="trendUp",showBands=false;
+  const draw=()=>{
+    let kind=mode==="trendUp"?"bull-volumeup":mode==="trendDown"?"bear-volumeup":mode==="twoWay"?"range-volumeup":"reclaim-volumeup";
+    const s=makeSeries(kind,64,707),vw=vwap(s,0);const ch=standardChart(s);drawLine(ch.ctx,vw,ch.price,ch.min,ch.max,ch.c.cyan,2.4);setBadge("SESSION VWAP");
+    if(showBands){
+      const dev=Math.sqrt(s.reduce((a,d,i)=>a+Math.pow(d.c-vw[i],2),0)/s.length);
+      drawLine(ch.ctx,vw.map(v=>v+dev),ch.price,ch.min,ch.max,ch.c.purple,1);drawLine(ch.ctx,vw.map(v=>v-dev),ch.price,ch.min,ch.max,ch.c.purple,1);
+    }
+    const last=s.at(-1),vlast=vw.at(-1),slope=vlast-vw[Math.max(0,vw.length-10)],above=s.slice(-10).filter((d,i)=>d.c>vw[vw.length-10+i]).length;
+    setKPIs([["Last vs VWAP",(last.c-vlast>=0?"+":"")+fmt(last.c-vlast,2)],["VWAP slope",slope>.08?"Rising":slope<-.08?"Falling":"Flat"],["Bars above",above+"/10"]]);
+    if(mode==="trendUp")marketRead("bull","Buyers keep accepting prices above a rising session average.","Price stays above VWAP and the average rises. Buyers are maintaining upward control.",mode);
+    else if(mode==="trendDown")marketRead("bear","Sellers keep accepting prices below a falling session average.","Price stays below VWAP and the average falls. Sellers are maintaining downward control.",mode);
+    else if(mode==="twoWay")marketRead("","Price repeatedly crosses a flat VWAP.","Trading is rotating around session average value. Neither side maintains directional progress.",mode);
+    else marketRead("bull","Buyers recovered VWAP and began accepting higher prices.","The reclaim becomes meaningful because price holds above the average and VWAP begins to turn upward.",mode);
+  };
+  $("#controls").innerHTML=controlHTML("Session behavior",segmented("vwapSeg",[["trendUp","Bull trend"],["trendDown","Bear trend"],["twoWay","Two-way"],["reclaim","Reclaim"]],"trendUp"))+
+    controlHTML("Display",`<label style="display:flex;align-items:center;gap:9px;color:var(--text)"><input id="bands" type="checkbox"> Show ±1 deviation</label>`)+
+    `<div class="formula">VWAP = cumulative Σ(typical price × volume) ÷ cumulative Σvolume</div>`;
+  bindSegment("vwapSeg",v=>{mode=v;draw()});$("#bands").addEventListener("change",e=>{showBands=e.target.checked;draw()});draw();return resizeHandler(draw);
+}
+function initAnchoredVWAP(){
+  let mode="majorLow",anchor=12;
+  const draw=()=>{
+    let kind=mode==="majorHigh"?"bear-volumeup":mode==="gap"?"reclaim-volumeup":"bull-volumeup";const s=makeSeries(kind,66,808);
+    anchor=clamp(anchor,0,s.length-2);const av=vwap(s,anchor),ch=standardChart(s);drawLine(ch.ctx,av,ch.price,ch.min,ch.max,ch.c.purple,2.5);setBadge("ANCHORED VWAP");
+    const x=ch.sx(anchor);ch.ctx.strokeStyle=ch.c.amber;ch.ctx.setLineDash([5,5]);ch.ctx.beginPath();ch.ctx.moveTo(x,ch.price.y);ch.ctx.lineTo(x,ch.volume.y+ch.volume.h);ch.ctx.stroke();ch.ctx.setLineDash([]);drawLabel(ch.ctx,"ANCHOR",Math.min(x+5,ch.price.x+ch.price.w-62),ch.price.y+20,ch.c.amber);
+    const last=s.at(-1),val=av.at(-1),slope=val-av[Math.max(anchor,av.length-10)];
+    setKPIs([["Anchor bar",anchor+1],["Price vs AVWAP",(last.c-val>=0?"+":"")+fmt(last.c-val,2)],["Slope",slope>.08?"Rising":slope<-.08?"Falling":"Flat"]]);
+    if(last.c>val&&slope>0)marketRead("bull","Trading since the anchor is accepted above a rising average.","Buyers have favorable location relative to the event and continue making upward progress.","above");
+    else if(last.c<val&&slope<0)marketRead("bear","Trading since the anchor is accepted below a falling average.","Sellers have favorable location relative to the event and continue making downward progress.","below");
+    else marketRead("warn","Price and anchored value are not aligned.","The event-based average is flat or being crossed. Neither side has clear control relative to this anchor.","unaligned");
+  };
+  $("#controls").innerHTML=controlHTML("Anchor event",segmented("avSeg",[["majorLow","Major low"],["majorHigh","Major high"],["gap","Gap / event"]],"majorLow"))+
+    rangeControl("anchorBar","Anchor bar",1,55,13,1,"")+
+    `<div class="formula">AVWAP uses the VWAP formula starting at the selected event.</div><p class="mini-note">Choose the anchor before interpreting the result. Do not move it to fit a preferred thesis.</p>`;
+  bindSegment("avSeg",v=>{mode=v;anchor=v==="majorLow"?12:v==="majorHigh"?15:26;$("#anchorBar").value=anchor+1;$("#anchorBarOut").textContent=anchor+1;draw()});
+  bindRange("anchorBar",v=>{anchor=v-1;draw()});draw();return resizeHandler(draw);
+}
+
+function profileData(series,bins=18){
+  const lo=Math.min(...series.map(d=>d.l)),hi=Math.max(...series.map(d=>d.h)),step=(hi-lo)/bins;
+  const vols=Array(bins).fill(0);
+  series.forEach(d=>{
+    const tp=(d.h+d.l+d.c)/3;const i=clamp(Math.floor((tp-lo)/step),0,bins-1);vols[i]+=d.v;
+    if(d.h-d.l>step*1.8){const j=clamp(Math.floor((d.c-lo)/step),0,bins-1);if(j!==i){vols[j]+=d.v*.28;vols[i]-=d.v*.28}}
+  });
+  const poc=vols.indexOf(Math.max(...vols));let included=new Set([poc]),sum=vols[poc],total=vols.reduce((a,b)=>a+b,0),l=poc-1,r=poc+1;
+  while(sum/total<.70&&(l>=0||r<bins)){const lv=l>=0?vols[l]:-1,rv=r<bins?vols[r]:-1;if(rv>lv){included.add(r);sum+=rv;r++}else{included.add(l);sum+=lv;l--}}
+  const ids=[...included];return{lo,hi,step,vols,poc,val:Math.min(...ids),vah:Math.max(...ids),price:i=>lo+step*(i+.5),total}
+}
+function drawProfileChart(series,bins=18,opts={}){
+  const {ctx,w,h}=canvasContext(),c=colors(),m={l:18,r:14,t:18,b:24},gap=14,profileW=Math.max(120,w*.27);
+  const price={x:m.l,y:m.t,w:w-m.l-m.r-profileW-gap,h:h-m.t-m.b};
+  const prof={x:price.x+price.w+gap,y:price.y,w:profileW,h:price.h};
+  grid(ctx,price.x,price.y,price.w,price.h,c);let[mn,mx]=extent(series,[d=>d.l,d=>d.h],.05);drawCandles(ctx,series,price,mn,mx,c);
+  const p=profileData(series,bins),vmax=Math.max(...p.vols);ctx.fillStyle=c.muted;ctx.font="10px system-ui";ctx.fillText("VOLUME AT PRICE",prof.x,prof.y+10);
+  p.vols.forEach((v,i)=>{
+    const y=prof.y+prof.h-(i+1)*prof.h/bins+2,bh=Math.max(2,prof.h/bins-4),bw=(v/vmax)*(prof.w-8);
+    ctx.fillStyle=i===p.poc?c.amber:(i>=p.val&&i<=p.vah?c.cyan:c.blue);ctx.globalAlpha=i===p.poc?.82:.42;ctx.fillRect(prof.x, y, bw,bh);ctx.globalAlpha=1;
+  });
+  const sy=v=>price.y+(mx-v)/(mx-mn)*price.h;
+  const pocPrice=p.price(p.poc),vahPrice=p.lo+p.step*(p.vah+1),valPrice=p.lo+p.step*p.val;
+  [ [pocPrice,c.amber,"POC"],[vahPrice,c.cyan,"VAH"],[valPrice,c.cyan,"VAL"] ].forEach(([v,col,label])=>{if(v>=mn&&v<=mx)drawHorizontal(ctx,sy(v),price.x,prof.x+prof.w,col,label)});
+  if(opts.current!=null&&opts.current>=mn&&opts.current<=mx){
+    const y=sy(opts.current);drawHorizontal(ctx,y,price.x,prof.x+prof.w,c.purple,"CURRENT");
+  }
+  setBadge("TIME + VOLUME AT PRICE");return{ctx,w,h,c,price,prof,min:mn,max:mx,sy,p,pocPrice,vahPrice,valPrice}
+}
+function initVolumeProfile(){
+  let mode="range",bins=18;
+  const draw=()=>{
+    let s=makeSeries(mode==="range"?"range-volumeup":mode==="trend"?"bull-volumeup":"breakout-volumeup",66,909);
+    const ch=drawProfileChart(s,bins);const p=ch.p;const hvn=p.price(p.poc),thin=p.vols.indexOf(Math.min(...p.vols.filter(v=>v>0)));
+    setKPIs([["POC",fmt(hvn,2)],["Value area",fmt(ch.valPrice,2)+" – "+fmt(ch.vahPrice,2)],["Profile",mode==="range"?"Balanced":mode==="trend"?"Directional":"Two distributions"]]);
+    if(mode==="range")marketRead("","Most activity is concentrated near the middle of the range.","Both sides repeatedly transact around the POC. The profile shows acceptance, not directional control.",mode);
+    else if(mode==="trend")marketRead("bull","Buyers move price higher while new volume builds at higher prices.","The market is accepting progressively higher value instead of only visiting it briefly.",mode);
+    else marketRead("bull","Buyers left the prior value area and began building activity above it.","The upper distribution indicates acceptance after the breakout; a quick return would instead show rejection.",mode);
+  };
+  $("#controls").innerHTML=controlHTML("Profile case",segmented("vpSeg",[["range","Range"],["trend","Uptrend"],["breakout","Breakout"]],"range"))+
+    rangeControl("profileBins","Price bins",10,30,18,1,"")+
+    `<div class="formula">Volume profile = Σ traded volume assigned to each price bin</div><p class="mini-note">Total profile volume shows where trade occurred. It does not identify the aggressor side.</p>`;
+  bindSegment("vpSeg",v=>{mode=v;draw()});bindRange("profileBins",v=>{bins=v;draw()});draw();return resizeHandler(draw);
+}
+function initValueArea(){
+  let mode="inside",bins=20,current=null;
+  const draw=()=>{
+    const s=makeSeries("range-volumeup",64,1010);const p0=profileData(s,bins),baseVAH=p0.lo+p0.step*(p0.vah+1),baseVAL=p0.lo+p0.step*p0.val;
+    if(current==null||mode!=="custom"){
+      current=mode==="inside"?(baseVAL+baseVAH)/2:mode==="acceptHigh"?baseVAH+p0.step*1.6:mode==="rejectHigh"?baseVAH-p0.step*.25:mode==="acceptLow"?baseVAL-p0.step*1.6:baseVAL+p0.step*.35;
+    }
+    const ch=drawProfileChart(s,bins,{current});const inside=current>=ch.valPrice&&current<=ch.vahPrice;
+    setKPIs([["Current",fmt(current,2)],["Location",current>ch.vahPrice?"Above value":current<ch.valPrice?"Below value":"Inside value"],["POC",fmt(ch.pocPrice,2)]]);
+    if(mode==="rejectHigh")marketRead("bear","Higher prices were tested, then rejected back into value.","Buyers could not maintain trade above VAH. Price returned to the prior accepted area.","rejectHigh");
+    else if(mode==="acceptHigh"||current>ch.vahPrice)marketRead("bull","Buyers are maintaining trade above the prior value area.","The market is accepting higher prices. Continued time and volume above VAH strengthen the evidence.","acceptHigh");
+    else if(mode==="acceptLow"||current<ch.valPrice)marketRead("bear","Sellers are maintaining trade below the prior value area.","The market is accepting lower prices. Continued time and volume below VAL strengthen the evidence.","acceptLow");
+    else if(mode==="lvn")marketRead("warn","Price is moving through a thinner-volume transition area.","The market previously spent little activity here. Movement may be fast, but acceleration is not guaranteed.","lvn");
+    else marketRead("","Price is trading inside the accepted value area.","Both sides are transacting around prior value. Neither side has established control outside it.","inside");
+  };
+  $("#controls").innerHTML=controlHTML("Auction response",segmented("vaSeg",[["inside","Inside value"],["acceptHigh","Accept above"],["rejectHigh","Reject high"],["acceptLow","Accept below"],["lvn","LVN transition"]],"inside"))+
+    rangeControl("vaBins","Profile bins",12,28,20,1,"")+
+    `<div class="formula">Value area ≈ selected share of profile volume around POC<br>Default in this lab: 70%</div>`;
+  bindSegment("vaSeg",v=>{mode=v;current=null;draw()});bindRange("vaBins",v=>{bins=v;current=null;draw()});draw();return resizeHandler(draw);
+}
+function depthBook(scenario="normal"){
+  let bids=[{p:99.99,q:420},{p:99.98,q:690},{p:99.97,q:920},{p:99.96,q:760},{p:99.95,q:1150}];
+  let asks=[{p:100.01,q:380},{p:100.02,q:610},{p:100.03,q:850},{p:100.04,q:980},{p:100.05,q:1250}];
+  if(scenario==="thin"){bids=bids.map(x=>({...x,q:Math.round(x.q*.28)}));asks=asks.map(x=>({...x,q:Math.round(x.q*.25)}))}
+  if(scenario==="bidWall")bids[1].q=4200;if(scenario==="askWall")asks[1].q=4300;
+  return{bids,asks}
+}
+function renderBook(book){
+  const max=Math.max(...book.bids.map(x=>x.q),...book.asks.map(x=>x.q));
+  const side=(arr,type)=>`<div class="book-side"><div class="book-head"><span>${type==="bid"?"Bid price":"Ask price"}</span><span>Size</span></div>${arr.map(x=>`<div class="book-row"><span>${fmt(x.p,2)}</span><span>${compact(x.q)}</span><i class="depth-bar ${type==="bid"?"bidbar":"askbar"}" style="width:${x.q/max*100}%"></i></div>`).join("")}</div>`;
+  $("#extraVisual").innerHTML=`<div class="book" style="margin-top:14px">${side(book.bids,"bid")}${side(book.asks,"ask")}</div>`;
+}
+function drawDepth(book,fill=null){
+  const {ctx,w,h}=canvasContext(),c=colors();const area={x:34,y:25,w:w-68,h:h-55};grid(ctx,area.x,area.y,area.w,area.h,c,4,8);
+  const levels=[...book.bids].reverse().concat(book.asks),max=Math.max(...levels.map(x=>x.q))*1.12,mid=area.x+area.w/2;
+  const bw=area.w/(levels.length+2);
+  levels.forEach((x,i)=>{
+    const isBid=i<book.bids.length,xx=area.x+bw*(i+1),bh=x.q/max*area.h*.78;
+    ctx.fillStyle=isBid?c.green:c.red;ctx.globalAlpha=.48;ctx.fillRect(xx-bw*.35,area.y+area.h-bh,bw*.7,bh);ctx.globalAlpha=1;
+    ctx.fillStyle=c.muted;ctx.font="10px system-ui";ctx.textAlign="center";ctx.fillText(fmt(x.p,2),xx,area.y+area.h+16)
+  });
+  ctx.strokeStyle=c.cyan;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(mid,area.y);ctx.lineTo(mid,area.y+area.h);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=c.muted;ctx.textAlign="left";ctx.fillText("RESTING DEPTH",area.x,area.y+10);setBadge("BID · ASK · DEPTH");
+}
+function initOrderTypes(){
+  let side="buy",type="market",qty=700,scenario="normal",result="Choose an order and execute it.";
+  const draw=()=>{
+    const book=depthBook(scenario);drawDepth(book);renderBook(book);
+    const spread=book.asks[0].p-book.bids[0].p;setKPIs([["Best bid",fmt(book.bids[0].p,2)],["Best ask",fmt(book.asks[0].p,2)],["Spread",fmt(spread,2)]]);
+    const r=$("#executionResult");if(r)r.textContent=result;
+    if(result.startsWith("Market buy"))marketRead("bull","The buyer demanded immediate execution and consumed ask liquidity.",result,scenario);
+    else if(result.startsWith("Market sell"))marketRead("bear","The seller demanded immediate execution and consumed bid liquidity.",result,scenario);
+    else if(result.includes("resting"))marketRead("","The limit order is providing liquidity and waiting.",result,scenario);
+    else marketRead("","The book shows available resting liquidity.","Aggressive buyers would lift asks; aggressive sellers would hit bids. Displayed size can change before execution.",scenario);
+  };
+  const execute=()=>{
+    const book=depthBook(scenario),levels=side==="buy"?book.asks:book.bids;let remain=qty,cost=0,filled=0,last=null;
+    if(type==="market"){
+      for(const l of levels){const f=Math.min(remain,l.q);cost+=f*l.p;filled+=f;remain-=f;if(f)last=l.p;if(!remain)break}
+      const avg=filled?cost/filled:0;result=`Market ${side}: filled ${filled} at average ${fmt(avg,3)}${remain?`; ${remain} unfilled in displayed depth`:""}. Last level ${last?fmt(last,2):"—"}.`;
+    }else{
+      const limit=Number($("#limitPrice").value),cross=side==="buy"?limit>=book.asks[0].p:limit<=book.bids[0].p;
+      if(cross){const avail=levels.filter(l=>side==="buy"?l.p<=limit:l.p>=limit);for(const l of avail){const f=Math.min(remain,l.q);cost+=f*l.p;filled+=f;remain-=f;if(!remain)break}result=`Marketable limit ${side}: filled ${filled}${filled?` at average ${fmt(cost/filled,3)}`:""}; ${remain} remains at the limit or unfilled.`}
+      else result=`Limit ${side} at ${fmt(limit,2)} is resting. Price is controlled, but execution is not guaranteed.`;
+    }
+    draw();
+  };
+  $("#controls").innerHTML=controlHTML("Side",segmented("sideSeg",[["buy","Buy"],["sell","Sell"]],"buy"))+
+    controlHTML("Order type",segmented("typeSeg",[["market","Market"],["limit","Limit"]],"market"))+
+    rangeControl("orderQty","Quantity",100,3000,700,100,"")+
+    controlHTML("Book condition",`<select id="bookCondition"><option value="normal">Normal depth</option><option value="thin">Thin depth</option><option value="bidWall">Large bid</option><option value="askWall">Large ask</option></select>`)+
+    `<div class="control" id="limitGroup" style="display:none"><label><span>Limit price</span></label><input id="limitPrice" type="number" step=".01" value="100.00"></div>
+     <button class="btn primary" id="executeOrder" style="width:100%">Execute simulation</button>
+     <div class="status" id="executionResult" style="margin-top:12px">${result}</div>`;
+  bindSegment("sideSeg",v=>{side=v;draw()});bindSegment("typeSeg",v=>{type=v;$("#limitGroup").style.display=v==="limit"?"block":"none";draw()});
+  bindRange("orderQty",v=>{qty=v;draw()});$("#bookCondition").addEventListener("change",e=>{scenario=e.target.value;result="Book condition changed. Execute the order to see the result.";draw()});
+  $("#executeOrder").addEventListener("click",execute);draw();return resizeHandler(draw);
+}
+function makeTapeScenario(mode){
+  const r=rng(1212+hashSeed(mode));let p=100,rows=[];
+  for(let i=0;i<42;i++){
+    let side=mode==="buyProgress"?(r()<.72?"ask":"bid"):mode==="sellProgress"?(r()<.72?"bid":"ask"):mode==="buyAbsorb"?(r()<.78?"ask":"bid"):mode==="sellAbsorb"?(r()<.78?"bid":"ask"):(r()<.5?"ask":"bid");
+    let move=0;
+    if(mode==="buyProgress")move=side==="ask"?.01:(r()<.28?-.01:0);
+    if(mode==="sellProgress")move=side==="bid"?-.01:(r()<.28?.01:0);
+    if(mode==="buyAbsorb")move=side==="ask"&&r()<.14?.01:side==="bid"&&r()<.12?-.01:0;
+    if(mode==="sellAbsorb")move=side==="bid"&&r()<.14?-.01:side==="ask"&&r()<.12?.01:0;
+    if(mode==="balance")move=r()<.23?(r()<.5?.01:-.01):0;
+    p=Number((p+move).toFixed(2));rows.push({time:`09:${String(30+Math.floor(i/12)).padStart(2,"0")}:${String((i%12)*5).padStart(2,"0")}`,p,q:Math.round(40+r()*520),side});
+  }
+  return rows;
+}
+function initTimeSales(){
+  let mode="buyProgress",rows=makeTapeScenario(mode),shown=1,timer=null,speed=450;
+  const draw=()=>{
+    const visible=rows.slice(0,shown),{ctx,w,h}=canvasContext(),c=colors(),area={x:35,y:25,w:w-80,h:h-55};grid(ctx,area.x,area.y,area.w,area.h,c);
+    const vals=visible.map(x=>x.p),mn=Math.min(...vals,99.95)-.02,mx=Math.max(...vals,100.05)+.02;drawLine(ctx,vals,area,mn,mx,c.cyan,2.5);drawAxes(ctx,area,mn,mx,c);
+    visible.forEach((d,i)=>{const x=area.x+area.w*i/Math.max(1,visible.length-1),y=area.y+(mx-d.p)/(mx-mn)*area.h;ctx.fillStyle=d.side==="ask"?c.green:c.red;ctx.beginPath();ctx.arc(x,y,2.8,0,Math.PI*2);ctx.fill()});
+    setBadge("TRANSACTION TAPE");
+    $("#extraVisual").innerHTML=`<div class="tape" id="tape" style="margin-top:14px">${visible.slice().reverse().map(x=>`<div class="tape-row ${x.side}"><span>${x.time}</span><span>${fmt(x.p,2)}</span><span>${x.q}</span><span>${x.side==="ask"?"AT ASK":"AT BID"}</span></div>`).join("")}</div>`;
+    const asks=visible.filter(x=>x.side==="ask").reduce((a,x)=>a+x.q,0),bids=visible.filter(x=>x.side==="bid").reduce((a,x)=>a+x.q,0),chg=visible.at(-1).p-visible[0].p;
+    setKPIs([["Ask volume",compact(asks)],["Bid volume",compact(bids)],["Price change",(chg>=0?"+":"")+fmt(chg,2)]]);
+    if(mode==="buyProgress")marketRead("bull","Aggressive buyers are lifting the ask and moving price higher.","Buy-side flow and price progress agree.",mode);
+    else if(mode==="sellProgress")marketRead("bear","Aggressive sellers are hitting the bid and moving price lower.","Sell-side flow and price progress agree.",mode);
+    else if(mode==="buyAbsorb")marketRead("warn","Aggressive buyers are active, but price barely rises.","Passive sellers are absorbing repeated buying. Aggression is not producing control.",mode);
+    else if(mode==="sellAbsorb")marketRead("warn","Aggressive sellers are active, but price barely falls.","Passive buyers are absorbing repeated selling. Aggression is not producing control.",mode);
+    else marketRead("","Trades alternate around the same prices.","Both sides are active, but neither maintains directional progress.",mode);
+  };
+  const stop=()=>{if(timer){clearInterval(timer);timer=null;$("#playTape").textContent="Play"}};
+  const step=()=>{shown=Math.min(rows.length,shown+1);draw();if(shown>=rows.length)stop()};
+  const play=()=>{if(timer){stop();return}$("#playTape").textContent="Pause";timer=setInterval(step,speed)};
+  $("#controls").innerHTML=controlHTML("Tape behavior",`<select id="tapeMode"><option value="buyProgress">Buying with progress</option><option value="sellProgress">Selling with progress</option><option value="buyAbsorb">Buying absorbed</option><option value="sellAbsorb">Selling absorbed</option><option value="balance">Balanced tape</option></select>`)+
+    rangeControl("tapeSpeed","Playback speed",120,900,450,30," ms")+
+    `<div class="segmented cols3"><button id="playTape">Play</button><button id="stepTape">Step</button><button id="resetTape">Reset</button></div>
+     <div class="formula" style="margin-top:15px">Ask-classified print = aggressive buyer<br>Bid-classified print = aggressive seller</div>`;
+  $("#tapeMode").addEventListener("change",e=>{stop();mode=e.target.value;rows=makeTapeScenario(mode);shown=1;draw()});
+  bindRange("tapeSpeed",v=>{speed=v;if(timer){stop();play()}}," ms");$("#playTape").addEventListener("click",play);$("#stepTape").addEventListener("click",step);$("#resetTape").addEventListener("click",()=>{stop();shown=1;draw()});
+  draw();const rh=resizeHandler(draw);return()=>{stop();rh()};
+}
+
+function footprintScenario(mode){
+  const r=rng(1313+hashSeed(mode)),candles=[],levels=9;let base=100;
+  for(let i=0;i<6;i++){
+    let o=base+(i-2.5)*.035, c=o;
+    if(mode==="alignedBuy")c=o+.055+r()*.025;
+    if(mode==="alignedSell")c=o-.055-r()*.025;
+    if(mode==="buyAbsorb")c=o-.018+r()*.018;
+    if(mode==="sellAbsorb")c=o+.018-r()*.018;
+    const h=Math.max(o,c)+.035,l=Math.min(o,c)-.035;const rows=[];
+    for(let j=0;j<levels;j++){
+      const center=(levels-1)/2,shape=Math.max(.2,1-Math.abs(j-center)/5);
+      let bid=Math.round((90+r()*210)*shape),ask=Math.round((90+r()*210)*shape);
+      if(mode==="alignedBuy")ask=Math.round(ask*1.65);
+      if(mode==="alignedSell")bid=Math.round(bid*1.65);
+      if(mode==="buyAbsorb")ask=Math.round(ask*2.0);
+      if(mode==="sellAbsorb")bid=Math.round(bid*2.0);
+      rows.push({bid,ask});
+    }
+    const delta=rows.reduce((a,x)=>a+x.ask-x.bid,0),vol=rows.reduce((a,x)=>a+x.ask+x.bid,0);
+    candles.push({o,h,l,c,v:vol,delta,rows});base=c;
+  }
+  return candles;
+}
+function initFootprint(){
+  let mode="alignedBuy",selected=5,ratio=3;
+  const draw=()=>{
+    const s=footprintScenario(mode),ch=standardChart(s,{noVolume:false});setBadge("FOOTPRINT + DELTA");
+    const step=ch.price.w/s.length,x=ch.price.x+step*selected;ch.ctx.fillStyle=ch.c.cyan;ch.ctx.globalAlpha=.09;ch.ctx.fillRect(x,ch.price.y,step,ch.price.h);ch.ctx.globalAlpha=1;
+    const maxH=Math.max(...s.map(d=>d.h)),minL=Math.min(...s.map(d=>d.l)),priceStep=(maxH-minL)/8;
+    let html=`<div class="footprint" style="margin-top:14px"><div class="fp-grid">`;
+    for(let row=8;row>=0;row--){
+      const price=minL+priceStep*row;html+=`<div class="fp-row"><div class="fp-cell price">${fmt(price,3)}</div>`;
+      for(let i=0;i<6;i++){const x=s[i].rows[row],imb=Math.max(x.ask,x.bid)/Math.max(1,Math.min(x.ask,x.bid));const cls=(x.ask-x.bid)>=0?"pos":"neg";html+=`<div class="fp-cell ${cls} ${imb>=ratio?"hot":""}" title="Bid × Ask">${x.bid} × ${x.ask}</div>`}
+      html+=`</div>`;
+    }
+    html+=`</div></div>`;$("#extraVisual").innerHTML=html;
+    const d=s[selected],deltaPct=d.delta/d.v*100,body=d.c-d.o;
+    setKPIs([["Selected candle",selected+1],["Delta",(d.delta>=0?"+":"")+compact(d.delta)],["Delta %",(deltaPct>=0?"+":"")+fmt(deltaPct,1)+"%"]]);
+    if(d.delta>0&&body>0)marketRead("bull","Aggressive buyers traded more volume at the ask and price closed higher.","Buy-side aggression and upward price progress agree.","alignedBuy");
+    else if(d.delta<0&&body<0)marketRead("bear","Aggressive sellers traded more volume at the bid and price closed lower.","Sell-side aggression and downward price progress agree.","alignedSell");
+    else if(d.delta>0&&body<=0)marketRead("warn","Buying was aggressive, but price failed to close higher.","Passive sellers absorbed the ask-side volume. Positive delta did not produce buyer control.","buyAbsorb");
+    else marketRead("warn","Selling was aggressive, but price failed to close lower.","Passive buyers absorbed the bid-side volume. Negative delta did not produce seller control.","sellAbsorb");
+  };
+  $("#controls").innerHTML=controlHTML("Footprint case",`<select id="fpMode"><option value="alignedBuy">Positive delta + price up</option><option value="alignedSell">Negative delta + price down</option><option value="buyAbsorb">Positive delta absorbed</option><option value="sellAbsorb">Negative delta absorbed</option></select>`)+
+    rangeControl("fpCandle","Selected candle",1,6,6,1,"")+
+    rangeControl("imbalance","Imbalance ratio",2,5,3,.5,"×")+
+    `<div class="formula">Delta = ask-classified volume − bid-classified volume<br>Highlighted cell = larger side ≥ threshold × smaller side</div>`;
+  $("#fpMode").addEventListener("change",e=>{mode=e.target.value;draw()});bindRange("fpCandle",v=>{selected=v-1;draw()});bindRange("imbalance",v=>{ratio=v;draw()},"×");draw();return resizeHandler(draw);
+}
+function makeCVDScenario(mode){
+  let priceKind=mode==="alignedBull"?"bull-volumeup":mode==="alignedBear"?"bear-volumeup":mode==="buyAbsorb"||mode==="sellAbsorb"?"range-volumeup":mode==="bearDiv"?"bull-volumeup":"bear-volumeup";
+  const s=makeSeries(priceKind,64,1414+hashSeed(mode));
+  s.forEach((d,i)=>{
+    let bias=0;
+    if(mode==="alignedBull")bias=220+Math.sin(i*.3)*80;
+    if(mode==="alignedBear")bias=-220+Math.sin(i*.3)*80;
+    if(mode==="buyAbsorb")bias=280+Math.sin(i*.35)*100;
+    if(mode==="sellAbsorb")bias=-280+Math.sin(i*.35)*100;
+    if(mode==="bearDiv")bias=-120+Math.sin(i*.4)*90;
+    if(mode==="bullDiv")bias=120+Math.sin(i*.4)*90;
+    d.delta=Math.round(bias+(i%5-2)*35);d.ask=Math.max(0,Math.round((d.v+d.delta)/2));d.bid=d.v-d.ask;
+  });
+  return s;
+}
+function initCVD(){
+  let mode="alignedBull",reset=0;
+  const draw=()=>{
+    const s=makeCVDScenario(mode);let vals=[];let x=0;s.forEach((d,i)=>{if(i===reset)x=0;vals.push(i<reset?null:(x+=d.delta))});
+    const {ctx,w,h}=canvasContext(),c=colors(),m={l:18,r:58,t:18,b:20},gap=18,priceH=(h-m.t-m.b)*.56;
+    const price={x:m.l,y:m.t,w:w-m.l-m.r,h:priceH},panel={x:m.l,y:m.t+priceH+gap,w:w-m.l-m.r,h:h-m.t-m.b-priceH-gap};
+    grid(ctx,price.x,price.y,price.w,price.h,c);let[mn,mx]=extent(s,[d=>d.l,d=>d.h]);drawCandles(ctx,s,price,mn,mx,c);drawAxes(ctx,price,mn,mx,c);
+    linePanel(ctx,vals,panel,c,{color:c.purple,zero:true});ctx.fillStyle=c.muted;ctx.font="10px system-ui";ctx.fillText("CUMULATIVE VOLUME DELTA",panel.x,panel.y+11);
+    if(reset>0){const xx=panel.x+panel.w*reset/(s.length-1);ctx.strokeStyle=c.amber;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(xx,price.y);ctx.lineTo(xx,panel.y+panel.h);ctx.stroke();ctx.setLineDash([])}
+    setBadge("PRICE + CVD");const pchg=s.at(-1).c-s[0].o,cchg=vals.filter(v=>v!=null).at(-1)||0;
+    setKPIs([["Price change",(pchg>=0?"+":"")+fmt(pchg,2)],["CVD change",(cchg>=0?"+":"")+compact(cchg)],["Relationship",mode.startsWith("aligned")?"Aligned":mode.includes("Absorb")?"Absorption":"Divergence"]]);
+    if(mode==="alignedBull")marketRead("bull","Aggressive buying accumulates while price moves higher.","Rising CVD and rising price agree: buyers are active and making progress.",mode);
+    else if(mode==="alignedBear")marketRead("bear","Aggressive selling accumulates while price moves lower.","Falling CVD and falling price agree: sellers are active and making progress.",mode);
+    else if(mode==="buyAbsorb")marketRead("warn","CVD rises, but price remains nearly flat.","Aggressive buyers are active, but passive sellers prevent upward progress.",mode);
+    else if(mode==="sellAbsorb")marketRead("warn","CVD falls, but price remains nearly flat.","Aggressive sellers are active, but passive buyers prevent downward progress.",mode);
+    else if(mode==="bearDiv")marketRead("warn","Price rises while CVD falls.","Price is progressing upward without matching aggressive buying. Classified selling is being absorbed or other buying mechanisms are moving price.",mode);
+    else marketRead("warn","Price falls while CVD rises.","Price is progressing downward without matching aggressive selling. Classified buying is being absorbed or other selling mechanisms are moving price.",mode);
+  };
+  $("#controls").innerHTML=controlHTML("Price / CVD case",`<select id="cvdMode"><option value="alignedBull">Bullish alignment</option><option value="alignedBear">Bearish alignment</option><option value="buyAbsorb">Buying absorbed</option><option value="sellAbsorb">Selling absorbed</option><option value="bearDiv">Price up / CVD down</option><option value="bullDiv">Price down / CVD up</option></select>`)+
+    rangeControl("cvdReset","Reset bar",0,40,0,1,"")+
+    `<div class="formula">CVDₜ = CVDₜ₋₁ + (ask-classified volume − bid-classified volume)</div><p class="mini-note">CVD can differ by venue, feed, aggregation, classification, and reset convention.</p>`;
+  $("#cvdMode").addEventListener("change",e=>{mode=e.target.value;draw()});bindRange("cvdReset",v=>{reset=v;draw()});draw();return resizeHandler(draw);
+}
+function marketDepthState(scenario,step){
+  const b=depthBook(scenario==="thin"?"thin":scenario==="bidWall"?"bidWall":scenario==="askWall"?"askWall":"normal");
+  let event="Initial displayed book.";
+  if(step>=1){
+    if(scenario==="bidWall"){b.bids[1].q-=800;event="Aggressive sellers hit the large bid."}
+    else if(scenario==="askWall"){b.asks[1].q-=900;event="Aggressive buyers lift the large ask."}
+    else if(scenario==="thin"){b.asks[0].q=20;b.asks[1].q=40;event="A market buy consumes the first ask levels."}
+    else{b.bids[0].q+=350;event="New limit buyers add at the best bid."}
+  }
+  if(step>=2){
+    if(scenario==="bidWall"){b.bids[1].q+=1100;event="The bid replenishes after being hit."}
+    else if(scenario==="askWall"){b.asks[1].q+=1200;event="The ask replenishes after being lifted."}
+    else if(scenario==="thin"){b.asks.shift();b.asks.push({p:100.06,q:240});event="The best ask moves higher after shallow depth is consumed."}
+    else{b.bids[0].q=Math.max(0,b.bids[0].q-500);event="Selling executes against the best bid."}
+  }
+  if(step>=3){
+    if(scenario==="bidWall"){b.bids[1].q=4600;event="Selling continues, but the bid remains and price does not fall."}
+    else if(scenario==="askWall"){b.asks[1].q=4700;event="Buying continues, but the ask remains and price does not rise."}
+    else if(scenario==="thin"){b.asks.shift();b.asks.push({p:100.07,q:300});event="Price impact extends through another level."}
+    else{b.bids[0].q=0;b.bids.shift();b.bids.push({p:99.94,q:900});event="The best bid is consumed and price can trade lower."}
+  }
+  if(step>=4){
+    if(scenario==="bidWall"){b.bids[1].q=0;event="The displayed bid is canceled before more selling reaches it."}
+    else if(scenario==="askWall"){b.asks[1].q=0;event="The displayed ask is canceled before more buying reaches it."}
+    else if(scenario==="thin"){event="The order finishes at a worse average price because depth was thin."}
+    else{event="New orders rebuild the book at updated prices."}
+  }
+  b.bids=b.bids.filter(x=>x.q>0);b.asks=b.asks.filter(x=>x.q>0);return{book:b,event}
+}
+function initMarketDepth(){
+  let scenario="bidWall",step=0,log=[];
+  const draw=()=>{
+    const {book,event}=marketDepthState(scenario,step);drawDepth(book);renderBook(book);
+    if(!log.length||log.at(-1)!==event)log.push(event);
+    $("#extraVisual").insertAdjacentHTML("beforeend",`<div class="status" style="margin-top:12px"><strong>Event ${step}:</strong> ${event}</div><div class="mini-note">${log.map((x,i)=>`${i}. ${x}`).join("<br>")}</div>`);
+    const spread=book.asks[0].p-book.bids[0].p,near=book.bids.slice(0,2).reduce((a,x)=>a+x.q,0)+book.asks.slice(0,2).reduce((a,x)=>a+x.q,0);
+    setKPIs([["Spread",fmt(spread,2)],["Near depth",compact(near)],["Event",step+"/4"]]);
+    if(scenario==="bidWall"&&step>0&&step<4)marketRead("bull","Aggressive sellers are hitting the bid, but price is not falling.","Resting buyers replenish and absorb selling. Buyer control is not confirmed until price responds upward, but sellers are failing to progress.","bidWall");
+    else if(scenario==="askWall"&&step>0&&step<4)marketRead("bear","Aggressive buyers are lifting the ask, but price is not rising.","Resting sellers replenish and absorb buying. Sellers prevent upward progress.","askWall");
+    else if((scenario==="bidWall"||scenario==="askWall")&&step===4)marketRead("warn","The large displayed order disappeared without being executed.","The wall was canceled. Displayed liquidity was intent, not completed support or resistance.","wallCancel");
+    else if(scenario==="thin"&&step>0)marketRead("warn","A marketable order is moving through several price levels.","Thin displayed depth creates greater price impact and a worse average fill.","thin");
+    else if(scenario==="normal"&&step>=3)marketRead("bear","Selling consumed the best bid and price can move lower.","The resting buyers at that level were exhausted.","normalConsumed");
+    else marketRead("","The book shows resting intentions before they are tested.","Wait to see whether liquidity remains, replenishes, is executed, or is canceled.","untested");
+  };
+  $("#controls").innerHTML=controlHTML("Book scenario",`<select id="depthMode"><option value="bidWall">Large bid tested</option><option value="askWall">Large ask tested</option><option value="thin">Thin depth</option><option value="normal">Normal book</option></select>`)+
+    `<div class="segmented cols3"><button id="depthStep">Next event</button><button id="depthReset">Reset</button><button id="depthEnd">Run all</button></div>
+     <div class="formula" style="margin-top:15px">Displayed order ≠ executed trade<br>Depth + spread + impact + replenishment = fuller liquidity view</div>`;
+  $("#depthMode").addEventListener("change",e=>{scenario=e.target.value;step=0;log=[];draw()});
+  $("#depthStep").addEventListener("click",()=>{step=Math.min(4,step+1);draw()});$("#depthReset").addEventListener("click",()=>{step=0;log=[];draw()});$("#depthEnd").addEventListener("click",()=>{step=4;log=[];for(let i=0;i<=4;i++)log.push(marketDepthState(scenario,i).event);draw()});
+  draw();return resizeHandler(draw);
+}
+function ruleSpec(state){
+  const flowText={positiveDelta:"delta > 0",negativeDelta:"delta < 0",bidAbsorption:"negative delta with no lower close",askAbsorption:"positive delta with no higher close"};
+  const confirmText={breakHigh:"close > prior resistance",breakLow:"close < prior support",holdAbove:"close > VWAP for 3 bars",holdBelow:"close < VWAP for 3 bars"};
+  return{
+    schema:"volume-order-flow-rule-v1",
+    name:`${state.side==="long"?"Long":"Short"} ${state.context} volume/order-flow setup`,
+    timeframe:"user-defined",
+    context:{marketState:state.context},
+    participation:state.volume==="none"?null:{metric:"relativeVolume",operator:state.volume==="high"?">=":"<=",value:state.volume==="high"?state.rvol:.8,baseline:"20 comparable bars"},
+    location:{reference:state.location},
+    orderFlow:{condition:flowText[state.flow]},
+    confirmation:{condition:confirmText[state.confirm]},
+    entry:{side:state.side,trigger:"on confirmed bar close"},
+    invalidation:{condition:state.side==="long"?"close below structural invalidation":"close above structural invalidation"},
+    exit:{target:"next structural or value reference",minimumRewardRisk:2},
+    noTrade:["spread or execution cost exceeds limit","required data is incomplete","conditions contradict"],
+    generatedAt:new Date().toISOString()
+  }
+}
+function initRuleBuilder(){
+  let state={context:"uptrend",side:"long",volume:"high",rvol:1.5,location:"aboveVWAP",flow:"positiveDelta",confirm:"breakHigh"};
+  const validate=()=>{
+    const issues=[];
+    if(state.side==="long"&&["breakLow","holdBelow"].includes(state.confirm))issues.push("Long side conflicts with bearish price confirmation.");
+    if(state.side==="short"&&["breakHigh","holdAbove"].includes(state.confirm))issues.push("Short side conflicts with bullish price confirmation.");
+    if(state.side==="long"&&state.flow==="askAbsorption")issues.push("Ask-side absorption describes buying that fails to move price; it conflicts with a basic long continuation rule.");
+    if(state.side==="short"&&state.flow==="bidAbsorption")issues.push("Bid-side absorption describes selling that fails to move price; it conflicts with a basic short continuation rule.");
+    if(state.context==="uptrend"&&state.side==="short")issues.push("This is countertrend relative to the selected context.");
+    if(state.context==="downtrend"&&state.side==="long")issues.push("This is countertrend relative to the selected context.");
+    return issues
+  };
+  const draw=()=>{
+    const kind=state.side==="long"?(state.context==="range"?"breakout-volumeup":"bull-volumeup"):(state.context==="range"?"failed-volumeup":"bear-volumeup");
+    const s=makeSeries(kind,62,1616),vw=vwap(s);const ch=standardChart(s);drawLine(ch.ctx,vw,ch.price,ch.min,ch.max,ch.c.cyan,2);setBadge("RULE PREVIEW");
+    const signal=46,x=ch.sx(signal),y=ch.sy(s[signal].c);ch.ctx.fillStyle=state.side==="long"?ch.c.green:ch.c.red;ch.ctx.beginPath();
+    if(state.side==="long"){ch.ctx.moveTo(x,y-18);ch.ctx.lineTo(x-7,y-5);ch.ctx.lineTo(x+7,y-5)}else{ch.ctx.moveTo(x,y+18);ch.ctx.lineTo(x-7,y+5);ch.ctx.lineTo(x+7,y+5)}ch.ctx.closePath();ch.ctx.fill();drawLabel(ch.ctx,"TRIGGER",Math.min(x+9,ch.price.x+ch.price.w-66),y,state.side==="long"?ch.c.green:ch.c.red);
+    const spec=ruleSpec(state),issues=validate();$("#ruleText").textContent=JSON.stringify(spec,null,2);const status=$("#ruleStatus");status.className="status "+(issues.length?"warn":"ok");status.innerHTML=issues.length?`<strong>${issues.length} issue${issues.length>1?"s":""}:</strong><br>${issues.join("<br>")}`:"Rule is internally consistent under this simplified model.";
+    setKPIs([["Side",state.side.toUpperCase()],["RVOL",state.volume==="none"?"Not used":state.volume==="high"?`≥ ${state.rvol.toFixed(1)}`:"≤ 0.8"],["Validation",issues.length?issues.length+" issue(s)":"Passed"]]);
+    if(issues.length)marketRead("warn","The rule asks the market to show conflicting behavior.",issues[0]+" Revise the conditions before backtesting.");
+    else if(state.side==="long")marketRead("bull","The rule requires buyers to show participation, aggression, and upward price confirmation.","A long trigger appears only after buyers make measurable progress in the selected context.");
+    else marketRead("bear","The rule requires sellers to show participation, aggression, and downward price confirmation.","A short trigger appears only after sellers make measurable progress in the selected context.");
+  };
+  $("#controls").innerHTML=
+    controlHTML("Market context",`<select id="ruleContext"><option value="uptrend">Uptrend</option><option value="downtrend">Downtrend</option><option value="range">Range boundary</option></select>`)+
+    controlHTML("Trade side",segmented("ruleSide",[["long","Long"],["short","Short"]],"long"))+
+    controlHTML("Participation",`<select id="ruleVolume"><option value="high">RVOL at or above threshold</option><option value="low">RVOL ≤ 0.8</option><option value="none">Not used</option></select>`)+
+    rangeControl("ruleRvol","RVOL threshold",1,3,1.5,.1,"×")+
+    controlHTML("Location",`<select id="ruleLocation"><option value="aboveVWAP">Above VWAP</option><option value="belowVWAP">Below VWAP</option><option value="aboveValueArea">Above value area</option><option value="belowValueArea">Below value area</option><option value="atStructuralLevel">At structural level</option></select>`)+
+    controlHTML("Order-flow evidence",`<select id="ruleFlow"><option value="positiveDelta">Positive delta</option><option value="negativeDelta">Negative delta</option><option value="bidAbsorption">Selling absorbed at bid</option><option value="askAbsorption">Buying absorbed at ask</option></select>`)+
+    controlHTML("Price confirmation",`<select id="ruleConfirm"><option value="breakHigh">Close above resistance</option><option value="breakLow">Close below support</option><option value="holdAbove">Hold above VWAP</option><option value="holdBelow">Hold below VWAP</option></select>`)+
+    `<button class="btn primary" id="downloadRule" style="width:100%">Export JSON rule</button>`;
+  $("#extraVisual").innerHTML=`<div id="ruleStatus" class="status" style="margin-top:14px"></div><pre id="ruleText" class="rule-output" style="margin-top:12px"></pre>`;
+  $("#ruleContext").addEventListener("change",e=>{state.context=e.target.value;draw()});bindSegment("ruleSide",v=>{state.side=v;draw()});
+  $("#ruleVolume").addEventListener("change",e=>{state.volume=e.target.value;$("#ruleRvol").disabled=state.volume!=="high";draw()});bindRange("ruleRvol",v=>{state.rvol=v;draw()},"×");
+  $("#ruleLocation").addEventListener("change",e=>{state.location=e.target.value;draw()});$("#ruleFlow").addEventListener("change",e=>{state.flow=e.target.value;draw()});$("#ruleConfirm").addEventListener("change",e=>{state.confirm=e.target.value;draw()});
+  $("#downloadRule").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(ruleSpec(state),null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="volume-order-flow-rule.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+  draw();return resizeHandler(draw);
+}
+function resizeHandler(fn){
+  window.redrawLab=fn;let t;const h=()=>{clearTimeout(t);t=setTimeout(fn,70)};window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)
+}
+const labs={
+  volumeBasics:initVolumeBasics,priceVolume:initPriceVolume,relativeVolume:initRelativeVolume,volumeConfirmation:initVolumeConfirmation,
+  obv:initOBV,cmf:initCMF,vwap:initVWAP,anchoredVwap:initAnchoredVWAP,volumeProfile:initVolumeProfile,valueArea:initValueArea,
+  orderTypes:initOrderTypes,timeSales:initTimeSales,footprint:initFootprint,cvd:initCVD,marketDepth:initMarketDepth,ruleBuilder:initRuleBuilder
+};
+window.initLab=()=>{
+  if(activeCleanup){activeCleanup();activeCleanup=null}
+  $("#controls").innerHTML="";$("#extraVisual").innerHTML="";$("#kpis").innerHTML="";window.redrawLab=null;
+  activeCleanup=labs[L.lab]();
+};
+window.initLab();
+</script>
+</body>
+</html>

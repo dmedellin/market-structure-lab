@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Trading Path · Learn · geterdone.io</title>
-  <meta name="description" content="The Trading path: eight courses in one deliberate order, from reading a bare chart to planning, sizing and reviewing a trade, then options pricing and the technical indicator set. Four courses and 54 lessons are live; four more are planned. Every lesson is one self-contained page." />
+  <meta name="description" content="The Trading path: eight courses in one deliberate order, from reading a bare chart to planning, sizing and reviewing a trade, then options pricing, the technical indicator set, and what traded volume and order flow reveal. Five courses and 70 lessons are live; three more are planned. Every lesson is one self-contained page." />
   <link rel="canonical" href="https://learn.geterdone.io/paths/trading/" />
   <meta name="author" content="dmedellin" />
 
@@ -23,12 +23,12 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Learn · geterdone.io" />
   <meta property="og:title" content="Trading Path · Learn · geterdone.io" />
-  <meta property="og:description" content="Eight courses in one deliberate order — chart reading, trade planning and execution, options, and technical indicators. Four courses and 54 lessons are live; four more are planned." />
+  <meta property="og:description" content="Eight courses in one deliberate order — chart reading, trade planning and execution, options, technical indicators, and volume and order flow. Five courses and 70 lessons are live; three more are planned." />
   <meta property="og:url" content="https://learn.geterdone.io/paths/trading/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Trading Path · Learn · geterdone.io" />
-  <meta name="twitter:description" content="Eight courses in one deliberate order — chart reading, trade planning and execution, options, and technical indicators. Four courses and 54 lessons are live; four more are planned." />
+  <meta name="twitter:description" content="Eight courses in one deliberate order — chart reading, trade planning and execution, options, technical indicators, and volume and order flow. Five courses and 70 lessons are live; three more are planned." />
   <meta name="twitter:url" content="https://learn.geterdone.io/paths/trading/" />
 
   <style>
@@ -385,8 +385,10 @@
 
     /* ---------- Progress panel ----------
        Every number in here is stated in text as well as drawn, and the meter
-       carries its own aria-valuetext, so the honest count (4 of 8) never depends
-       on seeing the bar. */
+       carries its own aria-valuetext, so the honest count (5 of 8) never depends
+       on seeing the bar. Both the bar's width and every number below move
+       together when a course ships; a fill that stays put is a claim the text
+       has already stopped making. */
     .progress-card {
       display: flex;
       flex-direction: column;
@@ -416,7 +418,7 @@
     }
     .meter-fill {
       display: block;
-      width: 50%;
+      width: 62.5%; /* 5 of 8 */
       height: 100%;
       border-radius: 999px;
       background: linear-gradient(90deg, var(--cyan-2), var(--cyan));
@@ -500,9 +502,13 @@
     }
 
     /* ---------- What the path gives you ---------- */
+    /* One column per outcome, and one outcome per PUBLISHED course. auto-fit
+       rather than a fixed count: the sixth course will add a sixth card, and a
+       hard-coded track count is the kind of thing that is only noticed once the
+       row has already broken. */
     .outcome-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
       gap: 12px;
     }
 
@@ -835,7 +841,7 @@
           <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Learning path · 8 courses</span>
           <h1 id="hero-title">The <span class="gradient-text">Trading</span> path</h1>
           <p class="tagline">From reading a bare chart to a written, sized, reviewable trade — and the tools that describe it.</p>
-          <p class="lede">Finish this path and you can read what price is doing without a single indicator on the chart, turn that read into a plan with an entry, an invalidation level, a target and a position size, price an options contract and know what moves it, and specify an indicator rule precisely enough to hand to a machine. Take the courses in number order: each one assumes the one before it, and the lessons inside a course are ordered for the same reason.</p>
+          <p class="lede">Finish this path and you can read what price is doing without a single indicator on the chart, turn that read into a plan with an entry, an invalidation level, a target and a position size, price an options contract and know what moves it, specify an indicator rule precisely enough to hand to a machine, and read participation and executed flow without mistaking displayed intent for a completed trade. Take the courses in number order: each one assumes the one before it, and the lessons inside a course are ordered for the same reason.</p>
           <div class="hero-actions">
             <a class="btn primary" href="../../market-structure/">Start with Course 1</a>
             <a class="btn ghost" href="#courses">See the whole path</a>
@@ -845,22 +851,22 @@
         <div class="progress-card">
           <h2 id="progress-title">Path progress</h2>
 
-          <div class="meter" role="progressbar" aria-labelledby="progress-title" aria-valuemin="0" aria-valuemax="8" aria-valuenow="4" aria-valuetext="4 of 8 courses available">
+          <div class="meter" role="progressbar" aria-labelledby="progress-title" aria-valuemin="0" aria-valuemax="8" aria-valuenow="5" aria-valuetext="5 of 8 courses available">
             <span class="meter-fill"></span>
           </div>
 
           <dl class="stat-row">
             <div class="stat">
               <dt>Available</dt>
-              <dd>4 of 8</dd>
+              <dd>5 of 8</dd>
             </div>
             <div class="stat">
               <dt>Lessons live</dt>
-              <dd>54</dd>
+              <dd>70</dd>
             </div>
             <div class="stat">
               <dt>Still to come</dt>
-              <dd>4</dd>
+              <dd>3</dd>
             </div>
           </dl>
 
@@ -872,7 +878,7 @@
                 <circle class="sv-node-live" cx="61" cy="39" r="7" />
                 <circle class="sv-node-live" cx="98" cy="39" r="7" />
                 <circle class="sv-node-live" cx="135" cy="39" r="7" />
-                <circle class="sv-node-soon" cx="172" cy="39" r="6.5" />
+                <circle class="sv-node-live" cx="172" cy="39" r="7" />
                 <circle class="sv-node-soon" cx="209" cy="39" r="6.5" />
                 <circle class="sv-node-soon" cx="246" cy="39" r="6.5" />
                 <circle class="sv-node-soon" cx="283" cy="39" r="6.5" />
@@ -882,7 +888,7 @@
                 <rect class="sv-bar-live" x="51" y="14" width="20" height="6" rx="3" />
                 <rect class="sv-bar-live" x="88" y="14" width="20" height="6" rx="3" />
                 <rect class="sv-bar-live" x="125" y="14" width="20" height="6" rx="3" />
-                <rect class="sv-bar-soon" x="162" y="14" width="20" height="6" rx="3" />
+                <rect class="sv-bar-live" x="162" y="14" width="20" height="6" rx="3" />
                 <rect class="sv-bar-soon" x="199" y="14" width="20" height="6" rx="3" />
                 <rect class="sv-bar-soon" x="236" y="14" width="20" height="6" rx="3" />
                 <rect class="sv-bar-soon" x="273" y="14" width="20" height="6" rx="3" />
@@ -892,7 +898,7 @@
                 <rect class="sv-bar-live" x="51" y="58" width="20" height="6" rx="3" />
                 <rect class="sv-bar-live" x="88" y="58" width="20" height="6" rx="3" />
                 <rect class="sv-bar-live" x="125" y="58" width="20" height="6" rx="3" />
-                <rect class="sv-bar-soon" x="162" y="58" width="20" height="6" rx="3" />
+                <rect class="sv-bar-live" x="162" y="58" width="20" height="6" rx="3" />
                 <rect class="sv-bar-soon" x="199" y="58" width="20" height="6" rx="3" />
                 <rect class="sv-bar-soon" x="236" y="58" width="20" height="6" rx="3" />
                 <rect class="sv-bar-soon" x="273" y="58" width="20" height="6" rx="3" />
@@ -900,7 +906,7 @@
             </svg>
           </div>
 
-          <p class="progress-note">Courses 1 to 4 are published and readable now — 54 lessons in total. Courses 5 to 8 are planned in the order shown below and are not yet available.</p>
+          <p class="progress-note">Courses 1 to 5 are published and readable now — 70 lessons in total. Courses 6 to 8 are planned in the order shown below and are not yet available.</p>
         </div>
       </section>
 
@@ -908,10 +914,10 @@
         <div class="section-head">
           <div>
             <p class="kicker">What the path gives you</p>
-            <h2 id="outcomes-title">Four skills, built in this order</h2>
-            <p>Each course answers the question the one before it leaves open. Read the market, then plan the trade, then price the contract, then measure it — the order is the point.</p>
+            <h2 id="outcomes-title">Five skills, built in this order</h2>
+            <p>Each course answers the question the one before it leaves open. Read the market, then plan the trade, then price the contract, then measure it, then check who was actually transacting — the order is the point.</p>
           </div>
-          <p class="count-chip">Courses 1–4, live</p>
+          <p class="count-chip">Courses 1–5, live</p>
         </div>
 
         <div class="outcome-grid">
@@ -958,6 +964,17 @@
             <h3>State a rule precisely</h3>
             <p>How each standard indicator is calculated, what it can and cannot say, and how to turn that into an unambiguous condition.</p>
           </div>
+
+          <div class="note-card">
+            <span class="note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 20V10M9 20V4M14 20v-7M19 20v-4" />
+                <path d="M3 20h18" />
+              </svg>
+            </span>
+            <h3>See who is transacting</h3>
+            <p>Participation, value and executed flow — relative volume, VWAP, volume profile, the tape, delta and the book, and the limits of each.</p>
+          </div>
         </div>
       </section>
 
@@ -966,9 +983,9 @@
           <div>
             <p class="kicker">The path, in order</p>
             <h2 id="courses-title">Eight courses, one sequence</h2>
-            <p>Work down the spine. Courses 1 to 4 are live and link straight to their course home; courses 5 to 8 hold their place in the order and are not yet available.</p>
+            <p>Work down the spine. Courses 1 to 5 are live and link straight to their course home; courses 6 to 8 hold their place in the order and are not yet available.</p>
           </div>
-          <p class="count-chip">4 available · 4 upcoming</p>
+          <p class="count-chip">5 available · 3 upcoming</p>
         </div>
 
         <ol class="path-track">
@@ -1044,17 +1061,21 @@
             </article>
           </li>
 
-          <li class="path-step upcoming">
+          <li class="path-step">
             <div class="step-rail">
               <p class="step-num" aria-hidden="true">05</p>
             </div>
             <article class="course-card">
               <div class="card-top">
                 <p class="course-ord">Course 5</p>
-                <span class="status soon"><span class="glyph" aria-hidden="true">◻</span> Not yet available</span>
+                <span class="status live"><span class="glyph" aria-hidden="true">✓</span> Available now</span>
               </div>
-              <h3>Volume and Order Flow</h3>
-              <p>Announced and holding its place in the order. Nothing has been published for it yet.</p>
+              <h3><a href="../../volume-and-order-flow/">Volume and Order Flow</a></h3>
+              <p>Read participation and executed flow: relative volume, VWAP and volume profile, then the tape, bid-ask delta and the order book — and what each one does and does not prove.</p>
+              <div class="meta-row">
+                <span class="chip">16 lessons</span>
+                <span class="chip">Builds on course 4</span>
+              </div>
             </article>
           </li>
 
@@ -1101,7 +1122,7 @@
           </li>
         </ol>
 
-        <p class="upcoming-lead"><strong>About courses 5 to 8.</strong> They are named and ordered, and that is all that is known: there are no lessons, no descriptions and no dates yet. They are listed rather than hidden so the shape of the whole path is honest — and they are not links, because there is nothing to open.</p>
+        <p class="upcoming-lead"><strong>About courses 6 to 8.</strong> They are named and ordered, and that is all that is known: there are no lessons, no descriptions and no dates yet. They are listed rather than hidden so the shape of the whole path is honest — and they are not links, because there is nothing to open.</p>
       </section>
     </main>
 

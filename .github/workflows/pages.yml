@@ -47,9 +47,9 @@ jobs:
           fi
           # The published URL space: the site index at /, the path page at
           # /paths/trading/, a home per course (/market-structure/,
-          # /trade-setup-execution/, /options-trading/ and
-          # /technical-indicators/), and each course's lessons beneath its own
-          # home -- 60 pages, in path order -- plus three published non-HTML
+          # /trade-setup-execution/, /options-trading/, /technical-indicators/
+          # and /volume-and-order-flow/), and each course's lessons beneath its
+          # own home -- 77 pages, in path order -- plus four published non-HTML
           # assets. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py and acceptance.checks in
           # release/contract.json. Publishing a tree that is missing a page
@@ -120,24 +120,43 @@ jobs:
                       technical-indicators/indicator-divergence/index.html \
                       technical-indicators/combining-indicators/index.html \
                       technical-indicators/indicator-selection-by-market-regime/index.html \
-                      technical-indicators/indicator-based-trading-rules/index.html ; do
+                      technical-indicators/indicator-based-trading-rules/index.html \
+                      volume-and-order-flow/index.html \
+                      volume-and-order-flow/volume-fundamentals/index.html \
+                      volume-and-order-flow/price-volume-relationships/index.html \
+                      volume-and-order-flow/relative-volume-and-volume-spikes/index.html \
+                      volume-and-order-flow/volume-confirmation/index.html \
+                      volume-and-order-flow/on-balance-volume/index.html \
+                      volume-and-order-flow/accumulation-distribution-and-chaikin-money-flow/index.html \
+                      volume-and-order-flow/volume-weighted-average-price/index.html \
+                      volume-and-order-flow/anchored-volume-weighted-average-price/index.html \
+                      volume-and-order-flow/volume-profile/index.html \
+                      volume-and-order-flow/value-area-poc-hvn-lvn/index.html \
+                      volume-and-order-flow/bid-ask-spread-and-order-types/index.html \
+                      volume-and-order-flow/time-and-sales/index.html \
+                      volume-and-order-flow/footprint-charts-and-bid-ask-delta/index.html \
+                      volume-and-order-flow/cumulative-volume-delta/index.html \
+                      volume-and-order-flow/order-book-and-market-depth/index.html \
+                      volume-and-order-flow/volume-and-order-flow-trading-rules/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "site/$page" ]; then
               echo "::error::missing site/$page -- refusing to publish an incomplete course"
               missing=1
             fi
           done
-          # Three courses ship an exchange schema as a real published file:
+          # Four courses ship an exchange schema as a real published file:
           # course 2's lesson 14 exports the journal shape and its lesson 15
-          # imports it, course 3's lesson 16 exports the trade plan shape, and
-          # course 4's lesson 16 exports the indicator rule shape. Each course
-          # home links to its file. An unparseable one 404s nothing and breaks
-          # the handoff silently, so all three are parsed here, not merely
+          # imports it, course 3's lesson 16 exports the trade plan shape,
+          # course 4's lesson 16 exports the indicator rule shape, and course
+          # 5's lesson 16 exports the volume and order flow rule shape. Each
+          # course home links to its file. An unparseable one 404s nothing and
+          # breaks the handoff silently, so all four are parsed here, not merely
           # counted -- and declared as assets rather than pushed through the
           # page loop above, which asserts things only a document can have.
           for asset in trade-setup-execution/trade-journal-schema.json \
                        options-trading/options-trade-plan-schema.json \
-                       technical-indicators/indicator-rule-schema.json ; do
+                       technical-indicators/indicator-rule-schema.json \
+                       volume-and-order-flow/volume-order-flow-rule-schema.json ; do
             if [ ! -f "site/$asset" ]; then
               echo "::error::missing site/$asset -- refusing to publish an incomplete course"
               missing=1
@@ -147,7 +166,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "self-containment OK; all $pages pages and 3 assets present"
+          echo "self-containment OK; all $pages pages and 4 assets present"
 
       # NOTE: `enablement: true` was tried here and fails --- GITHUB_TOKEN
       # cannot create a Pages site ("Resource not accessible by integration").

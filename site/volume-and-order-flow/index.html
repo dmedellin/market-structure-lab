@@ -3,18 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Technical Indicators</title>
-  <meta name="description" content="Technical Indicators is course 4 of the Learn library: sixteen interactive lessons that build from what an indicator actually computes, through moving averages and trend filters, the momentum oscillators, trend strength, volatility and channels, to divergence, combining indicators without redundancy, regime selection, and a deterministic rule set you can export. Every lesson is one self-contained page." />
-  <link rel="canonical" href="https://learn.geterdone.io/technical-indicators/" />
+  <title>Volume and Order Flow</title>
+  <meta name="description" content="Volume and Order Flow is course 5 of the Learn library: sixteen interactive lessons that build from what volume actually counts, through the volume-derived indicators, session and anchored VWAP, volume profile and the value area, into market microstructure — the quote, the tape, the footprint, cumulative delta and the order book — and end with a deterministic rule set you can export. Every lesson is one self-contained page." />
+  <link rel="canonical" href="https://learn.geterdone.io/volume-and-order-flow/" />
   <meta name="author" content="dmedellin" />
 
   <!-- Favicon: inline data-URI SVG, no external asset. Same mark family as the rest
-       of the site (cyan gradient tile, dark ink) with this course's own motif — an
-       oscillator wave crossing two dashed threshold lines — so course 4 is
+       of the site (cyan gradient tile, dark ink) with this course's own motif —
+       volume bars under a flat line of accepted value — so course 5 is
        distinguishable in a tab strip from the library (plain structure line),
-       course 1 (rising candles), course 2 (crosshair on one level) and course 3
-       (a payoff bending at a strike). -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M10 22H54' fill='none' stroke='%23041116' stroke-width='2.6' stroke-linecap='round' stroke-dasharray='5 6' opacity='.62'/%3E%3Cpath d='M10 42H54' fill='none' stroke='%23041116' stroke-width='2.6' stroke-linecap='round' stroke-dasharray='5 6' opacity='.62'/%3E%3Cpath d='M9 45C17 45 18 17 26 17C34 17 30 47 38 47C46 47 47 21 55 21' fill='none' stroke='%23041116' stroke-width='5.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+       course 1 (rising candles), course 2 (crosshair on one level), course 3
+       (a payoff bending at a strike) and course 4 (an oscillator crossing two
+       dashed thresholds). -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M9 30H55' fill='none' stroke='%23041116' stroke-width='3' stroke-linecap='round' stroke-dasharray='5 6' opacity='.66'/%3E%3Cg fill='%23041116'%3E%3Crect x='10' y='38' width='8' height='14' rx='2.6'/%3E%3Crect x='22' y='26' width='8' height='26' rx='2.6'/%3E%3Crect x='34' y='16' width='8' height='36' rx='2.6'/%3E%3Crect x='46' y='33' width='8' height='19' rx='2.6'/%3E%3C/g%3E%3C/svg%3E" />
 
   <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
@@ -24,19 +25,19 @@
        og:image + twitter:card=summary_large_image once a real 1200x630 asset ships. -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Learn · geterdone.io" />
-  <meta property="og:title" content="Technical Indicators" />
-  <meta property="og:description" content="Course 4 — sixteen interactive lessons from what an indicator computes, through moving averages, momentum oscillators, trend strength, volatility and channels, to divergence, redundancy, regime selection and an exportable rule set." />
-  <meta property="og:url" content="https://learn.geterdone.io/technical-indicators/" />
+  <meta property="og:title" content="Volume and Order Flow" />
+  <meta property="og:description" content="Course 5 — sixteen interactive lessons from what volume counts, through OBV, A/D and CMF, session and anchored VWAP, volume profile and the value area, into the quote, the tape, the footprint, cumulative delta and the order book, ending in an exportable rule set." />
+  <meta property="og:url" content="https://learn.geterdone.io/volume-and-order-flow/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Technical Indicators" />
-  <meta name="twitter:description" content="Course 4 — sixteen interactive lessons from what an indicator computes, through moving averages, momentum oscillators, trend strength, volatility and channels, to divergence, redundancy, regime selection and an exportable rule set." />
-  <meta name="twitter:url" content="https://learn.geterdone.io/technical-indicators/" />
+  <meta name="twitter:title" content="Volume and Order Flow" />
+  <meta name="twitter:description" content="Course 5 — sixteen interactive lessons from what volume counts, through OBV, A/D and CMF, session and anchored VWAP, volume profile and the value area, into the quote, the tape, the footprint, cumulative delta and the order book, ending in an exportable rule set." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/volume-and-order-flow/" />
 
   <style>
     /* ---------------------------------------------------------------------
        DESIGN TOKENS — the single place any theme-dependent colour may live.
-       The library index, the trading path page, courses 1-3 and every lesson of
+       The library index, the trading path page, courses 1-4 and every lesson of
        this course declare the same palette in the same shape. One origin, one
        product; do not fork it.
 
@@ -46,16 +47,13 @@
        below, for the reader who never touches the toggle). A component-level
        `[data-theme="light"] .foo {…}` override only ever reaches the first of
        them, so a light-OS reader gets the light background with dark-theme
-       accents. That is exactly the defect this course's source shipped with: its
-       light block carried neutrals only — no accents at all — and had no
-       prefers-color-scheme path whatsoever. Both halves are fixed here. There
-       are no component-level theme rules on this page; every component —
-       including all sixteen thumbnail SVGs — reads a token instead.
+       accents. There are no component-level theme rules on this page; every
+       component — including all sixteen thumbnail SVGs — reads a token instead.
 
        Accents are re-declared for light, not just the neutrals, because they are
        read AS TEXT (.eyebrow, .kicker, .go, .topic-tag, .stage-badge, the
-       gradient headline) and drawn as indicator strokes on a light surface.
-       Light values are contrast-checked against --bg (#edf4f8, the darkest light
+       gradient headline) and drawn as chart strokes on a light surface. Light
+       values are contrast-checked against --bg (#edf4f8, the darkest light
        surface): --cyan 4.98:1, --cyan-2 5.43:1, --green 4.94:1, --red 5.14:1,
        --amber 5.33:1, --purple 5.44:1, --blue 5.64:1, --muted 4.91:1 — all
        >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the
@@ -458,11 +456,10 @@
 
     /* ---------- Learning path ----------
        Three positions, always in reading order: the course before this one, this
-       one, and what follows. All three are links now that course 5 is published.
-       The third card was an unavailable entry while course 5 had no page —
-       visible, in sequence, and unmistakably unavailable, because a greyed
-       button that goes nowhere would be worse than saying so plainly. That
-       treatment belongs to whichever course home is currently last. */
+       one, and what follows. The third card is NOT a link: course 6 is announced
+       and not yet published, so it is rendered as an upcoming entry — visible, in
+       sequence, and unmistakably unavailable. A greyed button that goes nowhere
+       would be worse than saying so plainly. */
     .path-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -484,11 +481,32 @@
     .path-card h3 { margin: 0; font-size: 1.02rem; letter-spacing: -0.01em; }
     .path-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
 
-    /* This page once styled an UNAVAILABLE next course (.path-card.upcoming,
-       .path-flag, .path-move.is-upcoming). Course 5 shipped, so the state and
-       its rules are gone: the forward link here is now an ordinary rel="next"
-       anchor. The disabled treatment lives on whichever course home is
-       currently last — never here on the strength of having needed it once. */
+    /* The unavailable course. A dashed edge and a flat, un-panelled surface mark
+       it as not-yet-material at a glance; the .path-flag below states it in
+       words for anyone who cannot see the border treatment. Colour is NOT the
+       signal, and the copy is never dimmed below the contrast the rest of the
+       page holds — an announcement a reader cannot read is not an announcement. */
+    .path-card.upcoming {
+      border-style: dashed;
+      border-color: var(--line-strong);
+      background: none;
+    }
+    .path-card.upcoming h3 { color: var(--muted); }
+
+    .path-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      align-self: flex-start;
+      padding: 5px 10px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 999px;
+      color: var(--amber);
+      font-size: 0.69rem;
+      font-weight: 850;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
 
     .path-tag {
       display: inline-flex;
@@ -524,6 +542,9 @@
       border-radius: var(--radius-sm);
       background: var(--panel);
     }
+    /* The sources card is a fourth card in a three-column grid, so it spans the
+       whole row rather than sitting alone in one column. */
+    .note-card.span { grid-column: 1 / -1; }
     .note-icon {
       width: 32px;
       height: 32px;
@@ -537,10 +558,11 @@
     .note-icon svg { width: 17px; height: 17px; display: block; }
     .note-card h3 { margin: 12px 0 5px; font-size: 0.98rem; }
     .note-card p { margin: 0; color: var(--muted); font-size: 0.84rem; }
+    .note-card p + p { margin-top: 8px; }
 
     /* ---------- Stage jump list ----------
        Sixteen cards is far more than a reader will scroll through blind, so the
-       five stages are addressable from the top of the curriculum. Real in-page
+       six stages are addressable from the top of the curriculum. Real in-page
        links, so they work with JavaScript off. */
     .stage-nav {
       display: flex;
@@ -597,7 +619,7 @@
        glance, and assistive tech gets the same fact from the list element itself.
        The rail numeral is decorative (aria-hidden) because each card states its
        own "Lesson NN" in the link text. The <ol start> values continue 01 to 16
-       across the five lists, so the sequence never restarts. */
+       across the six lists, so the sequence never restarts. */
     .course-track {
       list-style: none;
       margin: 0;
@@ -721,8 +743,8 @@
 
     /* Reading order inside the link: position first, then title — the ordinal is
        part of the link's accessible name, not a decorative numeral beside it, so
-       "Lesson 04" is what a screen reader announces before "Relative Strength
-       Index". */
+       "Lesson 07" is what a screen reader announces before "Volume-Weighted
+       Average Price". */
     .lesson-ord {
       display: block;
       margin-bottom: 3px;
@@ -819,7 +841,7 @@
     .file-link:hover { border-color: var(--line-strong); transform: translateY(-1px); }
     .file-link svg { width: 17px; height: 17px; flex: none; color: var(--cyan-2); }
     /* The schema filename is long enough to overrun a 360px card on its own, and
-       neither is inside a <p>, so they do not inherit the global wrap rule. */
+       it is not inside a <p>, so it does not inherit the global wrap rule. */
     .file-link strong { display: block; font-size: 0.87rem; overflow-wrap: anywhere; }
     .file-link span { display: block; color: var(--muted); font-size: 0.77rem; overflow-wrap: anywhere; }
 
@@ -840,19 +862,6 @@
     .edu-note p { margin: 0 0 9px; }
     .edu-note p:last-child { margin-bottom: 0; }
 
-    /* Text for assistive tech only; never for anything a sighted reader needs. */
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      margin: -1px;
-      padding: 0;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-      border: 0;
-    }
-
     /* Same note styling as the lesson pages. */
     .noscript-note {
       display: block;
@@ -867,17 +876,60 @@
     }
     .noscript-note strong { display: block; margin-bottom: 4px; color: var(--text); }
 
+    /* ---------- Course-to-course navigation ----------
+       This is the COURSE pager and it is deliberately not the lesson one: that
+       one is .lesson-nav / .lesson-link and lives inside a lesson. A course with
+       nothing published after it ships the backward half alone rather than a
+       dead link forward. Every colour here is a token, so both light paths flip
+       it together. Depth: a course home is one level down, so a sibling course
+       is "../slug/". */
+    .path-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 34px 0 6px;
+    }
+
+    .path-move {
+      flex: 1 1 240px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-2);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 150ms ease, border-color 150ms ease;
+    }
+
+    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+    .path-move span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+    .path-move.next { margin-left: auto; text-align: right; }
+
+    /* The forward half when there is nothing to move forward to. It is a span,
+       not an anchor, so it cannot be focused or followed; the dashed edge and
+       the words "not yet available" carry the same fact twice, for the reader
+       who sees the border and the reader who does not. */
+    .path-move.is-upcoming {
+      opacity: 0.72;
+      cursor: default;
+      border-style: dashed;
+      background: none;
+    }
+    .path-move.is-upcoming:hover { transform: none; border-color: var(--line); }
+
     /* ---------- SVG theming ----------
        Classes, never hardcoded hex, so every mark in every thumbnail re-paints on
        BOTH light paths. This is the whole reason the thumbnails carry no inline
        fill or stroke colours.
 
        The colour grammar is fixed across all sixteen charts so a reader can read
-       any thumbnail without a legend: price is neutral, the FAST/primary
-       indicator line is cyan, the SLOW/comparison line is purple, an amber
-       dashed rule is a THRESHOLD the reader sets, a blue dashed rule is a
-       structural ZERO or midline, green is rising/bullish/valid and red is
-       falling/bearish/invalid. */
+       any thumbnail without a legend: price is neutral, the primary derived
+       series (VWAP, OBV, CVD, the profile's point of control) is cyan, a
+       comparison series is purple, an amber dashed rule is a BASELINE or anchor
+       the reader chooses, a blue dashed rule is a structural zero or midpoint,
+       green is buy-side/aggressive-at-the-ask/valid and red is
+       sell-side/aggressive-at-the-bid/invalid. */
     .sv-grid { stroke: var(--line); stroke-width: 1; }
     .sv-axis { stroke: var(--line-strong); stroke-width: 1.5; }
     .sv-tile { fill: var(--panel-2); stroke: var(--line-strong); stroke-width: 1.5; }
@@ -896,12 +948,11 @@
     .sv-slow { stroke: var(--purple); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .sv-slow-dash { stroke: var(--purple); stroke-width: 2.4; stroke-dasharray: 6 5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .sv-osc { stroke: var(--cyan); stroke-width: 2.9; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .sv-band { stroke: var(--cyan); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
-    .sv-band-2 { stroke: var(--purple); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
+    .sv-step { stroke: var(--cyan); stroke-width: 2.6; fill: none; stroke-linejoin: round; }
     .sv-up-line { stroke: var(--green); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .sv-dn-line { stroke: var(--red); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    /* Reference rules: amber is a threshold the reader chooses, blue is a
-       structural zero/midline that is not tunable. */
+    /* Reference rules: amber is a baseline or anchor the reader chooses, blue is
+       a structural zero/midpoint that is not tunable. */
     .sv-level { stroke: var(--amber); stroke-width: 1.75; stroke-dasharray: 7 6; fill: none; }
     .sv-zero { stroke: var(--blue); stroke-width: 1.75; stroke-dasharray: 4 5; fill: none; }
     .sv-link { stroke: var(--amber); stroke-width: 1.9; stroke-dasharray: 5 5; fill: none; stroke-linecap: round; }
@@ -965,6 +1016,8 @@
       .course-step { grid-template-columns: 38px minmax(0, 1fr); gap: 10px; }
       .step-num { width: 38px; height: 38px; border-radius: 12px; font-size: 0.84rem; }
       .stage-head { padding-left: 11px; }
+      .path-move { flex-basis: 100%; }
+      .path-move.next { text-align: left; }
       footer { display: block; }
       footer p { margin: 0 0 6px; }
     }
@@ -988,40 +1041,20 @@
       /* The toggle is a JS-only control: without JS it renders, invites a click,
          and does nothing. Hide it rather than ship a dead affordance. */
       #themeToggle { display: none; }
-    
-    .path-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 34px 0 6px;
-    }
-    .path-move {
-      flex: 1 1 240px;
-      padding: 13px 15px;
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      background: var(--panel-2);
-      color: var(--text);
-      text-decoration: none;
-      transition: transform 150ms ease, border-color 150ms ease;
-    }
-    .path-move:hover { transform: translateY(-1px); border-color: var(--line-strong); }
-    .path-move span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
-    .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
-    .path-move.next { margin-left: auto; text-align: right; }
-    .path-move { flex-basis: 100%; }
     </style>
   </noscript>
 
   <script>
     /* Applied before first paint so an explicit theme choice never flashes the
        other theme. This is why it lives LAST in <head> and not in the IIFE at the
-       bottom of <body>: that runs after the first paint.
-       SAME localStorage key as the library, the path pages, courses 1-3 and every
+       bottom of <body>: that runs after the first paint, which is exactly the
+       defect this course's source package shipped — it called its setTheme() at
+       the END of the script.
+       SAME localStorage key as the library, the path pages, courses 1-4 and every
        lesson ('learn-theme') so the toggle persists across the whole site. This
-       course's source shipped its own key ('technical-indicators-theme') — the
-       FOURTH distinct key on one origin — which silently reset a reader's choice
-       at the course boundary; it is gone.
+       course's source shipped its own key ('vof-theme') — the FIFTH distinct key
+       on one origin — which silently reset a reader's choice at the course
+       boundary; it is gone.
        The allowlist matters — a corrupt value would otherwise be written straight
        onto data-theme, matching no CSS while still counting as an explicit
        choice, which permanently mislabels the toggle and pins the page to the
@@ -1040,17 +1073,21 @@
 
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="./" aria-label="Technical Indicators — course home">
+      <a class="brand" href="./" aria-label="Volume and Order Flow — course home">
         <span class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 64 64" focusable="false">
-            <path d="M10 22H54" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="5 6" opacity=".62" />
-            <path d="M10 42H54" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="5 6" opacity=".62" />
-            <path d="M9 45C17 45 18 17 26 17C34 17 30 47 38 47C46 47 47 21 55 21" fill="none" stroke="currentColor" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M9 30H55" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="5 6" opacity=".66" />
+            <g fill="currentColor">
+              <rect x="10" y="38" width="8" height="14" rx="2.6" />
+              <rect x="22" y="26" width="8" height="26" rx="2.6" />
+              <rect x="34" y="16" width="8" height="36" rx="2.6" />
+              <rect x="46" y="33" width="8" height="19" rx="2.6" />
+            </g>
           </svg>
         </span>
         <span class="brand-copy">
-          <strong>Technical Indicators</strong>
-          <span>Course 4 · 16 lessons</span>
+          <strong>Volume and Order Flow</strong>
+          <span>Course 5 · 16 lessons</span>
         </span>
       </a>
 
@@ -1070,7 +1107,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../paths/trading/">Trading path</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Technical Indicators</span>
+      <span class="crumb-current" aria-current="page">Volume and Order Flow</span>
     </nav>
 
     <noscript>
@@ -1086,56 +1123,74 @@
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
         <div>
-          <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Course 4 · 16 interactive lessons</span>
-          <h1 id="hero-title">Technical <span class="gradient-text">Indicators</span></h1>
-          <p class="tagline">Every indicator is a formula applied to bars you already have. Learn what each one computes before you decide what it means.</p>
-          <p class="lede">Sixteen lessons that start with the transformation itself — what a lookback does to responsiveness, why a warm-up period exists, and why no indicator sees the future. From there it works through moving averages and the trend filters built on them, the momentum oscillators and the directional-movement family, the volatility measures and the three channel systems that wrap price in them, and finally the reading skills: divergence, combining indicators without stacking the same signal twice, choosing by market regime, and writing conditions precise enough to export. Every lesson is one self-contained interactive page — no accounts, no tracking, nothing to install.</p>
+          <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Course 5 · 16 interactive lessons</span>
+          <h1 id="hero-title">Volume and <span class="gradient-text">Order Flow</span></h1>
+          <p class="tagline">Volume counts what was traded. Order flow shows who had to have it, and where the other side stopped giving way.</p>
+          <p class="lede">Sixteen lessons that start with the number under every chart — what volume measures, what it cannot tell you about direction, and how participation is normalized against a baseline before the word "spike" means anything. From there it builds the volume-derived indicators, session and anchored VWAP, and the profile view that reorganizes activity by price instead of time. The last third drops below the bar entirely: the quote and the order types that reach it, the transaction stream, the footprint of executed volume at bid and ask, cumulative delta, and the displayed depth that is intent rather than trade — ending in a rule set precise enough to export. Every lesson is one self-contained interactive page — no accounts, no tracking, nothing to install.</p>
           <div class="hero-actions">
-            <a class="btn primary" href="./technical-indicator-fundamentals/">Start with lesson 01</a>
+            <a class="btn primary" href="./volume-fundamentals/">Start with lesson 01</a>
             <a class="btn ghost" href="#lessons">See all 16 lessons</a>
-            <a class="btn ghost" href="../options-trading/">Course 3 first</a>
+            <a class="btn ghost" href="../technical-indicators/">Course 4 first</a>
           </div>
         </div>
 
         <div class="hero-visual">
-          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of the course as five stages climbing left to right — foundations at lesson 01, trend for 02 to 03, momentum and trend strength for 04 to 07, volatility and channels for 08 to 11, and synthesis for 12 to 16 — drawn over a price line wrapped in a widening channel with an oscillator wave crossing a dashed threshold below it.">
+          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of the course: a price line tracked by a volume-weighted average price line over a row of volume bars, above six stage tiles — volume basics for lessons 01 to 04, the volume-derived indicators for 05 to 06, VWAP for 07 to 08, profile and value for 09 to 10, order flow for 11 to 15, and the exportable rule set at 16.">
             <g class="sv-grid">
-              <line x1="16" y1="86" x2="504" y2="86" />
-              <line x1="16" y1="168" x2="504" y2="168" />
+              <line x1="16" y1="46" x2="504" y2="46" />
+              <line x1="16" y1="96" x2="504" y2="96" />
             </g>
-            <line class="sv-axis" x1="16" y1="288" x2="504" y2="288" />
 
-            <path class="sv-band" d="M26 128C96 108 150 96 214 86C286 74 372 62 496 44" />
-            <path class="sv-band" d="M26 196C96 184 150 178 214 172C286 164 372 148 496 118" />
-            <path class="sv-price" d="M26 164C60 150 86 176 114 148C142 122 168 158 196 132C226 104 256 138 286 108C318 76 350 106 382 84C414 62 448 92 496 72" />
+            <path class="sv-price" d="M20 118C56 104 78 126 108 112C140 97 162 116 194 100C228 83 250 100 282 84C316 67 338 82 370 68C404 53 430 66 500 44" />
+            <path class="sv-fast" d="M20 126C60 120 82 116 122 110C164 104 186 100 226 92C268 84 290 80 330 72C372 64 394 60 500 46" />
+            <circle class="sv-dot" cx="330" cy="72" r="5" />
 
-            <line class="sv-level" x1="16" y1="248" x2="504" y2="248" />
-            <path class="sv-osc" d="M26 268C54 268 60 232 88 232C116 232 108 272 136 272C164 272 172 238 200 238" />
-            <circle class="sv-dot" cx="88" cy="232" r="5" />
+            <line class="sv-axis" x1="16" y1="180" x2="504" y2="180" />
+            <g class="sv-bar">
+              <rect x="20" y="162" width="12" height="18" rx="3" />
+              <rect x="46" y="154" width="12" height="26" rx="3" />
+              <rect x="72" y="166" width="12" height="14" rx="3" />
+              <rect x="98" y="148" width="12" height="32" rx="3" />
+              <rect x="124" y="158" width="12" height="22" rx="3" />
+              <rect x="150" y="168" width="12" height="12" rx="3" />
+              <rect x="176" y="152" width="12" height="28" rx="3" />
+              <rect x="202" y="160" width="12" height="20" rx="3" />
+              <rect x="254" y="164" width="12" height="16" rx="3" />
+              <rect x="280" y="150" width="12" height="30" rx="3" />
+              <rect x="306" y="158" width="12" height="22" rx="3" />
+              <rect x="332" y="166" width="12" height="14" rx="3" />
+              <rect x="358" y="156" width="12" height="24" rx="3" />
+              <rect x="384" y="162" width="12" height="18" rx="3" />
+              <rect x="410" y="152" width="12" height="28" rx="3" />
+              <rect x="436" y="164" width="12" height="16" rx="3" />
+              <rect x="462" y="146" width="12" height="34" rx="3" />
+              <rect x="488" y="158" width="12" height="22" rx="3" />
+            </g>
+            <rect class="sv-bar-hi" x="228" y="136" width="12" height="44" rx="3" />
 
+            <rect class="sv-tile-live" x="16" y="194" width="156" height="50" rx="14" />
             <g class="sv-tile">
-              <rect x="150" y="212" width="86" height="52" rx="13" />
-              <rect x="250" y="172" width="86" height="52" rx="13" />
-              <rect x="350" y="128" width="86" height="52" rx="13" />
-              <rect x="416" y="212" width="88" height="52" rx="13" />
+              <rect x="182" y="194" width="156" height="50" rx="14" />
+              <rect x="348" y="194" width="156" height="50" rx="14" />
+              <rect x="16" y="252" width="156" height="50" rx="14" />
+              <rect x="182" y="252" width="156" height="50" rx="14" />
+              <rect x="348" y="252" width="156" height="50" rx="14" />
             </g>
-            <rect class="sv-tile-live" x="16" y="212" width="86" height="52" rx="13" />
 
             <g class="sv-text">
-              <text class="sv-text-live" x="26" y="234">BASICS</text>
-              <text x="26" y="252">01</text>
-              <text class="sv-text-live" x="160" y="234">TREND</text>
-              <text x="160" y="252">02–03</text>
-              <text class="sv-text-live" x="260" y="194">MOMENTUM</text>
-              <text x="260" y="212">04–07</text>
-              <text class="sv-text-live" x="360" y="150">VOLATILITY</text>
-              <text x="360" y="168">08–11</text>
-              <text class="sv-text-live" x="426" y="234">SYNTHESIS</text>
-              <text x="426" y="252">12–16</text>
+              <text class="sv-text-live" x="30" y="216">VOLUME BASICS</text>
+              <text x="30" y="234">01–04</text>
+              <text class="sv-text-live" x="196" y="216">OBV · A/D · CMF</text>
+              <text x="196" y="234">05–06</text>
+              <text class="sv-text-live" x="362" y="216">VWAP</text>
+              <text x="362" y="234">07–08</text>
+              <text class="sv-text-live" x="30" y="274">PROFILE &amp; VALUE</text>
+              <text x="30" y="292">09–10</text>
+              <text class="sv-text-live" x="196" y="274">ORDER FLOW</text>
+              <text x="196" y="292">11–15</text>
+              <text class="sv-text-live" x="362" y="274">RULE SET</text>
+              <text x="362" y="292">16</text>
             </g>
-
-            <text class="sv-text" x="16" y="302">START HERE</text>
-            <text class="sv-text" x="430" y="302">EXPORT A RULE</text>
           </svg>
         </div>
       </section>
@@ -1145,9 +1200,9 @@
           <div>
             <p class="kicker">Learning path</p>
             <h2 id="path-title">Where this course sits</h2>
-            <p>The trading path is an order, not a shelf. This is the fourth course on it: the first three taught you to read structure, plan a trade and price an option — this one is about the calculated overlays people reach for instead.</p>
+            <p>The trading path is an order, not a shelf. This is the fifth course on it: the first four taught you to read structure, plan a trade, price an option and compute an indicator — this one goes underneath the bar, to what actually traded and who paid to make it happen.</p>
           </div>
-          <p class="count-chip">Course 4 of 8</p>
+          <p class="count-chip">Course 5 of 8</p>
         </div>
 
         <div class="path-grid">
@@ -1156,10 +1211,10 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                 <path d="M19 12H6" /><path d="M12 5l-7 7 7 7" />
               </svg>
-              Course 3 · Comes before this
+              Course 4 · Comes before this
             </p>
-            <h3><a href="../options-trading/">Options Trading</a></h3>
-            <p>Sixteen lessons on the contract itself: terms, calls and puts, moneyness and premium, the chain, time decay, implied volatility and the Greeks, five core strategies, assignment mechanics, and a scored trade plan. Indicators describe the underlying, not the contract — which is exactly why that course comes first: it is where you learned that a correct read on direction can still lose money.</p>
+            <h3><a href="../technical-indicators/">Technical Indicators</a></h3>
+            <p>Sixteen lessons on what an indicator computes: lookback and warm-up, moving averages and crossovers, the momentum oscillators, trend strength, volatility and channels, divergence, redundancy, regime selection, and an exportable rule set. It deliberately stopped short of every volume-derived tool and left them here, so the habits it taught — read the formula first, then decide what it means — are the ones this course assumes.</p>
           </article>
 
           <article class="path-card current">
@@ -1167,21 +1222,22 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                 <circle cx="12" cy="12" r="8.4" /><circle cx="12" cy="12" r="2.6" fill="currentColor" />
               </svg>
-              Course 4 · You are here
+              Course 5 · You are here
             </p>
-            <h3>Technical Indicators</h3>
-            <p>Sixteen lessons in five stages, from what an indicator computes to a rule set precise enough to hand to another person or program. It is written to stand on its own — every lesson is a standalone page and nothing here loads anything from courses 1 to 3 — so a single lesson also works as a reference you come back to.</p>
+            <h3>Volume and Order Flow</h3>
+            <p>Sixteen lessons in six stages, from what volume counts to a rule set precise enough to hand to another person or program. It is written to stand on its own — every lesson is a standalone page and nothing here loads anything from courses 1 to 4 — so a single lesson also works as a reference you come back to.</p>
           </article>
 
-          <article class="path-card">
-            <p class="path-tag">
+          <article class="path-card upcoming" aria-labelledby="next-course-title">
+            <p class="path-flag">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                <circle cx="12" cy="12" r="8.4" /><path d="M12 7.5V12l3 2" />
               </svg>
-              Course 5 · Comes after this
+              Not yet available
             </p>
-            <h3><a href="../volume-and-order-flow/">Volume and Order Flow</a></h3>
-            <p>Sixteen lessons on what participation and executed flow show: relative volume, on-balance volume, accumulation/distribution, session and anchored VWAP, volume profile and value area, then the tape, footprint and bid-ask delta, cumulative delta and the order book. It is named here because this course deliberately stops short of it — those volume-derived tools are course 5's subject, not this one's. The path continues past it — the <a href="../paths/trading/">trading path</a> lists every course and marks the ones that are not published yet.</p>
+            <p class="path-tag">Course 6 · Comes after this</p>
+            <h3 id="next-course-title">Trading Risk Management</h3>
+            <p>Announced, not yet published — there is no page to open yet. It is named here because this course deliberately stops at interpretation: position risk, portfolio risk, drawdown and risk-of-ruin are reserved for course 6, and strategy validation for course 7, Backtesting and Trading Systems. Reading flow well is not the same as sizing a position, and this course never pretends otherwise.</p>
           </article>
         </div>
       </section>
@@ -1191,20 +1247,20 @@
           <div>
             <p class="kicker">The course</p>
             <h2 id="overview-title">What this course is</h2>
-            <p>One family of tools, taken apart in the order you have to understand it: what the calculation does, what each family measures, and how to combine them without fooling yourself.</p>
+            <p>One question, taken apart in the order you have to understand it: how much traded, at what price it traded, and which side had to cross the spread to make it happen.</p>
           </div>
-          <p class="count-chip">16 lessons · 5 stages</p>
+          <p class="count-chip">16 lessons · 6 stages</p>
         </div>
 
         <div class="overview-grid">
           <article class="note-card">
             <span class="note-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                <path d="M3 17l5-6 4 3 6-9" /><path d="M14 5h5v5" />
+                <path d="M4 20V12M10 20V6M16 20v-9M22 20h-20" />
               </svg>
             </span>
             <h3>What it teaches</h3>
-            <p>The transformation itself — lookback, responsiveness, warm-up, context (01). Then trend: simple and exponential moving averages and the crossover filters built on them (02–03). Then what momentum and trend strength actually measure: RSI, the stochastic oscillator, MACD, and the directional-movement family (04–07). Then volatility and the channels drawn from it: true range and ATR, Bollinger Bands, Keltner and Donchian channels (08–11). Then the reading skills that decide whether any of it helps: rate of change, divergence, redundancy, regime selection, and deterministic rules (12–16).</p>
+            <p>What volume measures and what it does not, the four price-and-participation combinations, relative volume against a baseline, and whether volume confirms a move or contradicts it (01–04). Then the indicators built out of volume: On-Balance Volume, and the close-location family, Accumulation/Distribution and Chaikin Money Flow (05–06). Then value: session VWAP and anchored VWAP (07–08), the volume profile and the value area with its POC, high-volume and low-volume nodes (09–10). Then the market's own plumbing: bid, ask, spread and order types, time and sales, footprint charts and bid-ask delta, cumulative volume delta, and the order book (11–15). Lesson 16 turns all of it into explicit, testable rules.</p>
           </article>
 
           <article class="note-card">
@@ -1214,7 +1270,7 @@
               </svg>
             </span>
             <h3>Who it is for</h3>
-            <p>Anyone who has an indicator on their chart and could not, right now, write down its formula or say what makes it lag. It assumes you can read a chart and starts from the calculation, so no prior indicator knowledge is needed. It also suits the reader who has six indicators open and suspects — correctly — that four of them are showing the same thing twice.</p>
+            <p>Anyone who has said "that breakout had volume" without being able to say volume relative to what. It assumes you can read a chart and know what a moving average does; it assumes nothing about order books, tape reading or delta. It also suits the reader who has a footprint chart open and is quietly unsure whether the green number means buyers were stronger — the course is explicit that every trade has both a buyer and a seller, and that aggressor classification describes which side crossed the spread, not an unequal number of participants.</p>
           </article>
 
           <article class="note-card">
@@ -1224,7 +1280,18 @@
               </svg>
             </span>
             <h3>How to work through it</h3>
-            <p>In order, 01 to 16, one stage at a time. Each stage is the prerequisite for the next: the smoothing in 02 is the basis every later envelope is built on, the divergence work in 13 needs the oscillators from 04–06, and the rules in 16 ask for the trend, strength and volatility filters that 03, 07 and 08–11 taught you to compute. One lesson per sitting is plenty. Stage 5 is what stops the first eleven from being a list of formulas.</p>
+            <p>In order, 01 to 16, one stage at a time. Each stage is the prerequisite for the next: the baseline comparison in 03 is what makes the confirmation test in 04 mean anything, VWAP in 07 is the reference anchored VWAP moves in 08, the profile in 09 is what the value area in 10 is drawn on, and the rules in 16 ask for market context, participation, location, aggressive flow and price confirmation — one from almost every stage before it. One lesson per sitting is plenty. Stage 5 is where most readers find out that the tape and the book answer different questions.</p>
+          </article>
+
+          <article class="note-card span">
+            <span class="note-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                <path d="M4 5.5h7a2 2 0 0 1 2 2V19a2 2 0 0 0-2-2H4z" /><path d="M20 5.5h-7a2 2 0 0 0-2 2V19a2 2 0 0 1 2-2h7z" />
+              </svg>
+            </span>
+            <h3>Where the definitions come from</h3>
+            <p>The labs are simplified on purpose, so each lesson closes with an official reading link to a primary source rather than to a vendor selling order-flow software: CME Group's education material for how exchange volume is counted, what market-by-order data is, and the difference between market makers and market takers; Nasdaq's own glossary for VWAP; and the SEC's investor.gov for order types. Those are definitions from the venue and the regulator — the course's own synthetic examples are illustrations of them, never a substitute.</p>
+            <p>Every lesson still works with no network at all. Each page is entirely self-contained, and the reference links are the only things on it that point off the site.</p>
           </article>
         </div>
       </section>
@@ -1234,7 +1301,7 @@
           <div>
             <p class="kicker">Curriculum</p>
             <h2 id="lessons-title">The sixteen lessons, in order</h2>
-            <p>Five stages, grouped the way the sequence itself groups: what an indicator is, the trend tools, the momentum and strength tools, the volatility and channel tools, and the synthesis that turns all of them into a decision. Each lesson is a single self-contained page of interactive charts, worked explanations, and practice. Start at 01 and work down.</p>
+            <p>Six stages, grouped the way the sequence itself groups: the volume basics, the indicators derived from volume, VWAP, the profile and its value area, the order-flow tools — book, tape, footprint, delta — and the rule set that turns them into a decision. Each lesson is a single self-contained page of interactive charts, worked explanations, and practice. Start at 01 and work down.</p>
           </div>
           <p class="count-chip">Start at lesson 01</p>
         </div>
@@ -1242,32 +1309,41 @@
         <div class="edu-note">
           <p>
             <strong>Educational use only — nothing here is trading advice.</strong>
-            This course teaches indicator calculation, interpretation, and rule
-            specification. It does not provide live data, trading signals,
-            profitability claims, or personalized investment advice. Backtesting,
-            costs, robustness, and automation are covered in later courses.
+            This course teaches interpretation of volume, value, executed flow, and
+            displayed depth. It does not provide live market data, trading signals,
+            execution access, profitability claims, or personalized investment
+            advice. Position risk, portfolio risk, drawdown, and risk-of-ruin are
+            reserved for course 6; strategy validation for course 7.
           </p>
           <p>
-            <strong>Calculation scope.</strong> Every price series in these lessons
-            is a deterministic synthetic example. The course uses standard
-            conventions — an equal-weight rolling window for the SMA, an EMA seeded
-            with the first complete SMA, Wilder smoothing for RSI, ATR and ADX, a
-            population standard deviation for Bollinger Bands, and a prior
-            completed channel for Donchian breakout signals. Small differences from
-            charting platforms can occur because of source, seed, rounding,
-            missing-bar, adjustment, or incomplete-bar conventions. Indicators
-            transform historical price data; they do not guarantee future
-            direction.
+            <strong>Data and classification scope.</strong> All charts, order books,
+            tape data, profiles, and executions in these lessons are deterministic
+            synthetic examples. The course uses stated conventions — relative volume
+            is current volume divided by a comparable baseline volume; OBV adds the
+            full bar volume on an up close and subtracts it on a down close;
+            Accumulation/Distribution and Chaikin Money Flow infer pressure from
+            close location within the bar and are not trade-by-trade aggressor
+            measures; session and anchored VWAP use typical price
+            <span class="mono">(high + low + close) / 3</span> weighted by volume;
+            the profile assigns each bar to price bins using typical price; the
+            value area contains approximately 70% of profile volume around the POC;
+            bid/ask delta is ask-classified volume minus bid-classified volume, and
+            CVD is its running total. Time-and-sales and footprint classifications
+            are simplified and explicitly labeled, and order-book examples show
+            displayed liquidity, which can be added, consumed, moved, or canceled.
+            Real outputs vary by venue, feed, vendor, asset class, session,
+            aggregation, and classification method.
           </p>
         </div>
 
         <nav aria-label="Course stages">
           <ul class="stage-nav">
-            <li><a href="#stage-foundations">Foundations <span>01</span></a></li>
-            <li><a href="#stage-trend">Trend <span>02–03</span></a></li>
-            <li><a href="#stage-momentum">Momentum and trend strength <span>04–07</span></a></li>
-            <li><a href="#stage-volatility">Volatility and channels <span>08–11</span></a></li>
-            <li><a href="#stage-synthesis">Synthesis <span>12–16</span></a></li>
+            <li><a href="#stage-volume">Volume basics <span>01–04</span></a></li>
+            <li><a href="#stage-indicators">Volume-derived indicators <span>05–06</span></a></li>
+            <li><a href="#stage-vwap">VWAP <span>07–08</span></a></li>
+            <li><a href="#stage-profile">Profile and value area <span>09–10</span></a></li>
+            <li><a href="#stage-flow">Order flow <span>11–15</span></a></li>
+            <li><a href="#stage-rules">Rules <span>16</span></a></li>
           </ul>
         </nav>
 
@@ -1279,7 +1355,7 @@
                3. the <h4> title, the description <p>, and .topic-tag
                4. the inline SVG thumbnail + its aria-label
              Titles and descriptions are VERBATIM from
-             content/technical-indicators.manifest.json — that file is the
+             content/volume-and-order-flow.manifest.json — that file is the
              authority, not this page. Every following <ol start="NN"> has to move
              with it, and the rail numbering, the connector and the last-step rules
              follow from the lists themselves — no CSS changes needed. A new URL
@@ -1288,11 +1364,11 @@
              checks.
              =================================================================== -->
 
-        <div class="stage" id="stage-foundations">
+        <div class="stage" id="stage-volume">
           <div class="stage-head">
-            <p class="stage-badge">Stage 1 of 5 <b>Lesson 01</b></p>
-            <h3>Foundations</h3>
-            <p>What an indicator actually is before any of them has a name: a formula applied to bars you already have. Why the lookback you pick is the whole trade-off between responsiveness and noise, why every indicator has a warm-up period during which it has nothing to say, and why the same reading means different things in different market context.</p>
+            <p class="stage-badge">Stage 1 of 6 <b>Lessons 01–04</b></p>
+            <h3>Volume basics</h3>
+            <p>What the number under the chart counts, and what it refuses to say. Volume measures participation, not direction: a completed trade always has both a buyer and a seller, so a tall bar tells you how much changed hands, never who won. This stage sets the reading habits the rest of the course depends on — pairing price progress with changing activity, normalizing current volume against a comparable baseline before anything gets called a spike, and separating expansion from climax and absorption.</p>
           </div>
 
           <ol class="course-track" role="list" start="1">
@@ -1303,44 +1379,41 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A raw price series drawn as bars across the full width, with the opening stretch shaded as a warm-up period, and a smoothed indicator line that only begins once enough bars exist to compute it.">
-                    <rect class="sv-fill-warm" x="8" y="12" width="84" height="106" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line across the top of the panel with a row of volume bars beneath it, one bar much taller than the rest, showing that the bars record how much traded rather than which direction price took.">
                     <g class="sv-grid">
-                      <line x1="8" y1="42" x2="352" y2="42" />
-                      <line x1="8" y1="80" x2="352" y2="80" />
+                      <line x1="8" y1="26" x2="352" y2="26" />
+                      <line x1="8" y1="56" x2="352" y2="56" />
                     </g>
+                    <path class="sv-price" d="M14 68C40 60 56 44 82 46C108 48 124 62 150 58C176 54 190 36 216 34C242 32 256 44 282 40C308 36 324 28 346 24" />
                     <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
                     <g class="sv-bar">
-                      <rect x="14" y="74" width="9" height="44" rx="2" />
-                      <rect x="34" y="86" width="9" height="32" rx="2" />
-                      <rect x="54" y="66" width="9" height="52" rx="2" />
-                      <rect x="74" y="78" width="9" height="40" rx="2" />
-                      <rect x="94" y="60" width="9" height="58" rx="2" />
-                      <rect x="114" y="70" width="9" height="48" rx="2" />
-                      <rect x="134" y="52" width="9" height="66" rx="2" />
-                      <rect x="154" y="62" width="9" height="56" rx="2" />
-                      <rect x="174" y="44" width="9" height="74" rx="2" />
-                      <rect x="194" y="56" width="9" height="62" rx="2" />
-                      <rect x="214" y="38" width="9" height="80" rx="2" />
-                      <rect x="234" y="48" width="9" height="70" rx="2" />
-                      <rect x="254" y="30" width="9" height="88" rx="2" />
-                      <rect x="274" y="42" width="9" height="76" rx="2" />
-                      <rect x="294" y="26" width="9" height="92" rx="2" />
-                      <rect x="314" y="34" width="9" height="84" rx="2" />
-                      <rect x="334" y="22" width="9" height="96" rx="2" />
+                      <rect x="14" y="96" width="10" height="22" rx="2" />
+                      <rect x="36" y="88" width="10" height="30" rx="2" />
+                      <rect x="58" y="100" width="10" height="18" rx="2" />
+                      <rect x="80" y="84" width="10" height="34" rx="2" />
+                      <rect x="102" y="94" width="10" height="24" rx="2" />
+                      <rect x="124" y="102" width="10" height="16" rx="2" />
+                      <rect x="146" y="90" width="10" height="28" rx="2" />
+                      <rect x="168" y="98" width="10" height="20" rx="2" />
+                      <rect x="212" y="92" width="10" height="26" rx="2" />
+                      <rect x="234" y="100" width="10" height="18" rx="2" />
+                      <rect x="256" y="86" width="10" height="32" rx="2" />
+                      <rect x="278" y="96" width="10" height="22" rx="2" />
+                      <rect x="300" y="90" width="10" height="28" rx="2" />
+                      <rect x="322" y="102" width="10" height="16" rx="2" />
                     </g>
-                    <path class="sv-fast" d="M98 78C120 74 130 70 142 64C158 56 168 60 182 54C198 47 208 50 222 44C238 37 248 40 262 34C278 27 292 30 338 24" />
-                    <circle class="sv-dot" cx="98" cy="78" r="5" />
+                    <rect class="sv-bar-hi" x="190" y="72" width="10" height="46" rx="2" />
                     <g class="sv-text">
-                      <text x="12" y="134">WARM-UP</text>
-                      <text class="sv-text-live" x="242" y="134">INDICATOR</text>
+                      <text class="sv-text-live" x="12" y="18">PRICE</text>
+                      <text x="12" y="134">VOLUME</text>
+                      <text x="246" y="134">PARTICIPATION</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Foundations</span>
+                    <span class="topic-tag">Volume</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1349,9 +1422,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./technical-indicator-fundamentals/"><span class="lesson-ord">Lesson 01</span>Technical Indicator Fundamentals</a></h4>
+                  <h4><a class="lesson-link" href="./volume-fundamentals/"><span class="lesson-ord">Lesson 01</span>Volume Fundamentals</a></h4>
 
-                  <p>Learn how indicators transform historical market data, why lookback length changes responsiveness, how warm-up periods work, and why every signal must be interpreted in market context.</p>
+                  <p>Understand what volume measures, separate participation from direction, and read price progress together with trading activity.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1366,45 +1439,43 @@
               </article>
             </li>
 
-          </ol>
-        </div>
-
-        <div class="stage" id="stage-trend">
-          <div class="stage-head">
-            <p class="stage-badge">Stage 2 of 5 <b>Lessons 02–03</b></p>
-            <h3>Trend</h3>
-            <p>The smoothing every later tool is built on. Two ways to average a price series and what changing the source or the lookback does to each; then the trend-state model you get by putting a fast average against a slow one — including the whipsaws it produces, and the difference between a rule that confirms late and a prediction that arrives early.</p>
-          </div>
-
-          <ol class="course-track" role="list" start="2">
-
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">02</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="One price series with two averages drawn over it: a simple moving average as a solid line lagging well behind the turns, and an exponential moving average as a dashed line tracking the same turns more closely.">
-                    <g class="sv-grid">
-                      <line x1="8" y1="40" x2="352" y2="40" />
-                      <line x1="8" y1="78" x2="352" y2="78" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Four tiles, each pairing a price arrow with a volume bar: price up on rising volume, price up on falling volume, price down on rising volume, and price down on falling volume.">
+                    <g class="sv-tile">
+                      <rect x="8" y="10" width="80" height="76" rx="12" />
+                      <rect x="96" y="10" width="80" height="76" rx="12" />
+                      <rect x="184" y="10" width="80" height="76" rx="12" />
+                      <rect x="272" y="10" width="80" height="76" rx="12" />
                     </g>
-                    <line class="sv-axis" x1="8" y1="116" x2="352" y2="116" />
-                    <path class="sv-price" d="M12 96C30 62 42 100 60 74C78 48 90 88 108 60C126 34 138 74 156 52C174 30 186 66 204 44C222 24 234 58 252 40C270 22 282 52 300 36C318 22 330 44 348 30" />
-                    <path class="sv-fast" d="M12 92C40 84 58 82 86 76C114 70 132 68 160 62C188 56 206 54 234 48C262 42 280 40 348 30" />
-                    <path class="sv-slow-dash" d="M12 100C40 96 58 94 86 88C114 82 132 82 160 74C188 66 206 66 234 58C262 50 280 50 348 38" />
+                    <path class="sv-up-line" d="M18 66L32 50L46 38" />
+                    <path class="sv-up-line" d="M106 66L120 50L134 38" />
+                    <path class="sv-dn-line" d="M194 38L208 54L222 66" />
+                    <path class="sv-dn-line" d="M282 38L296 54L310 66" />
+                    <rect class="sv-bar-hi" x="62" y="44" width="10" height="34" rx="2" />
+                    <rect class="sv-bar" x="150" y="62" width="10" height="16" rx="2" />
+                    <rect class="sv-bar-hi" x="238" y="44" width="10" height="34" rx="2" />
+                    <rect class="sv-bar" x="326" y="62" width="10" height="16" rx="2" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="134">EMA</text>
-                      <text x="58" y="134">TRACKS CLOSER</text>
-                      <text class="sv-text-live" x="256" y="134">SMA</text>
-                      <text x="296" y="134">LAGS</text>
+                      <text class="sv-text-live" x="12" y="106">PRICE UP</text>
+                      <text x="12" y="126">VOL UP</text>
+                      <text class="sv-text-live" x="100" y="106">PRICE UP</text>
+                      <text x="100" y="126">VOL DOWN</text>
+                      <text class="sv-text-live" x="188" y="106">PRICE DN</text>
+                      <text x="188" y="126">VOL UP</text>
+                      <text class="sv-text-live" x="276" y="106">PRICE DN</text>
+                      <text x="276" y="126">VOL DOWN</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Trend</span>
+                    <span class="topic-tag">Volume</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1413,9 +1484,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./moving-averages/"><span class="lesson-ord">Lesson 02</span>Simple and Exponential Moving Averages</a></h4>
+                  <h4><a class="lesson-link" href="./price-volume-relationships/"><span class="lesson-ord">Lesson 02</span>Price and Volume Relationships</a></h4>
 
-                  <p>Calculate and compare simple and exponential moving averages, inspect how input source and lookback affect responsiveness, and understand why neither average is inherently superior.</p>
+                  <p>Interpret the four basic combinations of price direction and changing participation.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1436,28 +1507,37 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A fast average and a slow average crossing three times: an upward cross marked in green, then a shaded stretch where the two braid together and cross twice in quick succession, marked as whipsaw, then a downward cross marked in red.">
-                    <g class="sv-grid">
-                      <line x1="8" y1="40" x2="352" y2="40" />
-                      <line x1="8" y1="78" x2="352" y2="78" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A row of volume bars under a dashed baseline that marks the comparable average, with one bar rising far above the baseline and highlighted as a spike.">
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-bar">
+                      <rect x="14" y="96" width="12" height="22" rx="2" />
+                      <rect x="36" y="88" width="12" height="30" rx="2" />
+                      <rect x="58" y="94" width="12" height="24" rx="2" />
+                      <rect x="80" y="84" width="12" height="34" rx="2" />
+                      <rect x="102" y="92" width="12" height="26" rx="2" />
+                      <rect x="124" y="100" width="12" height="18" rx="2" />
+                      <rect x="146" y="86" width="12" height="32" rx="2" />
+                      <rect x="168" y="94" width="12" height="24" rx="2" />
+                      <rect x="212" y="76" width="12" height="42" rx="2" />
+                      <rect x="234" y="90" width="12" height="28" rx="2" />
+                      <rect x="256" y="98" width="12" height="20" rx="2" />
+                      <rect x="278" y="88" width="12" height="30" rx="2" />
+                      <rect x="300" y="96" width="12" height="22" rx="2" />
+                      <rect x="322" y="90" width="12" height="28" rx="2" />
                     </g>
-                    <line class="sv-axis" x1="8" y1="116" x2="352" y2="116" />
-                    <rect class="sv-fill-warm" x="150" y="12" width="76" height="104" />
-                    <path class="sv-fast" d="M12 88C40 84 56 62 76 56C104 48 122 60 150 58C168 57 176 66 188 64C200 62 206 54 218 54C232 54 240 44 258 42C282 39 300 56 348 74" />
-                    <path class="sv-slow" d="M12 72C40 72 58 68 84 64C112 60 128 60 156 60C184 60 200 60 228 58C256 56 272 52 348 50" />
-                    <circle class="sv-dot-ok" cx="70" cy="59" r="6" />
-                    <circle class="sv-dot-warn" cx="296" cy="54" r="6" />
+                    <rect class="sv-bar-hi" x="190" y="34" width="12" height="84" rx="2" />
+                    <line class="sv-level" x1="8" y1="82" x2="352" y2="82" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="134">CROSS UP</text>
-                      <text x="152" y="134">WHIPSAW</text>
-                      <text class="sv-text-live" x="266" y="134">CROSS DOWN</text>
+                      <text x="12" y="76">BASELINE</text>
+                      <text class="sv-text-live" x="186" y="28">SPIKE</text>
+                      <text x="12" y="136">RELATIVE VOLUME</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Trend</span>
+                    <span class="topic-tag">Volume</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1466,9 +1546,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./moving-average-crossovers/"><span class="lesson-ord">Lesson 03</span>Moving Average Trend Filters and Crossovers</a></h4>
+                  <h4><a class="lesson-link" href="./relative-volume-and-volume-spikes/"><span class="lesson-ord">Lesson 03</span>Relative Volume and Volume Spikes</a></h4>
 
-                  <p>Use fast and slow moving averages as a trend-state model, detect crossovers, measure whipsaws, and distinguish a delayed confirmation rule from an early reversal prediction.</p>
+                  <p>Normalize current volume against a baseline and distinguish participation expansion from climax or absorption.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1483,44 +1563,33 @@
               </article>
             </li>
 
-          </ol>
-        </div>
-
-        <div class="stage" id="stage-momentum">
-          <div class="stage-head">
-            <p class="stage-badge">Stage 3 of 5 <b>Lessons 04–07</b></p>
-            <h3>Momentum and trend strength</h3>
-            <p>Four bounded readings of the same bars. Three of them are momentum oscillators — RSI, the stochastic, and MACD — and the fourth is not: the directional-movement family separates which side is dominant from how strong the move is at all. The stage is really about thresholds, and about why a level that means "stretched" in a range means "trending" a week later.</p>
-          </div>
-
-          <ol class="course-track" role="list" start="4">
-
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">04</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="An oscillator bounded between zero and one hundred, with dashed threshold lines at seventy and thirty and a midline at fifty. The wave pushes above seventy once and below thirty once, and then stays pressed against the upper threshold without turning.">
-                    <rect class="sv-tile" x="8" y="12" width="344" height="104" rx="12" />
-                    <line class="sv-zero" x1="14" y1="64" x2="346" y2="64" />
-                    <line class="sv-level" x1="14" y1="34" x2="346" y2="34" />
-                    <line class="sv-level" x1="14" y1="94" x2="346" y2="94" />
-                    <path class="sv-osc" d="M16 62C34 48 44 26 62 28C80 30 84 66 100 78C116 90 126 102 144 100C162 98 168 74 186 66C204 58 214 70 232 58C250 46 258 30 276 28C294 26 300 32 318 30C332 29 340 32 346 32" />
-                    <circle class="sv-dot-warn" cx="62" cy="28" r="5.5" />
-                    <circle class="sv-dot-ok" cx="144" cy="100" r="5.5" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Price crossing a dashed structural level twice: the first break is backed by a tall volume bar and marked with a check, the second is backed by a small bar, fails back below the level, and is marked with a cross.">
+                    <line class="sv-zero" x1="8" y1="54" x2="352" y2="54" />
+                    <path class="sv-price" d="M14 92C40 88 62 78 86 68C100 62 108 56 120 50C138 42 154 40 172 44C192 48 208 54 226 58C240 61 248 52 258 50C270 47 280 58 292 64C312 74 330 80 346 86" />
+                    <circle class="sv-dot-ok" cx="120" cy="50" r="6" />
+                    <circle class="sv-dot-warn" cx="258" cy="50" r="6" />
+                    <path class="sv-check" d="M132 30l6 7 12-14" />
+                    <path class="sv-cross" d="M272 24l14 14M286 24l-14 14" />
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <rect class="sv-bar-up" x="112" y="78" width="14" height="40" rx="2" />
+                    <rect class="sv-bar" x="250" y="102" width="14" height="16" rx="2" />
                     <g class="sv-text">
-                      <text x="14" y="140">30</text>
-                      <text x="46" y="140">OVERSOLD</text>
-                      <text x="252" y="140">70</text>
-                      <text class="sv-text-live" x="278" y="140">STAYS HIGH</text>
+                      <text x="12" y="48">LEVEL</text>
+                      <text class="sv-text-live" x="96" y="136">CONFIRMED</text>
+                      <text x="228" y="136">NOT CONFIRMED</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Momentum</span>
+                    <span class="topic-tag">Confirmation</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1529,9 +1598,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./relative-strength-index/"><span class="lesson-ord">Lesson 04</span>Relative Strength Index</a></h4>
+                  <h4><a class="lesson-link" href="./volume-confirmation/"><span class="lesson-ord">Lesson 04</span>Volume Confirmation</a></h4>
 
-                  <p>Calculate RSI with Wilder smoothing, interpret momentum on a 0–100 scale, test threshold behavior across regimes, and avoid treating overbought or oversold as automatic reversal commands.</p>
+                  <p>Evaluate whether volume supports a breakout, continuation, rejection, or failed move.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1546,40 +1615,44 @@
               </article>
             </li>
 
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-indicators">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 2 of 6 <b>Lessons 05–06</b></p>
+            <h3>Volume-derived indicators</h3>
+            <p>Two ways to turn the volume series into a line you can compare with price. On-Balance Volume accumulates the full bar volume by closing direction; Accumulation/Distribution and Chaikin Money Flow weight where price closed inside each bar's range. Both infer pressure from the finished bar, which is exactly why they come before the tape: they are not trade-by-trade aggressor measures, and the lessons say so where it would be easy to imply otherwise.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="5">
+
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">05</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="On the left, a vertical high-to-low range bar with the closing price marked near its top to show range position. On the right, the resulting percent K line with its smoothed percent D line, moving between dashed bands at eighty and twenty.">
-                    <line class="sv-axis" x1="42" y1="18" x2="42" y2="110" />
-                    <path class="sv-flow" d="M34 18H50" />
-                    <path class="sv-flow" d="M34 110H50" />
-                    <rect class="sv-fill" x="34" y="18" width="16" height="34" />
-                    <circle class="sv-dot" cx="42" cy="36" r="6" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line making a higher second peak above a stepped On-Balance Volume line that makes a lower second peak, with dashed lines joining each pair of peaks to show the two series disagreeing.">
+                    <path class="sv-price" d="M14 58C34 48 44 34 62 30C80 26 92 38 110 46C128 54 140 58 158 54C176 50 186 32 204 24C222 16 232 14 250 18C268 22 280 34 298 42C316 50 330 48 346 44" />
+                    <line class="sv-link" x1="62" y1="24" x2="240" y2="10" />
+                    <circle class="sv-dot" cx="62" cy="30" r="5" />
+                    <circle class="sv-dot" cx="240" cy="15" r="5" />
+                    <path class="sv-step" d="M14 122H38V114H62V104H86V96H110V102H134V110H158V106H182V102H206V100H230V106H254V112H278V108H302V114H326V118H350" />
+                    <line class="sv-link" x1="110" y1="90" x2="230" y2="94" />
+                    <circle class="sv-dot" cx="110" cy="96" r="5" />
+                    <circle class="sv-dot-warn" cx="230" cy="100" r="5" />
                     <g class="sv-text">
-                      <text x="12" y="14">HIGH</text>
-                      <text class="sv-text-live" x="56" y="40">CLOSE</text>
-                      <text x="14" y="124">LOW</text>
-                    </g>
-                    <rect class="sv-tile" x="110" y="12" width="242" height="98" rx="12" />
-                    <line class="sv-level" x1="116" y1="32" x2="346" y2="32" />
-                    <line class="sv-level" x1="116" y1="90" x2="346" y2="90" />
-                    <path class="sv-fast" d="M118 84C132 56 142 28 158 30C174 32 178 78 194 86C210 94 218 62 234 48C250 34 258 30 274 36C290 42 296 76 312 80C328 84 338 58 346 44" />
-                    <path class="sv-slow-dash" d="M118 76C132 64 144 44 160 44C176 44 182 70 198 76C214 82 222 62 238 54C254 46 262 42 278 46C294 50 300 70 316 72C332 74 340 58 346 50" />
-                    <g class="sv-text">
-                      <text class="sv-text-live" x="112" y="128">%K</text>
-                      <text x="142" y="128">AND</text>
-                      <text class="sv-text-live" x="180" y="128">%D</text>
-                      <text x="240" y="128">RANGE POSITION</text>
+                      <text x="12" y="16">PRICE</text>
+                      <text class="sv-text-live" x="12" y="142">OBV</text>
+                      <text x="212" y="142">LOWER HIGH</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Momentum</span>
+                    <span class="topic-tag">Indicators</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1588,9 +1661,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./stochastic-oscillator/"><span class="lesson-ord">Lesson 05</span>Stochastic Oscillator</a></h4>
+                  <h4><a class="lesson-link" href="./on-balance-volume/"><span class="lesson-ord">Lesson 05</span>On-Balance Volume</a></h4>
 
-                  <p>Measure where the close sits inside its recent high-low range, compare %K and %D smoothing, and understand why range position behaves differently in trends and sideways markets.</p>
+                  <p>Use On-Balance Volume to accumulate volume by closing direction and compare its trend with price.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1611,46 +1684,26 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="The three MACD components drawn together: a histogram of bars growing and shrinking either side of a dashed zero line, the MACD line crossing that zero line, and a slower signal line crossing the MACD line at a marked point.">
-                    <g class="sv-bar-dn">
-                      <rect x="16" y="70" width="10" height="26" rx="2" />
-                      <rect x="34" y="70" width="10" height="20" rx="2" />
-                      <rect x="52" y="70" width="10" height="12" rx="2" />
-                      <rect x="70" y="70" width="10" height="6" rx="2" />
-                    </g>
-                    <g class="sv-bar-up">
-                      <rect x="88" y="62" width="10" height="8" rx="2" />
-                      <rect x="106" y="52" width="10" height="18" rx="2" />
-                      <rect x="124" y="40" width="10" height="30" rx="2" />
-                      <rect x="142" y="34" width="10" height="36" rx="2" />
-                      <rect x="160" y="42" width="10" height="28" rx="2" />
-                      <rect x="178" y="54" width="10" height="16" rx="2" />
-                      <rect x="196" y="64" width="10" height="6" rx="2" />
-                    </g>
-                    <g class="sv-bar-dn">
-                      <rect x="214" y="70" width="10" height="10" rx="2" />
-                      <rect x="232" y="70" width="10" height="22" rx="2" />
-                      <rect x="250" y="70" width="10" height="30" rx="2" />
-                      <rect x="268" y="70" width="10" height="24" rx="2" />
-                      <rect x="286" y="70" width="10" height="14" rx="2" />
-                      <rect x="304" y="70" width="10" height="6" rx="2" />
-                    </g>
-                    <line class="sv-zero" x1="10" y1="70" x2="350" y2="70" />
-                    <path class="sv-fast" d="M14 98C40 96 62 82 88 68C114 54 132 32 156 30C180 28 194 56 220 70C246 84 266 102 292 96C314 91 332 74 348 62" />
-                    <path class="sv-slow-dash" d="M14 92C40 92 64 86 90 78C116 70 136 52 162 46C188 40 202 62 228 72C254 82 272 92 298 88C320 85 334 76 348 68" />
-                    <circle class="sv-dot" cx="196" cy="60" r="5.5" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A single bar with its full high-to-low range drawn as a wick and the closing price marked near the top of the range, beside a money-flow oscillator that swings above and below a dashed zero line.">
+                    <line class="sv-wick" x1="44" y1="14" x2="44" y2="104" />
+                    <rect class="sv-tile" x="30" y="36" width="28" height="56" rx="4" />
+                    <line class="sv-fast" x1="22" y1="48" x2="66" y2="48" />
+                    <circle class="sv-dot" cx="44" cy="48" r="5" />
+                    <line class="sv-grid" x1="94" y1="14" x2="94" y2="112" />
+                    <line class="sv-zero" x1="112" y1="70" x2="352" y2="70" />
+                    <path class="sv-osc" d="M118 86C136 86 142 58 160 56C178 54 186 78 204 80C222 82 230 52 248 48C266 44 274 62 292 66C310 70 320 58 346 52" />
+                    <circle class="sv-dot-ok" cx="248" cy="48" r="5" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="124">MACD</text>
-                      <text x="58" y="124">SIGNAL</text>
-                      <text x="116" y="124">HISTOGRAM</text>
-                      <text class="sv-text-live" x="212" y="124">ZERO LINE</text>
+                      <text x="10" y="134">CLOSE LOCATION</text>
+                      <text class="sv-text-live" x="126" y="134">CMF</text>
+                      <text x="158" y="134">SIGN OF MONEY FLOW</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Momentum</span>
+                    <span class="topic-tag">Indicators</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1659,9 +1712,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./macd/"><span class="lesson-ord">Lesson 06</span>Moving Average Convergence Divergence</a></h4>
+                  <h4><a class="lesson-link" href="./accumulation-distribution-and-chaikin-money-flow/"><span class="lesson-ord">Lesson 06</span>Accumulation/Distribution and Chaikin Money Flow</a></h4>
 
-                  <p>Separate the MACD line, signal line, and histogram; change the three periods; identify zero-line and signal-line events; and understand what each component measures.</p>
+                  <p>Measure where price closes inside each bar’s range and weight that location by volume.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1676,32 +1729,60 @@
               </article>
             </li>
 
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-vwap">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 3 of 6 <b>Lessons 07–08</b></p>
+            <h3>VWAP</h3>
+            <p>The average price weighted by volume — what the session actually paid, rather than what it printed last. Lesson 07 builds session VWAP from typical price weighted by volume and reads price location around it as accepted value and directional control. Lesson 08 moves the starting point to an event you choose, so the question becomes whether price is accepted above or below the average traded value since that event rather than since the open.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="7">
+
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">07</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Three lines on one panel: a green plus DI and a red minus DI crossing each other to show which side is dominant, and a separate ADX line that only rises above a dashed threshold once the two have separated.">
-                    <rect class="sv-tile" x="8" y="12" width="344" height="98" rx="12" />
-                    <line class="sv-level" x1="14" y1="72" x2="346" y2="72" />
-                    <path class="sv-up-line" d="M16 84C34 80 46 60 66 54C86 48 96 62 116 56C136 50 148 36 168 32C188 28 202 34 222 30C242 26 256 34 276 32C296 30 320 34 346 28" />
-                    <path class="sv-dn-line" d="M16 46C34 50 48 66 68 70C88 74 98 62 118 66C138 70 150 82 170 86C190 90 204 84 224 88C244 92 258 86 278 88C298 90 320 86 346 92" />
-                    <path class="sv-osc" d="M16 96C34 96 46 94 66 92C86 90 98 86 118 80C138 74 150 66 170 58C190 50 204 48 224 46C244 44 258 46 278 44C298 42 320 44 346 40" />
-                    <circle class="sv-dot" cx="170" cy="58" r="5.5" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line weaving above and below a smooth volume-weighted average price line, with the excursions above and below marked, over a row of small volume bars.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="34" x2="352" y2="34" />
+                      <line x1="8" y1="70" x2="352" y2="70" />
+                    </g>
+                    <path class="sv-price" d="M14 88C34 78 46 62 66 60C86 58 96 78 116 80C136 82 148 60 168 54C188 48 200 62 220 60C240 58 252 42 272 38C292 34 306 46 326 44C336 43 342 40 348 38" />
+                    <path class="sv-fast" d="M14 82C50 78 70 74 106 70C142 66 162 64 198 60C234 56 254 52 290 48C312 45 330 43 348 41" />
+                    <circle class="sv-dot-ok" cx="66" cy="60" r="5" />
+                    <circle class="sv-dot-warn" cx="116" cy="80" r="5" />
+                    <line class="sv-axis" x1="8" y1="126" x2="352" y2="126" />
+                    <g class="sv-bar">
+                      <rect x="14" y="112" width="10" height="14" rx="2" />
+                      <rect x="38" y="108" width="10" height="18" rx="2" />
+                      <rect x="62" y="114" width="10" height="12" rx="2" />
+                      <rect x="86" y="106" width="10" height="20" rx="2" />
+                      <rect x="110" y="112" width="10" height="14" rx="2" />
+                      <rect x="134" y="104" width="10" height="22" rx="2" />
+                      <rect x="158" y="110" width="10" height="16" rx="2" />
+                      <rect x="182" y="114" width="10" height="12" rx="2" />
+                      <rect x="206" y="106" width="10" height="20" rx="2" />
+                      <rect x="230" y="112" width="10" height="14" rx="2" />
+                      <rect x="254" y="102" width="10" height="24" rx="2" />
+                      <rect x="278" y="110" width="10" height="16" rx="2" />
+                      <rect x="302" y="114" width="10" height="12" rx="2" />
+                      <rect x="326" y="108" width="10" height="18" rx="2" />
+                    </g>
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="128">+DI</text>
-                      <text class="sv-text-live" x="46" y="128">−DI</text>
-                      <text x="84" y="128">DOMINANCE</text>
-                      <text class="sv-text-live" x="192" y="128">ADX</text>
-                      <text x="226" y="128">TREND STRENGTH</text>
+                      <text class="sv-text-live" x="12" y="144">SESSION VWAP</text>
+                      <text x="140" y="144">ACCEPTED ABOVE OR BELOW</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Trend strength</span>
+                    <span class="topic-tag">VWAP</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1710,9 +1791,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./average-directional-index/"><span class="lesson-ord">Lesson 07</span>Average Directional Index and Directional Movement</a></h4>
+                  <h4><a class="lesson-link" href="./volume-weighted-average-price/"><span class="lesson-ord">Lesson 07</span>Volume-Weighted Average Price</a></h4>
 
-                  <p>Calculate +DI, −DI, and ADX; distinguish directional dominance from trend strength; adjust the lookback and threshold; and compare the indicator in trending and ranging price series.</p>
+                  <p>Calculate session VWAP and use price location around it to describe accepted value and directional control.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1727,71 +1808,32 @@
               </article>
             </li>
 
-          </ol>
-        </div>
-
-        <div class="stage" id="stage-volatility">
-          <div class="stage-head">
-            <p class="stage-badge">Stage 4 of 5 <b>Lessons 08–11</b></p>
-            <h3>Volatility and channels</h3>
-            <p>How far price moves, kept strictly separate from which way it moves. True range and the ATR built on it come first because the other three all consume a volatility estimate: standard deviation around an average, an ATR envelope around an EMA, and the pure high-low channel that needs no average at all. Three envelopes, three different definitions of "outside the band".</p>
-          </div>
-
-          <ol class="course-track" role="list" start="8">
-
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">08</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Two candles with a gap between them, showing that true range is measured from the previous close rather than from the current bar's own low, with the resulting average true range plotted as a separate rising series beneath.">
-                    <g class="sv-wick">
-                      <line x1="52" y1="22" x2="52" y2="72" />
-                      <line x1="140" y1="14" x2="140" y2="60" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A dashed vertical marker at a chosen event, with a volume-weighted average price line that begins at that event and runs forward beneath a price line held above it.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="30" x2="352" y2="30" />
+                      <line x1="8" y1="66" x2="352" y2="66" />
                     </g>
-                    <rect class="sv-bar" x="44" y="34" width="17" height="30" rx="2" />
-                    <rect class="sv-bar-up" x="132" y="24" width="17" height="26" rx="2" />
-                    <line class="sv-zero" x1="30" y1="66" x2="176" y2="66" />
-                    <path class="sv-link" d="M164 66V16" />
-                    <path class="sv-flow" d="M158 22l6-6 6 6" />
-                    <path class="sv-flow" d="M158 60l6 6 6-6" />
+                    <line class="sv-link" x1="112" y1="14" x2="112" y2="120" />
+                    <path class="sv-price" d="M14 96C36 88 52 96 74 90C92 85 100 78 112 74C132 68 146 56 168 52C190 48 202 60 224 56C246 52 260 38 282 34C304 30 320 40 346 32" />
+                    <path class="sv-fast" d="M112 80C140 76 156 72 184 68C212 64 228 60 256 54C284 48 300 46 346 40" />
+                    <circle class="sv-dot" cx="112" cy="74" r="6" />
                     <g class="sv-text">
-                      <text x="16" y="80">PRIOR CLOSE</text>
-                      <text class="sv-text-live" x="176" y="44">TRUE</text>
-                      <text class="sv-text-live" x="176" y="60">RANGE</text>
-                      <text x="100" y="14">GAP</text>
+                      <text x="12" y="136">ANCHOR EVENT</text>
+                      <text class="sv-text-live" x="126" y="136">ANCHORED VWAP</text>
+                      <text x="238" y="136">ACCEPTED ABOVE</text>
                     </g>
-                    <line class="sv-axis" x1="8" y1="140" x2="352" y2="140" />
-                    <g class="sv-bar">
-                      <rect x="16" y="128" width="12" height="12" rx="2" />
-                      <rect x="36" y="124" width="12" height="16" rx="2" />
-                      <rect x="56" y="126" width="12" height="14" rx="2" />
-                      <rect x="76" y="120" width="12" height="20" rx="2" />
-                      <rect x="96" y="122" width="12" height="18" rx="2" />
-                    </g>
-                    <g class="sv-bar-hi">
-                      <rect x="116" y="108" width="12" height="32" rx="2" />
-                      <rect x="136" y="100" width="12" height="40" rx="2" />
-                      <rect x="156" y="104" width="12" height="36" rx="2" />
-                    </g>
-                    <g class="sv-bar">
-                      <rect x="176" y="112" width="12" height="28" rx="2" />
-                      <rect x="196" y="118" width="12" height="22" rx="2" />
-                      <rect x="216" y="122" width="12" height="18" rx="2" />
-                      <rect x="236" y="120" width="12" height="20" rx="2" />
-                      <rect x="256" y="126" width="12" height="14" rx="2" />
-                      <rect x="276" y="124" width="12" height="16" rx="2" />
-                      <rect x="296" y="128" width="12" height="12" rx="2" />
-                      <rect x="316" y="126" width="12" height="14" rx="2" />
-                    </g>
-                    <text class="sv-text sv-text-live" x="252" y="102">ATR</text>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Volatility</span>
+                    <span class="topic-tag">VWAP</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1800,9 +1842,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./average-true-range/"><span class="lesson-ord">Lesson 08</span>Average True Range</a></h4>
+                  <h4><a class="lesson-link" href="./anchored-volume-weighted-average-price/"><span class="lesson-ord">Lesson 08</span>Anchored Volume-Weighted Average Price</a></h4>
 
-                  <p>Inspect true range components, see how gaps affect volatility measurement, calculate Wilder ATR and ATR as a percentage of price, and keep volatility separate from direction.</p>
+                  <p>Start VWAP from a selected event and evaluate whether price is accepted above or below the event’s average traded value.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1817,34 +1859,48 @@
               </article>
             </li>
 
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-profile">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 4 of 6 <b>Lessons 09–10</b></p>
+            <h3>Profile and value area</h3>
+            <p>The same trades, reorganized by price instead of by time. A volume profile bins traded volume into price levels and shows where the market spent its activity; the value area, the point of control, and the high- and low-volume nodes name the locations the auction kept returning to and the ones it passed straight through. In these labs the value area holds approximately 70% of profile volume around the POC — a convention, and the lesson states it as one.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="9">
+
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">09</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line inside a standard-deviation envelope around a moving-average basis. The bands pinch tight through a contraction in the middle of the chart and flare wide afterwards, with a marked touch of the upper band.">
-                    <g class="sv-grid">
-                      <line x1="8" y1="38" x2="352" y2="38" />
-                      <line x1="8" y1="76" x2="352" y2="76" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Horizontal bars stacked by price level, longest in the middle and shorter at the extremes, forming a volume profile beside the price path that produced it.">
+                    <g class="sv-bar">
+                      <rect x="14" y="16" width="30" height="9" rx="2" />
+                      <rect x="14" y="28" width="52" height="9" rx="2" />
+                      <rect x="14" y="40" width="84" height="9" rx="2" />
+                      <rect x="14" y="52" width="118" height="9" rx="2" />
+                      <rect x="14" y="64" width="146" height="9" rx="2" />
+                      <rect x="14" y="76" width="104" height="9" rx="2" />
+                      <rect x="14" y="88" width="68" height="9" rx="2" />
+                      <rect x="14" y="100" width="44" height="9" rx="2" />
+                      <rect x="14" y="112" width="26" height="9" rx="2" />
                     </g>
-                    <line class="sv-axis" x1="8" y1="114" x2="352" y2="114" />
-                    <path class="sv-fill" d="M14 40C48 44 78 56 110 60C142 64 160 62 190 60C220 58 240 46 280 32C310 21 332 18 348 16L348 92C332 88 310 82 280 76C240 68 220 66 190 66C160 66 142 68 110 70C78 72 48 78 14 84Z" />
-                    <path class="sv-band" d="M14 40C48 44 78 56 110 60C142 64 160 62 190 60C220 58 240 46 280 32C310 21 332 18 348 16" />
-                    <path class="sv-band" d="M14 84C48 78 78 72 110 70C142 68 160 66 190 66C220 66 240 68 280 76C310 82 332 88 348 92" />
-                    <path class="sv-slow-dash" d="M14 62C48 61 78 64 110 65C142 66 160 64 190 63C220 62 240 57 280 54C310 51 332 53 348 54" />
-                    <path class="sv-price" d="M14 70C32 52 44 78 62 66C80 54 92 74 110 66C128 58 140 68 158 64C176 60 188 68 206 62C224 56 236 44 254 40C272 36 284 46 302 36C320 26 334 30 348 22" />
-                    <circle class="sv-dot" cx="284" cy="34" r="5.5" />
+                    <line class="sv-axis" x1="14" y1="126" x2="14" y2="12" />
+                    <path class="sv-price" d="M190 108C202 96 208 84 222 76C236 68 244 78 258 72C272 66 280 52 294 46C308 40 318 50 332 42C340 37 344 32 348 28" />
                     <g class="sv-text">
-                      <text x="98" y="132">CONTRACTION</text>
-                      <text class="sv-text-live" x="220" y="132">EXPANSION</text>
+                      <text class="sv-text-live" x="12" y="140">VOLUME BY PRICE</text>
+                      <text x="190" y="140">TIME</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Volatility</span>
+                    <span class="topic-tag">Profile</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1853,9 +1909,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./bollinger-bands/"><span class="lesson-ord">Lesson 09</span>Bollinger Bands</a></h4>
+                  <h4><a class="lesson-link" href="./volume-profile/"><span class="lesson-ord">Lesson 09</span>Volume Profile</a></h4>
 
-                  <p>Build a moving-average envelope from standard deviation, inspect band width and %B, identify volatility contraction and expansion, and avoid treating a band touch as a complete signal.</p>
+                  <p>Organize traded volume by price rather than time and identify where the market spent activity.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1876,30 +1932,36 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="An exponential moving average with an evenly spaced average-true-range envelope drawn either side of it, staying far more parallel than the standard-deviation bands beside it, which are drawn faintly for comparison. A break above the upper channel is marked.">
-                    <g class="sv-grid">
-                      <line x1="8" y1="38" x2="352" y2="38" />
-                      <line x1="8" y1="76" x2="352" y2="76" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="The same profile with a shaded value area between two dashed boundaries, the point of control highlighted as the longest bar inside it, a thick high-volume node and a thin low-volume node labelled outside it.">
+                    <rect class="sv-fill" x="8" y="38" width="344" height="54" rx="6" />
+                    <g class="sv-bar">
+                      <rect x="14" y="16" width="30" height="9" rx="2" />
+                      <rect x="14" y="28" width="52" height="9" rx="2" />
+                      <rect x="14" y="40" width="84" height="9" rx="2" />
+                      <rect x="14" y="52" width="118" height="9" rx="2" />
+                      <rect x="14" y="76" width="104" height="9" rx="2" />
+                      <rect x="14" y="88" width="68" height="9" rx="2" />
+                      <rect x="14" y="100" width="22" height="9" rx="2" />
+                      <rect x="14" y="112" width="40" height="9" rx="2" />
                     </g>
-                    <line class="sv-axis" x1="8" y1="114" x2="352" y2="114" />
-                    <path class="sv-band-2" d="M14 34C48 36 78 44 110 46C142 48 160 40 190 34C220 28 240 22 280 18C310 15 332 20 348 22" opacity=".45" />
-                    <path class="sv-band-2" d="M14 90C48 88 78 84 110 82C142 80 160 74 190 68C220 62 240 58 280 54C310 51 332 54 348 56" opacity=".45" />
-                    <path class="sv-band" d="M14 44C48 46 78 52 110 54C142 56 160 50 190 44C220 38 240 32 280 28C310 25 332 30 348 32" />
-                    <path class="sv-band" d="M14 80C48 82 78 88 110 90C142 92 160 86 190 80C220 74 240 68 280 64C310 61 332 66 348 68" />
-                    <path class="sv-slow" d="M14 62C48 64 78 70 110 72C142 74 160 68 190 62C220 56 240 50 280 46C310 43 332 48 348 50" />
-                    <path class="sv-price" d="M14 74C32 60 44 84 62 74C80 64 92 84 110 78C128 72 140 80 158 72C176 64 188 70 206 60C224 50 236 54 254 44C272 34 284 26 302 24C320 22 334 34 348 40" />
-                    <circle class="sv-dot-ok" cx="300" cy="24" r="5.5" />
+                    <rect class="sv-bar-hi" x="14" y="64" width="146" height="9" rx="2" />
+                    <line class="sv-level" x1="8" y1="38" x2="352" y2="38" />
+                    <line class="sv-level" x1="8" y1="92" x2="352" y2="92" />
+                    <line class="sv-axis" x1="14" y1="126" x2="14" y2="12" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="132">EMA ± ATR</text>
-                      <text x="98" y="132">PARALLEL CHANNEL</text>
-                      <text class="sv-text-live" x="256" y="132">BREAK</text>
+                      <text x="290" y="34">VAH</text>
+                      <text class="sv-text-live" x="290" y="72">POC</text>
+                      <text x="290" y="106">VAL</text>
+                      <text x="180" y="86">HVN</text>
+                      <text x="180" y="108">LVN</text>
+                      <text class="sv-text-live" x="12" y="140">VALUE AREA</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Channels</span>
+                    <span class="topic-tag">Profile</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1908,9 +1970,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./keltner-channels/"><span class="lesson-ord">Lesson 10</span>Keltner Channels</a></h4>
+                  <h4><a class="lesson-link" href="./value-area-poc-hvn-lvn/"><span class="lesson-ord">Lesson 10</span>Value Area, POC, HVN, and LVN</a></h4>
 
-                  <p>Construct an EMA-centered ATR envelope, change the basis and volatility settings, compare Keltner Channels with Bollinger Bands, and define channel-break conditions precisely.</p>
+                  <p>Interpret value-area boundaries, high-volume nodes, and low-volume nodes as auction locations.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1925,34 +1987,59 @@
               </article>
             </li>
 
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-flow">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 5 of 6 <b>Lessons 11–15</b></p>
+            <h3>Order flow: book, tape, footprint, delta</h3>
+            <p>Below the bar. Lesson 11 is the quote itself — bid, ask, spread, and which order types have to pay it. Lesson 12 reads the transaction stream by price, size, side classification and pace. Lesson 13 splits executed volume into bid- and ask-classified at each price level inside a candle, and lesson 14 accumulates that delta through time to compare aggressive flow with price structure. Lesson 15 turns to the order book, where displayed depth is intent rather than trade: liquidity that can be added, consumed, moved, or canceled before anything prints.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="11">
+
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">11</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A staircase channel of rolling highest highs and lowest lows that only steps when a new extreme is made, with price breaking above the prior completed channel at a marked bar and the channel boundary stepping up only afterwards.">
-                    <g class="sv-grid">
-                      <line x1="8" y1="38" x2="352" y2="38" />
-                      <line x1="8" y1="76" x2="352" y2="76" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A quote ladder with three resting ask levels above and three resting bid levels below, the gap between them marked as the spread, and an arrow showing a marketable order crossing that gap to trade.">
+                    <g class="sv-tile">
+                      <rect x="96" y="10" width="132" height="13" rx="4" />
+                      <rect x="96" y="27" width="132" height="13" rx="4" />
+                      <rect x="96" y="44" width="132" height="13" rx="4" />
+                      <rect x="96" y="77" width="132" height="13" rx="4" />
+                      <rect x="96" y="94" width="132" height="13" rx="4" />
+                      <rect x="96" y="111" width="132" height="13" rx="4" />
                     </g>
-                    <line class="sv-axis" x1="8" y1="114" x2="352" y2="114" />
-                    <path class="sv-band" d="M14 56H74V48H134V44H194V38H254V26H348" />
-                    <path class="sv-band" d="M14 94H94V88H174V84H254V78H348" />
-                    <path class="sv-price" d="M14 80C30 66 40 86 56 74C72 62 82 76 98 66C114 56 124 70 140 60C156 50 166 62 182 52C198 42 208 50 224 44C240 38 248 40 254 34C262 27 268 22 284 20C300 18 312 30 348 32" />
-                    <circle class="sv-dot-ok" cx="262" cy="24" r="6" />
-                    <path class="sv-link" d="M254 26V16H300" />
+                    <g class="sv-bar-dn">
+                      <rect x="234" y="13" width="46" height="7" rx="2" />
+                      <rect x="234" y="30" width="30" height="7" rx="2" />
+                      <rect x="234" y="47" width="62" height="7" rx="2" />
+                    </g>
+                    <g class="sv-bar-up">
+                      <rect x="234" y="80" width="54" height="7" rx="2" />
+                      <rect x="234" y="97" width="36" height="7" rx="2" />
+                      <rect x="234" y="114" width="68" height="7" rx="2" />
+                    </g>
+                    <path class="sv-link" d="M162 59V75" />
+                    <path class="sv-flow" d="M70 108V40" />
+                    <path class="sv-flow" d="M64 46l6-8 6 8" />
                     <g class="sv-text">
-                      <text x="12" y="132">PRIOR CHANNEL</text>
-                      <text class="sv-text-live" x="132" y="132">HOLDS UNTIL A NEW EXTREME</text>
-                      <text class="sv-text-live" x="300" y="14">BREAK</text>
+                      <text x="12" y="24">ASK</text>
+                      <text x="12" y="92">BID</text>
+                      <text class="sv-text-live" x="176" y="72">SPREAD</text>
+                      <text class="sv-text-live" x="12" y="142">RESTING LIQUIDITY</text>
+                      <text x="170" y="142">MARKETABLE ORDER</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Channels</span>
+                    <span class="topic-tag">Microstructure</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1961,9 +2048,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./donchian-channels/"><span class="lesson-ord">Lesson 11</span>Donchian Channels</a></h4>
+                  <h4><a class="lesson-link" href="./bid-ask-spread-and-order-types/"><span class="lesson-ord">Lesson 11</span>Bid, Ask, Spread, and Order Types</a></h4>
 
-                  <p>Track rolling highest highs and lowest lows, compare current-bar and prior-channel calculations, detect completed breakout events, and understand why channel boundaries update after new extremes.</p>
+                  <p>Understand quoted prices, resting liquidity, marketable orders, and execution trade-offs.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1978,45 +2065,48 @@
               </article>
             </li>
 
-          </ol>
-        </div>
-
-        <div class="stage" id="stage-synthesis">
-          <div class="stage-head">
-            <p class="stage-badge">Stage 5 of 5 <b>Lessons 12–16</b></p>
-            <h3>Synthesis</h3>
-            <p>Where the first eleven lessons stop being a list of formulas. It opens with the last single-indicator lesson — rate of change, the plainest momentum measure there is — and then turns to reading: comparing two series for divergence, noticing when four indicators are the same indicator, matching the tool to the regime, and finally writing conditions precise enough that another person or program reproduces every entry and exit.</p>
-          </div>
-
-          <ol class="course-track" role="list" start="12">
-
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">12</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line above, and beneath it a rate-of-change oscillator that swings either side of a dashed zero line, shaded green where it is positive and red where it is negative, with the zero crossings marked.">
-                    <path class="sv-price" d="M14 46C32 34 44 54 62 44C80 34 92 50 110 40C128 30 140 34 158 28C176 22 188 30 206 26C224 22 236 34 254 40C272 46 284 40 302 34C320 28 334 32 348 26" />
-                    <text class="sv-text" x="12" y="66">PRICE</text>
-                    <line class="sv-zero" x1="8" y1="108" x2="352" y2="108" />
-                    <path class="sv-fill-up" d="M62 108C80 96 92 84 110 82C128 80 140 88 158 86C176 84 188 92 206 100L206 108Z" />
-                    <path class="sv-fill-dn" d="M14 108C32 116 44 122 56 120L62 108Z" />
-                    <path class="sv-fill-dn" d="M206 108C224 118 236 130 254 128C272 126 284 118 296 112L296 108Z" />
-                    <path class="sv-osc" d="M14 108C32 116 44 122 56 120C60 119 60 110 62 108C80 96 92 84 110 82C128 80 140 88 158 86C176 84 188 92 206 100C210 102 204 106 206 108C224 118 236 130 254 128C272 126 284 118 296 112C300 110 294 106 296 108C312 100 330 94 348 90" />
-                    <circle class="sv-dot-ok" cx="62" cy="108" r="5" />
-                    <circle class="sv-dot-warn" cx="206" cy="108" r="5" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Six rows of a transaction stream, each carrying a side marker and a size bar, with a downward arrow beside them standing for the pace at which prints arrive.">
+                    <g class="sv-tile">
+                      <rect x="8" y="8" width="236" height="16" rx="5" />
+                      <rect x="8" y="28" width="236" height="16" rx="5" />
+                      <rect x="8" y="48" width="236" height="16" rx="5" />
+                      <rect x="8" y="68" width="236" height="16" rx="5" />
+                      <rect x="8" y="88" width="236" height="16" rx="5" />
+                      <rect x="8" y="108" width="236" height="16" rx="5" />
+                    </g>
+                    <circle class="sv-dot-ok" cx="24" cy="16" r="5" />
+                    <circle class="sv-dot-ok" cx="24" cy="36" r="5" />
+                    <circle class="sv-dot-warn" cx="24" cy="56" r="5" />
+                    <circle class="sv-dot-ok" cx="24" cy="76" r="5" />
+                    <circle class="sv-dot-warn" cx="24" cy="96" r="5" />
+                    <circle class="sv-dot-ok" cx="24" cy="116" r="5" />
+                    <g class="sv-bar">
+                      <rect x="140" y="12" width="60" height="8" rx="2" />
+                      <rect x="140" y="32" width="34" height="8" rx="2" />
+                      <rect x="140" y="52" width="78" height="8" rx="2" />
+                      <rect x="140" y="72" width="46" height="8" rx="2" />
+                      <rect x="140" y="92" width="88" height="8" rx="2" />
+                      <rect x="140" y="112" width="28" height="8" rx="2" />
+                    </g>
+                    <path class="sv-flow" d="M300 18V112" />
+                    <path class="sv-flow" d="M294 106l6 8 6-8" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="142">ROC</text>
-                      <text x="46" y="142">ZERO CROSSINGS</text>
-                      <text x="182" y="142">SENSITIVITY = LOOKBACK</text>
+                      <text class="sv-text-live" x="12" y="142">TIME AND SALES</text>
+                      <text x="140" y="142">SIZE · SIDE</text>
+                      <text x="282" y="142">PACE</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Momentum</span>
+                    <span class="topic-tag">Tape</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2025,9 +2115,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./rate-of-change-and-momentum/"><span class="lesson-ord">Lesson 12</span>Rate of Change and Momentum</a></h4>
+                  <h4><a class="lesson-link" href="./time-and-sales/"><span class="lesson-ord">Lesson 12</span>Time and Sales</a></h4>
 
-                  <p>Measure price change over a fixed lookback in percentage and absolute terms, compare zero-line crossings, adjust sensitivity, and distinguish momentum from trend direction and volatility.</p>
+                  <p>Read the transaction stream by price, size, side classification, pace, and price response.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2048,28 +2138,43 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Price making a second peak higher than the first, joined by a dashed line, while the oscillator beneath makes its second peak lower than the first, joined by a matching dashed line. The two aligned swings are marked as a divergence awaiting price confirmation.">
-                    <path class="sv-price" d="M14 56C34 40 52 24 72 26C92 28 104 52 124 58C144 64 156 60 176 52C196 44 210 22 232 16C254 10 268 26 290 34C310 41 330 46 348 44" />
-                    <path class="sv-link" d="M72 20L232 10" />
-                    <circle class="sv-dot" cx="72" cy="26" r="5" />
-                    <circle class="sv-dot" cx="232" cy="16" r="5" />
-                    <text class="sv-text" x="96" y="16">HIGHER HIGH</text>
-                    <line class="sv-zero" x1="8" y1="126" x2="352" y2="126" />
-                    <path class="sv-osc" d="M14 116C34 108 52 84 72 82C92 80 104 106 124 112C144 118 156 114 176 110C196 106 210 92 232 92C254 92 268 106 290 112C310 117 330 118 348 116" />
-                    <path class="sv-link" d="M72 76L232 86" />
-                    <circle class="sv-dot-warn" cx="72" cy="82" r="5" />
-                    <circle class="sv-dot-warn" cx="232" cy="92" r="5" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Two candles drawn as stacks of price-level cells, each cell splitting executed volume into a bid-classified bar to the left of the centre line and an ask-classified bar to the right.">
+                    <line class="sv-zero" x1="104" y1="10" x2="104" y2="126" />
+                    <line class="sv-zero" x1="256" y1="10" x2="256" y2="126" />
+                    <g class="sv-bar-dn">
+                      <rect x="70" y="16" width="34" height="14" rx="3" />
+                      <rect x="76" y="38" width="28" height="14" rx="3" />
+                      <rect x="86" y="60" width="18" height="14" rx="3" />
+                      <rect x="64" y="82" width="40" height="14" rx="3" />
+                      <rect x="80" y="104" width="24" height="14" rx="3" />
+                      <rect x="236" y="16" width="20" height="14" rx="3" />
+                      <rect x="226" y="38" width="30" height="14" rx="3" />
+                      <rect x="212" y="60" width="44" height="14" rx="3" />
+                      <rect x="230" y="82" width="26" height="14" rx="3" />
+                      <rect x="240" y="104" width="16" height="14" rx="3" />
+                    </g>
+                    <g class="sv-bar-up">
+                      <rect x="104" y="16" width="22" height="14" rx="3" />
+                      <rect x="104" y="38" width="38" height="14" rx="3" />
+                      <rect x="104" y="60" width="46" height="14" rx="3" />
+                      <rect x="104" y="82" width="16" height="14" rx="3" />
+                      <rect x="104" y="104" width="30" height="14" rx="3" />
+                      <rect x="256" y="16" width="40" height="14" rx="3" />
+                      <rect x="256" y="38" width="24" height="14" rx="3" />
+                      <rect x="256" y="60" width="18" height="14" rx="3" />
+                      <rect x="256" y="82" width="34" height="14" rx="3" />
+                      <rect x="256" y="104" width="28" height="14" rx="3" />
+                    </g>
                     <g class="sv-text">
-                      <text x="98" y="76">LOWER HIGH</text>
-                      <text class="sv-text-live" x="242" y="142">CONFIRM ON PRICE</text>
-                      <text x="12" y="142">DIVERGENCE</text>
+                      <text class="sv-text-live" x="12" y="142">BID × ASK PER LEVEL</text>
+                      <text x="196" y="142">DELTA PER CELL</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Divergence</span>
+                    <span class="topic-tag">Delta</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2078,9 +2183,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./indicator-divergence/"><span class="lesson-ord">Lesson 13</span>Indicator Divergence</a></h4>
+                  <h4><a class="lesson-link" href="./footprint-charts-and-bid-ask-delta/"><span class="lesson-ord">Lesson 13</span>Footprint Charts and Bid-Ask Delta</a></h4>
 
-                  <p>Compare aligned price swings with RSI or MACD histogram swings, classify regular bullish and bearish divergence, distinguish divergence from disagreement at unrelated bars, and require price confirmation.</p>
+                  <p>Compare executed volume at the bid and ask within each price level and candle.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2101,27 +2206,28 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Three small indicator panels side by side. The first two trace almost the same shape and are marked with a red cross as redundant; the third traces a different shape and is marked with a green check as the one that adds information.">
-                    <rect class="sv-tile" x="8" y="14" width="104" height="80" rx="12" />
-                    <rect class="sv-tile" x="128" y="14" width="104" height="80" rx="12" />
-                    <rect class="sv-tile-live" x="248" y="14" width="104" height="80" rx="12" />
-                    <path class="sv-osc" d="M20 74C34 72 40 42 54 38C68 34 76 62 90 66C96 68 98 60 100 56" />
-                    <path class="sv-osc" d="M140 76C154 74 160 44 174 40C188 36 196 64 210 68C216 70 218 62 220 58" />
-                    <path class="sv-slow" d="M260 40C274 46 280 76 294 78C308 80 316 46 330 42C336 40 338 46 340 50" />
-                    <g class="sv-cross">
-                      <path d="M56 108l16 16" /><path d="M72 108l-16 16" />
-                    </g>
-                    <path class="sv-check" d="M290 116l7 8 14-16" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line reaching a higher second peak above a filled cumulative delta curve that peaks lower the second time, with dashed lines joining each pair of peaks across a dashed zero line.">
+                    <path class="sv-price" d="M14 56C36 46 50 34 74 32C98 30 110 44 134 48C158 52 172 40 196 32C220 24 234 18 258 20C282 22 296 34 320 40C332 43 340 42 348 40" />
+                    <line class="sv-link" x1="74" y1="26" x2="258" y2="14" />
+                    <circle class="sv-dot" cx="74" cy="32" r="5" />
+                    <circle class="sv-dot" cx="258" cy="20" r="5" />
+                    <line class="sv-zero" x1="8" y1="104" x2="352" y2="104" />
+                    <path class="sv-fill" d="M14 108C38 104 52 96 76 92C100 88 114 98 138 100C162 102 176 94 200 92C224 90 238 96 262 98C286 100 300 104 348 106V104H14Z" />
+                    <path class="sv-fast" d="M14 108C38 104 52 96 76 92C100 88 114 98 138 100C162 102 176 94 200 92C224 90 238 96 262 98C286 100 300 104 348 106" />
+                    <line class="sv-link" x1="76" y1="86" x2="262" y2="92" />
+                    <circle class="sv-dot" cx="76" cy="92" r="5" />
+                    <circle class="sv-dot-warn" cx="262" cy="98" r="5" />
                     <g class="sv-text">
-                      <text x="12" y="140">SAME SHAPE TWICE</text>
-                      <text class="sv-text-live" x="248" y="140">ADDS INFORMATION</text>
+                      <text x="12" y="16">PRICE</text>
+                      <text class="sv-text-live" x="12" y="140">CVD</text>
+                      <text x="200" y="140">AGGRESSIVE FLOW</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Method</span>
+                    <span class="topic-tag">Delta</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2130,9 +2236,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./combining-indicators/"><span class="lesson-ord">Lesson 14</span>Combining Indicators Without Redundancy</a></h4>
+                  <h4><a class="lesson-link" href="./cumulative-volume-delta/"><span class="lesson-ord">Lesson 14</span>Cumulative Volume Delta</a></h4>
 
-                  <p>Group indicators by function, compare normalized outputs and correlations, build a compact set for a defined purpose, and avoid stacking multiple transformations of the same price behavior as false confirmation.</p>
+                  <p>Accumulate bid-ask delta through time and compare aggressive flow with price structure.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2153,29 +2259,25 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Four market-regime tiles, each holding a small characteristic price shape: a trend, a range, a contraction, and a high-volatility series. The trend tile is selected and highlighted, showing that the choice of indicator follows the regime.">
-                    <rect class="sv-tile-live" x="8" y="12" width="82" height="76" rx="12" />
-                    <rect class="sv-tile" x="98" y="12" width="82" height="76" rx="12" />
-                    <rect class="sv-tile" x="188" y="12" width="82" height="76" rx="12" />
-                    <rect class="sv-tile" x="278" y="12" width="74" height="76" rx="12" />
-                    <path class="sv-fast" d="M18 72C30 66 38 50 50 44C62 38 70 34 82 26" />
-                    <path class="sv-price" d="M108 40C118 40 120 62 130 62C140 62 142 40 152 40C162 40 164 62 172 62" />
-                    <path class="sv-price" d="M198 50C206 44 210 56 218 50C226 44 230 54 238 50C246 46 250 52 262 50" />
-                    <path class="sv-price" d="M286 62C292 30 296 74 302 34C308 70 312 26 318 66C324 30 330 70 344 40" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A market-depth staircase: displayed bid liquidity accumulating in steps to the left of a dashed midpoint and displayed ask liquidity accumulating in steps to the right of it.">
+                    <path class="sv-fill-up" d="M180 100H156V88H132V76H108V62H84V50H60V36H20V112H180Z" />
+                    <path class="sv-fill-dn" d="M180 100H204V86H228V72H252V58H276V46H300V34H340V112H180Z" />
+                    <path class="sv-up-line" d="M180 100H156V88H132V76H108V62H84V50H60V36H20" />
+                    <path class="sv-dn-line" d="M180 100H204V86H228V72H252V58H276V46H300V34H340" />
+                    <line class="sv-zero" x1="180" y1="16" x2="180" y2="112" />
+                    <line class="sv-axis" x1="8" y1="112" x2="352" y2="112" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="104">TREND</text>
-                      <text x="102" y="104">RANGE</text>
-                      <text x="192" y="104">SQUEEZE</text>
-                      <text x="282" y="104">HIGH VOL</text>
-                      <text class="sv-text-live" x="12" y="134">SAME THRESHOLD, DIFFERENT MEANING</text>
+                      <text x="160" y="28">MID</text>
+                      <text x="12" y="136">BIDS</text>
+                      <text class="sv-text-live" x="132" y="136">DISPLAYED ONLY</text>
+                      <text x="316" y="136">ASKS</text>
                     </g>
-                    <path class="sv-check" d="M60 100l6 7 12-14" />
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Regime</span>
+                    <span class="topic-tag">Order book</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2184,9 +2286,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./indicator-selection-by-market-regime/"><span class="lesson-ord">Lesson 15</span>Indicator Selection by Market Regime</a></h4>
+                  <h4><a class="lesson-link" href="./order-book-and-market-depth/"><span class="lesson-ord">Lesson 15</span>Order Book and Market Depth</a></h4>
 
-                  <p>Classify synthetic market regimes, select indicators suited to the intended decision, receive scored feedback, and understand why the same threshold or crossover behaves differently in trends, ranges, contractions, and high volatility.</p>
+                  <p>Inspect resting liquidity, queue changes, spread, depth, and the difference between displayed intent and executed trades.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2201,37 +2303,54 @@
               </article>
             </li>
 
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-rules">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 6 of 6 <b>Lesson 16</b></p>
+            <h3>Rules</h3>
+            <p>Everything above stays an opinion until it is written down. The last lesson converts market context, participation, location, aggressive flow and price confirmation into explicit conditions, states the entry, the invalidation and the exit alongside them, flags the combinations that contradict each other, and exports the whole specification as a machine-readable document you can keep.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="16">
+
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">16</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Three stacked condition rows for a trend filter, a strength filter and a volatility filter feeding into a price series where an entry is marked in green and an exit in red, with the whole thing exported as a braced JSON document.">
-                    <rect class="sv-tile" x="8" y="16" width="118" height="22" rx="8" />
-                    <rect class="sv-tile" x="8" y="46" width="118" height="22" rx="8" />
-                    <rect class="sv-tile" x="8" y="76" width="118" height="22" rx="8" />
-                    <g class="sv-text">
-                      <text x="18" y="32">TREND FILTER</text>
-                      <text x="18" y="62">STRENGTH</text>
-                      <text x="18" y="92">VOLATILITY</text>
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Four stacked condition rows for context, participation, location and flow feeding into a price series where an entry is marked in green and an exit in red, with the finished specification shown between braces as an exportable rule set.">
+                    <g class="sv-tile">
+                      <rect x="8" y="10" width="126" height="20" rx="7" />
+                      <rect x="8" y="36" width="126" height="20" rx="7" />
+                      <rect x="8" y="62" width="126" height="20" rx="7" />
+                      <rect x="8" y="88" width="126" height="20" rx="7" />
                     </g>
-                    <path class="sv-flow" d="M126 27H150V57H126" />
-                    <path class="sv-flow" d="M126 87H150V57" />
-                    <path class="sv-flow" d="M150 57H172" />
-                    <path class="sv-flow" d="M166 51l6 6-6 6" />
-                    <path class="sv-price" d="M182 84C196 76 206 90 220 80C234 70 242 52 256 46C270 40 280 48 294 42C308 36 320 26 348 22" />
-                    <circle class="sv-dot-ok" cx="220" cy="80" r="6" />
-                    <circle class="sv-dot-warn" cx="294" cy="42" r="6" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="196" y="104">ENTRY</text>
-                      <text class="sv-text-live" x="284" y="104">EXIT</text>
+                      <text x="16" y="24">CONTEXT</text>
+                      <text x="16" y="50">PARTICIPATION</text>
+                      <text x="16" y="76">LOCATION</text>
+                      <text x="16" y="102">FLOW</text>
                     </g>
+                    <path class="sv-flow" d="M134 20H150V72H134" />
+                    <path class="sv-flow" d="M134 98H150V72" />
+                    <path class="sv-flow" d="M134 46H150" />
+                    <path class="sv-flow" d="M150 72H176" />
+                    <path class="sv-flow" d="M170 66l6 6-6 6" />
+                    <path class="sv-price" d="M186 60C200 52 212 66 226 58C240 50 252 34 266 30C280 26 292 38 306 34C320 30 332 24 346 20" />
+                    <circle class="sv-dot-ok" cx="226" cy="58" r="6" />
+                    <circle class="sv-dot-warn" cx="306" cy="34" r="6" />
                     <g class="sv-ring">
-                      <path d="M196 122h-6a4 4 0 0 0-4 4v4l-4 4 4 4v4a4 4 0 0 0 4 4h6" fill="none" />
-                      <path d="M232 122h6a4 4 0 0 1 4 4v4l4 4-4 4v4a4 4 0 0 1-4 4h-6" fill="none" />
+                      <path d="M212 102h-6a4 4 0 0 0-4 4v5l-4 4 4 4v5a4 4 0 0 0 4 4h6" fill="none" />
+                      <path d="M290 102h6a4 4 0 0 1 4 4v5l4 4-4 4v5a4 4 0 0 1-4 4h-6" fill="none" />
                     </g>
-                    <text class="sv-text sv-text-live" x="252" y="142">EXPORTABLE RULE</text>
+                    <g class="sv-text">
+                      <text x="200" y="84">ENTRY</text>
+                      <text x="284" y="84">EXIT</text>
+                      <text class="sv-text-live" x="222" y="124">RULE SET</text>
+                    </g>
                   </svg>
                 </div>
 
@@ -2246,9 +2365,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./indicator-based-trading-rules/"><span class="lesson-ord">Lesson 16</span>Indicator-Based Trading Rules</a></h4>
+                  <h4><a class="lesson-link" href="./volume-and-order-flow-trading-rules/"><span class="lesson-ord">Lesson 16</span>Volume and Order Flow Trading Rules</a></h4>
 
-                  <p>Convert indicator observations into deterministic conditions, apply trend, strength, and volatility filters, visualize entry and exit events, detect contradictory rules, and export a machine-readable specification.</p>
+                  <p>Convert market context, participation, aggressive flow, and price confirmation into explicit testable rules.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2274,33 +2393,37 @@
             <h2 id="rules-title">Lesson 16 exports a rule set</h2>
             <p>The last lesson is not a quiz you pass and close. It turns what you have learned into explicit conditions, checks them against each other, and then hands the whole rule set back to you as a file, so it can outlive the browser tab it was written in.</p>
           </div>
-          <p class="count-chip">Format: technical-indicator-rule-v1</p>
+          <p class="count-chip">Format: volume-order-flow-rule-v1</p>
         </div>
 
         <div class="interop">
           <article class="interop-card">
             <h3>What comes out of it</h3>
             <p>
-              Lesson 16 takes the direction, the trend, strength and volatility
-              filters, the entry trigger, the exit and the parameters you set,
-              marks the entry and exit events on a synthetic series, and exports
-              the whole specification as a JSON document stamped
-              <span class="mono">technical-indicator-rule-v1</span>. The file
-              records the data assumptions it was written against, the rule
-              itself, and diagnostics — the clarity score, whether direction and
-              trend agree, and the events it produced — so a rule you wrote can be
-              read back later and reproduced exactly.
+              Lesson 16 takes the market context you selected, the participation
+              test, the location the setup depends on — above or below VWAP, above
+              or below the value area, or at a structural level — the order-flow
+              condition, the price confirmation, the entry side and trigger, the
+              invalidation, the exit with its minimum reward-to-risk, and the
+              situations you decided not to trade at all, and exports the whole
+              specification as a JSON document stamped
+              <span class="mono">volume-order-flow-rule-v1</span>.
             </p>
             <p>
               The schema linked beside this is the contract for that shape. It is
               worth reading if you would rather keep your rules in your own
               notebook or script: match the shape and the same fields carry over.
-              Note what the export deliberately does NOT contain — any measure of
-              profitability. The diagnostics carry
-              <span class="mono">performanceEvaluated: false</span> on purpose, so
-              a rule that is merely well specified is never mistaken for a rule
-              that has been shown to work. Everything runs in your browser —
-              nothing is uploaded, and there is no account anywhere in this course.
+              The schema is strict on purpose —
+              <span class="mono">additionalProperties: false</span> everywhere — so
+              a field that is not in the contract is a rule that will not validate
+              rather than a silent extra. Note what the export deliberately does
+              NOT contain: any measure of what the rule earned. There is no
+              performance object anywhere in the shape, and
+              <span class="mono">minimumRewardRisk</span> is a constraint you set,
+              not a result — so a rule that is merely well specified is never
+              mistaken for one that has been shown to work. Validation is course
+              7's subject. Everything runs in your browser — nothing is uploaded,
+              and there is no account anywhere in this course.
             </p>
           </article>
 
@@ -2308,36 +2431,36 @@
             <h3>Go straight to the pieces</h3>
             <ul class="file-list">
               <li>
-                <a class="file-link" href="./indicator-based-trading-rules/">
+                <a class="file-link" href="./volume-and-order-flow-trading-rules/">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                     <path d="M5 4h11l3 3v13H5z" /><path d="M8.5 10h7M8.5 14h4" /><path d="M13.5 15.5l2 2 3.5-4" />
                   </svg>
                   <span>
-                    <strong>Lesson 16 · Indicator-Based Trading Rules</strong>
+                    <strong>Lesson 16 · Volume and Order Flow Trading Rules</strong>
                     <span>Builds the rule set and exports it</span>
                   </span>
                 </a>
               </li>
               <li>
-                <a class="file-link" href="./indicator-rule-schema.json">
+                <a class="file-link" href="./volume-order-flow-rule-schema.json">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                     <path d="M9 5H7a2 2 0 0 0-2 2v3l-2 2 2 2v3a2 2 0 0 0 2 2h2" />
                     <path d="M15 5h2a2 2 0 0 1 2 2v3l2 2-2 2v3a2 2 0 0 1-2 2h-2" />
                   </svg>
                   <span>
-                    <strong>indicator-rule-schema.json</strong>
+                    <strong>volume-order-flow-rule-schema.json</strong>
                     <span>The export shape, as JSON Schema — opens as plain text</span>
                   </span>
                 </a>
               </li>
               <li>
-                <a class="file-link" href="./indicator-selection-by-market-regime/">
+                <a class="file-link" href="./order-book-and-market-depth/">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                    <path d="M4 17l5-6 4 3 6-8" /><circle cx="19" cy="6" r="1.6" />
+                    <path d="M4 19V9M9 19V5M14 19v-7M19 19v-4" /><path d="M3 21h18" />
                   </svg>
                   <span>
-                    <strong>Lesson 15 · Indicator Selection by Market Regime</strong>
-                    <span>The choice a rule set has to justify</span>
+                    <strong>Lesson 15 · Order Book and Market Depth</strong>
+                    <span>Why displayed intent is not a rule condition on its own</span>
                   </span>
                 </a>
               </li>
@@ -2347,13 +2470,17 @@
       </section>
 
       <nav class="path-nav" aria-label="Course navigation">
-        <a class="path-move prev" href="../options-trading/" rel="prev"><span>Previous course</span><strong>Course 3 &middot; Options Trading</strong></a>
-        <a class="path-move next" href="../volume-and-order-flow/" rel="next"><span>Next course</span><strong>Course 5 &middot; Volume and Order Flow</strong></a>
+        <a class="path-move prev" href="../technical-indicators/" rel="prev"><span>Previous course</span><strong>Course 4 &middot; Technical Indicators</strong></a>
+        <!-- Course 6 has no page yet, so this is deliberately not an anchor: a disabled
+             span cannot be focused or followed, and aria-disabled tells a screen reader
+             why. Swap it for <a class="path-move next" href="../trading-risk-management/"
+             rel="next"> the moment that course ships. -->
+        <span class="path-move next is-upcoming" aria-disabled="true"><span>Next course</span><strong>Course 6 &middot; Trading Risk Management &mdash; not yet available</strong></span>
       </nav>
     </main>
 
     <footer>
-      <p class="risk"><strong>Educational course.</strong> This course teaches indicator calculation, interpretation, and rule specification. It does not provide live data, trading signals, profitability claims, or personalized investment advice. Backtesting, costs, robustness, and automation are covered in later courses. Indicators transform historical price data; they do not guarantee future direction. All price series are synthetic, and small differences from charting platforms can occur because of source, seed, rounding, missing-bar, adjustment, or incomplete-bar conventions. Confirm calculation settings, market context, execution costs, and risk before using an indicator in a trading decision.</p>
+      <p class="risk"><strong>Educational course.</strong> This course teaches interpretation of volume, value, executed flow, and displayed depth. It does not provide live market data, trading signals, execution access, profitability claims, or personalized investment advice. Position risk, portfolio risk, drawdown, and risk-of-ruin belong to course 6; strategy validation to course 7. All charts, order books, tape data, profiles, and executions are deterministic synthetic examples, and time-and-sales and footprint classifications are simplified and explicitly labeled. Real outputs vary by venue, feed, vendor, asset class, session, aggregation, and classification method. Confirm the data source, the classification method, execution costs, and risk before acting on anything you read here.</p>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
       <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
     </footer>
@@ -2363,7 +2490,7 @@
     (function () {
       var root = document.documentElement;
       var toggle = document.getElementById('themeToggle');
-      var KEY = 'learn-theme'; // shared with the library, the path pages, courses 1-3 and every lesson — keep identical
+      var KEY = 'learn-theme'; // shared with the library, the path pages, courses 1-4 and every lesson — keep identical
       var mql = window.matchMedia('(prefers-color-scheme: light)');
 
       function stored() {

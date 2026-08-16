@@ -2,7 +2,7 @@
   "schema_version": 1,
   "notes": [
     "COMMITTED CONTRACT SOURCE, and the single source of truth for __LOOPBACK_PORT__ and __APP_SUBNET__. .github/workflows/release.yml reads this document, renders the deployment inputs from its network block, overwrites only the fields a release run can prove, validates the result against release/contract.schema.json, and emits it as release-artifacts/release-contract.json. Every field the workflow does not overwrite is reviewed policy and is authoritative exactly as written here.",
-    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home), and each course's lessons beneath its own home - one check id per page, 60 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 4 are course-scoped because a lesson slug is only unique within a course). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the announced courses 5 to 8, so it carries its own check with its own markers rather than riding along on the index's. The three published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema) and /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one path and four courses.",
+    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home), and each course's lessons beneath its own home - one check id per page, 77 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 5 are course-scoped because a lesson slug is only unique within a course). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the announced courses 6 to 8, so it carries its own check with its own markers rather than riding along on the index's. Its two course-name markers name the LAST published course and the FIRST announced one, so both move forward at every launch. The four published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema) and /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one path and five courses.",
     "Fields only a release run can know carry all-zero sentinels: release_id, source.revision, image.digest, image.reference, build.timestamp, compose.template_sha256, compose.rendered_sha256 and invocation.workflow_run_id. An all-zero digest or revision can never be a real one, so this document can never be mistaken for a release.",
     "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED. The release workflow refuses to render or build while they hold placeholders, and names the allocation gate in the failure. Allocation is a human decision plus a live host preflight (platform-ops docs/APP_ONBOARDING.md section 2 reservation PR, section 4 bootstrap preflight, and docs/EDGE_ROUTING_CONTRACT.md section 5) and must never be automated here.",
     "build.base_images[].digest is __BASE_IMAGE_DIGEST__ because Containerfile.release is the only place a base image is pinned; the workflow copies the digests it actually built from there, so the two can never drift.",
@@ -124,7 +124,7 @@
       },
       {
         "id": "learn-index",
-        "description": "The site index is served at the site root, links to the trading path page, and names all four published courses. The index is subject-agnostic chrome: it lists PATHS, so the link checked here is /paths/trading/, not any course home.",
+        "description": "The site index is served at the site root, links to the trading path page, and names all five published courses. The index is subject-agnostic chrome: it lists PATHS, so the link checked here is /paths/trading/, not any course home.",
         "scope": "public",
         "method": "GET",
         "path": "/",
@@ -138,7 +138,8 @@
             "Market Structure",
             "Trade Setup and Execution",
             "Options Trading",
-            "Technical Indicators"
+            "Technical Indicators",
+            "Volume and Order Flow"
           ],
           "headers": [
             {
@@ -159,7 +160,7 @@
       },
       {
         "id": "trading-path",
-        "description": "The trading path page is served at /paths/trading/ and is provably that document: its own rel=canonical tag, the last PUBLISHED course, the first ANNOUNCED one, and the words marking an announced course unavailable.",
+        "description": "The trading path page is served at /paths/trading/ and is provably that document: its own rel=canonical tag, the last PUBLISHED course, the first ANNOUNCED one, and the words marking an announced course unavailable. Both names move at each launch.",
         "scope": "public",
         "method": "GET",
         "path": "/paths/trading/",
@@ -169,8 +170,8 @@
           "same_origin_redirects_only": true,
           "body_contains": [
             "<link rel=\"canonical\" href=\"https://learn.geterdone.io/paths/trading/\"",
-            "Technical Indicators",
             "Volume and Order Flow",
+            "Trading Risk Management",
             "Not yet available"
           ],
           "headers": [
@@ -1752,6 +1753,465 @@
         "blocking": true
       },
       {
+        "id": "course5-home",
+        "description": "Course 5 home, \"Volume and Order Flow\", is served at /volume-and-order-flow/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-volume-fundamentals",
+        "description": "Course 5 lesson 01 \"Volume Fundamentals\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/volume-fundamentals/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/volume-fundamentals/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-price-volume-relationships",
+        "description": "Course 5 lesson 02 \"Price and Volume Relationships\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/price-volume-relationships/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/price-volume-relationships/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-relative-volume-and-volume-spikes",
+        "description": "Course 5 lesson 03 \"Relative Volume and Volume Spikes\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/relative-volume-and-volume-spikes/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/relative-volume-and-volume-spikes/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-volume-confirmation",
+        "description": "Course 5 lesson 04 \"Volume Confirmation\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/volume-confirmation/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/volume-confirmation/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-on-balance-volume",
+        "description": "Course 5 lesson 05 \"On-Balance Volume\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/on-balance-volume/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/on-balance-volume/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-accumulation-distribution-and-chaikin-money-flow",
+        "description": "Course 5 lesson 06 \"Accumulation/Distribution and Chaikin Money Flow\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/accumulation-distribution-and-chaikin-money-flow/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/accumulation-distribution-and-chaikin-money-flow/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-volume-weighted-average-price",
+        "description": "Course 5 lesson 07 \"Volume-Weighted Average Price\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/volume-weighted-average-price/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/volume-weighted-average-price/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-anchored-volume-weighted-average-price",
+        "description": "Course 5 lesson 08 \"Anchored Volume-Weighted Average Price\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/anchored-volume-weighted-average-price/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/anchored-volume-weighted-average-price/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-volume-profile",
+        "description": "Course 5 lesson 09 \"Volume Profile\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/volume-profile/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/volume-profile/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-value-area-poc-hvn-lvn",
+        "description": "Course 5 lesson 10 \"Value Area, POC, HVN, and LVN\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/value-area-poc-hvn-lvn/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/value-area-poc-hvn-lvn/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-bid-ask-spread-and-order-types",
+        "description": "Course 5 lesson 11 \"Bid, Ask, Spread, and Order Types\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/bid-ask-spread-and-order-types/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/bid-ask-spread-and-order-types/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-time-and-sales",
+        "description": "Course 5 lesson 12 \"Time and Sales\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/time-and-sales/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/time-and-sales/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-footprint-charts-and-bid-ask-delta",
+        "description": "Course 5 lesson 13 \"Footprint Charts and Bid-Ask Delta\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/footprint-charts-and-bid-ask-delta/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/footprint-charts-and-bid-ask-delta/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-cumulative-volume-delta",
+        "description": "Course 5 lesson 14 \"Cumulative Volume Delta\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/cumulative-volume-delta/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/cumulative-volume-delta/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-order-book-and-market-depth",
+        "description": "Course 5 lesson 15 \"Order Book and Market Depth\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/order-book-and-market-depth/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/order-book-and-market-depth/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course5-lesson-volume-and-order-flow-trading-rules",
+        "description": "Course 5 lesson 16 \"Volume and Order Flow Trading Rules\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/volume-and-order-flow-trading-rules/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/volume-and-order-flow/volume-and-order-flow-trading-rules/\"",
+            "Volume and Order Flow",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
         "id": "journal-schema",
         "description": "The trade journal exchange schema is served as JSON at /trade-setup-execution/trade-journal-schema.json, parses, and declares the trade-journal-v1 shape lesson 14 exports and lesson 15 imports. A 200 alone would not prove any of that.",
         "scope": "public",
@@ -1827,6 +2287,31 @@
         "blocking": true
       },
       {
+        "id": "volume-order-flow-rule-schema",
+        "description": "The volume and order flow rule schema is served as JSON at its published path, parses, and declares the volume-order-flow-rule-v1 shape course 5 lesson 16 exports. A 200 alone proves none of that; a page-shaped marker would prove less.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/volume-and-order-flow/volume-order-flow-rule-schema.json",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "\"const\": \"volume-order-flow-rule-v1\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "json"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
         "id": "unknown-path-404",
         "description": "An unknown path returns a real 404 and never a soft 200 or a redirect to the index.",
         "scope": "public",
@@ -1842,7 +2327,7 @@
       },
       {
         "id": "self-containment",
-        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the site index, the path page, all four course homes and all 54 lessons - not just the path named here.",
+        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the site index, the path page, all five course homes and all 70 lessons - not just the path named here.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure/market-structure/",

@@ -1,13 +1,18 @@
 # Onboarding a generated course
 
 The lesson generator produces good **content** and does not keep to this site's
-**standards**. Every one of the four packages that has arrived shipped the same
-defects, every one was repaired by hand, and twice that repair drifted — at one
-point a single course carried three incompatible pager families.
+**standards**. Every one of the five packages that has arrived shipped the same
+defects, the first four were repaired by hand, and twice that repair drifted —
+at one point a single course carried three incompatible pager families.
 
 `scripts/intake_course.py` is the deterministic fix. It applies the pinned
-standards to a fresh package so that onboarding a fifth course is content work
-and nothing else.
+standards to a fresh package so that onboarding a course is content work and
+nothing else.
+
+The generator does not emit one implementation of the theme control, either: it
+has emitted **two** so far, and the tool knows both by name. See
+[The generator's theme shapes](#the-generators-theme-shapes) — read that section
+before touching the tool for a sixth package.
 
 ---
 
@@ -154,9 +159,10 @@ The tool writes no teaching copy and never will.
 | No `@media (prefers-color-scheme: light)` block | Writes one, value-identical to the toggle path |
 | No `color-scheme` | Declares `dark` for `:root` and `[data-theme="dark"]`, `light` in both light paths |
 | `[data-theme="light"] .foo { … }` component overrides | Lifts the colours into a custom property both light paths declare. **Values are unchanged** — see the note below |
-| Its own `localStorage` theme key | Replaces `setupTheme()` with the pinned implementation on `learn-theme` |
-| Theme applied after first paint | Injects the pre-paint script last in `<head>`, plus a `<noscript>` rule that hides the JS-only toggle |
-| A toggle whose `aria-label` is rewritten from script | Replaces it with the pinned, direction-neutral toggle |
+| Its own `localStorage` theme key — five distinct keys, one per package | Rewrites that shape's theme region to the pinned implementation on `learn-theme` |
+| Theme applied after first paint | Injects the pre-paint script last in `<head>`, plus a `<noscript>` rule that hides the JS-only toggle — and, for `SHAPE_SET_THEME`, **removes** the post-paint application so the stored theme is applied exactly once |
+| A toggle whose `aria-label` is rewritten from script, or whose id is the package's own (`themeBtn`) | Replaces it with the pinned, direction-neutral toggle, and points that shape's icon swap and click listener at the pinned id |
+| Light values for tokens the palette does not pin (course 5 ships `--bg2`/`--panel2`/`--panel3`/`--line2` where courses 1–4 ship `--bg-2`/`--panel-2`/…) | Carries the package's own light declaration across verbatim, so rewriting the block does not delete it. No value is chosen — a token the package never gave a light value still has none |
 | No breadcrumb, no pager | Injects both, with correct first/last handling: the first lesson omits the prev anchor rather than shipping a disabled one, and the last lesson's forward link points at the course home with no `rel` |
 | A footer with no site identity | Keeps the generator's notice prose verbatim and adds the copyright, licence and library link |
 | No styles for that chrome | Appends the pinned `.crumbs` / `.lesson-nav` / `.lesson-link` rules, only when absent |
@@ -180,6 +186,111 @@ It refuses, loudly, the moment that would stop being exact: a grouped or
 compound selector, a base rule that is missing or duplicated, a property the
 base does not set as a literal, or a token name already in use. Those are
 judgement calls, and judgement calls belong to a person.
+
+---
+
+## The generator's theme shapes
+
+The generator is consistent about the defects and **not** consistent about the
+code that carries them. Five packages have produced two different theme
+implementations, sharing no code and no names:
+
+| | `SHAPE_SETUP_THEME` (courses 1–4) | `SHAPE_SET_THEME` (course 5) |
+| --- | --- | --- |
+| Theme functions | one `function setupTheme(){…}` holding every storage call | `storedTheme()` + `setTheme(theme)` |
+| Toggle | `<button id="themeToggle">`, `aria-label` rewritten from script | `<button id="themeBtn">`, `textContent` swapped between `☀` and `☾` |
+| When the stored theme is applied | inside `setupTheme()` | `setTheme(storedTheme()||"dark")` at the **end of the script** — after first paint, so the page flashes |
+| Repaint hook | `onThemeChange()`, called only if the lesson defines one | `window.redrawLab()`, called unconditionally |
+| Storage key | one per package (`marketStructureTheme`, `market-lab-theme`, `options-course-theme`, `technical-indicators-theme`) | `vof-theme` — the fifth distinct key |
+
+Each shape is a **named row** in `SHAPES` in `scripts/intake_course.py`, carrying
+its own signature, its own toggle pattern, its own preflight and its own rewrite.
+That is the whole design, and it is worth being blunt about why:
+
+- **Detection is exact, not fuzzy.** A file must match exactly one signature,
+  exactly once. Matching none is a refusal. Matching two is a refusal. There is
+  no catch-all pattern that "probably" covers the next package, because a tool
+  that guesses is a tool that drifts, and drift is the thing this exists to
+  stop.
+- **A signature only says *which family*.** It is not evidence that the file is
+  safe to rewrite — that is the shape's preflight, which runs over the whole
+  package before a byte is written.
+- **Adding a shape never widens an existing one.** Two shapes are two rows.
+
+### What `SHAPE_SET_THEME` gets, specifically
+
+Rewritten, because it is shell: the storage key becomes `learn-theme`; the
+button becomes the pinned toggle and the icon swap and click listener follow it
+to the new id; the pre-paint script goes last in `<head>`; and the post-paint
+`setTheme(storedTheme()||"dark")` is **deleted**, so the stored theme is applied
+once, before paint, instead of twice.
+
+Carried across untouched, because it is the generator's: **`window.redrawLab()`**.
+The labs resolve every colour from CSS custom properties at draw time, so a
+canvas keeps the ink it was painted with until that hook runs. Dropping it would
+leave a course of charts painted in dark-theme ink on the light ground — and
+nothing would fail, in this suite or any other. It would just look broken. The
+rewrite asserts the call is still present afterwards for exactly that reason.
+
+Also carried across: the light values the package declared for tokens
+`LIGHT_PALETTE` does not pin. The tool rewrites the light block wholesale, so
+anything it does not write, it deletes; course 5 names its neutrals `--bg2` /
+`--panel2` / `--panel3` / `--line2`, which carry the body gradient, every panel
+and every hover border. Their values are copied verbatim — nothing is chosen,
+invented or improved, and a token the package never gave a light value still
+does not have one.
+
+### When a sixth package brings a third shape
+
+It will announce itself: the dry run fails, names the file, and prints every
+shape the tool knows. Nothing is written. Then:
+
+1. **Read the package's theme code first.** Find its storage key, its toggle
+   element and id, where it applies the stored theme, and what it calls to
+   repaint. That last one is the trap — course 5's `window.redrawLab()` is
+   invisible in a diff of the theme block and load-bearing for every chart.
+2. **Add a row to `SHAPES`.** A `ThemeShape` needs a name, a signature that
+   matches this family and only this family, the toggle pattern this package
+   ships, a preflight, and a rewrite. Do **not** edit an existing signature to
+   stretch over the new package: if two shapes both match, the tool refuses, and
+   that refusal is the design working.
+3. **Pin the replacement as its own constant**, next to `SETUP_THEME_JS` and
+   `SET_THEME_JS`. Do not try to make one implementation serve two packages —
+   they have different helpers (`byId` vs `$`) and different repaint hooks.
+4. **Recognize your own output.** The rewrite must return "no change" when handed
+   the text it just produced, and the shape's preflight must accept it. That is
+   what makes a second run a no-op instead of a failure. The usual way is a
+   check-then-repair: `if the pinned form is already here: return unchanged`.
+5. **Match statement by statement, not by region.** `SET_THEME_SOURCE_RE` names
+   each of the four statements it is allowed to delete and back-references the
+   key and the button id. A near-miss — a different glyph, a key that is read
+   and written differently — must fail rather than be deleted on a guess.
+6. **Prove all four things** before running it for real:
+
+   ```sh
+   # 1. the new package normalizes
+   python3 scripts/intake_course.py --source <package> --slug <slug> \
+       --title "<Title>" --position N --out /tmp/out --dry-run
+
+   # 2. it is idempotent: a second pass reports nothing
+   python3 scripts/intake_course.py --source <package> --slug <slug> \
+       --title "<Title>" --position N --out /tmp/out --dry-run
+
+   # 3. the shapes already known did not change: an already-published course
+   #    must still be a no-op
+   python3 scripts/intake_course.py --source site/technical-indicators \
+       --manifest content/technical-indicators.manifest.json \
+       --slug technical-indicators --title "Technical Indicators" \
+       --position 4 --dry-run
+
+   # 4. an unknown shape still fails loudly. Copy one lesson, rename its theme
+   #    function and its key, and confirm: exit 1, "nothing was written",
+   #    zero files under the output root.
+   ```
+
+   Check 3 and check 4 are the ones worth being stubborn about. Check 3 says the
+   new row did not disturb the old ones; check 4 says the tool did not become
+   permissive on the way in.
 
 ---
 
@@ -211,10 +322,14 @@ aborts the run with exit status 1 and **nothing written**:
 
 - **manifest / file-count mismatch** — a declared lesson with no file, or a file
   the manifest does not declare;
-- **an unknown theme key shape** — the storage calls must be confined to one
-  `function setupTheme(){…}`, which is shell the tool replaces wholesale; a
-  theme key touched from anywhere else is content, and content is not the tool's
-  to edit;
+- **an unknown theme shape** — the file matches none of the shapes in `SHAPES`,
+  or matches two of them. The error names every shape the tool knows;
+- **a known shape the tool cannot rewrite safely** — the theme storage calls
+  must be confined to the one region the tool replaces wholesale (`setupTheme()`
+  for `SHAPE_SETUP_THEME`, the `storedTheme()`/`setTheme()` block for
+  `SHAPE_SET_THEME`), and for `SHAPE_SET_THEME` that block must match statement
+  for statement. A theme key — or a call to `setTheme()` — from anywhere else is
+  content, and content is not the tool's to edit;
 - **an external resource reference** — scanned with `scripts/smoke.py`'s own
   scanner, the same one CI and the test suite use, so the on-disk verdict and
   the served verdict cannot disagree;
@@ -233,7 +348,7 @@ declaration, then re-run.
 
 ## Verifying the tool itself
 
-Two checks, both cheap, and both worth repeating whenever the tool changes.
+Three checks, all cheap, and all worth repeating whenever the tool changes.
 
 **Idempotence.** Point it at a course that is already published:
 
@@ -261,3 +376,18 @@ SITE_ROOT=/path/to/scratch-site python3 -m unittest discover -s tests
 
 `SITE_ROOT` must sit inside the repository — the suite reports paths relative to
 the repo root.
+
+**An unknown shape still refuses.** The tool knowing more shapes must never make
+it looser. Copy one lesson into a scratch package with a one-entry manifest,
+rename its theme function and its storage key to something it has never seen,
+and run it:
+
+```sh
+python3 scripts/intake_course.py --source /tmp/fixture --slug <slug> \
+    --title "<Title>" --position N --out /tmp/fixture-out
+```
+
+It must exit 1, print `nothing was written`, name every shape it knows, and
+leave `/tmp/fixture-out` empty. Vary the fixture: a third theme function, a file
+carrying **two** known signatures at once, and a known shape with one statement
+altered — all three are refusals, and each has its own message.

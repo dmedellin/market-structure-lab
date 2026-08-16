@@ -33,16 +33,16 @@ COPY site/ ./
 #     /srv/<course>/<lab>/index.html             -> learn.geterdone.io/<course>/<lab>/
 # The site is a library of PATHS. /srv/paths/trading/index.html is the trading
 # path page: it is NOT a course home and NOT a lesson, it is the ordered list of
-# the eight courses that path holds — the four published ones below and four
+# the eight courses that path holds — the five published ones below and three
 # more that are announced and have no pages, which is why nothing under
 # /srv/paths/ is swept by the course loops. The first path segment "paths"
 # belongs to that layer; a course may never take it.
-# There are four courses: market-structure (seven lessons), trade-setup-execution
-# (fifteen lessons), options-trading (sixteen lessons) and technical-indicators
-# (sixteen lessons), all listed in the RUN below, along with the three published
-# non-HTML assets. That is the same map as REQUIRED_PAGES plus NON_HTML_ASSETS in
-# tests/test_site_invariants.py and acceptance.checks in release/contract.json —
-# 60 pages and 3 assets. Each asset is tested on its own line: a guard that let
+# There are five courses: market-structure (seven lessons), trade-setup-execution
+# (fifteen lessons), options-trading (sixteen lessons), technical-indicators
+# (sixteen lessons) and volume-and-order-flow (sixteen lessons), all listed in
+# the RUN below, along with the four published non-HTML assets. That is the same
+# map as REQUIRED_PAGES plus NON_HTML_ASSETS in tests/test_site_invariants.py and
+# acceptance.checks in release/contract.json — 77 pages and 4 assets. Each asset is tested on its own line: a guard that let
 # a JSON file satisfy a page check would stop proving anything about either.
 # The seven FLAT /<lesson>/ URLs this image used to publish are retired, and so
 # is course 1's old /market-structure-lab/ prefix (that slug named the whole
@@ -56,7 +56,7 @@ COPY site/ ./
 # every published file must be world-readable and every directory traversable.
 RUN set -eu; \
     test -f /srv/index.html || { echo "FATAL: missing /srv/index.html (the site index)"; exit 1; }; \
-    test -f /srv/paths/trading/index.html || { echo "FATAL: missing /srv/paths/trading/index.html (the trading path page). It is published at learn.geterdone.io/paths/trading/ and is the only page that lists the announced courses 5 to 8; the site index links to it, so its absence 404s the only route into the path."; exit 1; }; \
+    test -f /srv/paths/trading/index.html || { echo "FATAL: missing /srv/paths/trading/index.html (the trading path page). It is published at learn.geterdone.io/paths/trading/ and is the only page that lists the announced courses 6 to 8; the site index links to it, so its absence 404s the only route into the path."; exit 1; }; \
     course=market-structure; \
     test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (course home of the Market Structure course)"; exit 1; }; \
     for lesson in market-structure \
@@ -130,6 +130,27 @@ RUN set -eu; \
         test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html (lesson of the Technical Indicators course)"; exit 1; }; \
     done; \
     test -s "/srv/$course/indicator-rule-schema.json" || { echo "FATAL: missing or empty /srv/$course/indicator-rule-schema.json. It is a published URL: the course home links to it and lesson 16 exports that shape."; exit 1; }; \
+    course=volume-and-order-flow; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (course home of the Volume and Order Flow course)"; exit 1; }; \
+    for lesson in volume-fundamentals \
+            price-volume-relationships \
+            relative-volume-and-volume-spikes \
+            volume-confirmation \
+            on-balance-volume \
+            accumulation-distribution-and-chaikin-money-flow \
+            volume-weighted-average-price \
+            anchored-volume-weighted-average-price \
+            volume-profile \
+            value-area-poc-hvn-lvn \
+            bid-ask-spread-and-order-types \
+            time-and-sales \
+            footprint-charts-and-bid-ask-delta \
+            cumulative-volume-delta \
+            order-book-and-market-depth \
+            volume-and-order-flow-trading-rules; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html (lesson of the Volume and Order Flow course)"; exit 1; }; \
+    done; \
+    test -s "/srv/$course/volume-order-flow-rule-schema.json" || { echo "FATAL: missing or empty /srv/$course/volume-order-flow-rule-schema.json. It is a published URL: the course home links to it and lesson 16 exports that shape."; exit 1; }; \
     test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: course 1 lesson 01 is published at learn.geterdone.io/market-structure/market-structure/, never learn.geterdone.io/learn/market-structure/market-structure/. Move site/learn/* up one level."; exit 1; }; \
     test ! -e /srv/market-structure-lab || { echo "FATAL: /srv/market-structure-lab exists. Course 1 was renamed to /market-structure; the old prefix must not be re-added, or the image would publish the same course at two URLs with one canonical between them."; exit 1; }; \
     test ! -e /srv/paths/index.html || { echo "FATAL: /srv/paths/index.html exists. The paths layer publishes one page per path (/paths/<subject>/) and nothing at /paths/ itself; the list of paths is the site index at /. Remove it or move it."; exit 1; }; \

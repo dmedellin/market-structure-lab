@@ -43,11 +43,11 @@ one-to-one onto a contract check:
     unknown-path-404    an unknown path is a real 404, not a soft 200 or a redirect
 
 The published URL space: the site index at /, the path page at /paths/trading/,
-a home per course (/market-structure/, /trade-setup-execution/, /options-trading/
-and /technical-indicators/), and each course's lessons beneath its own home --
-60 HTML pages, plus three published JSON assets. Checking one page and calling
-the site smoke-tested is how fifty-nine broken pages ship, so every published URL
-gets its own check id and its own line in the report.
+a home per course (/market-structure/, /trade-setup-execution/, /options-trading/,
+/technical-indicators/ and /volume-and-order-flow/), and each course's lessons
+beneath its own home -- 77 HTML pages, plus four published JSON assets. Checking
+one page and calling the site smoke-tested is how seventy-six broken pages ship,
+so every published URL gets its own check id and its own line in the report.
 
 Usage:
     python3 scripts/smoke.py https://learn.geterdone.io
@@ -98,10 +98,13 @@ USER_AGENT = "market-structure-lab-smoke/1"
 #     /technical-indicators/                     course 4 home
 #     /technical-indicators/<lesson>/            course 4's sixteen lessons, in order
 #     /technical-indicators/indicator-rule-schema.json   published JSON asset
+#     /volume-and-order-flow/                    course 5 home
+#     /volume-and-order-flow/<lesson>/           course 5's sixteen lessons, in order
+#     /volume-and-order-flow/volume-order-flow-rule-schema.json  published JSON asset
 #
 # The path page is NOT a course home and NOT a lesson. It is probed by its own
 # check id (trading-path) with its own markers, because it is the only page that
-# proves the ANNOUNCED courses render: courses 5 to 8 exist nowhere else in this
+# proves the ANNOUNCED courses render: courses 6 to 8 exist nowhere else in this
 # URL space and nothing else would notice if they silently vanished.
 #
 # The seven FLAT lesson URLs this site used to serve are retired with no redirect
@@ -133,6 +136,8 @@ COURSE_3_PATH = "/options-trading/"
 TRADE_PLAN_SCHEMA_PATH = COURSE_3_PATH + "options-trade-plan-schema.json"
 COURSE_4_PATH = "/technical-indicators/"
 INDICATOR_SCHEMA_PATH = COURSE_4_PATH + "indicator-rule-schema.json"
+COURSE_5_PATH = "/volume-and-order-flow/"
+VOLUME_RULE_SCHEMA_PATH = COURSE_5_PATH + "volume-order-flow-rule-schema.json"
 
 
 def canonical_marker(path):
@@ -165,6 +170,7 @@ COURSE_1_TITLE_MARKER = "Market Structure"
 COURSE_2_TITLE_MARKER = "Trade Setup and Execution"
 COURSE_3_TITLE_MARKER = "Options Trading"
 COURSE_4_TITLE_MARKER = "Technical Indicators"
+COURSE_5_TITLE_MARKER = "Volume and Order Flow"
 
 # The path page's markers. They are NOT page_markers(): the path page is shared
 # chrome, not course material, so the educational-use disclaimer is not part of
@@ -172,10 +178,17 @@ COURSE_4_TITLE_MARKER = "Technical Indicators"
 # canonical tag proves WHICH document was served; the other three prove the two
 # halves of the path actually rendered: a published course, an announced one,
 # and the words that mark an announced one as unavailable.
+#
+# These two titles MOVE as the path advances. They name the LAST published
+# course and the FIRST announced one, so they are the pair that changes at every
+# course launch: "Volume and Order Flow" was the announced marker until course 5
+# shipped, at which point leaving it here would have proved only that the page
+# still names a course -- not that the published/announced boundary rendered on
+# the correct side of it.
 PATH_PAGE_MARKERS = (
     canonical_marker(PATH_PAGE_PATH),
-    COURSE_4_TITLE_MARKER,
-    "Volume and Order Flow",
+    COURSE_5_TITLE_MARKER,
+    "Trading Risk Management",
     "Not yet available",
 )
 
@@ -307,6 +320,35 @@ COURSE_4_LESSONS = tuple(
     for slug in COURSE_4_LESSON_SLUGS
 )
 
+# Course 5, lessons 01-16, in course order, on the same terms.
+COURSE_5_LESSON_SLUGS = (
+    "volume-fundamentals",
+    "price-volume-relationships",
+    "relative-volume-and-volume-spikes",
+    "volume-confirmation",
+    "on-balance-volume",
+    "accumulation-distribution-and-chaikin-money-flow",
+    "volume-weighted-average-price",
+    "anchored-volume-weighted-average-price",
+    "volume-profile",
+    "value-area-poc-hvn-lvn",
+    "bid-ask-spread-and-order-types",
+    "time-and-sales",
+    "footprint-charts-and-bid-ask-delta",
+    "cumulative-volume-delta",
+    "order-book-and-market-depth",
+    "volume-and-order-flow-trading-rules",
+)
+
+COURSE_5_LESSONS = tuple(
+    (
+        "course5-lesson-%s" % slug,
+        COURSE_5_PATH + slug + "/",
+        page_markers(COURSE_5_PATH + slug + "/", COURSE_5_TITLE_MARKER),
+    )
+    for slug in COURSE_5_LESSON_SLUGS
+)
+
 # (check id, URL path, markers) for every course home addressed by the map.
 # Course 1's home is not here: it comes from --course-path/--course-marker.
 COURSE_HOMES = (
@@ -324,6 +366,11 @@ COURSE_HOMES = (
         "course4-home",
         COURSE_4_PATH,
         page_markers(COURSE_4_PATH, COURSE_4_TITLE_MARKER),
+    ),
+    (
+        "course5-home",
+        COURSE_5_PATH,
+        page_markers(COURSE_5_PATH, COURSE_5_TITLE_MARKER),
     ),
 )
 
@@ -349,6 +396,11 @@ PUBLISHED_ASSETS = (
         "indicator-rule-schema",
         INDICATOR_SCHEMA_PATH,
         ('"const": "technical-indicator-rule-v1"',),
+    ),
+    (
+        "volume-order-flow-rule-schema",
+        VOLUME_RULE_SCHEMA_PATH,
+        ('"const": "volume-order-flow-rule-v1"',),
     ),
 )
 
@@ -384,13 +436,17 @@ def lesson_targets(args):
     """(check id, path, markers) for every lesson of every course, in course order.
 
     Course 1's lab 01 comes from --lesson-path/--lesson-marker so the flags still
-    steer it; every other lesson of all four courses comes from the published
+    steer it; every other lesson of all five courses comes from the published
     URL map.
     """
     targets = [("lesson-page", args.lesson_path, tuple(args.lesson_marker))]
     seen = {args.lesson_path}
     for check_id, path, markers in (
-        COURSE_LESSONS + COURSE_2_LESSONS + COURSE_3_LESSONS + COURSE_4_LESSONS
+        COURSE_LESSONS
+        + COURSE_2_LESSONS
+        + COURSE_3_LESSONS
+        + COURSE_4_LESSONS
+        + COURSE_5_LESSONS
     ):
         if path in seen:
             # --lesson-path was pointed at a lesson that is already in the map;
@@ -1072,7 +1128,7 @@ def parse_args(argv):
         "--lesson-path",
         default=LESSON_01_PATH,
         help="course 1 lab 01's URL, checked as contract id lesson-page (default: %s); "
-        "every other lesson of all four courses is fixed by the published URL map"
+        "every other lesson of all five courses is fixed by the published URL map"
         % LESSON_01_PATH,
     )
     parser.add_argument("--unknown-path", default=None, help="override the 404 probe path (default: random)")
@@ -1123,9 +1179,11 @@ def parse_args(argv):
     # The site index is the library's front door: it lists the PATHS and names
     # the courses each one holds, and it is the only way a reader reaches a path
     # at all -- so the link to the path page is a marker, not an assumption. The
-    # index does not link a course home directly (a course is opened from its
-    # path, or from a search result), which is why the course titles are checked
-    # as text rather than as links.
+    # index names every AVAILABLE course, so each course title is a marker; a
+    # course that vanished from the index would still leave its own page serving
+    # 200 and nothing else would notice. The index does not link a course home
+    # directly (a course is opened from its path, or from a search result),
+    # which is why the course titles are checked as text rather than as links.
     if args.index_marker is None:
         args.index_marker = [
             canonical_marker(SITE_INDEX_PATH),
@@ -1134,6 +1192,7 @@ def parse_args(argv):
             COURSE_2_TITLE_MARKER,
             COURSE_3_TITLE_MARKER,
             COURSE_4_TITLE_MARKER,
+            COURSE_5_TITLE_MARKER,
         ]
     if args.path_marker is None:
         args.path_marker = list(PATH_PAGE_MARKERS)

@@ -2,7 +2,7 @@
 
 `market-structure-lab` is the repository, the application slug and the image
 title. What it publishes at `https://learn.geterdone.io/` is a **library of
-learning paths** — four interactive courses and 54 lessons today, all of them on
+learning paths** — five interactive courses and 70 lessons today, all of them on
 one subject, with more subjects planned. Every page is a single HTML file with
 its CSS, JavaScript and graphics inline — it loads no fonts, no frameworks, no
 analytics, and no third-party requests of any kind.
@@ -31,13 +31,15 @@ A path page is **neither a course home nor a lesson**, even though it sits two
 segments deep like a lesson does. Every guard declares it separately
 (`PATH_PAGE`) rather than classifying pages by URL shape.
 
-## The trading path — eight courses, four published
+## The trading path — eight courses, five published
 
 `https://learn.geterdone.io/paths/trading/` is the ordered path. Course 1 teaches
 you to read what price is doing; course 2 turns that read into a plan you can
 size, place, manage and review; course 3 takes that plan into options, where the
 instrument itself carries risk the stock chart does not show; course 4 is the
-indicator toolkit and how to state a rule precisely. A reader is expected to walk
+indicator toolkit and how to state a rule precisely; course 5 is what traded
+volume and order flow show about participation, value and executed flow — and
+what they do not. A reader is expected to walk
 them in order, which is why the courses share one theme setting, one visual
 system, one navigation model, and one set of guards — and why every course home
 says which number it is (`Course N of 8`) and links to its neighbours.
@@ -48,16 +50,18 @@ says which number it is (`Course N of 8`) and links to its neighbours.
 | 2 | Trade Setup and Execution | 15 | `/trade-setup-execution/` | published |
 | 3 | Options Trading | 16 | `/options-trading/` | published |
 | 4 | Technical Indicators | 16 | `/technical-indicators/` | published |
-| 5 | Volume and Order Flow | — | — | **not yet available** |
+| 5 | Volume and Order Flow | 16 | `/volume-and-order-flow/` | published |
 | 6 | Trading Risk Management | — | — | **not yet available** |
 | 7 | Backtesting and Trading Systems | — | — | **not yet available** |
 | 8 | Algorithmic and Automated Trading | — | — | **not yet available** |
 
-Courses 5 to 8 are **announced, not published**. They appear on the path page in
+Courses 6 to 8 are **announced, not published**. They appear on the path page in
 order, clearly marked unavailable, and they are **not links**: nothing exists to
 open. Their number and their name are the only facts that exist about them, so
 no lesson count, description or date is invented for them anywhere in this
-repository — and `TestPathPage` fails the build if one appears.
+repository — and `TestPathPage` fails the build if one appears. Course 5 left
+that group the day its pages landed; the move is one-way and happens when the
+pages exist, never in anticipation of them.
 
 Course 1 was published at `/market-structure-lab/` until the paths layer landed.
 That slug names the repository and the application, not the course, so the course
@@ -175,7 +179,7 @@ observation into an unambiguous condition.
 
 Course 4 ships one supporting file, `indicator-rule-schema.json`. Lesson 16
 exports a rule specification as `technical-indicator-rule-v1` JSON; the schema
-documents that shape. Like the other two schemas it is published as a real URL
+documents that shape. Like the other three schemas it is published as a real URL
 and checked as JSON, never as a page.
 
 **Course 4's own scope and risk notice, stated on the page.** The course teaches
@@ -187,11 +191,68 @@ direction. All price series are synthetic and deterministic, and small
 differences from a charting platform can come from source, seed, rounding,
 missing-bar, adjustment or incomplete-bar conventions. Volume-derived tools
 (VWAP, OBV, volume profile, cumulative delta, footprint charts, order-book
-concepts) are deliberately reserved for course 5.
+concepts) are deliberately reserved for course 5, which is now published at
+`/volume-and-order-flow/`.
+
+### Course 5 — Volume and Order Flow (16 lessons)
+
+`https://learn.geterdone.io/volume-and-order-flow/`
+
+What the participants are doing, not just what price did. Sixteen lessons: what
+volume measures and how it pairs with price direction, relative volume and
+spikes, confirmation, on-balance volume, accumulation/distribution and Chaikin
+money flow, session and anchored VWAP, volume profile with its value area, POC,
+HVN and LVN — then the execution side: bid, ask, spread and order types, time
+and sales, footprint charts and bid-ask delta, cumulative volume delta, the
+order book and market depth, and finally rules written from all of it.
+
+| # | Lesson | What it does |
+| --- | --- | --- |
+| 01 | Volume Fundamentals | Understand what volume measures, separate participation from direction, and read price progress together with trading activity. |
+| 02 | Price and Volume Relationships | Interpret the four basic combinations of price direction and changing participation. |
+| 03 | Relative Volume and Volume Spikes | Normalize current volume against a baseline and distinguish participation expansion from climax or absorption. |
+| 04 | Volume Confirmation | Evaluate whether volume supports a breakout, continuation, rejection, or failed move. |
+| 05 | On-Balance Volume | Use On-Balance Volume to accumulate volume by closing direction and compare its trend with price. |
+| 06 | Accumulation/Distribution and Chaikin Money Flow | Measure where price closes inside each bar’s range and weight that location by volume. |
+| 07 | Volume-Weighted Average Price | Calculate session VWAP and use price location around it to describe accepted value and directional control. |
+| 08 | Anchored Volume-Weighted Average Price | Start VWAP from a selected event and evaluate whether price is accepted above or below the event’s average traded value. |
+| 09 | Volume Profile | Organize traded volume by price rather than time and identify where the market spent activity. |
+| 10 | Value Area, POC, HVN, and LVN | Interpret value-area boundaries, high-volume nodes, and low-volume nodes as auction locations. |
+| 11 | Bid, Ask, Spread, and Order Types | Understand quoted prices, resting liquidity, marketable orders, and execution trade-offs. |
+| 12 | Time and Sales | Read the transaction stream by price, size, side classification, pace, and price response. |
+| 13 | Footprint Charts and Bid-Ask Delta | Compare executed volume at the bid and ask within each price level and candle. |
+| 14 | Cumulative Volume Delta | Accumulate bid-ask delta through time and compare aggressive flow with price structure. |
+| 15 | Order Book and Market Depth | Inspect resting liquidity, queue changes, spread, depth, and the difference between displayed intent and executed trades. |
+| 16 | Volume and Order Flow Trading Rules | Convert market context, participation, aggressive flow, and price confirmation into explicit testable rules. |
+
+Course 5 ships one supporting file, `volume-order-flow-rule-schema.json`. Lesson
+16 exports a rule specification as `volume-order-flow-rule-v1` JSON; the schema
+documents that shape. Like the other three schemas it is published as a real URL
+and checked as JSON, never as a page.
+
+Course 5 carries outbound reference links to two further origins: CME Group
+(`cmegroup.com`) and Nasdaq (`nasdaq.com`), both exchanges' own material rather
+than a vendor selling order-flow software. They are reviewed origins listed in
+`ci.yml`, and that review records **unequal verification**, deliberately:
+`nasdaq.com` answered HTTP 200 when it was checked; `cmegroup.com` answers 403 to
+every automated request including one for its own root, which is WAF
+bot-blocking rather than a dead link — so the four deep paths course 5 cites
+**could not be verified** from an automated environment and remain unchecked as
+paths. They are allowed on the strength of the origin being a primary source.
+
+**Course 5's own scope and risk notice, stated on the page.** The course teaches
+the interpretation of volume, value, executed flow and displayed depth. It does
+**not** provide live market data, trading signals, execution access,
+profitability claims, or personalized investment advice. Real outputs vary by
+venue, feed, vendor, asset class, session, aggregation and classification
+method; time-and-sales and footprint side classifications are simplified and
+labelled as such, and the order book shows displayed liquidity, which can be
+added, consumed, moved or cancelled. Position risk, portfolio risk and
+risk-of-ruin belong to course 6; strategy validation belongs to course 7.
 
 ### Data and risk notice
 
-All charts, trades, prices, fills, and performance results across all four
+All charts, trades, prices, fills, and performance results across all five
 courses are synthetic educational examples. The pages contain no live data and no
 trading signals. Real outcomes can differ because of spread, slippage,
 commissions, gaps, taxes, liquidity, assignment, exercise, implied volatility,
@@ -216,7 +277,7 @@ has three kinds of page — the index, a path page, and a course with its lesson
 ```text
 /                                       the site index (paths + course search)
 ├── /paths/trading/                     the trading PATH PAGE — eight courses in
-│                                       order: four published, four announced
+│                                       order: five published, three announced
 ├── /market-structure/                  course 1 home — lists its seven lessons
 │   ├── /market-structure/market-structure/                     lesson 1.01
 │   ├── … five more …
@@ -231,18 +292,23 @@ has three kinds of page — the index, a path page, and a course with its lesson
 │   ├── … fourteen more …
 │   ├── /options-trading/options-trade-planning/                lesson 3.16
 │   └── /options-trading/options-trade-plan-schema.json         published asset
-└── /technical-indicators/              course 4 home — lists its sixteen lessons
-    ├── /technical-indicators/technical-indicator-fundamentals/ lesson 4.01
+├── /technical-indicators/              course 4 home — lists its sixteen lessons
+│   ├── /technical-indicators/technical-indicator-fundamentals/ lesson 4.01
+│   ├── … fourteen more …
+│   ├── /technical-indicators/indicator-based-trading-rules/    lesson 4.16
+│   └── /technical-indicators/indicator-rule-schema.json        published asset
+└── /volume-and-order-flow/             course 5 home — lists its sixteen lessons
+    ├── /volume-and-order-flow/volume-fundamentals/             lesson 5.01
     ├── … fourteen more …
-    ├── /technical-indicators/indicator-based-trading-rules/    lesson 4.16
-    └── /technical-indicators/indicator-rule-schema.json        published asset
+    ├── /volume-and-order-flow/volume-and-order-flow-trading-rules/  lesson 5.16
+    └── /volume-and-order-flow/volume-order-flow-rule-schema.json    published asset
 ```
 
 `/paths/` belongs to the paths layer: no course may ever take that first segment,
 and nothing is served at `/paths/` itself — the list of paths is the site index.
-Courses 5 to 8 have no URLs at all; they exist only as entries on the path page.
+Courses 6 to 8 have no URLs at all; they exist only as entries on the path page.
 
-**60 pages and three assets. Nothing else is served:**
+**77 pages and four assets. Nothing else is served:**
 
 | # | URL | Page | Source |
 | --- | --- | --- | --- |
@@ -309,6 +375,24 @@ Courses 5 to 8 have no URLs at all; they exist only as entries on the path page.
 | 4.15 | `https://learn.geterdone.io/technical-indicators/indicator-selection-by-market-regime/` | Indicator Selection by Market Regime | `site/technical-indicators/indicator-selection-by-market-regime/index.html` |
 | 4.16 | `https://learn.geterdone.io/technical-indicators/indicator-based-trading-rules/` | Indicator-Based Trading Rules | `site/technical-indicators/indicator-based-trading-rules/index.html` |
 | asset | `https://learn.geterdone.io/technical-indicators/indicator-rule-schema.json` | Indicator rule schema (JSON, not a page) | `site/technical-indicators/indicator-rule-schema.json` |
+| — | `https://learn.geterdone.io/volume-and-order-flow/` | **Volume and Order Flow** — course 5 home | `site/volume-and-order-flow/index.html` |
+| 5.01 | `https://learn.geterdone.io/volume-and-order-flow/volume-fundamentals/` | Volume Fundamentals | `site/volume-and-order-flow/volume-fundamentals/index.html` |
+| 5.02 | `https://learn.geterdone.io/volume-and-order-flow/price-volume-relationships/` | Price and Volume Relationships | `site/volume-and-order-flow/price-volume-relationships/index.html` |
+| 5.03 | `https://learn.geterdone.io/volume-and-order-flow/relative-volume-and-volume-spikes/` | Relative Volume and Volume Spikes | `site/volume-and-order-flow/relative-volume-and-volume-spikes/index.html` |
+| 5.04 | `https://learn.geterdone.io/volume-and-order-flow/volume-confirmation/` | Volume Confirmation | `site/volume-and-order-flow/volume-confirmation/index.html` |
+| 5.05 | `https://learn.geterdone.io/volume-and-order-flow/on-balance-volume/` | On-Balance Volume | `site/volume-and-order-flow/on-balance-volume/index.html` |
+| 5.06 | `https://learn.geterdone.io/volume-and-order-flow/accumulation-distribution-and-chaikin-money-flow/` | Accumulation/Distribution and Chaikin Money Flow | `site/volume-and-order-flow/accumulation-distribution-and-chaikin-money-flow/index.html` |
+| 5.07 | `https://learn.geterdone.io/volume-and-order-flow/volume-weighted-average-price/` | Volume-Weighted Average Price | `site/volume-and-order-flow/volume-weighted-average-price/index.html` |
+| 5.08 | `https://learn.geterdone.io/volume-and-order-flow/anchored-volume-weighted-average-price/` | Anchored Volume-Weighted Average Price | `site/volume-and-order-flow/anchored-volume-weighted-average-price/index.html` |
+| 5.09 | `https://learn.geterdone.io/volume-and-order-flow/volume-profile/` | Volume Profile | `site/volume-and-order-flow/volume-profile/index.html` |
+| 5.10 | `https://learn.geterdone.io/volume-and-order-flow/value-area-poc-hvn-lvn/` | Value Area, POC, HVN, and LVN | `site/volume-and-order-flow/value-area-poc-hvn-lvn/index.html` |
+| 5.11 | `https://learn.geterdone.io/volume-and-order-flow/bid-ask-spread-and-order-types/` | Bid, Ask, Spread, and Order Types | `site/volume-and-order-flow/bid-ask-spread-and-order-types/index.html` |
+| 5.12 | `https://learn.geterdone.io/volume-and-order-flow/time-and-sales/` | Time and Sales | `site/volume-and-order-flow/time-and-sales/index.html` |
+| 5.13 | `https://learn.geterdone.io/volume-and-order-flow/footprint-charts-and-bid-ask-delta/` | Footprint Charts and Bid-Ask Delta | `site/volume-and-order-flow/footprint-charts-and-bid-ask-delta/index.html` |
+| 5.14 | `https://learn.geterdone.io/volume-and-order-flow/cumulative-volume-delta/` | Cumulative Volume Delta | `site/volume-and-order-flow/cumulative-volume-delta/index.html` |
+| 5.15 | `https://learn.geterdone.io/volume-and-order-flow/order-book-and-market-depth/` | Order Book and Market Depth | `site/volume-and-order-flow/order-book-and-market-depth/index.html` |
+| 5.16 | `https://learn.geterdone.io/volume-and-order-flow/volume-and-order-flow-trading-rules/` | Volume and Order Flow Trading Rules | `site/volume-and-order-flow/volume-and-order-flow-trading-rules/index.html` |
+| asset | `https://learn.geterdone.io/volume-and-order-flow/volume-order-flow-rule-schema.json` | Volume and order flow rule schema (JSON, not a page) | `site/volume-and-order-flow/volume-order-flow-rule-schema.json` |
 
 Course 1 and its lesson 01 share the name *Market Structure*: the course is the
 whole seven-lesson sequence, lesson 01 is its first lesson on structure itself
@@ -337,34 +421,37 @@ any page map — a path in these maps is a path that must exist.
 That map is declared in five places, and all five must agree:
 
 - `tests/test_site_invariants.py` → `REQUIRED_PAGES` (pages on disk, including
-  `SITE_INDEX` and `PATH_PAGE`) and `NON_HTML_ASSETS` (all three JSON schemas,
+  `SITE_INDEX` and `PATH_PAGE`) and `NON_HTML_ASSETS` (all four JSON schemas,
   each declared as an asset rather than by loosening any page check);
 - `scripts/smoke.py` → `PATH_PAGE_PATH`, `COURSE_PATH`, `COURSE_LESSONS`,
   `COURSE_2_PATH`, `COURSE_2_LESSONS`, `COURSE_3_PATH`, `COURSE_3_LESSONS`,
-  `COURSE_4_PATH`, `COURSE_4_LESSONS` and `PUBLISHED_ASSETS` (served responses);
+  `COURSE_4_PATH`, `COURSE_4_LESSONS`, `COURSE_5_PATH`, `COURSE_5_LESSONS` and
+  `PUBLISHED_ASSETS` (served responses);
 - `release/contract.json` → `acceptance.checks`, one check id per URL
   (`learn-index`; `trading-path` for the path page; `course-home` and
   `lesson-page`/`lesson-<slug>` for course 1; `course2-home` and
-  `course2-lesson-<slug>` for course 2, and the same shape for courses 3 and 4 —
-  course-scoped because a slug is unique only within a course; `journal-schema`,
-  `trade-plan-schema` and `indicator-rule-schema` for the three assets, each
-  fetched and parsed as JSON). `release/contract.schema.json` requires every one
+  `course2-lesson-<slug>` for course 2, and the same shape for courses 3, 4 and
+  5 — course-scoped because a slug is unique only within a course;
+  `journal-schema`, `trade-plan-schema`, `indicator-rule-schema` and
+  `volume-order-flow-rule-schema` for the four assets, each fetched and parsed as
+  JSON). `release/contract.schema.json` requires every one
   of those ids by name, so a check cannot be quietly dropped;
 - `.github/workflows/ci.yml` → the "Published URL space is complete" step;
 - `Containerfile.release` and `.github/workflows/pages.yml` (publish-time guards).
 
 A page added to one of them and not the others is a page nothing checks.
 
-Further site-wide invariants exist because four courses now share one origin.
+Further site-wide invariants exist because five courses now share one origin.
 Each of them is something a reader carries across a course boundary, so each is
-pinned once and asserted on all 60 pages (`TestPinnedConventions`):
+pinned once and asserted on all 77 pages (`TestPinnedConventions`):
 
 - **One theme key.** Every page persists the reader's light/dark choice under the
   single `localStorage` key `learn-theme`. The per-course keys the courses shipped
-  with (`marketStructureTheme`, `market-lab-theme`, `options-course-theme` and
-  course 4's `technical-indicators-theme`) silently reset a reader's choice at
-  every course boundary; standardizing cost one stored preference, once, and the
-  suite now fails any page that invents its own key.
+  with (`marketStructureTheme`, `market-lab-theme`, `options-course-theme`,
+  course 4's `technical-indicators-theme` and course 5's `vof-theme` — five
+  packages, five different keys) silently reset a reader's choice at every course
+  boundary; standardizing cost one stored preference, once, and the suite now
+  fails any page that invents its own key.
 - **One complete pager per course, in one markup.** `prev`/`next` links must walk
   each course in the order declared in `COURSES`, so a reordered syllabus and a
   reordered pager cannot disagree and no lesson becomes a dead end — and the
@@ -394,8 +481,9 @@ from the courses:
   courses that page lists, not the frame.
 - **Every course knows its place.** A course home states `Course N of 8` and its
   `rel=prev`/`rel=next` links resolve to the adjacent course homes — course 1
-  ships no `prev`, and course 4 ships no `next` because course 5 is announced and
-  has no page (`TestPathPosition`).
+  ships no `prev`, and course 5 ships no `next` because course 6 is announced and
+  has no page (`TestPathPosition`). Course 4's forward link stopped being a
+  disabled span and became a real `rel="next"` anchor the day course 5 shipped.
 
 The apex `geterdone.io` is a separate, live GitHub Pages site. It is not part of
 this project and nothing here touches it: every footer links to
@@ -429,11 +517,12 @@ python3 scripts/validate_release_contract.py \
     release/contract.json release/contract.example.json
 ```
 
-`smoke.py` checks all 60 published pages plus all three JSON assets — one report
+`smoke.py` checks all 77 published pages plus all four JSON assets — one report
 line per URL, each page demanding that document's own canonical tag and each
 asset fetched, typed and parsed as JSON. The path page has its own check id
 (`trading-path`) with its own markers: it is the only URL where the announced
-courses 5 to 8 appear at all. Against the plain
+courses 6 to 8 appear at all, and its two course-name markers name the last
+published course and the first announced one, so both move forward at a launch. Against the plain
 `python3 -m http.server` preview the `internal-health` and `security-headers`
 checks fail by design: `/healthz` and the header policy come from the
 in-container Caddy (`deploy/Caddyfile`), not from anything in `site/`.
@@ -464,7 +553,7 @@ AGENTS.md                 working agreement — read before changing anything
 **1. GitHub Pages — live.** `.github/workflows/pages.yml` uploads `site/` on every
 push to `main` and deploys it to `learn.geterdone.io` (`site/CNAME` holds the
 custom domain). Before uploading it re-checks self-containment, asserts that all
-60 pages exist, and parses all three published JSON assets. This path does not touch platform-ops, the shared Caddy
+77 pages exist, and parses all four published JSON assets. This path does not touch platform-ops, the shared Caddy
 edge, or any registry reservation, and it is **not** a shortcut around those
 gates — they govern the Hetzner platform, which is a different path.
 
@@ -499,9 +588,9 @@ The normative rules live in `dmedellin/platform-ops`
 ## STATUS
 
 **Deployed on GitHub Pages.** `https://learn.geterdone.io/` serves this `site/`
-tree — the site index, the trading path page, all four course homes, all 54
-lessons, and the trade journal, options trade plan and indicator rule schemas —
-from the `pages.yml` workflow.
+tree — the site index, the trading path page, all five course homes, all 70
+lessons, and the trade journal, options trade plan, indicator rule and volume
+and order flow rule schemas — from the `pages.yml` workflow.
 
 **The Hetzner container path remains UNBUILT.** No image of this repository has
 ever been built, deployed, or accepted on that platform. As of 2026-08-15, all of

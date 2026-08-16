@@ -94,7 +94,9 @@ jobs:
           #   /options-trading/<lesson>/           course 3's sixteen lessons
           #   /technical-indicators/               course 4 home
           #   /technical-indicators/<lesson>/      course 4's sixteen lessons
-          # 60 pages, in path order, plus three published non-HTML assets.
+          #   /volume-and-order-flow/              course 5 home
+          #   /volume-and-order-flow/<lesson>/     course 5's sixteen lessons
+          # 77 pages, in path order, plus four published non-HTML assets.
           # Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py, acceptance.checks in
           # release/contract.json, the publish guard in pages.yml, and the build
@@ -169,7 +171,24 @@ jobs:
                       technical-indicators/indicator-divergence/index.html \
                       technical-indicators/combining-indicators/index.html \
                       technical-indicators/indicator-selection-by-market-regime/index.html \
-                      technical-indicators/indicator-based-trading-rules/index.html ; do
+                      technical-indicators/indicator-based-trading-rules/index.html \
+                      volume-and-order-flow/index.html \
+                      volume-and-order-flow/volume-fundamentals/index.html \
+                      volume-and-order-flow/price-volume-relationships/index.html \
+                      volume-and-order-flow/relative-volume-and-volume-spikes/index.html \
+                      volume-and-order-flow/volume-confirmation/index.html \
+                      volume-and-order-flow/on-balance-volume/index.html \
+                      volume-and-order-flow/accumulation-distribution-and-chaikin-money-flow/index.html \
+                      volume-and-order-flow/volume-weighted-average-price/index.html \
+                      volume-and-order-flow/anchored-volume-weighted-average-price/index.html \
+                      volume-and-order-flow/volume-profile/index.html \
+                      volume-and-order-flow/value-area-poc-hvn-lvn/index.html \
+                      volume-and-order-flow/bid-ask-spread-and-order-types/index.html \
+                      volume-and-order-flow/time-and-sales/index.html \
+                      volume-and-order-flow/footprint-charts-and-bid-ask-delta/index.html \
+                      volume-and-order-flow/cumulative-volume-delta/index.html \
+                      volume-and-order-flow/order-book-and-market-depth/index.html \
+                      volume-and-order-flow/volume-and-order-flow-trading-rules/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "$WEB_ROOT/$page" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$page — the published URL space is incomplete"
@@ -179,13 +198,15 @@ jobs:
           # Published, and not pages. Course 2's lesson 14 exports the journal
           # shape and its lesson 15 imports it; course 3's lesson 16 exports the
           # trade plan shape; course 4's lesson 16 exports the indicator rule
+          # shape; course 5's lesson 16 exports the volume and order flow rule
           # shape. Each course home links to its file, so each is a live URL
           # whose absence is a 404 like any other. Each asset is listed here
           # explicitly rather than folded into the page loop above: a page check
           # that also accepts JSON is a page check that proves nothing.
           for asset in trade-setup-execution/trade-journal-schema.json \
                        options-trading/options-trade-plan-schema.json \
-                       technical-indicators/indicator-rule-schema.json ; do
+                       technical-indicators/indicator-rule-schema.json \
+                       volume-and-order-flow/volume-order-flow-rule-schema.json ; do
             if [ ! -f "$WEB_ROOT/$asset" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$asset — a published asset is missing"
               missing=1
@@ -195,7 +216,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "Published URL space: $pages/60 pages plus 3 assets present under $WEB_ROOT."
+          echo "Published URL space: $pages/77 pages plus 4 assets present under $WEB_ROOT."
 
       - name: HTML is well-formed
         run: |
@@ -341,6 +362,27 @@ jobs:
           # page would not be. Every linked path was confirmed to return HTTP 200.
           #   investor.gov -- U.S. Securities and Exchange Commission, investor education
           #   cboe.com     -- Cboe Global Markets, the options exchange
+          # Reviewed 2026-08-16 for course 5 (Volume and Order Flow). Both are
+          # primary sources for what the course teaches -- a futures exchange's
+          # own education material and a listing exchange's glossary -- rather
+          # than a vendor selling order-flow software, which is why they are
+          # accepted where a platform's marketing page would not be. Verification
+          # is NOT equal for the two, and the difference is recorded rather than
+          # smoothed over:
+          #   nasdaq.com   -- Nasdaq, the listing exchange's own glossary. The
+          #                   origin answered HTTP 200 when it was checked at
+          #                   intake.
+          #   cmegroup.com -- CME Group, the futures exchange's own education
+          #                   material. REACHABILITY NOT VERIFIED. The host
+          #                   answers 403 to every automated request, including a
+          #                   request for its own root, which is WAF bot-blocking
+          #                   rather than a dead link -- so the four deep paths
+          #                   course 5 cites could not be confirmed from an
+          #                   automated environment, and no other check was made.
+          #                   They are allowed on the strength of the ORIGIN
+          #                   being a primary source, and remain unchecked as
+          #                   paths until someone opens them in a browser. Do not
+          #                   let a later reader infer they were verified.
           # https://geterdone.io was reviewed and allowed while the footer
           # linked to it. It is REMOVED as of the paths layer: the apex is a
           # separate live site this project does not control, the library's own
@@ -351,7 +393,9 @@ jobs:
                                   "https://www.optionseducation.org",
                                   "https://www.finra.org",
                                   "https://www.investor.gov",
-                                  "https://www.cboe.com")
+                                  "https://www.cboe.com",
+                                  "https://www.nasdaq.com",
+                                  "https://www.cmegroup.com")
           # 2. Schema and namespace IDENTIFIERS. These name a dialect; nothing
           #    dereferences them. The w3.org URIs are required by inline SVG and
           #    document.createElementNS. The json-schema.org URI is the "$schema"

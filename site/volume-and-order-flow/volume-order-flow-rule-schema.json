@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "volume-order-flow-rule-schema.json",
+  "title": "Volume and Order Flow Trading Rule",
+  "description": "Schema for the JSON exported by Lesson 16 of Course 5.",
+  "type": "object",
+  "required": [
+    "schema",
+    "name",
+    "context",
+    "location",
+    "orderFlow",
+    "confirmation",
+    "entry",
+    "invalidation",
+    "exit",
+    "noTrade"
+  ],
+  "properties": {
+    "schema": {
+      "const": "volume-order-flow-rule-v1"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timeframe": {
+      "type": "string"
+    },
+    "context": {
+      "type": "object",
+      "required": [
+        "marketState"
+      ],
+      "properties": {
+        "marketState": {
+          "enum": [
+            "uptrend",
+            "downtrend",
+            "range"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "participation": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "metric",
+            "operator",
+            "value",
+            "baseline"
+          ],
+          "properties": {
+            "metric": {
+              "const": "relativeVolume"
+            },
+            "operator": {
+              "enum": [
+                ">=",
+                "<="
+              ]
+            },
+            "value": {
+              "type": "number",
+              "minimum": 0
+            },
+            "baseline": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "location": {
+      "type": "object",
+      "required": [
+        "reference"
+      ],
+      "properties": {
+        "reference": {
+          "enum": [
+            "aboveVWAP",
+            "belowVWAP",
+            "aboveValueArea",
+            "belowValueArea",
+            "atStructuralLevel"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "orderFlow": {
+      "type": "object",
+      "required": [
+        "condition"
+      ],
+      "properties": {
+        "condition": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "confirmation": {
+      "type": "object",
+      "required": [
+        "condition"
+      ],
+      "properties": {
+        "condition": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "side",
+        "trigger"
+      ],
+      "properties": {
+        "side": {
+          "enum": [
+            "long",
+            "short"
+          ]
+        },
+        "trigger": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "invalidation": {
+      "type": "object",
+      "required": [
+        "condition"
+      ],
+      "properties": {
+        "condition": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exit": {
+      "type": "object",
+      "required": [
+        "target",
+        "minimumRewardRisk"
+      ],
+      "properties": {
+        "target": {
+          "type": "string"
+        },
+        "minimumRewardRisk": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "noTrade": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

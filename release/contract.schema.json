@@ -299,7 +299,7 @@
         },
         "checks": {
           "type": "array",
-          "minItems": 67,
+          "minItems": 85,
           "uniqueItems": true,
           "items": {"$ref": "#/$defs/acceptanceCheck"},
           "allOf": [
@@ -364,14 +364,32 @@
             {"contains": {"properties": {"id": {"const": "course4-lesson-combining-indicators"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "course4-lesson-indicator-selection-by-market-regime"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "course4-lesson-indicator-based-trading-rules"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-home"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-fundamentals"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-price-volume-relationships"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-relative-volume-and-volume-spikes"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-confirmation"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-on-balance-volume"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-accumulation-distribution-and-chaikin-money-flow"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-weighted-average-price"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-anchored-volume-weighted-average-price"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-profile"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-value-area-poc-hvn-lvn"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-bid-ask-spread-and-order-types"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-time-and-sales"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-footprint-charts-and-bid-ask-delta"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-cumulative-volume-delta"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-order-book-and-market-depth"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-and-order-flow-trading-rules"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "journal-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "trade-plan-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "indicator-rule-schema"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "volume-order-flow-rule-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "unknown-path-404"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "self-containment"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "security-headers"}}, "required": ["id"]}}
           ],
-          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the library - the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 4 are course-scoped because a slug is unique only within a course), and the three published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema) and /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), each of which is fetched and PARSED rather than asserted against page-shaped markers. The path page is neither a course home nor a lesson and is checked as itself: it is the only published URL where the announced courses 5 to 8 appear. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs and course 1's retired /market-structure-lab/ prefix have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
+          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the library - the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 5 are course-scoped because a slug is unique only within a course), and the four published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema) and /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), each of which is fetched and PARSED rather than asserted against page-shaped markers. The path page is neither a course home nor a lesson and is checked as itself: it is the only published URL where the announced courses 6 to 8 appear. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs and course 1's retired /market-structure-lab/ prefix have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
         }
       }
     },
