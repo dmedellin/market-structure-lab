@@ -299,7 +299,7 @@
         },
         "checks": {
           "type": "array",
-          "minItems": 121,
+          "minItems": 139,
           "uniqueItems": true,
           "items": {"$ref": "#/$defs/acceptanceCheck"},
           "allOf": [
@@ -421,11 +421,30 @@
             {"contains": {"properties": {"id": {"const": "volume-order-flow-rule-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "trading-risk-plan-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "trading-system-specification-schema"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-home"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-algorithmic-and-automated-trading-fundamentals"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-trading-system-architecture-and-components"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-market-data-ingestion-and-normalization"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-time-sessions-events-and-scheduling"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-signal-engine-and-strategy-state"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-portfolio-position-and-risk-engine"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-broker-apis-and-order-lifecycle"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-order-management-and-execution"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-paper-trading-and-forward-testing"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-scanners-alerts-and-human-approval"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-reliability-idempotency-retries-and-recovery"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-observability-logging-and-auditability"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-security-secrets-permissions-and-kill-switches"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-deployment-environments-and-configuration"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-ai-assisted-and-agentic-trading-workflows"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course8-lesson-system-specification-and-production-readiness"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "automated-trading-system-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "unknown-path-404"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "self-containment"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "security-headers"}}, "required": ["id"]}}
           ],
-          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the library - the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home, /trading-risk-management/ id course6-home, /backtesting-and-trading-systems/ id course7-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 7 are course-scoped because a slug is unique only within a course - course 2 and course 6 both ship a position-sizing lesson), and the six published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), /trading-risk-management/trading-risk-plan-schema.json (id trading-risk-plan-schema) and /backtesting-and-trading-systems/trading-system-specification-schema.json (id trading-system-specification-schema), each of which is fetched and PARSED rather than asserted against page-shaped markers. The path page is neither a course home nor a lesson and is checked as itself: it is the only published URL where the announced course 8 appears. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs and course 1's retired /market-structure-lab/ prefix have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
+          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the library - the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home, /trading-risk-management/ id course6-home, /backtesting-and-trading-systems/ id course7-home, /algorithmic-and-automated-trading/ id course8-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 8 are course-scoped because a slug is unique only within a course - course 2 and course 6 both ship a position-sizing lesson), and the seven published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), /trading-risk-management/trading-risk-plan-schema.json (id trading-risk-plan-schema), /backtesting-and-trading-systems/trading-system-specification-schema.json (id trading-system-specification-schema) and /algorithmic-and-automated-trading/automated-trading-system-schema.json (id automated-trading-system-schema), each of which is fetched and PARSED rather than asserted against page-shaped markers. That is 128 pages and 7 assets: the trading path is COMPLETE at course 8, so this list stops growing until a second path is published. The path page is neither a course home nor a lesson and is checked as itself: it is the only published URL that shows the WHOLE path in one place, and its markers name the LAST course on the path and the link to its home - they used to name the first announced course instead, which is a state this path can no longer be in. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs and course 1's retired /market-structure-lab/ prefix have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
+
         }
       }
     },
@@ -608,7 +627,8 @@
           "type": "string",
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
           "maxLength": 72,
-          "description": "Stable check id, reported verbatim by scripts/smoke.py. A lesson check is course-scoped and carries the lesson's own URL slug, so its length is fixed by the published URL and not by this document: the longest is course7-lesson-overfitting-sensitivity-monte-carlo-and-stress-testing at 69 characters, which is why the bound is 72 rather than the 64 that fitted courses 1 to 6. The bound is on formatting only - the allOf list below still names every required id, and no check can be dropped or swapped for another under any length."
+          "description": "Stable check id, reported verbatim by scripts/smoke.py. A lesson check is course-scoped and carries the lesson's own URL slug, so its length is fixed by the published URL and not by this document: the longest declared id is course7-lesson-overfitting-sensitivity-monte-carlo-and-stress-testing at 69 characters, which is why the bound is 72 rather than the 64 that fitted courses 1 to 6. Course 8 lesson 16 is the one slug that does NOT fit - course8-lesson- plus automated-trading-system-specification-and-production-readiness is 78 - so scripts/smoke.py shortens that ONE id to course8-lesson-system-specification-and-production-readiness and the contract declares it under the same name; the bound is not raised to accommodate a slug, and a shortened id is written down in both files rather than derived differently in each. The bound is on formatting only - the allOf list on acceptance.checks still names every required id, and no check can be dropped or swapped for another under any length."
+
         },
         "description": {"type": "string", "minLength": 1, "maxLength": 256},
         "scope": {

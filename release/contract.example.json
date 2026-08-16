@@ -2,7 +2,7 @@
   "schema_version": 1,
   "notes": [
     "EXAMPLE ONLY. This document is a shape reference that validates against release/contract.schema.json. It is not a release and must never be staged.",
-    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home, /trading-risk-management/ id course6-home, /backtesting-and-trading-systems/ id course7-home), and each course's lessons beneath its own home - one check id per page, 111 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 7 are course-scoped because a lesson slug is only unique within a course - course 2 and course 6 both ship a position-sizing lesson). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the announced course 8, so it carries its own check with its own markers rather than riding along on the index's. Its two course-name markers name the LAST published course and the FIRST announced one, so both move forward at every launch. The six published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), /trading-risk-management/trading-risk-plan-schema.json (id trading-risk-plan-schema) and /backtesting-and-trading-systems/trading-system-specification-schema.json (id trading-system-specification-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one path and seven courses.",
+    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home, /trading-risk-management/ id course6-home, /backtesting-and-trading-systems/ id course7-home, /algorithmic-and-automated-trading/ id course8-home), and each course's lessons beneath its own home - one check id per page, 128 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 8 are course-scoped because a lesson slug is only unique within a course - course 2 and course 6 both ship a position-sizing lesson). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the WHOLE path in one place, so it carries its own check with its own markers rather than riding along on the index's. Those markers used to name the last published course and the first announced one and moved forward at every launch; the trading path is COMPLETE at course 8, so the announced half is retired and what is asserted instead is that the last course on the path is named AND linked to its own home. The seven published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), /trading-risk-management/trading-risk-plan-schema.json (id trading-risk-plan-schema) /backtesting-and-trading-systems/trading-system-specification-schema.json (id trading-system-specification-schema) and /algorithmic-and-automated-trading/automated-trading-system-schema.json (id automated-trading-system-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one complete path and eight courses.",
     "Every hex value here is all-zero on purpose. An all-zero digest can never be a real registry digest, so no reader can mistake this for a deployable identity.",
     "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED placeholders. This app pins the internal port to the same integer as the host loopback port (deploy/Caddyfile binds it, Containerfile.release EXPOSEs it, and the Compose template publishes it on both sides), so all three are allocated together. Port and subnet allocation is explicitly forbidden to automate: a human must choose them and prove them free with a live host preflight (listeners, routes, and the root registry) before onboarding.",
     "build.base_images[].digest are __BASE_IMAGE_DIGEST__ because no base image digest has been verified against a registry from this workspace. A plausible-looking invented sha256 would be worse than this placeholder.",
@@ -124,7 +124,7 @@
       },
       {
         "id": "learn-index",
-        "description": "The site index is served at the site root, links to the trading path page, and names all five published courses. The index is subject-agnostic chrome: it lists PATHS, so the link checked here is /paths/trading/, not any course home.",
+        "description": "The site index is served at the site root, links to the trading path page, and names all eight courses of the complete trading path. The index is subject-agnostic chrome: it lists PATHS, so the link checked here is /paths/trading/, not any course home.",
         "scope": "public",
         "method": "GET",
         "path": "/",
@@ -139,7 +139,10 @@
             "Trade Setup and Execution",
             "Options Trading",
             "Technical Indicators",
-            "Volume and Order Flow"
+            "Volume and Order Flow",
+            "Trading Risk Management",
+            "Backtesting and Trading Systems",
+            "Algorithmic and Automated Trading"
           ],
           "headers": [
             {
@@ -160,7 +163,7 @@
       },
       {
         "id": "trading-path",
-        "description": "The trading path page is served at /paths/trading/ and is provably that document: its own rel=canonical tag, the last PUBLISHED course, the first ANNOUNCED one, and the words marking an announced course unavailable. Both names move at each launch.",
+        "description": "The trading path page is served at /paths/trading/ and is provably that document: its rel=canonical tag, the last two courses on the path, and the href proving the last one is a LINK to its home. The path is complete; no marker names an unavailable course.",
         "scope": "public",
         "method": "GET",
         "path": "/paths/trading/",
@@ -172,7 +175,7 @@
             "<link rel=\"canonical\" href=\"https://learn.geterdone.io/paths/trading/\"",
             "Backtesting and Trading Systems",
             "Algorithmic and Automated Trading",
-            "Not yet available"
+            "href=\"../../algorithmic-and-automated-trading/\""
           ],
           "headers": [
             {
@@ -3280,6 +3283,490 @@
         "blocking": true
       },
       {
+        "id": "course8-home",
+        "description": "Course 8 home, \"Algorithmic and Automated Trading\", is served at /algorithmic-and-automated-trading/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-algorithmic-and-automated-trading-fundamentals",
+        "description": "Course 8 lesson 01 \"Algorithmic and Automated Trading Fundamentals\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/algorithmic-and-automated-trading-fundamentals/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/algorithmic-and-automated-trading-fundamentals/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-trading-system-architecture-and-components",
+        "description": "Course 8 lesson 02 \"Trading System Architecture and Components\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/trading-system-architecture-and-components/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/trading-system-architecture-and-components/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-market-data-ingestion-and-normalization",
+        "description": "Course 8 lesson 03 \"Market Data Ingestion and Normalization\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/market-data-ingestion-and-normalization/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/market-data-ingestion-and-normalization/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-time-sessions-events-and-scheduling",
+        "description": "Course 8 lesson 04 \"Time, Sessions, Events, and Scheduling\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/time-sessions-events-and-scheduling/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/time-sessions-events-and-scheduling/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-signal-engine-and-strategy-state",
+        "description": "Course 8 lesson 05 \"Signal Engine and Strategy State\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/signal-engine-and-strategy-state/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/signal-engine-and-strategy-state/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-portfolio-position-and-risk-engine",
+        "description": "Course 8 lesson 06 \"Portfolio, Position, and Risk Engine\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/portfolio-position-and-risk-engine/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/portfolio-position-and-risk-engine/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-broker-apis-and-order-lifecycle",
+        "description": "Course 8 lesson 07 \"Broker APIs and Order Lifecycle\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/broker-apis-and-order-lifecycle/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/broker-apis-and-order-lifecycle/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-order-management-and-execution",
+        "description": "Course 8 lesson 08 \"Order Management and Execution\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/order-management-and-execution/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/order-management-and-execution/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-paper-trading-and-forward-testing",
+        "description": "Course 8 lesson 09 \"Paper Trading and Forward Testing\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/paper-trading-and-forward-testing/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/paper-trading-and-forward-testing/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-scanners-alerts-and-human-approval",
+        "description": "Course 8 lesson 10 \"Scanners, Alerts, and Human Approval\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/scanners-alerts-and-human-approval/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/scanners-alerts-and-human-approval/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-reliability-idempotency-retries-and-recovery",
+        "description": "Course 8 lesson 11 \"Reliability, Idempotency, Retries, and Recovery\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/reliability-idempotency-retries-and-recovery/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/reliability-idempotency-retries-and-recovery/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-observability-logging-and-auditability",
+        "description": "Course 8 lesson 12 \"Observability, Logging, and Auditability\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/observability-logging-and-auditability/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/observability-logging-and-auditability/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-security-secrets-permissions-and-kill-switches",
+        "description": "Course 8 lesson 13 \"Security, Secrets, Permissions, and Kill Switches\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/security-secrets-permissions-and-kill-switches/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/security-secrets-permissions-and-kill-switches/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-deployment-environments-and-configuration",
+        "description": "Course 8 lesson 14 \"Deployment, Environments, and Configuration\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/deployment-environments-and-configuration/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/deployment-environments-and-configuration/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-ai-assisted-and-agentic-trading-workflows",
+        "description": "Course 8 lesson 15 \"AI-Assisted and Agentic Trading Workflows\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course8-lesson-system-specification-and-production-readiness",
+        "description": "Course 8 lesson 16 \"Automated Trading System Specification and Production Readiness\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/\"",
+            "Algorithmic and Automated Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "automated-trading-system-schema",
+        "description": "The automated trading system schema is served as JSON at its published path, parses, and declares the automated-trading-system-v1 shape course 8 lesson 16 exports. A 200 alone proves none of that; a page-shaped marker would prove less.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/algorithmic-and-automated-trading/automated-trading-system-schema.json",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "\"const\": \"automated-trading-system-v1\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "json"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
         "id": "unknown-path-404",
         "description": "An unknown path returns a real 404 and never a soft 200 or a redirect to the index.",
         "scope": "public",
@@ -3295,7 +3782,7 @@
       },
       {
         "id": "self-containment",
-        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the site index, the path page, all five course homes and all 70 lessons - not just the path named here.",
+        "description": "Served HTML references no origin other than its own; only data: URIs and non-fetching XML namespaces are exempt. Applied to EVERY published page - the site index, the path page, all eight course homes and all 118 lessons - not just the path named here.",
         "scope": "public",
         "method": "GET",
         "path": "/market-structure/market-structure/",

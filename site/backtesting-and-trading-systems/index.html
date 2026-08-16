@@ -457,10 +457,8 @@
 
     /* ---------- Learning path ----------
        Three positions, always in reading order: the course before this one, this
-       one, and what follows. The third card is NOT a link: course 8 is announced
-       and not yet published, so it is rendered as an upcoming entry — visible, in
-       sequence, and unmistakably unavailable. A greyed button that goes nowhere
-       would be worse than saying so plainly. */
+       one, and what follows. All three are links now: course 8 shipped, so the
+       third card stopped being an announcement and became an ordinary entry. */
     .path-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -482,32 +480,12 @@
     .path-card h3 { margin: 0; font-size: 1.02rem; letter-spacing: -0.01em; }
     .path-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
 
-    /* The unavailable course. A dashed edge and a flat, un-panelled surface mark
-       it as not-yet-material at a glance; the .path-flag below states it in
-       words for anyone who cannot see the border treatment. Colour is NOT the
-       signal, and the copy is never dimmed below the contrast the rest of the
-       page holds — an announcement a reader cannot read is not an announcement. */
-    .path-card.upcoming {
-      border-style: dashed;
-      border-color: var(--line-strong, var(--line2, var(--line)));
-      background: none;
-    }
-    .path-card.upcoming h3 { color: var(--muted); }
-
-    .path-flag {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      align-self: flex-start;
-      padding: 5px 10px;
-      border: 1px dashed var(--line-strong);
-      border-radius: 999px;
-      color: var(--amber);
-      font-size: 0.69rem;
-      font-weight: 850;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
+    /* This page once styled an UNAVAILABLE next course (.path-card.upcoming and
+       .path-flag). Course 8 shipped, so the state and the rules for it are gone
+       rather than left behind styling nothing — the same retirement courses 4
+       and 5 made when the course after them landed. Course 8 is the LAST course
+       on the path, so this is the last time these rules will ever be needed;
+       nothing follows it to announce. */
 
     .path-tag {
       display: inline-flex;
@@ -879,11 +857,11 @@
 
     /* ---------- Course-to-course navigation ----------
        This is the COURSE pager and it is deliberately not the lesson one: that
-       one is .lesson-nav / .lesson-link and lives inside a lesson. A course with
-       nothing published after it ships the backward half alone rather than a
-       dead link forward. Every colour here is a token, so both light paths flip
-       it together. Depth: a course home is one level down, so a sibling course
-       is "../slug/". */
+       one is .lesson-nav / .lesson-link and lives inside a lesson. Both halves
+       are ordinary links here: course 6 is behind this course and course 8 is in
+       front of it. Every colour here is a token, so both light paths flip it
+       together. Depth: a course home is one level down, so a sibling course is
+       "../slug/". */
     .path-nav {
       display: flex;
       flex-wrap: wrap;
@@ -907,17 +885,10 @@
     .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
     .path-move.next { margin-left: auto; text-align: right; }
 
-    /* The forward half when there is nothing to move forward to. It is a span,
-       not an anchor, so it cannot be focused or followed; the dashed edge and
-       the words "not yet available" carry the same fact twice, for the reader
-       who sees the border and the reader who does not. */
-    .path-move.is-upcoming {
-      opacity: 0.72;
-      cursor: default;
-      border-style: dashed;
-      background: none;
-    }
-    .path-move.is-upcoming:hover { transform: none; border-color: var(--line); }
+    /* The forward half of the pager was a DISABLED span while course 8 had no
+       page: not an anchor, so it could not be focused or followed. Course 8
+       shipped and it is an ordinary link now, so .path-move.is-upcoming is gone
+       with the state it described. */
 
     /* ---------- SVG theming ----------
        Classes, never hardcoded hex, so every mark in every thumbnail re-paints on
@@ -1214,16 +1185,15 @@
             <p>Sixteen lessons in six stages, from what a historical simulation can establish to a versioned specification precise enough to hand to another person or program. It is written to stand on its own — every lesson is a standalone page and nothing here loads anything from courses 1 to 6 — so a single lesson also works as a reference you come back to.</p>
           </article>
 
-          <article class="path-card upcoming" aria-labelledby="next-course-title">
-            <p class="path-flag">
+          <article class="path-card" aria-labelledby="next-course-title">
+            <p class="path-tag">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="12" r="8.4" /><path d="M12 7.5V12l3 2" />
+                <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
               </svg>
-              Not yet available
+              Course 8 · Comes after this
             </p>
-            <p class="path-tag">Course 8 · Comes after this</p>
-            <h3 id="next-course-title">Algorithmic and Automated Trading</h3>
-            <p>Announced, not yet published — there is no page to open yet. It is named here because this course deliberately stops at the specification: defining a system and validating it is course 7's subject, and live data ingestion, schedulers, broker connections, alerting, deployment, monitoring and automated execution are reserved for course 8. A validated specification is not a running system, and this course never pretends otherwise.</p>
+            <h3 id="next-course-title"><a href="../algorithmic-and-automated-trading/">Algorithmic and Automated Trading</a></h3>
+            <p>Sixteen lessons, and the last course on the path. This course deliberately stops at the specification: defining a system and validating it is course 7's subject, while live data ingestion, schedulers, broker connections, order management, alerting, deployment, monitoring and automated execution belong to course 8. A validated specification is not a running system, and this course never pretends otherwise — course 8 is where the running starts.</p>
           </article>
         </div>
       </section>
@@ -1299,7 +1269,8 @@
             live market data, trading signals, profitability claims, personalized
             investment advice, or an execution system. Live data ingestion,
             schedulers, broker connections, alerting, deployment, monitoring, and
-            automated execution are reserved for course 8.
+            automated execution belong to course 8, which is published and linked
+            below.
           </p>
           <p>
             <strong>Data and results scope.</strong> All price paths, trades,
@@ -2450,11 +2421,7 @@
 
       <nav class="path-nav" aria-label="Course navigation">
         <a class="path-move prev" href="../trading-risk-management/" rel="prev"><span>Previous course</span><strong>Course 6 &middot; Trading Risk Management</strong></a>
-        <!-- Course 8 has no page yet, so this is deliberately not an anchor: a disabled
-             span cannot be focused or followed, and aria-disabled tells a screen reader
-             why. Swap it for <a class="path-move next" href="../algorithmic-and-automated-trading/"
-             rel="next"> the moment that course ships. -->
-        <span class="path-move next is-upcoming" aria-disabled="true"><span>Next course</span><strong>Course 8 &middot; Algorithmic and Automated Trading &mdash; not yet available</strong></span>
+        <a class="path-move next" href="../algorithmic-and-automated-trading/" rel="next"><span>Next course</span><strong>Course 8 &middot; Algorithmic and Automated Trading</strong></a>
       </nav>
     </main>
 

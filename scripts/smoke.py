@@ -10,8 +10,8 @@ one-to-one onto a contract check:
 
     internal-health     /healthz is 200 and never cached
     learn-index         / is 200 HTML, is the site index, and links to the path
-    trading-path        /paths/trading/ is 200 and is that document: it lists the
-                        published courses AND the announced ones
+    trading-path        /paths/trading/ is 200 and is that document: it lists
+                        every course on the path, and the last one as a LINK
     course-home         /market-structure/ is 200 and is that document
     lesson-page         /market-structure/market-structure/ is 200 and is that
                         document
@@ -44,11 +44,12 @@ one-to-one onto a contract check:
 
 The published URL space: the site index at /, the path page at /paths/trading/,
 a home per course (/market-structure/, /trade-setup-execution/, /options-trading/,
-/technical-indicators/, /volume-and-order-flow/, /trading-risk-management/ and
-/backtesting-and-trading-systems/), and each course's lessons beneath its own
-home -- 111 HTML pages, plus six published JSON assets. Checking one page and
-calling the site smoke-tested is how a hundred and ten broken pages ship, so
-every published URL gets its own check id and its own line in the report.
+/technical-indicators/, /volume-and-order-flow/, /trading-risk-management/,
+/backtesting-and-trading-systems/ and /algorithmic-and-automated-trading/), and
+each course's lessons beneath its own home -- 128 HTML pages, plus seven
+published JSON assets. Checking one page and calling the site smoke-tested is how
+a hundred and twenty-seven broken pages ship, so every published URL gets its own
+check id and its own line in the report.
 
 Usage:
     python3 scripts/smoke.py https://learn.geterdone.io
@@ -109,11 +110,17 @@ USER_AGENT = "market-structure-lab-smoke/1"
 #     /backtesting-and-trading-systems/<lesson>/ course 7's sixteen lessons, in order
 #     /backtesting-and-trading-systems/trading-system-specification-schema.json
 #                                                published JSON asset
+#     /algorithmic-and-automated-trading/        course 8 home
+#     /algorithmic-and-automated-trading/<lesson>/
+#                                                course 8's sixteen lessons, in order
+#     /algorithmic-and-automated-trading/automated-trading-system-schema.json
+#                                                published JSON asset
 #
 # The path page is NOT a course home and NOT a lesson. It is probed by its own
 # check id (trading-path) with its own markers, because it is the only page that
-# proves the ANNOUNCED course renders: course 8 exists nowhere else in this
-# URL space and nothing else would notice if it silently vanished.
+# shows the WHOLE path in one place: every other page proves at most that its own
+# course exists, and nothing else would notice if an entry silently vanished from
+# the spine.
 #
 # The seven FLAT lesson URLs this site used to serve are retired with no redirect
 # stub behind them, and so is course 1's old /market-structure-lab/ prefix (that
@@ -150,6 +157,8 @@ COURSE_6_PATH = "/trading-risk-management/"
 RISK_PLAN_SCHEMA_PATH = COURSE_6_PATH + "trading-risk-plan-schema.json"
 COURSE_7_PATH = "/backtesting-and-trading-systems/"
 SYSTEM_SPEC_SCHEMA_PATH = COURSE_7_PATH + "trading-system-specification-schema.json"
+COURSE_8_PATH = "/algorithmic-and-automated-trading/"
+AUTOMATED_SYSTEM_SCHEMA_PATH = COURSE_8_PATH + "automated-trading-system-schema.json"
 
 
 def canonical_marker(path):
@@ -185,6 +194,7 @@ COURSE_4_TITLE_MARKER = "Technical Indicators"
 COURSE_5_TITLE_MARKER = "Volume and Order Flow"
 COURSE_6_TITLE_MARKER = "Trading Risk Management"
 COURSE_7_TITLE_MARKER = "Backtesting and Trading Systems"
+COURSE_8_TITLE_MARKER = "Algorithmic and Automated Trading"
 
 # The path page's markers. They are NOT page_markers(): the path page is shared
 # chrome, not course material, so the educational-use disclaimer is not part of
@@ -193,18 +203,23 @@ COURSE_7_TITLE_MARKER = "Backtesting and Trading Systems"
 # halves of the path actually rendered: a published course, an announced one,
 # and the words that mark an announced one as unavailable.
 #
-# These two titles MOVE as the path advances. They name the LAST published
-# course and the FIRST announced one, so they are the pair that changes at every
-# course launch: "Trading Risk Management" was the announced marker until course
-# 6 shipped and "Backtesting and Trading Systems" until course 7 shipped, at
-# which point leaving either here would have proved only that the page still
-# names a course -- not that the published/announced boundary rendered on the
-# correct side of it. Course 8 is now the only announced one.
+# These markers used to MOVE as the path advanced: they named the last published
+# course and the first announced one, so the pair changed at every course launch
+# and proved the published/announced boundary had rendered on the correct side.
+# There is no boundary left. Course 8 shipped, the path is complete, and
+# "Not yet available" is retired from this tuple rather than kept as a marker
+# that would now FAIL against a correct page -- a smoke check that demands stale
+# copy is worse than no check.
+#
+# What replaces it is the fact that is true from here on: the LAST course on the
+# path is named, and it is named as a link to its own home. The href is what
+# distinguishes "the spine lists course 8" from "the spine still mentions course
+# 8 as an announcement", which is the same thing the retired marker was for.
 PATH_PAGE_MARKERS = (
     canonical_marker(PATH_PAGE_PATH),
     COURSE_7_TITLE_MARKER,
-    "Algorithmic and Automated Trading",
-    "Not yet available",
+    COURSE_8_TITLE_MARKER,
+    'href="../..%s"' % COURSE_8_PATH,
 )
 
 # Course 1, labs 02-07. Lab titles avoid "&" on purpose: a title may be served
@@ -425,6 +440,53 @@ COURSE_7_LESSONS = tuple(
     for slug in COURSE_7_LESSON_SLUGS
 )
 
+# Course 8, lessons 01-16, in course order, on the same terms.
+COURSE_8_LESSON_SLUGS = (
+    "algorithmic-and-automated-trading-fundamentals",
+    "trading-system-architecture-and-components",
+    "market-data-ingestion-and-normalization",
+    "time-sessions-events-and-scheduling",
+    "signal-engine-and-strategy-state",
+    "portfolio-position-and-risk-engine",
+    "broker-apis-and-order-lifecycle",
+    "order-management-and-execution",
+    "paper-trading-and-forward-testing",
+    "scanners-alerts-and-human-approval",
+    "reliability-idempotency-retries-and-recovery",
+    "observability-logging-and-auditability",
+    "security-secrets-permissions-and-kill-switches",
+    "deployment-environments-and-configuration",
+    "ai-assisted-and-agentic-trading-workflows",
+    "automated-trading-system-specification-and-production-readiness",
+)
+
+# A check id is a REPORT KEY, and release/contract.schema.json caps it at 72
+# characters. Course 8's lesson 16 has the longest slug in the library, and
+# "course8-lesson-" + that slug is 78 -- so this one id is shortened HERE,
+# explicitly, next to the rule that forces it, rather than by truncating every
+# id in the file to fit the worst case. The id must stay identical to the one in
+# release/contract.json: one smoke report line maps onto one acceptance check,
+# and tests/test_site_invariants.py asserts exactly that in
+# TestDeclaredUrlSpaceAgrees.test_smoke_check_ids_are_release_contract_check_ids.
+CHECK_ID_OVERRIDES = {
+    "automated-trading-system-specification-and-production-readiness":
+        "course8-lesson-system-specification-and-production-readiness",
+}
+
+
+def lesson_check_id(course_number, slug):
+    return CHECK_ID_OVERRIDES.get(slug, "course%d-lesson-%s" % (course_number, slug))
+
+
+COURSE_8_LESSONS = tuple(
+    (
+        lesson_check_id(8, slug),
+        COURSE_8_PATH + slug + "/",
+        page_markers(COURSE_8_PATH + slug + "/", COURSE_8_TITLE_MARKER),
+    )
+    for slug in COURSE_8_LESSON_SLUGS
+)
+
 # (check id, URL path, markers) for every course home addressed by the map.
 # Course 1's home is not here: it comes from --course-path/--course-marker.
 COURSE_HOMES = (
@@ -457,6 +519,11 @@ COURSE_HOMES = (
         "course7-home",
         COURSE_7_PATH,
         page_markers(COURSE_7_PATH, COURSE_7_TITLE_MARKER),
+    ),
+    (
+        "course8-home",
+        COURSE_8_PATH,
+        page_markers(COURSE_8_PATH, COURSE_8_TITLE_MARKER),
     ),
 )
 
@@ -498,6 +565,11 @@ PUBLISHED_ASSETS = (
         SYSTEM_SPEC_SCHEMA_PATH,
         ('"const": "trading-system-specification-v1"',),
     ),
+    (
+        "automated-trading-system-schema",
+        AUTOMATED_SYSTEM_SCHEMA_PATH,
+        ('"const": "automated-trading-system-v1"',),
+    ),
 )
 
 
@@ -532,7 +604,7 @@ def lesson_targets(args):
     """(check id, path, markers) for every lesson of every course, in course order.
 
     Course 1's lab 01 comes from --lesson-path/--lesson-marker so the flags still
-    steer it; every other lesson of all seven courses comes from the published
+    steer it; every other lesson of all eight courses comes from the published
     URL map.
     """
     targets = [("lesson-page", args.lesson_path, tuple(args.lesson_marker))]
@@ -545,6 +617,7 @@ def lesson_targets(args):
         + COURSE_5_LESSONS
         + COURSE_6_LESSONS
         + COURSE_7_LESSONS
+        + COURSE_8_LESSONS
     ):
         if path in seen:
             # --lesson-path was pointed at a lesson that is already in the map;
@@ -1032,10 +1105,11 @@ class Smoke:
     def check_path_pages(self):
         """The path page: the ordered spine of one subject.
 
-        It is the only page in the URL space that mentions the ANNOUNCED
-        courses. If it 404s, or if it renders without them, the library still
-        looks complete from every other page -- which is exactly why it gets its
-        own check id rather than riding along on the index's.
+        It is the only page in the URL space that shows the WHOLE path in one
+        place. If it 404s, or if it renders with an entry missing, every other
+        page still looks correct -- each one only ever proves its own course
+        exists -- which is exactly why it gets its own check id rather than
+        riding along on the index's.
         """
         for check_id, path, markers in path_page_targets(self.args):
             check = self.new_check(check_id, "path page is served at its subpath", path)
@@ -1226,7 +1300,7 @@ def parse_args(argv):
         "--lesson-path",
         default=LESSON_01_PATH,
         help="course 1 lab 01's URL, checked as contract id lesson-page (default: %s); "
-        "every other lesson of all seven courses is fixed by the published URL map"
+        "every other lesson of all eight courses is fixed by the published URL map"
         % LESSON_01_PATH,
     )
     parser.add_argument("--unknown-path", default=None, help="override the 404 probe path (default: random)")
@@ -1279,8 +1353,10 @@ def parse_args(argv):
     # at all -- so the link to the path page is a marker, not an assumption. The
     # index names every AVAILABLE course, so each course title is a marker; a
     # course that vanished from the index would still leave its own page serving
-    # 200 and nothing else would notice. The index does not link a course home
-    # directly (a course is opened from its path, or from a search result),
+    # 200 and nothing else would notice. That list is ALL EIGHT now: it stopped
+    # at course 5 while three courses were unpublished, and a title left out here
+    # is a course the index could silently drop. The index does not link a course
+    # home directly (a course is opened from its path, or from a search result),
     # which is why the course titles are checked as text rather than as links.
     if args.index_marker is None:
         args.index_marker = [
@@ -1291,6 +1367,9 @@ def parse_args(argv):
             COURSE_3_TITLE_MARKER,
             COURSE_4_TITLE_MARKER,
             COURSE_5_TITLE_MARKER,
+            COURSE_6_TITLE_MARKER,
+            COURSE_7_TITLE_MARKER,
+            COURSE_8_TITLE_MARKER,
         ]
     if args.path_marker is None:
         args.path_marker = list(PATH_PAGE_MARKERS)

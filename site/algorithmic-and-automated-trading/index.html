@@ -3,19 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Volume and Order Flow</title>
-  <meta name="description" content="Volume and Order Flow is course 5 of the Learn library: sixteen interactive lessons that build from what volume actually counts, through the volume-derived indicators, session and anchored VWAP, volume profile and the value area, into market microstructure — the quote, the tape, the footprint, cumulative delta and the order book — and end with a deterministic rule set you can export. Every lesson is one self-contained page." />
-  <link rel="canonical" href="https://learn.geterdone.io/volume-and-order-flow/" />
+  <title>Algorithmic and Automated Trading</title>
+  <meta name="description" content="Algorithmic and Automated Trading is course 8 of the Learn library, and the last course on the trading path: sixteen interactive lessons that build from choosing a level of automation and separating strategy, risk, order and execution responsibilities, through market-data ingestion, exchange calendars, the signal engine and the risk engine, into broker adapters, order management, paper trading, alerting and human approval, then idempotency and recovery, observability, secrets and kill switches, deployment and rollback, AI-assisted workflows that stay advisory, and one versioned production specification you can export. Every lesson is one self-contained page." />
+  <link rel="canonical" href="https://learn.geterdone.io/algorithmic-and-automated-trading/" />
   <meta name="author" content="dmedellin" />
 
-  <!-- Favicon: inline data-URI SVG, no external asset. Same mark family as the rest
-       of the site (cyan gradient tile, dark ink) with this course's own motif —
-       volume bars under a flat line of accepted value — so course 5 is
+  <!-- Favicon: inline data-URI SVG, no external asset. Same mark family as the
+       rest of the site (cyan gradient tile, dark ink) with this course's own
+       motif — a closed automation loop turning around the engine at its centre,
+       because course 8 is the one that runs continuously — so it is
        distinguishable in a tab strip from the library (plain structure line),
-       course 1 (rising candles), course 2 (crosshair on one level), course 3
-       (a payoff bending at a strike) and course 4 (an oscillator crossing two
-       dashed thresholds). -->
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M9 30H55' fill='none' stroke='%23041116' stroke-width='3' stroke-linecap='round' stroke-dasharray='5 6' opacity='.66'/%3E%3Cg fill='%23041116'%3E%3Crect x='10' y='38' width='8' height='14' rx='2.6'/%3E%3Crect x='22' y='26' width='8' height='26' rx='2.6'/%3E%3Crect x='34' y='16' width='8' height='36' rx='2.6'/%3E%3Crect x='46' y='33' width='8' height='19' rx='2.6'/%3E%3C/g%3E%3C/svg%3E" />
+       course 1 (rising candles), course 2 (crosshair on one level), course 3 (a
+       payoff bending at a strike), course 4 (an oscillator crossing two dashed
+       thresholds), course 5 (volume bars under a flat line of accepted value),
+       course 6 (a bounded risk band) and course 7 (an equity curve crossing the
+       out-of-sample seal). -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M42 14.7A20 20 0 1 1 28.6 12.3' fill='none' stroke='%23041116' stroke-width='4.2' stroke-linecap='round'/%3E%3Cpath d='M22.6 6.4L29.8 12.3L23.6 18.6' fill='none' stroke='%23041116' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='25' y='25' width='14' height='14' rx='4.5' fill='%23041116'/%3E%3C/svg%3E" />
 
   <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
@@ -25,21 +28,22 @@
        og:image + twitter:card=summary_large_image once a real 1200x630 asset ships. -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Learn · geterdone.io" />
-  <meta property="og:title" content="Volume and Order Flow" />
-  <meta property="og:description" content="Course 5 — sixteen interactive lessons from what volume counts, through OBV, A/D and CMF, session and anchored VWAP, volume profile and the value area, into the quote, the tape, the footprint, cumulative delta and the order book, ending in an exportable rule set." />
-  <meta property="og:url" content="https://learn.geterdone.io/volume-and-order-flow/" />
+  <meta property="og:title" content="Algorithmic and Automated Trading" />
+  <meta property="og:description" content="Course 8, the last on the trading path — sixteen interactive lessons from automation levels and system architecture, through market data, scheduling, the signal and risk engines, broker adapters and order management, paper trading, approval, reliability, observability, secrets and kill switches, deployment and rollback, AI-assisted workflows kept advisory, and an exportable production specification." />
+  <meta property="og:url" content="https://learn.geterdone.io/algorithmic-and-automated-trading/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Volume and Order Flow" />
-  <meta name="twitter:description" content="Course 5 — sixteen interactive lessons from what volume counts, through OBV, A/D and CMF, session and anchored VWAP, volume profile and the value area, into the quote, the tape, the footprint, cumulative delta and the order book, ending in an exportable rule set." />
-  <meta name="twitter:url" content="https://learn.geterdone.io/volume-and-order-flow/" />
+  <meta name="twitter:title" content="Algorithmic and Automated Trading" />
+  <meta name="twitter:description" content="Course 8, the last on the trading path — sixteen interactive lessons from automation levels and system architecture, through market data, scheduling, the signal and risk engines, broker adapters and order management, paper trading, approval, reliability, observability, secrets and kill switches, deployment and rollback, AI-assisted workflows kept advisory, and an exportable production specification." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/algorithmic-and-automated-trading/" />
 
   <style>
     /* ---------------------------------------------------------------------
        DESIGN TOKENS — the single place any theme-dependent colour may live.
-       The library index, the trading path page, courses 1-4 and every lesson of
+       The library index, the trading path page, courses 1-7 and every lesson of
        this course declare the same palette in the same shape. One origin, one
-       product; do not fork it.
+       product; do not fork it. This is the eighth and last course on the trading
+       path, so this file is the last chance for the palette to drift; it does not.
 
        THEME RULE, and the reason this block is the only place light values may
        live: the palette flips through TWO independent paths — the explicit
@@ -456,10 +460,11 @@
 
     /* ---------- Learning path ----------
        Three positions, always in reading order: the course before this one, this
-       one, and what follows. All three are links: course 6 was announced and
-       unpublished when this page was written, and its card was drawn as an
-       upcoming entry until it shipped. The rules for that state are retired
-       below, and the whole trading path is published now. */
+       one, and what follows it. On every earlier course the third card named the
+       next course. Here it cannot: this is course 8 of 8 and the path ends, so
+       the third card reports the ending and links to the path page instead of
+       reserving a slot for a course 9 that was never announced. Inventing that
+       slot would be worse than saying plainly that the sequence is finished. */
     .path-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -481,11 +486,38 @@
     .path-card h3 { margin: 0; font-size: 1.02rem; letter-spacing: -0.01em; }
     .path-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
 
-    /* This page once styled an UNAVAILABLE next course (.path-card.upcoming,
-       .path-flag, .path-move.is-upcoming). Course 6 shipped, so the state and
-       its rules are gone: the forward link here is now an ordinary rel="next"
-       anchor. The disabled treatment lives on whichever course home is
-       currently last — never here on the strength of having needed it once. */
+    /* The END of the path. Courses 1 to 7 each had a NEXT card here, and course 7
+       shipped an .upcoming variant — dashed, unlinked, "not yet available" —
+       for the course that had no page. Course 8 is the last course, every course
+       on the path is published, and there is no course 9: the state this card
+       reports is completion, not a gap, so the dashed unavailable treatment is
+       gone from this file rather than left behind styling nothing. The card is a
+       real link to the path page, and the accent edge marks a sequence that
+       closed rather than one that ran out. */
+    .path-card.complete {
+      border-color: var(--cyan);
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+    }
+
+    /* The status flag on the last card. It states the fact in WORDS — colour is
+       never the only signal — and its green is the same "accepted / done" green
+       the thumbnails use, read against --panel-2 in both themes. */
+    .path-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      align-self: flex-start;
+      padding: 5px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.69rem;
+      font-weight: 850;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .path-flag.done { color: var(--green); }
+    .path-flag svg { width: 13px; height: 13px; flex: none; }
 
     .path-tag {
       display: inline-flex;
@@ -498,6 +530,7 @@
       text-transform: uppercase;
     }
     .path-card.current .path-tag { color: var(--cyan-2); }
+    .path-card.complete .path-tag { color: var(--cyan-2); }
     .path-tag svg { width: 14px; height: 14px; flex: none; }
 
     .path-card h3 a { text-decoration: none; }
@@ -722,8 +755,8 @@
 
     /* Reading order inside the link: position first, then title — the ordinal is
        part of the link's accessible name, not a decorative numeral beside it, so
-       "Lesson 07" is what a screen reader announces before "Volume-Weighted
-       Average Price". */
+       "Lesson 13" is what a screen reader announces before "Security, Secrets,
+       Permissions, and Kill Switches". */
     .lesson-ord {
       display: block;
       margin-bottom: 3px;
@@ -787,7 +820,7 @@
       }
     }
 
-    /* ---------- Rule-set interop ---------- */
+    /* ---------- Specification interop ---------- */
     .interop {
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
@@ -857,11 +890,10 @@
 
     /* ---------- Course-to-course navigation ----------
        This is the COURSE pager and it is deliberately not the lesson one: that
-       one is .lesson-nav / .lesson-link and lives inside a lesson. A course with
-       nothing published after it ships the backward half alone rather than a
-       dead link forward. Every colour here is a token, so both light paths flip
-       it together. Depth: a course home is one level down, so a sibling course
-       is "../slug/". */
+       one is .lesson-nav / .lesson-link and lives inside a lesson. Every colour
+       here is a token, so both light paths flip it together. Depth: a course home
+       is one level down, so a sibling course is "../slug/" and the path page is
+       "../paths/trading/". */
     .path-nav {
       display: flex;
       flex-wrap: wrap;
@@ -885,18 +917,31 @@
     .path-move strong { display: block; margin-top: 4px; font-size: 0.9rem; }
     .path-move.next { margin-left: auto; text-align: right; }
 
+    /* The forward half at the END of the path. Course 7 shipped a DISABLED span
+       here because course 8 had no page; there is no course 9, so the same
+       treatment would be a placeholder for something that was never announced.
+       This is an ordinary anchor to the path page with an accent edge, and the
+       copy says "end of the path" rather than naming a course that does not
+       exist. It carries no rel="next": the path page is not the next document in
+       the sequence. */
+    .path-move.is-complete { border-color: var(--cyan); }
+    .path-move.is-complete strong { color: var(--cyan-2); }
+
     /* ---------- SVG theming ----------
        Classes, never hardcoded hex, so every mark in every thumbnail re-paints on
        BOTH light paths. This is the whole reason the thumbnails carry no inline
        fill or stroke colours.
 
        The colour grammar is fixed across all sixteen charts so a reader can read
-       any thumbnail without a legend: price is neutral, the primary derived
-       series (VWAP, OBV, CVD, the profile's point of control) is cyan, a
-       comparison series is purple, an amber dashed rule is a BASELINE or anchor
-       the reader chooses, a blue dashed rule is a structural zero or midpoint,
-       green is buy-side/aggressive-at-the-ask/valid and red is
-       sell-side/aggressive-at-the-bid/invalid. */
+       any thumbnail without a legend, and it is the SAME grammar course 7 used,
+       carried one step further into a running system: raw inbound market data is
+       neutral, the system's own deterministic services and their output are cyan,
+       something arriving from OUTSIDE the system's authority (a broker response,
+       an AI proposal, a benchmark assumption) is purple, an amber dashed rule is a
+       BOUNDARY A HUMAN CONFIGURED (a session edge, a risk limit, an approval
+       deadline, the line AI may not cross), a blue dashed rule is a structural
+       constant that is not tunable, green is accepted/filled/reconciled and red is
+       rejected/failed/halted. */
     .sv-grid { stroke: var(--line); stroke-width: 1; }
     .sv-axis { stroke: var(--line-strong); stroke-width: 1.5; }
     .sv-tile { fill: var(--panel-2); stroke: var(--line-strong); stroke-width: 1.5; }
@@ -914,12 +959,12 @@
     .sv-fast { stroke: var(--cyan); stroke-width: 2.9; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .sv-slow { stroke: var(--purple); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .sv-slow-dash { stroke: var(--purple); stroke-width: 2.4; stroke-dasharray: 6 5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    .sv-osc { stroke: var(--cyan); stroke-width: 2.9; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .sv-step { stroke: var(--cyan); stroke-width: 2.6; fill: none; stroke-linejoin: round; }
     .sv-up-line { stroke: var(--green); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .sv-dn-line { stroke: var(--red); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-    /* Reference rules: amber is a baseline or anchor the reader chooses, blue is
-       a structural zero/midpoint that is not tunable. */
+    .sv-faint { stroke: var(--muted); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: .45; }
+    /* Reference rules: amber is a boundary the tester chose, blue is a
+       structural zero or prior peak that is not tunable. */
     .sv-level { stroke: var(--amber); stroke-width: 1.75; stroke-dasharray: 7 6; fill: none; }
     .sv-zero { stroke: var(--blue); stroke-width: 1.75; stroke-dasharray: 4 5; fill: none; }
     .sv-link { stroke: var(--amber); stroke-width: 1.9; stroke-dasharray: 5 5; fill: none; stroke-linecap: round; }
@@ -1014,14 +1059,13 @@
   <script>
     /* Applied before first paint so an explicit theme choice never flashes the
        other theme. This is why it lives LAST in <head> and not in the IIFE at the
-       bottom of <body>: that runs after the first paint, which is exactly the
-       defect this course's source package shipped — it called its setTheme() at
-       the END of the script.
-       SAME localStorage key as the library, the path pages, courses 1-4 and every
+       bottom of <body>: that runs after the first paint, and a theme applied after
+       paint is a theme the reader watches change.
+       SAME localStorage key as the library, the path pages, courses 1-7 and every
        lesson ('learn-theme') so the toggle persists across the whole site. This
-       course's source shipped its own key ('vof-theme') — the FIFTH distinct key
-       on one origin — which silently reset a reader's choice at the course
-       boundary; it is gone.
+       course's source shipped its own key ('aat-theme') — the eighth distinct
+       key to arrive on one origin, one per package, every package — which
+       silently reset a reader's choice at the course boundary; it is gone.
        The allowlist matters — a corrupt value would otherwise be written straight
        onto data-theme, matching no CSS while still counting as an explicit
        choice, which permanently mislabels the toggle and pins the page to the
@@ -1040,21 +1084,17 @@
 
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="./" aria-label="Volume and Order Flow — course home">
+      <a class="brand" href="./" aria-label="Algorithmic and Automated Trading — course home">
         <span class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 64 64" focusable="false">
-            <path d="M9 30H55" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="5 6" opacity=".66" />
-            <g fill="currentColor">
-              <rect x="10" y="38" width="8" height="14" rx="2.6" />
-              <rect x="22" y="26" width="8" height="26" rx="2.6" />
-              <rect x="34" y="16" width="8" height="36" rx="2.6" />
-              <rect x="46" y="33" width="8" height="19" rx="2.6" />
-            </g>
+            <path d="M42 14.7A20 20 0 1 1 28.6 12.3" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" />
+            <path d="M22.6 6.4L29.8 12.3L23.6 18.6" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+            <rect x="25" y="25" width="14" height="14" rx="4.5" fill="currentColor" />
           </svg>
         </span>
         <span class="brand-copy">
-          <strong>Volume and Order Flow</strong>
-          <span>Course 5 · 16 lessons</span>
+          <strong>Algorithmic and Automated Trading</strong>
+          <span>Course 8 · 16 lessons</span>
         </span>
       </a>
 
@@ -1063,7 +1103,7 @@
         <a href="../paths/trading/">Trading path</a>
         <a href="./" aria-current="page">Course home</a>
         <a href="#lessons">Lessons</a>
-        <a href="#rules">Rule export</a>
+        <a href="#spec">Specification</a>
       </nav>
 
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
@@ -1074,14 +1114,14 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../paths/trading/">Trading path</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Volume and Order Flow</span>
+      <span class="crumb-current" aria-current="page">Algorithmic and Automated Trading</span>
     </nav>
 
     <noscript>
       <div class="noscript-note">
         <strong>JavaScript is off, so the theme toggle is hidden.</strong>
         Everything else on this page — the path position, the course overview, the
-        lesson list, the rule-export section, and the illustrations — is plain HTML
+        lesson list, the specification section, and the illustrations — is plain HTML
         and CSS and works normally. The page still follows your system's light or
         dark preference.
       </div>
@@ -1090,50 +1130,67 @@
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
         <div>
-          <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Course 5 · 16 interactive lessons</span>
-          <h1 id="hero-title">Volume and <span class="gradient-text">Order Flow</span></h1>
-          <p class="tagline">Volume counts what was traded. Order flow shows who had to have it, and where the other side stopped giving way.</p>
-          <p class="lede">Sixteen lessons that start with the number under every chart — what volume measures, what it cannot tell you about direction, and how participation is normalized against a baseline before the word "spike" means anything. From there it builds the volume-derived indicators, session and anchored VWAP, and the profile view that reorganizes activity by price instead of time. The last third drops below the bar entirely: the quote and the order types that reach it, the transaction stream, the footprint of executed volume at bid and ask, cumulative delta, and the displayed depth that is intent rather than trade — ending in a rule set precise enough to export. Every lesson is one self-contained interactive page — no accounts, no tracking, nothing to install.</p>
+          <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Course 8 · 16 interactive lessons</span>
+          <h1 id="hero-title">Algorithmic and Automated <span class="gradient-text">Trading</span></h1>
+          <p class="tagline">Automation changes how a decision reaches the market. It does not decide whether the decision was worth making, and it adds a second set of things that can go wrong: the system itself.</p>
+          <p class="lede">Sixteen lessons on building the thing that runs after the strategy is written — and on the controls that make running it defensible. They start by separating strategy rules, signal generation, risk checks, order submission and execution into parts that can fail independently, then choosing how much authority to delegate: alert, approval, or automatic. From there the machinery: the services and boundaries a decision travels through; market data received, validated, deduplicated and normalized; exchange calendars, session boundaries and deterministic schedulers instead of the assumption that every minute is tradable; a signal engine whose state transitions are repeatable; and a risk engine that owns cash, exposure and limits before an order exists. Then the outside world: a broker adapter where every response is asynchronous state, order types and fill quality measured against the decision price, and a full run on current data with no capital at risk. The last third is what separates a script from a system — duplicate-safe commands, bounded retries and reconciliation after a timeout; metrics, traces and an immutable decision log; scoped credentials, separated environments and a kill switch that stops new trading immediately; reproducible artifacts, gradual rollout and rollback. Lesson 15 puts AI where it belongs: research, extraction, classification and proposals, with risk and execution authority left deterministic. Lesson 16 writes the whole system down as one versioned specification. Every lesson is one self-contained interactive page — no accounts, no broker connection, nothing to install.</p>
           <div class="hero-actions">
-            <a class="btn primary" href="./volume-fundamentals/">Start with lesson 01</a>
+            <a class="btn primary" href="./algorithmic-and-automated-trading-fundamentals/">Start with lesson 01</a>
             <a class="btn ghost" href="#lessons">See all 16 lessons</a>
-            <a class="btn ghost" href="../technical-indicators/">Course 4 first</a>
+            <a class="btn ghost" href="../backtesting-and-trading-systems/">Course 7 first</a>
           </div>
         </div>
 
         <div class="hero-visual">
-          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of the course: a price line tracked by a volume-weighted average price line over a row of volume bars, above six stage tiles — volume basics for lessons 01 to 04, the volume-derived indicators for 05 to 06, VWAP for 07 to 08, profile and value for 09 to 10, order flow for 11 to 15, and the exportable rule set at 16.">
+          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of the course: raw market data entering a pipeline of five stages — data, signal, risk, orders and the broker — with the broker's status updates returning asynchronously on a dashed line, an amber boundary marking where the system's own authority ends, and paper trading, human approval and a kill switch named as the controls around it; below, six tiles for the five stages of the course — encoding the strategy for lessons 01 to 05, execution and infrastructure for 06 to 08, testing and risk controls for 09 to 11, deployment and monitoring for 12 to 14, AI and production readiness for 15 to 16 — and a final tile marking course 8 of 8, the end of the path.">
             <g class="sv-grid">
-              <line x1="16" y1="46" x2="504" y2="46" />
-              <line x1="16" y1="96" x2="504" y2="96" />
+              <line x1="16" y1="30" x2="504" y2="30" />
             </g>
 
-            <path class="sv-price" d="M20 118C56 104 78 126 108 112C140 97 162 116 194 100C228 83 250 100 282 84C316 67 338 82 370 68C404 53 430 66 500 44" />
-            <path class="sv-fast" d="M20 126C60 120 82 116 122 110C164 104 186 100 226 92C268 84 290 80 330 72C372 64 394 60 500 46" />
-            <circle class="sv-dot" cx="330" cy="72" r="5" />
+            <path class="sv-price" d="M16 40C36 32 52 44 72 36C92 28 104 40 122 34" />
+            <path class="sv-flow" d="M122 34H136V52" />
+            <path class="sv-flow" d="M132 46l4 6 4-6" />
 
-            <line class="sv-axis" x1="16" y1="180" x2="504" y2="180" />
-            <g class="sv-bar">
-              <rect x="20" y="162" width="12" height="18" rx="3" />
-              <rect x="46" y="154" width="12" height="26" rx="3" />
-              <rect x="72" y="166" width="12" height="14" rx="3" />
-              <rect x="98" y="148" width="12" height="32" rx="3" />
-              <rect x="124" y="158" width="12" height="22" rx="3" />
-              <rect x="150" y="168" width="12" height="12" rx="3" />
-              <rect x="176" y="152" width="12" height="28" rx="3" />
-              <rect x="202" y="160" width="12" height="20" rx="3" />
-              <rect x="254" y="164" width="12" height="16" rx="3" />
-              <rect x="280" y="150" width="12" height="30" rx="3" />
-              <rect x="306" y="158" width="12" height="22" rx="3" />
-              <rect x="332" y="166" width="12" height="14" rx="3" />
-              <rect x="358" y="156" width="12" height="24" rx="3" />
-              <rect x="384" y="162" width="12" height="18" rx="3" />
-              <rect x="410" y="152" width="12" height="28" rx="3" />
-              <rect x="436" y="164" width="12" height="16" rx="3" />
-              <rect x="462" y="146" width="12" height="34" rx="3" />
-              <rect x="488" y="158" width="12" height="22" rx="3" />
+            <rect class="sv-tile" x="16" y="56" width="90" height="46" rx="14" />
+            <rect class="sv-tile-live" x="118" y="56" width="90" height="46" rx="14" />
+            <rect class="sv-tile-live" x="220" y="56" width="90" height="46" rx="14" />
+            <rect class="sv-tile-live" x="322" y="56" width="90" height="46" rx="14" />
+            <rect class="sv-tile" x="424" y="56" width="90" height="46" rx="14" />
+
+            <g class="sv-flow">
+              <path d="M106 79h12" /><path d="M114 75l4 4-4 4" />
+              <path d="M208 79h12" /><path d="M216 75l4 4-4 4" />
+              <path d="M310 79h12" /><path d="M318 75l4 4-4 4" />
+              <path d="M412 79h12" /><path d="M420 75l4 4-4 4" />
             </g>
-            <rect class="sv-bar-hi" x="228" y="136" width="12" height="44" rx="3" />
+
+            <line class="sv-level" x1="418" y1="26" x2="418" y2="132" />
+
+            <path class="sv-slow-dash" d="M469 102V124H367V106" />
+            <path class="sv-slow-dash" d="M363 112l4-6 4 6" />
+
+            <g class="sv-text">
+              <text x="30" y="84">DATA</text>
+              <text class="sv-text-live" x="130" y="84">SIGNAL</text>
+              <text class="sv-text-live" x="240" y="84">RISK</text>
+              <text class="sv-text-live" x="330" y="84">ORDERS</text>
+              <text x="436" y="84">BROKER</text>
+              <text x="16" y="24">MARKET</text>
+              <text x="330" y="20">AUTHORITY ENDS</text>
+              <text x="192" y="140">ASYNCHRONOUS STATUS</text>
+            </g>
+
+            <g class="sv-text">
+              <text class="sv-text-live" x="16" y="164">CONTROLS</text>
+              <text x="102" y="164">PAPER FIRST</text>
+              <text x="212" y="164">HUMAN APPROVAL</text>
+              <text x="352" y="164">KILL SWITCH</text>
+            </g>
+            <circle class="sv-dot-ok" cx="94" cy="160" r="4" />
+            <circle class="sv-dot" cx="204" cy="160" r="4" />
+            <circle class="sv-dot-warn" cx="344" cy="160" r="4" />
+
+            <line class="sv-axis" x1="16" y1="178" x2="504" y2="178" />
 
             <rect class="sv-tile-live" x="16" y="194" width="156" height="50" rx="14" />
             <g class="sv-tile">
@@ -1141,22 +1198,22 @@
               <rect x="348" y="194" width="156" height="50" rx="14" />
               <rect x="16" y="252" width="156" height="50" rx="14" />
               <rect x="182" y="252" width="156" height="50" rx="14" />
-              <rect x="348" y="252" width="156" height="50" rx="14" />
             </g>
+            <rect class="sv-tile-live" x="348" y="252" width="156" height="50" rx="14" />
 
             <g class="sv-text">
-              <text class="sv-text-live" x="30" y="216">VOLUME BASICS</text>
-              <text x="30" y="234">01–04</text>
-              <text class="sv-text-live" x="196" y="216">OBV · A/D · CMF</text>
-              <text x="196" y="234">05–06</text>
-              <text class="sv-text-live" x="362" y="216">VWAP</text>
-              <text x="362" y="234">07–08</text>
-              <text class="sv-text-live" x="30" y="274">PROFILE &amp; VALUE</text>
-              <text x="30" y="292">09–10</text>
-              <text class="sv-text-live" x="196" y="274">ORDER FLOW</text>
-              <text x="196" y="292">11–15</text>
-              <text class="sv-text-live" x="362" y="274">RULE SET</text>
-              <text x="362" y="292">16</text>
+              <text class="sv-text-live" x="30" y="216">ENCODE</text>
+              <text x="30" y="234">01–05</text>
+              <text class="sv-text-live" x="196" y="216">EXECUTE</text>
+              <text x="196" y="234">06–08</text>
+              <text class="sv-text-live" x="362" y="216">CONTROLS</text>
+              <text x="362" y="234">09–11</text>
+              <text class="sv-text-live" x="30" y="274">OPERATE</text>
+              <text x="30" y="292">12–14</text>
+              <text class="sv-text-live" x="196" y="274">AI + SPEC</text>
+              <text x="196" y="292">15–16</text>
+              <text class="sv-text-live" x="362" y="274">PATH ENDS</text>
+              <text x="362" y="292">COURSE 8 OF 8</text>
             </g>
           </svg>
         </div>
@@ -1167,9 +1224,9 @@
           <div>
             <p class="kicker">Learning path</p>
             <h2 id="path-title">Where this course sits</h2>
-            <p>The trading path is an order, not a shelf. This is the fifth course on it: the first four taught you to read structure, plan a trade, price an option and compute an indicator — this one goes underneath the bar, to what actually traded and who paid to make it happen.</p>
+            <p>The trading path is an order, not a shelf. This is the eighth course on it, and the last: the first seven taught you to read structure, plan a trade, price an option, compute an indicator, read the flow underneath the bar, size the risk and test whether the rules ever worked — this one runs them, and puts controls around the running.</p>
           </div>
-          <p class="count-chip">Course 5 of 8</p>
+          <p class="count-chip">Course 8 of 8</p>
         </div>
 
         <div class="path-grid">
@@ -1178,10 +1235,10 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                 <path d="M19 12H6" /><path d="M12 5l-7 7 7 7" />
               </svg>
-              Course 4 · Comes before this
+              Course 7 · Comes before this
             </p>
-            <h3><a href="../technical-indicators/">Technical Indicators</a></h3>
-            <p>Sixteen lessons on what an indicator computes: lookback and warm-up, moving averages and crossovers, the momentum oscillators, trend strength, volatility and channels, divergence, redundancy, regime selection, and an exportable rule set. It deliberately stopped short of every volume-derived tool and left them here, so the habits it taught — read the formula first, then decide what it means — are the ones this course assumes.</p>
+            <h3><a href="../backtesting-and-trading-systems/">Backtesting and Trading Systems</a></h3>
+            <p>Sixteen lessons on whether a rule set ever worked: testable hypotheses, data quality and point-in-time universes, bar construction and signal timing, execution simulation and costs, the trade log and its drawdown, expectancy and benchmarking, out-of-sample and walk-forward validation, robustness testing, and a versioned system specification. Course 7 stops at a validated specification on purpose. This course is what happens when you run one.</p>
           </article>
 
           <article class="path-card current">
@@ -1189,21 +1246,22 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                 <circle cx="12" cy="12" r="8.4" /><circle cx="12" cy="12" r="2.6" fill="currentColor" />
               </svg>
-              Course 5 · You are here
+              Course 8 · You are here
             </p>
-            <h3>Volume and Order Flow</h3>
-            <p>Sixteen lessons in six stages, from what volume counts to a rule set precise enough to hand to another person or program. It is written to stand on its own — every lesson is a standalone page and nothing here loads anything from courses 1 to 4 — so a single lesson also works as a reference you come back to.</p>
+            <h3>Algorithmic and Automated Trading</h3>
+            <p>Sixteen lessons in five stages, from separating the responsibilities of a trading system to a versioned production specification with a readiness gate in front of it. It is written to stand on its own — every lesson is a standalone page and nothing here loads anything from courses 1 to 7 — so a single lesson also works as a reference you come back to.</p>
           </article>
 
-          <article class="path-card" aria-labelledby="next-course-title">
-            <p class="path-tag">
+          <article class="path-card complete" aria-labelledby="path-complete-title">
+            <p class="path-flag done">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                <path d="M4.5 12.5l5 5 10-11" />
               </svg>
-              Course 6 · Comes after this
+              Path complete
             </p>
-            <h3 id="next-course-title"><a href="../trading-risk-management/">Trading Risk Management</a></h3>
-            <p>Sixteen lessons on what a read costs you when it is wrong: account risk and the risk budget, risk per trade, stops placed at structural invalidation, position sizing, R-multiples and expectancy, drawdown and risk of ruin, ATR-based sizing, gap and slippage risk, leverage, correlation and portfolio exposure, options risk, and hard daily and weekly limits. It is named here because this course deliberately stops at interpretation: reading flow well is not the same as sizing a position, and this course never pretends otherwise. The path continues past it — the <a href="../paths/trading/">trading path</a> lists every course and marks the ones that are not published yet.</p>
+            <p class="path-tag">Nothing comes after this</p>
+            <h3 id="path-complete-title"><a href="../paths/trading/">The whole trading path</a></h3>
+            <p>Course 8 is the end of the sequence: all eight courses are published, and there is no course 9 waiting behind this one. If you have worked forward from course 1, the path page is where the whole run is laid out in order — and where you can go back to any course you want to reread.</p>
           </article>
         </div>
       </section>
@@ -1213,20 +1271,20 @@
           <div>
             <p class="kicker">The course</p>
             <h2 id="overview-title">What this course is</h2>
-            <p>One question, taken apart in the order you have to understand it: how much traded, at what price it traded, and which side had to cross the spread to make it happen.</p>
+            <p>One question, taken apart in the order you have to answer it: what are the parts, where does the data come from and when is it valid, who decides, who is allowed to send an order — and how do you know what the system did, and stop it when you need to?</p>
           </div>
-          <p class="count-chip">16 lessons · 6 stages</p>
+          <p class="count-chip">16 lessons · 5 stages</p>
         </div>
 
         <div class="overview-grid">
           <article class="note-card">
             <span class="note-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" focusable="false">
-                <path d="M4 20V12M10 20V6M16 20v-9M22 20h-20" />
+                <path d="M4 7h6v5H4zM14 12h6v5h-6z" /><path d="M10 9.5h4v5" />
               </svg>
             </span>
             <h3>What it teaches</h3>
-            <p>What volume measures and what it does not, the four price-and-participation combinations, relative volume against a baseline, and whether volume confirms a move or contradicts it (01–04). Then the indicators built out of volume: On-Balance Volume, and the close-location family, Accumulation/Distribution and Chaikin Money Flow (05–06). Then value: session VWAP and anchored VWAP (07–08), the volume profile and the value area with its POC, high-volume and low-volume nodes (09–10). Then the market's own plumbing: bid, ask, spread and order types, time and sales, footprint charts and bid-ask delta, cumulative volume delta, and the order book (11–15). Lesson 16 turns all of it into explicit, testable rules.</p>
+            <p>How a trading system is split into parts that can be reasoned about separately — strategy rules, signal generation, risk checks, order submission and execution — and how much authority to hand each level of automation (01–02). Then the inputs: historical and streaming data validated, deduplicated and normalized into one model, with late events handled rather than assumed away; and the clock — exchange calendars, time zones, session boundaries, event windows and schedulers that behave the same way twice (03–04). Then the decision itself: a signal engine with explicit state, which is what stops a system repeating, contradicting or acting on a stale signal; and a risk engine that holds cash, positions, exposure, open orders and limits, and is consulted before an order exists (05–06). Then the outside world: a broker adapter that submits, queries, cancels and reconciles while treating every status as asynchronous; order type selection, open-order management and fill quality measured against the decision price; and the whole system run on current data with no capital at risk (07–09). Then the controls: scanning and ranking with deduplicated alerts and decisions that expire; duplicate-safe commands, bounded retries, durable state and reconciliation after a timeout; metrics and traces and an immutable audit trail; scoped credentials, separated environments, rotation and a kill switch; reproducible artifacts, gradual rollout and rollback (10–14). Lesson 15 covers AI-assisted and agentic workflows, and lesson 16 turns all of it into one versioned specification.</p>
           </article>
 
           <article class="note-card">
@@ -1236,7 +1294,7 @@
               </svg>
             </span>
             <h3>Who it is for</h3>
-            <p>Anyone who has said "that breakout had volume" without being able to say volume relative to what. It assumes you can read a chart and know what a moving average does; it assumes nothing about order books, tape reading or delta. It also suits the reader who has a footprint chart open and is quietly unsure whether the green number means buyers were stronger — the course is explicit that every trade has both a buyer and a seller, and that aggressor classification describes which side crossed the spread, not an unequal number of participants.</p>
+            <p>Anyone who has a rule set they trust and no idea what it takes to let it run unattended. It assumes you can read a chart, and that risk per trade, position sizing, expectancy and out-of-sample validation already mean something to you — courses 6 and 7 define them. It assumes nothing about distributed systems: idempotency, reconciliation, traces, secret rotation and rollback are introduced here, from the trading problem they solve rather than from the general engineering literature. It also suits the reader who has decided NOT to automate, and wants to know what they would be signing up for: most of this course is about failure — a timeout with unknown state, a duplicate order, a stale price, a credential with more permission than it needs — and none of that goes away because the strategy is good.</p>
           </article>
 
           <article class="note-card">
@@ -1246,7 +1304,7 @@
               </svg>
             </span>
             <h3>How to work through it</h3>
-            <p>In order, 01 to 16, one stage at a time. Each stage is the prerequisite for the next: the baseline comparison in 03 is what makes the confirmation test in 04 mean anything, VWAP in 07 is the reference anchored VWAP moves in 08, the profile in 09 is what the value area in 10 is drawn on, and the rules in 16 ask for market context, participation, location, aggressive flow and price confirmation — one from almost every stage before it. One lesson per sitting is plenty. Stage 5 is where most readers find out that the tape and the book answer different questions.</p>
+            <p>In order, 01 to 16, one stage at a time. Each stage is the prerequisite for the next: the boundaries drawn in 02 are what the data in 03 and the clock in 04 are delivered across, the state in 05 and the limits in 06 are what the broker calls in 07 and 08 are allowed to act on, and the reliability, observability and security work in 11 to 13 only makes sense once you have seen an order's status arrive out of order. One lesson per sitting is plenty. Stage 3 is where most readers discover that the hard part was never the strategy: it is what the system does when a response never comes back.</p>
           </article>
 
           <article class="note-card span">
@@ -1256,7 +1314,7 @@
               </svg>
             </span>
             <h3>Where the definitions come from</h3>
-            <p>The labs are simplified on purpose, so each lesson closes with an official reading link to a primary source rather than to a vendor selling order-flow software: CME Group's education material for how exchange volume is counted, what market-by-order data is, and the difference between market makers and market takers; Nasdaq's own glossary for VWAP; and the SEC's investor.gov for order types. Those are definitions from the venue and the regulator — the course's own synthetic examples are illustrations of them, never a substitute.</p>
+            <p>The labs are simplified on purpose, so lessons close with an official reading link to a primary source rather than to a vendor selling an execution platform: FINRA's Regulatory Notice 15-09 on supervision, testing, controls and documentation for algorithmic trading strategies, and the SEC's own summary of Rule 15c3-5, the market-access rule that requires pre-trade financial and regulatory risk controls. Where the subject is engineering rather than regulation, the source is the project that defines the thing: OpenTelemetry on traces, metrics and logs; Kubernetes on liveness and readiness probes; Docker on build practice; the OWASP Secrets Management Cheat Sheet on storing and rotating credentials; and a broker's own published API documentation for paper trading, streaming market data and working with orders — cited as an example of what such an API looks like, not as a recommendation of that broker.</p>
             <p>Every lesson still works with no network at all. Each page is entirely self-contained, and the reference links are the only things on it that point off the site.</p>
           </article>
         </div>
@@ -1267,7 +1325,7 @@
           <div>
             <p class="kicker">Curriculum</p>
             <h2 id="lessons-title">The sixteen lessons, in order</h2>
-            <p>Six stages, grouped the way the sequence itself groups: the volume basics, the indicators derived from volume, VWAP, the profile and its value area, the order-flow tools — book, tape, footprint, delta — and the rule set that turns them into a decision. Each lesson is a single self-contained page of interactive charts, worked explanations, and practice. Start at 01 and work down.</p>
+            <p>Five stages, grouped the way the system itself is built: the strategy encoded as parts, data and state; the execution machinery that turns a decision into an order; the testing and the risk controls that decide whether it may run unattended; the deployment, security and monitoring that keep it accountable while it does; and the finish — where AI fits, and what has to be true before anything is switched on. Each lesson is a single self-contained page of interactive charts, worked explanations, and practice. Start at 01 and work down.</p>
           </div>
           <p class="count-chip">Start at lesson 01</p>
         </div>
@@ -1275,41 +1333,36 @@
         <div class="edu-note">
           <p>
             <strong>Educational use only — nothing here is trading advice.</strong>
-            This course teaches interpretation of volume, value, executed flow, and
-            displayed depth. It does not provide live market data, trading signals,
-            execution access, profitability claims, or personalized investment
-            advice. Position risk, portfolio risk, drawdown, and risk-of-ruin are
-            reserved for course 6; strategy validation for course 7.
+            This course does not connect to a broker, ingest live market data, place
+            orders, provide trading signals, or claim that any automated strategy
+            will be profitable. It teaches how such a system is structured and
+            controlled; it is not one, and no page here can submit an order.
           </p>
           <p>
-            <strong>Data and classification scope.</strong> All charts, order books,
-            tape data, profiles, and executions in these lessons are deterministic
-            synthetic examples. The course uses stated conventions — relative volume
-            is current volume divided by a comparable baseline volume; OBV adds the
-            full bar volume on an up close and subtracts it on a down close;
-            Accumulation/Distribution and Chaikin Money Flow infer pressure from
-            close location within the bar and are not trade-by-trade aggressor
-            measures; session and anchored VWAP use typical price
-            <span class="mono">(high + low + close) / 3</span> weighted by volume;
-            the profile assigns each bar to price bins using typical price; the
-            value area contains approximately 70% of profile volume around the POC;
-            bid/ask delta is ask-classified volume minus bid-classified volume, and
-            CVD is its running total. Time-and-sales and footprint classifications
-            are simplified and explicitly labeled, and order-book examples show
-            displayed liquidity, which can be added, consumed, moved, or canceled.
-            Real outputs vary by venue, feed, vendor, asset class, session,
-            aggregation, and classification method.
+            <strong>Data and results scope.</strong> All market paths, events,
+            orders, failures, and portfolio states in these lessons are
+            deterministic synthetic examples. The course uses stated conventions —
+            market data, strategy, risk, order and broker responsibilities stay
+            separate; a network timeout represents unknown state until
+            reconciliation; automatic execution is treated as the final level of
+            automation rather than the starting point; AI components produce
+            advisory proposals while deterministic services retain risk and
+            execution authority; and deployment begins with paper, shadow and
+            limited-scope rollout. Every lesson also separates what the market is
+            doing — buyers accepting higher prices, sellers accepting lower ones,
+            price balanced, volatility expanding — from what the system is doing,
+            because latency, a data gap, a risk rejection or an unknown order state
+            is a fact about your software and not about the market.
           </p>
         </div>
 
         <nav aria-label="Course stages">
           <ul class="stage-nav">
-            <li><a href="#stage-volume">Volume basics <span>01–04</span></a></li>
-            <li><a href="#stage-indicators">Volume-derived indicators <span>05–06</span></a></li>
-            <li><a href="#stage-vwap">VWAP <span>07–08</span></a></li>
-            <li><a href="#stage-profile">Profile and value area <span>09–10</span></a></li>
-            <li><a href="#stage-flow">Order flow <span>11–15</span></a></li>
-            <li><a href="#stage-rules">Rules <span>16</span></a></li>
+            <li><a href="#stage-encode">Encoding the strategy <span>01–05</span></a></li>
+            <li><a href="#stage-execute">Execution and infrastructure <span>06–08</span></a></li>
+            <li><a href="#stage-controls">Testing and risk controls <span>09–11</span></a></li>
+            <li><a href="#stage-operate">Deployment and monitoring <span>12–14</span></a></li>
+            <li><a href="#stage-finish">AI and production readiness <span>15–16</span></a></li>
           </ul>
         </nav>
 
@@ -1321,20 +1374,20 @@
                3. the <h4> title, the description <p>, and .topic-tag
                4. the inline SVG thumbnail + its aria-label
              Titles and descriptions are VERBATIM from
-             content/volume-and-order-flow.manifest.json — that file is the
-             authority, not this page. Every following <ol start="NN"> has to move
-             with it, and the rail numbering, the connector and the last-step rules
-             follow from the lists themselves — no CSS changes needed. A new URL
-             also has to be registered in tests/test_site_invariants.py
+             content/algorithmic-and-automated-trading.manifest.json — that file is
+             the authority, not this page. Every following <ol start="NN"> has to
+             move with it, and the rail numbering, the connector and the last-step
+             rules follow from the lists themselves — no CSS changes needed. A new
+             URL also has to be registered in tests/test_site_invariants.py
              (REQUIRED_PAGES), in scripts/smoke.py, and in the release acceptance
              checks.
              =================================================================== -->
 
-        <div class="stage" id="stage-volume">
+        <div class="stage" id="stage-encode">
           <div class="stage-head">
-            <p class="stage-badge">Stage 1 of 6 <b>Lessons 01–04</b></p>
-            <h3>Volume basics</h3>
-            <p>What the number under the chart counts, and what it refuses to say. Volume measures participation, not direction: a completed trade always has both a buyer and a seller, so a tall bar tells you how much changed hands, never who won. This stage sets the reading habits the rest of the course depends on — pairing price progress with changing activity, normalizing current volume against a comparable baseline before anything gets called a spike, and separating expansion from climax and absorption.</p>
+            <p class="stage-badge">Stage 1 of 5 <b>Lessons 01–05</b></p>
+            <h3>Encoding the strategy</h3>
+            <p>Before anything runs: what the parts of a trading system are, and how much authority each level of automation actually takes. A strategy that lives in your head produces a different trade every time; a strategy encoded as separate rules, signals, risk checks and orders produces the same decision from the same events — which is the minimum condition for everything that follows. This stage draws the boundaries, then fills them in: the data model events arrive as, the calendar and scheduler that say when a decision is even allowed, and the signal engine whose state is explicit enough that a repeat or a stale value cannot slip through as a new trade.</p>
           </div>
 
           <ol class="course-track" role="list" start="1">
@@ -1345,41 +1398,44 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line across the top of the panel with a row of volume bars beneath it, one bar much taller than the rest, showing that the bars record how much traded rather than which direction price took.">
-                    <g class="sv-grid">
-                      <line x1="8" y1="26" x2="352" y2="26" />
-                      <line x1="8" y1="56" x2="352" y2="56" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Five responsibilities drawn as separate chips — rules, signal, risk, order and fill — above three automation levels, alert, approval and automatic, with only the last one highlighted, showing that the parts stay separate however much authority is delegated.">
+                    <g class="sv-tile">
+                      <rect x="8" y="14" width="64" height="22" rx="7" />
+                      <rect x="80" y="14" width="64" height="22" rx="7" />
+                      <rect x="152" y="14" width="64" height="22" rx="7" />
+                      <rect x="224" y="14" width="64" height="22" rx="7" />
+                      <rect x="296" y="14" width="56" height="22" rx="7" />
                     </g>
-                    <path class="sv-price" d="M14 68C40 60 56 44 82 46C108 48 124 62 150 58C176 54 190 36 216 34C242 32 256 44 282 40C308 36 324 28 346 24" />
-                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
-                    <g class="sv-bar">
-                      <rect x="14" y="96" width="10" height="22" rx="2" />
-                      <rect x="36" y="88" width="10" height="30" rx="2" />
-                      <rect x="58" y="100" width="10" height="18" rx="2" />
-                      <rect x="80" y="84" width="10" height="34" rx="2" />
-                      <rect x="102" y="94" width="10" height="24" rx="2" />
-                      <rect x="124" y="102" width="10" height="16" rx="2" />
-                      <rect x="146" y="90" width="10" height="28" rx="2" />
-                      <rect x="168" y="98" width="10" height="20" rx="2" />
-                      <rect x="212" y="92" width="10" height="26" rx="2" />
-                      <rect x="234" y="100" width="10" height="18" rx="2" />
-                      <rect x="256" y="86" width="10" height="32" rx="2" />
-                      <rect x="278" y="96" width="10" height="22" rx="2" />
-                      <rect x="300" y="90" width="10" height="28" rx="2" />
-                      <rect x="322" y="102" width="10" height="16" rx="2" />
-                    </g>
-                    <rect class="sv-bar-hi" x="190" y="72" width="10" height="46" rx="2" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="18">PRICE</text>
-                      <text x="12" y="134">VOLUME</text>
-                      <text x="246" y="134">PARTICIPATION</text>
+                      <text x="16" y="29">RULES</text>
+                      <text x="88" y="29">SIGNAL</text>
+                      <text x="160" y="29">RISK</text>
+                      <text x="232" y="29">ORDER</text>
+                      <text x="304" y="29">FILL</text>
+                    </g>
+                    <rect class="sv-tile" x="8" y="56" width="108" height="44" rx="12" />
+                    <rect class="sv-tile" x="126" y="56" width="108" height="44" rx="12" />
+                    <rect class="sv-tile-live" x="244" y="56" width="108" height="44" rx="12" />
+                    <g class="sv-flow">
+                      <path d="M116 78h10" /><path d="M122 74l4 4-4 4" />
+                      <path d="M234 78h10" /><path d="M240 74l4 4-4 4" />
+                    </g>
+                    <g class="sv-text">
+                      <text x="34" y="82">ALERT</text>
+                      <text x="142" y="82">APPROVAL</text>
+                      <text class="sv-text-live" x="258" y="82">AUTOMATIC</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="134">SAME PARTS</text>
+                      <text x="150" y="134">MORE AUTHORITY</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Volume</span>
+                    <span class="topic-tag">Foundations</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1388,9 +1444,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./volume-fundamentals/"><span class="lesson-ord">Lesson 01</span>Volume Fundamentals</a></h4>
+                  <h4><a class="lesson-link" href="./algorithmic-and-automated-trading-fundamentals/"><span class="lesson-ord">Lesson 01</span>Algorithmic and Automated Trading Fundamentals</a></h4>
 
-                  <p>Understand what volume measures, separate participation from direction, and read price progress together with trading activity.</p>
+                  <p>Separate strategy rules, signal generation, risk checks, order submission, and execution, then choose the appropriate level of automation.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1411,37 +1467,33 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Four tiles, each pairing a price arrow with a volume bar: price up on rising volume, price up on falling volume, price down on rising volume, and price down on falling volume.">
-                    <g class="sv-tile">
-                      <rect x="8" y="10" width="80" height="76" rx="12" />
-                      <rect x="96" y="10" width="80" height="76" rx="12" />
-                      <rect x="184" y="10" width="80" height="76" rx="12" />
-                      <rect x="272" y="10" width="80" height="76" rx="12" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Three service tiles — ingest, decide and execute — joined by arrows, with a shared state store beneath the middle one that both the decision and the execution service write to, showing services, boundaries and the one place state is owned.">
+                    <rect class="sv-tile" x="8" y="16" width="96" height="40" rx="12" />
+                    <rect class="sv-tile-live" x="132" y="16" width="96" height="40" rx="12" />
+                    <rect class="sv-tile-live" x="256" y="16" width="96" height="40" rx="12" />
+                    <g class="sv-flow">
+                      <path d="M104 36h22" /><path d="M122 32l4 4-4 4" />
+                      <path d="M228 36h22" /><path d="M246 32l4 4-4 4" />
+                      <path d="M180 56v20" /><path d="M176 70l4 6 4-6" />
+                      <path d="M304 56v10h-64v11" /><path d="M236 71l4 6 4-6" />
                     </g>
-                    <path class="sv-up-line" d="M18 66L32 50L46 38" />
-                    <path class="sv-up-line" d="M106 66L120 50L134 38" />
-                    <path class="sv-dn-line" d="M194 38L208 54L222 66" />
-                    <path class="sv-dn-line" d="M282 38L296 54L310 66" />
-                    <rect class="sv-bar-hi" x="62" y="44" width="10" height="34" rx="2" />
-                    <rect class="sv-bar" x="150" y="62" width="10" height="16" rx="2" />
-                    <rect class="sv-bar-hi" x="238" y="44" width="10" height="34" rx="2" />
-                    <rect class="sv-bar" x="326" y="62" width="10" height="16" rx="2" />
+                    <rect class="sv-tile" x="132" y="78" width="96" height="30" rx="11" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="106">PRICE UP</text>
-                      <text x="12" y="126">VOL UP</text>
-                      <text class="sv-text-live" x="100" y="106">PRICE UP</text>
-                      <text x="100" y="126">VOL DOWN</text>
-                      <text class="sv-text-live" x="188" y="106">PRICE DN</text>
-                      <text x="188" y="126">VOL UP</text>
-                      <text class="sv-text-live" x="276" y="106">PRICE DN</text>
-                      <text x="276" y="126">VOL DOWN</text>
+                      <text x="22" y="40">INGEST</text>
+                      <text class="sv-text-live" x="150" y="40">DECIDE</text>
+                      <text class="sv-text-live" x="268" y="40">EXECUTE</text>
+                      <text x="146" y="97">STATE</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="134">ONE OWNER PER BOX</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Volume</span>
+                    <span class="topic-tag">Architecture</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1450,9 +1502,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./price-volume-relationships/"><span class="lesson-ord">Lesson 02</span>Price and Volume Relationships</a></h4>
+                  <h4><a class="lesson-link" href="./trading-system-architecture-and-components/"><span class="lesson-ord">Lesson 02</span>Trading System Architecture and Components</a></h4>
 
-                  <p>Interpret the four basic combinations of price direction and changing participation.</p>
+                  <p>Define the services, boundaries, data stores, messages, and ownership required to move from market data to an auditable trading decision.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1473,37 +1525,36 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A row of volume bars under a dashed baseline that marks the comparable average, with one bar rising far above the baseline and highlighted as a spike.">
-                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
-                    <g class="sv-bar">
-                      <rect x="14" y="96" width="12" height="22" rx="2" />
-                      <rect x="36" y="88" width="12" height="30" rx="2" />
-                      <rect x="58" y="94" width="12" height="24" rx="2" />
-                      <rect x="80" y="84" width="12" height="34" rx="2" />
-                      <rect x="102" y="92" width="12" height="26" rx="2" />
-                      <rect x="124" y="100" width="12" height="18" rx="2" />
-                      <rect x="146" y="86" width="12" height="32" rx="2" />
-                      <rect x="168" y="94" width="12" height="24" rx="2" />
-                      <rect x="212" y="76" width="12" height="42" rx="2" />
-                      <rect x="234" y="90" width="12" height="28" rx="2" />
-                      <rect x="256" y="98" width="12" height="20" rx="2" />
-                      <rect x="278" y="88" width="12" height="30" rx="2" />
-                      <rect x="300" y="96" width="12" height="22" rx="2" />
-                      <rect x="322" y="90" width="12" height="28" rx="2" />
-                    </g>
-                    <rect class="sv-bar-hi" x="190" y="34" width="12" height="84" rx="2" />
-                    <line class="sv-level" x1="8" y1="82" x2="352" y2="82" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Raw prints scattered at the left, one pair overlapping and crossed out as a duplicate and one arriving late marked in red, funnelled into a single clean normalized line at the right.">
                     <g class="sv-text">
-                      <text x="12" y="76">BASELINE</text>
-                      <text class="sv-text-live" x="186" y="28">SPIKE</text>
-                      <text x="12" y="136">RELATIVE VOLUME</text>
+                      <text x="12" y="20">RAW PRINTS</text>
+                      <text class="sv-text-live" x="242" y="20">NORMALIZED</text>
+                    </g>
+                    <circle class="sv-dot" cx="26" cy="46" r="5" />
+                    <circle class="sv-dot" cx="52" cy="70" r="5" />
+                    <circle class="sv-dot" cx="86" cy="40" r="5" />
+                    <circle class="sv-dot" cx="94" cy="46" r="5" />
+                    <path class="sv-cross" d="M80 34l22 18M102 34l-22 18" />
+                    <circle class="sv-dot-warn" cx="44" cy="98" r="5" />
+                    <g class="sv-text">
+                      <text x="106" y="44">DUPLICATE</text>
+                      <text x="56" y="102">LATE</text>
+                    </g>
+                    <g class="sv-flow">
+                      <path d="M116 60h20" /><path d="M132 56l4 4-4 4" />
+                    </g>
+                    <path class="sv-fast" d="M146 76C170 62 186 80 210 66C234 52 252 70 276 58C300 46 320 60 346 50" />
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text x="12" y="134">MANY SOURCES</text>
+                      <text class="sv-text-live" x="180" y="134">ONE MARKET MODEL</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Volume</span>
+                    <span class="topic-tag">Market data</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1512,9 +1563,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./relative-volume-and-volume-spikes/"><span class="lesson-ord">Lesson 03</span>Relative Volume and Volume Spikes</a></h4>
+                  <h4><a class="lesson-link" href="./market-data-ingestion-and-normalization/"><span class="lesson-ord">Lesson 03</span>Market Data Ingestion and Normalization</a></h4>
 
-                  <p>Normalize current volume against a baseline and distinguish participation expansion from climax or absorption.</p>
+                  <p>Receive historical and streaming data, validate timestamps and symbols, remove duplicates, handle late events, and expose one normalized market-data model.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1535,27 +1586,34 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Price crossing a dashed structural level twice: the first break is backed by a tall volume bar and marked with a check, the second is backed by a small bar, fails back below the level, and is marked with a cross.">
-                    <line class="sv-zero" x1="8" y1="54" x2="352" y2="54" />
-                    <path class="sv-price" d="M14 92C40 88 62 78 86 68C100 62 108 56 120 50C138 42 154 40 172 44C192 48 208 54 226 58C240 61 248 52 258 50C270 47 280 58 292 64C312 74 330 80 346 86" />
-                    <circle class="sv-dot-ok" cx="120" cy="50" r="6" />
-                    <circle class="sv-dot-warn" cx="258" cy="50" r="6" />
-                    <path class="sv-check" d="M132 30l6 7 12-14" />
-                    <path class="sv-cross" d="M272 24l14 14M286 24l-14 14" />
-                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
-                    <rect class="sv-bar-up" x="112" y="78" width="14" height="40" rx="2" />
-                    <rect class="sv-bar" x="250" y="102" width="14" height="16" rx="2" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A trading day drawn as a price line between two amber dashed session boundaries, with the closed periods shaded at either end, a shaded event window in the middle, and evenly spaced scheduler ticks beneath.">
+                    <rect class="sv-fill-warm" x="8" y="30" width="60" height="62" />
+                    <rect class="sv-fill-warm" x="292" y="30" width="60" height="62" />
+                    <rect class="sv-fill" x="196" y="30" width="46" height="62" />
+                    <line class="sv-level" x1="68" y1="24" x2="68" y2="98" />
+                    <line class="sv-level" x1="292" y1="24" x2="292" y2="98" />
+                    <path class="sv-price" d="M74 74C100 66 120 78 148 70C176 62 196 72 220 60C244 48 268 66 286 58" />
+                    <g class="sv-faint">
+                      <path d="M88 96v10" /><path d="M124 96v10" /><path d="M160 96v10" />
+                      <path d="M196 96v10" /><path d="M232 96v10" /><path d="M268 96v10" />
+                    </g>
                     <g class="sv-text">
-                      <text x="12" y="48">LEVEL</text>
-                      <text class="sv-text-live" x="96" y="136">CONFIRMED</text>
-                      <text x="228" y="136">NOT CONFIRMED</text>
+                      <text x="12" y="20">CLOSED</text>
+                      <text class="sv-text-live" x="118" y="20">SESSION</text>
+                      <text x="200" y="20">EVENT</text>
+                      <text x="296" y="20">CLOSED</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="134">SCHEDULED RUNS</text>
+                      <text x="190" y="134">NOT EVERY MINUTE</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Confirmation</span>
+                    <span class="topic-tag">Scheduling</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1564,9 +1622,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./volume-confirmation/"><span class="lesson-ord">Lesson 04</span>Volume Confirmation</a></h4>
+                  <h4><a class="lesson-link" href="./time-sessions-events-and-scheduling/"><span class="lesson-ord">Lesson 04</span>Time, Sessions, Events, and Scheduling</a></h4>
 
-                  <p>Evaluate whether volume supports a breakout, continuation, rejection, or failed move.</p>
+                  <p>Use exchange calendars, time zones, session boundaries, event windows, and deterministic schedulers instead of assuming every day and minute is tradable.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1581,44 +1639,41 @@
               </article>
             </li>
 
-          </ol>
-        </div>
-
-        <div class="stage" id="stage-indicators">
-          <div class="stage-head">
-            <p class="stage-badge">Stage 2 of 6 <b>Lessons 05–06</b></p>
-            <h3>Volume-derived indicators</h3>
-            <p>Two ways to turn the volume series into a line you can compare with price. On-Balance Volume accumulates the full bar volume by closing direction; Accumulation/Distribution and Chaikin Money Flow weight where price closed inside each bar's range. Both infer pressure from the finished bar, which is exactly why they come before the tape: they are not trade-by-trade aggressor measures, and the lessons say so where it would be easy to imply otherwise.</p>
-          </div>
-
-          <ol class="course-track" role="list" start="5">
-
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">05</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line making a higher second peak above a stepped On-Balance Volume line that makes a lower second peak, with dashed lines joining each pair of peaks to show the two series disagreeing.">
-                    <path class="sv-price" d="M14 58C34 48 44 34 62 30C80 26 92 38 110 46C128 54 140 58 158 54C176 50 186 32 204 24C222 16 232 14 250 18C268 22 280 34 298 42C316 50 330 48 346 44" />
-                    <line class="sv-link" x1="62" y1="24" x2="240" y2="10" />
-                    <circle class="sv-dot" cx="62" cy="30" r="5" />
-                    <circle class="sv-dot" cx="240" cy="15" r="5" />
-                    <path class="sv-step" d="M14 122H38V114H62V104H86V96H110V102H134V110H158V106H182V102H206V100H230V106H254V112H278V108H302V114H326V118H350" />
-                    <line class="sv-link" x1="110" y1="90" x2="230" y2="94" />
-                    <circle class="sv-dot" cx="110" cy="96" r="5" />
-                    <circle class="sv-dot-warn" cx="230" cy="100" r="5" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A three-state machine — flat, long, flat — joined by entry and exit transitions, with a self-loop back into the long state crossed out in red to show a repeated signal being refused.">
+                    <circle class="sv-ring" cx="46" cy="50" r="22" />
+                    <circle class="sv-ring" cx="170" cy="50" r="22" />
+                    <circle class="sv-ring" cx="294" cy="50" r="22" />
+                    <g class="sv-flow">
+                      <path d="M68 50h78" /><path d="M142 46l4 4-4 4" />
+                      <path d="M192 50h78" /><path d="M266 46l4 4-4 4" />
+                    </g>
+                    <path class="sv-flow" d="M156 70C138 98 202 98 184 70" />
+                    <path class="sv-cross" d="M162 78l16 16M178 78l-16 16" />
                     <g class="sv-text">
-                      <text x="12" y="16">PRICE</text>
-                      <text class="sv-text-live" x="12" y="142">OBV</text>
-                      <text x="212" y="142">LOWER HIGH</text>
+                      <text class="sv-text-live" x="31" y="54">FLAT</text>
+                      <text class="sv-text-live" x="153" y="54">LONG</text>
+                      <text class="sv-text-live" x="279" y="54">FLAT</text>
+                      <text x="90" y="34">ENTRY</text>
+                      <text x="218" y="34">EXIT</text>
+                      <text x="200" y="96">REPEAT REFUSED</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="134">SAME EVENTS IN</text>
+                      <text x="190" y="134">SAME STATE OUT</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Indicators</span>
+                    <span class="topic-tag">Signal engine</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1627,9 +1682,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./on-balance-volume/"><span class="lesson-ord">Lesson 05</span>On-Balance Volume</a></h4>
+                  <h4><a class="lesson-link" href="./signal-engine-and-strategy-state/"><span class="lesson-ord">Lesson 05</span>Signal Engine and Strategy State</a></h4>
 
-                  <p>Use On-Balance Volume to accumulate volume by closing direction and compare its trend with price.</p>
+                  <p>Convert normalized events into deterministic strategy-state transitions while preventing repeated, contradictory, or stale signals.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1643,6 +1698,17 @@
                 </div>
               </article>
             </li>
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-execute">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 2 of 5 <b>Lessons 06–08</b></p>
+            <h3>Execution and infrastructure</h3>
+            <p>The part that touches money. A risk engine that owns cash, positions, exposure, open orders and limits comes first, because it has to be consulted before an order exists rather than after one is rejected. Then the broker adapter, where the comfortable assumption breaks: a submitted order is not a filled order, a response is not a state, and a status update can arrive out of order or not at all. Then the execution decisions themselves — which order type, how long to leave it working, how much of the available liquidity to take, and what the fill actually cost against the price the decision was made at.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="6">
 
             <li class="course-step">
               <div class="step-rail">
@@ -1650,26 +1716,31 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A single bar with its full high-to-low range drawn as a wick and the closing price marked near the top of the range, beside a money-flow oscillator that swings above and below a dashed zero line.">
-                    <line class="sv-wick" x1="44" y1="14" x2="44" y2="104" />
-                    <rect class="sv-tile" x="30" y="36" width="28" height="56" rx="4" />
-                    <line class="sv-fast" x1="22" y1="48" x2="66" y2="48" />
-                    <circle class="sv-dot" cx="44" cy="48" r="5" />
-                    <line class="sv-grid" x1="94" y1="14" x2="94" y2="112" />
-                    <line class="sv-zero" x1="112" y1="70" x2="352" y2="70" />
-                    <path class="sv-osc" d="M118 86C136 86 142 58 160 56C178 54 186 78 204 80C222 82 230 52 248 48C266 44 274 62 292 66C310 70 320 58 346 52" />
-                    <circle class="sv-dot-ok" cx="248" cy="48" r="5" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Four cyan bars showing current exposure beneath an amber dashed limit line, and a fifth red bar for a proposed order that would breach the limit, crossed out before it is submitted.">
+                    <rect class="sv-bar-hi" x="20" y="70" width="28" height="40" />
+                    <rect class="sv-bar-hi" x="60" y="58" width="28" height="52" />
+                    <rect class="sv-bar-hi" x="100" y="78" width="28" height="32" />
+                    <rect class="sv-bar-hi" x="140" y="50" width="28" height="60" />
+                    <rect class="sv-bar-dn" x="196" y="22" width="28" height="88" />
+                    <path class="sv-cross" d="M194 26l32 80M226 26l-32 80" />
+                    <line class="sv-level" x1="8" y1="42" x2="352" y2="42" />
                     <g class="sv-text">
-                      <text x="10" y="134">CLOSE LOCATION</text>
-                      <text class="sv-text-live" x="126" y="134">CMF</text>
-                      <text x="158" y="134">SIGN OF MONEY FLOW</text>
+                      <text x="248" y="38">EXPOSURE LIMIT</text>
+                      <text x="248" y="72">REJECTED</text>
+                      <text x="248" y="90">BEFORE</text>
+                      <text x="248" y="108">SUBMIT</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="134">OPEN POSITIONS</text>
+                      <text x="180" y="134">PROPOSED ORDER</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Indicators</span>
+                    <span class="topic-tag">Risk engine</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1678,9 +1749,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./accumulation-distribution-and-chaikin-money-flow/"><span class="lesson-ord">Lesson 06</span>Accumulation/Distribution and Chaikin Money Flow</a></h4>
+                  <h4><a class="lesson-link" href="./portfolio-position-and-risk-engine/"><span class="lesson-ord">Lesson 06</span>Portfolio, Position, and Risk Engine</a></h4>
 
-                  <p>Measure where price closes inside each bar’s range and weight that location by volume.</p>
+                  <p>Maintain authoritative cash, positions, exposure, open orders, and risk limits before any order is submitted.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1695,60 +1766,42 @@
               </article>
             </li>
 
-          </ol>
-        </div>
-
-        <div class="stage" id="stage-vwap">
-          <div class="stage-head">
-            <p class="stage-badge">Stage 3 of 6 <b>Lessons 07–08</b></p>
-            <h3>VWAP</h3>
-            <p>The average price weighted by volume — what the session actually paid, rather than what it printed last. Lesson 07 builds session VWAP from typical price weighted by volume and reads price location around it as accepted value and directional control. Lesson 08 moves the starting point to an event you choose, so the question becomes whether price is accepted above or below the average traded value since that event rather than since the open.</p>
-          </div>
-
-          <ol class="course-track" role="list" start="7">
-
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">07</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line weaving above and below a smooth volume-weighted average price line, with the excursions above and below marked, over a row of small volume bars.">
-                    <g class="sv-grid">
-                      <line x1="8" y1="34" x2="352" y2="34" />
-                      <line x1="8" y1="70" x2="352" y2="70" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Four order states climbing left to right — new, accepted, partially filled, filled — with a purple dashed line running back beneath them from the broker into the middle of the sequence, showing status arriving asynchronously.">
+                    <rect class="sv-tile" x="8" y="40" width="72" height="30" rx="10" />
+                    <rect class="sv-tile" x="96" y="40" width="76" height="30" rx="10" />
+                    <rect class="sv-tile" x="188" y="40" width="72" height="30" rx="10" />
+                    <rect class="sv-tile-live" x="276" y="40" width="72" height="30" rx="10" />
+                    <g class="sv-flow">
+                      <path d="M80 55h12" /><path d="M88 51l4 4-4 4" />
+                      <path d="M172 55h12" /><path d="M180 51l4 4-4 4" />
+                      <path d="M260 55h12" /><path d="M268 51l4 4-4 4" />
                     </g>
-                    <path class="sv-price" d="M14 88C34 78 46 62 66 60C86 58 96 78 116 80C136 82 148 60 168 54C188 48 200 62 220 60C240 58 252 42 272 38C292 34 306 46 326 44C336 43 342 40 348 38" />
-                    <path class="sv-fast" d="M14 82C50 78 70 74 106 70C142 66 162 64 198 60C234 56 254 52 290 48C312 45 330 43 348 41" />
-                    <circle class="sv-dot-ok" cx="66" cy="60" r="5" />
-                    <circle class="sv-dot-warn" cx="116" cy="80" r="5" />
-                    <line class="sv-axis" x1="8" y1="126" x2="352" y2="126" />
-                    <g class="sv-bar">
-                      <rect x="14" y="112" width="10" height="14" rx="2" />
-                      <rect x="38" y="108" width="10" height="18" rx="2" />
-                      <rect x="62" y="114" width="10" height="12" rx="2" />
-                      <rect x="86" y="106" width="10" height="20" rx="2" />
-                      <rect x="110" y="112" width="10" height="14" rx="2" />
-                      <rect x="134" y="104" width="10" height="22" rx="2" />
-                      <rect x="158" y="110" width="10" height="16" rx="2" />
-                      <rect x="182" y="114" width="10" height="12" rx="2" />
-                      <rect x="206" y="106" width="10" height="20" rx="2" />
-                      <rect x="230" y="112" width="10" height="14" rx="2" />
-                      <rect x="254" y="102" width="10" height="24" rx="2" />
-                      <rect x="278" y="110" width="10" height="16" rx="2" />
-                      <rect x="302" y="114" width="10" height="12" rx="2" />
-                      <rect x="326" y="108" width="10" height="18" rx="2" />
-                    </g>
+                    <path class="sv-slow-dash" d="M312 70v22H134v-18" />
+                    <path class="sv-slow-dash" d="M130 78l4-6 4 6" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="144">SESSION VWAP</text>
-                      <text x="140" y="144">ACCEPTED ABOVE OR BELOW</text>
+                      <text x="24" y="59">NEW</text>
+                      <text x="102" y="59">ACCEPTED</text>
+                      <text x="196" y="59">PARTIAL</text>
+                      <text class="sv-text-live" x="292" y="59">FILLED</text>
+                      <text x="146" y="108">STATUS ARRIVES ASYNC</text>
+                      <text x="12" y="24">SUBMIT</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="134">RECONCILE, NEVER ASSUME</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">VWAP</span>
+                    <span class="topic-tag">Broker adapter</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1757,9 +1810,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./volume-weighted-average-price/"><span class="lesson-ord">Lesson 07</span>Volume-Weighted Average Price</a></h4>
+                  <h4><a class="lesson-link" href="./broker-apis-and-order-lifecycle/"><span class="lesson-ord">Lesson 07</span>Broker APIs and Order Lifecycle</a></h4>
 
-                  <p>Calculate session VWAP and use price location around it to describe accepted value and directional control.</p>
+                  <p>Submit, query, cancel, and reconcile orders through a broker adapter while treating every response and status update as asynchronous state.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1780,26 +1833,35 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A dashed vertical marker at a chosen event, with a volume-weighted average price line that begins at that event and runs forward beneath a price line held above it.">
-                    <g class="sv-grid">
-                      <line x1="8" y1="30" x2="352" y2="30" />
-                      <line x1="8" y1="66" x2="352" y2="66" />
-                    </g>
-                    <line class="sv-link" x1="112" y1="14" x2="112" y2="120" />
-                    <path class="sv-price" d="M14 96C36 88 52 96 74 90C92 85 100 78 112 74C132 68 146 56 168 52C190 48 202 60 224 56C246 52 260 38 282 34C304 30 320 40 346 32" />
-                    <path class="sv-fast" d="M112 80C140 76 156 72 184 68C212 64 228 60 256 54C284 48 300 46 346 40" />
-                    <circle class="sv-dot" cx="112" cy="74" r="6" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A depth ladder with ask sizes above and bid sizes below an amber dashed decision-price line, the reader&#x27;s own resting order drawn in cyan on that line, and a green fill marker dropped below the line to show the difference between the decision price and the price actually obtained.">
+                    <line class="sv-level" x1="64" y1="62" x2="352" y2="62" />
+                    <rect class="sv-bar-dn" x="70" y="20" width="96" height="12" />
+                    <rect class="sv-bar-dn" x="70" y="38" width="62" height="12" />
+                    <rect class="sv-bar-hi" x="70" y="56" width="130" height="12" />
+                    <rect class="sv-bar-up" x="70" y="74" width="78" height="12" />
+                    <rect class="sv-bar-up" x="70" y="92" width="110" height="12" />
+                    <path class="sv-link" d="M232 62v10" />
+                    <circle class="sv-dot-ok" cx="232" cy="78" r="6" />
                     <g class="sv-text">
-                      <text x="12" y="136">ANCHOR EVENT</text>
-                      <text class="sv-text-live" x="126" y="136">ANCHORED VWAP</text>
-                      <text x="238" y="136">ACCEPTED ABOVE</text>
+                      <text x="12" y="30">ASK</text>
+                      <text x="12" y="48">ASK</text>
+                      <text class="sv-text-live" x="12" y="66">OURS</text>
+                      <text x="12" y="84">BID</text>
+                      <text x="12" y="102">BID</text>
+                      <text x="240" y="50">DECISION PRICE</text>
+                      <text class="sv-text-live" x="246" y="82">FILL</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text x="12" y="134">RESTING SIZE</text>
+                      <text class="sv-text-live" x="180" y="134">MEASURED FILL QUALITY</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">VWAP</span>
+                    <span class="topic-tag">Execution</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1808,9 +1870,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./anchored-volume-weighted-average-price/"><span class="lesson-ord">Lesson 08</span>Anchored Volume-Weighted Average Price</a></h4>
+                  <h4><a class="lesson-link" href="./order-management-and-execution/"><span class="lesson-ord">Lesson 08</span>Order Management and Execution</a></h4>
 
-                  <p>Start VWAP from a selected event and evaluate whether price is accepted above or below the event’s average traded value.</p>
+                  <p>Select order types, manage open orders, control participation, and measure fill quality against the decision price and available liquidity.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1824,15 +1886,14 @@
                 </div>
               </article>
             </li>
-
           </ol>
         </div>
 
-        <div class="stage" id="stage-profile">
+        <div class="stage" id="stage-controls">
           <div class="stage-head">
-            <p class="stage-badge">Stage 4 of 6 <b>Lessons 09–10</b></p>
-            <h3>Profile and value area</h3>
-            <p>The same trades, reorganized by price instead of by time. A volume profile bins traded volume into price levels and shows where the market spent its activity; the value area, the point of control, and the high- and low-volume nodes name the locations the auction kept returning to and the ones it passed straight through. In these labs the value area holds approximately 70% of profile volume around the POC — a convention, and the lesson states it as one.</p>
+            <p class="stage-badge">Stage 3 of 5 <b>Lessons 09–11</b></p>
+            <h3>Testing and risk controls</h3>
+            <p>Whether the system may be trusted to run, and what happens when it is wrong. Paper trading runs the whole thing on current data with no capital at risk, which is the first place backtest assumptions meet real signal timing, real latency and real fills. Scanners, alerts and an explicit human approval step are the automation level below automatic, and they have failure modes of their own: duplicated alerts, a thesis the reader cannot reconstruct, a decision acted on an hour after it stopped being true. Then the uncomfortable one — a network that times out leaves you not knowing whether an order exists, and only duplicate-safe commands, durable state and reconciliation get you back to certainty.</p>
           </div>
 
           <ol class="course-track" role="list" start="9">
@@ -1843,30 +1904,31 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Horizontal bars stacked by price level, longest in the middle and shorter at the extremes, forming a volume profile beside the price path that produced it.">
-                    <g class="sv-bar">
-                      <rect x="14" y="16" width="30" height="9" rx="2" />
-                      <rect x="14" y="28" width="52" height="9" rx="2" />
-                      <rect x="14" y="40" width="84" height="9" rx="2" />
-                      <rect x="14" y="52" width="118" height="9" rx="2" />
-                      <rect x="14" y="64" width="146" height="9" rx="2" />
-                      <rect x="14" y="76" width="104" height="9" rx="2" />
-                      <rect x="14" y="88" width="68" height="9" rx="2" />
-                      <rect x="14" y="100" width="44" height="9" rx="2" />
-                      <rect x="14" y="112" width="26" height="9" rx="2" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A purple dashed curve for what the backtest assumed running above a cyan curve for what forward testing observed, with an amber dashed marker where paper trading begins and a bracket measuring the gap between the two at the right.">
+                    <g class="sv-grid">
+                      <line x1="8" y1="34" x2="352" y2="34" />
+                      <line x1="8" y1="74" x2="352" y2="74" />
                     </g>
-                    <line class="sv-axis" x1="14" y1="126" x2="14" y2="12" />
-                    <path class="sv-price" d="M190 108C202 96 208 84 222 76C236 68 244 78 258 72C272 66 280 52 294 46C308 40 318 50 332 42C340 37 344 32 348 28" />
+                    <line class="sv-level" x1="120" y1="14" x2="120" y2="108" />
+                    <path class="sv-slow-dash" d="M14 92C50 82 78 70 114 60C150 50 186 42 222 34C258 26 296 22 336 18" />
+                    <path class="sv-fast" d="M14 96C50 88 78 82 114 76C150 70 186 66 222 60C258 54 296 50 336 44" />
+                    <circle class="sv-dot" cx="222" cy="60" r="5" />
+                    <path class="sv-link" d="M340 18v26" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="140">VOLUME BY PRICE</text>
-                      <text x="190" y="140">TIME</text>
+                      <text x="14" y="24">ASSUMED</text>
+                      <text class="sv-text-live" x="128" y="24">PAPER STARTS</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text x="12" y="134">BACKTEST ASSUMPTION</text>
+                      <text class="sv-text-live" x="216" y="134">OBSERVED</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Profile</span>
+                    <span class="topic-tag">Forward testing</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1875,9 +1937,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./volume-profile/"><span class="lesson-ord">Lesson 09</span>Volume Profile</a></h4>
+                  <h4><a class="lesson-link" href="./paper-trading-and-forward-testing/"><span class="lesson-ord">Lesson 09</span>Paper Trading and Forward Testing</a></h4>
 
-                  <p>Organize traded volume by price rather than time and identify where the market spent activity.</p>
+                  <p>Run the complete system on current market data without live capital, then compare backtest assumptions with observed signals, latency, and simulated fills.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1898,36 +1960,35 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="The same profile with a shaded value area between two dashed boundaries, the point of control highlighted as the longest bar inside it, a thick high-volume node and a thin low-volume node labelled outside it.">
-                    <rect class="sv-fill" x="8" y="38" width="344" height="54" rx="6" />
-                    <g class="sv-bar">
-                      <rect x="14" y="16" width="30" height="9" rx="2" />
-                      <rect x="14" y="28" width="52" height="9" rx="2" />
-                      <rect x="14" y="40" width="84" height="9" rx="2" />
-                      <rect x="14" y="52" width="118" height="9" rx="2" />
-                      <rect x="14" y="76" width="104" height="9" rx="2" />
-                      <rect x="14" y="88" width="68" height="9" rx="2" />
-                      <rect x="14" y="100" width="22" height="9" rx="2" />
-                      <rect x="14" y="112" width="40" height="9" rx="2" />
-                    </g>
-                    <rect class="sv-bar-hi" x="14" y="64" width="146" height="9" rx="2" />
-                    <line class="sv-level" x1="8" y1="38" x2="352" y2="38" />
-                    <line class="sv-level" x1="8" y1="92" x2="352" y2="92" />
-                    <line class="sv-axis" x1="14" y1="126" x2="14" y2="12" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Four ranked candidate bars: the first accepted with a green check, the second crossed out in red as a duplicate alert, the third faded and marked expired, the fourth still pending.">
                     <g class="sv-text">
-                      <text x="290" y="34">VAH</text>
-                      <text class="sv-text-live" x="290" y="72">POC</text>
-                      <text x="290" y="106">VAL</text>
-                      <text x="180" y="86">HVN</text>
-                      <text x="180" y="108">LVN</text>
-                      <text class="sv-text-live" x="12" y="140">VALUE AREA</text>
+                      <text x="10" y="27">01</text>
+                      <text x="10" y="51">02</text>
+                      <text x="10" y="75">03</text>
+                      <text x="10" y="99">04</text>
+                    </g>
+                    <rect class="sv-bar-hi" x="42" y="16" width="196" height="14" />
+                    <rect class="sv-bar-hi" x="42" y="40" width="152" height="14" />
+                    <rect class="sv-bar" x="42" y="64" width="118" height="14" />
+                    <rect class="sv-bar" x="42" y="88" width="86" height="14" />
+                    <path class="sv-check" d="M250 24l7 8 13-16" />
+                    <path class="sv-cross" d="M250 41l16 16M266 41l-16 16" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="278" y="28">SENT</text>
+                      <text x="278" y="52">DUPLICATE</text>
+                      <text x="172" y="76">EXPIRED</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text x="12" y="134">RANKED CANDIDATES</text>
+                      <text class="sv-text-live" x="200" y="134">ONE CLEAR THESIS</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Profile</span>
+                    <span class="topic-tag">Approval</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -1936,9 +1997,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./value-area-poc-hvn-lvn/"><span class="lesson-ord">Lesson 10</span>Value Area, POC, HVN, and LVN</a></h4>
+                  <h4><a class="lesson-link" href="./scanners-alerts-and-human-approval/"><span class="lesson-ord">Lesson 10</span>Scanners, Alerts, and Human Approval</a></h4>
 
-                  <p>Interpret value-area boundaries, high-volume nodes, and low-volume nodes as auction locations.</p>
+                  <p>Screen instruments, rank candidates, deduplicate alerts, communicate the exact thesis, and expire decisions that are no longer current.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -1953,59 +2014,39 @@
               </article>
             </li>
 
-          </ol>
-        </div>
-
-        <div class="stage" id="stage-flow">
-          <div class="stage-head">
-            <p class="stage-badge">Stage 5 of 6 <b>Lessons 11–15</b></p>
-            <h3>Order flow: book, tape, footprint, delta</h3>
-            <p>Below the bar. Lesson 11 is the quote itself — bid, ask, spread, and which order types have to pay it. Lesson 12 reads the transaction stream by price, size, side classification and pace. Lesson 13 splits executed volume into bid- and ask-classified at each price level inside a candle, and lesson 14 accumulates that delta through time to compare aggressive flow with price structure. Lesson 15 turns to the order book, where displayed depth is intent rather than trade: liquidity that can be added, consumed, moved, or canceled before anything prints.</p>
-          </div>
-
-          <ol class="course-track" role="list" start="11">
-
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">11</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A quote ladder with three resting ask levels above and three resting bid levels below, the gap between them marked as the spread, and an arrow showing a marketable order crossing that gap to trade.">
-                    <g class="sv-tile">
-                      <rect x="96" y="10" width="132" height="13" rx="4" />
-                      <rect x="96" y="27" width="132" height="13" rx="4" />
-                      <rect x="96" y="44" width="132" height="13" rx="4" />
-                      <rect x="96" y="77" width="132" height="13" rx="4" />
-                      <rect x="96" y="94" width="132" height="13" rx="4" />
-                      <rect x="96" y="111" width="132" height="13" rx="4" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Two attempts leaving the system on separate lines — the first ending in a red cross marked timeout, the second retried carrying the same key on an amber dashed link — converging on one tile marked with a green check to show a single order was created.">
+                    <g class="sv-flow">
+                      <path d="M14 34h122" />
                     </g>
-                    <g class="sv-bar-dn">
-                      <rect x="234" y="13" width="46" height="7" rx="2" />
-                      <rect x="234" y="30" width="30" height="7" rx="2" />
-                      <rect x="234" y="47" width="62" height="7" rx="2" />
+                    <path class="sv-cross" d="M142 26l16 16M158 26l-16 16" />
+                    <g class="sv-flow">
+                      <path d="M14 92h176" /><path d="M182 88l8 4-8 4" />
                     </g>
-                    <g class="sv-bar-up">
-                      <rect x="234" y="80" width="54" height="7" rx="2" />
-                      <rect x="234" y="97" width="36" height="7" rx="2" />
-                      <rect x="234" y="114" width="68" height="7" rx="2" />
-                    </g>
-                    <path class="sv-link" d="M162 59V75" />
-                    <path class="sv-flow" d="M70 108V40" />
-                    <path class="sv-flow" d="M64 46l6-8 6 8" />
+                    <path class="sv-link" d="M14 63h182" />
+                    <rect class="sv-tile-live" x="204" y="42" width="148" height="44" rx="13" />
+                    <path class="sv-check" d="M218 64l7 8 13-16" />
                     <g class="sv-text">
-                      <text x="12" y="24">ASK</text>
-                      <text x="12" y="92">BID</text>
-                      <text class="sv-text-live" x="176" y="72">SPREAD</text>
-                      <text class="sv-text-live" x="12" y="142">RESTING LIQUIDITY</text>
-                      <text x="170" y="142">MARKETABLE ORDER</text>
+                      <text x="170" y="30">TIMEOUT</text>
+                      <text x="20" y="26">ATTEMPT 1</text>
+                      <text x="20" y="112">RETRY, SAME KEY</text>
+                      <text class="sv-text-live" x="246" y="68">ONE ORDER</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="134">DUPLICATE-SAFE COMMANDS</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Microstructure</span>
+                    <span class="topic-tag">Reliability</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2014,9 +2055,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./bid-ask-spread-and-order-types/"><span class="lesson-ord">Lesson 11</span>Bid, Ask, Spread, and Order Types</a></h4>
+                  <h4><a class="lesson-link" href="./reliability-idempotency-retries-and-recovery/"><span class="lesson-ord">Lesson 11</span>Reliability, Idempotency, Retries, and Recovery</a></h4>
 
-                  <p>Understand quoted prices, resting liquidity, marketable orders, and execution trade-offs.</p>
+                  <p>Design duplicate-safe commands, bounded retries, durable state, reconciliation, and restart behavior for uncertain networks and asynchronous broker updates.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2030,6 +2071,17 @@
                 </div>
               </article>
             </li>
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-operate">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 4 of 5 <b>Lessons 12–14</b></p>
+            <h3>Deployment and monitoring</h3>
+            <p>Running it accountably. Observability first, because a system you cannot measure is a system you are guessing about: data freshness, decision latency, broker latency, error rate, positions and risk, end-to-end traces, and an immutable record of why each decision was made. Then the credentials and the stop: scoped permissions, separated environments, rotation, audited access, and a mechanism that halts new trading immediately and does not depend on the thing it is stopping. Then getting changes into production without changing trading state by accident — reproducible artifacts, configuration separated from code, gradual rollout, and a rollback you have actually tried.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="12">
 
             <li class="course-step">
               <div class="step-rail">
@@ -2037,42 +2089,30 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Six rows of a transaction stream, each carrying a side marker and a size bar, with a downward arrow beside them standing for the pace at which prints arrive.">
-                    <g class="sv-tile">
-                      <rect x="8" y="8" width="236" height="16" rx="5" />
-                      <rect x="8" y="28" width="236" height="16" rx="5" />
-                      <rect x="8" y="48" width="236" height="16" rx="5" />
-                      <rect x="8" y="68" width="236" height="16" rx="5" />
-                      <rect x="8" y="88" width="236" height="16" rx="5" />
-                      <rect x="8" y="108" width="236" height="16" rx="5" />
-                    </g>
-                    <circle class="sv-dot-ok" cx="24" cy="16" r="5" />
-                    <circle class="sv-dot-ok" cx="24" cy="36" r="5" />
-                    <circle class="sv-dot-warn" cx="24" cy="56" r="5" />
-                    <circle class="sv-dot-ok" cx="24" cy="76" r="5" />
-                    <circle class="sv-dot-warn" cx="24" cy="96" r="5" />
-                    <circle class="sv-dot-ok" cx="24" cy="116" r="5" />
-                    <g class="sv-bar">
-                      <rect x="140" y="12" width="60" height="8" rx="2" />
-                      <rect x="140" y="32" width="34" height="8" rx="2" />
-                      <rect x="140" y="52" width="78" height="8" rx="2" />
-                      <rect x="140" y="72" width="46" height="8" rx="2" />
-                      <rect x="140" y="92" width="88" height="8" rx="2" />
-                      <rect x="140" y="112" width="28" height="8" rx="2" />
-                    </g>
-                    <path class="sv-flow" d="M300 18V112" />
-                    <path class="sv-flow" d="M294 106l6 8 6-8" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="Three stacked measurement rows — data age, decision latency against an amber dashed threshold, and error rate — above a nested row of trace spans, showing one trace recorded per decision.">
+                    <path class="sv-fast" d="M92 26C116 20 134 32 158 26C182 20 200 30 224 24C248 18 266 28 290 22" />
+                    <line class="sv-level" x1="92" y1="52" x2="290" y2="52" />
+                    <path class="sv-fast" d="M92 62C116 56 134 46 158 58C182 70 200 44 224 56C248 68 266 50 290 60" />
+                    <path class="sv-dn-line" d="M92 94h30l6-12 8 12h34l7-16 9 16h96" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="142">TIME AND SALES</text>
-                      <text x="140" y="142">SIZE · SIDE</text>
-                      <text x="282" y="142">PACE</text>
+                      <text x="10" y="30">DATA AGE</text>
+                      <text x="10" y="60">LATENCY</text>
+                      <text x="10" y="98">ERRORS</text>
+                      <text x="298" y="48">LIMIT</text>
+                    </g>
+                    <rect class="sv-bar" x="92" y="104" width="198" height="8" rx="4" />
+                    <rect class="sv-bar-hi" x="110" y="104" width="86" height="8" rx="4" />
+                    <rect class="sv-bar-hi" x="206" y="104" width="52" height="8" rx="4" />
+                    <line class="sv-axis" x1="8" y1="122" x2="352" y2="122" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="136">ONE TRACE PER DECISION</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Tape</span>
+                    <span class="topic-tag">Observability</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2081,9 +2121,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./time-and-sales/"><span class="lesson-ord">Lesson 12</span>Time and Sales</a></h4>
+                  <h4><a class="lesson-link" href="./observability-logging-and-auditability/"><span class="lesson-ord">Lesson 12</span>Observability, Logging, and Auditability</a></h4>
 
-                  <p>Read the transaction stream by price, size, side classification, pace, and price response.</p>
+                  <p>Measure data freshness, decision latency, broker latency, error rate, positions, risk, and end-to-end traces while preserving an immutable decision audit trail.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2104,43 +2144,39 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Two candles drawn as stacks of price-level cells, each cell splitting executed volume into a bid-classified bar to the left of the centre line and an ask-classified bar to the right.">
-                    <line class="sv-zero" x1="104" y1="10" x2="104" y2="126" />
-                    <line class="sv-zero" x1="256" y1="10" x2="256" y2="126" />
-                    <g class="sv-bar-dn">
-                      <rect x="70" y="16" width="34" height="14" rx="3" />
-                      <rect x="76" y="38" width="28" height="14" rx="3" />
-                      <rect x="86" y="60" width="18" height="14" rx="3" />
-                      <rect x="64" y="82" width="40" height="14" rx="3" />
-                      <rect x="80" y="104" width="24" height="14" rx="3" />
-                      <rect x="236" y="16" width="20" height="14" rx="3" />
-                      <rect x="226" y="38" width="30" height="14" rx="3" />
-                      <rect x="212" y="60" width="44" height="14" rx="3" />
-                      <rect x="230" y="82" width="26" height="14" rx="3" />
-                      <rect x="240" y="104" width="16" height="14" rx="3" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A secret held in a vault tile at the left, three permission chips beside it with read and trade granted by green checks and withdrawal refused by a red cross, and a kill switch at the right whose thrown red lever stops new orders.">
+                    <rect class="sv-tile" x="8" y="20" width="92" height="64" rx="13" />
+                    <circle class="sv-ring" cx="38" cy="48" r="10" />
+                    <path class="sv-ring" d="M48 48h30M70 48v10" />
+                    <g class="sv-tile">
+                      <rect x="120" y="16" width="104" height="24" rx="8" />
+                      <rect x="120" y="46" width="104" height="24" rx="8" />
+                      <rect x="120" y="76" width="104" height="24" rx="8" />
                     </g>
-                    <g class="sv-bar-up">
-                      <rect x="104" y="16" width="22" height="14" rx="3" />
-                      <rect x="104" y="38" width="38" height="14" rx="3" />
-                      <rect x="104" y="60" width="46" height="14" rx="3" />
-                      <rect x="104" y="82" width="16" height="14" rx="3" />
-                      <rect x="104" y="104" width="30" height="14" rx="3" />
-                      <rect x="256" y="16" width="40" height="14" rx="3" />
-                      <rect x="256" y="38" width="24" height="14" rx="3" />
-                      <rect x="256" y="60" width="18" height="14" rx="3" />
-                      <rect x="256" y="82" width="34" height="14" rx="3" />
-                      <rect x="256" y="104" width="28" height="14" rx="3" />
-                    </g>
+                    <path class="sv-check" d="M232 26l5 6 10-12" />
+                    <path class="sv-check" d="M232 56l5 6 10-12" />
+                    <path class="sv-cross" d="M232 82l13 13M245 82l-13 13" />
+                    <rect class="sv-tile-live" x="268" y="30" width="84" height="48" rx="13" />
+                    <path class="sv-dn-line" d="M280 66l30-22" />
+                    <circle class="sv-dot-warn" cx="280" cy="66" r="5" />
                     <g class="sv-text">
-                      <text class="sv-text-live" x="12" y="142">BID × ASK PER LEVEL</text>
-                      <text x="196" y="142">DELTA PER CELL</text>
+                      <text x="14" y="100">SECRET</text>
+                      <text x="128" y="32">READ</text>
+                      <text x="128" y="62">TRADE</text>
+                      <text x="128" y="92">WITHDRAW</text>
+                      <text class="sv-text-live" x="286" y="98">KILL</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text x="12" y="134">LEAST PRIVILEGE</text>
+                      <text class="sv-text-live" x="188" y="134">STOP NEW TRADING</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Delta</span>
+                    <span class="topic-tag">Security</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2149,9 +2185,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./footprint-charts-and-bid-ask-delta/"><span class="lesson-ord">Lesson 13</span>Footprint Charts and Bid-Ask Delta</a></h4>
+                  <h4><a class="lesson-link" href="./security-secrets-permissions-and-kill-switches/"><span class="lesson-ord">Lesson 13</span>Security, Secrets, Permissions, and Kill Switches</a></h4>
 
-                  <p>Compare executed volume at the bid and ask within each price level and candle.</p>
+                  <p>Protect broker credentials, restrict execution permissions, separate environments, audit access, rotate secrets, and provide immediate mechanisms to stop new trading.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2172,28 +2208,35 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A price line reaching a higher second peak above a filled cumulative delta curve that peaks lower the second time, with dashed lines joining each pair of peaks across a dashed zero line.">
-                    <path class="sv-price" d="M14 56C36 46 50 34 74 32C98 30 110 44 134 48C158 52 172 40 196 32C220 24 234 18 258 20C282 22 296 34 320 40C332 43 340 42 348 40" />
-                    <line class="sv-link" x1="74" y1="26" x2="258" y2="14" />
-                    <circle class="sv-dot" cx="74" cy="32" r="5" />
-                    <circle class="sv-dot" cx="258" cy="20" r="5" />
-                    <line class="sv-zero" x1="8" y1="104" x2="352" y2="104" />
-                    <path class="sv-fill" d="M14 108C38 104 52 96 76 92C100 88 114 98 138 100C162 102 176 94 200 92C224 90 238 96 262 98C286 100 300 104 348 106V104H14Z" />
-                    <path class="sv-fast" d="M14 108C38 104 52 96 76 92C100 88 114 98 138 100C162 102 176 94 200 92C224 90 238 96 262 98C286 100 300 104 348 106" />
-                    <line class="sv-link" x1="76" y1="86" x2="262" y2="92" />
-                    <circle class="sv-dot" cx="76" cy="92" r="5" />
-                    <circle class="sv-dot-warn" cx="262" cy="98" r="5" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="The same artifact square carried across three environment tiles — development, paper, then live — by arrows, with a red rollback arc curving back from live to paper.">
+                    <rect class="sv-tile" x="8" y="30" width="100" height="48" rx="13" />
+                    <rect class="sv-tile" x="130" y="30" width="100" height="48" rx="13" />
+                    <rect class="sv-tile-live" x="252" y="30" width="100" height="48" rx="13" />
+                    <rect class="sv-bar-hi" x="20" y="40" width="16" height="16" rx="4" />
+                    <rect class="sv-bar-hi" x="142" y="40" width="16" height="16" rx="4" />
+                    <rect class="sv-bar-hi" x="264" y="40" width="16" height="16" rx="4" />
+                    <g class="sv-flow">
+                      <path d="M108 54h18" /><path d="M118 50l4 4-4 4" />
+                      <path d="M230 54h18" /><path d="M240 50l4 4-4 4" />
+                    </g>
+                    <path class="sv-dn-line" d="M302 78C302 100 180 100 180 80" />
+                    <path class="sv-dn-line" d="M176 86l4-6 4 6" />
                     <g class="sv-text">
-                      <text x="12" y="16">PRICE</text>
-                      <text class="sv-text-live" x="12" y="140">CVD</text>
-                      <text x="200" y="140">AGGRESSIVE FLOW</text>
+                      <text x="44" y="52">DEV</text>
+                      <text x="166" y="52">PAPER</text>
+                      <text class="sv-text-live" x="290" y="52">LIVE</text>
+                      <text x="206" y="112">ROLLBACK</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="122" x2="352" y2="122" />
+                    <g class="sv-text">
+                      <text class="sv-text-live" x="12" y="136">ONE ARTIFACT, THREE CONFIGS</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Delta</span>
+                    <span class="topic-tag">Deployment</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2202,9 +2245,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./cumulative-volume-delta/"><span class="lesson-ord">Lesson 14</span>Cumulative Volume Delta</a></h4>
+                  <h4><a class="lesson-link" href="./deployment-environments-and-configuration/"><span class="lesson-ord">Lesson 14</span>Deployment, Environments, and Configuration</a></h4>
 
-                  <p>Accumulate bid-ask delta through time and compare aggressive flow with price structure.</p>
+                  <p>Build reproducible artifacts, separate development, paper, and live configuration, validate changes, deploy gradually, and roll back without changing trading state unexpectedly.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2218,6 +2261,17 @@
                 </div>
               </article>
             </li>
+          </ol>
+        </div>
+
+        <div class="stage" id="stage-finish">
+          <div class="stage-head">
+            <p class="stage-badge">Stage 5 of 5 <b>Lessons 15–16</b></p>
+            <h3>AI and production readiness</h3>
+            <p>The finish, and the two questions left. Lesson 15 is where AI belongs in this system: research, extraction, classification and trade proposals — with market data, rules, risk, permissions and execution controls kept deterministic and auditable, so a proposal is an input to the risk engine and never a substitute for it. Lesson 16 collects everything the course has built — strategy, data, architecture, risk, broker, reliability, security, deployment, observability, approval and rollback — into one versioned specification, and puts a readiness gate in front of it. That specification is the last thing this path asks you to write.</p>
+          </div>
+
+          <ol class="course-track" role="list" start="15">
 
             <li class="course-step">
               <div class="step-rail">
@@ -2225,25 +2279,34 @@
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="A market-depth staircase: displayed bid liquidity accumulating in steps to the left of a dashed midpoint and displayed ask liquidity accumulating in steps to the right of it.">
-                    <path class="sv-fill-up" d="M180 100H156V88H132V76H108V62H84V50H60V36H20V112H180Z" />
-                    <path class="sv-fill-dn" d="M180 100H204V86H228V72H252V58H276V46H300V34H340V112H180Z" />
-                    <path class="sv-up-line" d="M180 100H156V88H132V76H108V62H84V50H60V36H20" />
-                    <path class="sv-dn-line" d="M180 100H204V86H228V72H252V58H276V46H300V34H340" />
-                    <line class="sv-zero" x1="180" y1="16" x2="180" y2="112" />
-                    <line class="sv-axis" x1="8" y1="112" x2="352" y2="112" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A purple dashed AI proposal box at the left, an amber dashed authority boundary, then a cyan deterministic risk-and-rules gate feeding execution; a second purple dashed arrow attempting to bypass the gate is crossed out in red.">
+                    <path class="sv-slow-dash" d="M14 26H98A6 6 0 0 1 104 32V72A6 6 0 0 1 98 78H14A6 6 0 0 1 8 72V32A6 6 0 0 1 14 26Z" />
+                    <line class="sv-level" x1="122" y1="12" x2="122" y2="108" />
+                    <rect class="sv-tile-live" x="140" y="26" width="104" height="52" rx="13" />
+                    <rect class="sv-tile-live" x="262" y="26" width="90" height="52" rx="13" />
+                    <g class="sv-flow">
+                      <path d="M104 52h14" /><path d="M110 48l4 4-4 4" />
+                      <path d="M244 52h14" /><path d="M250 48l4 4-4 4" />
+                    </g>
+                    <path class="sv-slow-dash" d="M56 90h250" />
+                    <path class="sv-cross" d="M180 82l16 16M196 82l-16 16" />
                     <g class="sv-text">
-                      <text x="160" y="28">MID</text>
-                      <text x="12" y="136">BIDS</text>
-                      <text class="sv-text-live" x="132" y="136">DISPLAYED ONLY</text>
-                      <text x="316" y="136">ASKS</text>
+                      <text x="18" y="56">AI PROPOSAL</text>
+                      <text class="sv-text-live" x="150" y="56">RISK + RULES</text>
+                      <text class="sv-text-live" x="272" y="56">EXECUTE</text>
+                      <text x="126" y="22">AUTHORITY</text>
+                    </g>
+                    <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
+                    <g class="sv-text">
+                      <text x="12" y="134">ADVISORY</text>
+                      <text class="sv-text-live" x="140" y="134">DETERMINISTIC AND AUDITED</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Order book</span>
+                    <span class="topic-tag">AI workflows</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2252,9 +2315,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./order-book-and-market-depth/"><span class="lesson-ord">Lesson 15</span>Order Book and Market Depth</a></h4>
+                  <h4><a class="lesson-link" href="./ai-assisted-and-agentic-trading-workflows/"><span class="lesson-ord">Lesson 15</span>AI-Assisted and Agentic Trading Workflows</a></h4>
 
-                  <p>Inspect resting liquidity, queue changes, spread, depth, and the difference between displayed intent and executed trades.</p>
+                  <p>Use AI for research, extraction, classification, and trade proposals while keeping market data, rules, risk, permissions, and execution controls deterministic and auditable.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2269,60 +2332,44 @@
               </article>
             </li>
 
-          </ol>
-        </div>
-
-        <div class="stage" id="stage-rules">
-          <div class="stage-head">
-            <p class="stage-badge">Stage 6 of 6 <b>Lesson 16</b></p>
-            <h3>Rules</h3>
-            <p>Everything above stays an opinion until it is written down. The last lesson converts market context, participation, location, aggressive flow and price confirmation into explicit conditions, states the entry, the invalidation and the exit alongside them, flags the combinations that contradict each other, and exports the whole specification as a machine-readable document you can keep.</p>
-          </div>
-
-          <ol class="course-track" role="list" start="16">
-
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">16</p>
               </div>
               <article class="lesson-card">
                 <div class="thumb">
-                  <svg viewBox="0 0 360 150" role="img" aria-label="Four stacked condition rows for context, participation, location and flow feeding into a price series where an entry is marked in green and an exit in red, with the finished specification shown between braces as an exportable rule set.">
-                    <g class="sv-tile">
-                      <rect x="8" y="10" width="126" height="20" rx="7" />
-                      <rect x="8" y="36" width="126" height="20" rx="7" />
-                      <rect x="8" y="62" width="126" height="20" rx="7" />
-                      <rect x="8" y="88" width="126" height="20" rx="7" />
+                  <svg viewBox="0 0 360 150" role="img" aria-label="A specification document at the left with four readiness rows, three checked green and the last crossed red, an amber dashed readiness gate beside it, and a highlighted tile marked live and bounded that the arrow only reaches through the gate.">
+                    <rect class="sv-tile" x="8" y="14" width="180" height="94" rx="13" />
+                    <g class="sv-faint">
+                      <path d="M52 32h120" /><path d="M52 54h120" /><path d="M52 76h120" /><path d="M52 98h120" />
+                    </g>
+                    <path class="sv-check" d="M22 30l5 6 10-12" />
+                    <path class="sv-check" d="M22 52l5 6 10-12" />
+                    <path class="sv-check" d="M22 74l5 6 10-12" />
+                    <path class="sv-cross" d="M22 90l13 13M35 90l-13 13" />
+                    <line class="sv-level" x1="212" y1="12" x2="212" y2="110" />
+                    <rect class="sv-tile-live" x="232" y="38" width="120" height="46" rx="13" />
+                    <g class="sv-flow">
+                      <path d="M190 61h36" /><path d="M218 57l4 4-4 4" />
                     </g>
                     <g class="sv-text">
-                      <text x="16" y="24">CONTEXT</text>
-                      <text x="16" y="50">PARTICIPATION</text>
-                      <text x="16" y="76">LOCATION</text>
-                      <text x="16" y="102">FLOW</text>
+                      <text x="56" y="28">DATA</text>
+                      <text x="56" y="50">RISK</text>
+                      <text x="56" y="72">OPERATIONS</text>
+                      <text x="56" y="94">EVIDENCE</text>
+                      <text class="sv-text-live" x="244" y="66">LIVE, BOUNDED</text>
+                      <text x="216" y="24">GATE</text>
                     </g>
-                    <path class="sv-flow" d="M134 20H150V72H134" />
-                    <path class="sv-flow" d="M134 98H150V72" />
-                    <path class="sv-flow" d="M134 46H150" />
-                    <path class="sv-flow" d="M150 72H176" />
-                    <path class="sv-flow" d="M170 66l6 6-6 6" />
-                    <path class="sv-price" d="M186 60C200 52 212 66 226 58C240 50 252 34 266 30C280 26 292 38 306 34C320 30 332 24 346 20" />
-                    <circle class="sv-dot-ok" cx="226" cy="58" r="6" />
-                    <circle class="sv-dot-warn" cx="306" cy="34" r="6" />
-                    <g class="sv-ring">
-                      <path d="M212 102h-6a4 4 0 0 0-4 4v5l-4 4 4 4v5a4 4 0 0 0 4 4h6" fill="none" />
-                      <path d="M290 102h6a4 4 0 0 1 4 4v5l4 4-4 4v5a4 4 0 0 1-4 4h-6" fill="none" />
-                    </g>
+                    <line class="sv-axis" x1="8" y1="122" x2="352" y2="122" />
                     <g class="sv-text">
-                      <text x="200" y="84">ENTRY</text>
-                      <text x="284" y="84">EXIT</text>
-                      <text class="sv-text-live" x="222" y="124">RULE SET</text>
+                      <text class="sv-text-live" x="12" y="136">ONE VERSIONED SPECIFICATION</text>
                     </g>
                   </svg>
                 </div>
 
                 <div class="lesson-body">
                   <div class="meta-row">
-                    <span class="topic-tag">Rules</span>
+                    <span class="topic-tag">Specification</span>
                     <span class="time-tag">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                         <path d="M5 3l14 8-6 1.7-2.3 6.3z" />
@@ -2331,9 +2378,9 @@
                     </span>
                   </div>
 
-                  <h4><a class="lesson-link" href="./volume-and-order-flow-trading-rules/"><span class="lesson-ord">Lesson 16</span>Volume and Order Flow Trading Rules</a></h4>
+                  <h4><a class="lesson-link" href="./automated-trading-system-specification-and-production-readiness/"><span class="lesson-ord">Lesson 16</span>Automated Trading System Specification and Production Readiness</a></h4>
 
-                  <p>Convert market context, participation, aggressive flow, and price confirmation into explicit testable rules.</p>
+                  <p>Combine strategy, data, architecture, risk, broker, reliability, security, deployment, observability, approval, and rollback requirements into one versioned production specification.</p>
 
                   <div class="lesson-foot">
                     <span class="go">
@@ -2347,49 +2394,55 @@
                 </div>
               </article>
             </li>
-
           </ol>
         </div>
       </section>
 
-      <section class="section" id="rules" aria-labelledby="rules-title">
+      <section class="section" id="spec" aria-labelledby="spec-title">
         <div class="section-head">
           <div>
             <p class="kicker">Interop</p>
-            <h2 id="rules-title">Lesson 16 exports a rule set</h2>
-            <p>The last lesson is not a quiz you pass and close. It turns what you have learned into explicit conditions, checks them against each other, and then hands the whole rule set back to you as a file, so it can outlive the browser tab it was written in.</p>
+            <h2 id="spec-title">Lesson 16 exports a system specification</h2>
+            <p>The last lesson of the last course is not a quiz you pass and close. It turns the whole course into one document — what the system trades, where its data comes from, what risk it may take, which broker it speaks to, how it was validated, how it is operated, and what AI is permitted to do — and hands that document back to you as a file, so it can outlive the browser tab it was written in.</p>
           </div>
-          <p class="count-chip">Format: volume-order-flow-rule-v1</p>
+          <p class="count-chip">Format: automated-trading-system-v1</p>
         </div>
 
         <div class="interop">
           <article class="interop-card">
             <h3>What comes out of it</h3>
             <p>
-              Lesson 16 takes the market context you selected, the participation
-              test, the location the setup depends on — above or below VWAP, above
-              or below the value area, or at a structural level — the order-flow
-              condition, the price confirmation, the entry side and trigger, the
-              invalidation, the exit with its minimum reward-to-risk, and the
-              situations you decided not to trade at all, and exports the whole
-              specification as a JSON document stamped
-              <span class="mono">volume-order-flow-rule-v1</span>.
+              Lesson 16 takes the identity and version you gave the system, the
+              strategy section — type, timeframe, direction, and the automation
+              level, which is one of <span class="mono">alert</span>,
+              <span class="mono">approval</span> or
+              <span class="mono">automatic</span> — the market-data section with
+              its mode, its maximum acceptable age in seconds and whether it is
+              normalized, the risk section with its per-trade and gross-exposure
+              percentages, whether risk is evaluated independently and whether a
+              kill switch exists, the order section covering idempotency,
+              reconciliation and the broker adapter, the validation section with
+              its paper-trading days and shadow-mode flag, the operations section
+              with observability, security scope, rollout percentage and rollback,
+              and the AI section, and exports the whole thing as a JSON document
+              stamped <span class="mono">automated-trading-system-v1</span>.
             </p>
             <p>
               The schema linked beside this is the contract for that shape. It is
-              worth reading if you would rather keep your rules in your own
-              notebook or script: match the shape and the same fields carry over.
-              The schema is strict on purpose —
-              <span class="mono">additionalProperties: false</span> everywhere — so
-              a field that is not in the contract is a rule that will not validate
-              rather than a silent extra. Note what the export deliberately does
-              NOT contain: any measure of what the rule earned. There is no
-              performance object anywhere in the shape, and
-              <span class="mono">minimumRewardRisk</span> is a constraint you set,
-              not a result — so a rule that is merely well specified is never
-              mistaken for one that has been shown to work. Validation is course
-              7's subject. Everything runs in your browser — nothing is uploaded,
-              and there is no account anywhere in this course.
+              worth reading if you would rather keep your systems in your own
+              notebook or repository: match the shape and the same fields carry
+              over. All nine top-level members are required, so a specification
+              that omits its risk section or its validation plan does not
+              validate — those are the two a hurried system leaves out first. Note
+              what the shape deliberately does contain: <span class="mono">ai.mode</span>
+              and <span class="mono">ai.directExecution</span> are separate fields,
+              because "an AI is involved" and "an AI can place an order" are
+              different claims and the specification is not allowed to blur them.
+              Note also what it does NOT contain: any realized or expected return.
+              A specification records what a system is permitted to do and what had
+              to be true before it was allowed to run — never what it earned.
+              Everything runs in your browser: nothing is uploaded, no broker is
+              contacted, and there is no account anywhere in this course.
             </p>
           </article>
 
@@ -2397,36 +2450,47 @@
             <h3>Go straight to the pieces</h3>
             <ul class="file-list">
               <li>
-                <a class="file-link" href="./volume-and-order-flow-trading-rules/">
+                <a class="file-link" href="./automated-trading-system-specification-and-production-readiness/">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                     <path d="M5 4h11l3 3v13H5z" /><path d="M8.5 10h7M8.5 14h4" /><path d="M13.5 15.5l2 2 3.5-4" />
                   </svg>
                   <span>
-                    <strong>Lesson 16 · Volume and Order Flow Trading Rules</strong>
-                    <span>Builds the rule set and exports it</span>
+                    <strong>Lesson 16 · Automated Trading System Specification and Production Readiness</strong>
+                    <span>Builds the specification and exports it</span>
                   </span>
                 </a>
               </li>
               <li>
-                <a class="file-link" href="./volume-order-flow-rule-schema.json">
+                <a class="file-link" href="./automated-trading-system-schema.json">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                     <path d="M9 5H7a2 2 0 0 0-2 2v3l-2 2 2 2v3a2 2 0 0 0 2 2h2" />
                     <path d="M15 5h2a2 2 0 0 1 2 2v3l2 2-2 2v3a2 2 0 0 1-2 2h-2" />
                   </svg>
                   <span>
-                    <strong>volume-order-flow-rule-schema.json</strong>
+                    <strong>automated-trading-system-schema.json</strong>
                     <span>The export shape, as JSON Schema — opens as plain text</span>
                   </span>
                 </a>
               </li>
               <li>
-                <a class="file-link" href="./order-book-and-market-depth/">
+                <a class="file-link" href="./ai-assisted-and-agentic-trading-workflows/">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                    <path d="M4 19V9M9 19V5M14 19v-7M19 19v-4" /><path d="M3 21h18" />
+                    <rect x="4" y="7" width="16" height="12" rx="3" /><path d="M12 4v3" /><path d="M9 12h.01M15 12h.01" />
                   </svg>
                   <span>
-                    <strong>Lesson 15 · Order Book and Market Depth</strong>
-                    <span>Why displayed intent is not a rule condition on its own</span>
+                    <strong>Lesson 15 · AI-Assisted and Agentic Trading Workflows</strong>
+                    <span>Where the specification's AI mode and direct-execution flag come from</span>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="file-link" href="./paper-trading-and-forward-testing/">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M3 6h18v12H3z" /><path d="M11 6v12M17 6v12" />
+                  </svg>
+                  <span>
+                    <strong>Lesson 09 · Paper Trading and Forward Testing</strong>
+                    <span>Where the paper-trading days and shadow-mode flag come from</span>
                   </span>
                 </a>
               </li>
@@ -2435,14 +2499,21 @@
         </div>
       </section>
 
+      <!-- The course pager at the end of the LAST course on the path. The backward
+           half is an ordinary rel="prev" link to course 7. The forward half is NOT
+           a disabled "course 9" placeholder: there is no course 9, the path is
+           complete rather than truncated, and drawing an empty slot would announce
+           a promise nobody made. It is a real link back to the path page, and it
+           carries no rel="next" on purpose — the path page is not the next document
+           in the sequence, it is the sequence. -->
       <nav class="path-nav" aria-label="Course navigation">
-        <a class="path-move prev" href="../technical-indicators/" rel="prev"><span>Previous course</span><strong>Course 4 &middot; Technical Indicators</strong></a>
-        <a class="path-move next" href="../trading-risk-management/" rel="next"><span>Next course</span><strong>Course 6 &middot; Trading Risk Management</strong></a>
+        <a class="path-move prev" href="../backtesting-and-trading-systems/" rel="prev"><span>Previous course</span><strong>Course 7 &middot; Backtesting and Trading Systems</strong></a>
+        <a class="path-move next is-complete" href="../paths/trading/"><span>End of the path</span><strong>All 8 courses &middot; see the whole trading path</strong></a>
       </nav>
     </main>
 
     <footer>
-      <p class="risk"><strong>Educational course.</strong> This course teaches interpretation of volume, value, executed flow, and displayed depth. It does not provide live market data, trading signals, execution access, profitability claims, or personalized investment advice. Position risk, portfolio risk, drawdown, and risk-of-ruin belong to course 6; strategy validation to course 7. All charts, order books, tape data, profiles, and executions are deterministic synthetic examples, and time-and-sales and footprint classifications are simplified and explicitly labeled. Real outputs vary by venue, feed, vendor, asset class, session, aggregation, and classification method. Confirm the data source, the classification method, execution costs, and risk before acting on anything you read here.</p>
+      <p class="risk"><strong>Educational course.</strong> This course is educational. It does not connect to a broker, ingest live market data, place orders, provide trading signals, or claim that any automated strategy will be profitable, and no page in it can submit an order. All market paths, events, orders, failures and portfolio states in these lessons are deterministic synthetic examples. Automating a strategy does not reduce its risk: it removes the pause in which a person would have noticed a stale price, a duplicated order, a wrong size or a broken assumption, so an automated system can lose money faster and more consistently than a manual one. Real outcomes vary by data source, vendor, venue, asset class, session, liquidity, latency, broker behaviour and the execution you actually get. Confirm the data, the risk limits, the broker's rules and your own obligations before running anything against a live account.</p>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
       <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
     </footer>
@@ -2452,7 +2523,7 @@
     (function () {
       var root = document.documentElement;
       var toggle = document.getElementById('themeToggle');
-      var KEY = 'learn-theme'; // shared with the library, the path pages, courses 1-4 and every lesson — keep identical
+      var KEY = 'learn-theme'; // shared with the library, the path pages, courses 1-7 and every lesson — keep identical
       var mql = window.matchMedia('(prefers-color-scheme: light)');
 
       function stored() {

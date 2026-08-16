@@ -535,9 +535,12 @@
     /* ---------- The courses inside a path ----------
        Titles only, deliberately NOT links: this page routes to a path, and a
        path page owns its course links. One destination per card keeps the
-       stretched-link hit target honest. Upcoming courses are listed in order and
-       carry a visible "Upcoming" tag, so they are announced without pretending
-       to be openable. */
+       stretched-link hit target honest. The .soon variants below list a course
+       that has no page yet: they are unused today, because the one path in the
+       library is complete, and they are kept because the NEXT path will arrive
+       part-written and must announce its unfinished courses in order rather than
+       hide them. Using them again means adding the visible "Upcoming" tag with
+       them; the tag is what carries the meaning, never the muted colour. */
     .strip {
       margin-top: 2px;
       padding: 13px 14px;
@@ -786,9 +789,11 @@
 
     /* ---------- SVG theming (classes, not hardcoded hex, so both themes work) ----------
        The artwork on this page is subject-neutral by design: it draws ORDER and
-       AVAILABILITY — numbered nodes on a rail, solid for what is ready, dashed for
-       what is not — and never a chart, a formula or anything else that would tie
-       the library index to one subject. */
+       AVAILABILITY — numbered nodes on a rail, solid for what is ready, dashed
+       for what is not — and never a chart, a formula or anything else that would
+       tie the library index to one subject. The dashed "-soon" variants are
+       unused while every course in the library is published; they stay for the
+       next path, which will arrive part-written. */
     .sv-rail { stroke: var(--line-strong); stroke-width: 2; stroke-linecap: round; }
     .sv-rail-live { stroke: var(--cyan); stroke-width: 2; stroke-linecap: round; }
     .sv-node { fill: var(--cyan); }
@@ -944,10 +949,10 @@
         </div>
 
         <div class="hero-visual">
-          <svg class="hero-svg" viewBox="0 0 520 340" role="img" aria-label="Illustration of a path: four courses stacked in order along one rail. Courses one, two and three are drawn as solid panels with a row of lesson markers each; the fourth panel is drawn as a dashed outline labelled upcoming.">
-            <!-- The rail: accent where courses are ready, hairline where they are not. -->
-            <line class="sv-rail-live" x1="40" y1="56" x2="40" y2="208" />
-            <line class="sv-rail" x1="40" y1="208" x2="40" y2="284" />
+          <svg class="hero-svg" viewBox="0 0 520 340" role="img" aria-label="Illustration of a path: four courses stacked in order along one rail, each drawn as a panel with a row of lesson markers, the first one highlighted as the place to start.">
+            <!-- The rail runs the whole way: this draws a path a reader can take
+                 end to end, which is what the library holds today. -->
+            <line class="sv-rail-live" x1="40" y1="56" x2="40" y2="284" />
 
             <!-- Course 1 -->
             <rect class="sv-tile-live" x="70" y="28" width="434" height="56" rx="16" />
@@ -988,12 +993,18 @@
               <rect class="sv-chip-muted" x="218" y="214" width="24" height="6" rx="3" />
             </g>
 
-            <!-- What comes next: drawn, but plainly not ready. -->
-            <rect class="sv-tile-soon" x="70" y="256" width="434" height="56" rx="16" />
-            <circle class="sv-node-soon" cx="40" cy="284" r="15" />
-            <text class="sv-num sv-num-soon" x="40" y="288">4</text>
-            <text class="sv-text" x="90" y="280">UPCOMING</text>
-            <rect class="sv-bar-soon" x="90" y="288" width="120" height="10" rx="5" />
+            <!-- Course 4 -->
+            <rect class="sv-tile" x="70" y="256" width="434" height="56" rx="16" />
+            <circle class="sv-node" cx="40" cy="284" r="15" />
+            <text class="sv-num" x="40" y="288">4</text>
+            <text class="sv-text sv-text-live" x="90" y="280">COURSE 4</text>
+            <g>
+              <rect class="sv-chip-muted" x="90" y="290" width="24" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="122" y="290" width="24" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="154" y="290" width="24" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="186" y="290" width="24" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="218" y="290" width="24" height="6" rx="3" />
+            </g>
           </svg>
         </div>
       </section>
@@ -1005,7 +1016,7 @@
             <h2 id="paths-title">Paths</h2>
             <p>A path is an ordered sequence of courses on one subject, meant to be taken front to back. Each subject arrives as its own path, so a course always sits in a sequence rather than alone on a shelf. One path is open today; more are being written. Looking for a single course instead? <a href="#find">Search by title or topic</a>.</p>
           </div>
-          <p class="count-chip">1 path · 7 courses available</p>
+          <p class="count-chip">1 path · 8 courses available</p>
         </div>
 
         <!-- ===================================================================
@@ -1020,8 +1031,11 @@
                   (one span per course, class "ready" on the ones available now)
                3. the .strip-head id + the aria-labelledby that points at it (ids
                   must stay unique) and the <li> items of .course-strip: every
-                  course in order, each either with its lesson count or with the
-                  "Upcoming" tag and NO invented count
+                  course in order with its lesson count. A path that arrives
+                  part-written lists its unfinished courses here too, in order,
+                  with the .soon variants and the visible "Upcoming" tag (see the
+                  .strip and SVG comments above) and NO invented lesson count —
+                  the trading path needs none of that, because it is complete.
                4. the artwork and its aria-label
              Nothing in the CSS changes: .paths is an auto-fit grid, so one card
              fills the row and two split it. Then update, outside the card: the
@@ -1033,9 +1047,8 @@
 
           <li class="path-card">
             <div class="path-cover">
-              <svg viewBox="0 0 400 272" role="img" aria-label="Eight courses in order on one rail. The first seven are drawn as solid bars whose length is that course's lesson count — 7, 15, 16, 16, 16, 16 and 16 lessons. The last one is drawn as a dashed outline, because it is not available yet.">
-                <line class="sv-rail-live" x1="34" y1="20" x2="34" y2="218" />
-                <line class="sv-rail" x1="34" y1="218" x2="34" y2="251" />
+              <svg viewBox="0 0 400 272" role="img" aria-label="Eight courses in order on one rail, all of them drawn as solid bars whose length is that course's lesson count — 7, 15, 16, 16, 16, 16, 16 and 16 lessons.">
+                <line class="sv-rail-live" x1="34" y1="20" x2="34" y2="251" />
 
                 <!-- Available: bar length = lesson count -->
                 <circle class="sv-node" cx="34" cy="20" r="11" />
@@ -1063,7 +1076,6 @@
                 <rect class="sv-bar" x="54" y="146" width="260" height="12" rx="6" />
                 <text class="sv-text" x="322" y="156">16</text>
 
-                <!-- Upcoming: uniform dashed outlines, so no length can be read as a count -->
                 <circle class="sv-node" cx="34" cy="185" r="11" />
                 <text class="sv-num" x="34" y="189">6</text>
                 <rect class="sv-bar" x="54" y="179" width="260" height="12" rx="6" />
@@ -1074,21 +1086,22 @@
                 <rect class="sv-bar" x="54" y="212" width="260" height="12" rx="6" />
                 <text class="sv-text" x="322" y="222">16</text>
 
-                <circle class="sv-node-soon" cx="34" cy="251" r="11" />
-                <text class="sv-num sv-num-soon" x="34" y="255">8</text>
-                <rect class="sv-bar-soon" x="54" y="245" width="110" height="12" rx="6" />
+                <circle class="sv-node" cx="34" cy="251" r="11" />
+                <text class="sv-num" x="34" y="255">8</text>
+                <rect class="sv-bar" x="54" y="245" width="260" height="12" rx="6" />
+                <text class="sv-text" x="322" y="255">16</text>
               </svg>
             </div>
 
             <div class="path-body">
               <div class="meta-row">
                 <span class="subject-tag">Subject · Trading</span>
-                <span class="meta-note">7 of 8 courses available</span>
+                <span class="meta-note">8 of 8 courses available</span>
               </div>
 
               <h3><a class="path-link" href="./paths/trading/">Trading</a></h3>
 
-              <p class="tagline">Read what price is doing, turn that read into a plan you can execute, then go deep on options, on the indicator toolkit, and on what traded volume and order flow actually show.</p>
+              <p class="tagline">Read what price is doing, turn that read into a plan you can execute, then go deep on options, on the indicator toolkit, on what traded volume and order flow actually show, on sizing the risk, on testing the rules, and on building the system that runs them.</p>
 
               <dl class="stats">
                 <div>
@@ -1097,17 +1110,17 @@
                 </div>
                 <div>
                   <dt>Available now</dt>
-                  <dd>7<small>102 lessons</small></dd>
+                  <dd>8<small>118 lessons</small></dd>
                 </div>
                 <div>
-                  <dt>Upcoming</dt>
-                  <dd>1<small>not yet available</small></dd>
+                  <dt>Status</dt>
+                  <dd>Complete<small>every course published</small></dd>
                 </div>
               </dl>
 
               <div class="meter" aria-hidden="true">
                 <span class="ready"></span><span class="ready"></span><span class="ready"></span><span class="ready"></span><span class="ready"></span>
-                <span class="ready"></span><span class="ready"></span><span></span>
+                <span class="ready"></span><span class="ready"></span><span class="ready"></span>
               </div>
 
               <div class="strip">
@@ -1120,7 +1133,7 @@
                   <li><span class="cs-num"><span class="visually-hidden">Course </span>05</span> <span class="cs-title">Volume and Order Flow</span> <span class="cs-tag">16 lessons</span></li>
                   <li><span class="cs-num"><span class="visually-hidden">Course </span>06</span> <span class="cs-title">Trading Risk Management</span> <span class="cs-tag">16 lessons</span></li>
                   <li><span class="cs-num"><span class="visually-hidden">Course </span>07</span> <span class="cs-title">Backtesting and Trading Systems</span> <span class="cs-tag">16 lessons</span></li>
-                  <li><span class="cs-num soon"><span class="visually-hidden">Course </span>08</span> <span class="cs-title soon">Algorithmic and Automated Trading</span> <span class="cs-tag soon">Upcoming</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>08</span> <span class="cs-title">Algorithmic and Automated Trading</span> <span class="cs-tag">16 lessons</span></li>
                 </ol>
               </div>
 
@@ -1247,10 +1260,11 @@
        --------------------------------------------------------------------- */
     (function () {
       /* The individual courses a reader can open TODAY, in path order.
-         Trading course 8 is deliberately absent: a result here is a link,
-         and a course that has no page yet has nothing to open — listing it would
-         produce a search hit that goes nowhere. Add one the day its home page
-         ships, not before. Titles and descriptions are what search matches. */
+         A result here is a link, so a course belongs in this array only once its
+         home page exists — trading course 8 was deliberately absent until it
+         shipped, and was added the day it did. All eight trading courses are
+         published, so all eight are searchable. Titles and descriptions are what
+         search matches. */
       var COURSES = [
         {
           title: 'Market Structure',
@@ -1307,6 +1321,14 @@
           position: 'Course 7',
           lessons: 16,
           href: './backtesting-and-trading-systems/'
+        },
+        {
+          title: 'Algorithmic and Automated Trading',
+          description: 'Build the system that runs a strategy: separating strategy, signal, risk, order and execution responsibilities, system architecture, market data ingestion and normalization, exchange calendars and scheduling, the signal engine and strategy state, the portfolio and risk engine, broker APIs and the order lifecycle, order management and execution quality, paper trading and forward testing, scanners, alerts and human approval, idempotency, retries and recovery, observability and auditability, secrets, permissions and kill switches, deployment, environments and rollback, AI-assisted and agentic workflows, and a versioned production specification.',
+          path: 'Trading',
+          position: 'Course 8',
+          lessons: 16,
+          href: './algorithmic-and-automated-trading/'
         }
       ];
 

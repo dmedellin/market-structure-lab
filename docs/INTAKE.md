@@ -1,9 +1,12 @@
 # Onboarding a generated course
 
 The lesson generator produces good **content** and does not keep to this site's
-**standards**. Every one of the seven packages that has arrived shipped the same
+**standards**. Every one of the eight packages that has arrived shipped the same
 defects, the first four were repaired by hand, and twice that repair drifted —
-at one point a single course carried three incompatible pager families.
+at one point a single course carried three incompatible pager families. The
+eighth package, course 8, was the first to pass the dry run with no intervention
+at all: 16 of 16 lessons normalizable, exit 0. It still arrived with its own
+theme key.
 
 `scripts/intake_course.py` is the deterministic fix. It applies the pinned
 standards to a fresh package so that onboarding a course is content work and
@@ -161,9 +164,9 @@ The tool writes no teaching copy and never will.
 | No `@media (prefers-color-scheme: light)` block | Writes one, value-identical to the toggle path |
 | No `color-scheme` | Declares `dark` for `:root` and `[data-theme="dark"]`, `light` in both light paths |
 | `[data-theme="light"] .foo { … }` component overrides | Lifts the colours into a custom property both light paths declare. **Values are unchanged** — see the note below |
-| Its own `localStorage` theme key — **seven** distinct keys, one per package | Classifies the theme region statement by statement and rewrites it to the pinned implementation on `learn-theme` |
+| Its own `localStorage` theme key — **eight** distinct keys, one per package | Classifies the theme region statement by statement and rewrites it to the pinned implementation on `learn-theme` |
 | Theme applied after first paint | Injects the pre-paint script last in `<head>`, plus a `<noscript>` rule that hides the JS-only toggle — and **removes** the statement classified as *applies the stored theme at load*, so the stored theme is applied exactly once |
-| A toggle whose `aria-label` is rewritten from script, or whose id is the package's own (`themeBtn`) | Replaces **that button only** with the pinned, direction-neutral toggle, and points the icon swap and click listener at the pinned id. In courses 6–7 the button sits in a `.top-actions` div beside a `#resetBtn`: the reset button, its id and its handler are untouched |
+| A toggle whose `aria-label` is rewritten from script, or whose id is the package's own (`themeBtn`) | Replaces **that button only** with the pinned, direction-neutral toggle, and points the icon swap and click listener at the pinned id. In courses 6–8 the button sits in a `.top-actions` div beside a `#resetBtn`: the reset button, its id and its handler are untouched |
 | Light values for tokens the palette does not pin (course 5 ships `--bg2`/`--panel2`/`--panel3`/`--line2` where courses 1–4 ship `--bg-2`/`--panel-2`/…) | Carries the package's own light declaration across verbatim, so rewriting the block does not delete it. No value is chosen — a token the package never gave a light value still has none |
 | No breadcrumb, no pager | Injects both, with correct first/last handling: the first lesson omits the prev anchor rather than shipping a disabled one, and the last lesson's forward link points at the course home with no `rel` |
 | A footer with no site identity | Keeps the generator's notice prose verbatim and adds the copyright, licence and library link |
@@ -194,10 +197,10 @@ judgement calls, and judgement calls belong to a person.
 ## The theme block: classified, not memorized
 
 The generator is consistent about the defects and **not** consistent about the
-code that carries them. Seven packages have produced **three** theme
+code that carries them. Eight packages have produced **three** theme
 implementations, sharing no code and no names:
 
-| | courses 1–4 | course 5 | courses 6–7 |
+| | courses 1–4 | course 5 | courses 6–8 |
 | --- | --- | --- | --- |
 | Toggle | `<button id="themeToggle">`, `aria-label` rewritten from script | `<button id="themeBtn">`, `textContent` swapped between `☀` and `☾` | `<button id="themeBtn">` **inside a `.top-actions` div beside a `#resetBtn`** |
 | Theme functions | one `function setupTheme(){…}` holding every storage call | `storedTheme()` + `setTheme(theme)` | `setTheme(theme)` collapsed to a **one-liner**, no reader function |
@@ -205,10 +208,11 @@ implementations, sharing no code and no names:
 | When the stored theme is applied | inside `setupTheme()` | `setTheme(storedTheme()\|\|"dark")` at the end of the script — after first paint, so the page flashes | `setTheme(saved\|\|'dark');` — same flash |
 | Repaint hook | `onThemeChange()`, called only if the lesson defines one | `window.redrawLab()` | `window.redrawLab()` |
 | Quote style | single | double | single |
-| Storage key | `marketStructureTheme`, `market-lab-theme`, `options-course-theme`, `technical-indicators-theme` | `vof-theme` | `trm-theme`, `bts-theme` |
+| Storage key | `marketStructureTheme`, `market-lab-theme`, `options-course-theme`, `technical-indicators-theme` | `vof-theme` | `trm-theme`, `bts-theme`, `aat-theme` |
 
-Seven packages, seven keys. **The generator has never shipped this block twice
-the same way.**
+Eight packages, eight keys. **The generator never shipped this block twice the
+same way** — and it never shipped the shared key either, not once, including in
+the package that otherwise needed no intervention.
 
 ### Why sequence matching was abandoned
 

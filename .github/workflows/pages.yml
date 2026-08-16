@@ -48,9 +48,10 @@ jobs:
           # The published URL space: the site index at /, the path page at
           # /paths/trading/, a home per course (/market-structure/,
           # /trade-setup-execution/, /options-trading/, /technical-indicators/,
-          # /volume-and-order-flow/, /trading-risk-management/ and
-          # /backtesting-and-trading-systems/), and each course's lessons
-          # beneath its own home -- 111 pages, in path order -- plus six
+          # /volume-and-order-flow/, /trading-risk-management/,
+          # /backtesting-and-trading-systems/ and
+          # /algorithmic-and-automated-trading/), and each course's lessons
+          # beneath its own home -- 128 pages, in path order -- plus seven
           # published non-HTML assets. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py and acceptance.checks in
           # release/contract.json. Publishing a tree that is missing a page
@@ -172,30 +173,49 @@ jobs:
                       backtesting-and-trading-systems/in-sample-validation-and-out-of-sample-data/index.html \
                       backtesting-and-trading-systems/walk-forward-testing/index.html \
                       backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/index.html \
-                      backtesting-and-trading-systems/trading-system-specification-and-backtest-report/index.html ; do
+                      backtesting-and-trading-systems/trading-system-specification-and-backtest-report/index.html \
+                      algorithmic-and-automated-trading/index.html \
+                      algorithmic-and-automated-trading/algorithmic-and-automated-trading-fundamentals/index.html \
+                      algorithmic-and-automated-trading/trading-system-architecture-and-components/index.html \
+                      algorithmic-and-automated-trading/market-data-ingestion-and-normalization/index.html \
+                      algorithmic-and-automated-trading/time-sessions-events-and-scheduling/index.html \
+                      algorithmic-and-automated-trading/signal-engine-and-strategy-state/index.html \
+                      algorithmic-and-automated-trading/portfolio-position-and-risk-engine/index.html \
+                      algorithmic-and-automated-trading/broker-apis-and-order-lifecycle/index.html \
+                      algorithmic-and-automated-trading/order-management-and-execution/index.html \
+                      algorithmic-and-automated-trading/paper-trading-and-forward-testing/index.html \
+                      algorithmic-and-automated-trading/scanners-alerts-and-human-approval/index.html \
+                      algorithmic-and-automated-trading/reliability-idempotency-retries-and-recovery/index.html \
+                      algorithmic-and-automated-trading/observability-logging-and-auditability/index.html \
+                      algorithmic-and-automated-trading/security-secrets-permissions-and-kill-switches/index.html \
+                      algorithmic-and-automated-trading/deployment-environments-and-configuration/index.html \
+                      algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/index.html \
+                      algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "site/$page" ]; then
               echo "::error::missing site/$page -- refusing to publish an incomplete course"
               missing=1
             fi
           done
-          # Six courses ship an exchange schema as a real published file:
+          # Seven courses ship an exchange schema as a real published file:
           # course 2's lesson 14 exports the journal shape and its lesson 15
           # imports it, course 3's lesson 16 exports the trade plan shape,
           # course 4's lesson 16 exports the indicator rule shape, course
           # 5's lesson 16 exports the volume and order flow rule shape, course
-          # 6's lesson 16 exports the trading risk plan shape, and course 7's
-          # lesson 16 exports the trading system specification shape. Each
-          # course home links to its file. An unparseable one 404s nothing and
-          # breaks the handoff silently, so all six are parsed here, not merely
-          # counted -- and declared as assets rather than pushed through the
-          # page loop above, which asserts things only a document can have.
+          # 6's lesson 16 exports the trading risk plan shape, course 7's
+          # lesson 16 exports the trading system specification shape, and
+          # course 8's lesson 16 exports the automated trading system shape.
+          # Each course home links to its file. An unparseable one 404s nothing
+          # and breaks the handoff silently, so all seven are parsed here, not
+          # merely counted -- and declared as assets rather than pushed through
+          # the page loop above, which asserts things only a document can have.
           for asset in trade-setup-execution/trade-journal-schema.json \
                        options-trading/options-trade-plan-schema.json \
                        technical-indicators/indicator-rule-schema.json \
                        volume-and-order-flow/volume-order-flow-rule-schema.json \
                        trading-risk-management/trading-risk-plan-schema.json \
-                       backtesting-and-trading-systems/trading-system-specification-schema.json ; do
+                       backtesting-and-trading-systems/trading-system-specification-schema.json \
+                       algorithmic-and-automated-trading/automated-trading-system-schema.json ; do
             if [ ! -f "site/$asset" ]; then
               echo "::error::missing site/$asset -- refusing to publish an incomplete course"
               missing=1
@@ -205,7 +225,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "self-containment OK; all $pages pages and 6 assets present"
+          echo "self-containment OK; all $pages pages and 7 assets present"
 
       # NOTE: `enablement: true` was tried here and fails --- GITHUB_TOKEN
       # cannot create a Pages site ("Resource not accessible by integration").

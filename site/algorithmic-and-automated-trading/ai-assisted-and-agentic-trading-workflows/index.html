@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Use AI for research, extraction, classification, and trade proposals while keeping market data, rules, risk, permissions, and execution controls deterministic and auditable." />
+  <title>AI-Assisted and Agentic Trading Workflows · Algorithmic and Automated Trading</title>
+  <link rel="canonical" href="https://learn.geterdone.io/algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/" />
+  <meta name="author" content="dmedellin" />
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="learn.geterdone.io" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="AI-Assisted and Agentic Trading Workflows · Algorithmic and Automated Trading" />
+  <meta property="og:description" content="Use AI for research, extraction, classification, and trade proposals while keeping market data, rules, risk, permissions, and execution controls deterministic and auditable." />
+  <meta property="og:url" content="https://learn.geterdone.io/algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/" />
+  <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="AI-Assisted and Agentic Trading Workflows · Algorithmic and Automated Trading" />
+  <meta name="twitter:description" content="Use AI for research, extraction, classification, and trade proposals while keeping market data, rules, risk, permissions, and execution controls deterministic and auditable." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M14 45L26 33L38 41L51 18' fill='none' stroke='%23041116' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='14' cy='45' r='4.5'/%3E%3Ccircle cx='26' cy='33' r='4.5'/%3E%3Ccircle cx='38' cy='41' r='4.5'/%3E%3Ccircle cx='51' cy='18' r='4.5'/%3E%3C/g%3E%3C/svg%3E" />
+  <style>
+:root{
+  --bg:#071019;--bg2:#0a1520;--panel:#0f1f2e;--panel2:#142638;--panel3:#192e42;
+  --text:#edf8ff;--muted:#93aabd;--line:rgba(174,204,226,.16);--line2:rgba(174,204,226,.3);
+  --cyan:#39d8e8;--cyan2:#9af6ff;--green:#42e39a;--red:#ff6f7e;--amber:#ffc85a;
+  --purple:#b59cff;--blue:#79aaff;--shadow:0 24px 70px rgba(0,0,0,.35);--radius:20px
+}
+:root { color-scheme: dark; }
+
+/* System preference, only when the reader has NOT made an explicit choice.
+   The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+   survive on a light-mode OS. Values are pinned in LIGHT_PALETTE
+   (tests/test_site_invariants.py) and written here by
+   scripts/intake_course.py. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #edf4f8;
+    --panel: rgba(255, 255, 255, 0.94);
+    --text: #102433;
+    --muted: #586c7c;
+    --line: rgba(24, 62, 88, 0.13);
+    --cyan: #0e7382;
+    --green: #10784f;
+    --red: #c22a34;
+    --amber: #8a5a06;
+    --purple: #6b46d6;
+    --blue: #1d5fd0;
+    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    --bg2: #f9fbfd;
+    --line2: rgba(24,62,88,.25);
+    --panel2: #f3f8fb;
+    --panel3: #eaf2f7;
+  }
+}
+
+/* Explicit choice (localStorage key: learn-theme). Value-identical to the
+   media block above - the two light paths must never disagree. */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #edf4f8;
+  --panel: rgba(255, 255, 255, 0.94);
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --cyan: #0e7382;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  --bg2: #f9fbfd;
+  --line2: rgba(24,62,88,.25);
+  --panel2: #f3f8fb;
+  --panel3: #eaf2f7;
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);
+  background:radial-gradient(circle at 12% 5%,rgba(57,216,232,.13),transparent 30rem),
+  radial-gradient(circle at 89% 10%,rgba(181,156,255,.11),transparent 28rem),
+  linear-gradient(180deg,var(--bg),var(--bg2));
+  font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{color:inherit}a{color:inherit}canvas{display:block;width:100%;height:auto}
+.shell{width:min(1220px,calc(100% - 28px));margin:auto;padding:22px 0 64px}
+.topbar{position:sticky;top:12px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--panel) 93%,transparent);
+  backdrop-filter:blur(18px);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}.brand-mark{width:39px;height:39px;display:grid;place-items:center;
+  border-radius:12px;color:#041116;font-weight:950;background:linear-gradient(135deg,var(--cyan2),var(--cyan));
+  box-shadow:0 8px 26px rgba(57,216,232,.25)}
+.brand-copy strong,.brand-copy span{display:block}.brand-copy strong{font-size:.96rem}.brand-copy span{color:var(--muted);font-size:.75rem}
+.top-actions{display:flex;gap:8px}.icon-btn{width:39px;height:39px;border:1px solid var(--line);border-radius:11px;display:grid;
+  place-items:center;background:var(--panel2);cursor:pointer;transition:.15s}.icon-btn:hover{transform:translateY(-1px);border-color:var(--line2)}
+.hero{display:grid;grid-template-columns:1.12fr .88fr;gap:28px;align-items:center;padding:70px 8px 42px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;color:var(--cyan2);border:1px solid rgba(57,216,232,.28);
+  border-radius:999px;background:rgba(57,216,232,.08);font-size:.77rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 5px rgba(57,216,232,.12)}
+.hero>div,.hero-card{min-width:0}h1{max-width:850px;margin:18px 0 15px;font-size:clamp(2.45rem,5.6vw,5.15rem);line-height:.98;letter-spacing:-.058em;overflow-wrap:anywhere}
+.gradient-text{background:linear-gradient(110deg,var(--cyan2),var(--purple));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero>div>p{max-width:720px;margin:0;color:var(--muted);font-size:clamp(1rem,1.8vw,1.16rem)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.btn{border:1px solid var(--line);border-radius:12px;padding:11px 15px;background:var(--panel2);color:var(--text);cursor:pointer;
+  text-decoration:none;font-weight:780;font-size:.9rem;transition:.15s}.btn:hover{transform:translateY(-1px);border-color:var(--line2)}
+.btn.primary{color:#041116;border-color:transparent;background:linear-gradient(135deg,var(--cyan2),var(--cyan))}
+.btn.ghost{background:transparent}.btn.small{padding:8px 11px;font-size:.8rem;border-radius:10px}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.hero-card{position:relative;min-height:330px;border:1px solid var(--line);border-radius:28px;overflow:hidden;padding:24px;
+  background:linear-gradient(rgba(174,204,226,.055) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(174,204,226,.055) 1px,transparent 1px),var(--panel);
+  background-size:38px 38px,38px 38px,auto;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between}
+.hero-card:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-100px;top:-90px;
+  background:radial-gradient(circle,rgba(57,216,232,.22),transparent 67%)}
+.state-row{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.state-tag{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;border:1px solid var(--line2);
+  background:color-mix(in srgb,var(--panel2) 92%,transparent);font-weight:850;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+.market-icon{width:55px;height:55px;border-radius:16px;display:grid;place-items:center;background:rgba(57,216,232,.1);border:1px solid rgba(57,216,232,.22);
+  color:var(--cyan2);font-size:1.5rem;font-weight:900}
+.behavior-copy{position:relative;z-index:1}.behavior-copy h3{font-size:clamp(1.5rem,2.8vw,2.25rem);line-height:1.08;letter-spacing:-.035em;margin:0 0 11px}
+.behavior-copy p{color:var(--muted);margin:0}.pressure{position:relative;z-index:1;margin-top:20px}
+.pressure-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.pressure-track{height:9px;border-radius:999px;margin-top:7px;background:linear-gradient(90deg,var(--red),var(--panel3) 50%,var(--green));position:relative}
+.pressure-pin{position:absolute;top:50%;left:50%;width:17px;height:17px;border-radius:50%;transform:translate(-50%,-50%);background:var(--text);border:4px solid var(--cyan);box-shadow:0 0 0 4px rgba(57,216,232,.12)}
+.section{padding:34px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:17px}
+.section-head h2{margin:0;font-size:clamp(1.6rem,3vw,2.45rem);letter-spacing:-.04em}.section-head p{max-width:650px;margin:0;color:var(--muted)}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:20px;box-shadow:0 12px 34px rgba(0,0,0,.12)}
+.card-num{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(57,216,232,.1);color:var(--cyan2);font-weight:900;border:1px solid rgba(57,216,232,.2)}
+.card h3{margin:16px 0 7px;font-size:1.05rem}.card p{margin:0;color:var(--muted)}
+.lab{border:1px solid var(--line);border-radius:26px;background:var(--panel);overflow:hidden;box-shadow:var(--shadow)}
+.lab-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.lab-head h3{margin:0;font-size:1.13rem}.lab-head p{margin:3px 0 0;color:var(--muted);font-size:.82rem}
+.lab-body{display:grid;grid-template-columns:minmax(0,1fr) 310px;min-height:500px}
+.chart-pane{padding:18px;min-width:0}.chart-wrap{position:relative;border:1px solid var(--line);border-radius:17px;overflow:hidden;
+  background:linear-gradient(rgba(174,204,226,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(174,204,226,.05) 1px,transparent 1px),var(--bg);
+  background-size:42px 42px,42px 42px,auto}
+.chart-wrap canvas{aspect-ratio:16/9;min-height:360px}
+.chart-badge{position:absolute;left:14px;top:14px;padding:6px 9px;border:1px solid var(--line2);border-radius:9px;background:rgba(7,16,25,.82);color:#eef9ff;font-size:.72rem;font-weight:800}
+.controls{padding:18px;border-left:1px solid var(--line);background:color-mix(in srgb,var(--panel2) 58%,var(--panel))}
+.control{margin-bottom:17px}.control:last-child{margin-bottom:0}.control label{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px;font-size:.78rem;color:var(--muted);font-weight:780}
+.control label output{color:var(--text)}select,input[type=number],input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);padding:9px 10px}
+input[type=range]{width:100%;accent-color:var(--cyan)}.segmented{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.segmented.cols3{grid-template-columns:repeat(3,1fr)}.segmented button{border:1px solid var(--line);border-radius:10px;padding:9px 7px;background:var(--panel);cursor:pointer;font-size:.76rem;font-weight:780}
+.segmented button.active{border-color:rgba(57,216,232,.5);background:rgba(57,216,232,.12);color:var(--cyan2)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.kpi{padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}
+.kpi span{display:block;color:var(--muted);font-size:.67rem;text-transform:uppercase;letter-spacing:.04em;font-weight:800}.kpi strong{display:block;margin-top:3px;font-size:.96rem}
+.market-read{margin-top:14px;padding:15px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);position:relative;overflow:hidden}
+.market-read:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cyan)}
+.market-read.bull:before{background:var(--green)}.market-read.bear:before{background:var(--red)}.market-read.warn:before{background:var(--amber)}
+.market-read small{display:block;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.05em;font-size:.65rem}
+.market-read strong{display:block;margin:4px 0 5px}.market-read p{margin:0;color:var(--muted);font-size:.83rem}
+/* The participation reading: a subordinate second layer inside the same block as
+   the structural statement -- what the drawn structure is conventionally READ AS.
+   Tokens only, no new colour values, and no new palette entry. */
+.market-read .participation{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line2)}
+.market-read .participation small{margin-bottom:3px}
+.mini-note{margin-top:12px;color:var(--muted);font-size:.76rem}.formula{padding:12px;border-radius:11px;background:var(--bg);border:1px solid var(--line);font:700 .78rem/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:auto}
+.reading-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.reading{display:flex;gap:13px;padding:17px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.reading b{flex:0 0 auto;width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:var(--panel3);color:var(--cyan2)}
+.reading h3{margin:0 0 4px;font-size:.92rem}.reading p{margin:0;color:var(--muted);font-size:.82rem}
+.quiz{display:grid;gap:12px}.question{padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+.question h3{margin:0 0 12px;font-size:.98rem}.choices{display:grid;gap:8px}.choice{border:1px solid var(--line);border-radius:11px;background:var(--panel2);padding:10px 12px;text-align:left;cursor:pointer}
+.choice:hover{border-color:var(--line2)}.choice.correct{border-color:rgba(66,227,154,.55);background:rgba(66,227,154,.11)}.choice.wrong{border-color:rgba(255,111,126,.55);background:rgba(255,111,126,.1)}
+.feedback{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);color:var(--muted);font-size:.82rem}.feedback.show{display:block}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}.list-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:19px}.list-card h3{margin:0 0 12px}
+.list-card ul{margin:0;padding-left:19px;color:var(--muted)}.list-card li+li{margin-top:8px}.list-card.good h3{color:var(--green)}.list-card.bad h3{color:var(--red)}
+.reference{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+.reference p{margin:0;color:var(--muted);font-size:.82rem}.reference a{color:var(--cyan2);text-decoration:none;font-weight:750}.reference a:hover{text-decoration:underline}
+.footer{margin-top:34px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:.76rem}
+.tape{height:360px;overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.tape-row{display:grid;grid-template-columns:70px 1fr 1fr 1fr;gap:8px;padding:7px 10px;border-bottom:1px solid var(--line);font:700 .76rem ui-monospace,SFMono-Regular,Menlo,monospace}
+.tape-row.ask{color:var(--green)}.tape-row.bid{color:var(--red)}.tape-row.mid{color:var(--muted)}
+.book{display:grid;grid-template-columns:1fr 1fr;gap:12px}.book-side{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--bg)}
+.book-head,.book-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 10px}.book-head{font-size:.68rem;color:var(--muted);text-transform:uppercase;font-weight:850;background:var(--panel2)}
+.book-row{position:relative;border-top:1px solid var(--line);font:700 .78rem ui-monospace,SFMono-Regular,Menlo,monospace}.depth-bar{position:absolute;top:2px;bottom:2px;opacity:.13;z-index:0}
+.book-row>*{position:relative;z-index:1}.bidbar{right:0;background:var(--green)}.askbar{left:0;background:var(--red)}
+.footprint{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--bg);padding:10px}.fp-grid{display:grid;gap:3px;min-width:520px}.fp-row{display:grid;grid-template-columns:72px repeat(6,1fr);gap:3px}
+.fp-cell{padding:7px 5px;border-radius:6px;text-align:center;background:var(--panel2);font:700 .68rem ui-monospace,SFMono-Regular,Menlo,monospace}
+.fp-cell.price{color:var(--muted);background:transparent;text-align:right}.fp-cell.pos{background:rgba(66,227,154,.14)}.fp-cell.neg{background:rgba(255,111,126,.14)}.fp-cell.hot{outline:1px solid var(--amber)}
+.rule-output{white-space:pre-wrap;min-height:180px;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font:700 .75rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan2)}
+.status{padding:10px 12px;border-radius:11px;border:1px solid var(--line);background:var(--panel);font-size:.8rem}.status.ok{border-color:rgba(66,227,154,.4);color:var(--green)}.status.warn{border-color:rgba(255,200,90,.4);color:var(--amber)}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:48px}.hero-card{min-height:280px}.grid-3,.reading-grid{grid-template-columns:1fr}.lab-body{grid-template-columns:1fr}.controls{border-left:0;border-top:1px solid var(--line)}.two-col{grid-template-columns:1fr}}
+@media(max-width:620px){.shell{width:min(100% - 18px,1220px);padding-top:9px}.topbar{top:7px}.brand-copy span{display:none}.hero{padding:42px 2px 28px}h1{font-size:clamp(2.35rem,14vw,3.5rem)}.section{padding:27px 0}.section-head{display:block}.section-head p{margin-top:7px}.lab-head{align-items:flex-start;flex-direction:column}.chart-pane{padding:10px}.chart-wrap canvas{min-height:310px;aspect-ratio:4/5}.controls{padding:14px}.kpis{grid-template-columns:1fr}.footer,.reference{display:block}.reference a{display:inline-block;margin-top:8px}.book{grid-template-columns:1fr}.segmented.cols3{grid-template-columns:1fr}.top-actions .icon-btn:first-child{display:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.risk-meter{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--panel2)}
+.risk-track{height:16px;border-radius:999px;overflow:hidden;background:var(--bg);border:1px solid var(--line);display:flex}
+.risk-track span{height:100%;display:block;transition:width .2s}.risk-track .used{background:var(--red)}.risk-track .open{background:var(--amber)}.risk-track .free{background:rgba(66,227,154,.55)}
+.risk-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:9px;color:var(--muted);font-size:.75rem}.risk-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:13px}.metric{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}.metric small{display:block;color:var(--muted);font-weight:800;text-transform:uppercase;font-size:.65rem;letter-spacing:.04em}.metric strong{display:block;font-size:1.05rem;margin-top:4px}
+.calc-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;overflow:hidden;border:1px solid var(--line);border-radius:13px}.calc-table th,.calc-table td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;font-size:.76rem}.calc-table th:first-child,.calc-table td:first-child{text-align:left}.calc-table tr:last-child td{border-bottom:0}.calc-table th{color:var(--muted);background:var(--panel2);text-transform:uppercase;letter-spacing:.04em;font-size:.64rem}
+.sequence{display:flex;gap:5px;flex-wrap:wrap;margin-top:14px}.trade-chip{min-width:38px;padding:7px 8px;text-align:center;border:1px solid var(--line);border-radius:8px;font:800 .72rem ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--panel2)}.trade-chip.win{color:var(--green);border-color:rgba(66,227,154,.3)}.trade-chip.loss{color:var(--red);border-color:rgba(255,111,126,.3)}.trade-chip.stop{color:var(--amber);border-color:rgba(255,200,90,.35)}
+.portfolio{display:grid;gap:7px;margin-top:14px}.position-row{display:grid;grid-template-columns:1.1fr .75fr .75fr .8fr;gap:7px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:.75rem}.position-row.head{color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.04em;background:transparent;border:0;padding:2px 9px}.position-row input{padding:7px 8px}
+.gauge{position:relative;height:22px;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--amber) 55%,var(--red));border:1px solid var(--line);margin-top:14px}.gauge-pin{position:absolute;top:50%;width:18px;height:30px;border-radius:8px;transform:translate(-50%,-50%);background:var(--text);border:4px solid var(--cyan);box-shadow:0 0 0 4px rgba(57,216,232,.12);transition:left .2s}
+.payoff-wrap{margin-top:14px;border:1px solid var(--line);border-radius:13px;padding:12px;background:var(--bg)}
+.inline-fields{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.inline-fields.three{grid-template-columns:repeat(3,1fr)}
+.schema-output{white-space:pre-wrap;min-height:210px;max-height:420px;overflow:auto;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font:700 .74rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan2)}
+.checks{display:grid;gap:7px;margin-top:12px}.check{padding:9px 10px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);font-size:.77rem}.check.ok{color:var(--green);border-color:rgba(66,227,154,.35)}.check.warn{color:var(--amber);border-color:rgba(255,200,90,.35)}.check.bad{color:var(--red);border-color:rgba(255,111,126,.35)}
+.small-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}.small-grid div{padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);text-align:center}.small-grid small{display:block;color:var(--muted);font-size:.62rem;text-transform:uppercase;font-weight:800}.small-grid strong{font-size:.84rem}
+@media(max-width:620px){.metric-grid,.inline-fields,.inline-fields.three{grid-template-columns:1fr}.position-row{grid-template-columns:1fr 1fr}.position-row.head{display:none}.small-grid{grid-template-columns:1fr 1fr}.calc-table{display:block;overflow-x:auto;white-space:nowrap}}
+
+.data-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.data-table th,.data-table td{padding:9px 10px;border-bottom:1px solid var(--line);font-size:.75rem;text-align:right}.data-table th:first-child,.data-table td:first-child{text-align:left}.data-table tr:last-child td{border-bottom:0}.data-table th{color:var(--muted);background:var(--panel2);text-transform:uppercase;letter-spacing:.04em;font-size:.63rem}.data-table td.bad{color:var(--red)}.data-table td.good{color:var(--green)}.data-table td.warn{color:var(--amber)}
+.legend-row{display:flex;gap:13px;flex-wrap:wrap;margin-top:11px;color:var(--muted);font-size:.72rem}.legend-row span{display:inline-flex;align-items:center;gap:6px}.legend-row i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.split-strip{display:grid;grid-template-columns:50fr 25fr 25fr;overflow:hidden;border-radius:11px;border:1px solid var(--line);margin-top:13px}.split-strip span{padding:8px 9px;text-align:center;font-size:.68rem;font-weight:850;text-transform:uppercase;letter-spacing:.04em}.split-strip .train{background:rgba(57,216,232,.13);color:var(--cyan2)}.split-strip .validate{background:rgba(255,200,90,.13);color:var(--amber)}.split-strip .test{background:rgba(181,156,255,.13);color:var(--purple)}
+.check-line{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:.77rem}.check-line b{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;flex:0 0 auto}.check-line.ok b{background:rgba(66,227,154,.15);color:var(--green)}.check-line.warn b{background:rgba(255,200,90,.15);color:var(--amber)}.check-line.bad b{background:rgba(255,111,126,.15);color:var(--red)}
+.code-output{white-space:pre-wrap;min-height:130px;max-height:360px;overflow:auto;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font:700 .73rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan2)}
+.bar-stack{display:grid;gap:8px;margin-top:13px}.bar-row{display:grid;grid-template-columns:110px minmax(0,1fr) 62px;align-items:center;gap:8px;font-size:.72rem}.bar-row>span:first-child{color:var(--muted)}.bar-track{height:10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden}.bar-track i{display:block;height:100%;border-radius:999px}.bar-row strong{text-align:right}
+.fold-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:13px}.fold-card{padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}.fold-card small{display:block;color:var(--muted);font-size:.62rem;text-transform:uppercase;font-weight:850}.fold-card strong{display:block;margin-top:4px}
+.heatmap-wrap{margin-top:14px;border:1px solid var(--line);border-radius:13px;background:var(--bg);padding:10px;overflow:auto}.heatmap-grid{display:grid;gap:4px;min-width:440px}.heatmap-cell{padding:8px 4px;border-radius:7px;text-align:center;font:750 .66rem ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid rgba(255,255,255,.04)}
+.timeline-list{display:grid;gap:7px;margin-top:13px}.timeline-row{display:grid;grid-template-columns:62px 1fr 74px;gap:8px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:.73rem}.timeline-row span:first-child{color:var(--muted);font-weight:800}.timeline-row strong{text-align:right}
+.inline-note{margin-top:12px;padding:11px 12px;border-left:3px solid var(--cyan);border-radius:8px;background:var(--panel2);color:var(--muted);font-size:.78rem}
+@media(max-width:620px){.data-table{display:block;overflow-x:auto;white-space:nowrap}.fold-grid{grid-template-columns:1fr 1fr}.bar-row{grid-template-columns:82px minmax(0,1fr) 52px}.timeline-row{grid-template-columns:52px 1fr}.timeline-row strong{grid-column:2;text-align:left}}
+
+.system-flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:14px;align-items:stretch}.flow-node{position:relative;padding:12px 9px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);min-height:83px}.flow-node:not(:last-child)::after{content:'→';position:absolute;right:-9px;top:31px;z-index:2;color:var(--muted);font-weight:900}.flow-node small{display:block;color:var(--muted);font-size:.61rem;text-transform:uppercase;letter-spacing:.05em;font-weight:850}.flow-node strong{display:block;margin-top:6px;font-size:.78rem}.flow-node span{display:block;margin-top:5px;color:var(--muted);font-size:.68rem;line-height:1.4}.flow-node.ok{border-color:rgba(66,227,154,.42);box-shadow:inset 0 0 0 1px rgba(66,227,154,.08)}.flow-node.warn{border-color:rgba(255,200,90,.48)}.flow-node.bad{border-color:rgba(255,111,126,.52)}.flow-node.off{opacity:.45;filter:saturate(.5)}
+.event-log{display:grid;gap:7px;margin-top:13px}.event-row{display:grid;grid-template-columns:70px 105px minmax(0,1fr) 90px;gap:8px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:.71rem}.event-row time,.event-row code{color:var(--muted);font:750 .68rem ui-monospace,SFMono-Regular,Menlo,monospace}.event-row strong{text-align:right}.event-row.good strong{color:var(--green)}.event-row.warn strong{color:var(--amber)}.event-row.bad strong{color:var(--red)}
+.state-machine{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px;align-items:center}.state-pill{padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);font-size:.68rem;font-weight:850}.state-pill.active{border-color:var(--cyan);color:var(--cyan2);box-shadow:0 0 0 3px rgba(57,216,232,.08)}.state-arrow{color:var(--muted);font-weight:900}
+.code-output{white-space:pre-wrap;min-height:132px;max-height:360px;overflow:auto;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font:700 .71rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan2)}
+.data-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;border:1px solid var(--line);border-radius:13px;overflow:hidden}.data-table th,.data-table td{padding:9px 10px;border-bottom:1px solid var(--line);font-size:.72rem;text-align:right}.data-table th:first-child,.data-table td:first-child{text-align:left}.data-table tr:last-child td{border-bottom:0}.data-table th{color:var(--muted);background:var(--panel2);text-transform:uppercase;letter-spacing:.04em;font-size:.61rem}.data-table td.bad{color:var(--red)}.data-table td.good{color:var(--green)}.data-table td.warn{color:var(--amber)}
+.status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:13px}.status-card{padding:10px;border:1px solid var(--line);border-radius:11px;background:var(--panel2)}.status-card small{display:block;color:var(--muted);text-transform:uppercase;font-size:.59rem;font-weight:850;letter-spacing:.04em}.status-card strong{display:block;margin-top:4px;font-size:.83rem}.status-card p{margin:5px 0 0;color:var(--muted);font-size:.66rem;line-height:1.4}
+.check-stack{display:grid;gap:8px;margin-top:13px}.check-line{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:.73rem}.check-line b{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;flex:0 0 auto}.check-line.ok b{background:rgba(66,227,154,.15);color:var(--green)}.check-line.warn b{background:rgba(255,200,90,.15);color:var(--amber)}.check-line.bad b{background:rgba(255,111,126,.15);color:var(--red)}
+.arch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:13px}.arch-card{padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);min-height:90px}.arch-card small{display:block;color:var(--muted);font-size:.6rem;text-transform:uppercase;font-weight:850}.arch-card strong{display:block;margin-top:5px}.arch-card p{margin:5px 0 0;color:var(--muted);font-size:.67rem;line-height:1.4}.arch-card.active{border-color:var(--cyan);box-shadow:inset 0 0 0 1px rgba(57,216,232,.08)}
+.score-track{height:11px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden;margin-top:8px}.score-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--red),var(--amber),var(--green))}.inline-note{margin-top:12px;padding:11px 12px;border-left:3px solid var(--cyan);border-radius:8px;background:var(--panel2);color:var(--muted);font-size:.75rem;line-height:1.5}
+.action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.action-row .btn{flex:1;min-width:110px}.badge-inline{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:.61rem;font-weight:850}.badge-inline.good{color:var(--green)}.badge-inline.warn{color:var(--amber)}.badge-inline.bad{color:var(--red)}
+.waterfall{display:grid;gap:6px;margin-top:13px}.water-row{display:grid;grid-template-columns:90px minmax(0,1fr) 70px;gap:8px;align-items:center;font-size:.68rem}.water-row span:first-child{color:var(--muted)}.water-bar{height:11px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden;position:relative}.water-bar i{position:absolute;height:100%;border-radius:999px;background:var(--cyan)}.water-row strong{text-align:right}
+@media(max-width:760px){.system-flow{grid-template-columns:1fr 1fr}.flow-node:not(:last-child)::after{display:none}.status-grid{grid-template-columns:1fr 1fr}.arch-grid{grid-template-columns:1fr 1fr}.event-row{grid-template-columns:54px 82px 1fr}.event-row strong{grid-column:3;text-align:left}.data-table{display:block;overflow-x:auto;white-space:nowrap}}
+@media(max-width:430px){.system-flow,.arch-grid{grid-template-columns:1fr}.status-grid{grid-template-columns:1fr 1fr}.water-row{grid-template-columns:70px 1fr 55px}}
+
+/* --- chrome owned by scripts/intake_course.py ---------------------------- */
+
+/* Breadcrumb. A lesson sits two levels below the document root
+   (library -> course -> lesson): "../" is this course's home and "../../" is
+   the library index. flex-wrap lets the crumbs fall onto a second line on a
+   phone instead of collapsing, which keeps the route back to the library
+   reachable at every width. */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: 10px 2px 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.crumbs a {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 6px 9px;
+  border-radius: 9px;
+}
+
+.crumbs a:hover { color: var(--text); background: var(--line); }
+.crumb-sep { opacity: 0.5; }
+.crumb-current { color: var(--text); padding: 6px 9px; }
+
+/* Previous / next lesson pager. The sequence is the course order the manifest
+   declares; the last lesson points back at the course home. Same shape and
+   tokens as the pagers in every other course so the whole library pages
+   identically. */
+.lesson-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.lesson-link {
+  flex: 1 1 240px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong, var(--line2, var(--line))); }
+.lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+.lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.lesson-link.next { margin-left: auto; text-align: right; }
+
+/* One card per row on a phone; a two-up pager at 320px is two unreadable columns. */
+@media (max-width: 720px) {
+  .lesson-link { flex-basis: 100%; }
+}
+/* --- end chrome ---------------------------------------------------------- */
+</style>
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives LAST in <head> and not with the rest of
+       the page script at the bottom of <body>: that runs after the first paint.
+       SAME localStorage key as every other page in the library ('learn-theme')
+       so the choice persists across every course. The allowlist matters: a
+       corrupt value would otherwise be written straight onto data-theme,
+       matching no CSS while still counting as an explicit choice, which pins
+       the page to the dark palette.
+       No stored value => CSS prefers-color-scheme decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+<main class="shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">A</div><div class="brand-copy"><strong>Algorithmic and Automated Trading</strong><span>Course 8 · Lesson 15</span></div></div>
+    <div class="top-actions"><button class="icon-btn" id="resetBtn" type="button" aria-label="Reset lab" title="Reset lab">↻</button><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
+  </header>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="../../">Learn library</a>
+    <span class="crumb-sep" aria-hidden="true">/</span>
+    <a href="../">Algorithmic and Automated Trading</a>
+    <span class="crumb-sep" aria-hidden="true">/</span>
+    <span class="crumb-current" aria-current="page">Lesson 15 &middot; AI-Assisted and Agentic Trading Workflows</span>
+  </nav>
+  <section class="hero">
+    <div><span class="eyebrow"><i class="pulse"></i> Lesson 15 of 16</span><h1>AI-Assisted and Agentic Trading Workflows</h1><p>Use AI for research, extraction, classification, and trade proposals while keeping market data, rules, risk, permissions, and execution controls deterministic and auditable.</p><div class="hero-actions"><button class="btn primary" id="startLab" type="button">Open interactive lab</button><a class="btn ghost" href="#concepts">Review concepts</a></div></div>
+    <aside class="hero-card" aria-label="Market behavior summary"><div class="state-row"><span class="state-tag">Market behavior · AI decision boundary</span><span class="market-icon">AI</span></div><div class="behavior-copy"><h3>AI can propose an interpretation, but observable market data and fixed controls determine whether an action is allowed.</h3><p>A model may describe buyer control, but the system must verify actual higher prices, volume, freshness, risk, and invalidation before creating an order.</p></div><div class="pressure"><div class="pressure-labels"><span>Market input</span><span>System action</span></div><div class="pressure-track"><i class="pressure-pin" style="left:43%"></i></div></div></aside>
+  </section>
+  <section class="section" id="concepts"><div class="section-head"><div><span class="eyebrow">Core concepts</span><h2>What to understand</h2></div><p>Keep the boundaries, state, and authority explicit.</p></div><div class="grid-3"><article class="card"><div class="card-num">1</div><h3>Advisory task</h3><p>Summarize news, extract events, classify regimes, or explain a setup without direct execution authority.</p></article><article class="card"><div class="card-num">2</div><h3>Structured proposal</h3><p>Return evidence, timestamps, uncertainty, rule references, invalidation, and a requested action in a schema.</p></article><article class="card"><div class="card-num">3</div><h3>Deterministic guardrail</h3><p>Validate source freshness, allowed symbols, strategy rules, position size, risk, and approval before execution.</p></article></div></section>
+  <section class="section" id="lab"><div class="section-head"><div><span class="eyebrow">Interactive lab</span><h2>AI Proposal and Guardrail Lab</h2></div><p>Change source freshness, model confidence, evidence quality, hallucination risk, approval mode, and deterministic guardrails.</p></div><div class="lab"><div class="lab-head"><div><h3>AI Proposal and Guardrail Lab</h3><p>Deterministic synthetic educational data · no broker or live-market connection</p></div><button class="btn small" type="button" onclick="window.initLab()">Reset</button></div><div class="lab-body"><div class="chart-pane"><div class="chart-wrap"><span class="chart-badge" id="chartBadge">SYSTEM MODEL</span><canvas id="chart" aria-label="Interactive algorithmic trading system chart"></canvas></div><div id="extraVisual"></div><div class="kpis" id="kpis"></div><div class="market-read" id="marketRead"></div></div><aside class="controls" id="controls"></aside></div></div></section>
+  <section class="section"><div class="section-head"><div><span class="eyebrow">Process</span><h2>Keep AI outside the final authority boundary</h2></div><p>The model may propose; controlled services decide and execute.</p></div><div class="reading-grid"><article class="reading"><b>1</b><div><h3>Gather</h3><p>Retrieve timestamped market, company, and event evidence.</p></div></article><article class="reading"><b>2</b><div><h3>Propose</h3><p>Return a structured thesis with uncertainty and citations.</p></div></article><article class="reading"><b>3</b><div><h3>Validate</h3><p>Apply deterministic strategy, risk, permission, and approval checks.</p></div></article></div></section>
+  <section class="section"><div class="section-head"><div><span class="eyebrow">Knowledge check</span><h2>Check your understanding</h2></div><p>Select one answer for each question. Feedback appears immediately.</p></div><div class="quiz"><article class="question" data-correct="0"><h3>1. Which output is safer from an AI component?</h3><div class="choices"><button class="choice" type="button">A structured proposal with evidence and uncertainty</button><button class="choice" type="button">An unrestricted broker command</button><button class="choice" type="button">A hidden free-text instruction</button></div><div class="feedback">Structured proposals can be validated and audited before action.</div></article><article class="question" data-correct="0"><h3>2. High model confidence should:</h3><div class="choices"><button class="choice" type="button">Never bypass deterministic risk controls</button><button class="choice" type="button">Automatically double position size</button><button class="choice" type="button">Replace market-data freshness checks</button></div><div class="feedback">Confidence is not an account-risk permission.</div></article><article class="question" data-correct="0"><h3>3. The execution service should accept:</h3><div class="choices"><button class="choice" type="button">Only validated commands from authorized components</button><button class="choice" type="button">Any natural-language message</button><button class="choice" type="button">Unversioned model output</button></div><div class="feedback">A strict contract reduces ambiguity and unauthorized side effects.</div></article></div></section>
+  <section class="section"><div class="two-col"><article class="list-card good"><h3>Practical rules</h3><ul><li>Use AI for advisory work before execution authority.</li><li>Require structured outputs with evidence and timestamps.</li><li>Validate every proposal with deterministic rules and risk controls.</li></ul></article><article class="list-card bad"><h3>Common mistakes</h3><ul><li>Allowing free-form model output to call the broker directly.</li><li>Treating confidence as probability of profit.</li><li>Using stale news or market context without validation.</li></ul></article></div></section>
+  <section class="section"><div class="section-head"><div><span class="eyebrow">References</span><h2>Official reading</h2></div><p>These sources cover algorithmic controls, market access, broker APIs, system operations, or security.</p></div><div style="display:grid;gap:10px"><div class="reference"><p><strong>FINRA · Regulatory Notice 15-09</strong><br>Official guidance on supervision, testing, controls, documentation, and monitoring for algorithmic trading strategies.</p><a href="https://www.finra.org/rules-guidance/notices/15-09" target="_blank" rel="noopener noreferrer">Open official reference ↗</a></div><div class="reference"><p><strong>SEC · Rule 15c3-5 Market Access Controls</strong><br>Official rule overview describing pre-trade financial and regulatory risk controls for broker-dealers with market access.</p><a href="https://www.sec.gov/files/rules/final/2010/34-63241-secg.htm" target="_blank" rel="noopener noreferrer">Open official reference ↗</a></div></div></section>
+  <nav class="lesson-nav" aria-label="Lesson navigation">
+    <a class="lesson-link prev" href="../deployment-environments-and-configuration/" rel="prev"><span>Previous lesson</span><strong>14 &middot; Deployment, Environments, and Configuration</strong></a>
+    <a class="lesson-link next" href="../automated-trading-system-specification-and-production-readiness/" rel="next"><span>Next lesson</span><strong>16 &middot; Automated Trading System Specification and Production Readiness</strong></a>
+  </nav>
+
+  <footer class="footer">
+    <p><span>Course 8 · Algorithmic and Automated Trading · Lesson 15</span><span>Educational synthetic examples only. No live signals, broker connection, or automatic trading is included.</span></p>
+    <p>© 2026 dmedellin · Released under the MIT License · Educational use only — charts are synthetic examples, not trade signals.</p>
+    <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+  </footer>
+</main>
+<script>window.LESSON={"id": "15", "title": "AI-Assisted and Agentic Trading Workflows", "lab": "ai"};</script>
+<script>
+const L=window.LESSON;
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmt=(v,d=2)=>Number(v).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
+const money=(v,d=0)=>(v<0?'-':'')+'$'+Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct=(v,d=1)=>(v>=0?'+':'')+fmt(v,d)+'%';
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let activeCleanup=null;
+/* Theme control, pinned by scripts/intake_course.py.
+   The stored choice is applied BEFORE first paint by the script at the end of
+   <head>; nothing here applies it a second time. window.redrawLab() is this
+   package's own repaint hook and is called on every theme change on purpose:
+   the labs read their colours from CSS custom properties at draw time, so a
+   canvas painted under one theme keeps that theme's ink until it is redrawn. */
+const themeQuery=window.matchMedia?window.matchMedia("(prefers-color-scheme: light)"):null;
+const effectiveTheme=()=>document.documentElement.dataset.theme||(themeQuery&&themeQuery.matches?"light":"dark");
+const renderThemeIcon=()=>{const b=$("#themeToggle");if(b)b.textContent=effectiveTheme()==="light"?"☀":"☾"};
+function setTheme(theme){
+  document.documentElement.dataset.theme=theme;
+  try{localStorage.setItem("learn-theme",theme)}catch{}
+  renderThemeIcon();
+  if(window.redrawLab) window.redrawLab();
+}
+renderThemeIcon();
+$("#themeToggle").addEventListener("click",()=>setTheme(effectiveTheme()==="light"?"dark":"light"));
+if(themeQuery){
+  const onSystemThemeChange=()=>{if(document.documentElement.dataset.theme)return;renderThemeIcon();if(window.redrawLab) window.redrawLab()};
+  if(themeQuery.addEventListener)themeQuery.addEventListener("change",onSystemThemeChange);
+  else if(themeQuery.addListener)themeQuery.addListener(onSystemThemeChange);
+}
+$('#resetBtn').addEventListener('click',()=>window.initLab&&window.initLab(true));
+$('#startLab').addEventListener('click',()=>$('#lab').scrollIntoView({behavior:'smooth'}));
+$$('.question').forEach(q=>{const correct=Number(q.dataset.correct);$$('.choice',q).forEach((b,i)=>b.addEventListener('click',()=>{if(q.dataset.done)return;q.dataset.done='1';$$('.choice',q).forEach((x,j)=>{if(j===correct)x.classList.add('correct');else if(j===i)x.classList.add('wrong')});$('.feedback',q).classList.add('show')}))});
+function rng(seed){let x=(seed||1234567)>>>0;return()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return((x>>>0)%1000000)/1000000}}
+function normal(r){let u=0,v=0;while(u===0)u=r();while(v===0)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+function colors(){return{bg:css('--bg'),panel:css('--panel'),panel2:css('--panel2'),text:css('--text'),muted:css('--muted'),line:css('--line'),line2:css('--line2'),cyan:css('--cyan'),green:css('--green'),red:css('--red'),amber:css('--amber'),purple:css('--purple'),blue:css('--blue')}}
+function canvasContext(){const canvas=$('#chart'),rect=canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1),w=Math.max(320,rect.width),h=Math.max(310,rect.height);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr)}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);return{ctx,w,h}}
+function grid(ctx,x,y,w,h,c,rows=5,cols=7){ctx.save();ctx.strokeStyle=c.line;ctx.lineWidth=1;for(let i=0;i<=rows;i++){const yy=y+h*i/rows;ctx.beginPath();ctx.moveTo(x,yy);ctx.lineTo(x+w,yy);ctx.stroke()}for(let i=0;i<=cols;i++){const xx=x+w*i/cols;ctx.beginPath();ctx.moveTo(xx,y);ctx.lineTo(xx,y+h);ctx.stroke()}ctx.restore()}
+function label(ctx,text,x,y,color){ctx.save();ctx.font='800 10px system-ui';const width=ctx.measureText(text).width+12;ctx.globalAlpha=.16;ctx.fillStyle=color;ctx.fillRect(x,y-11,width,22);ctx.globalAlpha=1;ctx.strokeStyle=color;ctx.strokeRect(x,y-11,width,22);ctx.fillStyle=color;ctx.textBaseline='middle';ctx.fillText(text,x+6,y);ctx.restore()}
+function setBadge(t){$('#chartBadge').textContent=t}
+function setKPIs(items){$('#kpis').innerHTML=items.map(([k,v])=>`<div class="kpi"><span>${k}</span><strong>${v}</strong></div>`).join('')}
+/* ---------------------------------------------------------------------------
+   THE PARTICIPATION READING
+   A second layer beside the structural explanation: what the drawn structure is
+   conventionally READ AS. Keyed so an unknown key renders nothing rather than
+   the wrong sentence.
+
+   ONE ENTRY, and it is written with more care than any other in this course.
+   makeMarket("bull",96,221) is regenerated identically on every redraw: none of
+   the six controls changes a bar of it, and the AI PROPOSAL marker is fixed at
+   bar 55 with the outcome marker fixed at bar 63 whether the guardrail passes or
+   blocks. So the chart cannot be evidence that a proposal was right, and the
+   reading says exactly that. It claims no forecast, no removal of risk, and no
+   safety by construction; the guardrail is the point, and the reading ends on
+   what the guardrail actually decides on.
+--------------------------------------------------------------------------- */
+const PARTICIPATION={
+  proposal:"Across the 96 bars price rises from 100.51 to 110.54, each third holding a higher low than the last &mdash; 98.75, 106.77, 108.79 &mdash; which is normally read as higher prices being accepted, with a close below 108.79 ending that reading. The eight bars the lab marks out do not show it: between the AI PROPOSAL at bar 55 and the outcome marker at bar 63 price closes lower, 110.55 down to 109.76, with a low of 108.19 between them. And no control on this page changes a bar of the series, so a bullish proposal sitting on a rising line is a property of a fixed sample rather than evidence that the proposal was produced by reading one &mdash; which is why the guardrail decides on evidence freshness, source quality and permissions instead of on agreement with the chart."
+};
+function participationHTML(key){const text=key?PARTICIPATION[key]:null;return text?`<div class="participation"><small>What this is normally read as</small><p>${text}</p></div>`:''}
+function marketRead(state,title,text,key){const e=$('#marketRead');e.className='market-read '+(state||'');e.innerHTML=`<small>What the market is doing</small><strong>${title}</strong><p>${text}</p>`+participationHTML(key)}
+function controlHTML(label,body){return `<div class="control"><label>${label}</label>${body}</div>`}
+function rangeControl(id,label,min,max,value,step=1,suffix=''){return `<div class="control"><label><span>${label}</span><output id="${id}Out">${value}${suffix}</output></label><input id="${id}" type="range" min="${min}" max="${max}" step="${step}" value="${value}"></div>`}
+function bindRange(id,cb,suffix=''){const e=$('#'+id);e.addEventListener('input',()=>{$('#'+id+'Out').textContent=e.value+suffix;cb(Number(e.value))})}
+function segmented(id,items,active){return `<div class="segmented ${items.length===3?'cols3':''}" id="${id}">${items.map(([v,t])=>`<button type="button" data-value="${v}" class="${v===active?'active':''}">${t}</button>`).join('')}</div>`}
+function bindSegment(id,cb){$$('#'+id+' button').forEach(b=>b.addEventListener('click',()=>{$$('#'+id+' button').forEach(x=>x.classList.remove('active'));b.classList.add('active');cb(b.dataset.value)}))}
+function resizeHandler(fn){window.redrawLab=fn;let t;const h=()=>{clearTimeout(t);t=setTimeout(fn,70)};window.addEventListener('resize',h);return()=>window.removeEventListener('resize',h)}
+function makeMarket(regime='bull',n=110,seed=7){const r=rng(seed);let p=100,out=[];for(let i=0;i<n;i++){let drift=0,vol=.52;if(regime==='bull')drift=.12+(i%28>21?-.08:0);if(regime==='bear')drift=-.12+(i%27>20?.07:0);if(regime==='range')drift=(100-p)*.07; if(regime==='volatile'){drift=i<n*.45?.12:-.09;vol=1.22}if(regime==='breakout'){drift=i<n*.42?(100-p)*.06:i<n*.58?.31:.12;vol=i>n*.40&&i<n*.62?.82:.48}const noise=normal(r)*vol;const o=p,c=Math.max(10,o+drift+noise),h=Math.max(o,c)+.15+r()*vol*.65,l=Math.min(o,c)-.15-r()*vol*.65,v=Math.round((650000+r()*450000)*(1+Math.abs(c-o)*.9)*(i>n*.42&&i<n*.63&&regime==='breakout'?1.7:1));out.push({o,h,l,c,v,t:i});p=c}return out}
+function drawPrice(bars,opts={}){const {ctx,w,h}=canvasContext(),c=colors(),area={x:24,y:22,w:w-86,h:h-56};const vals=bars.flatMap(b=>[b.h,b.l]);let mn=Math.min(...vals),mx=Math.max(...vals),pad=(mx-mn)*.08||1;mn-=pad;mx+=pad;grid(ctx,area.x,area.y,area.w,area.h,c);const sx=i=>area.x+area.w*i/Math.max(1,bars.length-1),sy=v=>area.y+(mx-v)/(mx-mn)*area.h;ctx.save();ctx.strokeStyle=opts.lineColor||c.cyan;ctx.lineWidth=2.3;ctx.beginPath();bars.forEach((b,i)=>{const x=sx(i),y=sy(b.c);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();ctx.restore();(opts.markers||[]).forEach(m=>{const x=sx(m.i),y=sy(m.price??bars[m.i].c),col=m.color||c.amber;ctx.save();ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,4.5,0,Math.PI*2);ctx.fill();ctx.restore();if(m.label)label(ctx,m.label,x+5,y-15,col)});(opts.vlines||[]).forEach(v=>{const x=sx(v.i);ctx.save();ctx.strokeStyle=v.color||c.amber;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(x,area.y);ctx.lineTo(x,area.y+area.h);ctx.stroke();ctx.restore();if(v.label)label(ctx,v.label,x+4,area.y+14,v.color||c.amber)});ctx.save();ctx.fillStyle=c.muted;ctx.font='11px system-ui';ctx.textBaseline='middle';for(let i=0;i<=4;i++){const val=mx-(mx-mn)*i/4;ctx.fillText(fmt(val,1),area.x+area.w+7,area.y+area.h*i/4)}ctx.restore();return{ctx,w,h,area,sx,sy,c,mn,mx}}
+function drawSeries(lines,opts={}){const {ctx,w,h}=canvasContext(),c=colors(),area={x:24,y:22,w:w-86,h:h-56};const all=lines.flatMap(x=>x.values.filter(v=>Number.isFinite(v)));let mn=opts.min??Math.min(...all),mx=opts.max??Math.max(...all);if(!Number.isFinite(mn)||!Number.isFinite(mx)){mn=0;mx=1}if(mx===mn){mn-=1;mx+=1}const pad=(mx-mn)*.08;mn-=pad;mx+=pad;grid(ctx,area.x,area.y,area.w,area.h,c);const sx=(i,n)=>area.x+area.w*i/Math.max(1,n-1),sy=v=>area.y+(mx-v)/(mx-mn)*area.h;lines.forEach((s,idx)=>{ctx.save();ctx.strokeStyle=s.color||[c.cyan,c.amber,c.purple,c.green,c.red][idx%5];ctx.lineWidth=s.width||2.3;ctx.setLineDash(s.dash||[]);ctx.beginPath();let started=false;s.values.forEach((v,i)=>{if(!Number.isFinite(v)){started=false;return}const x=sx(i,s.values.length),y=sy(v);if(!started){ctx.moveTo(x,y);started=true}else ctx.lineTo(x,y)});ctx.stroke();ctx.restore()});(opts.markers||[]).forEach(m=>{const n=lines[0].values.length,x=sx(m.i,n),y=sy(m.value);ctx.fillStyle=m.color||c.amber;ctx.beginPath();ctx.arc(x,y,4.5,0,Math.PI*2);ctx.fill();if(m.label)label(ctx,m.label,x+5,y-15,m.color||c.amber)});ctx.save();ctx.fillStyle=c.muted;ctx.font='11px system-ui';ctx.textBaseline='middle';for(let i=0;i<=4;i++){const val=mx-(mx-mn)*i/4;ctx.fillText(opts.formatter?opts.formatter(val):fmt(val,1),area.x+area.w+7,area.y+area.h*i/4)}ctx.restore();return{ctx,w,h,area,c,sx,sy,mn,mx}}
+function behavior(regime){if(regime==='bull'||regime==='breakout')return['bull','Buyers continue accepting higher prices.','Price is making upward progress because buyers keep lifting available offers.'];if(regime==='bear')return['bear','Sellers continue accepting lower prices.','This sample is generated with a downward drift; read the series in front of you for what it actually did.'];if(regime==='volatile')return['warn','Price is moving quickly in both directions.','Buyers and sellers are repricing aggressively, so latency and execution assumptions matter more.'];return['neutral','Buyers and sellers are balanced.','Trading continues, but neither side is producing sustained price progress.']}
+function flowHTML(nodes){return `<div class="system-flow">${nodes.map((n,i)=>`<div class="flow-node ${n.state||''}"><small>${i+1}. ${n.label}</small><strong>${n.title}</strong><span>${n.text}</span></div>`).join('')}</div>`}
+function eventHTML(rows){return `<div class="event-log">${rows.map(r=>`<div class="event-row ${r.state||''}"><time>${r.time}</time><code>${r.kind}</code><span>${r.text}</span><strong>${r.result}</strong></div>`).join('')}</div>`}
+function statusHTML(items){return `<div class="status-grid">${items.map(x=>`<div class="status-card"><small>${x[0]}</small><strong>${x[1]}</strong><p>${x[2]||''}</p></div>`).join('')}</div>`}
+function checkHTML(items){return `<div class="check-stack">${items.map(x=>`<div class="check-line ${x[0]}"><b>${x[0]==='ok'?'✓':x[0]==='bad'?'×':'!'}</b><span>${x[1]}</span></div>`).join('')}</div>`}
+
+
+function initLabSpecific(){let fresh=3,confidence=78,evidence='strong',hallucination=10,guard='on',mode='approval';
+  const draw=()=>{const bars=makeMarket('bull',96,221),proposal=confidence>=65,verified=fresh<=5&&evidence==='strong'&&hallucination<=20,allowed=proposal&&(guard==='off'||verified),executed=allowed&&mode==='auto';drawPrice(bars,{markers:[{i:55,price:bars[55].c,label:'AI PROPOSAL',color:colors().purple},{i:63,price:bars[63].c,label:allowed?'VALIDATED':'BLOCKED',color:allowed?colors().green:colors().red}]});setBadge(`${mode.toUpperCase()} · GUARDRAIL ${guard.toUpperCase()}`);setKPIs([['Model confidence',confidence+'%'],['Source age',fresh+' min'],['Proposal',proposal?'Created':'No action'],['Final action',!allowed?'Blocked':executed?'Order submitted':mode==='approval'?'Await approval':'Alert only']]);marketRead('','A proposal is a claim awaiting verification, not a reading the market has confirmed.','Whether it may be acted on is decided by the checks below — price structure, evidence freshness, hallucination risk and risk limits — and not by how convincing the proposal sounds. A blocked proposal is the guardrail working, not a market call being overruled.','proposal');$('#extraVisual').innerHTML=flowHTML([{label:'Evidence',title:evidence==='strong'?'Market + company data':'Weak context',text:`Newest source is ${fresh} minutes old.`,state:verified?'ok':'warn'},{label:'Model',title:proposal?'Bullish proposal':'No proposal',text:`Confidence ${confidence}% · hallucination risk ${hallucination}%`,state:proposal?'ok':'off'},{label:'Schema',title:'Structured output',text:'Direction, evidence, invalidation, timestamp.',state:'ok'},{label:'Guardrail',title:guard==='on'?(verified?'Pass':'Block'):'Bypassed',text:'Deterministic strategy, freshness, risk, and permissions.',state:guard==='on'?(verified?'ok':'bad'):'bad'},{label:'Authority',title:mode, text:executed?'Validated order submitted.':mode==='approval'?'Human decision required.':'No direct order.',state:executed?'warn':'ok'}])+checkHTML([[fresh<=5?'ok':'bad','Source freshness is within the configured limit.'],[evidence==='strong'?'ok':'warn','The proposal references observable market and company evidence.'],[hallucination<=20?'ok':'bad','Unsupported-detail risk is below the limit.'],[guard==='on'?'ok':'bad','Deterministic validation controls the authority boundary.']])};
+  $('#controls').innerHTML=rangeControl('iFresh','Newest source age',0,30,fresh,1,' min')+rangeControl('iConf','Model confidence',30,99,confidence,1,'%')+controlHTML('Evidence quality',segmented('iEvid',[['strong','Strong'],['weak','Weak']],'strong'))+rangeControl('iHall','Unsupported-detail risk',0,60,hallucination,5,'%')+controlHTML('Deterministic guardrail',segmented('iGuard',[['on','Enabled'],['off','Bypassed']],'on'))+controlHTML('Authority mode',`<select id="iMode"><option value="alert">Alert only</option><option value="approval" selected>Human approval</option><option value="auto">Automatic</option></select>`);
+  bindRange('iFresh',v=>{fresh=v;draw()},' min');bindRange('iConf',v=>{confidence=v;draw()},'%');bindSegment('iEvid',v=>{evidence=v;draw()});bindRange('iHall',v=>{hallucination=v;draw()},'%');bindSegment('iGuard',v=>{guard=v;draw()});$('#iMode').addEventListener('change',e=>{mode=e.target.value;draw()});draw();return resizeHandler(draw)}
+
+
+window.initLab=()=>{if(activeCleanup){activeCleanup();activeCleanup=null}$('#controls').innerHTML='';$('#extraVisual').innerHTML='';$('#kpis').innerHTML='';window.redrawLab=null;activeCleanup=initLabSpecific()};
+window.initLab();
+</script>
+</body></html>

@@ -30,7 +30,7 @@ What is deliberately strict here:
     theme localStorage key is checked site-wide for exactly that reason: courses
     that each persist the reader's theme under their own key is a bug that looks
     like nothing until a reader crosses from one course to the next.
-  * Seven courses share one origin, one visual system and one navigation model,
+  * Eight courses share one origin, one visual system and one navigation model,
     so the conventions that cross course boundaries -- the lesson pager markup,
     the light palette token VALUES, and the theme-toggle button -- are pinned in
     TestPinnedConventions. Each course inventing its own variant is invisible in
@@ -78,10 +78,18 @@ CANONICAL_HOST = "learn.geterdone.io"
 #     /backtesting-and-trading-systems/  course 7 home, "Backtesting and Trading Systems"
 #     /backtesting-and-trading-systems/<lesson>/
 #                                        course 7's sixteen lessons, in course order
+#     /algorithmic-and-automated-trading/
+#                                        course 8 home, "Algorithmic and Automated Trading"
+#     /algorithmic-and-automated-trading/<lesson>/
+#                                        course 8's sixteen lessons, in course order
 #
-# That is 111 HTML pages. The document root publishes exactly six further
+# That is 128 HTML pages. The document root publishes exactly seven further
 # things, all non-HTML assets -- one exchange schema per course that ships one --
 # declared separately in NON_HTML_ASSETS below.
+#
+# The trading path is COMPLETE at course 8. Every course it was ever going to
+# hold is published, so there is no announced-but-unpublished entry anywhere in
+# this file any more, and none may be re-added without a page behind it.
 #
 # Containerfile.release, .github/workflows/{ci,pages}.yml, release/contract.json
 # (acceptance.checks) and scripts/smoke.py all assert the same mapping; changing
@@ -243,6 +251,26 @@ COURSE_7_LESSONS = (
     "trading-system-specification-and-backtest-report",
 )
 
+COURSE_8_HOME = "/algorithmic-and-automated-trading/"
+COURSE_8_LESSONS = (
+    "algorithmic-and-automated-trading-fundamentals",
+    "trading-system-architecture-and-components",
+    "market-data-ingestion-and-normalization",
+    "time-sessions-events-and-scheduling",
+    "signal-engine-and-strategy-state",
+    "portfolio-position-and-risk-engine",
+    "broker-apis-and-order-lifecycle",
+    "order-management-and-execution",
+    "paper-trading-and-forward-testing",
+    "scanners-alerts-and-human-approval",
+    "reliability-idempotency-retries-and-recovery",
+    "observability-logging-and-auditability",
+    "security-secrets-permissions-and-kill-switches",
+    "deployment-environments-and-configuration",
+    "ai-assisted-and-agentic-trading-workflows",
+    "automated-trading-system-specification-and-production-readiness",
+)
+
 # NOTE: course 6 ships a lesson slug "position-sizing" and so does course 2, and
 # course 7 ships "position-sizing-and-portfolio-accounting". Slugs are only ever
 # unique WITHIN a course -- they are resolved beneath their own course home, and
@@ -259,22 +287,21 @@ COURSES = (
     ("Volume and Order Flow", COURSE_5_HOME, COURSE_5_LESSONS),
     ("Trading Risk Management", COURSE_6_HOME, COURSE_6_LESSONS),
     ("Backtesting and Trading Systems", COURSE_7_HOME, COURSE_7_LESSONS),
+    ("Algorithmic and Automated Trading", COURSE_8_HOME, COURSE_8_LESSONS),
 )
 
-# The trading path is EIGHT courses long. Seven are published; course 8 is
-# announced, holds its place in the order, and is NOT a link. The only facts
-# that exist about it are its number and its name -- no lesson count, no
-# description, no date -- so those are the only facts recorded here, and
-# TestPathPage asserts that the page invents nothing more.
+# The trading path is EIGHT courses long and all eight are published. This tuple
+# is EMPTY, and that is the finished state rather than an oversight: an entry
+# here is a promise with no page behind it, and there are none left to make.
 #
-# Courses 5, 6 and 7 each moved OUT of this tuple and into COURSES the day their
-# pages landed. That direction is one-way: an entry here is a promise with no
-# page behind it, so the move happens when the pages exist, never in
-# anticipation of them.
+# Courses 5, 6, 7 and finally 8 each moved OUT of this tuple and into COURSES on
+# the day their pages landed. That direction is one-way, and course 8 was the
+# last move it will ever carry for this path: nothing may be added back without a
+# published page, and a ninth course was never announced, so no page may reserve
+# a slot for one. TestPathIsComplete asserts the consequences -- every course on
+# the path links, and no page anywhere still calls a course unavailable.
 PATH_COURSE_COUNT = 8
-UPCOMING_COURSES = (
-    (8, "Algorithmic and Automated Trading"),
-)
+UPCOMING_COURSES = ()
 
 UNKNOWN_PATH_CHECK = "/release-smoke-unknown-path"
 
@@ -323,6 +350,8 @@ NON_HTML_ASSETS = {
         "trading-risk-management/trading-risk-plan-schema.json",
     "/backtesting-and-trading-systems/trading-system-specification-schema.json":
         "backtesting-and-trading-systems/trading-system-specification-schema.json",
+    "/algorithmic-and-automated-trading/automated-trading-system-schema.json":
+        "algorithmic-and-automated-trading/automated-trading-system-schema.json",
 }
 
 # Rides along inside the document root without being published content. CNAME
@@ -332,23 +361,25 @@ DELIVERY_CONTROL_FILES = frozenset({"CNAME"})
 
 COURSE_HOMES = tuple(home for _title, home, _slugs in COURSES)
 
-# Everything that is not shared chrome is course material -- all seven course
-# homes as well as all 102 lessons. All of it teaches trading, so all of it
+# Everything that is not shared chrome is course material -- all eight course
+# homes as well as all 118 lessons. All of it teaches trading, so all of it
 # carries the same disclaimer. The two chrome pages are excluded BY NAME, not by
 # URL shape: /paths/trading/ looks exactly like a lesson URL.
 COURSE_PAGES = {
     url: rel for url, rel in REQUIRED_PAGES.items() if url not in SHARED_CHROME_PAGES
 }
 
-# The 102 lessons alone, without any course home.
+# The 118 lessons alone, without any course home.
 LESSON_PAGES = {url: rel for url, rel in COURSE_PAGES.items() if url not in COURSE_HOMES}
 
 # Every page of the library persists the reader's theme under ONE localStorage
 # key. Course 1 shipped "marketStructureTheme", course 2 shipped
 # "market-lab-theme", course 3 arrived with a third key, "options-course-theme",
 # course 4's source package arrived with a FOURTH, "technical-indicators-theme",
-# course 5's arrived with a FIFTH, "vof-theme", and courses 6 and 7 arrived with
-# a SIXTH and SEVENTH, "trm-theme" and "bts-theme"; with several courses on one
+# course 5's arrived with a FIFTH, "vof-theme", courses 6 and 7 arrived with a
+# SIXTH and SEVENTH, "trm-theme" and "bts-theme", and course 8 -- the last
+# package this path will ever receive -- arrived with an EIGHTH, "aat-theme":
+# one per package, every package, without exception; with several courses on one
 # origin that meant a reader's choice silently reset at every course boundary.
 # Every source package so far has invented its own key, which is why this is
 # checked site-wide rather than trusted. The site standardized on "learn-theme"
@@ -359,6 +390,7 @@ THEME_STORAGE_KEY = "learn-theme"
 RETIRED_THEME_KEYS = (
     "marketStructureTheme", "market-lab-theme", "options-course-theme",
     "technical-indicators-theme", "vof-theme", "trm-theme", "bts-theme",
+    "aat-theme",
 )
 
 # localStorage.getItem("k") / setItem("k", v) / removeItem("k") -- a literal key.
@@ -579,15 +611,15 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     acceptance matrix. A page added to one and not the others is a live page that
     nothing probes, which is exactly the hole these tests exist to close. The
     course homes count: they are published, so they are probed -- and so is the
-    path page, and so are all six non-HTML assets, each checked as JSON rather
+    path page, and so are all seven non-HTML assets, each checked as JSON rather
     than as a page.
     """
 
     def test_declared_url_space_is_the_index_the_path_page_and_the_course_tree(self):
         """Site index, path page, then a home per course and that course's lessons.
 
-        111 URLs exactly: /, /paths/trading/, seven course homes, and
-        7 + 15 + 16 + 16 + 16 + 16 + 16 lessons beneath them. The flat /<lesson>/ URLs and
+        128 URLs exactly: /, /paths/trading/, eight course homes, and
+        7 + 15 + 16 * 6 lessons beneath them. The flat /<lesson>/ URLs and
         the old /market-structure-lab/ course prefix were retired without
         redirects, so a two-segment lesson path under a declared course home is
         the only shape a lesson may have; re-adding either would declare a page
@@ -600,17 +632,17 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             + sum(len(slugs) for _t, _h, slugs in COURSES)
         )
         self.assertEqual(
-            111,
+            128,
             expected,
-            "the library is 1 + 1 + 7 + 7 + 15 + 16 + 16 + 16 + 16 + 16 = 111 pages, "
-            "got %d" % expected,
+            "the library is 1 + 1 + 8 + 7 + 15 + 16 + 16 + 16 + 16 + 16 + 16 = 128 "
+            "pages, got %d" % expected,
         )
         self.assertEqual(
             expected,
             len(REQUIRED_PAGES),
             "expected %d published URLs, got %d" % (expected, len(REQUIRED_PAGES)),
         )
-        self.assertEqual(7, len(COURSES), "the library publishes seven courses")
+        self.assertEqual(8, len(COURSES), "the library publishes eight courses")
         self.assertEqual(7, len(COURSE_1_LESSONS), "course 1 is seven lessons")
         self.assertEqual(15, len(COURSE_2_LESSONS), "course 2 is fifteen lessons")
         self.assertEqual(16, len(COURSE_3_LESSONS), "course 3 is sixteen lessons")
@@ -618,6 +650,7 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         self.assertEqual(16, len(COURSE_5_LESSONS), "course 5 is sixteen lessons")
         self.assertEqual(16, len(COURSE_6_LESSONS), "course 6 is sixteen lessons")
         self.assertEqual(16, len(COURSE_7_LESSONS), "course 7 is sixteen lessons")
+        self.assertEqual(16, len(COURSE_8_LESSONS), "course 8 is sixteen lessons")
         for index, (title, _home, slugs) in enumerate(COURSES, start=1):
             with self.subTest(course=title):
                 self.assertEqual(
@@ -680,19 +713,20 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     def test_declared_assets_are_not_pages(self):
         """The asset map exists so no page check has to be softened for it.
 
-        All six published schemas are declared here, one line each. Every new
+        All seven published schemas are declared here, one line each. Every new
         one is the moment the temptation appears to relax an HTML assertion so a
         JSON file can slip through the page sweep; the fix for "this check cannot
         apply to that file" is another declaration, never a weaker check.
         """
         self.assertEqual(
-            6,
+            7,
             len(NON_HTML_ASSETS),
-            "all six published JSON schemas must stay declared: course 2's "
+            "all seven published JSON schemas must stay declared: course 2's "
             "trade journal exchange schema, course 3's options trade plan "
             "schema, course 4's indicator rule schema, course 5's volume "
             "and order flow rule schema, course 6's trading risk plan schema, "
-            "and course 7's trading system specification schema",
+            "course 7's trading system specification schema, and course 8's "
+            "automated trading system schema",
         )
         for url, relative in sorted(NON_HTML_ASSETS.items()):
             with self.subTest(url=url):
@@ -738,6 +772,58 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             % (sorted(probed - set(NON_HTML_ASSETS)), sorted(set(NON_HTML_ASSETS) - probed)),
         )
 
+    def test_smoke_check_ids_are_release_contract_check_ids(self):
+        """One smoke report line maps onto one acceptance check, by id.
+
+        The two files already agree on the URL SET (the tests above). They also
+        have to agree on the NAME of each check, because that is what makes a
+        failing smoke line traceable to the contract clause it violates -- and
+        because release/contract.schema.json caps a check id at 72 characters
+        while nothing caps a lesson slug. Course 8's lesson 16 slug is long
+        enough to exceed the cap, so smoke.py shortens that one id deliberately;
+        if the shortening ever drifts from the contract, the two files name the
+        same page differently and this fails rather than shipping.
+        """
+        from smoke import (
+            parse_args, lesson_targets, course_home_targets, asset_targets,
+            path_page_targets,
+        )
+
+        args = parse_args([CANONICAL_ORIGIN])
+        probed = {
+            check_id
+            for check_id, _path, _markers in (
+                lesson_targets(args) + course_home_targets(args)
+                + asset_targets(args) + path_page_targets(args)
+            )
+        }
+        for name in ("contract.json", "contract.example.json"):
+            path = REPO_ROOT / "release" / name
+            with self.subTest(contract=name):
+                if not path.is_file():
+                    self.skipTest("no release/%s in this checkout" % name)
+                document = json.loads(path.read_text(encoding="utf-8"))
+                declared = {
+                    check["id"]
+                    for check in document["acceptance"]["checks"]
+                    if check.get("scope") == "public"
+                }
+                missing = sorted(probed - declared)
+                self.assertEqual(
+                    [],
+                    missing,
+                    "scripts/smoke.py reports check id(s) %s that release/%s does "
+                    "not declare; a failing smoke line would name a contract "
+                    "clause that does not exist" % (missing, name),
+                )
+                overlong = sorted(i for i in declared if len(i) > 72)
+                self.assertEqual(
+                    [],
+                    overlong,
+                    "release/%s declares check id(s) longer than the 72 characters "
+                    "release/contract.schema.json allows: %s" % (name, overlong),
+                )
+
     def test_release_contract_accepts_every_published_page(self):
         for name in ("contract.json", "contract.example.json"):
             path = REPO_ROOT / "release" / name
@@ -768,6 +854,64 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
                     "release/%s declares public acceptance checks for %s, which the "
                     "site does not publish; the contract has drifted from the tree"
                     % (name, stale),
+                )
+
+    def test_the_release_schema_requires_every_declared_check_by_name(self):
+        """The schema is the guard on the contract; it has to name every check.
+
+        release/contract.schema.json does not merely count checks: it carries one
+        `contains` clause per required id, so a check cannot be dropped, renamed
+        or swapped for another and still validate. That only holds while the
+        clause list keeps up with the tree. Course 8 landed with its eighteen
+        checks written into both contract documents and NONE of them required by
+        the schema, which validated cleanly and would have kept validating with
+        the whole course missing from the acceptance matrix -- a guard that
+        cannot fail. This asserts the list is exhaustive in both directions, and
+        that minItems agrees with it, so the next course cannot repeat it.
+        """
+        schema_path = REPO_ROOT / "release" / "contract.schema.json"
+        if not schema_path.is_file():
+            self.skipTest("no release/contract.schema.json in this checkout")
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        checks = schema["properties"]["acceptance"]["properties"]["checks"]
+        required = [
+            clause["contains"]["properties"]["id"]["const"]
+            for clause in checks["allOf"]
+        ]
+        self.assertEqual(
+            len(set(required)),
+            len(required),
+            "release/contract.schema.json requires the same check id twice",
+        )
+        self.assertEqual(
+            len(required),
+            checks["minItems"],
+            "minItems (%d) and the required-id list (%d) disagree; the count and "
+            "the names must describe the same matrix"
+            % (checks["minItems"], len(required)),
+        )
+        for name in ("contract.json", "contract.example.json"):
+            path = REPO_ROOT / "release" / name
+            with self.subTest(contract=name):
+                if not path.is_file():
+                    self.skipTest("no release/%s in this checkout" % name)
+                document = json.loads(path.read_text(encoding="utf-8"))
+                declared = [check["id"] for check in document["acceptance"]["checks"]]
+                unguarded = sorted(set(declared) - set(required))
+                self.assertEqual(
+                    [],
+                    unguarded,
+                    "release/%s declares check(s) %s that release/contract.schema.json "
+                    "does not require by name; they could be deleted from the "
+                    "contract and it would still validate" % (name, unguarded),
+                )
+                phantom = sorted(set(required) - set(declared))
+                self.assertEqual(
+                    [],
+                    phantom,
+                    "release/contract.schema.json requires check id(s) %s that "
+                    "release/%s does not declare; the schema would reject a "
+                    "contract that matches the published tree" % (phantom, name),
                 )
 
 
@@ -918,7 +1062,7 @@ class TestContent(SiteFixture):
     def test_course_pages_retain_the_disclaimer(self):
         """Every course page teaches trading and must say so.
 
-        That is all seven course homes as well as all 102 lessons: a course home
+        That is all eight course homes as well as all 118 lessons: a course home
         is not an exempt landing page, it sells the same material.
 
         The two shared-chrome pages are excluded, and excluded BY NAME. They are
@@ -1367,6 +1511,60 @@ TRADING_VOCABULARY = (
     "trade signal",
 )
 
+# Copy that announces something a reader cannot open yet. The trading path is
+# COMPLETE -- all eight courses are published -- so none of this may appear in
+# the visible copy or the metadata of any page. It is deliberately a list of
+# announcement phrases rather than the bare word "available": "available now" is
+# correct copy and appears on every course entry of the path page.
+#
+# Comments are not copy (visible_text drops them), so the several pages that
+# explain in a comment why they no longer style an unavailable course keep
+# passing -- the same line this file draws for the theme key and the singular
+# path phrase.
+UNAVAILABLE_COPY_RE = re.compile(
+    r"(?i)\b(not yet available|coming soon|still to come|upcoming"
+    r"|announced,? (?:but )?not yet published)\b"
+)
+
+# An availability CLAIM: how many courses of a path a reader can open. This site
+# writes it two ways, and both are read below by availability_claims():
+#
+#   * in a sentence or a chip -- "7 of 8 courses available", "Available 7 of 8";
+#   * as the path page's progress meter, role="progressbar" with aria-valuenow
+#     and aria-valuemax, where the numbers are attributes rather than copy and no
+#     text sweep would ever see them.
+#
+# A bare "N of M" is deliberately NOT a claim: "Course 7 of 8" is the POSITION
+# every course home is required to state, and banning that shape would make the
+# correct page unwritable.
+AVAILABILITY_SENTENCE_RE = re.compile(
+    r"(?i)(?:available\D{0,12}?)?\b(\d+)\s+of\s+(\d+)\s+courses?(?:\s+available)?\b"
+)
+AVAILABLE_WORD_RE = re.compile(r"(?i)\bavailable\b")
+PROGRESSBAR_RE = re.compile(r"(?i)<[^>]*\brole=\"progressbar\"[^>]*>")
+ARIA_NUMBER_RE = re.compile(r"(?i)\baria-value(now|max)=\"(\d+)\"")
+
+
+def availability_claims(doc):
+    """[(quoted claim, courses available, courses on the path)] on one page.
+
+    Both shapes, normalized to one tuple, so the test that reads them does not
+    have to know which shape it came from.
+    """
+    claims = []
+    copy = visible_text(doc.text) + " " + metadata_text(doc)
+    for match in AVAILABILITY_SENTENCE_RE.finditer(copy):
+        window = copy[max(0, match.start() - 40):match.end() + 40]
+        if AVAILABLE_WORD_RE.search(window):
+            claims.append((match.group(0).strip(), int(match.group(1)), int(match.group(2))))
+    for tag in PROGRESSBAR_RE.finditer(doc.text):
+        numbers = dict(
+            (name.lower(), int(value)) for name, value in ARIA_NUMBER_RE.findall(tag.group(0))
+        )
+        if "now" in numbers and "max" in numbers:
+            claims.append((tag.group(0).strip(), numbers["now"], numbers["max"]))
+    return claims
+
 # The site index shows MANY paths (one today, more being written), so its copy
 # must never speak of "the path" as though there were one. This is a phrase, not
 # a word: "a path", "each path", "paths" and "the path page" are all correct and
@@ -1607,9 +1805,9 @@ class TestPathPosition(SiteFixture):
                     visible_text(doc.text),
                     position,
                     "%s does not say it is course %d of %d. The path is eight "
-                    "courses long including the three that are not published "
-                    "yet, and a course home that states a position out of seven "
-                    "would describe a path that does not exist."
+                    "courses long and all eight are published, so a course home "
+                    "that states a position out of any other number would "
+                    "describe a path that does not exist."
                     % (home, index, PATH_COURSE_COUNT),
                 )
 
@@ -1648,10 +1846,12 @@ class TestPathPosition(SiteFixture):
                     self.assertEqual(
                         [],
                         following,
-                        "course %d is the last PUBLISHED course: course %d is "
-                        "announced but has no page, so there is nothing to link "
-                        "forward to. An upcoming course is listed on the path "
-                        "page and is never a link."
+                        "course %d is the LAST course on the path -- the path "
+                        "ends there, and no course %d was ever announced -- so "
+                        "there is nothing to link forward to and no placeholder "
+                        "to draw for one. The page may still link onward to the "
+                        "path page; that link carries no rel=\"next\", because "
+                        "the path page is not the next course."
                         % (len(homes), len(homes) + 1),
                     )
                 else:
@@ -1693,11 +1893,13 @@ class TestPathPosition(SiteFixture):
 class TestPathPage(SiteFixture):
     """The path page is the ordered spine of one subject.
 
-    It is the only page that shows the WHOLE path: seven published courses that
-    link to their homes, and one announced course that holds its place in the
-    order without pretending to be openable. Both halves are asserted, because
-    each fails in its own way -- a missing link strands a published course, and
-    an upcoming course rendered as a link is a 404 with a promise attached.
+    It is the only page that shows the WHOLE path. It used to show two kinds of
+    entry -- published courses that link to their homes, and announced ones that
+    held their place in the order without pretending to be openable -- and the
+    second kind is gone: all eight courses are published. So what is asserted
+    here is that every one of the eight is listed, in order, and that every one
+    of them links; TestPathIsComplete asserts the other half, that nothing on
+    this page or anywhere else still describes a course as unavailable.
     """
 
     def path_document(self):
@@ -1752,9 +1954,9 @@ class TestPathPage(SiteFixture):
                 self.assertNotEqual(
                     -1,
                     index,
-                    "%s names no course %r. Courses 6 to 8 are announced, so "
-                    "they are listed in order and marked unavailable rather than "
-                    "hidden until they exist." % (PATH_PAGE, name),
+                    "%s names no course %r. The path page lists every course on "
+                    "the path, in order, and all eight are published."
+                    % (PATH_PAGE, name),
                 )
             positions.append(index)
         self.assertEqual(
@@ -1764,59 +1966,135 @@ class TestPathPage(SiteFixture):
             % list(zip(names, positions)),
         )
 
-    def test_upcoming_courses_are_marked_and_are_not_links(self):
-        doc = self.path_document()
-        copy = visible_text(doc.text)
-        links = [text for text in anchor_texts(doc.text) if text]
-        for number, name in UPCOMING_COURSES:
-            with self.subTest(course=name):
-                self.assertNotIn(
-                    name,
-                    " | ".join(links),
-                    "course %d, %r, is rendered as a link. It is not published; "
-                    "there is nothing to open, and a link that 404s is worse than "
-                    "an entry that says so." % (number, name),
-                )
-                start = copy.find(name)
-                self.assertNotEqual(-1, start, "%r is not listed" % name)
-                window = copy[max(0, start - 260):start + 260].lower()
-                self.assertIn(
-                    "not yet available",
-                    window,
-                    "course %d, %r, is listed without saying it is unavailable. "
-                    "It must be unmistakable, next to the entry itself."
-                    % (number, name),
-                )
+    def test_every_course_on_the_path_page_is_a_link(self):
+        """No entry on the path page is inert any more.
 
-    def test_upcoming_courses_declare_no_invented_lesson_count(self):
-        """Nothing is known about courses 6 to 8 but the number and the name.
-
-        A lesson count or a syllabus for an unwritten course is an invention,
-        and it is the kind that reads as fact forever. The window runs from the
-        course's name to the next entry, which is exactly where such a claim
-        would be written.
+        The page used to carry two kinds of entry, and the unlinked kind was
+        correct while a course had no page behind it. All eight are published, so
+        an entry a reader cannot open is now simply a broken listing. This is the
+        positive form of the retired upcoming checks: instead of asserting that
+        an announced course is NOT a link, it asserts that every course IS one.
         """
         doc = self.path_document()
-        copy = visible_text(doc.text)
-        upcoming = [name for _number, name in UPCOMING_COURSES]
-        for index, name in enumerate(upcoming):
-            start = copy.find(name)
-            if start == -1:
-                continue  # reported above
-            end = copy.find(upcoming[index + 1]) if index + 1 < len(upcoming) else -1
-            window = copy[start:end] if end > start else copy[start:start + 420]
-            with self.subTest(course=name):
-                self.assertIsNone(
-                    re.search(r"(?i)\b\d+\s+lessons?\b", window),
-                    "%r is announced only: it has no published lesson count, so "
-                    "the path page must not state one." % name,
+        links = [text for text in anchor_texts(doc.text) if text]
+        joined = " | ".join(links)
+        for title, home, _slugs in COURSES:
+            with self.subTest(course=title):
+                self.assertIn(
+                    title,
+                    joined,
+                    "%s lists %r without linking it. Every course on the path is "
+                    "published; the entry must open %s." % (PATH_PAGE, title, home),
                 )
+
+
+class TestPathIsComplete(SiteFixture):
+    """The trading path is finished, and the whole library has to read that way.
+
+    This suite replaces the pair that guarded the opposite state. While courses
+    were still being written, the invariant was that an announced course must be
+    listed, marked unavailable, and never rendered as a link -- and with
+    UPCOMING_COURSES now empty those checks would iterate over nothing and pass
+    forever, which is exactly the "guard that cannot fail" this file refuses to
+    keep. The invariant has an inverse, and it is the one that matters now: no
+    page may still say a course is coming, and no availability count may read as
+    a fraction of the path.
+
+    Both halves are swept across EVERY published page, not only the path page.
+    The claim "7 of 8 courses available" lived on the site index, the progress
+    meter on the path page, and the forward half of course 7's pager, and a
+    reader who finishes course 8 can arrive at any of them.
+    """
+
+    def test_no_page_describes_a_course_as_unavailable(self):
+        for doc in self.documents:
+            page = str(doc.path.relative_to(REPO_ROOT))
+            copy = visible_text(doc.text) + " " + metadata_text(doc)
+            found = sorted({m.group(0).lower() for m in UNAVAILABLE_COPY_RE.finditer(copy)})
+            with self.subTest(page=page):
+                self.assertEqual(
+                    [],
+                    found,
+                    "this page still announces something as unavailable (%s). All "
+                    "eight courses on the trading path are published; nothing is "
+                    "upcoming, and copy that says otherwise is now simply wrong. "
+                    "Comments are not copy (see visible_text), so a note "
+                    "explaining that the state was retired keeps passing."
+                    % ", ".join(found),
+                )
+
+    def test_every_availability_count_reads_as_complete(self):
+        """An availability claim has to name the WHOLE path, everywhere it appears.
+
+        "Course 7 of 8" is a POSITION and must keep passing -- it is what every
+        course home is required to state. What is checked here is the narrower
+        claim about how many courses a reader can OPEN, in both shapes the site
+        writes it: an availability sentence or chip, and the path page's progress
+        meter, whose numbers live in aria attributes where no copy sweep sees
+        them.
+        """
+        for doc in self.documents:
+            page = str(doc.path.relative_to(REPO_ROOT))
+            for claim, available, total in availability_claims(doc):
+                with self.subTest(page=page, claim=claim):
+                    self.assertEqual(
+                        total,
+                        available,
+                        "%r claims only %d of %d courses can be opened. Every "
+                        "course on the path is published, so an availability "
+                        "count that is not the whole path is out of date."
+                        % (claim, available, total),
+                    )
+
+    def test_completion_scanners_are_not_inert(self):
+        """Both scanners must catch the copy they forbid, and only that."""
+        self.assertTrue(
+            UNAVAILABLE_COPY_RE.search("Course 8 &mdash; not yet available"),
+            "the unavailable-copy scanner must match the phrase it retired",
+        )
+        self.assertTrue(UNAVAILABLE_COPY_RE.search("7 available &middot; 1 upcoming"))
+        self.assertIsNone(
+            UNAVAILABLE_COPY_RE.search(
+                "Every course on the path is published and available now."
+            ),
+            "correct copy must keep passing",
+        )
+        self.assertIsNone(
+            UNAVAILABLE_COPY_RE.search(
+                visible_text("<p><!-- the retired 'not yet available' state --></p>")
+            ),
+            "documenting the retired state in a comment is not committing it",
+        )
+        class _Doc:
+            def __init__(self, text):
+                self.text = text
+                self.title = ""
+                self.description = ""
+
+        claims = availability_claims(_Doc("<p>7 of 8 courses available</p>"))
+        self.assertEqual([("7 of 8 courses available", 7, 8)], claims)
+        self.assertEqual(
+            [],
+            availability_claims(_Doc("<p>Course 7 of 8</p>")),
+            "a course POSITION is not an availability claim and must not be swept",
+        )
+        meter = availability_claims(
+            _Doc('<div role="progressbar" aria-valuemin="0" aria-valuemax="8" '
+                 'aria-valuenow="7"></div>')
+        )
+        self.assertEqual([(7, 8)], [(have, total) for _c, have, total in meter],
+                         "the progress meter's aria numbers must be swept too")
+        self.assertEqual(
+            [("8 of 8 courses available", 8, 8)],
+            availability_claims(_Doc("<p>8 of 8 courses available</p>")),
+            "the finished claim is found and simply passes the equality check",
+        )
 
 
 # ---------------------------------------------------------------------------
 # The pinned cross-course conventions
 # ---------------------------------------------------------------------------
-# Seven courses, authored at seven different times, now share one origin. The
+# Eight courses, authored at eight different times, now share one origin. The
 # review before course 3 landed found all of them drifting in the same three
 # places, course 4's source package arrived drifting in all three again -- a
 # light block with no accent tokens and no prefers-color-scheme path, and a

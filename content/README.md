@@ -13,6 +13,13 @@ runtime.
   trade-setup-execution.manifest.json  Course 2, all 15 lessons
   options-trading.manifest.json        Course 3, all 16 lessons
   technical-indicators.manifest.json   Course 4, all 16 lessons
+  volume-and-order-flow.manifest.json  Course 5, all 16 lessons
+  trading-risk-management.manifest.json          Course 6, all 16 lessons
+  backtesting-and-trading-systems.manifest.json  Course 7, all 16 lessons
+  algorithmic-and-automated-trading.manifest.json  Course 8, all 16 lessons
+
+That is every course on the trading path: the path is complete at course 8, so
+this directory is complete too.
 
 The file name matches the course's URL slug. Course 1's manifest was named
 market-structure-lab.manifest.json while the course was published under that

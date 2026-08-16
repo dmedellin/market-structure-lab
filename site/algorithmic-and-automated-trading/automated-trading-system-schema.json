@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "automated-trading-system-schema.json",
+  "title": "Automated Trading System Specification",
+  "type": "object",
+  "required": [
+    "schema",
+    "identity",
+    "strategy",
+    "marketData",
+    "risk",
+    "orders",
+    "validation",
+    "operations",
+    "ai"
+  ],
+  "properties": {
+    "schema": {
+      "const": "automated-trading-system-v1"
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "course": {
+          "const": 8
+        }
+      }
+    },
+    "strategy": {
+      "type": "object",
+      "required": [
+        "type",
+        "timeframe",
+        "direction",
+        "automation"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "timeframe": {
+          "type": "string"
+        },
+        "direction": {
+          "type": "string"
+        },
+        "automation": {
+          "enum": [
+            "alert",
+            "approval",
+            "automatic"
+          ]
+        }
+      }
+    },
+    "marketData": {
+      "type": "object",
+      "required": [
+        "mode",
+        "maxAgeSeconds",
+        "normalized"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "stream",
+            "poll"
+          ]
+        },
+        "maxAgeSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "normalized": {
+          "type": "boolean"
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "required": [
+        "independent",
+        "riskPerTradePct",
+        "maxGrossExposurePct",
+        "killSwitch"
+      ],
+      "properties": {
+        "independent": {
+          "type": "boolean"
+        },
+        "riskPerTradePct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxGrossExposurePct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "killSwitch": {
+          "type": "boolean"
+        }
+      }
+    },
+    "orders": {
+      "type": "object",
+      "required": [
+        "idempotency",
+        "reconciliation",
+        "brokerAdapter"
+      ],
+      "properties": {
+        "idempotency": {
+          "type": "boolean"
+        },
+        "reconciliation": {
+          "type": "boolean"
+        },
+        "brokerAdapter": {
+          "type": "string"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "paperTradingDays",
+        "shadowMode"
+      ],
+      "properties": {
+        "paperTradingDays": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shadowMode": {
+          "type": "boolean"
+        }
+      }
+    },
+    "operations": {
+      "type": "object",
+      "required": [
+        "observability",
+        "security",
+        "rolloutPct",
+        "rollback"
+      ],
+      "properties": {
+        "observability": {
+          "enum": [
+            "basic",
+            "full"
+          ]
+        },
+        "security": {
+          "enum": [
+            "broad",
+            "scoped"
+          ]
+        },
+        "rolloutPct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "rollback": {
+          "type": "string"
+        }
+      }
+    },
+    "ai": {
+      "type": "object",
+      "required": [
+        "mode",
+        "directExecution"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "advisory",
+            "direct"
+          ]
+        },
+        "directExecution": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

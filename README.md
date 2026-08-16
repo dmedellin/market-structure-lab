@@ -2,10 +2,11 @@
 
 `market-structure-lab` is the repository, the application slug and the image
 title. What it publishes at `https://learn.geterdone.io/` is a **library of
-learning paths** — seven interactive courses and 102 lessons today, all of them on
-one subject, with more subjects planned. Every page is a single HTML file with
-its CSS, JavaScript and graphics inline — it loads no fonts, no frameworks, no
-analytics, and no third-party requests of any kind.
+learning paths** — eight interactive courses and 118 lessons today, all of them
+on one subject, whose path is now complete end to end, with more subjects
+planned. Every page is a single HTML file with its CSS, JavaScript and graphics
+inline — it loads no fonts, no frameworks, no analytics, and no third-party
+requests of any kind.
 
 ## The paths layer
 
@@ -31,7 +32,7 @@ A path page is **neither a course home nor a lesson**, even though it sits two
 segments deep like a lesson does. Every guard declares it separately
 (`PATH_PAGE`) rather than classifying pages by URL shape.
 
-## The trading path — eight courses, five published
+## The trading path — eight courses, all published
 
 `https://learn.geterdone.io/paths/trading/` is the ordered path. Course 1 teaches
 you to read what price is doing; course 2 turns that read into a plan you can
@@ -42,10 +43,14 @@ volume and order flow show about participation, value and executed flow — and
 what they do not; course 6 decides what a trade may cost before it is taken, in
 risk budget, stop distance, position size, drawdown and ruin; course 7 asks
 whether the whole rule set ever worked, and what a backtest can and cannot
-establish. A reader is expected to walk
-them in order, which is why the courses share one theme setting, one visual
-system, one navigation model, and one set of guards — and why every course home
-says which number it is (`Course N of 8`) and links to its neighbours.
+establish; and course 8 builds the system that would run it — architecture,
+market data, scheduling, signal and risk engines, broker APIs, order management,
+paper trading, reliability, observability, secrets and kill switches, deployment,
+where AI belongs, and one versioned production specification. A reader is
+expected to walk them in order, which is why the courses share one theme setting,
+one visual system, one navigation model, and one set of guards — and why every
+course home says which number it is (`Course N of 8`) and links to its
+neighbours.
 
 | # | Course | Lessons | URL | Status |
 | --- | --- | --- | --- | --- |
@@ -56,15 +61,15 @@ says which number it is (`Course N of 8`) and links to its neighbours.
 | 5 | Volume and Order Flow | 16 | `/volume-and-order-flow/` | published |
 | 6 | Trading Risk Management | 16 | `/trading-risk-management/` | published |
 | 7 | Backtesting and Trading Systems | 16 | `/backtesting-and-trading-systems/` | published |
-| 8 | Algorithmic and Automated Trading | — | — | **not yet available** |
+| 8 | Algorithmic and Automated Trading | 16 | `/algorithmic-and-automated-trading/` | published |
 
-Course 8 is **announced, not published**. It appears on the path page in
-order, clearly marked unavailable, and it is **not a link**: nothing exists to
-open. Its number and its name are the only facts that exist about it, so
-no lesson count, description or date is invented for it anywhere in this
-repository — and `TestPathPage` fails the build if one appears. Courses 5, 6 and
-7 each left that group the day their pages landed; the move is one-way and
-happens when the pages exist, never in anticipation of them.
+**The trading path is complete.** All eight courses are published; there is no
+announced-but-unpublished entry left anywhere in this repository, and no ninth
+course was ever announced, so nothing reserves a slot for one. Courses 5, 6, 7
+and finally 8 each left the announced group the day their pages landed; the move
+was always one-way, and course 8 was the last one this path will make.
+`TestPathIsComplete` fails the build if any page still calls a course upcoming,
+or if any availability count reads as a fraction of the path.
 
 Course 1 was published at `/market-structure-lab/` until the paths layer landed.
 That slug names the repository and the application, not the course, so the course
@@ -182,7 +187,7 @@ observation into an unambiguous condition.
 
 Course 4 ships one supporting file, `indicator-rule-schema.json`. Lesson 16
 exports a rule specification as `technical-indicator-rule-v1` JSON; the schema
-documents that shape. Like the other five schemas it is published as a real URL
+documents that shape. Like the other six schemas it is published as a real URL
 and checked as JSON, never as a page.
 
 **Course 4's own scope and risk notice, stated on the page.** The course teaches
@@ -230,7 +235,7 @@ order book and market depth, and finally rules written from all of it.
 
 Course 5 ships one supporting file, `volume-order-flow-rule-schema.json`. Lesson
 16 exports a rule specification as `volume-order-flow-rule-v1` JSON; the schema
-documents that shape. Like the other five schemas it is published as a real URL
+documents that shape. Like the other six schemas it is published as a real URL
 and checked as JSON, never as a page.
 
 Course 5 carries outbound reference links to two further origins: CME Group
@@ -288,7 +293,7 @@ risk plan built from all of it.
 
 Course 6 ships one supporting file, `trading-risk-plan-schema.json`. Lesson 16
 exports a risk plan as `trading-risk-plan-v1` JSON; the schema documents that
-shape. Like the other five schemas it is published as a real URL and checked as
+shape. Like the other six schemas it is published as a real URL and checked as
 JSON, never as a page.
 
 **Course 6's own scope and risk notice, stated on the page.** The course teaches
@@ -337,7 +342,7 @@ versioned system specification with a backtest report.
 
 Course 7 ships one supporting file, `trading-system-specification-schema.json`.
 Lesson 16 exports a system specification as `trading-system-specification-v1`
-JSON; the schema documents that shape. Like the other five schemas it is
+JSON; the schema documents that shape. Like the other six schemas it is
 published as a real URL and checked as JSON, never as a page.
 
 **Course 7's own scope and risk notice, stated on the page.** The course teaches
@@ -350,9 +355,67 @@ result. Every price path, trade, universe, fill, cost, fold and Monte Carlo path
 is a deterministic synthetic example, and a backtest result never establishes
 future performance.
 
+### Course 8 — Algorithmic and Automated Trading (16 lessons)
+
+`https://learn.geterdone.io/algorithmic-and-automated-trading/`
+
+The system that would run a strategy, and what running one unattended actually
+requires. Sixteen lessons: choosing a level of automation and separating
+strategy, signal, risk, order and execution responsibilities, system
+architecture and ownership, market-data ingestion and normalization, exchange
+calendars and deterministic scheduling, the signal engine and strategy state,
+the portfolio and risk engine, broker APIs and the asynchronous order lifecycle,
+order management and execution quality, paper trading and forward testing,
+scanners, alerts and human approval, idempotency, bounded retries and recovery,
+observability and an immutable audit trail, secrets, permissions and kill
+switches, deployment, environments and rollback, where AI belongs in the
+workflow and where it must not decide, and a versioned production-readiness
+specification.
+
+| # | Lesson | What it does |
+| --- | --- | --- |
+| 01 | Algorithmic and Automated Trading Fundamentals | Separate strategy rules, signal generation, risk checks, order submission, and execution, then choose the appropriate level of automation. |
+| 02 | Trading System Architecture and Components | Define the services, boundaries, data stores, messages, and ownership required to move from market data to an auditable trading decision. |
+| 03 | Market Data Ingestion and Normalization | Receive historical and streaming data, validate timestamps and symbols, remove duplicates, handle late events, and expose one normalized market-data model. |
+| 04 | Time, Sessions, Events, and Scheduling | Use exchange calendars, time zones, session boundaries, event windows, and deterministic schedulers instead of assuming every day and minute is tradable. |
+| 05 | Signal Engine and Strategy State | Convert normalized events into deterministic strategy-state transitions while preventing repeated, contradictory, or stale signals. |
+| 06 | Portfolio, Position, and Risk Engine | Maintain authoritative cash, positions, exposure, open orders, and risk limits before any order is submitted. |
+| 07 | Broker APIs and Order Lifecycle | Submit, query, cancel, and reconcile orders through a broker adapter while treating every response and status update as asynchronous state. |
+| 08 | Order Management and Execution | Select order types, manage open orders, control participation, and measure fill quality against the decision price and available liquidity. |
+| 09 | Paper Trading and Forward Testing | Run the complete system on current market data without live capital, then compare backtest assumptions with observed signals, latency, and simulated fills. |
+| 10 | Scanners, Alerts, and Human Approval | Screen instruments, rank candidates, deduplicate alerts, communicate the exact thesis, and expire decisions that are no longer current. |
+| 11 | Reliability, Idempotency, Retries, and Recovery | Design duplicate-safe commands, bounded retries, durable state, reconciliation, and restart behavior for uncertain networks and asynchronous broker updates. |
+| 12 | Observability, Logging, and Auditability | Measure data freshness, decision latency, broker latency, error rate, positions, risk, and end-to-end traces while preserving an immutable decision audit trail. |
+| 13 | Security, Secrets, Permissions, and Kill Switches | Protect broker credentials, restrict execution permissions, separate environments, audit access, rotate secrets, and provide immediate mechanisms to stop new trading. |
+| 14 | Deployment, Environments, and Configuration | Build reproducible artifacts, separate development, paper, and live configuration, validate changes, deploy gradually, and roll back without changing trading state unexpectedly. |
+| 15 | AI-Assisted and Agentic Trading Workflows | Use AI for research, extraction, classification, and trade proposals while keeping market data, rules, risk, permissions, and execution controls deterministic and auditable. |
+| 16 | Automated Trading System Specification and Production Readiness | Combine strategy, data, architecture, risk, broker, reliability, security, deployment, observability, approval, and rollback requirements into one versioned production specification. |
+
+Course 8 ships one supporting file, `automated-trading-system-schema.json`.
+Lesson 16 exports a production specification as `automated-trading-system-v1`
+JSON; the schema documents that shape. Like the other six schemas it is
+published as a real URL and checked as JSON, never as a page.
+
+Course 8 is the last course on the path. Its home links back to course 7 with
+`rel=prev`; the forward half of its pager is **not** a disabled "course 9" slot,
+because no ninth course was ever announced — it is a real link back to the path
+page, deliberately without `rel=next`, since the path page is not the next
+document in the sequence but the sequence itself.
+
+**Course 8's own scope and risk notice, stated on the page.** The course is
+educational. It does **not** connect to a broker, ingest live market data, place
+orders, provide trading signals, or claim that any automated strategy will be
+profitable, and no page in it can submit an order — every market path, event,
+order, failure and portfolio state in it is a deterministic synthetic example.
+The page states the point the rest of the course is built around: automating a
+strategy does not reduce its risk. It removes the pause in which a person would
+have noticed a stale price, a duplicated order, a wrong size or a broken
+assumption, so an automated system can lose money faster and more consistently
+than a manual one.
+
 ### Data and risk notice
 
-All charts, trades, prices, fills, and performance results across all seven
+All charts, trades, prices, fills, and performance results across all eight
 courses are synthetic educational examples. The pages contain no live data and no
 trading signals. Real outcomes can differ because of spread, slippage,
 commissions, gaps, taxes, liquidity, assignment, exercise, implied volatility,
@@ -377,7 +440,7 @@ has three kinds of page — the index, a path page, and a course with its lesson
 ```text
 /                                       the site index (paths + course search)
 ├── /paths/trading/                     the trading PATH PAGE — eight courses in
-│                                       order: seven published, one announced
+│                                       order, all eight published
 ├── /market-structure/                  course 1 home — lists its seven lessons
 │   ├── /market-structure/market-structure/                     lesson 1.01
 │   ├── … five more …
@@ -407,18 +470,24 @@ has three kinds of page — the index, a path page, and a course with its lesson
 │   ├── … fourteen more …
 │   ├── /trading-risk-management/trading-risk-plan/             lesson 6.16
 │   └── /trading-risk-management/trading-risk-plan-schema.json  published asset
-└── /backtesting-and-trading-systems/   course 7 home — lists its sixteen lessons
-    ├── /backtesting-and-trading-systems/backtesting-fundamentals/   lesson 7.01
+├── /backtesting-and-trading-systems/   course 7 home — lists its sixteen lessons
+│   ├── /backtesting-and-trading-systems/backtesting-fundamentals/   lesson 7.01
+│   ├── … fourteen more …
+│   ├── /backtesting-and-trading-systems/trading-system-specification-and-backtest-report/   lesson 7.16
+│   └── /backtesting-and-trading-systems/trading-system-specification-schema.json  published asset
+└── /algorithmic-and-automated-trading/ course 8 home — lists its sixteen lessons
+    ├── /algorithmic-and-automated-trading/algorithmic-and-automated-trading-fundamentals/   lesson 8.01
     ├── … fourteen more …
-    ├── /backtesting-and-trading-systems/trading-system-specification-and-backtest-report/   lesson 7.16
-    └── /backtesting-and-trading-systems/trading-system-specification-schema.json  published asset
+    ├── /algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/  lesson 8.16
+    └── /algorithmic-and-automated-trading/automated-trading-system-schema.json   published asset
 ```
 
 `/paths/` belongs to the paths layer: no course may ever take that first segment,
 and nothing is served at `/paths/` itself — the list of paths is the site index.
-Course 8 has no URLs at all; it exists only as an entry on the path page.
+Every course on the path has its own URLs; nothing on the path page is an entry
+without a page behind it.
 
-**111 pages and six assets. Nothing else is served:**
+**128 pages and seven assets. Nothing else is served:**
 
 | # | URL | Page | Source |
 | --- | --- | --- | --- |
@@ -539,6 +608,24 @@ Course 8 has no URLs at all; it exists only as an entry on the path page.
 | 7.15 | `https://learn.geterdone.io/backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/` | Overfitting, Sensitivity, Monte Carlo, and Stress Testing | `site/backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/index.html` |
 | 7.16 | `https://learn.geterdone.io/backtesting-and-trading-systems/trading-system-specification-and-backtest-report/` | Trading System Specification and Backtest Report | `site/backtesting-and-trading-systems/trading-system-specification-and-backtest-report/index.html` |
 | asset | `https://learn.geterdone.io/backtesting-and-trading-systems/trading-system-specification-schema.json` | Trading system specification schema (JSON, not a page) | `site/backtesting-and-trading-systems/trading-system-specification-schema.json` |
+| — | `https://learn.geterdone.io/algorithmic-and-automated-trading/` | **Algorithmic and Automated Trading** — course 8 home | `site/algorithmic-and-automated-trading/index.html` |
+| 8.01 | `https://learn.geterdone.io/algorithmic-and-automated-trading/algorithmic-and-automated-trading-fundamentals/` | Algorithmic and Automated Trading Fundamentals | `site/algorithmic-and-automated-trading/algorithmic-and-automated-trading-fundamentals/index.html` |
+| 8.02 | `https://learn.geterdone.io/algorithmic-and-automated-trading/trading-system-architecture-and-components/` | Trading System Architecture and Components | `site/algorithmic-and-automated-trading/trading-system-architecture-and-components/index.html` |
+| 8.03 | `https://learn.geterdone.io/algorithmic-and-automated-trading/market-data-ingestion-and-normalization/` | Market Data Ingestion and Normalization | `site/algorithmic-and-automated-trading/market-data-ingestion-and-normalization/index.html` |
+| 8.04 | `https://learn.geterdone.io/algorithmic-and-automated-trading/time-sessions-events-and-scheduling/` | Time, Sessions, Events, and Scheduling | `site/algorithmic-and-automated-trading/time-sessions-events-and-scheduling/index.html` |
+| 8.05 | `https://learn.geterdone.io/algorithmic-and-automated-trading/signal-engine-and-strategy-state/` | Signal Engine and Strategy State | `site/algorithmic-and-automated-trading/signal-engine-and-strategy-state/index.html` |
+| 8.06 | `https://learn.geterdone.io/algorithmic-and-automated-trading/portfolio-position-and-risk-engine/` | Portfolio, Position, and Risk Engine | `site/algorithmic-and-automated-trading/portfolio-position-and-risk-engine/index.html` |
+| 8.07 | `https://learn.geterdone.io/algorithmic-and-automated-trading/broker-apis-and-order-lifecycle/` | Broker APIs and Order Lifecycle | `site/algorithmic-and-automated-trading/broker-apis-and-order-lifecycle/index.html` |
+| 8.08 | `https://learn.geterdone.io/algorithmic-and-automated-trading/order-management-and-execution/` | Order Management and Execution | `site/algorithmic-and-automated-trading/order-management-and-execution/index.html` |
+| 8.09 | `https://learn.geterdone.io/algorithmic-and-automated-trading/paper-trading-and-forward-testing/` | Paper Trading and Forward Testing | `site/algorithmic-and-automated-trading/paper-trading-and-forward-testing/index.html` |
+| 8.10 | `https://learn.geterdone.io/algorithmic-and-automated-trading/scanners-alerts-and-human-approval/` | Scanners, Alerts, and Human Approval | `site/algorithmic-and-automated-trading/scanners-alerts-and-human-approval/index.html` |
+| 8.11 | `https://learn.geterdone.io/algorithmic-and-automated-trading/reliability-idempotency-retries-and-recovery/` | Reliability, Idempotency, Retries, and Recovery | `site/algorithmic-and-automated-trading/reliability-idempotency-retries-and-recovery/index.html` |
+| 8.12 | `https://learn.geterdone.io/algorithmic-and-automated-trading/observability-logging-and-auditability/` | Observability, Logging, and Auditability | `site/algorithmic-and-automated-trading/observability-logging-and-auditability/index.html` |
+| 8.13 | `https://learn.geterdone.io/algorithmic-and-automated-trading/security-secrets-permissions-and-kill-switches/` | Security, Secrets, Permissions, and Kill Switches | `site/algorithmic-and-automated-trading/security-secrets-permissions-and-kill-switches/index.html` |
+| 8.14 | `https://learn.geterdone.io/algorithmic-and-automated-trading/deployment-environments-and-configuration/` | Deployment, Environments, and Configuration | `site/algorithmic-and-automated-trading/deployment-environments-and-configuration/index.html` |
+| 8.15 | `https://learn.geterdone.io/algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/` | AI-Assisted and Agentic Trading Workflows | `site/algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/index.html` |
+| 8.16 | `https://learn.geterdone.io/algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/` | Automated Trading System Specification and Production Readiness | `site/algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/index.html` |
+| asset | `https://learn.geterdone.io/algorithmic-and-automated-trading/automated-trading-system-schema.json` | Automated trading system schema (JSON, not a page) | `site/algorithmic-and-automated-trading/automated-trading-system-schema.json` |
 
 Course 1 and its lesson 01 share the name *Market Structure*: the course is the
 whole seven-lesson sequence, lesson 01 is its first lesson on structure itself
@@ -577,28 +664,34 @@ That map is declared in five places, and all five must agree:
   (`learn-index`; `trading-path` for the path page; `course-home` and
   `lesson-page`/`lesson-<slug>` for course 1; `course2-home` and
   `course2-lesson-<slug>` for course 2, and the same shape for courses 3 to
-  7 — course-scoped because a slug is unique only within a course (courses 2
+  8 — course-scoped because a slug is unique only within a course (courses 2
   and 6 both ship a `position-sizing` lesson);
   `journal-schema`, `trade-plan-schema`, `indicator-rule-schema`,
-  `volume-order-flow-rule-schema`, `trading-risk-plan-schema` and
-  `trading-system-specification-schema` for the six assets, each fetched and
-  parsed as JSON). `release/contract.schema.json` requires every one
-  of those ids by name, so a check cannot be quietly dropped;
+  `volume-order-flow-rule-schema`, `trading-risk-plan-schema`,
+  `trading-system-specification-schema` and `automated-trading-system-schema`
+  for the seven assets, each fetched and parsed as JSON). One id is shortened
+  against that scheme — course 8's lesson 16 slug would push
+  `course8-lesson-<slug>` past the 72-character cap the contract schema sets, so
+  `scripts/smoke.py` and both contract documents name it
+  `course8-lesson-system-specification-and-production-readiness`, and
+  `TestDeclaredUrlSpaceAgrees` fails if the two files ever stop agreeing on it.
+  `release/contract.schema.json` requires every one of those ids by name — all
+  139 of them — so a check cannot be quietly dropped;
 - `.github/workflows/ci.yml` → the "Published URL space is complete" step;
 - `Containerfile.release` and `.github/workflows/pages.yml` (publish-time guards).
 
 A page added to one of them and not the others is a page nothing checks.
 
-Further site-wide invariants exist because seven courses now share one origin.
+Further site-wide invariants exist because eight courses now share one origin.
 Each of them is something a reader carries across a course boundary, so each is
-pinned once and asserted on all 111 pages (`TestPinnedConventions`):
+pinned once and asserted on all 128 pages (`TestPinnedConventions`):
 
 - **One theme key.** Every page persists the reader's light/dark choice under the
   single `localStorage` key `learn-theme`. The per-course keys the courses shipped
   with (`marketStructureTheme`, `market-lab-theme`, `options-course-theme`,
   course 4's `technical-indicators-theme`, course 5's `vof-theme`, course 6's
-  `trm-theme` and course 7's `bts-theme` — seven
-  packages, seven different keys) silently reset a reader's choice at every course
+  `trm-theme`, course 7's `bts-theme` and course 8's `aat-theme` — eight
+  packages, eight different keys) silently reset a reader's choice at every course
   boundary; standardizing cost one stored preference, once, and the suite now
   fails any page that invents its own key.
 - **One complete pager per course, in one markup.** `prev`/`next` links must walk
@@ -630,10 +723,12 @@ from the courses:
   courses that page lists, not the frame.
 - **Every course knows its place.** A course home states `Course N of 8` and its
   `rel=prev`/`rel=next` links resolve to the adjacent course homes — course 1
-  ships no `prev`, and course 7 ships no `next` because course 8 is announced and
-  has no page (`TestPathPosition`). Each course's forward link stops being a
-  disabled span and becomes a real `rel="next"` anchor the day its successor
-  ships — course 4's when course 5 landed, course 5's when course 6 landed.
+  ships no `prev`, and course 8 ships no `next` because it is the last course on
+  the path (`TestPathPosition`). Each course's forward link stopped being a
+  disabled span and became a real `rel="next"` anchor the day its successor
+  shipped — course 4's when course 5 landed, course 5's when course 6 landed,
+  course 7's when course 8 landed. There is no disabled forward link left in the
+  library, and no course after 8 to make one for.
 
 The apex `geterdone.io` is a separate, live GitHub Pages site. It is not part of
 this project and nothing here touches it: every footer links to
@@ -667,12 +762,14 @@ python3 scripts/validate_release_contract.py \
     release/contract.json release/contract.example.json
 ```
 
-`smoke.py` checks all 111 published pages plus all six JSON assets — one report
+`smoke.py` checks all 128 published pages plus all seven JSON assets — one report
 line per URL, each page demanding that document's own canonical tag and each
 asset fetched, typed and parsed as JSON. The path page has its own check id
-(`trading-path`) with its own markers: it is the only URL where the announced
-course 8 appears at all, and its two course-name markers name the last
-published course and the first announced one, so both move forward at a launch. Against the plain
+(`trading-path`) with its own markers: it is the only URL that shows the whole
+path in one place. Those markers used to name the last published course and the
+first announced one and moved forward at every launch; with the path complete
+they name the LAST course and the link to its home, which is what distinguishes
+a listed course from a mentioned one. Against the plain
 `python3 -m http.server` preview the `internal-health` and `security-headers`
 checks fail by design: `/healthz` and the header policy come from the
 in-container Caddy (`deploy/Caddyfile`), not from anything in `site/`.
@@ -703,9 +800,10 @@ AGENTS.md                 working agreement — read before changing anything
 **1. GitHub Pages — live.** `.github/workflows/pages.yml` uploads `site/` on every
 push to `main` and deploys it to `learn.geterdone.io` (`site/CNAME` holds the
 custom domain). Before uploading it re-checks self-containment, asserts that all
-111 pages exist, and parses all six published JSON assets. This path does not touch platform-ops, the shared Caddy
-edge, or any registry reservation, and it is **not** a shortcut around those
-gates — they govern the Hetzner platform, which is a different path.
+128 pages exist, and parses all seven published JSON assets. This path does not
+touch platform-ops, the shared Caddy edge, or any registry reservation, and it
+is **not** a shortcut around those gates — they govern the Hetzner platform,
+which is a different path.
 
 **2. The Hetzner container platform — not built.** That platform serves
 applications **only** as containers behind `reverse_proxy 127.0.0.1:<port>`; it
@@ -738,9 +836,12 @@ The normative rules live in `dmedellin/platform-ops`
 ## STATUS
 
 **Deployed on GitHub Pages.** `https://learn.geterdone.io/` serves this `site/`
-tree — the site index, the trading path page, all five course homes, all 70
-lessons, and the trade journal, options trade plan, indicator rule and volume
-and order flow rule schemas — from the `pages.yml` workflow.
+tree — the site index, the trading path page, all eight course homes, all 118
+lessons, and the seven published schemas (trade journal, options trade plan,
+indicator rule, volume and order flow rule, trading risk plan, trading system
+specification, and automated trading system) — from the `pages.yml` workflow.
+128 pages and 7 assets; the trading path is complete, and nothing in the library
+is announced without a page behind it.
 
 **The Hetzner container path remains UNBUILT.** No image of this repository has
 ever been built, deployed, or accepted on that platform. As of 2026-08-15, all of

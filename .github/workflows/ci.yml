@@ -101,7 +101,10 @@ jobs:
           #   /backtesting-and-trading-systems/    course 7 home
           #   /backtesting-and-trading-systems/<lesson>/
           #                                        course 7's sixteen lessons
-          # 111 pages, in path order, plus six published non-HTML assets.
+          #   /algorithmic-and-automated-trading/  course 8 home
+          #   /algorithmic-and-automated-trading/<lesson>/
+          #                                        course 8's sixteen lessons
+          # 128 pages, in path order, plus seven published non-HTML assets.
           # Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py, acceptance.checks in
           # release/contract.json, the publish guard in pages.yml, and the build
@@ -227,7 +230,24 @@ jobs:
                       backtesting-and-trading-systems/in-sample-validation-and-out-of-sample-data/index.html \
                       backtesting-and-trading-systems/walk-forward-testing/index.html \
                       backtesting-and-trading-systems/overfitting-sensitivity-monte-carlo-and-stress-testing/index.html \
-                      backtesting-and-trading-systems/trading-system-specification-and-backtest-report/index.html ; do
+                      backtesting-and-trading-systems/trading-system-specification-and-backtest-report/index.html \
+                      algorithmic-and-automated-trading/index.html \
+                      algorithmic-and-automated-trading/algorithmic-and-automated-trading-fundamentals/index.html \
+                      algorithmic-and-automated-trading/trading-system-architecture-and-components/index.html \
+                      algorithmic-and-automated-trading/market-data-ingestion-and-normalization/index.html \
+                      algorithmic-and-automated-trading/time-sessions-events-and-scheduling/index.html \
+                      algorithmic-and-automated-trading/signal-engine-and-strategy-state/index.html \
+                      algorithmic-and-automated-trading/portfolio-position-and-risk-engine/index.html \
+                      algorithmic-and-automated-trading/broker-apis-and-order-lifecycle/index.html \
+                      algorithmic-and-automated-trading/order-management-and-execution/index.html \
+                      algorithmic-and-automated-trading/paper-trading-and-forward-testing/index.html \
+                      algorithmic-and-automated-trading/scanners-alerts-and-human-approval/index.html \
+                      algorithmic-and-automated-trading/reliability-idempotency-retries-and-recovery/index.html \
+                      algorithmic-and-automated-trading/observability-logging-and-auditability/index.html \
+                      algorithmic-and-automated-trading/security-secrets-permissions-and-kill-switches/index.html \
+                      algorithmic-and-automated-trading/deployment-environments-and-configuration/index.html \
+                      algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/index.html \
+                      algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "$WEB_ROOT/$page" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$page — the published URL space is incomplete"
@@ -239,7 +259,8 @@ jobs:
           # trade plan shape; course 4's lesson 16 exports the indicator rule
           # shape; course 5's lesson 16 exports the volume and order flow rule
           # shape; course 6's lesson 16 exports the trading risk plan shape; and
-          # course 7's lesson 16 exports the trading system specification shape.
+          # course 7's lesson 16 exports the trading system specification shape;
+          # and course 8's lesson 16 exports the automated trading system shape.
           # Each course home links to its file, so each is a live URL
           # whose absence is a 404 like any other. Each asset is listed here
           # explicitly rather than folded into the page loop above: a page check
@@ -249,7 +270,8 @@ jobs:
                        technical-indicators/indicator-rule-schema.json \
                        volume-and-order-flow/volume-order-flow-rule-schema.json \
                        trading-risk-management/trading-risk-plan-schema.json \
-                       backtesting-and-trading-systems/trading-system-specification-schema.json ; do
+                       backtesting-and-trading-systems/trading-system-specification-schema.json \
+                       algorithmic-and-automated-trading/automated-trading-system-schema.json ; do
             if [ ! -f "$WEB_ROOT/$asset" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$asset — a published asset is missing"
               missing=1
@@ -259,7 +281,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "Published URL space: $pages/111 pages plus 6 assets present under $WEB_ROOT."
+          echo "Published URL space: $pages/128 pages plus 7 assets present under $WEB_ROOT."
 
       - name: HTML is well-formed
         run: |
@@ -426,6 +448,40 @@ jobs:
           #                   being a primary source, and remain unchecked as
           #                   paths until someone opens them in a browser. Do not
           #                   let a later reader infer they were verified.
+          # Reviewed 2026-08-16 for course 8 (Algorithmic and Automated
+          # Trading), the last course on the path. Six origins are added here:
+          # ONE regulator (sec.gov), FOUR projects that define the thing the
+          # lesson teaches (OWASP, Docker, Kubernetes, OpenTelemetry) and ONE
+          # broker's own API documentation (docs.alpaca.markets), cited as an
+          # example of what an order API looks like, never as a recommendation
+          # of that broker; no linked page sells software the course teaches you
+          # to build. Verification is NOT equal across them, and the difference
+          # is recorded rather than smoothed over:
+          #   cheatsheetseries.owasp.org -- OWASP Secrets Management Cheat Sheet.
+          #                   Answered HTTP 200 when checked at intake.
+          #   docs.alpaca.markets -- a broker's own API documentation: paper
+          #                   trading, streaming market data, working with
+          #                   orders. Answered HTTP 200 at intake.
+          #   docs.docker.com -- build best practices. HTTP 200 at intake.
+          #   kubernetes.io   -- pod liveness/readiness probes. HTTP 200.
+          #   opentelemetry.io -- traces, metrics and logs. HTTP 200.
+          #   sec.gov         -- U.S. Securities and Exchange Commission, the
+          #                   Rule 15c3-5 market-access small-entity compliance
+          #                   guide. REACHABILITY NOT VERIFIED. The host answers
+          #                   403 to automated requests, exactly as cmegroup.com
+          #                   does, so the ONE deep path course 8 cites could not
+          #                   be confirmed from this environment and no other
+          #                   check was made in its place. It is allowed on the
+          #                   strength of the ORIGIN being the primary source --
+          #                   the regulator publishing its own rule -- and the
+          #                   path remains unchecked until someone opens it in a
+          #                   browser. Do not let a later reader infer it was
+          #                   verified. (investor.gov, allowed above, is the
+          #                   SEC's investor-education site and is a different
+          #                   host with a different result.)
+          # finra.org was already allowed above and course 8 links it again, for
+          # Regulatory Notice 15-09; no new decision was needed for that origin.
+          #
           # https://geterdone.io was reviewed and allowed while the footer
           # linked to it. It is REMOVED as of the paths layer: the apex is a
           # separate live site this project does not control, the library's own
@@ -438,7 +494,13 @@ jobs:
                                   "https://www.investor.gov",
                                   "https://www.cboe.com",
                                   "https://www.nasdaq.com",
-                                  "https://www.cmegroup.com")
+                                  "https://www.cmegroup.com",
+                                  "https://cheatsheetseries.owasp.org",
+                                  "https://docs.alpaca.markets",
+                                  "https://docs.docker.com",
+                                  "https://kubernetes.io",
+                                  "https://opentelemetry.io",
+                                  "https://www.sec.gov")
           # 2. Schema and namespace IDENTIFIERS. These name a dialect; nothing
           #    dereferences them. The w3.org URIs are required by inline SVG and
           #    document.createElementNS. The json-schema.org URI is the "$schema"
@@ -461,14 +523,35 @@ jobs:
                                              ".xml", ".txt", ".md", ".webmanifest"}
           REMOTE = re.compile(r'^\s*(?:https?:)?//', re.I)
           ANY_URL = re.compile(r'https?://', re.I)
-          TEXT_RULES = [
-              ("AT_IMPORT", re.compile(r'@import', re.I), "CSS @import"),
-              ("NETWORK_API", re.compile(
-                  r'\bfetch\s*\(|\bXMLHttpRequest\b|\bWebSocket\b|\bEventSource\b'
-                  r'|\bsendBeacon\b|\bimportScripts\b|\bnavigator\.serviceWorker\b'
-                  r'|\bimport\s*\(', re.I),
-               "runtime network API"),
-          ]
+          # The two CODE rules, and the four places they are applied. A page's
+          # readable copy is NOT code: course 8 cites a broker's "WebSocket Market
+          # Data" documentation by name, and a scanner that reads that sentence as
+          # a WebSocket call reports a defect the page does not have -- worse, it
+          # teaches the next author to rename a reference instead of fixing
+          # anything. So each rule is applied where the thing it forbids could
+          # actually execute:
+          #   * a pure-code file (.js, .css, .json ...) is scanned whole, as before;
+          #   * inside <script>, the runtime-network rule;
+          #   * inside <style>, the @import rule;
+          #   * in prose and comments, neither -- only the external-URL sweep,
+          #     which is unchanged and still applies everywhere.
+          # Coverage is not reduced by this: inline on* handlers and javascript:
+          # URLs are the other two places markup can execute code, and they are
+          # scanned explicitly below, where NOTHING scanned them before -- an
+          # HTMLParser never delivers an attribute value to handle_data, so
+          # onclick="fetch('/x')" passed this step until now. scripts/smoke.py
+          # scopes the same rule to <script> the same way, against the SERVED
+          # body; the two verdicts must not drift.
+          AT_IMPORT_RULE = ("AT_IMPORT", re.compile(r'@import', re.I), "CSS @import")
+          NETWORK_API_RULE = ("NETWORK_API", re.compile(
+              r'\bfetch\s*\(|\bXMLHttpRequest\b|\bWebSocket\b|\bEventSource\b'
+              r'|\bsendBeacon\b|\bimportScripts\b|\bnavigator\.serviceWorker\b'
+              r'|\bimport\s*\(', re.I),
+           "runtime network API")
+          TEXT_RULES = [AT_IMPORT_RULE, NETWORK_API_RULE]
+          SCRIPT_RULES = [NETWORK_API_RULE]
+          STYLE_RULES = [AT_IMPORT_RULE]
+          PROSE_RULES = []
 
           violations = []
           notices = []
@@ -477,7 +560,7 @@ jobs:
               return any(url == o or url.startswith(o + "/") or url.startswith(o + "?")
                          or url.startswith(o + "#") for o in allowed)
 
-          def scan_text(path, line, text):
+          def scan_text(path, line, text, rules=TEXT_RULES):
               # Namespace identifiers and reviewed navigation origins are the
               # only absolute URLs allowed to survive in text, CSS, or script.
               scrubbed = text
@@ -489,20 +572,38 @@ jobs:
                   offset = line + scrubbed.count("\n", 0, m.start())
                   violations.append((path, offset, "EXTERNAL_URL",
                                      "absolute http(s) URL in text/script/style"))
-              for rule, pattern, label in TEXT_RULES:
+              for rule, pattern, label in rules:
                   for m in pattern.finditer(text):
                       offset = line + text.count("\n", 0, m.start())
                       violations.append((path, offset, rule, label))
 
           class Scanner(HTMLParser):
+              # Elements that never enclose anything, so they never open a scope.
+              VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input",
+                      "link", "meta", "param", "source", "track", "wbr"}
+
               def __init__(self, path):
                   super().__init__(convert_charrefs=True)
                   self.path = path
+                  self.stack = []
 
               def bad(self, rule, detail):
                   violations.append((self.path, self.getpos()[0], rule, detail))
 
               def handle_starttag(self, tag, attrs):
+                  self.inspect(tag, attrs)
+                  if tag not in self.VOID:
+                      self.stack.append(tag)
+
+              def handle_startendtag(self, tag, attrs):
+                  self.inspect(tag, attrs)
+
+              def handle_endtag(self, tag):
+                  if tag in self.stack:
+                      while self.stack and self.stack.pop() != tag:
+                          pass
+
+              def inspect(self, tag, attrs):
                   attrs = [(k.lower(), (v or "").strip()) for k, v in attrs]
                   values = dict(attrs)
                   rel = values.get("rel", "").lower()
@@ -510,6 +611,11 @@ jobs:
                   for name, value in attrs:
                       if not value:
                           continue
+                      # The two places an ATTRIBUTE holds executable code. An
+                      # HTMLParser never routes an attribute value through
+                      # handle_data, so nothing scanned these before.
+                      if name.startswith("on") or value.lower().startswith("javascript:"):
+                          scan_text(self.path, self.getpos()[0], value, SCRIPT_RULES)
                       if name == "xmlns" or name.startswith("xmlns:"):
                           if value not in NAMESPACE_URIS:
                               self.bad("EXTERNAL_URL", "unknown namespace URI %r" % value)
@@ -539,13 +645,21 @@ jobs:
                               self.bad("EXTERNAL_SUBRESOURCE",
                                        "<%s %s=%r> would fetch a remote resource" % (tag, name, url))
 
-              handle_startendtag = handle_starttag
-
               def handle_data(self, data):
-                  scan_text(self.path, self.getpos()[0], data)
+                  enclosing = self.stack[-1] if self.stack else None
+                  if enclosing == "script":
+                      rules = SCRIPT_RULES
+                  elif enclosing == "style":
+                      rules = STYLE_RULES
+                  else:
+                      rules = PROSE_RULES
+                  scan_text(self.path, self.getpos()[0], data, rules)
 
               def handle_comment(self, data):
-                  scan_text(self.path, self.getpos()[0], data)
+                  # A comment executes nothing, so no code rule applies to it --
+                  # which is what lets a page DOCUMENT the anti-pattern it avoids.
+                  # The external-URL sweep still runs.
+                  scan_text(self.path, self.getpos()[0], data, PROSE_RULES)
 
           files = [p for p in sorted(pathlib.Path("site").rglob("*"))
                    if p.is_file() and p.suffix.lower() in TEXT_SUFFIXES]
