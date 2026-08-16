@@ -12,6 +12,14 @@ one-to-one onto a contract check:
     learn-index         / is 200 HTML, is the site index, and links to the path
     trading-path        /paths/trading/ is 200 and is that document: it lists
                         every course on the path, and the last one as a LINK
+    capstone-iren-lab   the dated real-data capstone is 200 and is that document:
+    capstone-iren-slides
+                        its canonical tag, the security, the REAL-DATA notice
+                        that replaces the synthetic-examples disclaimer (which
+                        would be false there), and the as-of date
+    capstone-iren-dataset
+                        the capstone's dataset is 200, is served as JSON, and
+                        parses
     course-home         /market-structure/ is 200 and is that document
     lesson-page         /market-structure/market-structure/ is 200 and is that
                         document
@@ -46,10 +54,12 @@ The published URL space: the site index at /, the path page at /paths/trading/,
 a home per course (/market-structure/, /trade-setup-execution/, /options-trading/,
 /technical-indicators/, /volume-and-order-flow/, /trading-risk-management/,
 /backtesting-and-trading-systems/ and /algorithmic-and-automated-trading/), and
-each course's lessons beneath its own home -- 128 HTML pages, plus seven
-published JSON assets. Checking one page and calling the site smoke-tested is how
-a hundred and twenty-seven broken pages ship, so every published URL gets its own
-check id and its own line in the report.
+each course's lessons beneath its own home -- 128 HTML pages -- plus the two
+pages of the dated real-data CAPSTONE under /paths/trading/, for 130, and eight
+published JSON assets (seven course schemas and the capstone's dataset). Checking
+one page and calling the site smoke-tested is how a hundred and twenty-nine
+broken pages ship, so every published URL gets its own check id and its own line
+in the report.
 
 Usage:
     python3 scripts/smoke.py https://learn.geterdone.io
@@ -160,6 +170,16 @@ SYSTEM_SPEC_SCHEMA_PATH = COURSE_7_PATH + "trading-system-specification-schema.j
 COURSE_8_PATH = "/algorithmic-and-automated-trading/"
 AUTOMATED_SYSTEM_SCHEMA_PATH = COURSE_8_PATH + "automated-trading-system-schema.json"
 
+# The capstone: a dated, REAL-DATA worked example published UNDER the path page.
+# Two documents and one dataset. They are not a ninth course and not lessons, so
+# they are probed by their own ids with their own markers rather than folded into
+# the course lists -- whose markers include the educational-use / synthetic
+# disclaimer these pages must NOT carry, because their data is real.
+CAPSTONE_PATH = PATH_PAGE_PATH + "iren-analysis-2026-08-16/"
+CAPSTONE_SLIDES_PATH = CAPSTONE_PATH + "slides/"
+CAPSTONE_DATASET_PATH = CAPSTONE_PATH + "iren-analysis-data.json"
+CAPSTONE_AS_OF_MARKER = "August 16, 2026"
+
 
 def canonical_marker(path):
     """The marker that proves WHICH document was served.
@@ -186,6 +206,43 @@ def page_markers(path, *extra):
     """
     return (canonical_marker(path),) + tuple(extra) + (DISCLAIMER_MARKER,)
 
+
+def real_data_page_markers(path, *extra):
+    """Identity, then the notice a REAL-DATA page owes its reader.
+
+    Deliberately NOT page_markers(): that appends the educational-use /
+    synthetic-examples disclaimer, and on a page built from real market data
+    that sentence is false. What replaces it is strictly more, not less --
+    the data is real, this is not advice, it is not a signal, and the as-of
+    DATE, because the analysis ages and a reader arriving months later must be
+    able to see that it is a snapshot rather than a live view. A served page
+    that dropped the date would pass a bare 200 and mislead every reader after
+    the first week, so the date is a marker like any other.
+
+    tests/test_site_invariants.py REAL_DATA_PAGES asserts the same requirement
+    against the files on disk, phrase for phrase.
+    """
+    return (canonical_marker(path),) + tuple(extra) + (
+        "real market data",
+        "not a trade signal",
+        CAPSTONE_AS_OF_MARKER,
+    )
+
+
+# (check id, path, markers) for the capstone's two pages. Ids are under the 72
+# characters release/contract.schema.json allows.
+CAPSTONE_PAGES = (
+    (
+        "capstone-iren-lab",
+        CAPSTONE_PATH,
+        real_data_page_markers(CAPSTONE_PATH, "IREN"),
+    ),
+    (
+        "capstone-iren-slides",
+        CAPSTONE_SLIDES_PATH,
+        real_data_page_markers(CAPSTONE_SLIDES_PATH, "IREN"),
+    ),
+)
 
 COURSE_1_TITLE_MARKER = "Market Structure"
 COURSE_2_TITLE_MARKER = "Trade Setup and Execution"
@@ -570,6 +627,17 @@ PUBLISHED_ASSETS = (
         AUTOMATED_SYSTEM_SCHEMA_PATH,
         ('"const": "automated-trading-system-v1"',),
     ),
+    # Not a schema: the capstone's DATASET, published so the analysis is
+    # inspectable. The markers discriminate -- the two capstone pages embed
+    # their copy of this data MINIFIED, so the indented `"key": "value"` form
+    # below cannot be satisfied by either document being served here by
+    # mistake, and the ticker plus the analysis date name this dataset and no
+    # other.
+    (
+        "capstone-iren-dataset",
+        CAPSTONE_DATASET_PATH,
+        ('"ticker": "IREN"', '"analysis_date": "2026-08-16"'),
+    ),
 )
 
 
@@ -581,6 +649,17 @@ def path_page_targets(args):
     educational-use disclaimer) that a path page has no reason to satisfy.
     """
     return [("trading-path", PATH_PAGE_PATH, tuple(args.path_marker))]
+
+
+def capstone_page_targets(args):
+    """(check id, path, markers) for the dated real-data capstone's pages.
+
+    Its own list for the same reason the path page has one: these are neither
+    course homes nor lessons, and the course lists carry markers (a course
+    title, the synthetic-examples disclaimer) that a real-data page has no
+    reason -- and no right -- to satisfy.
+    """
+    return [(check_id, path, markers) for check_id, path, markers in CAPSTONE_PAGES]
 
 
 def course_home_targets(args):
@@ -639,6 +718,9 @@ def published_paths(args):
     """
     paths = [SITE_INDEX_PATH]
     for _, path, _ in path_page_targets(args):
+        if path not in paths:
+            paths.append(path)
+    for _, path, _ in capstone_page_targets(args):
         if path not in paths:
             paths.append(path)
     for _, path, _ in course_home_targets(args):
@@ -1126,6 +1208,33 @@ class Smoke:
             for marker in markers:
                 self.assert_contains(check, response, marker, "path page marker")
 
+    def check_capstone_pages(self):
+        """The dated, real-data capstone.
+
+        Checked with its own markers because it is the one place on this site
+        where the course disclaimer would be a FALSE statement: the data is
+        real. What is asserted instead is the notice that is true -- real market
+        data, not a trade signal -- and the AS-OF DATE, because a real-data page
+        that renders without its date reads as a present-tense claim about a
+        security the moment the week turns.
+        """
+        for check_id, path, markers in capstone_page_targets(self.args):
+            check = self.new_check(
+                check_id, "dated real-data capstone page is served at its subpath", path
+            )
+            try:
+                response = self.get(path, max_redirects=self.args.max_redirects)
+            except FetchError as exc:
+                check.fail(str(exc))
+                continue
+            if not self.assert_same_origin_chain(check, response):
+                continue
+            if not self.assert_status(check, response, 200):
+                continue
+            self.assert_header(check, response, "Content-Type", "text/html", "contains")
+            for marker in markers:
+                self.assert_contains(check, response, marker, "capstone marker")
+
     def check_course_homes(self):
         """Each course's own page. They are published URLs, so they are probed
         like any other: the path page links to them and every lesson links
@@ -1272,6 +1381,7 @@ class Smoke:
         self.check_internal_health()
         self.check_learn_index()
         self.check_path_pages()
+        self.check_capstone_pages()
         self.check_course_homes()
         self.check_lesson_pages()
         self.check_published_assets()

@@ -693,6 +693,12 @@
     }
     .complete-lead strong { color: var(--text); }
 
+    /* The capstone notice. Same component as .complete-lead, amber rather than
+       green: it is a caution about a dated, real-data page, not a completion
+       note. Reads tokens only — a [data-theme="light"] component override would
+       reach the toggle path and miss the system-preference one. */
+    .capstone-note { border-left-color: var(--amber); }
+
     footer {
       display: flex;
       justify-content: space-between;
@@ -1157,10 +1163,60 @@
 
         <p class="complete-lead"><strong>The path is complete.</strong> Course 8 is the end of the sequence — all eight courses are published, every one of them links to its home above, and no ninth course is planned or promised. This note used to explain what was still missing; what it says now is that nothing is. Start at course 1 if you are new, or open any course directly: each one is written to stand on its own.</p>
       </section>
+
+      <!-- ===================================================================
+           THE CAPSTONE. It is NOT a ninth course and must never be listed as
+           one. The path is EIGHT courses: the count chip, the progress meter
+           and the note that closes the list above all say so, and none of them
+           moves for this. What follows is one worked example that draws on all
+           eight courses at once, which is why it hangs off the path as a whole
+           rather than off any single course.
+
+           It is DATED, and the date is load-bearing. The analysis was written
+           as of Sunday, August 16, 2026 against a window of real market data
+           that ended on Friday, August 14, 2026. Within days it is a historical
+           snapshot, so the date is in the heading, in the chip, in the link
+           text and in the notice below it — never only in a title attribute or
+           a footer.
+
+           Its own two pages carry a REAL-DATA notice instead of the
+           synthetic-examples disclaimer every course page carries: that
+           sentence would be false about real IREN data. The exception is
+           declared by name in tests/test_site_invariants.py (REAL_DATA_PAGES)
+           and those pages are required to carry the real-data notice and the
+           as-of date instead — a stricter requirement, not a waiver.
+           =================================================================== -->
+      <section class="section" id="capstone" aria-labelledby="capstone-title">
+        <div class="section-head">
+          <div>
+            <p class="kicker">After the eight courses</p>
+            <h2 id="capstone-title">Capstone: the same method, on one real security</h2>
+            <p>A worked example, not a ninth course and not a recommendation. It applies the material of all eight courses above, once, end to end, to a real listed security using real market data from a window that closed on Friday, August 14, 2026.</p>
+          </div>
+          <p class="count-chip">Analysis as of August 16, 2026</p>
+        </div>
+
+        <article class="course-card">
+          <div class="card-top">
+            <p class="course-ord">Worked example · real data</p>
+            <span class="status live"><span class="glyph" aria-hidden="true">✓</span> Published</span>
+          </div>
+          <h3><a href="./iren-analysis-2026-08-16/">IREN — a worked analysis, as of August 16, 2026</a></h3>
+          <p>Fifty completed daily sessions, June 4 to August 14, 2026, read the way this path teaches it: structure and levels, indicators, participation and volume, exploratory pattern studies quoted with their sample sizes and their limits, then risk framing and scenarios. The dataset every figure derives from is published beside the analysis, so the arithmetic is yours to check.</p>
+          <div class="meta-row">
+            <span class="chip">Real market data</span>
+            <span class="chip">Point-in-time · August 16, 2026</span>
+            <span class="chip">Not a course</span>
+            <span class="chip">Dataset published</span>
+          </div>
+        </article>
+
+        <p class="complete-lead capstone-note"><strong>Read the date before you read the analysis.</strong> This is educational analysis of real market data. It is not personalized investment advice, not a trade signal, and not a guarantee of any outcome. It describes one weekend — it was written as of Sunday, August 16, 2026, looking ahead to the Monday, August 17, 2026 session — and it is not a live or current view of that security or of any price. The eight courses above teach with synthetic, deterministic examples; this one example does not, and that is exactly why it carries a notice of its own.</p>
+      </section>
     </main>
 
     <footer>
-      <p class="risk"><strong>Educational path.</strong> These courses teach trading concepts using synthetic, deterministic examples. Nothing here is personalized investment advice, a live signal, or a claim about profitability. Trading carries the risk of losing money; verify contract specifications, costs, broker procedures and current disclosure documents before trading.</p>
+      <p class="risk"><strong>Educational path.</strong> These courses teach trading concepts using synthetic, deterministic examples. The one dated worked example linked from this page is the exception: it uses real market data, and it carries its own notice for that reason. Nothing here is personalized investment advice, a live signal, or a claim about profitability. Trading carries the risk of losing money; verify contract specifications, costs, broker procedures and current disclosure documents before trading.</p>
       <p>© 2026 dmedellin · Released under the MIT License · Educational use only — worked examples are illustrative, not professional advice.</p>
       <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
     </footer>

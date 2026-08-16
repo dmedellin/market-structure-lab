@@ -41,11 +41,22 @@ COPY site/ ./
 # (sixteen lessons), volume-and-order-flow (sixteen lessons),
 # trading-risk-management (sixteen lessons), backtesting-and-trading-systems
 # (sixteen lessons) and algorithmic-and-automated-trading (sixteen lessons), all
-# listed in the RUN below, along with the seven published non-HTML assets. That
+# listed in the RUN below, along with the eight published non-HTML assets. That
 # is the same map as REQUIRED_PAGES plus NON_HTML_ASSETS in
 # tests/test_site_invariants.py and acceptance.checks in release/contract.json
-# — 128 pages and 7 assets. Each asset is tested on its own line: a guard that
+# — 130 pages and 8 assets. Each asset is tested on its own line: a guard that
 # let a JSON file satisfy a page check would stop proving anything about either.
+# The extra two pages and the eighth asset are the CAPSTONE: a dated, real-data
+# worked example published under the path page at
+# /srv/paths/trading/iren-analysis-2026-08-16/ (the interactive lab), its
+# /slides/ deck, and the dataset both derive from. It is NOT a ninth course —
+# the path is complete at eight — and it is not swept by any course loop; it is
+# guarded on its own lines below, immediately after the path page it hangs off.
+# It is also the only published material built from REAL market data, which is
+# why its pages carry a real-data notice rather than the synthetic-examples
+# disclaimer every course page carries (REAL_DATA_PAGES in
+# tests/test_site_invariants.py declares that exception and enforces the
+# stricter notice those two pages owe instead).
 # The seven FLAT /<lesson>/ URLs this image used to publish are retired, and so
 # is course 1's old /market-structure-lab/ prefix (that slug named the whole
 # site, not the course): no stub is shipped for either and neither may be
@@ -59,6 +70,9 @@ COPY site/ ./
 RUN set -eu; \
     test -f /srv/index.html || { echo "FATAL: missing /srv/index.html (the site index)"; exit 1; }; \
     test -f /srv/paths/trading/index.html || { echo "FATAL: missing /srv/paths/trading/index.html (the trading path page). It is published at learn.geterdone.io/paths/trading/ and is the only page that shows all eight courses of the path in one ordered list; the site index links to it, so its absence 404s the only route into the path."; exit 1; }; \
+    test -f /srv/paths/trading/iren-analysis-2026-08-16/index.html || { echo "FATAL: missing /srv/paths/trading/iren-analysis-2026-08-16/index.html (the dated real-data capstone, interactive lab). It is published at learn.geterdone.io/paths/trading/iren-analysis-2026-08-16/ and the path page links to it; it is a worked example, not a ninth course."; exit 1; }; \
+    test -f /srv/paths/trading/iren-analysis-2026-08-16/slides/index.html || { echo "FATAL: missing /srv/paths/trading/iren-analysis-2026-08-16/slides/index.html (the dated real-data capstone, slide deck)."; exit 1; }; \
+    test -s /srv/paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json || { echo "FATAL: missing or empty /srv/paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json. It is a published URL: every price, bar, indicator and backtest figure on the two capstone pages derives from it, and it is published so the analysis can be checked rather than believed."; exit 1; }; \
     course=market-structure; \
     test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (course home of the Market Structure course)"; exit 1; }; \
     for lesson in market-structure \

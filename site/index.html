@@ -603,6 +603,35 @@
       border-radius: 999px;
     }
 
+    /* The capstone line. One dated worked example that hangs off a PATH, not a
+       course: it never appears in .course-strip and never in the search array.
+       Tokens only — a [data-theme="light"] component override would light the
+       toggle path and miss the system-preference one. */
+    .path-card p.capstone-line {
+      margin: 0;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--panel-2) 70%, transparent);
+      font-size: 0.83rem;
+      line-height: 1.5;
+    }
+
+    .capstone-tag {
+      display: inline-block;
+      margin-right: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      color: var(--amber);
+      font-size: 0.66rem;
+      font-weight: 850;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      vertical-align: 1px;
+    }
+
     .path-foot {
       display: flex;
       align-items: center;
@@ -1037,6 +1066,10 @@
                   .strip and SVG comments above) and NO invented lesson count —
                   the trading path needs none of that, because it is complete.
                4. the artwork and its aria-label
+               5. the .capstone-line paragraph: keep it only if that path
+                  publishes a dated worked example of its own, and drop it
+                  otherwise. It is not a course, so it never goes in the
+                  .course-strip, the counts, or the COURSES array.
              Nothing in the CSS changes: .paths is an auto-fit grid, so one card
              fills the row and two split it. Then update, outside the card: the
              .count-chip, the hero copy if the totals it states change, the
@@ -1137,6 +1170,22 @@
                 </ol>
               </div>
 
+              <!-- A card may carry a CAPSTONE LINE after its course strip: one
+                   dated worked example that belongs to the path as a whole
+                   rather than to a course. It is NOT a course, so it is not in
+                   the .course-strip above, not in the counts, and deliberately
+                   not in the COURSES search array at the foot of this file —
+                   search returns courses. A path without a capstone simply
+                   omits this paragraph. -->
+              <p class="capstone-line">
+                <span class="capstone-tag">Capstone</span>
+                Plus one dated worked example, published after course 8: a
+                real-data analysis of a listed security, as of August 16, 2026.
+                It is a point-in-time snapshot rather than a current view, it is
+                not a course, and it is not a recommendation. Open the Trading
+                path to read it.
+              </p>
+
               <div class="path-foot">
                 <span class="go">
                   See all 8 courses
@@ -1163,6 +1212,18 @@
           liquidity, assignment, exercise, implied volatility, time decay, and
           other factors. Options in particular involve risk and are not suitable
           for every investor.
+        </p>
+
+        <p class="edu-note">
+          <strong>The one exception, and it is dated.</strong>
+          A single worked example published under that path is not course
+          material and is not synthetic: it analyses real market data for a real
+          listed security over a fixed window that ended on August 14, 2026, and
+          it is written as of August 16, 2026. It is a point-in-time snapshot,
+          not a live or current view, and not a forecast. It is educational
+          analysis, not personalized investment advice, not a trade signal, and
+          not a guarantee of any outcome, and it carries a notice of its own
+          saying exactly that.
         </p>
       </section>
 

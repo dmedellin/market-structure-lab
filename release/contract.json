@@ -2,7 +2,7 @@
   "schema_version": 1,
   "notes": [
     "COMMITTED CONTRACT SOURCE, and the single source of truth for __LOOPBACK_PORT__ and __APP_SUBNET__. .github/workflows/release.yml reads this document, renders the deployment inputs from its network block, overwrites only the fields a release run can prove, validates the result against release/contract.schema.json, and emits it as release-artifacts/release-contract.json. Every field the workflow does not overwrite is reviewed policy and is authoritative exactly as written here.",
-    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home, /trading-risk-management/ id course6-home, /backtesting-and-trading-systems/ id course7-home, /algorithmic-and-automated-trading/ id course8-home), and each course's lessons beneath its own home - one check id per page, 128 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 8 are course-scoped because a lesson slug is only unique within a course - course 2 and course 6 both ship a position-sizing lesson). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the WHOLE path in one place, so it carries its own check with its own markers rather than riding along on the index's. Those markers used to name the last published course and the first announced one and moved forward at every launch; the trading path is COMPLETE at course 8, so the announced half is retired and what is asserted instead is that the last course on the path is named AND linked to its own home. The seven published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), /trading-risk-management/trading-risk-plan-schema.json (id trading-risk-plan-schema) /backtesting-and-trading-systems/trading-system-specification-schema.json (id trading-system-specification-schema) and /algorithmic-and-automated-trading/automated-trading-system-schema.json (id automated-trading-system-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one complete path and eight courses.",
+    "acceptance.checks enumerates the COMPLETE published URL space: the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home, /trading-risk-management/ id course6-home, /backtesting-and-trading-systems/ id course7-home, /algorithmic-and-automated-trading/ id course8-home), and each course's lessons beneath its own home - one check id per page, 128 pages in all, plus the two pages of the dated real-data CAPSTONE published under the path page (ids capstone-iren-lab and capstone-iren-slides) for 130 in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 8 are course-scoped because a lesson slug is only unique within a course - course 2 and course 6 both ship a position-sizing lesson). The path page is NEITHER a course home NOR a lesson: it is the only URL that shows the WHOLE path in one place, so it carries its own check with its own markers rather than riding along on the index's. Those markers used to name the last published course and the first announced one and moved forward at every launch; the trading path is COMPLETE at course 8, so the announced half is retired and what is asserted instead is that the last course on the path is named AND linked to its own home. The eight published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), /trading-risk-management/trading-risk-plan-schema.json (id trading-risk-plan-schema) /backtesting-and-trading-systems/trading-system-specification-schema.json (id trading-system-specification-schema) /algorithmic-and-automated-trading/automated-trading-system-schema.json (id automated-trading-system-schema) and the capstone's dataset /paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json (id capstone-iren-dataset, which is not a schema but the data the capstone's figures derive from), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a further asset is declared as a further check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served - /paths/trading/ shares no prefix with any course home and is built the same way anyway, because a marker set that discriminates only where URLs happen to overlap is one nobody can reason about. Course 1's old /market-structure-lab/ prefix and the seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app, the repository and the image (org.opencontainers.image.title), not the library, which now holds a subject-agnostic index, one complete path and eight courses. The capstone is NOT a ninth course: the path is complete at eight, and its two pages are checked with their own ids and their own markers because they are the only published pages built from REAL market data. The synthetic-examples disclaimer every course page must carry would be a false statement on them, so their checks demand the real-data notice and the AS-OF DATE instead - an added requirement, never a relaxed one. tests/test_site_invariants.py declares the same exception by name (REAL_DATA_PAGES) and fails a page in that set which carries neither disclaimer.",
     "Fields only a release run can know carry all-zero sentinels: release_id, source.revision, image.digest, image.reference, build.timestamp, compose.template_sha256, compose.rendered_sha256 and invocation.workflow_run_id. An all-zero digest or revision can never be a real one, so this document can never be mistaken for a release.",
     "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED. The release workflow refuses to render or build while they hold placeholders, and names the allocation gate in the failure. Allocation is a human decision plus a live host preflight (platform-ops docs/APP_ONBOARDING.md section 2 reservation PR, section 4 bootstrap preflight, and docs/EDGE_ROUTING_CONTRACT.md section 5) and must never be automated here.",
     "build.base_images[].digest is __BASE_IMAGE_DIGEST__ because Containerfile.release is the only place a base image is pinned; the workflow copies the digests it actually built from there, so the two can never drift.",
@@ -176,6 +176,64 @@
             "Backtesting and Trading Systems",
             "Algorithmic and Automated Trading",
             "href=\"../../algorithmic-and-automated-trading/\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "capstone-iren-lab",
+        "description": "The dated real-data capstone (interactive lab) is served at /paths/trading/iren-analysis-2026-08-16/ and is provably that document: its own canonical tag, the security, the real-data notice that REPLACES the synthetic one, and the as-of date.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/paths/trading/iren-analysis-2026-08-16/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/paths/trading/iren-analysis-2026-08-16/\"",
+            "IREN",
+            "real market data",
+            "not a trade signal",
+            "August 16, 2026"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "capstone-iren-slides",
+        "description": "The dated real-data capstone (slide deck) is served at /paths/trading/iren-analysis-2026-08-16/slides/ and is provably that document: its own canonical tag, the security, the real-data notice in place of the synthetic one, and the as-of date.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/paths/trading/iren-analysis-2026-08-16/slides/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/paths/trading/iren-analysis-2026-08-16/slides/\"",
+            "IREN",
+            "real market data",
+            "not a trade signal",
+            "August 16, 2026"
           ],
           "headers": [
             {
@@ -3753,6 +3811,32 @@
           "same_origin_redirects_only": true,
           "body_contains": [
             "\"const\": \"automated-trading-system-v1\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "json"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "capstone-iren-dataset",
+        "description": "The capstone dataset is served as JSON, parses, and names the ticker and analysis date every figure on those two pages derives from. Indented keys discriminate: both capstone pages embed this same data minified.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "\"ticker\": \"IREN\"",
+            "\"analysis_date\": \"2026-08-16\""
           ],
           "headers": [
             {

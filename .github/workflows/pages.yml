@@ -51,8 +51,11 @@ jobs:
           # /volume-and-order-flow/, /trading-risk-management/,
           # /backtesting-and-trading-systems/ and
           # /algorithmic-and-automated-trading/), and each course's lessons
-          # beneath its own home -- 128 pages, in path order -- plus seven
-          # published non-HTML assets. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
+          # beneath its own home -- 128 pages, in path order -- plus the two
+          # pages of the dated real-data capstone at
+          # /paths/trading/iren-analysis-2026-08-16/ for 130 in all, plus eight
+          # published non-HTML assets (seven course schemas and the capstone's
+          # dataset). Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py and acceptance.checks in
           # release/contract.json. Publishing a tree that is missing a page
           # would 404 a live URL, so refuse instead.
@@ -61,10 +64,20 @@ jobs:
           # The seven flat /<lesson>/ URLs are retired with no redirect stub,
           # and so is course 1's old /market-structure-lab/ prefix; neither is
           # listed here and neither may come back.
+          # After the eight courses, the path publishes one DATED, REAL-DATA
+          # capstone: /paths/trading/iren-analysis-2026-08-16/ (interactive lab)
+          # and its /slides/ deck, plus the dataset they derive from. It is NOT a
+          # ninth course -- the path is complete at eight -- and it is the only
+          # published material built from real market data, which is why its
+          # pages carry a real-data notice instead of the synthetic-examples
+          # disclaimer every course page carries. See REAL_DATA_PAGES in
+          # tests/test_site_invariants.py.
           missing=0
           pages=0
           for page in index.html \
                       paths/trading/index.html \
+                      paths/trading/iren-analysis-2026-08-16/index.html \
+                      paths/trading/iren-analysis-2026-08-16/slides/index.html \
                       market-structure/index.html \
                       market-structure/market-structure/index.html \
                       market-structure/ranges-breakouts-liquidity/index.html \
@@ -197,7 +210,8 @@ jobs:
               missing=1
             fi
           done
-          # Seven courses ship an exchange schema as a real published file:
+          # Seven courses ship an exchange schema as a real published file, and the
+          # capstone ships the dataset its two pages derive from:
           # course 2's lesson 14 exports the journal shape and its lesson 15
           # imports it, course 3's lesson 16 exports the trade plan shape,
           # course 4's lesson 16 exports the indicator rule shape, course
@@ -215,7 +229,8 @@ jobs:
                        volume-and-order-flow/volume-order-flow-rule-schema.json \
                        trading-risk-management/trading-risk-plan-schema.json \
                        backtesting-and-trading-systems/trading-system-specification-schema.json \
-                       algorithmic-and-automated-trading/automated-trading-system-schema.json ; do
+                       algorithmic-and-automated-trading/automated-trading-system-schema.json \
+                       paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json ; do
             if [ ! -f "site/$asset" ]; then
               echo "::error::missing site/$asset -- refusing to publish an incomplete course"
               missing=1
@@ -225,7 +240,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "self-containment OK; all $pages pages and 7 assets present"
+          echo "self-containment OK; all $pages pages and 8 assets present"
 
       # NOTE: `enablement: true` was tried here and fails --- GITHUB_TOKEN
       # cannot create a Pages site ("Resource not accessible by integration").

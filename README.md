@@ -419,10 +419,16 @@ All charts, trades, prices, fills, and performance results across all eight
 courses are synthetic educational examples. The pages contain no live data and no
 trading signals. Real outcomes can differ because of spread, slippage,
 commissions, gaps, taxes, liquidity, assignment, exercise, implied volatility,
-time decay, and other factors. Every course and lesson page carries an
-`Educational use only` disclaimer and the invariant suite fails the build if one
-loses it. The two shared-chrome pages are exempt by name, not by shape: a
-subject-specific notice is not theirs to carry.
+time decay, and other factors. Every course and lesson page carries
+`Educational use only — charts are synthetic examples, not trade signals.` and
+the invariant suite fails the build if one loses either half of it.
+
+Two kinds of page are exempt, and both by NAME rather than by URL shape. The two
+shared-chrome pages carry no subject-specific notice because the same frame is
+meant to hold a mathematics path next. And the two pages of the dated capstone
+(see below) carry a **real-data** notice instead, because their data is real and
+the synthetic sentence would be false on them — an exemption paired with a
+strictly larger requirement, never a page let off being checked.
 
 **Options carry their own risk notice, and course 3 states it on the page.**
 Options involve risk and are not suitable for every investor. Course 3 is
@@ -432,6 +438,88 @@ Black-Scholes model; they do not model every listed-product feature, dividend,
 early-exercise decision, fee, tax, margin rule, or market microstructure effect.
 Contract specifications and broker procedures must be verified independently.
 
+## The capstone — one dated, real-data worked example
+
+`https://learn.geterdone.io/paths/trading/iren-analysis-2026-08-16/`
+
+After the eight courses, the trading path publishes one **capstone**: a worked
+example that applies the path's material, once and end to end, to a real listed
+security. It sits under the path page rather than under any course because it
+draws on all eight of them; it is **not a ninth course**, and nothing about the
+path's "8 of 8" framing moves for it. Two pages and one dataset:
+
+| URL | What it is |
+| --- | --- |
+| `/paths/trading/iren-analysis-2026-08-16/` | the interactive lab |
+| `/paths/trading/iren-analysis-2026-08-16/slides/` | the slide deck (keyboard navigation, one slide per printed page) |
+| `/paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json` | the 50-session dataset every figure derives from, published so the analysis can be checked rather than believed |
+
+**As of Sunday, August 16, 2026.** That date is the point of the slug, and it is
+stated in the body of both pages above the analysis, not only in the `<title>`
+and not only in a footer. The analysis reads 50 completed daily sessions from
+June 4 to August 14, 2026 and looks ahead to the Monday, August 17, 2026
+session. Within days of publication it is a historical snapshot, so both pages
+frame it as a point-in-time view rather than a live or current one, and the
+guards below fail a page that drops the date.
+
+### Why its disclaimer differs — and why that is stricter, not looser
+
+Every course page carries `Educational use only — charts are synthetic examples,
+not trade signals.` That sentence is true of the courses and **false of the
+capstone**: its prices, bars, indicators and pattern studies come from real
+market data for a real security. A false disclaimer is worse than none, because
+the disclaimer is the sentence a reader trusts.
+
+So the two capstone pages are declared by name in
+`tests/test_site_invariants.py` as `REAL_DATA_PAGES`, and that declaration is a
+trade rather than a waiver. A page in that set:
+
+- is **exempt** from the synthetic-examples assertion, and is **forbidden** to
+  carry that sentence at all — it may not hold both notices and let a reader
+  pick;
+- **must** carry the real-data notice, asserted phrase by phrase: *real market
+  data*, *not (personalized) investment advice*, *not a trade signal*, and the
+  point-in-time framing (*point-in-time* / *not a live or current view*);
+- **must** state the as-of date, `August 16, 2026`, **in the page body** — a
+  date in `<title>` alone does not satisfy it, because a dated analysis that is
+  undated where a reader reads ages into a false present-tense claim.
+
+That is strictly more than a course page must satisfy. The exemption is also
+guarded against being used as a loophole: `TestRealDataPages` fails a page in
+`REAL_DATA_PAGES` that carries **neither** disclaimer, fails one that names a
+page which is not published, and fails outright if the set ever names a course
+home or a lesson. All 126 course pages keep the synthetic assertion, and that
+assertion got *stronger* in the same change — it used to check only the four
+words `Educational use only`, and now pins the whole sentence.
+
+The same split runs through the served checks: `scripts/smoke.py` probes the
+capstone under its own ids (`capstone-iren-lab`, `capstone-iren-slides`,
+`capstone-iren-dataset`) with real-data markers and the as-of date, never with
+the course disclaimer marker, and `release/contract.json` declares the three
+checks to match.
+
+### What the analysis claims, and what it does not
+
+The source package is candid about its limits and the pages keep those limits
+next to the results they qualify rather than in a footer:
+
+- the backtests are **exploratory**: the patterns were selected *after*
+  inspecting this 50-session sample;
+- signals are evaluated at the close, and forward results are future
+  close-to-close returns;
+- transaction costs and execution effects are excluded;
+- sample sizes are small, and the results are **not** out-of-sample forecasts;
+- the three-consecutive-up-closes study has only **two valid events** in the
+  sample: it is descriptive only and not statistically reliable, and that caveat
+  renders beside the number rather than below the fold;
+- **volume differs by provider.** The historical series is StockAnalysis/S&P
+  Global Market Intelligence; the current snapshot is WSJ. Totals can differ by
+  provider and market coverage while price levels agree, and that is stated
+  where volume is shown.
+
+None of it is personalized investment advice, a trade signal, or a guarantee of
+any outcome — including the August 17 session it looks ahead to.
+
 ## URL layout
 
 The site is published under one subdomain, `learn.geterdone.io`. The URL space
@@ -440,7 +528,12 @@ has three kinds of page — the index, a path page, and a course with its lesson
 ```text
 /                                       the site index (paths + course search)
 ├── /paths/trading/                     the trading PATH PAGE — eight courses in
-│                                       order, all eight published
+│   │                                   order, all eight published
+│   └── /paths/trading/iren-analysis-2026-08-16/   the CAPSTONE — a dated,
+│       │                               real-data worked example; not a course
+│       ├── /paths/trading/iren-analysis-2026-08-16/slides/          slide deck
+│       └── /paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json
+│                                                            published asset
 ├── /market-structure/                  course 1 home — lists its seven lessons
 │   ├── /market-structure/market-structure/                     lesson 1.01
 │   ├── … five more …
@@ -487,12 +580,15 @@ and nothing is served at `/paths/` itself — the list of paths is the site inde
 Every course on the path has its own URLs; nothing on the path page is an entry
 without a page behind it.
 
-**128 pages and seven assets. Nothing else is served:**
+**130 pages and eight assets. Nothing else is served** — 128 pages of the course tree, plus the capstone's two pages, and the seven course schemas plus the capstone's dataset:
 
 | # | URL | Page | Source |
 | --- | --- | --- | --- |
 | — | `https://learn.geterdone.io/` | Site index — the paths, plus course search | `site/index.html` |
 | path | `https://learn.geterdone.io/paths/trading/` | **Trading path** — the eight courses in order | `site/paths/trading/index.html` |
+| capstone | `https://learn.geterdone.io/paths/trading/iren-analysis-2026-08-16/` | **IREN worked analysis, as of August 16, 2026** — the interactive lab; real data, not a course | `site/paths/trading/iren-analysis-2026-08-16/index.html` |
+| capstone | `https://learn.geterdone.io/paths/trading/iren-analysis-2026-08-16/slides/` | The same analysis as a slide deck (keyboard navigation, print one slide per page) | `site/paths/trading/iren-analysis-2026-08-16/slides/index.html` |
+| asset | `https://learn.geterdone.io/paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json` | The 50-session dataset both capstone pages derive from (JSON, not a page) | `site/paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json` |
 | — | `https://learn.geterdone.io/market-structure/` | **Market Structure** — course 1 home | `site/market-structure/index.html` |
 | 1.01 | `https://learn.geterdone.io/market-structure/market-structure/` | Market Structure Lab | `site/market-structure/market-structure/index.html` |
 | 1.02 | `https://learn.geterdone.io/market-structure/ranges-breakouts-liquidity/` | Ranges, Breakouts & Liquidity Sweeps Lab | `site/market-structure/ranges-breakouts-liquidity/index.html` |
@@ -654,8 +750,9 @@ any page map — a path in these maps is a path that must exist.
 That map is declared in five places, and all five must agree:
 
 - `tests/test_site_invariants.py` → `REQUIRED_PAGES` (pages on disk, including
-  `SITE_INDEX` and `PATH_PAGE`) and `NON_HTML_ASSETS` (all four JSON schemas,
-  each declared as an asset rather than by loosening any page check);
+  `SITE_INDEX`, `PATH_PAGE` and the two `REAL_DATA_PAGES` of the capstone) and
+  `NON_HTML_ASSETS` (the seven JSON schemas plus the capstone's dataset, each
+  declared as an asset rather than by loosening any page check);
 - `scripts/smoke.py` → `PATH_PAGE_PATH`, `COURSE_PATH`, `COURSE_LESSONS`,
   `COURSE_2_PATH`, `COURSE_2_LESSONS`, `COURSE_3_PATH`, `COURSE_3_LESSONS`,
   `COURSE_4_PATH`, `COURSE_4_LESSONS`, `COURSE_5_PATH`, `COURSE_5_LESSONS` and
@@ -669,14 +766,17 @@ That map is declared in five places, and all five must agree:
   `journal-schema`, `trade-plan-schema`, `indicator-rule-schema`,
   `volume-order-flow-rule-schema`, `trading-risk-plan-schema`,
   `trading-system-specification-schema` and `automated-trading-system-schema`
-  for the seven assets, each fetched and parsed as JSON). One id is shortened
+  for the seven course assets, each fetched and parsed as JSON; and
+  `capstone-iren-lab`, `capstone-iren-slides` and `capstone-iren-dataset` for the
+  capstone, whose two page checks demand the real-data notice and the as-of date
+  where a course check demands the synthetic disclaimer). One id is shortened
   against that scheme — course 8's lesson 16 slug would push
   `course8-lesson-<slug>` past the 72-character cap the contract schema sets, so
   `scripts/smoke.py` and both contract documents name it
   `course8-lesson-system-specification-and-production-readiness`, and
   `TestDeclaredUrlSpaceAgrees` fails if the two files ever stop agreeing on it.
   `release/contract.schema.json` requires every one of those ids by name — all
-  139 of them — so a check cannot be quietly dropped;
+  142 of them — so a check cannot be quietly dropped;
 - `.github/workflows/ci.yml` → the "Published URL space is complete" step;
 - `Containerfile.release` and `.github/workflows/pages.yml` (publish-time guards).
 
@@ -684,7 +784,9 @@ A page added to one of them and not the others is a page nothing checks.
 
 Further site-wide invariants exist because eight courses now share one origin.
 Each of them is something a reader carries across a course boundary, so each is
-pinned once and asserted on all 128 pages (`TestPinnedConventions`):
+pinned once and asserted on all 130 published pages — the capstone included, which
+is normalized onto exactly these conventions even though it is not a course
+(`TestPinnedConventions`):
 
 - **One theme key.** Every page persists the reader's light/dark choice under the
   single `localStorage` key `learn-theme`. The per-course keys the courses shipped
@@ -762,7 +864,7 @@ python3 scripts/validate_release_contract.py \
     release/contract.json release/contract.example.json
 ```
 
-`smoke.py` checks all 128 published pages plus all seven JSON assets — one report
+`smoke.py` checks all 130 published pages plus all eight JSON assets — one report
 line per URL, each page demanding that document's own canonical tag and each
 asset fetched, typed and parsed as JSON. The path page has its own check id
 (`trading-path`) with its own markers: it is the only URL that shows the whole
@@ -800,7 +902,7 @@ AGENTS.md                 working agreement — read before changing anything
 **1. GitHub Pages — live.** `.github/workflows/pages.yml` uploads `site/` on every
 push to `main` and deploys it to `learn.geterdone.io` (`site/CNAME` holds the
 custom domain). Before uploading it re-checks self-containment, asserts that all
-128 pages exist, and parses all seven published JSON assets. This path does not
+130 pages exist, and parses all eight published JSON assets. This path does not
 touch platform-ops, the shared Caddy edge, or any registry reservation, and it
 is **not** a shortcut around those gates — they govern the Hetzner platform,
 which is a different path.
@@ -837,11 +939,12 @@ The normative rules live in `dmedellin/platform-ops`
 
 **Deployed on GitHub Pages.** `https://learn.geterdone.io/` serves this `site/`
 tree — the site index, the trading path page, all eight course homes, all 118
-lessons, and the seven published schemas (trade journal, options trade plan,
+lessons, the seven published schemas (trade journal, options trade plan,
 indicator rule, volume and order flow rule, trading risk plan, trading system
-specification, and automated trading system) — from the `pages.yml` workflow.
-128 pages and 7 assets; the trading path is complete, and nothing in the library
-is announced without a page behind it.
+specification, and automated trading system), and the dated real-data capstone
+with its dataset — from the `pages.yml` workflow. 130 pages and 8 assets; the
+trading path is complete at eight courses, the capstone is a worked example and
+not a ninth, and nothing in the library is announced without a page behind it.
 
 **The Hetzner container path remains UNBUILT.** No image of this repository has
 ever been built, deployed, or accepted on that platform. As of 2026-08-15, all of

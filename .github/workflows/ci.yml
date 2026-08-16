@@ -104,7 +104,10 @@ jobs:
           #   /algorithmic-and-automated-trading/  course 8 home
           #   /algorithmic-and-automated-trading/<lesson>/
           #                                        course 8's sixteen lessons
-          # 128 pages, in path order, plus seven published non-HTML assets.
+          # 128 pages, in path order, plus the two pages of the dated real-data
+          # capstone at /paths/trading/iren-analysis-2026-08-16/ -- 130 pages --
+          # plus eight published non-HTML assets (the seven course schemas and
+          # the capstone's dataset).
           # Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py, acceptance.checks in
           # release/contract.json, the publish guard in pages.yml, and the build
@@ -118,10 +121,20 @@ jobs:
           # with no redirect stub, and so is course 1's old
           # /market-structure-lab/ prefix. They are deliberately absent from
           # this list and must not be re-added.
+          # After the eight courses, the path publishes one DATED, REAL-DATA
+          # capstone: /paths/trading/iren-analysis-2026-08-16/ (interactive lab)
+          # and its /slides/ deck, plus the dataset they derive from. It is NOT a
+          # ninth course -- the path is complete at eight -- and it is the only
+          # published material built from real market data, which is why its
+          # pages carry a real-data notice instead of the synthetic-examples
+          # disclaimer every course page carries. See REAL_DATA_PAGES in
+          # tests/test_site_invariants.py.
           missing=0
           pages=0
           for page in index.html \
                       paths/trading/index.html \
+                      paths/trading/iren-analysis-2026-08-16/index.html \
+                      paths/trading/iren-analysis-2026-08-16/slides/index.html \
                       market-structure/index.html \
                       market-structure/market-structure/index.html \
                       market-structure/ranges-breakouts-liquidity/index.html \
@@ -264,14 +277,17 @@ jobs:
           # Each course home links to its file, so each is a live URL
           # whose absence is a 404 like any other. Each asset is listed here
           # explicitly rather than folded into the page loop above: a page check
-          # that also accepts JSON is a page check that proves nothing.
+          # that also accepts JSON is a page check that proves nothing. The eighth
+          # asset is not a schema: it is the capstone's dataset, published so the
+          # analysis on those two pages can be checked rather than believed.
           for asset in trade-setup-execution/trade-journal-schema.json \
                        options-trading/options-trade-plan-schema.json \
                        technical-indicators/indicator-rule-schema.json \
                        volume-and-order-flow/volume-order-flow-rule-schema.json \
                        trading-risk-management/trading-risk-plan-schema.json \
                        backtesting-and-trading-systems/trading-system-specification-schema.json \
-                       algorithmic-and-automated-trading/automated-trading-system-schema.json ; do
+                       algorithmic-and-automated-trading/automated-trading-system-schema.json \
+                       paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json ; do
             if [ ! -f "$WEB_ROOT/$asset" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$asset — a published asset is missing"
               missing=1
@@ -281,7 +297,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "Published URL space: $pages/128 pages plus 7 assets present under $WEB_ROOT."
+          echo "Published URL space: $pages/130 pages plus 8 assets present under $WEB_ROOT."
 
       - name: HTML is well-formed
         run: |
@@ -501,6 +517,14 @@ jobs:
                                   "https://kubernetes.io",
                                   "https://opentelemetry.io",
                                   "https://www.sec.gov")
+          # The dated real-data capstone cites its DATA SOURCES -- StockAnalysis,
+          # WSJ, the issuer's investor page, GlobeNewswire and TradingView -- and
+          # none of them is here, deliberately. Its pages and its published
+          # dataset name each provider as text (host and path, no scheme), so a
+          # reader can trace any figure to the series it came from without the
+          # tree carrying a single absolute URL. Nothing links out, so nothing
+          # needed reviewing: an origin in this list with no link behind it is
+          # policy surface that widens the text scrub for no page at all.
           # 2. Schema and namespace IDENTIFIERS. These name a dialect; nothing
           #    dereferences them. The w3.org URIs are required by inline SVG and
           #    document.createElementNS. The json-schema.org URI is the "$schema"

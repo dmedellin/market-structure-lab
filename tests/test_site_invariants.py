@@ -83,8 +83,14 @@ CANONICAL_HOST = "learn.geterdone.io"
 #     /algorithmic-and-automated-trading/<lesson>/
 #                                        course 8's sixteen lessons, in course order
 #
-# That is 128 HTML pages. The document root publishes exactly seven further
-# things, all non-HTML assets -- one exchange schema per course that ships one --
+# That is 128 HTML pages, and it is the COURSE TREE. Two further HTML pages are
+# published under the path page -- the dated, real-data CAPSTONE and its slide
+# deck (REAL_DATA_PAGES below) -- for 130 in all. The capstone is a worked
+# example, not a ninth course: nothing about it may grow COURSES, and the path
+# is still eight courses long everywhere a count appears.
+#
+# The document root publishes exactly eight further things, all non-HTML assets:
+# one exchange schema per course that ships one, plus the capstone's dataset --
 # declared separately in NON_HTML_ASSETS below.
 #
 # The trading path is COMPLETE at course 8. Every course it was ever going to
@@ -303,6 +309,56 @@ COURSES = (
 PATH_COURSE_COUNT = 8
 UPCOMING_COURSES = ()
 
+# ---------------------------------------------------------------------------
+# The capstone: a dated, REAL-DATA worked example
+# ---------------------------------------------------------------------------
+# Two pages published UNDER the path page, at /paths/trading/<dated slug>/ .
+# They are not a ninth course, not lessons, and not shared chrome:
+#
+#   * they are not a course -- there are eight, the path is complete, and
+#     COURSES may not grow for them (TestPathIsComplete still asserts that);
+#   * they are not lessons -- they have no owning course home and no pager, so
+#     every per-course collection below is built by EXCLUDING them by name, the
+#     same way PATH_PAGE is;
+#   * they are not chrome -- they are the most subject-specific pages on the
+#     site, so the subject-agnostic sweeps do not apply to them either.
+#
+# What makes them different from every other published page is the DATA. Every
+# course page on this site teaches with synthetic series and says so, in the
+# pinned sentence SYNTHETIC_DISCLAIMER_RE matches. These two pages analyse a
+# real listed security over a real, closed window of real market data, so that
+# sentence would be FALSE on them -- and a disclaimer that is false is worse
+# than none, because it is the sentence a reader trusts.
+#
+# So the exception is declared here BY NAME, and it is a trade, not a waiver:
+# a page in REAL_DATA_PAGES is exempt from the synthetic assertion and is
+# required instead to carry
+#
+#   * the real-data notice, phrase by phrase (REAL_DATA_DISCLAIMER_PHRASES:
+#     real market data, not investment advice, not a trade signal, and the
+#     point-in-time framing), and
+#   * the AS-OF DATE in the page BODY, not merely in <title> -- the analysis
+#     ages, and a reader arriving months later must not be able to mistake it
+#     for a present-tense view;
+#
+# and it is forbidden to carry the synthetic sentence at all. That is strictly
+# MORE than a course page must satisfy. TestRealDataPages proves the exemption
+# cannot be used as a loophole: a page in this set that carries neither
+# disclaimer fails, and the set may never name course material.
+CAPSTONE_HOME = PATH_PAGE + "iren-analysis-2026-08-16/"
+CAPSTONE_SLIDES = CAPSTONE_HOME + "slides/"
+CAPSTONE_DATASET = CAPSTONE_HOME + "iren-analysis-data.json"
+
+# The as-of date, written the way the pages write it. The analysis is a
+# snapshot of Sunday 2026-08-16 looking ahead to the Monday 2026-08-17 session;
+# an undated real-data page is the failure this string exists to catch.
+CAPSTONE_AS_OF = "August 16, 2026"
+
+# The declared exception. Two pages, listed one per line: a third real-data page
+# is a third LINE here plus the notice it has to carry, never a reason to soften
+# the assertion that binds the other 126.
+REAL_DATA_PAGES = (CAPSTONE_HOME, CAPSTONE_SLIDES)
+
 UNKNOWN_PATH_CHECK = "/release-smoke-unknown-path"
 
 
@@ -327,6 +383,12 @@ for _title, _home, _slugs in COURSES:
     REQUIRED_PAGES[_home] = source_of(_home)
     for _slug in _slugs:
         REQUIRED_PAGES[lesson_url(_home, _slug)] = source_of(lesson_url(_home, _slug))
+# The capstone pages are published like any other page -- every whole-tree
+# invariant (self-containment, subpath safety, metadata, theme key, the pinned
+# palette and toggle) applies to them unchanged. Only the DISCLAIMER differs,
+# and only because the synthetic one would be false; see REAL_DATA_PAGES.
+for _url in REAL_DATA_PAGES:
+    REQUIRED_PAGES[_url] = source_of(_url)
 
 # Published, but NOT a document. The HTML invariants -- <title>,
 # <meta name="description">, rel=canonical, the educational-use disclaimer --
@@ -352,6 +414,12 @@ NON_HTML_ASSETS = {
         "backtesting-and-trading-systems/trading-system-specification-schema.json",
     "/algorithmic-and-automated-trading/automated-trading-system-schema.json":
         "algorithmic-and-automated-trading/automated-trading-system-schema.json",
+    # Not a schema: the capstone's DATASET. It is published so the analysis is
+    # inspectable -- every price, bar, indicator and backtest figure on those two
+    # pages derives from this file, and a reader who wants to check the
+    # arithmetic can fetch it. Declared as an asset for the same reason the seven
+    # schemas are: it is not a document and has none of a document's properties.
+    CAPSTONE_DATASET: CAPSTONE_DATASET.lstrip("/"),
 }
 
 # Rides along inside the document root without being published content. CNAME
@@ -365,8 +433,17 @@ COURSE_HOMES = tuple(home for _title, home, _slugs in COURSES)
 # homes as well as all 118 lessons. All of it teaches trading, so all of it
 # carries the same disclaimer. The two chrome pages are excluded BY NAME, not by
 # URL shape: /paths/trading/ looks exactly like a lesson URL.
+# Everything that is not shared chrome AND not a declared real-data page. The
+# real-data pages are excluded BY NAME, exactly like the chrome pages: they are
+# published under /paths/trading/ and are two segments deeper than a lesson, so a
+# guard that classified by URL SHAPE would demand an owning course home, a lesson
+# pager and the synthetic-examples disclaimer of a page that has none of the
+# three. Excluding them here is not a hole -- TestRealDataPages asserts a
+# strictly larger set of requirements against exactly these URLs.
 COURSE_PAGES = {
-    url: rel for url, rel in REQUIRED_PAGES.items() if url not in SHARED_CHROME_PAGES
+    url: rel
+    for url, rel in REQUIRED_PAGES.items()
+    if url not in SHARED_CHROME_PAGES and url not in REAL_DATA_PAGES
 }
 
 # The 118 lessons alone, without any course home.
@@ -412,9 +489,82 @@ PREPAINT_THEME_READ_RE = re.compile(
     r"""localStorage\s*\.\s*getItem\s*\(\s*(['"])%s\1\s*\)""" % THEME_STORAGE_KEY
 )
 
-# Every course page (every page that is not shared chrome) must keep this
-# disclaimer.
+# Every course page (every page that is not shared chrome and not a declared
+# real-data page) must keep this disclaimer.
 DISCLAIMER_RE = re.compile(r"(?i)educational use only")
+
+# ...and the sentence that says WHAT KIND of material it is. Every one of the
+# 126 course pages carries it today; it is asserted here rather than assumed,
+# because it is the claim a reader relies on when they see a chart. It was
+# previously covered only by the four words above, which a page could satisfy
+# while quietly dropping the part that matters.
+#
+# Written to match the served bytes either way: the em dash before it may be a
+# literal or an entity, and only the sentence itself is pinned.
+SYNTHETIC_DISCLAIMER_RE = re.compile(
+    r"(?i)charts are synthetic examples,\s*not trade signals"
+)
+
+# The notice a REAL-DATA page carries instead. Each phrase is asserted
+# separately so a page cannot satisfy the check with a vague gesture at
+# "educational": what a reader needs to be told is that the data is real, that
+# this is not advice, that it is not a signal, and that it is a snapshot of a
+# past moment rather than a live view.
+#
+# The alternations are deliberately narrow. "not personalized investment advice"
+# and "not investment advice" are the same promise and both pass; "point-in-time"
+# and "not a live or current view" are the same framing and both pass. Nothing
+# weaker than those does.
+REAL_DATA_DISCLAIMER_PHRASES = (
+    ("real market data", re.compile(r"(?i)\breal market data\b")),
+    (
+        "not investment advice",
+        re.compile(r"(?i)\bnot\s+(?:personalized\s+)?investment advice\b"),
+    ),
+    ("not a trade signal", re.compile(r"(?i)\bnot a trade signal\b")),
+    (
+        "point-in-time framing (not a live or current view)",
+        re.compile(
+            r"(?i)point[\s\u2010-\u2015-]?in[\s\u2010-\u2015-]?time"
+            r"|\bnot (?:a )?(?:live|current)\b"
+        ),
+    ),
+)
+
+# The as-of date, as it must appear in the BODY of a real-data page. A date in
+# <title> alone is invisible to a reader who has scrolled, and this analysis
+# ages: the whole point of the string is that a reader arriving months later
+# reads it as history.
+AS_OF_DATE_RE = re.compile(r"(?i)" + re.escape(CAPSTONE_AS_OF))
+
+BODY_RE = re.compile(r"<body\b[^>]*>(.*?)</body>", re.S | re.I)
+
+
+def body_text(markup):
+    """Readable copy of the <body> only -- <title> deliberately excluded.
+
+    visible_text() over a whole document keeps the <title> text, which is
+    exactly the loophole this helper closes: a real-data page must state its
+    as-of date where a reader reads, not only in the tab.
+    """
+    match = BODY_RE.search(markup)
+    return visible_text(match.group(1) if match else markup)
+
+
+def missing_real_data_phrases(markup):
+    """Labels of the real-data notice this document does NOT carry.
+
+    Module level and text-only on purpose: TestRealDataPages hands it planted
+    documents to prove the check is not inert, which a method reading files off
+    disk could never do.
+    """
+    missing = [
+        label for label, pattern in REAL_DATA_DISCLAIMER_PHRASES
+        if not pattern.search(markup)
+    ]
+    if not AS_OF_DATE_RE.search(body_text(markup)):
+        missing.append("the as-of date %r in the page body" % CAPSTONE_AS_OF)
+    return missing
 
 SECRET_PATTERNS = [
     ("AWS access key id", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
@@ -616,16 +766,22 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     """
 
     def test_declared_url_space_is_the_index_the_path_page_and_the_course_tree(self):
-        """Site index, path page, then a home per course and that course's lessons.
+        """Site index, path page, a home per course and that course's lessons,
+        then the capstone.
 
-        128 URLs exactly: /, /paths/trading/, eight course homes, and
-        7 + 15 + 16 * 6 lessons beneath them. The flat /<lesson>/ URLs and
-        the old /market-structure-lab/ course prefix were retired without
+        The COURSE TREE is 128 URLs exactly: /, /paths/trading/, eight course
+        homes, and 7 + 15 + 16 * 6 lessons beneath them. The flat /<lesson>/ URLs
+        and the old /market-structure-lab/ course prefix were retired without
         redirects, so a two-segment lesson path under a declared course home is
         the only shape a lesson may have; re-adding either would declare a page
         that no longer exists on disk.
+
+        The capstone adds two more pages BESIDE that tree, under the path page.
+        They are counted separately here on purpose: the number that must never
+        drift is the course tree, and folding the capstone into it would let a
+        course quietly disappear behind a worked example being added.
         """
-        expected = (
+        course_tree = (
             1  # the site index
             + 1  # the path page
             + len(COURSES)
@@ -633,9 +789,20 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         )
         self.assertEqual(
             128,
-            expected,
+            course_tree,
             "the library is 1 + 1 + 8 + 7 + 15 + 16 + 16 + 16 + 16 + 16 + 16 = 128 "
-            "pages, got %d" % expected,
+            "pages, got %d" % course_tree,
+        )
+        self.assertEqual(
+            2,
+            len(REAL_DATA_PAGES),
+            "the capstone is two pages: the interactive lab and the slide deck",
+        )
+        expected = course_tree + len(REAL_DATA_PAGES)
+        self.assertEqual(
+            130,
+            expected,
+            "128 course-tree pages plus the 2 capstone pages is 130, got %d" % expected,
         )
         self.assertEqual(
             expected,
@@ -713,20 +880,30 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     def test_declared_assets_are_not_pages(self):
         """The asset map exists so no page check has to be softened for it.
 
-        All seven published schemas are declared here, one line each. Every new
-        one is the moment the temptation appears to relax an HTML assertion so a
-        JSON file can slip through the page sweep; the fix for "this check cannot
-        apply to that file" is another declaration, never a weaker check.
+        All seven published schemas are declared here, one line each, and so is
+        the capstone's dataset -- which is not a schema at all, but is published
+        for the same reason and is not a document either. Every new one is the
+        moment the temptation appears to relax an HTML assertion so a JSON file
+        can slip through the page sweep; the fix for "this check cannot apply to
+        that file" is another declaration, never a weaker check.
         """
         self.assertEqual(
-            7,
+            8,
             len(NON_HTML_ASSETS),
             "all seven published JSON schemas must stay declared: course 2's "
             "trade journal exchange schema, course 3's options trade plan "
             "schema, course 4's indicator rule schema, course 5's volume "
             "and order flow rule schema, course 6's trading risk plan schema, "
             "course 7's trading system specification schema, and course 8's "
-            "automated trading system schema",
+            "automated trading system schema -- plus the capstone's published "
+            "dataset, which is not a schema but is the file every figure on the "
+            "two real-data pages derives from",
+        )
+        self.assertIn(
+            CAPSTONE_DATASET,
+            NON_HTML_ASSETS,
+            "the capstone dataset is published so the analysis is inspectable; "
+            "declare it or stop publishing it",
         )
         for url, relative in sorted(NON_HTML_ASSETS.items()):
             with self.subTest(url=url):
@@ -786,7 +963,7 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         """
         from smoke import (
             parse_args, lesson_targets, course_home_targets, asset_targets,
-            path_page_targets,
+            path_page_targets, capstone_page_targets,
         )
 
         args = parse_args([CANONICAL_ORIGIN])
@@ -795,6 +972,7 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             for check_id, _path, _markers in (
                 lesson_targets(args) + course_home_targets(args)
                 + asset_targets(args) + path_page_targets(args)
+                + capstone_page_targets(args)
             )
         }
         for name in ("contract.json", "contract.example.json"):
@@ -822,6 +1000,48 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
                     overlong,
                     "release/%s declares check id(s) longer than the 72 characters "
                     "release/contract.schema.json allows: %s" % (name, overlong),
+                )
+
+    def test_smoke_probes_the_capstone_with_real_data_markers(self):
+        """The served capstone must prove the notice that is TRUE about it.
+
+        A page check whose markers include the synthetic-examples disclaimer
+        would demand a false sentence from these two pages; one that dropped the
+        disclaimer and asked for nothing in its place would accept a real-data
+        analysis served with no notice and no date at all. So the markers are
+        asserted here: the real-data phrases AND the as-of date, and NOT the
+        course disclaimer.
+        """
+        from smoke import parse_args, capstone_page_targets, DISCLAIMER_MARKER
+
+        args = parse_args([CANONICAL_ORIGIN])
+        targets = capstone_page_targets(args)
+        self.assertEqual(
+            set(REAL_DATA_PAGES),
+            {path for _check_id, path, _markers in targets},
+            "scripts/smoke.py probes a different set of real-data pages than "
+            "this suite declares",
+        )
+        for check_id, path, markers in targets:
+            with self.subTest(page=path):
+                joined = " ".join(markers)
+                self.assertIn(
+                    CAPSTONE_AS_OF,
+                    joined,
+                    "%s is probed without its as-of date; a served page that "
+                    "lost its date would pass" % check_id,
+                )
+                for phrase in ("real market data", "not a trade signal"):
+                    self.assertIn(
+                        phrase,
+                        joined,
+                        "%s is probed without the phrase %r" % (check_id, phrase),
+                    )
+                self.assertNotIn(
+                    DISCLAIMER_MARKER,
+                    markers,
+                    "%s demands the course disclaimer of a page built from real "
+                    "market data" % check_id,
                 )
 
     def test_release_contract_accepts_every_published_page(self):
@@ -1060,21 +1280,34 @@ class TestPageMetadata(SiteFixture):
 
 class TestContent(SiteFixture):
     def test_course_pages_retain_the_disclaimer(self):
-        """Every course page teaches trading and must say so.
+        """Every course page teaches trading with synthetic data and must say so.
 
         That is all eight course homes as well as all 118 lessons: a course home
         is not an exempt landing page, it sells the same material.
 
-        The two shared-chrome pages are excluded, and excluded BY NAME. They are
-        not trading material -- the same frame is meant to hold a mathematics
-        path next -- so a trading disclaimer is not theirs to carry, and a
-        subject-specific notice on a subject-agnostic page is precisely what
-        TestSharedChromeIsSubjectAgnostic forbids.
+        BOTH halves of the notice are asserted. "Educational use only" alone was
+        the whole check once, which a page could satisfy while dropping the part
+        a reader actually relies on -- that the charts are synthetic and are not
+        signals. All 126 course pages carry the full sentence today, so it is
+        pinned here rather than left to review.
+
+        Two kinds of page are excluded, and both BY NAME, never by URL shape:
+
+          * the two shared-chrome pages. They are not trading material -- the
+            same frame is meant to hold a mathematics path next -- so a trading
+            disclaimer is not theirs to carry, and a subject-specific notice on a
+            subject-agnostic page is what TestSharedChromeIsSubjectAgnostic
+            forbids;
+          * the declared REAL_DATA_PAGES. The synthetic sentence would be FALSE
+            on them, and they are held to the strictly larger requirement in
+            TestRealDataPages instead: the real-data notice, phrase by phrase,
+            the as-of date in the body, and a ban on claiming to be synthetic.
 
         Checked two ways on purpose: every DECLARED course page must be present (a
         lesson that vanished cannot pass by not being iterated), and every
-        PUBLISHED page that is not chrome must carry the disclaimer (a page added
-        without touching REQUIRED_PAGES is still covered).
+        PUBLISHED page that is neither chrome nor a declared real-data page must
+        carry the disclaimer (a page added without touching REQUIRED_PAGES is
+        still covered).
         """
         by_url = {served_path(doc.path): doc for doc in self.documents}
         missing = sorted(set(COURSE_PAGES) - set(by_url))
@@ -1086,15 +1319,31 @@ class TestContent(SiteFixture):
         course_pages = [
             doc
             for url, doc in sorted(by_url.items())
-            if url not in SHARED_CHROME_PAGES
+            if url not in SHARED_CHROME_PAGES and url not in REAL_DATA_PAGES
         ]
         self.assertTrue(course_pages, "no course page found under %s" % SITE_ROOT)
+        self.assertEqual(
+            126,
+            len(course_pages),
+            "eight course homes and 118 lessons carry this disclaimer; found %d "
+            "pages, so a page has been added or removed without being declared"
+            % len(course_pages),
+        )
         for doc in course_pages:
             with self.subTest(page=str(doc.path.relative_to(REPO_ROOT))):
                 self.assertRegex(
                     doc.text,
                     DISCLAIMER_RE,
                     "course page lost its educational-use disclaimer",
+                )
+                self.assertRegex(
+                    doc.text,
+                    SYNTHETIC_DISCLAIMER_RE,
+                    "course page lost the synthetic-examples disclaimer. Every "
+                    "chart on a course page is generated; the sentence saying so "
+                    "is what stops a reader reading it as a signal. The only "
+                    "pages exempt from it are the declared REAL_DATA_PAGES, "
+                    "which must carry the real-data notice instead.",
                 )
 
     def test_no_secret_like_strings(self):
@@ -1131,6 +1380,270 @@ class TestContent(SiteFixture):
         for label, pattern in SECRET_PATTERNS:
             with self.subTest(kind=label):
                 self.assertIsNone(pattern.search(benign))
+
+
+class TestRealDataPages(SiteFixture):
+    """The dated capstone: real data, and a notice that is TRUE about real data.
+
+    Every other page in this library teaches with synthetic series and says so.
+    These two analyse a real listed security over a real, closed window, so the
+    synthetic sentence would be a false statement on them -- and the sentence a
+    reader trusts is exactly the one that must never be false.
+
+    The exemption from that sentence is therefore paired with a LARGER
+    obligation, asserted here:
+
+      * the real-data notice, phrase by phrase -- real market data, not
+        investment advice, not a trade signal, and the point-in-time framing;
+      * the as-of date, in the page BODY, because the analysis ages and a reader
+        arriving months later must read it as history rather than as a view of
+        today;
+      * a ban on carrying the synthetic sentence at all, so a page cannot hold
+        both notices and let a reader pick.
+
+    And the set itself is guarded: it may name only published pages, it may
+    never name course material, and a page in it that carries NEITHER notice
+    fails. An exemption that could be pointed at a lesson would be a hole in the
+    disclaimer, not an exception to it.
+    """
+
+    def real_data_documents(self):
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        pages = []
+        for url in REAL_DATA_PAGES:
+            doc = by_url.get(url)
+            self.assertIsNotNone(
+                doc,
+                "%s is declared in REAL_DATA_PAGES but is not published. The "
+                "exemption may only name pages that exist: an exemption for a "
+                "page nobody can open is a rule with nothing behind it." % url,
+            )
+            pages.append((url, doc))
+        return pages
+
+    # -- the set is declared, published, and never course material -----------
+
+    def test_the_exemption_names_only_published_non_course_pages(self):
+        self.assertTrue(REAL_DATA_PAGES, "the declared set must not be empty")
+        self.assertEqual(
+            len(set(REAL_DATA_PAGES)),
+            len(REAL_DATA_PAGES),
+            "the same page is declared twice",
+        )
+        for url in REAL_DATA_PAGES:
+            with self.subTest(url=url):
+                self.assertIn(
+                    url,
+                    REQUIRED_PAGES,
+                    "a real-data page is a published page like any other",
+                )
+                self.assertNotIn(
+                    url,
+                    COURSE_PAGES,
+                    "%s is course material AND exempt from the course "
+                    "disclaimer, which is the loophole this set exists not to "
+                    "be" % url,
+                )
+                self.assertNotIn(
+                    url, LESSON_PAGES, "a real-data page is not a lesson"
+                )
+                self.assertNotIn(
+                    url, COURSE_HOMES, "a real-data page is not a course home"
+                )
+                self.assertNotIn(
+                    url,
+                    SHARED_CHROME_PAGES,
+                    "chrome is subject-agnostic; a dated analysis of one "
+                    "security is the opposite of that",
+                )
+                self.assertTrue(
+                    url.startswith(PATH_PAGE),
+                    "the capstone belongs to the path as a whole and is "
+                    "published beneath %s, got %s" % (PATH_PAGE, url),
+                )
+        for _title, home, slugs in COURSES:
+            with self.subTest(course=home):
+                self.assertNotIn(
+                    home,
+                    REAL_DATA_PAGES,
+                    "a course home may never be exempted from the "
+                    "synthetic-examples disclaimer",
+                )
+                for slug in slugs:
+                    self.assertNotIn(
+                        lesson_url(home, slug),
+                        REAL_DATA_PAGES,
+                        "a lesson may never be exempted from the "
+                        "synthetic-examples disclaimer",
+                    )
+
+    # -- what those pages must say ------------------------------------------
+
+    def test_real_data_pages_carry_the_real_data_disclaimer(self):
+        for url, doc in self.real_data_documents():
+            with self.subTest(page=url):
+                missing = missing_real_data_phrases(doc.text)
+                self.assertEqual(
+                    [],
+                    missing,
+                    "%s is exempt from the synthetic-examples disclaimer because "
+                    "its data is real, and it does not carry what it owes "
+                    "instead. Missing: %s. The notice has to state that the data "
+                    "is real market data, that this is not investment advice, "
+                    "that it is not a trade signal, that it is a point-in-time "
+                    "view rather than a live one, and it has to name the as-of "
+                    "date in the body." % (url, ", ".join(missing)),
+                )
+
+    def test_real_data_pages_state_the_as_of_date_above_the_analysis(self):
+        """The date is in the BODY, not only in <title>.
+
+        The analysis is a snapshot of one weekend. A date that lives only in the
+        tab is invisible to the reader who scrolled, and this is the page where
+        a reader mistaking a snapshot for a current view is the whole risk.
+        """
+        for url, doc in self.real_data_documents():
+            with self.subTest(page=url):
+                copy = body_text(doc.text)
+                self.assertRegex(
+                    copy,
+                    AS_OF_DATE_RE,
+                    "%s does not state its as-of date (%s) in the page body. A "
+                    "dated analysis that is undated where a reader reads is a "
+                    "page that ages into a false present-tense claim."
+                    % (url, CAPSTONE_AS_OF),
+                )
+                title = doc.title or ""
+                self.assertNotEqual(
+                    "",
+                    body_text(doc.text).replace(title, "").strip(),
+                    "%s has no body copy at all" % url,
+                )
+
+    def test_real_data_pages_never_claim_their_charts_are_synthetic(self):
+        """The exemption is a ban, not a choice between two notices."""
+        for url, doc in self.real_data_documents():
+            with self.subTest(page=url):
+                self.assertNotRegex(
+                    doc.text,
+                    SYNTHETIC_DISCLAIMER_RE,
+                    "%s carries the synthetic-examples disclaimer. It analyses "
+                    "real market data, so that sentence is false there, and a "
+                    "page carrying both notices lets a reader believe whichever "
+                    "one they saw first." % url,
+                )
+
+    # -- the exemption cannot be used as a loophole -------------------------
+
+    def test_a_real_data_page_carrying_neither_disclaimer_fails(self):
+        """The scanner must reject the page the exemption would otherwise shelter.
+
+        This is the whole risk of a declared exception: the page stops being
+        checked for the sentence it is exempt from, and nothing checks it for the
+        sentence it owes instead. Planted documents, so the guard is proven
+        against the defect itself rather than against whatever happens to be on
+        disk today.
+        """
+        neither = (
+            "<!doctype html><html><head><title>IREN, %s</title></head>"
+            "<body><h1>IREN</h1><p>Fifty sessions, read end to end.</p>"
+            "</body></html>" % CAPSTONE_AS_OF
+        )
+        self.assertNotEqual(
+            [],
+            missing_real_data_phrases(neither),
+            "a real-data page with NEITHER disclaimer must fail. The exemption "
+            "removes one obligation and adds a larger one; a page that satisfies "
+            "no obligation at all is the loophole.",
+        )
+        self.assertIn(
+            "the as-of date %r in the page body" % CAPSTONE_AS_OF,
+            missing_real_data_phrases(neither),
+            "a date that appears only in <title> is not a dated page",
+        )
+
+        synthetic_only = (
+            "<!doctype html><html><head><title>IREN</title></head><body>"
+            "<p>Educational use only &mdash; charts are synthetic examples, not "
+            "trade signals.</p></body></html>"
+        )
+        self.assertNotEqual(
+            [],
+            missing_real_data_phrases(synthetic_only),
+            "carrying the course disclaimer does not satisfy the real-data one; "
+            "on real data that sentence is the false claim, not the fix",
+        )
+        self.assertTrue(
+            SYNTHETIC_DISCLAIMER_RE.search(synthetic_only),
+            "the synthetic scanner must match the sentence it pins",
+        )
+
+        complete = (
+            "<!doctype html><html><head><title>IREN</title></head><body>"
+            "<p class=\"risk\">This page analyses real market data. It is "
+            "educational analysis, not personalized investment advice, not a "
+            "trade signal, and not a guarantee of any outcome. Point-in-time "
+            "analysis as of Sunday, %s.</p></body></html>" % CAPSTONE_AS_OF
+        )
+        self.assertEqual(
+            [],
+            missing_real_data_phrases(complete),
+            "the notice the pages are required to carry must PASS, or the "
+            "requirement is unwritable",
+        )
+        self.assertIsNone(
+            SYNTHETIC_DISCLAIMER_RE.search(complete),
+            "a correct real-data notice is not the synthetic one",
+        )
+
+    def test_the_real_data_scanners_are_not_inert(self):
+        """Each phrase is load-bearing: drop any one and the page must fail."""
+        template = (
+            "<!doctype html><html><head><title>x</title></head><body><p>"
+            "%s</p></body></html>"
+        )
+        full = (
+            "This page analyses real market data. It is educational analysis, "
+            "not personalized investment advice, not a trade signal, and not a "
+            "guarantee of any outcome. Point-in-time analysis as of %s."
+            % CAPSTONE_AS_OF
+        )
+        self.assertEqual([], missing_real_data_phrases(template % full))
+        for label, phrase in (
+            ("real market data", "real market data"),
+            ("not investment advice", "not personalized investment advice"),
+            ("not a trade signal", "not a trade signal"),
+            ("point-in-time framing", "Point-in-time"),
+            ("as-of date", CAPSTONE_AS_OF),
+        ):
+            with self.subTest(dropped=label):
+                self.assertNotEqual(
+                    [],
+                    missing_real_data_phrases(template % full.replace(phrase, "")),
+                    "dropping %r still passed; that phrase is not actually "
+                    "required" % phrase,
+                )
+        # The shorter form of the advice phrase is the same promise and passes.
+        self.assertEqual(
+            [],
+            missing_real_data_phrases(
+                template % full.replace("not personalized investment advice",
+                                        "not investment advice")
+            ),
+        )
+        # ...and so is the plainer form of the point-in-time framing.
+        self.assertEqual(
+            [],
+            missing_real_data_phrases(
+                template % full.replace("Point-in-time analysis as of",
+                                        "Not a current view. Analysis as of")
+            ),
+        )
+        # A page with no <body> is read whole rather than silently passing.
+        self.assertIn(
+            "the as-of date %r in the page body" % CAPSTONE_AS_OF,
+            missing_real_data_phrases("<p>real market data</p>"),
+        )
 
 
 class TestPublishedAssets(SiteFixture):
