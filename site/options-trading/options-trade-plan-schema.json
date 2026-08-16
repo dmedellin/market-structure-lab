@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "options-trade-plan-v1",
+  "title": "Options Trade Plan",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "createdAt",
+    "thesis",
+    "contract",
+    "risk",
+    "management",
+    "evaluation"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "options-trade-plan-v1"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "thesis": {
+      "type": "object",
+      "required": [
+        "direction",
+        "stock",
+        "target",
+        "invalidation",
+        "expectedDays"
+      ],
+      "properties": {
+        "direction": {
+          "enum": [
+            "bullish",
+            "bearish",
+            "neutral"
+          ]
+        },
+        "stock": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "target": {
+          "type": "number",
+          "minimum": 0
+        },
+        "invalidation": {
+          "type": "number",
+          "minimum": 0
+        },
+        "expectedDays": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "eventRisk": {
+          "type": "boolean"
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "strategy",
+        "strike",
+        "expirationDays",
+        "quantity",
+        "bid",
+        "ask"
+      ],
+      "properties": {
+        "strategy": {
+          "type": "string"
+        },
+        "strike": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "secondStrike": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "expirationDays": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "bid": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ask": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "properties": {
+        "accountSize": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "riskBudgetPct": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maximumLoss": {
+          "type": "number",
+          "minimum": 0
+        },
+        "breakeven": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "management": {
+      "type": "object",
+      "required": [
+        "exitRule"
+      ],
+      "properties": {
+        "exitRule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "eventPlan": {
+          "type": "string"
+        }
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "required": [
+        "score",
+        "decision"
+      ],
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "decision": {
+          "enum": [
+            "approved",
+            "revise",
+            "reject"
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

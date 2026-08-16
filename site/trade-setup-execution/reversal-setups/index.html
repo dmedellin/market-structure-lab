@@ -42,7 +42,7 @@
    the hero diagram's <text fill="var(--...)">). Light values are contrast-
    checked against the DARKEST light surface they can land on (--bg #edf4f8 and
    --panel-3 #eaf2f7): --cyan 4.89:1, --cyan-2 5.33:1, --green 4.85:1,
-   --red 5.05:1, --amber 5.23:1, --purple 5.34:1, --blue 5.61:1 -- all >= 4.5:1.
+   --red 5.05:1, --amber 5.23:1, --purple 5.34:1, --blue 5.15:1 -- all >= 4.5:1.
    Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the emphasis stop
    in both themes, so it has to be the more readable one against the current
    background, not simply the lighter hue.
@@ -56,27 +56,27 @@
    --------------------------------------------------------------------- */
 :root {
   color-scheme: dark;
-  --bg: #071019;
-  --bg-2: #0b1622;
-  --panel: rgba(16, 31, 46, 0.91);
-  --panel-solid: #101f2e;
-  --panel-2: #142638;
-  --panel-3: #182d41;
-  --text: #edf7ff;
-  --muted: #95aabd;
-  --line: rgba(170, 202, 226, 0.16);
-  --line-strong: rgba(170, 202, 226, 0.3);
-  --cyan: #37d7e7;
-  --cyan-2: #91f4ff;
-  --green: #41e39b;
-  --red: #ff6e7d;
-  --amber: #ffc857;
-  --purple: #b69cff;
-  --blue: #76a8ff;
-  --on-accent: #041116;
+  --bg: #edf4f8;
+  --bg-2: #f9fbfd;
+  --panel: rgba(255, 255, 255, 0.94);
+  --panel-solid: #ffffff;
+  --panel-2: #f3f8fb;
+  --panel-3: #eaf2f7;
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --line-strong: rgba(24, 62, 88, 0.24);
+  --cyan: #0e7382;
+  --cyan-2: #0b6d79;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --on-accent: #ffffff;
   --code-bg: #071019;
   --code-text: #d8f6ff;
-  --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
   --radius: 20px;
   --radius-sm: 12px;
 }
@@ -94,7 +94,7 @@
   --panel-2: #f3f8fb;
   --panel-3: #eaf2f7;
   --text: #102433;
-  --muted: #556b7b;
+  --muted: #586c7c;
   --line: rgba(24, 62, 88, 0.13);
   --line-strong: rgba(24, 62, 88, 0.24);
   --cyan: #0e7382;
@@ -103,7 +103,7 @@
   --red: #c22a34;
   --amber: #8a5a06;
   --purple: #6b46d6;
-  --blue: #1f5bbf;
+  --blue: #1d5fd0;
   --on-accent: #ffffff;
   --code-bg: #e9f2f7;
   --code-text: #173144;
@@ -122,7 +122,7 @@
   --panel-2: #f3f8fb;
   --panel-3: #eaf2f7;
   --text: #102433;
-  --muted: #556b7b;
+  --muted: #586c7c;
   --line: rgba(24, 62, 88, 0.13);
   --line-strong: rgba(24, 62, 88, 0.24);
   --cyan: #0e7382;
@@ -131,7 +131,7 @@
   --red: #c22a34;
   --amber: #8a5a06;
   --purple: #6b46d6;
-  --blue: #1f5bbf;
+  --blue: #1d5fd0;
   --on-accent: #ffffff;
   --code-bg: #e9f2f7;
   --code-text: #173144;
@@ -1152,35 +1152,31 @@ textarea { font: inherit; }
 .crumb-sep { opacity: 0.5; }
 .crumb-current { color: var(--text); padding: 6px 9px; }
 
-/* Prev / next within the course. The last lesson's NEXT points at the course
-   home; the cross-course link lives on the site index, not here. */
+/* Previous / next lesson pager. The course sequence is the manifest order; the
+   last lesson points back at the course home, which carries the link to the
+   next course. */
 .lesson-nav {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  margin-top: 34px;
+  margin-top: 32px;
 }
+
 .lesson-link {
-  display: grid;
-  gap: 3px;
+  flex: 1 1 240px;
   padding: 13px 15px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 13px;
   background: var(--panel-2);
+  color: var(--text);
   text-decoration: none;
   transition: transform 150ms ease, border-color 150ms ease;
 }
+
 .lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong); }
-.lesson-link span {
-  color: var(--muted);
-  font-size: 0.7rem;
-  font-weight: 850;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.lesson-link strong { font-size: 0.92rem; }
-.lesson-link.next { text-align: right; }
-.lesson-link.only-next { grid-column: 2; }
+.lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+.lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.lesson-link.next { margin-left: auto; text-align: right; }
 
 .noscript-note {
   display: block;
@@ -1200,9 +1196,7 @@ textarea { font: inherit; }
 
 @media (max-width: 720px) {
   .topnav { display: none; }
-  .lesson-nav { grid-template-columns: 1fr; }
-  .lesson-link.next { text-align: left; }
-  .lesson-link.only-next { grid-column: auto; }
+  .lesson-link { flex-basis: 100%; }
 }
 </style>
 
@@ -1318,9 +1312,15 @@ textarea { font: inherit; }
 
     </main>
 
-    <nav class="lesson-nav" aria-label="Lesson">
-      <a class="lesson-link prev" href="../pullback-setups/" rel="prev"><span>Previous · Lesson 05</span><strong>Pullback Setups</strong></a>
-      <a class="lesson-link next" href="../entry-confirmation/" rel="next"><span>Next · Lesson 07</span><strong>Entry Confirmation</strong></a>
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../pullback-setups/" rel="prev">
+        <span>Previous lesson</span>
+        <strong>05 &middot; Pullback Setups</strong>
+      </a>
+      <a class="lesson-link next" href="../entry-confirmation/" rel="next">
+        <span>Next lesson</span>
+        <strong>07 &middot; Entry Confirmation</strong>
+      </a>
     </nav>
 
     <footer class="footer">

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Learning Path · Learn · geterdone.io</title>
-  <meta name="description" content="An ordered path through two free interactive courses, 22 lessons in total. Course 1, Market Structure Lab, teaches you to read what price is doing. Course 2, Trade Setup and Execution, turns that read into a plan you can size, place, manage, and review. Every lesson is one self-contained page." />
+  <meta name="description" content="An ordered path through three free interactive courses, 38 lessons in total. Course 1, Market Structure Lab, teaches you to read what price is doing. Course 2, Trade Setup and Execution, turns that read into a plan you can size, place, manage, and review. Course 3, Options Trading, is the deep treatment of the options contract itself. Every lesson is one self-contained page." />
   <link rel="canonical" href="https://learn.geterdone.io/" />
   <meta name="author" content="dmedellin" />
 
@@ -16,7 +16,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M14 45L26 33L38 41L51 18' fill='none' stroke='%23041116' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='14' cy='45' r='4.5'/%3E%3Ccircle cx='26' cy='33' r='4.5'/%3E%3Ccircle cx='38' cy='41' r='4.5'/%3E%3Ccircle cx='51' cy='18' r='4.5'/%3E%3C/g%3E%3C/svg%3E" />
 
   <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#eef4f8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
 
   <!-- Open Graph / Twitter. og:image is intentionally OMITTED: there is no image asset in
        this repo and pointing at a non-existent path would 404 in every crawler. Add
@@ -24,13 +24,13 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Learn · geterdone.io" />
   <meta property="og:title" content="Learning Path · Learn · geterdone.io" />
-  <meta property="og:description" content="Two free interactive courses, 22 lessons, in one order. Read the market first, then plan and execute a trade. Every lesson is one self-contained page." />
+  <meta property="og:description" content="Three free interactive courses, 38 lessons, in one order. Read the market first, then plan and execute a trade, then take the options contract apart. Every lesson is one self-contained page." />
   <meta property="og:url" content="https://learn.geterdone.io/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:url" content="https://learn.geterdone.io/" />
   <meta name="twitter:title" content="Learning Path · Learn · geterdone.io" />
-  <meta name="twitter:description" content="Two free interactive courses, 22 lessons, in one order. Read the market first, then plan and execute a trade. Every lesson is one self-contained page." />
+  <meta name="twitter:description" content="Three free interactive courses, 38 lessons, in one order. Read the market first, then plan and execute a trade, then take the options contract apart. Every lesson is one self-contained page." />
 
   <style>
     /* ---------------------------------------------------------------------
@@ -53,9 +53,11 @@
        (.eyebrow, .kicker, .go, .topic-tag, .step-num, the gradient headline)
        and because the lesson's charts sample these very tokens with
        getComputedStyle at draw time. Light values are contrast-checked against
-       --bg (#eef4f8, the darkest light surface): --cyan 4.99:1, --cyan-2
-       5.44:1, --green 4.95:1, --red 5.15:1, --amber 5.34:1, --purple 5.45:1 —
-       all >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is
+       --bg (#edf4f8, the darkest light surface): --cyan 4.98:1, --cyan-2
+       5.43:1, --green 4.94:1, --red 5.14:1, --amber 5.33:1, --purple 5.44:1,
+       --muted 4.91:1 — all >= 4.5:1. These are the values every page of the
+       library ships; they are pinned, so do not "improve" one file's copy.
+       Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is
        the emphasis stop in both themes, so it has to be the more readable one
        against the current background, not simply the lighter hue.
 
@@ -92,15 +94,15 @@
     @media (prefers-color-scheme: light) {
       :root:not([data-theme="dark"]) {
         color-scheme: light;
-        --bg: #eef4f8;
-        --bg-2: #f8fbfd;
-        --panel: rgba(255, 255, 255, 0.9);
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
         --panel-solid: #ffffff;
-        --panel-2: #f4f8fb;
-        --text: #112433;
-        --muted: #5c7182;
-        --line: rgba(26, 63, 88, 0.12);
-        --line-strong: rgba(26, 63, 88, 0.22);
+        --panel-2: #f3f8fb;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
         --cyan: #0e7382;
         --cyan-2: #0b6d79;
         --green: #10784f;
@@ -116,15 +118,15 @@
        the media block above — the two light paths must never disagree. */
     [data-theme="light"] {
       color-scheme: light;
-      --bg: #eef4f8;
-      --bg-2: #f8fbfd;
-      --panel: rgba(255, 255, 255, 0.9);
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
       --panel-solid: #ffffff;
-      --panel-2: #f4f8fb;
-      --text: #112433;
-      --muted: #5c7182;
-      --line: rgba(26, 63, 88, 0.12);
-      --line-strong: rgba(26, 63, 88, 0.22);
+      --panel-2: #f3f8fb;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
       --cyan: #0e7382;
       --cyan-2: #0b6d79;
       --green: #10784f;
@@ -751,7 +753,10 @@
        only the classes this page actually draws with live here. sv-stop /
        sv-target / sv-entry are this page's additions, for the course 2 cover:
        a trade plan needs a risk band, a reward band, and the entry between
-       them. They are tokens like everything else, so both themes follow. */
+       them. The course 3 cover reuses the same two fills for the two halves of
+       an option payoff — premium at risk below the zero line, profit above it —
+       rather than inventing a second vocabulary for the same idea. They are
+       tokens like everything else, so both themes follow. */
     .sv-grid { stroke: var(--line); stroke-width: 1; }
     .sv-up { fill: var(--green); }
     .sv-dn { fill: var(--red); }
@@ -898,7 +903,7 @@
         <div>
           <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Free · interactive · self-guided</span>
           <h1 id="hero-title">From reading the chart to <span class="gradient-text">placing the trade.</span></h1>
-          <p>Two interactive courses, 22 lessons, in one deliberate order. Course 1 teaches you to read what price is doing. Course 2 turns that read into a plan you can size, place, manage, and review. Every lesson is one self-contained page — no accounts, no tracking, nothing to install, and it keeps working offline once loaded.</p>
+          <p>Three interactive courses, 38 lessons, in one deliberate order. Course 1 teaches you to read what price is doing. Course 2 turns that read into a plan you can size, place, manage, and review. Course 3 takes the options contract apart — pricing, the Greeks, and the strategies built from them. Every lesson is one self-contained page — no accounts, no tracking, nothing to install, and it keeps working offline once loaded.</p>
           <div class="hero-actions">
             <a class="btn primary" href="./market-structure-lab/">Start with Course 1</a>
             <a class="btn ghost" href="#path">See the whole path</a>
@@ -906,57 +911,92 @@
         </div>
 
         <div class="hero-visual">
-          <svg class="hero-svg" viewBox="0 0 520 310" role="img" aria-label="Illustration of a two-step learning path: a highlighted first panel labelled Course 1, Market Structure, showing a rising price line above seven lesson markers, connected by an arrow down and to the right into a second panel labelled Course 2, Trade Setup, showing an entry line between a stop band and a target band above fifteen lesson markers.">
+          <svg class="hero-svg" viewBox="0 0 520 340" role="img" aria-label="Illustration of a three-step learning path: a highlighted first panel labelled Course 1, Read the market, showing a rising price line above seven lesson markers; an arrow down and to the right into a second panel labelled Course 2, Plan the trade, showing an entry line between a target band and a stop band above fifteen lesson markers; and a second arrow into a third panel labelled Course 3, Trade options, showing an option payoff line that runs flat, bends upward, and crosses a dashed break-even level, above sixteen lesson markers.">
             <!-- STEP 1: the course you start with, drawn "live" (accent border) -->
-            <rect class="sv-tile-live" x="18" y="26" width="252" height="126" rx="20" />
-            <text class="sv-text" x="40" y="54">COURSE 1</text>
-            <text class="sv-text sv-text-live" x="40" y="74">READ THE MARKET</text>
-            <line class="sv-axis" x1="40" y1="86" x2="248" y2="86" opacity=".6" />
-            <polyline class="sv-spark-live" points="42,118 74,104 100,110 132,92 162,100 194,80 220,88 248,68" />
+            <rect class="sv-tile-live" x="8" y="14" width="248" height="92" rx="20" />
+            <text class="sv-text" x="30" y="40">COURSE 1</text>
+            <text class="sv-text sv-text-live" x="30" y="58">READ THE MARKET</text>
+            <line class="sv-axis" x1="30" y1="62" x2="244" y2="62" opacity=".6" />
+            <polyline class="sv-spark-live" points="32,88 62,80 88,84 116,74 144,78 172,68 200,72 244,66" />
             <g class="sv-dot">
-              <circle cx="132" cy="92" r="4" />
-              <circle cx="194" cy="80" r="4" />
-              <circle cx="248" cy="68" r="4" />
+              <circle cx="116" cy="74" r="3.5" />
+              <circle cx="172" cy="68" r="3.5" />
+              <circle cx="244" cy="66" r="3.5" />
             </g>
             <!-- seven lessons; the first is where a reader begins -->
             <g>
-              <rect class="sv-chip" x="40" y="134" width="22" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="68" y="134" width="22" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="96" y="134" width="22" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="124" y="134" width="22" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="152" y="134" width="22" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="180" y="134" width="22" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="208" y="134" width="22" height="6" rx="3" />
+              <rect class="sv-chip" x="30" y="94" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="60" y="94" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="90" y="94" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="120" y="94" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="150" y="94" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="180" y="94" width="22" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="210" y="94" width="22" height="6" rx="3" />
             </g>
 
             <!-- the path itself: step 1 feeds step 2 -->
-            <path class="sv-struct" d="M144 158 V 174 H 390 V 186" />
-            <path class="sv-struct" d="M383 180 L390 190 L397 180" />
+            <path class="sv-struct" d="M60 106 V 114 H 200 V 120" />
+            <path class="sv-struct" d="M193 114 L200 124 L207 114" />
 
             <!-- STEP 2: what follows, drawn as a quieter tile -->
-            <rect class="sv-tile" x="264" y="194" width="238" height="104" rx="20" />
-            <text class="sv-text" x="286" y="220">COURSE 2</text>
-            <text class="sv-text sv-text-live" x="286" y="240">PLAN THE TRADE</text>
-            <rect class="sv-target" x="286" y="248" width="196" height="9" rx="4" />
-            <line class="sv-entry" x1="286" y1="264" x2="482" y2="264" />
-            <rect class="sv-stop" x="286" y="270" width="196" height="9" rx="4" />
+            <rect class="sv-tile" x="136" y="126" width="248" height="92" rx="20" />
+            <text class="sv-text" x="158" y="150">COURSE 2</text>
+            <text class="sv-text sv-text-live" x="158" y="168">PLAN THE TRADE</text>
+            <rect class="sv-target" x="158" y="176" width="204" height="7" rx="3.5" />
+            <line class="sv-entry" x1="158" y1="191" x2="362" y2="191" />
+            <rect class="sv-stop" x="158" y="197" width="204" height="7" rx="3.5" />
             <!-- fifteen lessons -->
             <g>
-              <rect class="sv-chip-muted" x="286" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="300" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="314" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="328" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="342" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="356" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="370" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="384" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="398" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="412" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="426" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="440" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="454" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="468" y="286" width="9" height="6" rx="3" />
-              <rect class="sv-chip-muted" x="482" y="286" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="158" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="172" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="186" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="200" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="214" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="228" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="242" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="256" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="270" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="284" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="298" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="312" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="326" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="340" y="208" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="354" y="208" width="9" height="6" rx="3" />
+            </g>
+
+            <!-- step 2 feeds step 3 -->
+            <path class="sv-struct" d="M188 218 V 226 H 330 V 232" />
+            <path class="sv-struct" d="M323 226 L330 236 L337 226" />
+
+            <!-- STEP 3: the options contract, drawn as its payoff -->
+            <rect class="sv-tile" x="264" y="238" width="248" height="92" rx="20" />
+            <text class="sv-text" x="286" y="262">COURSE 3</text>
+            <text class="sv-text sv-text-live" x="286" y="280">TRADE OPTIONS</text>
+            <!-- the dashed line is break-even; flat below it is the premium at risk -->
+            <line class="sv-level" x1="286" y1="298" x2="490" y2="298" />
+            <polyline class="sv-struct" points="286,308 356,308 490,286" />
+            <g class="sv-dot">
+              <circle cx="356" cy="308" r="3.5" />
+              <circle cx="417" cy="298" r="3.5" />
+            </g>
+            <!-- sixteen lessons -->
+            <g>
+              <rect class="sv-chip-muted" x="286" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="299" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="312" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="325" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="338" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="351" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="364" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="377" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="390" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="403" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="416" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="429" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="442" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="455" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="468" y="316" width="9" height="6" rx="3" />
+              <rect class="sv-chip-muted" x="481" y="316" width="9" height="6" rx="3" />
             </g>
           </svg>
         </div>
@@ -967,9 +1007,9 @@
           <div>
             <p class="kicker">Learning path</p>
             <h2 id="path-title">The path, in order</h2>
-            <p>Two courses, 22 lessons in total, meant to be taken front to back. Course 1 is the prerequisite: it teaches the chart-reading vocabulary — structure, ranges, timeframes, invalidation — that Course 2 assumes you already have. Course 2 then turns that read into an executable plan. Open a course to see its lessons and start anywhere inside it.</p>
+            <p>Three courses, 38 lessons in total, meant to be taken front to back. Course 1 is the prerequisite: it teaches the chart-reading vocabulary — structure, ranges, timeframes, invalidation — that Course 2 assumes you already have. Course 2 turns that read into an executable plan. Course 3 then goes deep on the options contract that plan is often expressed in, starting from the contract itself rather than from the chart. Open a course to see its lessons and start anywhere inside it.</p>
           </div>
-          <p class="count-chip">2 courses · 22 lessons</p>
+          <p class="count-chip">3 courses · 38 lessons</p>
         </div>
 
         <p class="edu-note">
@@ -981,12 +1021,14 @@
           Trading carries the risk of losing money, and real outcomes can differ
           from any illustration here because of spread, slippage, commissions,
           gaps, taxes, liquidity, assignment, exercise, implied volatility, time
-          decay, and other factors.
+          decay, and other factors. Options in particular involve risk and are
+          not suitable for every investor.
         </p>
 
         <!-- ===================================================================
-             ADDING COURSE #3: copy ONE <li class="step"> below — the whole
-             element, cover art and all — paste it as the next child of
+             ADDING THE NEXT COURSE (#4, and every one after it): still a
+             copy-paste of ONE step. Copy ONE <li class="step"> below — the
+             whole element, cover art and all — paste it as the next child of
              <ol class="path">, then change only:
                1. the number in .step-num, and the .step-eyebrow line
                2. the href on .course-link (a new ./<course-slug>/ directory,
@@ -1002,9 +1044,15 @@
              .step::before and suppressed on :last-child, so the spine re-ends
              itself at the new final step automatically; do not hand-manage it.
              Leave the "Start here" flag on step 1 — there is only ever one.
-             Then update: the .count-chip and the hero copy (course and lesson
-             totals), REQUIRED_PAGES in tests/test_site_invariants.py, the probe
-             list in scripts/smoke.py, and the release acceptance checks.
+             Then update, outside the step: the .count-chip and the hero copy
+             (course and lesson totals), <meta name="description"> plus the og:
+             and twitter: descriptions, the intro under "The path, in order",
+             and the hero illustration, which draws one panel per course and
+             names all of them in its aria-label. Then, outside this file:
+             REQUIRED_PAGES in tests/test_site_invariants.py, the probe list in
+             scripts/smoke.py, and the release acceptance checks.
+             Course 3 was added exactly this way: one pasted step, plus those
+             counts. No CSS changed, and no other page was touched.
              =================================================================== -->
         <ol class="path">
 
@@ -1235,6 +1283,127 @@
                     </svg>
                   </span>
                   <span class="level">Intermediate → Advanced</span>
+                </div>
+              </div>
+            </article>
+          </li>
+
+          <li class="step">
+            <span class="step-num" aria-hidden="true">3</span>
+
+            <div class="step-head">
+              <p class="step-eyebrow">Step 3 · Trade the options contract</p>
+            </div>
+
+            <article class="course-card">
+              <div class="cover">
+                <svg viewBox="0 0 400 272" role="img" aria-label="Cover art for course 3: the payoff of a long option at expiration — the line runs flat through the shaded premium it cost, bends upward at a dashed strike line, crosses the zero line at break-even, and rises into a shaded profit area, with sixteen lesson markers along the bottom edge.">
+                  <g class="sv-grid">
+                    <line x1="16" y1="60" x2="326" y2="60" />
+                    <line x1="16" y1="120" x2="326" y2="120" />
+                    <line x1="16" y1="180" x2="326" y2="180" />
+                  </g>
+
+                  <!-- the two halves of the payoff: premium at risk below the zero
+                       line, open-ended profit above it past break-even -->
+                  <polygon class="sv-target" points="201,170 326,170 326,62" />
+                  <rect class="sv-stop" x="24" y="170" width="177" height="44" rx="6" />
+
+                  <!-- zero P/L, and the strike the contract is struck at -->
+                  <line class="sv-axis" x1="16" y1="170" x2="326" y2="170" />
+                  <line class="sv-level" x1="150" y1="44" x2="150" y2="228" />
+
+                  <!-- the payoff itself: flat, then the kink at the strike -->
+                  <polyline class="sv-struct" points="24,214 150,214 326,62" />
+                  <g class="sv-dot">
+                    <circle cx="150" cy="214" r="5" />
+                    <circle cx="201" cy="170" r="5" />
+                  </g>
+
+                  <!-- labels sit in a clean right-hand gutter, clear of the payoff -->
+                  <text class="sv-text" x="158" y="40">STRIKE</text>
+                  <text class="sv-text" x="334" y="96">PROFIT</text>
+                  <text class="sv-text" x="334" y="200">LOSS</text>
+                  <text class="sv-text sv-text-live" x="34" y="200">PREMIUM</text>
+
+                  <!-- sixteen lessons, first one first -->
+                  <g>
+                    <rect class="sv-chip" x="16" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="39" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="62" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="85" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="108" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="131" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="154" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="177" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="200" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="223" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="246" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="269" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="292" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="315" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="338" y="250" width="17" height="6" rx="3" />
+                    <rect class="sv-chip-muted" x="361" y="250" width="17" height="6" rx="3" />
+                  </g>
+                </svg>
+              </div>
+
+              <div class="course-body">
+                <div class="meta-row">
+                  <span class="topic-tag">Options &amp; the Greeks</span>
+                  <!-- EXTRAPOLATED the same way course 2's figure is, from course
+                       1's published pace (~2 hr 40 min across 7 lessons, ~23 min
+                       a lesson): 16 lessons ~= 6 hr 8 min, rounded. Replace it
+                       with the course's own number when there is one. -->
+                  <span class="time-tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true" focusable="false">
+                      <circle cx="12" cy="12" r="9" />
+                      <path d="M12 7v5l3.5 2" />
+                    </svg>
+                    ~6 hr 10 min in total
+                  </span>
+                </div>
+
+                <h3><a class="course-link" href="./options-trading/">Options Trading</a></h3>
+
+                <p class="tagline">Trade the contract — what an option is worth, what moves it, and what each strategy risks.</p>
+
+                <p class="prereq"><strong>Prerequisite: Courses 1 and 2, in practice rather than in mechanics.</strong> The options mechanics here start from zero and assume no prior options knowledge, but a strategy is only as good as the read it expresses and the plan that sizes it, which is why this course sits third. Note that Course 1 already ends with an Options Contract Selection lab — a single pass at picking a contract for a read you have already made. This is the deep treatment of that same subject: the contract taken apart over sixteen lessons.</p>
+
+                <p>Sixteen lessons on the contract itself: rights, obligations, and the multiplier; calls and puts; moneyness, premium, and how to read a chain and its liquidity. From there, what actually moves the price — expiration and time decay, implied volatility, and the Greeks in pairs, delta and gamma, then theta and vega. The last third is strategy: long calls and puts, covered calls, cash-secured puts, debit and credit verticals, what exercise and assignment do to you at expiration, and a scored options trade plan to close.</p>
+
+                <p>Every price in the course comes from a simplified Black&ndash;Scholes model applied to synthetic quotes. It does not model dividends, early exercise, fees, taxes, margin rules, or the microstructure of a real chain, and contract specifications and broker procedures have to be verified independently.</p>
+
+                <div class="contents">
+                  <p class="contents-head" id="opt-contents">Inside the course · 16 lessons, in order</p>
+                  <ol class="lesson-index" aria-labelledby="opt-contents">
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>01</span> <span>Options Contract Fundamentals</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>02</span> <span>Calls and Puts</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>03</span> <span>Moneyness</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>04</span> <span>Option Premium</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>05</span> <span>Option Chain and Liquidity</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>06</span> <span>Expiration and Time Decay</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>07</span> <span>Implied Volatility</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>08</span> <span>Delta and Gamma</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>09</span> <span>Theta and Vega</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>10</span> <span>Long Calls and Long Puts</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>11</span> <span>Covered Calls</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>12</span> <span>Cash-Secured Puts</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>13</span> <span>Vertical Debit Spreads</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>14</span> <span>Vertical Credit Spreads</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>15</span> <span>Exercise, Assignment, and Expiration</span></li>
+                    <li><span class="ix-num"><span class="visually-hidden">Lesson </span>16</span> <span>Options Trade Planning</span></li>
+                  </ol>
+                </div>
+
+                <div class="course-foot">
+                  <span class="go">
+                    Open the course
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                      <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span class="level">Beginner → Advanced</span>
                 </div>
               </div>
             </article>

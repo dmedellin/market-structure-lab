@@ -42,10 +42,10 @@
    (.eyebrow, .concept-card .icon, .state-pill, td.good/.warn/.bad, .pill.*, the
    gradient headline, and the hero SVG <text> labels that paint with
    fill="var(--green)" and friends), so they are re-declared for light and
-   contrast-checked against --bg #edf4f8, the darkest light surface once
-   --panel-3 was lifted from #eaf2f7 to #ecf3f8 for this same reason:
+   contrast-checked against --bg #edf4f8; --panel-3 #eaf2f7 is the darkest
+   light surface and the same set clears 4.5:1 there too:
      --cyan 4.98:1  --cyan-2 5.43:1  --green 4.94:1  --red 5.14:1
-     --amber 5.33:1  --purple 5.44:1  --blue 5.71:1  --muted 4.57:1
+     --amber 5.33:1  --purple 5.44:1  --blue 5.25:1  --muted 4.91:1
    all >= 4.5:1. Note the light --cyan-2 is DARKER than --cyan: --cyan-2 is the
    emphasis stop in both themes, so it has to be the more readable one against
    the current background, not simply the lighter hue.
@@ -54,7 +54,7 @@
    .btn.primary, .tab.active, .seg-btn.active, .check-dot, .lesson-row .num,
    .callout .mark, .timeline-step .step-no, .tag-check, .skip-link). It flips
    with the theme because those accent fills go dark in light mode; white on the
-   light accents measures 5.50:1 (green) to 6.35:1 (blue).
+   light accents measures 5.50:1 (green) to 6.05:1 (purple).
 
    --grid-line and --wash/--wash-2 exist for the same reason: they were cool
    translucent whites tuned for a dark ground, and they vanished on a light one.
@@ -101,9 +101,9 @@
     --panel: rgba(255, 255, 255, 0.94);
     --panel-solid: #ffffff;
     --panel-2: #f3f8fb;
-    --panel-3: #ecf3f8;
+    --panel-3: #eaf2f7;
     --text: #102433;
-    --muted: #5c7182;
+    --muted: #586c7c;
     --line: rgba(24, 62, 88, 0.13);
     --line-strong: rgba(24, 62, 88, 0.24);
     --cyan: #0e7382;
@@ -112,7 +112,7 @@
     --red: #c22a34;
     --amber: #8a5a06;
     --purple: #6b46d6;
-    --blue: #1f5bbf;
+    --blue: #1d5fd0;
     --on-accent: #ffffff;
     --code-bg: #e9f2f7;
     --code-ink: #173144;
@@ -132,9 +132,9 @@
   --panel: rgba(255, 255, 255, 0.94);
   --panel-solid: #ffffff;
   --panel-2: #f3f8fb;
-  --panel-3: #ecf3f8;
+  --panel-3: #eaf2f7;
   --text: #102433;
-  --muted: #5c7182;
+  --muted: #586c7c;
   --line: rgba(24, 62, 88, 0.13);
   --line-strong: rgba(24, 62, 88, 0.24);
   --cyan: #0e7382;
@@ -143,7 +143,7 @@
   --red: #c22a34;
   --amber: #8a5a06;
   --purple: #6b46d6;
-  --blue: #1f5bbf;
+  --blue: #1d5fd0;
   --on-accent: #ffffff;
   --code-bg: #e9f2f7;
   --code-ink: #173144;
@@ -272,6 +272,7 @@ svg { display: block; }
   border: 1px solid var(--line);
   border-radius: 13px;
   background: var(--panel-2);
+  color: var(--text);
   text-decoration: none;
   transition: transform 150ms ease, border-color 150ms ease;
 }
@@ -1259,7 +1260,7 @@ textarea { font: inherit; }
         <a href="#lab">Interactive lesson</a>
         <a href="#process">Process</a>
       </nav>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Use light theme">☾</button>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
     </header>
 
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1396,7 +1397,7 @@ TARGET: —</div></div>
     <nav class="lesson-nav" aria-label="Lesson navigation">
       <a class="lesson-link next" href="../support-resistance/" rel="next">
         <span>Next lesson</span>
-        <strong>02 · Support and Resistance</strong>
+        <strong>02 &middot; Support and Resistance</strong>
       </a>
     </nav>
 
@@ -1730,7 +1731,6 @@ function setupTheme() {
     if (!button) return;
     const light = effectiveTheme() === "light";
     button.textContent = light ? "☀" : "☾";
-    button.setAttribute("aria-label", light ? "Use dark theme" : "Use light theme");
   };
   // Every chart colour on this page resolves through a CSS class bound to a
   // token, so the SVG rethemes without JS. The redraw hook is here so that a

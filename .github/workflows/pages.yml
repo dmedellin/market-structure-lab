@@ -46,10 +46,10 @@ jobs:
             exit 1
           fi
           # The published URL space, two levels deep: the learning path at /,
-          # a home per course (/market-structure-lab/ and
-          # /trade-setup-execution/), and each course's lessons beneath its own
-          # home -- 25 pages, in course order -- plus one published non-HTML
-          # asset. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
+          # a home per course (/market-structure-lab/, /trade-setup-execution/
+          # and /options-trading/), and each course's lessons beneath its own
+          # home -- 42 pages, in course order -- plus two published non-HTML
+          # assets. Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py and acceptance.checks in
           # release/contract.json. Publishing a tree that is missing a page
           # would 404 a live URL, so refuse instead.
@@ -81,18 +81,39 @@ jobs:
                       trade-setup-execution/trade-management/index.html \
                       trade-setup-execution/backtesting/index.html \
                       trade-setup-execution/trading-journal/index.html \
-                      trade-setup-execution/performance-review/index.html ; do
+                      trade-setup-execution/performance-review/index.html \
+                      options-trading/index.html \
+                      options-trading/options-contract-fundamentals/index.html \
+                      options-trading/calls-and-puts/index.html \
+                      options-trading/moneyness/index.html \
+                      options-trading/option-premium/index.html \
+                      options-trading/option-chain-and-liquidity/index.html \
+                      options-trading/expiration-and-time-decay/index.html \
+                      options-trading/implied-volatility/index.html \
+                      options-trading/delta-and-gamma/index.html \
+                      options-trading/theta-and-vega/index.html \
+                      options-trading/long-calls-and-long-puts/index.html \
+                      options-trading/covered-calls/index.html \
+                      options-trading/cash-secured-puts/index.html \
+                      options-trading/vertical-debit-spreads/index.html \
+                      options-trading/vertical-credit-spreads/index.html \
+                      options-trading/exercise-assignment-and-expiration/index.html \
+                      options-trading/options-trade-planning/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "site/$page" ]; then
               echo "::error::missing site/$page -- refusing to publish an incomplete course"
               missing=1
             fi
           done
-          # Course 2 ships its trade journal exchange schema as a real published
-          # file: lesson 14 exports that shape, lesson 15 imports it, and the
-          # course home links to it. An unparseable one 404s nothing and breaks
-          # the handoff silently, so it is parsed here, not merely counted.
-          for asset in trade-setup-execution/trade-journal-schema.json ; do
+          # Two courses ship an exchange schema as a real published file:
+          # course 2's lesson 14 exports the journal shape and its lesson 15
+          # imports it, and course 3's lesson 16 exports the trade plan shape.
+          # Each course home links to its file. An unparseable one 404s nothing
+          # and breaks the handoff silently, so both are parsed here, not merely
+          # counted -- and declared as assets rather than pushed through the
+          # page loop above, which asserts things only a document can have.
+          for asset in trade-setup-execution/trade-journal-schema.json \
+                       options-trading/options-trade-plan-schema.json ; do
             if [ ! -f "site/$asset" ]; then
               echo "::error::missing site/$asset -- refusing to publish an incomplete course"
               missing=1
@@ -102,7 +123,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "self-containment OK; all $pages pages and 1 asset present"
+          echo "self-containment OK; all $pages pages and 2 assets present"
 
       # NOTE: `enablement: true` was tried here and fails --- GITHUB_TOKEN
       # cannot create a Pages site ("Resource not accessible by integration").

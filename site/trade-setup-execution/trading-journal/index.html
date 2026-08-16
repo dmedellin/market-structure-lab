@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://learn.geterdone.io/trade-setup-execution/trading-journal/" />
   <meta name="author" content="dmedellin" />
   <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
-  <meta name="theme-color" content="#eef4f8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="learn.geterdone.io" />
   <meta property="og:locale" content="en_US" />
@@ -37,10 +37,10 @@
    Accents are re-declared for light because they are read AS TEXT (.eyebrow,
    .concept-card .icon, .state-pill, .pill, td.good/.warn/.bad, .footer a) and
    because the inline SVG charts paint through the same var() references. Light
-   values are contrast-checked against --bg (#eef4f8): --cyan 4.99:1,
-   --cyan-2 5.44:1, --green 4.95:1, --red 5.15:1, --amber 5.34:1, --purple 5.45:1,
-   --blue 5.75:1. Against the darkest light surface (--panel-3 #ecf3f8) the same
-   set holds at >= 4.89:1, and --muted clears 4.5:1 there as well. Note the light
+   values are contrast-checked against --bg (#edf4f8): --cyan 4.98:1,
+   --cyan-2 5.43:1, --green 4.94:1, --red 5.14:1, --amber 5.33:1, --purple 5.44:1,
+   --blue 5.25:1. Against the darkest light surface (--panel-3 #eaf2f7) the same
+   set holds at >= 4.85:1, and --muted clears 4.5:1 there as well. Note the light
    --cyan-2 is DARKER than --cyan: --cyan-2 is the emphasis stop in both themes,
    so it has to be the more readable one against the current background.
 
@@ -83,23 +83,23 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     color-scheme: light;
-    --bg: #eef4f8;
-    --bg-2: #f8fbfd;
-    --panel: rgba(255, 255, 255, 0.9);
+    --bg: #edf4f8;
+    --bg-2: #f9fbfd;
+    --panel: rgba(255, 255, 255, 0.94);
     --panel-solid: #ffffff;
-    --panel-2: #f4f8fb;
-    --panel-3: #ecf3f8;
-    --text: #112433;
-    --muted: #5c7182;
-    --line: rgba(26, 63, 88, 0.12);
-    --line-strong: rgba(26, 63, 88, 0.22);
+    --panel-2: #f3f8fb;
+    --panel-3: #eaf2f7;
+    --text: #102433;
+    --muted: #586c7c;
+    --line: rgba(24, 62, 88, 0.13);
+    --line-strong: rgba(24, 62, 88, 0.24);
     --cyan: #0e7382;
     --cyan-2: #0b6d79;
     --green: #10784f;
     --red: #c22a34;
     --amber: #8a5a06;
     --purple: #6b46d6;
-    --blue: #2158c8;
+    --blue: #1d5fd0;
     --on-accent: #ffffff;
     --code-bg: #e9f2f7;
     --code-ink: #173144;
@@ -111,23 +111,23 @@
    block above -- the two light paths must never disagree. */
 [data-theme="light"] {
   color-scheme: light;
-  --bg: #eef4f8;
-  --bg-2: #f8fbfd;
-  --panel: rgba(255, 255, 255, 0.9);
+  --bg: #edf4f8;
+  --bg-2: #f9fbfd;
+  --panel: rgba(255, 255, 255, 0.94);
   --panel-solid: #ffffff;
-  --panel-2: #f4f8fb;
-  --panel-3: #ecf3f8;
-  --text: #112433;
-  --muted: #5c7182;
-  --line: rgba(26, 63, 88, 0.12);
-  --line-strong: rgba(26, 63, 88, 0.22);
+  --panel-2: #f3f8fb;
+  --panel-3: #eaf2f7;
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --line-strong: rgba(24, 62, 88, 0.24);
   --cyan: #0e7382;
   --cyan-2: #0b6d79;
   --green: #10784f;
   --red: #c22a34;
   --amber: #8a5a06;
   --purple: #6b46d6;
-  --blue: #2158c8;
+  --blue: #1d5fd0;
   --on-accent: #ffffff;
   --code-bg: #e9f2f7;
   --code-ink: #173144;
@@ -1157,41 +1157,38 @@ a.brand { text-decoration: none; }
 }
 .noscript-note strong { display: block; margin-bottom: 4px; color: var(--text); }
 
-/* Previous / next lesson pager, in course order. */
+/* Previous / next lesson pager. The course sequence is the manifest order; the
+   last lesson points back at the course home, which carries the link to the
+   next course. */
 .lesson-nav {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 34px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
 }
-.lesson-nav a {
-  display: grid;
-  gap: 3px;
-  padding: 14px 16px;
+
+.lesson-link {
+  flex: 1 1 240px;
+  padding: 13px 15px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+  border-radius: 13px;
   background: var(--panel-2);
+  color: var(--text);
   text-decoration: none;
-  transition: border-color 150ms ease, transform 150ms ease;
+  transition: transform 150ms ease, border-color 150ms ease;
 }
-.lesson-nav a:hover { border-color: var(--line-strong); transform: translateY(-1px); }
-.lesson-nav .dir {
-  color: var(--muted);
-  font-size: 0.68rem;
-  font-weight: 850;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-.lesson-nav .name { color: var(--text); font-size: 0.9rem; font-weight: 820; }
-.lesson-nav .next { grid-column: 2; text-align: right; }
+
+.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+.lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.lesson-link.next { margin-left: auto; text-align: right; }
 
 .footer p { margin: 0 0 7px; }
 .footer p:last-child { margin-bottom: 0; }
 
 @media (max-width: 720px) {
   .topnav { display: none; }
-  .lesson-nav { grid-template-columns: 1fr; }
-  .lesson-nav .next { grid-column: auto; text-align: left; }
+  .lesson-link { flex-basis: 100%; }
 }
 </style>
 
@@ -1331,9 +1328,15 @@ a.brand { text-decoration: none; }
 
     </main>
 
-    <nav class="lesson-nav" aria-label="Lesson">
-      <a class="prev" href="../backtesting/" rel="prev"><span class="dir">Previous lesson</span><span class="name">13 &middot; Backtesting</span></a>
-      <a class="next" href="../performance-review/" rel="next"><span class="dir">Next lesson</span><span class="name">15 &middot; Performance Review</span></a>
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../backtesting/" rel="prev">
+        <span>Previous lesson</span>
+        <strong>13 &middot; Backtesting</strong>
+      </a>
+      <a class="lesson-link next" href="../performance-review/" rel="next">
+        <span>Next lesson</span>
+        <strong>15 &middot; Performance Review</strong>
+      </a>
     </nav>
 
     <footer class="footer">

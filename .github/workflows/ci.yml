@@ -88,7 +88,9 @@ jobs:
           #   /market-structure-lab/<lesson>/      course 1's seven lessons
           #   /trade-setup-execution/              course 2 home
           #   /trade-setup-execution/<lesson>/     course 2's fifteen lessons
-          # 25 pages, in course order, plus one published non-HTML asset.
+          #   /options-trading/                    course 3 home
+          #   /options-trading/<lesson>/           course 3's sixteen lessons
+          # 42 pages, in course order, plus two published non-HTML assets.
           # Same map as REQUIRED_PAGES + NON_HTML_ASSETS in
           # tests/test_site_invariants.py, acceptance.checks in
           # release/contract.json, the publish guard in pages.yml, and the build
@@ -124,17 +126,38 @@ jobs:
                       trade-setup-execution/trade-management/index.html \
                       trade-setup-execution/backtesting/index.html \
                       trade-setup-execution/trading-journal/index.html \
-                      trade-setup-execution/performance-review/index.html ; do
+                      trade-setup-execution/performance-review/index.html \
+                      options-trading/index.html \
+                      options-trading/options-contract-fundamentals/index.html \
+                      options-trading/calls-and-puts/index.html \
+                      options-trading/moneyness/index.html \
+                      options-trading/option-premium/index.html \
+                      options-trading/option-chain-and-liquidity/index.html \
+                      options-trading/expiration-and-time-decay/index.html \
+                      options-trading/implied-volatility/index.html \
+                      options-trading/delta-and-gamma/index.html \
+                      options-trading/theta-and-vega/index.html \
+                      options-trading/long-calls-and-long-puts/index.html \
+                      options-trading/covered-calls/index.html \
+                      options-trading/cash-secured-puts/index.html \
+                      options-trading/vertical-debit-spreads/index.html \
+                      options-trading/vertical-credit-spreads/index.html \
+                      options-trading/exercise-assignment-and-expiration/index.html \
+                      options-trading/options-trade-planning/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "$WEB_ROOT/$page" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$page — the published URL space is incomplete"
               missing=1
             fi
           done
-          # Published, and not a page. Course 2's lesson 14 exports this shape
-          # and lesson 15 imports it, and the course home links to the file, so
-          # it is a live URL whose absence is a 404 like any other.
-          for asset in trade-setup-execution/trade-journal-schema.json ; do
+          # Published, and not pages. Course 2's lesson 14 exports the journal
+          # shape and its lesson 15 imports it; course 3's lesson 16 exports the
+          # trade plan shape. Both course homes link to their file, so each is a
+          # live URL whose absence is a 404 like any other. Each asset is listed
+          # here explicitly rather than folded into the page loop above: a page
+          # check that also accepts JSON is a page check that proves nothing.
+          for asset in trade-setup-execution/trade-journal-schema.json \
+                       options-trading/options-trade-plan-schema.json ; do
             if [ ! -f "$WEB_ROOT/$asset" ]; then
               echo "::error file=$WEB_ROOT::missing $WEB_ROOT/$asset — a published asset is missing"
               missing=1
@@ -144,7 +167,7 @@ jobs:
             fi
           done
           [ "$missing" -eq 0 ] || exit 1
-          echo "Published URL space: $pages/25 pages plus 1 asset present under $WEB_ROOT."
+          echo "Published URL space: $pages/42 pages plus 2 assets present under $WEB_ROOT."
 
       - name: HTML is well-formed
         run: |
@@ -283,9 +306,18 @@ jobs:
           # three deep paths were confirmed to return HTTP 200.
           #   optionseducation.org -- Options Industry Council
           #   finra.org            -- Financial Industry Regulatory Authority
+          # Reviewed 2026-08-15, again, for course 3 (Options Trading): both are
+          # primary sources -- a federal regulator and the listing exchange
+          # itself -- rather than a brokerage selling the product the lessons
+          # teach, which is why they are accepted where a broker's education
+          # page would not be. Every linked path was confirmed to return HTTP 200.
+          #   investor.gov -- U.S. Securities and Exchange Commission, investor education
+          #   cboe.com     -- Cboe Global Markets, the options exchange
           ALLOWED_LINK_ORIGINS = (SELF_ORIGIN, "https://geterdone.io",
                                   "https://www.optionseducation.org",
-                                  "https://www.finra.org")
+                                  "https://www.finra.org",
+                                  "https://www.investor.gov",
+                                  "https://www.cboe.com")
           # 2. Schema and namespace IDENTIFIERS. These name a dialect; nothing
           #    dereferences them. The w3.org URIs are required by inline SVG and
           #    document.createElementNS. The json-schema.org URI is the "$schema"

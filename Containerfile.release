@@ -31,11 +31,13 @@ COPY site/ ./
 #     /srv/index.html                            -> learn.geterdone.io/
 #     /srv/<course>/index.html                   -> learn.geterdone.io/<course>/
 #     /srv/<course>/<lab>/index.html             -> learn.geterdone.io/<course>/<lab>/
-# There are two courses: market-structure-lab (seven lessons) and
-# trade-setup-execution (fifteen lessons), both listed in the RUN below, along
-# with the one published non-HTML asset. That is the same map as REQUIRED_PAGES
-# plus NON_HTML_ASSETS in tests/test_site_invariants.py and acceptance.checks in
-# release/contract.json.
+# There are three courses: market-structure-lab (seven lessons),
+# trade-setup-execution (fifteen lessons) and options-trading (sixteen lessons),
+# all listed in the RUN below, along with the two published non-HTML assets.
+# That is the same map as REQUIRED_PAGES plus NON_HTML_ASSETS in
+# tests/test_site_invariants.py and acceptance.checks in release/contract.json —
+# 42 pages and 2 assets. Each asset is tested on its own line: a guard that let
+# a JSON file satisfy a page check would stop proving anything about either.
 # The seven FLAT /<lesson>/ URLs this image used to publish are retired: no stub
 # is shipped for them and none may be re-added here.
 # The build fails loudly here rather than silently shipping an image whose URLs
@@ -77,6 +79,27 @@ RUN set -eu; \
         test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html (lesson of the Trade Setup and Execution course)"; exit 1; }; \
     done; \
     test -s "/srv/$course/trade-journal-schema.json" || { echo "FATAL: missing or empty /srv/$course/trade-journal-schema.json. It is a published URL: the course home links to it, lesson 14 exports that shape and lesson 15 imports it."; exit 1; }; \
+    course=options-trading; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (course home of the Options Trading course)"; exit 1; }; \
+    for lesson in options-contract-fundamentals \
+            calls-and-puts \
+            moneyness \
+            option-premium \
+            option-chain-and-liquidity \
+            expiration-and-time-decay \
+            implied-volatility \
+            delta-and-gamma \
+            theta-and-vega \
+            long-calls-and-long-puts \
+            covered-calls \
+            cash-secured-puts \
+            vertical-debit-spreads \
+            vertical-credit-spreads \
+            exercise-assignment-and-expiration \
+            options-trade-planning; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html (lesson of the Options Trading course)"; exit 1; }; \
+    done; \
+    test -s "/srv/$course/options-trade-plan-schema.json" || { echo "FATAL: missing or empty /srv/$course/options-trade-plan-schema.json. It is a published URL: the course home links to it and lesson 16 exports that shape."; exit 1; }; \
     test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: course 1 lesson 01 is published at learn.geterdone.io/market-structure-lab/market-structure/, never learn.geterdone.io/learn/market-structure-lab/market-structure/. Move site/learn/* up one level."; exit 1; }; \
     chmod -R a=rX /srv
 

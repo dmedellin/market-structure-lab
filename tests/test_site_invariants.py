@@ -20,10 +20,16 @@ What is deliberately strict here:
     https://learn.geterdone.io/ . An extra directory level silently changes every
     public URL.
   * The site is a LIBRARY of courses now, so every invariant that used to be
-    "the course" is stated per course and asserted for both. The theme
-    localStorage key is checked site-wide for exactly that reason: two courses
+    "the course" is stated per course and asserted for every one of them. The
+    theme localStorage key is checked site-wide for exactly that reason: courses
     that each persist the reader's theme under their own key is a bug that looks
-    like nothing until a reader crosses from one course to the other.
+    like nothing until a reader crosses from one course to the next.
+  * Three courses share one origin, one visual system and one navigation model,
+    so the conventions that cross course boundaries -- the lesson pager markup,
+    the light palette token VALUES, and the theme-toggle button -- are pinned in
+    TestPinnedConventions. Each course inventing its own variant is invisible in
+    review (every variant works inside its own course) and visible to a reader
+    the moment they cross from one course into the next.
 """
 
 import json
@@ -51,9 +57,12 @@ CANONICAL_HOST = "learn.geterdone.io"
 #     /market-structure-lab/<lesson>/    course 1's seven lessons, in course order
 #     /trade-setup-execution/            course 2 home, "Trade Setup and Execution"
 #     /trade-setup-execution/<lesson>/   course 2's fifteen lessons, in course order
+#     /options-trading/                  course 3 home, "Options Trading"
+#     /options-trading/<lesson>/         course 3's sixteen lessons, in course order
 #
-# That is 25 HTML pages. The document root publishes exactly one further thing,
-# a non-HTML asset, declared separately in NON_HTML_ASSETS below.
+# That is 42 HTML pages. The document root publishes exactly two further things,
+# both non-HTML assets -- one exchange schema per course that ships one --
+# declared separately in NON_HTML_ASSETS below.
 #
 # Containerfile.release, .github/workflows/{ci,pages}.yml, release/contract.json
 # (acceptance.checks) and scripts/smoke.py all assert the same mapping; changing
@@ -99,10 +108,31 @@ COURSE_2_LESSONS = (
     "performance-review",
 )
 
+COURSE_3_HOME = "/options-trading/"
+COURSE_3_LESSONS = (
+    "options-contract-fundamentals",
+    "calls-and-puts",
+    "moneyness",
+    "option-premium",
+    "option-chain-and-liquidity",
+    "expiration-and-time-decay",
+    "implied-volatility",
+    "delta-and-gamma",
+    "theta-and-vega",
+    "long-calls-and-long-puts",
+    "covered-calls",
+    "cash-secured-puts",
+    "vertical-debit-spreads",
+    "vertical-credit-spreads",
+    "exercise-assignment-and-expiration",
+    "options-trade-planning",
+)
+
 # (course title, course home URL, lesson slugs in course order)
 COURSES = (
     ("Market Structure Lab", COURSE_1_HOME, COURSE_1_LESSONS),
     ("Trade Setup and Execution", COURSE_2_HOME, COURSE_2_LESSONS),
+    ("Options Trading", COURSE_3_HOME, COURSE_3_LESSONS),
 )
 
 UNKNOWN_PATH_CHECK = "/release-smoke-unknown-path"
@@ -131,9 +161,13 @@ for _title, _home, _slugs in COURSES:
 # through, the asset is declared here as what it is: it is still published, so
 # it is still guarded by every publish-time page list, still probed by
 # scripts/smoke.py, and still checked here -- as JSON (TestPublishedAssets).
+# Each entry is declared explicitly. A second asset is a second LINE here, never
+# a reason to relax an HTML check so both files can pass one sweep.
 NON_HTML_ASSETS = {
     "/trade-setup-execution/trade-journal-schema.json":
         "trade-setup-execution/trade-journal-schema.json",
+    "/options-trading/options-trade-plan-schema.json":
+        "options-trading/options-trade-plan-schema.json",
 }
 
 # Rides along inside the document root without being published content. CNAME
@@ -144,22 +178,25 @@ DELIVERY_CONTROL_FILES = frozenset({"CNAME"})
 COURSE_HOMES = tuple(home for _title, home, _slugs in COURSES)
 
 # "/" is the learning path; every other published page is course material --
-# both course homes as well as all 22 lessons. All of it teaches trading, so all
-# of it carries the same disclaimer. There is no exempt page below the root.
+# all three course homes as well as all 38 lessons. All of it teaches trading, so
+# all of it carries the same disclaimer. There is no exempt page below the root.
 COURSE_PAGES = {url: rel for url, rel in REQUIRED_PAGES.items() if url != SITE_INDEX}
 
-# The 22 lessons alone, without either course home.
+# The 38 lessons alone, without any course home.
 LESSON_PAGES = {url: rel for url, rel in COURSE_PAGES.items() if url not in COURSE_HOMES}
 
 # Every page of the library persists the reader's theme under ONE localStorage
-# key. Course 1 shipped "marketStructureTheme" and course 2 shipped
-# "market-lab-theme"; with two courses on one origin that meant a reader's
-# choice silently reset at the course boundary. The site standardized on
-# "learn-theme" everywhere. Note the check below reads storage CALL SITES, not
+# key. Course 1 shipped "marketStructureTheme", course 2 shipped
+# "market-lab-theme" and course 3 arrived with a third key,
+# "options-course-theme"; with several courses on one origin that meant a
+# reader's choice silently reset at every course boundary. The site standardized
+# on "learn-theme" everywhere. Note the check below reads storage CALL SITES, not
 # prose: site/index.html names both retired keys in a comment that explains the
 # migration, and documenting the fix must not fail the build.
 THEME_STORAGE_KEY = "learn-theme"
-RETIRED_THEME_KEYS = ("marketStructureTheme", "market-lab-theme")
+RETIRED_THEME_KEYS = (
+    "marketStructureTheme", "market-lab-theme", "options-course-theme",
+)
 
 # localStorage.getItem("k") / setItem("k", v) / removeItem("k") -- a literal key.
 STORAGE_LITERAL_KEY_RE = re.compile(
@@ -375,40 +412,44 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     same map for the SERVED responses and release/contract.json declares it as the
     acceptance matrix. A page added to one and not the others is a live page that
     nothing probes, which is exactly the hole these tests exist to close. The
-    course homes count: they are published, so they are probed -- and so is the
-    one non-HTML asset, which is checked as JSON rather than as a page.
+    course homes count: they are published, so they are probed -- and so are both
+    non-HTML assets, each checked as JSON rather than as a page.
     """
 
     def test_declared_url_space_is_the_two_level_course_tree(self):
         """Learning path, then a home per course, then that course's lessons.
 
-        25 URLs exactly: /, two course homes, and 7 + 15 lessons beneath them.
-        The flat /<lesson>/ URLs were retired without redirects, so a two-segment
-        lesson path is the only shape a lesson may have; re-adding a one-segment
-        lesson here would declare a page that no longer exists on disk.
+        42 URLs exactly: /, three course homes, and 7 + 15 + 16 lessons beneath
+        them. The flat /<lesson>/ URLs were retired without redirects, so a
+        two-segment lesson path is the only shape a lesson may have; re-adding a
+        one-segment lesson here would declare a page that no longer exists on
+        disk.
         """
         expected = 1 + len(COURSES) + sum(len(slugs) for _t, _h, slugs in COURSES)
         self.assertEqual(
-            25, expected, "the library is 1 + 2 + 7 + 15 = 25 pages, got %d" % expected
+            42,
+            expected,
+            "the library is 1 + 3 + 7 + 15 + 16 = 42 pages, got %d" % expected,
         )
         self.assertEqual(
             expected,
             len(REQUIRED_PAGES),
             "expected %d published URLs, got %d" % (expected, len(REQUIRED_PAGES)),
         )
+        self.assertEqual(3, len(COURSES), "the library is three courses")
         self.assertEqual(7, len(COURSE_1_LESSONS), "course 1 is seven lessons")
         self.assertEqual(15, len(COURSE_2_LESSONS), "course 2 is fifteen lessons")
-        self.assertEqual(
-            len(set(COURSE_1_LESSONS)), len(COURSE_1_LESSONS), "duplicate slug in course 1"
-        )
-        self.assertEqual(
-            len(set(COURSE_2_LESSONS)), len(COURSE_2_LESSONS), "duplicate slug in course 2"
-        )
+        self.assertEqual(16, len(COURSE_3_LESSONS), "course 3 is sixteen lessons")
+        for index, (title, _home, slugs) in enumerate(COURSES, start=1):
+            with self.subTest(course=title):
+                self.assertEqual(
+                    len(set(slugs)), len(slugs), "duplicate slug in course %d" % index
+                )
         for _title, home, _slugs in COURSES:
             with self.subTest(course=home):
                 self.assertIn(home, REQUIRED_PAGES, "the course home must be published")
-        # Two course homes, neither a prefix of the other: the first path
-        # segment must identify the course on its own, or /a/ and /a-b/x/ start
+        # No course home may be a prefix of another: the first path segment
+        # must identify the course on its own, or /a/ and /a-b/x/ start
         # answering for each other in guards that match on prefixes.
         for _title, home, _slugs in COURSES:
             for _other_title, other, _other_slugs in COURSES:
@@ -441,8 +482,20 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
                 )
 
     def test_declared_assets_are_not_pages(self):
-        """The asset map exists so no page check has to be softened for it."""
-        self.assertTrue(NON_HTML_ASSETS, "the JSON schema asset must stay declared")
+        """The asset map exists so no page check has to be softened for it.
+
+        Both published schemas are declared here, one line each. The second one
+        arriving with course 3 is the moment the temptation appears to relax an
+        HTML assertion so a JSON file can slip through the page sweep; the fix
+        for "this check cannot apply to that file" is another declaration, never
+        a weaker check.
+        """
+        self.assertEqual(
+            2,
+            len(NON_HTML_ASSETS),
+            "both published JSON schemas must stay declared: course 2's trade "
+            "journal exchange schema and course 3's options trade plan schema",
+        )
         for url, relative in sorted(NON_HTML_ASSETS.items()):
             with self.subTest(url=url):
                 self.assertNotIn(
@@ -667,8 +720,8 @@ class TestContent(SiteFixture):
     def test_course_pages_retain_the_disclaimer(self):
         """Everything below the learning path teaches trading and must say so.
 
-        That is both course homes as well as all 22 lessons: a course home is not
-        an exempt landing page, it sells the same material.
+        That is all three course homes as well as all 38 lessons: a course home
+        is not an exempt landing page, it sells the same material.
 
         Checked two ways on purpose: every DECLARED course page must be present (a
         lab that vanished cannot pass by not being iterated), and every PUBLISHED
@@ -729,7 +782,7 @@ class TestContent(SiteFixture):
 
 
 class TestPublishedAssets(SiteFixture):
-    """The one non-HTML thing the document root publishes.
+    """The non-HTML things the document root publishes.
 
     It is checked as what it is. A JSON schema has no <title>, no
     <meta name="description">, no rel=canonical and no disclaimer, and inventing
@@ -753,11 +806,12 @@ class TestPublishedAssets(SiteFixture):
                 )
 
     def test_declared_json_assets_parse(self):
-        """A corrupt export schema is a broken lesson 14 -> 15 handoff.
+        """A corrupt export schema is a broken handoff between two lessons.
 
-        Lesson 14 exports trade-journal-v1 and lesson 15 imports it; this file
-        is the exchange shape both refer a reader to. Shipping it unparseable
-        would 200 happily and still be broken, so parse it here.
+        Course 2's lesson 14 exports trade-journal-v1 and lesson 15 imports it;
+        course 3's lesson 16 exports options-trade-plan-v1. Each file is the
+        exchange shape those lessons refer a reader to. Shipping one
+        unparseable would 200 happily and still be broken, so parse it here.
         """
         for url, relative in sorted(NON_HTML_ASSETS.items()):
             if not url.endswith(".json"):
@@ -777,13 +831,14 @@ class TestPublishedAssets(SiteFixture):
 class TestThemeKey(SiteFixture):
     """One library, one theme key.
 
-    Course 1 shipped "marketStructureTheme" and course 2 shipped
-    "market-lab-theme". Both worked perfectly inside their own course and broke
-    the moment the two shared an origin: the reader's explicit light/dark choice
-    silently reset at the course boundary, on a site whose whole point is that a
-    reader walks from course 1 into course 2. The site now uses "learn-theme"
-    everywhere, and "everywhere" is the invariant -- a third course that quietly
-    invents its own key must fail here rather than at a reader's expense.
+    Course 1 shipped "marketStructureTheme", course 2 shipped "market-lab-theme"
+    and course 3 arrived carrying "options-course-theme". Each worked perfectly
+    inside its own course and broke the moment they shared an origin: the
+    reader's explicit light/dark choice silently reset at the course boundary, on
+    a site whose whole point is that a reader walks from course 1 through course
+    3. The site now uses "learn-theme" everywhere, and "everywhere" is the
+    invariant -- a fourth course that quietly invents its own key must fail here
+    rather than at a reader's expense.
     """
 
     @staticmethod
@@ -971,6 +1026,484 @@ class TestLessonChain(SiteFixture):
                 ]
                 self.assertEqual(
                     [], missing, "%s does not link to %s" % (home, missing)
+                )
+
+
+# ---------------------------------------------------------------------------
+# The pinned cross-course conventions
+# ---------------------------------------------------------------------------
+# Three courses, authored at three different times, now share one origin. The
+# review before course 3 landed found all three drifting in the same three
+# places, and every variant looked correct inside its own course:
+#
+#   * three incompatible pager families, so "the next lesson link" was a
+#     different component on each course;
+#   * light palette token values that differ by a digit or two per page, so the
+#     page ground shifts as a reader walks the library;
+#   * a theme-toggle button whose accessible name was rewritten from JavaScript
+#     to describe the NEXT state on some pages and the CURRENT state on others,
+#     which is two different meanings for one control.
+#
+# None of that fails a single-course review and all of it is visible to a
+# reader crossing a course boundary. So it is pinned below, character for
+# character, and a fourth course that invents its own variant fails here.
+
+# The light palette, one value per token. Contrast against --bg #edf4f8:
+# cyan 4.98, cyan-2 5.43, green 4.94, red 5.14, amber 5.33, purple 5.44,
+# blue 5.64, muted 4.91 -- all >= 4.5:1. A page declares only the tokens it
+# actually uses, but a token it DOES declare carries exactly this value.
+LIGHT_PALETTE = {
+    "--bg": "#edf4f8",
+    "--bg-2": "#f9fbfd",
+    "--panel": "rgba(255, 255, 255, 0.94)",
+    "--panel-solid": "#ffffff",
+    "--panel-2": "#f3f8fb",
+    "--panel-3": "#eaf2f7",
+    "--text": "#102433",
+    "--muted": "#586c7c",
+    "--line": "rgba(24, 62, 88, 0.13)",
+    "--line-strong": "rgba(24, 62, 88, 0.24)",
+    "--cyan": "#0e7382",
+    "--cyan-2": "#0b6d79",
+    "--green": "#10784f",
+    "--red": "#c22a34",
+    "--amber": "#8a5a06",
+    "--purple": "#6b46d6",
+    "--blue": "#1d5fd0",
+    "--on-accent": "#ffffff",
+    "--shadow": "0 22px 55px rgba(39, 77, 101, 0.14)",
+}
+
+# Light has TWO paths, and both must carry the same values: the explicit toggle
+# ([data-theme="light"]) and the system preference, for the reader who never
+# touches the toggle. A component-level `[data-theme="light"] .foo {…}` rule
+# reaches only the first of them, which is precisely how the two paths drift
+# apart -- so components read tokens and nothing else.
+LIGHT_TOGGLE_SELECTOR = '[data-theme="light"]'
+LIGHT_MEDIA_PRELUDE = "@media (prefers-color-scheme: light)"
+LIGHT_MEDIA_SELECTOR = ':root:not([data-theme="dark"])'
+
+STYLE_BLOCK_RE = re.compile(r"<style[^>]*>(.*?)</style>", re.S | re.I)
+CSS_COMMENT_RE = re.compile(r"/\*.*?\*/", re.S)
+CSS_VARIABLE_RE = re.compile(r"(--[A-Za-z0-9_-]+)\s*:\s*([^;{}]+);")
+
+# The lesson pager, verbatim. Class names are exactly lesson-nav /
+# lesson-link prev / lesson-link next; the retired families below are the ones
+# the three courses shipped separately and must never come back.
+LESSON_NAV_MARKUP = '<nav class="lesson-nav" aria-label="Lesson navigation">'
+LESSON_NAV_RE = re.compile(r"<nav class=\"lesson-nav\"[^>]*>(.*?)</nav>", re.S)
+PAGER_ANCHOR_RE = re.compile(r"<a\s+([^>]*?)>(.*?)</a>", re.S)
+ATTRIBUTE_RE = re.compile(r"([A-Za-z_:][-\w:.]*)\s*=\s*\"([^\"]*)\"")
+PAGER_BODY_RE = re.compile(r"\A\s*<span>([^<]+)</span>\s*<strong>(.+?)</strong>\s*\Z", re.S)
+RETIRED_PAGER_MARKUP = (
+    "lesson-pager", "pager-link",
+    'class="prev"', 'class="next"', 'class="dir"', 'class="name"',
+)
+
+# The theme toggle, verbatim. The label is STATIC and direction-neutral, so it
+# is accurate in both states; a label rewritten per state has to pick between
+# describing the current theme and the next one, and the courses picked
+# differently. type="button" keeps it out of any form submission.
+THEME_TOGGLE_MARKUP = (
+    '<button class="icon-btn" id="themeToggle" type="button" '
+    'aria-label="Toggle light and dark theme" title="Toggle theme">'
+)
+# An accessible name written from script, with the value expression captured.
+# Only a THEME label is a violation: a lesson widget that labels itself from
+# script is ordinary, but the theme toggle's name must not depend on state.
+SCRIPTED_LABEL_RE = re.compile(
+    r"""(?:setAttribute\s*\(\s*(['"])aria-label\1\s*,|\.\s*ariaLabel\s*=)([^;\n]*)"""
+)
+
+
+def stylesheet(text):
+    """Every <style> block of one document, CSS comments removed.
+
+    Comments are stripped so the prose that DOCUMENTS these conventions (the
+    header comment on each page explains the two light paths and quotes the
+    component-override anti-pattern) is never mistaken for a rule.
+    """
+    return "\n".join(
+        CSS_COMMENT_RE.sub(" ", block) for block in STYLE_BLOCK_RE.findall(text)
+    )
+
+
+def css_rules(css):
+    """(enclosing at-rule preludes, selector, declarations) for every rule."""
+    rules = []
+    stack = []
+    buffer = []
+    for char in css:
+        if char == "{":
+            stack.append(re.sub(r"\s+", " ", "".join(buffer)).strip())
+            buffer = []
+        elif char == "}":
+            if stack:
+                rules.append((tuple(stack[:-1]), stack.pop(), "".join(buffer)))
+            buffer = []
+        else:
+            buffer.append(char)
+    return rules
+
+
+def css_variables(declarations):
+    return {
+        name: re.sub(r"\s+", " ", value).strip()
+        for name, value in CSS_VARIABLE_RE.findall(declarations)
+    }
+
+
+def light_paths(text):
+    """{"toggle": [...], "media": [...]} -- the custom properties each path sets."""
+    paths = {"toggle": [], "media": []}
+    for context, selector, declarations in css_rules(stylesheet(text)):
+        if not context and selector == LIGHT_TOGGLE_SELECTOR:
+            paths["toggle"].append(css_variables(declarations))
+        elif (context == (LIGHT_MEDIA_PRELUDE,)
+              and selector == LIGHT_MEDIA_SELECTOR):
+            paths["media"].append(css_variables(declarations))
+    return paths
+
+
+def light_component_overrides(text):
+    """Selectors that scope a component to the toggle path only."""
+    return [
+        selector
+        for _context, selector, _declarations in css_rules(stylesheet(text))
+        if LIGHT_TOGGLE_SELECTOR in selector and selector != LIGHT_TOGGLE_SELECTOR
+    ]
+
+
+def pager_anchors(text):
+    """[(attributes, inner markup)] of one page's lesson pager, in document order."""
+    anchors = []
+    for inner in LESSON_NAV_RE.findall(text):
+        for attributes, body in PAGER_ANCHOR_RE.findall(inner):
+            anchors.append((dict(ATTRIBUTE_RE.findall(attributes)), body))
+    return anchors
+
+
+class TestPinnedConventions(SiteFixture):
+    """One library, one pager, one light palette, one theme toggle.
+
+    Every assertion here is about a convention that CROSSES course boundaries.
+    A course is free to have its own lessons, its own charts and its own
+    layout; it is not free to have its own version of the navigation control, of
+    the light theme, or of the theme toggle, because a reader walks from one
+    course into the next and those three are what they carry with them.
+
+    These fail loudly on purpose. A future course that reintroduces its own
+    variant should fail here, in a suite that names the pinned form, rather than
+    pass review because the variant looks fine inside its own course.
+    """
+
+    def pages(self):
+        return [(str(doc.path.relative_to(REPO_ROOT)), doc) for doc in self.documents]
+
+    # -- the light palette --------------------------------------------------
+
+    def test_every_page_declares_both_light_paths(self):
+        """A page with one light path is a page that is light for half its readers.
+
+        The toggle path serves the reader who chose light; the media path serves
+        the reader who never touched the toggle and whose OS is light. Course 3
+        arrived with the toggle path only -- no
+        @media (prefers-color-scheme: light) block at all -- which reads as
+        "light mode is broken" to everyone in the second group.
+        """
+        for page, doc in self.pages():
+            with self.subTest(page=page):
+                paths = light_paths(doc.text)
+                self.assertEqual(
+                    1,
+                    len(paths["toggle"]),
+                    "expected exactly one `%s { … }` block, found %d"
+                    % (LIGHT_TOGGLE_SELECTOR, len(paths["toggle"])),
+                )
+                self.assertEqual(
+                    1,
+                    len(paths["media"]),
+                    "expected exactly one `%s { %s { … } }` block, found %d"
+                    % (LIGHT_MEDIA_PRELUDE, LIGHT_MEDIA_SELECTOR, len(paths["media"])),
+                )
+
+    def test_both_light_paths_declare_identical_values(self):
+        """The two paths are one palette written twice; they may not disagree."""
+        for page, doc in self.pages():
+            paths = light_paths(doc.text)
+            if not (paths["toggle"] and paths["media"]):
+                continue  # reported by test_every_page_declares_both_light_paths
+            toggle, media = paths["toggle"][0], paths["media"][0]
+            for token in sorted(set(toggle) | set(media)):
+                with self.subTest(page=page, token=token):
+                    self.assertEqual(
+                        toggle.get(token),
+                        media.get(token),
+                        "%s differs between the toggle path and the system-preference "
+                        "path; the two are the same palette and must be "
+                        "value-identical" % token,
+                    )
+
+    def test_light_palette_values_are_the_pinned_ones(self):
+        """The palette is pinned, and the pinned values are contrast-checked.
+
+        A page declares only the tokens it uses, so a missing token is fine. A
+        token declared with its own slightly different value is not: those are
+        the "improvements" that put four different --muted values in one library
+        and drop a heading below 4.5:1 on one page of it.
+        """
+        for page, doc in self.pages():
+            for label, blocks in sorted(light_paths(doc.text).items()):
+                for declarations in blocks:
+                    for token, value in sorted(declarations.items()):
+                        if token not in LIGHT_PALETTE:
+                            continue
+                        with self.subTest(page=page, path=label, token=token):
+                            self.assertEqual(
+                                LIGHT_PALETTE[token],
+                                value,
+                                "%s is pinned; do not re-tune it per page" % token,
+                            )
+
+    def test_light_palette_is_identical_across_every_page_that_declares_it(self):
+        """Same token, same value, library-wide -- including page-local tokens.
+
+        LIGHT_PALETTE pins the shared tokens. A course that adds one of its own
+        (a chart grid line, a code surface) is still bound by this: the second
+        page to declare that token must declare the same value, or the library
+        has two light themes wearing one name.
+        """
+        values = {}
+        for page, doc in self.pages():
+            for blocks in light_paths(doc.text).values():
+                for declarations in blocks:
+                    for token, value in declarations.items():
+                        values.setdefault(token, {}).setdefault(value, []).append(page)
+        for token, seen in sorted(values.items()):
+            with self.subTest(token=token):
+                self.assertEqual(
+                    1,
+                    len(seen),
+                    "%s has %d different light values across the library: %s"
+                    % (
+                        token,
+                        len(seen),
+                        "; ".join(
+                            "%s on %d page(s) (e.g. %s)" % (value, len(pages), pages[0])
+                            for value, pages in sorted(seen.items())
+                        ),
+                    ),
+                )
+
+    def test_no_component_is_scoped_to_the_toggle_path_alone(self):
+        """`[data-theme="light"] .foo` is how the two light paths drift apart.
+
+        Such a rule applies when the reader clicked the toggle and NOT when
+        their OS is light, so that reader gets the light ground with dark-theme
+        ink on that component alone. Components read tokens; only the palette
+        blocks name a theme.
+        """
+        for page, doc in self.pages():
+            with self.subTest(page=page):
+                self.assertEqual(
+                    [],
+                    light_component_overrides(doc.text),
+                    "component-level light override(s); move the value into the "
+                    "palette tokens both light paths declare",
+                )
+
+    # -- the lesson pager ---------------------------------------------------
+
+    def test_every_lesson_carries_the_pinned_pager_markup(self):
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        for url in sorted(LESSON_PAGES):
+            doc = by_url.get(url)
+            with self.subTest(lesson=url):
+                self.assertIsNotNone(doc, "%s is not published" % url)
+                self.assertEqual(
+                    1,
+                    doc.text.count(LESSON_NAV_MARKUP),
+                    "expected exactly one pager opening tag, verbatim:\n  %s"
+                    % LESSON_NAV_MARKUP,
+                )
+
+    def test_pager_anchors_use_the_pinned_class_names(self):
+        """Exactly lesson-link prev / lesson-link next, and nothing else."""
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        for title, home, slugs in COURSES:
+            urls = [lesson_url(home, slug) for slug in slugs]
+            for index, url in enumerate(urls):
+                doc = by_url.get(url)
+                if doc is None:
+                    continue  # reported by TestPublishedLayout
+                anchors = pager_anchors(doc.text)
+                first, last = index == 0, index == len(urls) - 1
+                expected = ([] if first else ["lesson-link prev"]) + ["lesson-link next"]
+                with self.subTest(course=title, lesson=url):
+                    self.assertEqual(
+                        expected,
+                        [attrs.get("class") for attrs, _body in anchors],
+                        "the pager's anchors must be exactly %s, in that order. "
+                        "The first lesson omits the prev anchor entirely rather "
+                        "than shipping a disabled one." % expected,
+                    )
+                for attrs, body in anchors:
+                    with self.subTest(course=title, lesson=url, anchor=attrs.get("class")):
+                        self.assertEqual(
+                            set(),
+                            set(attrs) - {"class", "href", "rel"},
+                            "a pager anchor carries only class, href and rel",
+                        )
+                        self.assertRegex(
+                            body,
+                            PAGER_BODY_RE,
+                            "a pager anchor is <span>direction</span> then "
+                            "<strong>label</strong>; no other elements",
+                        )
+
+    def test_pager_rel_asserts_only_true_document_relationships(self):
+        """rel=prev/next inside a course; no rel on the link out of one.
+
+        The last lesson's forward link points at the COURSE HOME, which is not
+        the next document in the sequence, so rel="next" there asserts a
+        relationship that is not true.
+        """
+        by_url = {served_path(doc.path): doc for doc in self.documents}
+        for title, home, slugs in COURSES:
+            urls = [lesson_url(home, slug) for slug in slugs]
+            for index, url in enumerate(urls):
+                doc = by_url.get(url)
+                if doc is None:
+                    continue
+                for attrs, _body in pager_anchors(doc.text):
+                    direction = (attrs.get("class") or "").split()[-1]
+                    terminal = direction == "next" and index == len(urls) - 1
+                    with self.subTest(course=title, lesson=url, anchor=direction):
+                        if terminal:
+                            self.assertNotIn(
+                                "rel",
+                                attrs,
+                                "the last lesson's forward link goes to the course "
+                                "home (%s); it must carry no rel attribute" % home,
+                            )
+                            self.assertEqual(
+                                "../", attrs.get("href"), "it points at the course home"
+                            )
+                        else:
+                            self.assertEqual(
+                                direction,
+                                attrs.get("rel"),
+                                'a pager anchor inside the sequence declares rel="%s"'
+                                % direction,
+                            )
+
+    def test_no_page_ships_a_retired_pager_variant(self):
+        """The three families that shipped separately must not come back."""
+        for page, doc in self.pages():
+            for markup in RETIRED_PAGER_MARKUP:
+                with self.subTest(page=page, retired=markup):
+                    self.assertNotIn(
+                        markup,
+                        doc.text,
+                        "retired pager markup %r; the pinned pager is %s with "
+                        "lesson-link prev / lesson-link next anchors"
+                        % (markup, LESSON_NAV_MARKUP),
+                    )
+
+    # -- the theme toggle ---------------------------------------------------
+
+    def test_every_page_ships_the_pinned_theme_toggle(self):
+        for page, doc in self.pages():
+            with self.subTest(page=page):
+                self.assertEqual(
+                    1,
+                    doc.text.count(THEME_TOGGLE_MARKUP),
+                    "expected exactly one theme toggle, verbatim:\n  %s"
+                    % THEME_TOGGLE_MARKUP,
+                )
+
+    def test_pinned_convention_scanners_are_not_inert(self):
+        """Each scanner above must actually detect the variant it forbids.
+
+        A guard that cannot fail is worse than no guard: it reads as coverage.
+        Every helper is handed the defect it exists to catch, and one benign
+        near-miss, so a regex that quietly stops matching is caught here.
+        """
+        drifted = (
+            "<style>[data-theme=\"light\"] { --bg: #eef4f8; }"
+            "@media (prefers-color-scheme: light) {"
+            " :root:not([data-theme=\"dark\"]) { --bg: #edf4f8; } }</style>"
+        )
+        paths = light_paths(drifted)
+        self.assertEqual([{"--bg": "#eef4f8"}], paths["toggle"])
+        self.assertEqual([{"--bg": "#edf4f8"}], paths["media"])
+
+        self.assertEqual(
+            ['[data-theme="light"] .rule-output'],
+            light_component_overrides(
+                '<style>[data-theme="light"] .rule-output { color: #111; }</style>'
+            ),
+            "a component scoped to the toggle path alone must be reported",
+        )
+        self.assertEqual(
+            [],
+            light_component_overrides(
+                "<style>/* never write [data-theme=\"light\"] .foo {…} */"
+                '[data-theme="light"] { --bg: #edf4f8; }</style>'
+            ),
+            "documenting the anti-pattern in a comment is not committing it",
+        )
+
+        anchors = pager_anchors(
+            '<nav class="lesson-nav" aria-label="Lesson navigation">'
+            '<a class="lesson-link prev" href="../a/" rel="prev">'
+            "<span>Previous lesson</span><strong>01 &middot; A</strong></a>"
+            '<a class="lesson-link next" href="../">'
+            "<span>Next</span><strong>Course home</strong></a></nav>"
+        )
+        self.assertEqual(
+            ["lesson-link prev", "lesson-link next"],
+            [attrs["class"] for attrs, _body in anchors],
+        )
+        self.assertNotIn("rel", anchors[1][0], "the terminal link carries no rel")
+        for _attrs, body in anchors:
+            self.assertRegex(body, PAGER_BODY_RE)
+
+        themed = 'x.setAttribute("aria-label", light ? "Switch to the dark theme" : "y");'
+        match = SCRIPTED_LABEL_RE.search(themed)
+        self.assertIsNotNone(match, "a scripted aria-label must be found")
+        self.assertRegex(match.group(2), THEMEISH_KEY_RE)
+        other = 'chart.setAttribute("aria-label", "Payoff at expiration");'
+        match = SCRIPTED_LABEL_RE.search(other)
+        self.assertIsNotNone(match)
+        self.assertNotRegex(
+            match.group(2),
+            THEMEISH_KEY_RE,
+            "labelling a lesson widget from script is ordinary and must not fail",
+        )
+
+    def test_no_page_rewrites_the_toggle_label_from_script(self):
+        """A static label is accurate in both states; a scripted one is a fork.
+
+        "Switch to the dark theme" and "Toggle light and dark theme" are two
+        different contracts with a screen reader, and pages that rewrote the
+        label chose differently -- some named the next state, some the current
+        one. The pinned label is direction-neutral, so nothing has to be
+        rewritten and nothing can disagree.
+        """
+        for page, doc in self.pages():
+            scripted = [
+                match.group(0).strip()
+                for match in SCRIPTED_LABEL_RE.finditer(doc.text)
+                if THEMEISH_KEY_RE.search(match.group(2) or "")
+            ]
+            with self.subTest(page=page):
+                self.assertEqual(
+                    [],
+                    scripted,
+                    "the theme control's accessible name is written from script. "
+                    "The pinned toggle carries a static, direction-neutral "
+                    "aria-label plus title and needs no runtime rewrite.",
                 )
 
 

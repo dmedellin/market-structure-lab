@@ -35,7 +35,7 @@
   <style>
     /* ---------------------------------------------------------------------
        DESIGN TOKENS — copied verbatim from site/index.html and
-       site/market-structure-lab/index.html so the library, both course homes,
+       site/market-structure-lab/index.html so the library, every course home,
        and every lesson read as one product. Do not fork this palette; change
        all of them.
 
@@ -92,15 +92,15 @@
     @media (prefers-color-scheme: light) {
       :root:not([data-theme="dark"]) {
         color-scheme: light;
-        --bg: #eef4f8;
-        --bg-2: #f8fbfd;
-        --panel: rgba(255, 255, 255, 0.9);
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
         --panel-solid: #ffffff;
-        --panel-2: #f4f8fb;
-        --text: #112433;
-        --muted: #5c7182;
-        --line: rgba(26, 63, 88, 0.12);
-        --line-strong: rgba(26, 63, 88, 0.22);
+        --panel-2: #f3f8fb;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
         --cyan: #0e7382;
         --cyan-2: #0b6d79;
         --green: #10784f;
@@ -116,15 +116,15 @@
        the media block above — the two light paths must never disagree. */
     [data-theme="light"] {
       color-scheme: light;
-      --bg: #eef4f8;
-      --bg-2: #f8fbfd;
-      --panel: rgba(255, 255, 255, 0.9);
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
       --panel-solid: #ffffff;
-      --panel-2: #f4f8fb;
-      --text: #112433;
-      --muted: #5c7182;
-      --line: rgba(26, 63, 88, 0.12);
-      --line-strong: rgba(26, 63, 88, 0.22);
+      --panel-2: #f3f8fb;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
       --cyan: #0e7382;
       --cyan-2: #0b6d79;
       --green: #10784f;
@@ -449,9 +449,12 @@
 
     /* ---------- Learning path ----------
        Three positions, always in reading order: the course before this one, this
-       one, and what follows. The third card is NOT a link, because there is no
-       course 3 — an empty slot stated plainly is honest; a greyed "coming soon"
-       button that goes nowhere is not. */
+       one, and the one after it. The third card used to be an inert slot stating
+       plainly that the path ended here — honest while that was true, a dead end
+       the moment it stopped being true. Course 3 (Options Trading) is published,
+       so all three cards are links and the markup is identical apart from
+       .current. Depth: this file is a COURSE home, so a sibling course is one
+       level up ("../options-trading/"), not a child of this directory. */
     .path-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1081,9 +1084,9 @@
           <div>
             <p class="kicker">Learning path</p>
             <h2 id="path-title">Where this course sits</h2>
-            <p>The library is a path, not a shelf. This is the second course on it, and it assumes the first one.</p>
+            <p>The library is a path, not a shelf. This is the second of the three courses on it: it assumes the first, and the third picks up where it stops.</p>
           </div>
-          <p class="count-chip">Course 2 of 2</p>
+          <p class="count-chip">Course 2 of 3</p>
         </div>
 
         <div class="path-grid">
@@ -1112,12 +1115,12 @@
           <article class="path-card">
             <p class="path-tag">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                <path d="M12 4v9" /><path d="M8.5 9.5L12 13l3.5-3.5" /><circle cx="12" cy="18" r="2.2" />
+                <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
               </svg>
-              After lesson 15
+              Course 3 · Next
             </p>
-            <h3>The path continues here</h3>
-            <p>There is no course 3. This is the end of the published path, and lesson 15 is written as a loop rather than a cliff: the single measurable improvement rule it makes you write goes straight back into the thesis you build in lesson 01, on the next trade. Work the loop instead of waiting for more material.</p>
+            <h3><a href="../options-trading/">Options Trading</a></h3>
+            <p>Sixteen lessons that take the same planned, sized, reviewed trade into options: contracts and moneyness, premium, the option chain, time decay and implied volatility, the Greeks, then long calls and puts, covered calls, cash-secured puts, and vertical spreads, ending in a scored options trade plan. Options involve risk and are not suitable for every investor; the course is educational and gives no personalized advice or trading signals.</p>
           </article>
         </div>
       </section>

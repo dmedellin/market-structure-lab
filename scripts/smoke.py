@@ -20,7 +20,13 @@ one-to-one onto a contract check:
     course2-lesson-<slug>
                         one check per lesson of course 2, Trade Setup and
                         Execution, on the same terms
+    course3-home        /options-trading/ is 200 and is that document
+    course3-lesson-<slug>
+                        one check per lesson of course 3, Options Trading, on
+                        the same terms
     journal-schema      /trade-setup-execution/trade-journal-schema.json is 200,
+                        is served as JSON, and parses
+    trade-plan-schema   /options-trading/options-trade-plan-schema.json is 200,
                         is served as JSON, and parses
     self-containment    served HTML references no origin but its own, on EVERY
                         published page
@@ -28,10 +34,11 @@ one-to-one onto a contract check:
     unknown-path-404    an unknown path is a real 404, not a soft 200 or a redirect
 
 The published URL space is two levels: the learning path at /, a home per course
-(/market-structure-lab/ and /trade-setup-execution/), and each course's lessons
-beneath its own home -- 25 HTML pages, plus one published JSON asset. Checking
-one page and calling the site smoke-tested is how twenty-four broken pages ship,
-so every published URL gets its own check id and its own line in the report.
+(/market-structure-lab/, /trade-setup-execution/ and /options-trading/), and each
+course's lessons beneath its own home -- 42 HTML pages, plus two published JSON
+assets. Checking one page and calling the site smoke-tested is how forty-one
+broken pages ship, so every published URL gets its own check id and its own line
+in the report.
 
 Usage:
     python3 scripts/smoke.py https://learn.geterdone.io
@@ -75,6 +82,9 @@ USER_AGENT = "market-structure-lab-smoke/1"
 #     /trade-setup-execution/                    course 2 home
 #     /trade-setup-execution/<lesson>/           course 2's fifteen lessons, in order
 #     /trade-setup-execution/trade-journal-schema.json   published JSON asset
+#     /options-trading/                          course 3 home
+#     /options-trading/<lesson>/                 course 3's sixteen lessons, in order
+#     /options-trading/options-trade-plan-schema.json    published JSON asset
 #
 # The seven FLAT lesson URLs this site used to serve are retired with no redirect
 # stub behind them. They are not probed here and must not be re-added: a path in
@@ -89,7 +99,8 @@ USER_AGENT = "market-structure-lab-smoke/1"
 # Course 1's lab 01 is NOT listed in COURSE_1_LESSONS: it is addressed through
 # --lesson-path/--lesson-marker under the contract id "lesson-page", and course
 # 1's home through --course-path/--course-marker, so those flags keep working.
-# Course 2 arrived after those flags existed and is addressed only by the map.
+# Courses 2 and 3 arrived after those flags existed and are addressed only by the
+# map.
 DISCLAIMER_MARKER = "Educational use only"
 CANONICAL_ORIGIN = "https://learn.geterdone.io"
 
@@ -97,6 +108,8 @@ COURSE_PATH = "/market-structure-lab/"
 LESSON_01_PATH = COURSE_PATH + "market-structure/"
 COURSE_2_PATH = "/trade-setup-execution/"
 JOURNAL_SCHEMA_PATH = COURSE_2_PATH + "trade-journal-schema.json"
+COURSE_3_PATH = "/options-trading/"
+TRADE_PLAN_SCHEMA_PATH = COURSE_3_PATH + "options-trade-plan-schema.json"
 
 
 def canonical_marker(path):
@@ -125,6 +138,7 @@ def page_markers(path, *extra):
 
 COURSE_1_TITLE_MARKER = "Market Structure Lab"
 COURSE_2_TITLE_MARKER = "Trade Setup and Execution"
+COURSE_3_TITLE_MARKER = "Options Trading"
 
 # Course 1, labs 02-07. Lab titles avoid "&" on purpose: a title may be served
 # escaped or raw, and the marker must match the bytes either way.
@@ -195,6 +209,36 @@ COURSE_2_LESSONS = tuple(
     for slug in COURSE_2_LESSON_SLUGS
 )
 
+# Course 3, lessons 01-16, in course order, on the same terms as course 2: the
+# ids name the course because a slug is unique only within one.
+COURSE_3_LESSON_SLUGS = (
+    "options-contract-fundamentals",
+    "calls-and-puts",
+    "moneyness",
+    "option-premium",
+    "option-chain-and-liquidity",
+    "expiration-and-time-decay",
+    "implied-volatility",
+    "delta-and-gamma",
+    "theta-and-vega",
+    "long-calls-and-long-puts",
+    "covered-calls",
+    "cash-secured-puts",
+    "vertical-debit-spreads",
+    "vertical-credit-spreads",
+    "exercise-assignment-and-expiration",
+    "options-trade-planning",
+)
+
+COURSE_3_LESSONS = tuple(
+    (
+        "course3-lesson-%s" % slug,
+        COURSE_3_PATH + slug + "/",
+        page_markers(COURSE_3_PATH + slug + "/", COURSE_3_TITLE_MARKER),
+    )
+    for slug in COURSE_3_LESSON_SLUGS
+)
+
 # (check id, URL path, markers) for every course home addressed by the map.
 # Course 1's home is not here: it comes from --course-path/--course-marker.
 COURSE_HOMES = (
@@ -203,19 +247,30 @@ COURSE_HOMES = (
         COURSE_2_PATH,
         page_markers(COURSE_2_PATH, COURSE_2_TITLE_MARKER),
     ),
+    (
+        "course3-home",
+        COURSE_3_PATH,
+        page_markers(COURSE_3_PATH, COURSE_3_TITLE_MARKER),
+    ),
 )
 
-# Published, and not a document. The lessons that export and import a trade
-# journal point the reader at this file, so it is a live URL like any other --
-# but an HTML-shaped assertion against a JSON body proves nothing, so it gets a
-# check that fits what it is: served as JSON, parses, and declares the schema id
-# the two lessons exchange. "trade-journal-v1" also discriminates: no HTML page
-# served by mistake at this path would contain it inside valid JSON.
+# Published, and not documents. The lessons that export and import these shapes
+# point the reader at the files, so each is a live URL like any other -- but an
+# HTML-shaped assertion against a JSON body proves nothing, so each gets a check
+# that fits what it is: served as JSON, parses, and declares the schema id its
+# lessons exchange. Each id also discriminates: no HTML page served by mistake at
+# one of these paths would contain that string inside valid JSON. A second asset
+# is a second ENTRY here, never a reason to loosen a page check so both fit one.
 PUBLISHED_ASSETS = (
     (
         "journal-schema",
         JOURNAL_SCHEMA_PATH,
         ('"const": "trade-journal-v1"',),
+    ),
+    (
+        "trade-plan-schema",
+        TRADE_PLAN_SCHEMA_PATH,
+        ('"const": "options-trade-plan-v1"',),
     ),
 )
 
@@ -241,11 +296,12 @@ def lesson_targets(args):
     """(check id, path, markers) for every lesson of every course, in course order.
 
     Course 1's lab 01 comes from --lesson-path/--lesson-marker so the flags still
-    steer it; every other lesson of both courses comes from the published URL map.
+    steer it; every other lesson of all three courses comes from the published
+    URL map.
     """
     targets = [("lesson-page", args.lesson_path, tuple(args.lesson_marker))]
     seen = {args.lesson_path}
-    for check_id, path, markers in COURSE_LESSONS + COURSE_2_LESSONS:
+    for check_id, path, markers in COURSE_LESSONS + COURSE_2_LESSONS + COURSE_3_LESSONS:
         if path in seen:
             # --lesson-path was pointed at a lesson that is already in the map;
             # check it once rather than reporting two lines for one URL.
@@ -765,9 +821,9 @@ class Smoke:
 
         A JSON file that answers 200 with an HTML error page, or with truncated
         bytes, is still "up" by every page-shaped assertion; parsing it is the
-        only check that can tell. Lesson 14 exports this schema's shape and
-        lesson 15 imports it, so a broken asset breaks a documented handoff
-        between two lessons.
+        only check that can tell. Course 2's lesson 14 exports the journal shape
+        and its lesson 15 imports it; course 3's lesson 16 exports the trade plan
+        shape. A broken asset breaks a documented handoff between lessons.
         """
         for check_id, path, markers in asset_targets(self.args):
             check = self.new_check(check_id, "published asset is served and parses", path)
@@ -891,13 +947,13 @@ def parse_args(argv):
         "--course-path",
         default=COURSE_PATH,
         help="course 1's home URL, checked as contract id course-home (default: %s); "
-        "course 2's home is fixed by the published URL map" % COURSE_PATH,
+        "the other course homes are fixed by the published URL map" % COURSE_PATH,
     )
     parser.add_argument(
         "--lesson-path",
         default=LESSON_01_PATH,
         help="course 1 lab 01's URL, checked as contract id lesson-page (default: %s); "
-        "every other lesson of both courses is fixed by the published URL map"
+        "every other lesson of all three courses is fixed by the published URL map"
         % LESSON_01_PATH,
     )
     parser.add_argument("--unknown-path", default=None, help="override the 404 probe path (default: random)")
@@ -938,9 +994,9 @@ def parse_args(argv):
     parser.add_argument("--json", action="store_true", help="emit a machine-readable report")
     args = parser.parse_args(argv)
 
-    # The learning path lists COURSES, so it must name both and link to both
-    # homes. The two-level links are deliberate, not the retired flat lesson
-    # paths: "market-structure/" would be satisfied by a dead URL.
+    # The learning path lists COURSES, so it must name all three and link to all
+    # three homes. The two-level links are deliberate, not the retired flat
+    # lesson paths: "market-structure/" would be satisfied by a dead URL.
     if args.index_marker is None:
         args.index_marker = [
             canonical_marker("/"),
@@ -948,6 +1004,8 @@ def parse_args(argv):
             "market-structure-lab/",
             COURSE_2_TITLE_MARKER,
             "trade-setup-execution/",
+            COURSE_3_TITLE_MARKER,
+            "options-trading/",
         ]
     # Course 1's home and its lab 01 share the title "Market Structure Lab", and
     # the course path is a prefix of the lab path, so neither a title nor a bare

@@ -1,8 +1,8 @@
 # Market Structure Lab
 
 `market-structure-lab` is the repository, the application slug and the image
-title. What it publishes at `https://learn.geterdone.io/` is a **library of two
-interactive courses**, 22 lessons in all, presented as one ordered learning path.
+title. What it publishes at `https://learn.geterdone.io/` is a **library of three
+interactive courses**, 38 lessons in all, presented as one ordered learning path.
 Every page is a single HTML file with its CSS, JavaScript and graphics inline —
 it loads no fonts, no frameworks, no analytics, and no third-party requests of
 any kind.
@@ -11,8 +11,10 @@ any kind.
 
 The site index is not a menu, it is a **sequence**. Course 1 teaches you to read
 what price is doing; course 2 turns that read into a plan you can size, place,
-manage and review. A reader is expected to walk them in order, which is why the
-two courses share one theme setting, one visual system, and one set of guards.
+manage and review; course 3 takes that plan into options, where the instrument
+itself carries risk the stock chart does not show. A reader is expected to walk
+them in order, which is why the three courses share one theme setting, one visual
+system, one navigation model, and one set of guards.
 
 ### Course 1 — Market Structure Lab (7 lessons)
 
@@ -59,14 +61,58 @@ exports `trade-journal-v1` JSON, lesson 15 imports that export directly, and the
 schema documents the exchange shape. It is published like any other URL and is
 checked by every guard listed below — as JSON, not as a page.
 
+### Course 3 — Options Trading (16 lessons)
+
+The contract itself: what an option is, what it costs and why, how its value
+moves with price, time and volatility, the core single-leg and two-leg
+strategies, and what actually happens at expiration.
+
+| # | Lesson | What it does |
+| --- | --- | --- |
+| 01 | Options Contract Fundamentals | Decode option contract terms, holder rights, writer obligations, multipliers, premium cash flow, and expiration payoff. |
+| 02 | Calls and Puts | Compare long and short calls and puts using rights, obligations, payoff charts, breakeven, and maximum risk. |
+| 03 | Moneyness | Classify calls and puts as ITM, ATM, or OTM and calculate intrinsic value from stock and strike. |
+| 04 | Option Premium | Decompose theoretical option premium into intrinsic and extrinsic value and change core pricing inputs. |
+| 05 | Option Chain and Liquidity | Read option-chain fields, quantify bid-ask friction, inspect activity, and evaluate a limit-order selection. |
+| 06 | Expiration and Time Decay | Visualize long-option value by days remaining and inspect theoretical theta, intrinsic value, and extrinsic value. |
+| 07 | Implied Volatility | Model option-value changes from IV expansion and contraction separately from underlying movement. |
+| 08 | Delta and Gamma | Compare delta-only and delta-plus-gamma estimates with full theoretical repricing and visualize delta across stock prices. |
+| 09 | Theta and Vega | Apply time and IV shocks, compare theta-plus-vega estimates with full repricing, and visualize volatility-dependent decay. |
+| 10 | Long Calls and Long Puts | Plan long calls and puts with expiration breakeven, premium risk, modeled early-exit value, and payoff charts. |
+| 11 | Covered Calls | Build covered calls, compare them with stock-only payoff, and calculate breakeven, maximum profit, and downside risk. |
+| 12 | Cash-Secured Puts | Calculate cash reservation, effective purchase price, payoff, maximum premium profit, and downside risk for cash-secured puts. |
+| 13 | Vertical Debit Spreads | Construct bull call and bear put debit spreads and calculate debit, breakeven, maximum loss, and maximum profit. |
+| 14 | Vertical Credit Spreads | Construct bull put and bear call credit spreads and calculate credit, breakeven, maximum profit, and maximum loss. |
+| 15 | Exercise, Assignment, and Expiration | Simulate expiration outcomes, exercise and assignment obligations, resulting shares, and broker-handling risks. |
+| 16 | Options Trade Planning | Score a complete options plan across thesis, strategy fit, timing, spread, risk budget, event exposure, and exit rules. |
+
+Course 3 ships one supporting file, `options-trade-plan-schema.json`. Lesson 16
+scores a complete options plan and exports it as `options-trade-plan-v1` JSON;
+the schema documents that shape. Like course 2's journal schema it is published
+as a real URL and checked as JSON, never as a page.
+
+Course 3 also carries outbound reference links to four authoritative,
+non-commercial sources — the Options Industry Council (`optionseducation.org`),
+FINRA, the SEC's `investor.gov`, and Cboe. They are reviewed origins listed in
+`ci.yml`; a link navigates and loads nothing, so the pages stay self-contained.
+
 ### Data and risk notice
 
-All charts, trades, prices, fills, and performance results across both courses
-are synthetic educational examples. The pages contain no live data and no trading
-signals. Real outcomes can differ because of spread, slippage, commissions, gaps,
-taxes, liquidity, assignment, exercise, implied volatility, time decay, and other
-factors. Every page below the learning path carries an `Educational use only`
-disclaimer and the invariant suite fails the build if one loses it.
+All charts, trades, prices, fills, and performance results across all three
+courses are synthetic educational examples. The pages contain no live data and no
+trading signals. Real outcomes can differ because of spread, slippage,
+commissions, gaps, taxes, liquidity, assignment, exercise, implied volatility,
+time decay, and other factors. Every page below the learning path carries an
+`Educational use only` disclaimer and the invariant suite fails the build if one
+loses it.
+
+**Options carry their own risk notice, and course 3 states it on the page.**
+Options involve risk and are not suitable for every investor. Course 3 is
+educational and provides no personalized investment advice and no live trading
+signals. Its demonstrations use synthetic prices and a simplified European
+Black-Scholes model; they do not model every listed-product feature, dividend,
+early-exercise decision, fee, tax, margin rule, or market microstructure effect.
+Contract specifications and broker procedures must be verified independently.
 
 ## URL layout
 
@@ -74,19 +120,24 @@ The site is published under one subdomain, `learn.geterdone.io`, and the URL
 space is **two levels deep: courses, then lessons**.
 
 ```text
-/                                       the learning path (both courses)
+/                                       the learning path (all three courses)
 ├── /market-structure-lab/              course 1 home — lists its seven lessons
 │   ├── /market-structure-lab/market-structure/                 lesson 1.01
 │   ├── … five more …
 │   └── /market-structure-lab/options-contract-selection/       lesson 1.07
-└── /trade-setup-execution/             course 2 home — lists its fifteen lessons
-    ├── /trade-setup-execution/trade-thesis/                    lesson 2.01
-    ├── … thirteen more …
-    ├── /trade-setup-execution/performance-review/              lesson 2.15
-    └── /trade-setup-execution/trade-journal-schema.json        published asset
+├── /trade-setup-execution/             course 2 home — lists its fifteen lessons
+│   ├── /trade-setup-execution/trade-thesis/                    lesson 2.01
+│   ├── … thirteen more …
+│   ├── /trade-setup-execution/performance-review/              lesson 2.15
+│   └── /trade-setup-execution/trade-journal-schema.json        published asset
+└── /options-trading/                   course 3 home — lists its sixteen lessons
+    ├── /options-trading/options-contract-fundamentals/         lesson 3.01
+    ├── … fourteen more …
+    ├── /options-trading/options-trade-planning/                lesson 3.16
+    └── /options-trading/options-trade-plan-schema.json         published asset
 ```
 
-**25 pages and one asset. Nothing else is served:**
+**42 pages and two assets. Nothing else is served:**
 
 | # | URL | Page | Source |
 | --- | --- | --- | --- |
@@ -116,6 +167,24 @@ space is **two levels deep: courses, then lessons**.
 | 2.14 | `https://learn.geterdone.io/trade-setup-execution/trading-journal/` | Trading Journal | `site/trade-setup-execution/trading-journal/index.html` |
 | 2.15 | `https://learn.geterdone.io/trade-setup-execution/performance-review/` | Performance Review | `site/trade-setup-execution/performance-review/index.html` |
 | asset | `https://learn.geterdone.io/trade-setup-execution/trade-journal-schema.json` | Trade journal exchange schema (JSON, not a page) | `site/trade-setup-execution/trade-journal-schema.json` |
+| — | `https://learn.geterdone.io/options-trading/` | **Options Trading** — course 3 home | `site/options-trading/index.html` |
+| 3.01 | `https://learn.geterdone.io/options-trading/options-contract-fundamentals/` | Options Contract Fundamentals | `site/options-trading/options-contract-fundamentals/index.html` |
+| 3.02 | `https://learn.geterdone.io/options-trading/calls-and-puts/` | Calls and Puts | `site/options-trading/calls-and-puts/index.html` |
+| 3.03 | `https://learn.geterdone.io/options-trading/moneyness/` | Moneyness | `site/options-trading/moneyness/index.html` |
+| 3.04 | `https://learn.geterdone.io/options-trading/option-premium/` | Option Premium | `site/options-trading/option-premium/index.html` |
+| 3.05 | `https://learn.geterdone.io/options-trading/option-chain-and-liquidity/` | Option Chain and Liquidity | `site/options-trading/option-chain-and-liquidity/index.html` |
+| 3.06 | `https://learn.geterdone.io/options-trading/expiration-and-time-decay/` | Expiration and Time Decay | `site/options-trading/expiration-and-time-decay/index.html` |
+| 3.07 | `https://learn.geterdone.io/options-trading/implied-volatility/` | Implied Volatility | `site/options-trading/implied-volatility/index.html` |
+| 3.08 | `https://learn.geterdone.io/options-trading/delta-and-gamma/` | Delta and Gamma | `site/options-trading/delta-and-gamma/index.html` |
+| 3.09 | `https://learn.geterdone.io/options-trading/theta-and-vega/` | Theta and Vega | `site/options-trading/theta-and-vega/index.html` |
+| 3.10 | `https://learn.geterdone.io/options-trading/long-calls-and-long-puts/` | Long Calls and Long Puts | `site/options-trading/long-calls-and-long-puts/index.html` |
+| 3.11 | `https://learn.geterdone.io/options-trading/covered-calls/` | Covered Calls | `site/options-trading/covered-calls/index.html` |
+| 3.12 | `https://learn.geterdone.io/options-trading/cash-secured-puts/` | Cash-Secured Puts | `site/options-trading/cash-secured-puts/index.html` |
+| 3.13 | `https://learn.geterdone.io/options-trading/vertical-debit-spreads/` | Vertical Debit Spreads | `site/options-trading/vertical-debit-spreads/index.html` |
+| 3.14 | `https://learn.geterdone.io/options-trading/vertical-credit-spreads/` | Vertical Credit Spreads | `site/options-trading/vertical-credit-spreads/index.html` |
+| 3.15 | `https://learn.geterdone.io/options-trading/exercise-assignment-and-expiration/` | Exercise, Assignment, and Expiration | `site/options-trading/exercise-assignment-and-expiration/index.html` |
+| 3.16 | `https://learn.geterdone.io/options-trading/options-trade-planning/` | Options Trade Planning | `site/options-trading/options-trade-planning/index.html` |
+| asset | `https://learn.geterdone.io/options-trading/options-trade-plan-schema.json` | Options trade plan schema (JSON, not a page) | `site/options-trading/options-trade-plan-schema.json` |
 
 Course 1 and its lesson 01 share the name *Market Structure Lab*: the course is
 the whole seven-lesson sequence, lesson 01 is its first lesson on structure
@@ -141,29 +210,50 @@ a path that must exist.
 That map is declared in five places, and all five must agree:
 
 - `tests/test_site_invariants.py` → `REQUIRED_PAGES` (pages on disk) and
-  `NON_HTML_ASSETS` (the JSON asset, declared as an asset rather than by
+  `NON_HTML_ASSETS` (both JSON schemas, each declared as an asset rather than by
   loosening any page check);
 - `scripts/smoke.py` → `COURSE_PATH`, `COURSE_LESSONS`, `COURSE_2_PATH`,
-  `COURSE_2_LESSONS` and `PUBLISHED_ASSETS` (served responses);
+  `COURSE_2_LESSONS`, `COURSE_3_PATH`, `COURSE_3_LESSONS` and
+  `PUBLISHED_ASSETS` (served responses);
 - `release/contract.json` → `acceptance.checks`, one check id per URL
   (`learn-index`; `course-home` and `lesson-page`/`lesson-<slug>` for course 1;
-  `course2-home` and `course2-lesson-<slug>` for course 2 — course-scoped
-  because a slug is unique only within a course; `journal-schema` for the asset);
+  `course2-home` and `course2-lesson-<slug>` for course 2; `course3-home` and
+  `course3-lesson-<slug>` for course 3 — course-scoped because a slug is unique
+  only within a course; `journal-schema` and `trade-plan-schema` for the two
+  assets, each fetched and parsed as JSON);
 - `.github/workflows/ci.yml` → the "Published URL space is complete" step;
 - `Containerfile.release` and `.github/workflows/pages.yml` (publish-time guards).
 
 A page added to one of them and not the others is a page nothing checks.
 
-Two further site-wide invariants exist because two courses now share one origin:
+Further site-wide invariants exist because three courses now share one origin.
+Each of them is something a reader carries across a course boundary, so each is
+pinned once and asserted on all 42 pages (`TestPinnedConventions`):
 
 - **One theme key.** Every page persists the reader's light/dark choice under the
-  single `localStorage` key `learn-theme`. The per-course keys the two courses
-  shipped with (`marketStructureTheme` and `market-lab-theme`) silently reset a
-  reader's choice at the course boundary; standardizing cost one stored
-  preference, once, and the suite now fails any page that invents its own key.
-- **One complete pager per course.** `prev`/`next` links must walk each course in
-  the order declared in `COURSES`, so a reordered syllabus and a reordered pager
-  cannot disagree, and no lesson can become a dead end.
+  single `localStorage` key `learn-theme`. The per-course keys the three courses
+  shipped with (`marketStructureTheme`, `market-lab-theme` and
+  `options-course-theme`) silently reset a reader's choice at every course
+  boundary; standardizing cost one stored preference, once, and the suite now
+  fails any page that invents its own key.
+- **One complete pager per course, in one markup.** `prev`/`next` links must walk
+  each course in the order declared in `COURSES`, so a reordered syllabus and a
+  reordered pager cannot disagree and no lesson becomes a dead end — and the
+  pager is always `nav.lesson-nav` with `a.lesson-link.prev` / `a.lesson-link.next`
+  anchors. The first lesson omits the prev anchor entirely; the last lesson's
+  forward link points at the course home and carries **no** `rel`, because the
+  course home is not the next document in the sequence.
+- **One light palette.** The light theme has two paths — the explicit toggle
+  (`[data-theme="light"]`) and `@media (prefers-color-scheme: light)` for the
+  reader who never touches it — and both declare the same token values. Every
+  page that declares a light token declares the pinned value for it; component
+  rules read tokens, so a `[data-theme="light"] .foo` override (which reaches
+  the toggle path only) fails the suite.
+- **One theme toggle.** `<button class="icon-btn" id="themeToggle" type="button">`
+  with a static, direction-neutral `aria-label` plus `title`. A label rewritten
+  from JavaScript has to choose between naming the current theme and the next
+  one, and the courses chose differently; a static label is accurate in both
+  states and cannot diverge.
 
 The apex `geterdone.io` is a separate, live GitHub Pages site. It is not part of
 this project and nothing here touches it.
@@ -194,8 +284,9 @@ python3 scripts/validate_release_contract.py \
     release/contract.json release/contract.example.json
 ```
 
-`smoke.py` checks all 25 published pages plus the JSON asset — one report line
-per URL, each demanding that document's own canonical tag. Against the plain
+`smoke.py` checks all 42 published pages plus both JSON assets — one report line
+per URL, each page demanding that document's own canonical tag and each asset
+fetched, typed and parsed as JSON. Against the plain
 `python3 -m http.server` preview the `internal-health` and `security-headers`
 checks fail by design: `/healthz` and the header policy come from the
 in-container Caddy (`deploy/Caddyfile`), not from anything in `site/`.
@@ -225,7 +316,7 @@ AGENTS.md                 working agreement — read before changing anything
 **1. GitHub Pages — live.** `.github/workflows/pages.yml` uploads `site/` on every
 push to `main` and deploys it to `learn.geterdone.io` (`site/CNAME` holds the
 custom domain). Before uploading it re-checks self-containment, asserts that all
-25 pages exist, and parses the published JSON asset. This path does not touch platform-ops, the shared Caddy
+42 pages exist, and parses both published JSON assets. This path does not touch platform-ops, the shared Caddy
 edge, or any registry reservation, and it is **not** a shortcut around those
 gates — they govern the Hetzner platform, which is a different path.
 
@@ -260,8 +351,9 @@ The normative rules live in `dmedellin/platform-ops`
 ## STATUS
 
 **Deployed on GitHub Pages.** `https://learn.geterdone.io/` serves this `site/`
-tree — the learning path, both course homes, all 22 lessons and the trade journal
-schema — from the `pages.yml` workflow.
+tree — the learning path, all three course homes, all 38 lessons, the trade
+journal schema and the options trade plan schema — from the `pages.yml`
+workflow.
 
 **The Hetzner container path remains UNBUILT.** No image of this repository has
 ever been built, deployed, or accepted on that platform. As of 2026-08-15, all of

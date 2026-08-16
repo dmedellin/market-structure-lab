@@ -2,7 +2,7 @@
   "schema_version": 1,
   "notes": [
     "COMMITTED CONTRACT SOURCE, and the single source of truth for __LOOPBACK_PORT__ and __APP_SUBNET__. .github/workflows/release.yml reads this document, renders the deployment inputs from its network block, overwrites only the fields a release run can prove, validates the result against release/contract.schema.json, and emits it as release-artifacts/release-contract.json. Every field the workflow does not overwrite is reviewed policy and is authoritative exactly as written here.",
-    "acceptance.checks enumerates the COMPLETE published URL space, which is two levels deep: the learning path at /, a home per course (/market-structure-lab/ id course-home, /trade-setup-execution/ id course2-home), and each course's lessons beneath its own home - one check id per page, 25 pages in all (course 1 lab 01 keeps the id lesson-page; course 2's ids are course-scoped because a lesson slug is only unique within a course). The one published non-HTML asset, /trade-setup-execution/trade-journal-schema.json, has its own check (id journal-schema) that fetches and PARSES it rather than asserting page-shaped markers against JSON. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served. The seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app and the image (org.opencontainers.image.title), not the library, which now holds two courses.",
+    "acceptance.checks enumerates the COMPLETE published URL space, which is two levels deep: the learning path at /, a home per course (/market-structure-lab/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home), and each course's lessons beneath its own home - one check id per page, 42 pages in all (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 and 3 are course-scoped because a lesson slug is only unique within a course). The two published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema) and /options-trading/options-trade-plan-schema.json (id trade-plan-schema), each have their own check that fetches and PARSES the file rather than asserting page-shaped markers against JSON; a second asset is declared as a second check, never by loosening a page check until both fit it. Every page check demands that page's own full rel=canonical tag: course and lesson paths overlap by prefix and every course home links to all of its lessons, so a bare path substring is satisfied by several documents and proves nothing about which one was served. The seven FLAT /<lesson>/ URLs this site used to serve are retired with no redirect stub behind them; they are deliberately absent here and must not be re-added. tests/test_site_invariants.py REQUIRED_PAGES plus NON_HTML_ASSETS, and the URL tables in scripts/smoke.py, declare the same map against the files on disk and the served responses. Adding a page to one of the three and not the others ships a page nothing checks. application.title stays \"Market Structure Lab\": it names the app and the image (org.opencontainers.image.title), not the library, which now holds three courses.",
     "Fields only a release run can know carry all-zero sentinels: release_id, source.revision, image.digest, image.reference, build.timestamp, compose.template_sha256, compose.rendered_sha256 and invocation.workflow_run_id. An all-zero digest or revision can never be a real one, so this document can never be mistaken for a release.",
     "network.loopback_port, network.internal_port and network.subnet are UNALLOCATED. The release workflow refuses to render or build while they hold placeholders, and names the allocation gate in the failure. Allocation is a human decision plus a live host preflight (platform-ops docs/APP_ONBOARDING.md section 2 reservation PR, section 4 bootstrap preflight, and docs/EDGE_ROUTING_CONTRACT.md section 5) and must never be automated here.",
     "build.base_images[].digest is __BASE_IMAGE_DIGEST__ because Containerfile.release is the only place a base image is pinned; the workflow copies the digests it actually built from there, so the two can never drift.",
@@ -124,7 +124,7 @@
       },
       {
         "id": "learn-index",
-        "description": "The learning path is served at the site root and links to BOTH course homes: Market Structure Lab and Trade Setup and Execution. A catalog that lists one course is a library with a course missing.",
+        "description": "The learning path is served at the site root and links to ALL THREE course homes: Market Structure Lab, Trade Setup and Execution, and Options Trading. A catalog that lists two of three courses is a library with a course missing.",
         "scope": "public",
         "method": "GET",
         "path": "/",
@@ -137,7 +137,9 @@
             "Market Structure Lab",
             "market-structure-lab/",
             "Trade Setup and Execution",
-            "trade-setup-execution/"
+            "trade-setup-execution/",
+            "Options Trading",
+            "options-trading/"
           ],
           "headers": [
             {
@@ -805,6 +807,465 @@
         "blocking": true
       },
       {
+        "id": "course3-home",
+        "description": "Course 3 home, \"Options Trading\", is served at /options-trading/ and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-options-contract-fundamentals",
+        "description": "Course 3 lesson 01 \"Options Contract Fundamentals\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/options-contract-fundamentals/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/options-contract-fundamentals/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-calls-and-puts",
+        "description": "Course 3 lesson 02 \"Calls and Puts\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/calls-and-puts/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/calls-and-puts/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-moneyness",
+        "description": "Course 3 lesson 03 \"Moneyness\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/moneyness/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/moneyness/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-option-premium",
+        "description": "Course 3 lesson 04 \"Option Premium\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/option-premium/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/option-premium/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-option-chain-and-liquidity",
+        "description": "Course 3 lesson 05 \"Option Chain and Liquidity\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/option-chain-and-liquidity/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/option-chain-and-liquidity/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-expiration-and-time-decay",
+        "description": "Course 3 lesson 06 \"Expiration and Time Decay\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/expiration-and-time-decay/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/expiration-and-time-decay/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-implied-volatility",
+        "description": "Course 3 lesson 07 \"Implied Volatility\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/implied-volatility/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/implied-volatility/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-delta-and-gamma",
+        "description": "Course 3 lesson 08 \"Delta and Gamma\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/delta-and-gamma/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/delta-and-gamma/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-theta-and-vega",
+        "description": "Course 3 lesson 09 \"Theta and Vega\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/theta-and-vega/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/theta-and-vega/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-long-calls-and-long-puts",
+        "description": "Course 3 lesson 10 \"Long Calls and Long Puts\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/long-calls-and-long-puts/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/long-calls-and-long-puts/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-covered-calls",
+        "description": "Course 3 lesson 11 \"Covered Calls\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/covered-calls/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/covered-calls/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-cash-secured-puts",
+        "description": "Course 3 lesson 12 \"Cash-Secured Puts\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/cash-secured-puts/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/cash-secured-puts/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-vertical-debit-spreads",
+        "description": "Course 3 lesson 13 \"Vertical Debit Spreads\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/vertical-debit-spreads/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/vertical-debit-spreads/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-vertical-credit-spreads",
+        "description": "Course 3 lesson 14 \"Vertical Credit Spreads\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/vertical-credit-spreads/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/vertical-credit-spreads/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-exercise-assignment-and-expiration",
+        "description": "Course 3 lesson 15 \"Exercise, Assignment, and Expiration\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/exercise-assignment-and-expiration/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/exercise-assignment-and-expiration/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "course3-lesson-options-trade-planning",
+        "description": "Course 3 lesson 16 \"Options Trade Planning\" is served at its subpath and is provably that document: its own rel=canonical tag, the course title, and the educational-use disclaimer.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/options-trade-planning/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/options-trading/options-trade-planning/\"",
+            "Options Trading",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
         "id": "journal-schema",
         "description": "The trade journal exchange schema is served as JSON at /trade-setup-execution/trade-journal-schema.json, parses, and declares the trade-journal-v1 shape lesson 14 exports and lesson 15 imports. A 200 alone would not prove any of that.",
         "scope": "public",
@@ -816,6 +1277,31 @@
           "same_origin_redirects_only": true,
           "body_contains": [
             "\"const\": \"trade-journal-v1\""
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "json"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "trade-plan-schema",
+        "description": "The options trade plan schema is served as JSON at /options-trading/options-trade-plan-schema.json, parses, and declares the options-trade-plan-v1 shape course 3 lesson 16 exports. A 200 alone proves none of that; a page-shaped marker would prove less.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/options-trading/options-trade-plan-schema.json",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "\"const\": \"options-trade-plan-v1\""
           ],
           "headers": [
             {

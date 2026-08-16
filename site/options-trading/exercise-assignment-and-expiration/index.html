@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Simulate expiration outcomes, exercise and assignment obligations, resulting shares, and broker-handling risks." />
+  <title>Exercise, Assignment, and Expiration · Options Trading</title>
+  <link rel="canonical" href="https://learn.geterdone.io/options-trading/exercise-assignment-and-expiration/" />
+  <meta name="author" content="dmedellin" />
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="learn.geterdone.io" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Exercise, Assignment, and Expiration · Options Trading" />
+  <meta property="og:description" content="Simulate expiration outcomes, exercise and assignment obligations, resulting shares, and broker-handling risks." />
+  <meta property="og:url" content="https://learn.geterdone.io/options-trading/exercise-assignment-and-expiration/" />
+  <!-- No og:image / twitter:image: a share card needs an absolute hosted image URL, and this page is deliberately self-contained. -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Exercise, Assignment, and Expiration · Options Trading" />
+  <meta name="twitter:description" content="Simulate expiration outcomes, exercise and assignment obligations, resulting shares, and broker-handling risks." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/options-trading/exercise-assignment-and-expiration/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071019'/%3E%3Cpath d='M10 46 L24 29 L34 39 L46 17' fill='none' stroke='%2336d6e7' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <style>:root {
+  color-scheme: dark;
+  --bg: #071019;
+  --bg-2: #0b1622;
+  --panel: rgba(16, 31, 46, 0.91);
+  --panel-solid: #101f2e;
+  --panel-2: #142638;
+  --panel-3: #182d41;
+  --text: #edf7ff;
+  --muted: #95aabd;
+  --line: rgba(170, 202, 226, 0.16);
+  --line-strong: rgba(170, 202, 226, 0.3);
+  --cyan: #37d7e7;
+  --cyan-2: #91f4ff;
+  --green: #41e39b;
+  --red: #ff6e7d;
+  --amber: #ffc857;
+  --purple: #b69cff;
+  --blue: #76a8ff;
+  --on-accent: #041116;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  --radius: 20px;
+  --radius-sm: 12px;
+}
+
+/* System preference, only when the visitor has NOT made an explicit choice.
+   The :not([data-theme="dark"]) guard is what lets an explicit "dark" pick
+   survive on a light-mode OS. Value-identical to the toggle block below: the
+   two light paths must never disagree, so no component ever carries a
+   [data-theme="light"] .foo rule -- components read tokens instead.
+
+   The ACCENTS are re-declared for light, not just the neutrals, because they
+   are read AS TEXT (.eyebrow, .concept-card .icon, chart labels, .pill.good/
+   warn/bad, the gradient headline) and the dark accents are unreadable on a
+   light surface. Contrast against --bg #edf4f8:
+     --cyan 4.98:1  --cyan-2 5.43:1  --green 4.94:1  --red 5.14:1
+     --amber 5.33:1 --purple 5.44:1  --blue 5.25:1   --muted 4.91:1
+   all >= 4.5:1. --on-accent is the ink that sits ON a filled accent
+   (.brand-mark, .btn.primary, .tab.active, .seg-btn.active, .lesson-row .num,
+   .callout .mark, .check-dot, .rule-check .state, .skip-link); it flips because
+   those accent fills go dark in light mode. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #edf4f8;
+    --bg-2: #f9fbfd;
+    --panel: rgba(255, 255, 255, 0.94);
+    --panel-solid: #ffffff;
+    --panel-2: #f3f8fb;
+    --panel-3: #eaf2f7;
+    --text: #102433;
+    --muted: #586c7c;
+    --line: rgba(24, 62, 88, 0.13);
+    --line-strong: rgba(24, 62, 88, 0.24);
+    --cyan: #0e7382;
+    --cyan-2: #0b6d79;
+    --green: #10784f;
+    --red: #c22a34;
+    --amber: #8a5a06;
+    --purple: #6b46d6;
+    --blue: #1d5fd0;
+    --on-accent: #ffffff;
+    --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+  }
+}
+
+/* Explicit choice (localStorage key: learn-theme). */
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #edf4f8;
+  --bg-2: #f9fbfd;
+  --panel: rgba(255, 255, 255, 0.94);
+  --panel-solid: #ffffff;
+  --panel-2: #f3f8fb;
+  --panel-3: #eaf2f7;
+  --text: #102433;
+  --muted: #586c7c;
+  --line: rgba(24, 62, 88, 0.13);
+  --line-strong: rgba(24, 62, 88, 0.24);
+  --cyan: #0e7382;
+  --cyan-2: #0b6d79;
+  --green: #10784f;
+  --red: #c22a34;
+  --amber: #8a5a06;
+  --purple: #6b46d6;
+  --blue: #1d5fd0;
+  --on-accent: #ffffff;
+  --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+    radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+button, input, select { font: inherit; }
+button { color: inherit; }
+a { color: inherit; }
+svg { display: block; }
+
+.shell {
+  width: min(1220px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 22px 0 64px;
+}
+
+.topbar {
+  position: sticky;
+  top: 12px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: var(--on-accent);
+  font-weight: 950;
+  background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+  box-shadow: 0 8px 26px rgba(55, 215, 231, 0.25);
+}
+
+.brand-copy strong {
+  display: block;
+  font-size: 0.96rem;
+  letter-spacing: 0.01em;
+}
+
+.brand-copy span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.icon-btn {
+  width: 39px;
+  height: 39px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--panel-2);
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.icon-btn:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.16fr 0.84fr;
+  gap: 28px;
+  align-items: center;
+  padding: 74px 8px 42px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  color: var(--cyan-2);
+  border: 1px solid rgba(55, 215, 231, 0.28);
+  border-radius: 999px;
+  background: rgba(55, 215, 231, 0.08);
+  font-size: 0.77rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 0 5px rgba(55, 215, 231, 0.12);
+}
+
+h1 {
+  max-width: 820px;
+  margin: 18px 0 15px;
+  font-size: clamp(2.55rem, 6vw, 5.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.gradient-text {
+  background: linear-gradient(110deg, var(--cyan-2), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.8vw, 1.16rem);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 15px;
+  background: var(--panel-2);
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 780;
+  font-size: 0.9rem;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.btn:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.btn.primary { color: var(--on-accent); border-color: transparent; background: linear-gradient(135deg, var(--cyan-2), var(--cyan)); }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 8px 11px; font-size: 0.8rem; border-radius: 10px; }
+.btn:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
+
+.hero-visual {
+  position: relative;
+  min-height: 330px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(170,202,226,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(170,202,226,0.06) 1px, transparent 1px),
+    radial-gradient(circle at 75% 20%, rgba(55,215,231,0.14), transparent 15rem),
+    var(--panel-solid);
+  background-size: 42px 42px, 42px 42px, auto, auto;
+  box-shadow: var(--shadow);
+}
+
+.hero-visual svg { width: 100%; height: 100%; min-height: 330px; }
+
+.float-label {
+  position: absolute;
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  font-size: 0.76rem;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+.section {
+  padding: 34px 0;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.45rem);
+  letter-spacing: -0.04em;
+}
+
+.section-head p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 16px 42px rgba(0,0,0,0.12);
+}
+
+.card-pad { padding: 20px; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.concept-card {
+  min-height: 100%;
+  padding: 19px;
+}
+
+.concept-card .icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  font-weight: 900;
+  color: var(--cyan-2);
+}
+
+.concept-card h3 { margin: 0 0 7px; font-size: 1.02rem; }
+.concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+.lab-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(290px, 0.65fr);
+  gap: 16px;
+}
+
+.chart-card { overflow: hidden; }
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.chart-title strong { display: block; font-size: 0.92rem; }
+.chart-title span { display: block; color: var(--muted); font-size: 0.76rem; }
+
+.tab-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tab {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: var(--panel-2);
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 750;
+  font-size: 0.78rem;
+}
+
+.tab:hover { color: var(--text); border-color: var(--line-strong); }
+.tab.active { color: var(--on-accent); border-color: transparent; background: var(--cyan); }
+
+.chart-wrap {
+  position: relative;
+  min-height: 390px;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(55,215,231,0.07), transparent 19rem),
+    var(--panel-solid);
+}
+
+.market-chart {
+  width: 100%;
+  height: auto;
+  min-height: 390px;
+  touch-action: none;
+}
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 10;
+  display: none;
+  pointer-events: none;
+  min-width: 148px;
+  padding: 9px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel-solid);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.24);
+  color: var(--text);
+  font-size: 0.75rem;
+}
+
+.chart-tooltip strong { display: block; margin-bottom: 3px; }
+.chart-tooltip span { color: var(--muted); }
+
+.chart-grid { stroke: var(--line); stroke-width: 1; }
+.chart-axis { fill: var(--muted); font-size: 11px; }
+.candle-up .wick, .candle-up .body { stroke: var(--green); }
+.candle-up .body { fill: var(--green); }
+.candle-down .wick, .candle-down .body { stroke: var(--red); }
+.candle-down .body { fill: var(--red); }
+.candle-flat .wick, .candle-flat .body { stroke: var(--amber); }
+.candle-flat .body { fill: var(--amber); }
+.close-dot { fill: var(--cyan-2); stroke: var(--panel-solid); stroke-width: 2; }
+.level-line { stroke-width: 1.6; stroke-dasharray: 7 6; }
+.tone-cyan { stroke: var(--cyan); fill: var(--cyan); }
+.tone-green { stroke: var(--green); fill: var(--green); }
+.tone-red { stroke: var(--red); fill: var(--red); }
+.tone-amber { stroke: var(--amber); fill: var(--amber); }
+.tone-purple { stroke: var(--purple); fill: var(--purple); }
+.tone-blue { stroke: var(--blue); fill: var(--blue); }
+.chart-label {
+  font-size: 11px;
+  font-weight: 850;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.zone { opacity: 0.08; }
+.focus-window { fill: rgba(55,215,231,0.09); stroke: var(--cyan); stroke-width: 1.4; stroke-dasharray: 7 5; }
+
+.control-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 15px;
+  border-top: 1px solid var(--line);
+  background: rgba(170,202,226,0.035);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.control-group.grow { flex: 1; }
+
+.control-group label {
+  color: var(--muted);
+  font-size: 0.77rem;
+  white-space: nowrap;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--cyan);
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.check input { accent-color: var(--cyan); }
+
+.side-panel {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.side-panel h3 { margin: 0; font-size: 1.08rem; }
+.side-panel > p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+.verdict {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-2);
+}
+
+.verdict .label {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.verdict strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 1.08rem;
+}
+
+.verdict p { margin: 6px 0 0; color: var(--muted); font-size: 0.82rem; }
+
+.checklist {
+  display: grid;
+  gap: 9px;
+}
+
+.check-row {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+}
+
+.check-dot {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--panel-3);
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.check-row.pass .check-dot { color: var(--on-accent); background: var(--green); }
+.check-row.warn .check-dot { color: var(--on-accent); background: var(--amber); }
+.check-row.fail .check-dot { color: white; background: var(--red); }
+.check-row strong { display: block; font-size: 0.82rem; }
+.check-row span { display: block; color: var(--muted); font-size: 0.75rem; margin-top: 2px; }
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.metric {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+}
+
+.metric .k {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metric .v {
+  display: block;
+  margin-top: 3px;
+  font-size: 1.03rem;
+  font-weight: 900;
+}
+
+.note {
+  padding: 13px 14px;
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 12px 12px 0;
+  background: rgba(55,215,231,0.07);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.note strong { color: var(--text); }
+
+.matrix {
+  display: grid;
+  gap: 8px;
+}
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.matrix-row > span:first-child {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.state-pill::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state-pill.bull { color: var(--green); }
+.state-pill.bear { color: var(--red); }
+.state-pill.range { color: var(--amber); }
+.state-pill.shift { color: var(--purple); }
+.state-pill.neutral { color: var(--muted); }
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 760;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  outline: none;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.field input:focus,
+.field select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(55,215,231,0.1); }
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+th, td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+th {
+  color: var(--muted);
+  background: var(--panel-2);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+tr:last-child td { border-bottom: 0; }
+tr.selectable { cursor: pointer; }
+tr.selectable:hover td { background: rgba(55,215,231,0.05); }
+tr.selected td { background: rgba(55,215,231,0.1); }
+td.good { color: var(--green); font-weight: 800; }
+td.warn { color: var(--amber); font-weight: 800; }
+td.bad { color: var(--red); font-weight: 800; }
+
+.practice {
+  padding: 20px;
+}
+
+.practice-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.practice-head h3 { margin: 0; }
+.score {
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.choice {
+  min-height: 54px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-weight: 780;
+}
+
+.choice:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.choice.correct { border-color: var(--green); background: rgba(65,227,155,0.1); }
+.choice.incorrect { border-color: var(--red); background: rgba(255,110,125,0.1); }
+
+.feedback {
+  min-height: 56px;
+  margin-top: 12px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(170,202,226,0.025);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.feedback.good { border-color: rgba(65,227,155,0.45); background: rgba(65,227,155,0.07); }
+.feedback.bad { border-color: rgba(255,110,125,0.45); background: rgba(255,110,125,0.07); }
+.feedback strong { color: var(--text); }
+
+.lesson-list {
+  display: grid;
+  gap: 10px;
+}
+
+.lesson-row {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+}
+
+.lesson-row .num {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--cyan);
+  font-weight: 950;
+}
+
+.lesson-row strong { display: block; font-size: 0.88rem; }
+.lesson-row span { display: block; margin-top: 3px; color: var(--muted); font-size: 0.8rem; }
+
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid rgba(255,200,87,0.3);
+  border-radius: 15px;
+  background: rgba(255,200,87,0.07);
+}
+
+.callout .mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: var(--on-accent);
+  background: var(--amber);
+  font-weight: 950;
+}
+
+.callout strong { display: block; }
+.callout p { margin: 4px 0 0; color: var(--muted); font-size: 0.84rem; }
+
+.footer {
+  margin-top: 42px;
+  padding: 22px 4px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.footer strong { color: var(--text); }
+.footer a { color: var(--cyan-2); text-underline-offset: 3px; }
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; padding-top: 54px; }
+  .hero-visual { min-height: 290px; }
+  .lab-layout { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .shell { width: min(100% - 18px, 1220px); padding-top: 9px; }
+  .topbar { top: 7px; }
+  .brand-copy span { display: none; }
+  .hero { padding: 48px 2px 28px; }
+  h1 { font-size: clamp(2.35rem, 14vw, 4.3rem); }
+  .section { padding: 27px 0; }
+  .section-head { display: block; }
+  .section-head p { margin-top: 8px; }
+  .grid-2, .grid-3, .grid-4, .choice-grid, .form-grid { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: 1fr; }
+  .chart-wrap, .market-chart { min-height: 320px; }
+  .control-strip { align-items: stretch; }
+  .control-group.grow { flex-basis: 100%; }
+  .matrix-row { grid-template-columns: 88px 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+}
+
+
+.entry-model-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.entry-model {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2);
+  text-align: left;
+  cursor: pointer;
+}
+.entry-model:hover { border-color: var(--line-strong); }
+.entry-model.active { border-color: var(--cyan); background: rgba(55,215,231,.09); }
+.entry-model strong { display: block; font-size: .82rem; }
+.entry-model span { display: block; margin-top: 3px; color: var(--muted); font-size: .72rem; }
+.tradeoff-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+}
+.tradeoff-bar span {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line-strong);
+}
+.tradeoff-bar span.on { background: var(--cyan); }
+.rr-large {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.rr-large strong { font-size: 2rem; line-height: 1; letter-spacing: -.04em; }
+.rr-large span { color: var(--muted); font-size: .8rem; }
+.risk-zone { fill: var(--red); opacity: .08; }
+.reward-zone { fill: var(--green); opacity: .08; }
+.entry-marker {
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+.model-marker {
+  font-size: 12px;
+  font-weight: 900;
+  paint-order: stroke;
+  stroke: var(--panel-solid);
+  stroke-width: 4px;
+}
+@media (max-width: 720px) {
+  .entry-model-grid { grid-template-columns: 1fr; }
+}
+
+/* Course 2 shared additions */
+textarea { font: inherit; }
+.field textarea {
+  width: 100%; min-height: 96px; resize: vertical; padding: 10px 11px;
+  border: 1px solid var(--line); border-radius: 11px; outline: none;
+  background: var(--panel-2); color: var(--text);
+}
+.field textarea:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(55,215,231,0.1); }
+.full-span { grid-column: 1 / -1; }
+.stack { display: grid; gap: 12px; }
+.action-row { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; }
+.button-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.seg-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.seg-btn {
+  border: 1px solid var(--line); border-radius: 11px; padding: 9px 11px;
+  color: var(--muted); background: var(--panel-2); cursor: pointer; font-weight: 800; font-size: .79rem;
+}
+.seg-btn:hover { color: var(--text); border-color: var(--line-strong); }
+.seg-btn.active { color: var(--on-accent); border-color: transparent; background: var(--cyan); }
+.seg-btn.active.red { color: white; background: var(--red); }
+.seg-btn.active.green { color: var(--on-accent); background: var(--green); }
+.status-banner {
+  padding: 13px 14px; border: 1px solid var(--line); border-radius: 13px;
+  background: var(--panel-2); color: var(--muted); font-size: .84rem;
+}
+.status-banner strong { color: var(--text); }
+.status-banner.good { border-color: rgba(65,227,155,.45); background: rgba(65,227,155,.08); }
+.status-banner.warn { border-color: rgba(255,200,87,.45); background: rgba(255,200,87,.08); }
+.status-banner.bad { border-color: rgba(255,110,125,.45); background: rgba(255,110,125,.08); }
+.progress-track { height: 9px; border-radius: 999px; overflow: hidden; background: var(--panel-3); }
+.progress-fill { height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg,var(--cyan),var(--purple)); transition: width .2s ease; }
+.range-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; align-items: center; }
+.range-value { min-width: 78px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel-2); text-align: center; font-weight: 900; }
+.kpi-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.kpi { padding: 13px; border: 1px solid var(--line); border-radius: 13px; background: var(--panel-2); }
+.kpi span { display: block; color: var(--muted); font-size: .68rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.kpi strong { display: block; margin-top: 4px; font-size: 1.16rem; }
+.kpi small { display:block; margin-top:3px; color:var(--muted); font-size:.72rem; }
+.factor-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.factor {
+  position: relative; display: grid; grid-template-columns: 24px 1fr; gap: 9px; align-items: start;
+  padding: 11px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); cursor: pointer;
+}
+.factor input { margin-top: 2px; accent-color: var(--cyan); }
+.factor strong { display:block; font-size:.82rem; }
+.factor span { display:block; color:var(--muted); font-size:.73rem; margin-top:2px; }
+.factor.selected { border-color: var(--cyan); background: rgba(55,215,231,.08); }
+.factor.redundant { border-color: var(--amber); }
+.pill-list { display: flex; flex-wrap: wrap; gap: 7px; }
+.pill { padding: 6px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel-2); color: var(--muted); font-size: .74rem; font-weight: 800; }
+.pill.good { color:var(--green); border-color:rgba(65,227,155,.34); }
+.pill.bad { color:var(--red); border-color:rgba(255,110,125,.34); }
+.pill.warn { color:var(--amber); border-color:rgba(255,200,87,.34); }
+/* Token-bound in BOTH themes. This used to be a hardcoded dark slab plus a
+   [data-theme="light"] .rule-output override, which reached the toggle path
+   only: a light-OS reader who never touched the toggle got dark-on-light.
+   Reading --bg/--text instead makes one rule correct on both paths. */
+.rule-output {
+  min-height: 115px; padding: 13px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--bg); color: var(--text); font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size: .78rem; white-space: pre-wrap; line-height: 1.55;
+}
+.chart-instruction { position:absolute; left:12px; top:12px; z-index:5; padding:7px 9px; border:1px solid var(--line); border-radius:9px; background:var(--panel); color:var(--muted); font-size:.72rem; font-weight:800; pointer-events:none; }
+.draggable-line { cursor: ns-resize; stroke-width: 2.4; }
+.handle { cursor: ns-resize; stroke: var(--panel-solid); stroke-width: 3; }
+.click-capture { cursor: crosshair; }
+.bar-list { display:grid; gap:9px; }
+.bar-row { display:grid; grid-template-columns:110px minmax(0,1fr) 56px; gap:9px; align-items:center; }
+.bar-row > span:first-child { color:var(--muted); font-size:.76rem; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.bar-track { height:9px; border-radius:999px; background:var(--panel-3); overflow:hidden; }
+.bar-fill { height:100%; border-radius:inherit; background:var(--cyan); }
+.bar-fill.green { background:var(--green); }
+.bar-fill.red { background:var(--red); }
+.bar-fill.amber { background:var(--amber); }
+.bar-fill.purple { background:var(--purple); }
+.bar-row strong { text-align:right; font-size:.77rem; }
+.timeline { display:grid; gap:8px; }
+.timeline-step { display:grid; grid-template-columns:34px 1fr; gap:10px; align-items:start; padding:11px; border:1px solid var(--line); border-radius:12px; background:var(--panel-2); }
+.timeline-step .step-no { width:32px; height:32px; display:grid; place-items:center; border-radius:10px; background:var(--panel-3); color:var(--muted); font-weight:950; }
+.timeline-step.active { border-color:var(--cyan); background:rgba(55,215,231,.07); }
+.timeline-step.active .step-no { color:var(--on-accent); background:var(--cyan); }
+.timeline-step.done .step-no { color:var(--on-accent); background:var(--green); }
+.timeline-step strong { display:block; font-size:.83rem; }
+.timeline-step span { display:block; color:var(--muted); font-size:.74rem; margin-top:2px; }
+.data-table-actions { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.tag-grid { display:flex; flex-wrap:wrap; gap:7px; }
+.tag-check { position:relative; }
+.tag-check input { position:absolute; opacity:0; pointer-events:none; }
+.tag-check span { display:block; padding:7px 9px; border:1px solid var(--line); border-radius:999px; background:var(--panel-2); color:var(--muted); font-size:.73rem; font-weight:800; cursor:pointer; }
+.tag-check input:checked + span { color:var(--on-accent); border-color:transparent; background:var(--cyan); }
+.empty-state { padding:25px; text-align:center; color:var(--muted); font-size:.84rem; }
+.canvas-card { overflow:hidden; }
+.grid-2 > *, .grid-3 > *, .grid-4 > *, .lab-layout > * { min-width: 0; }
+.table-wrap { max-width: 100%; }
+.chart-legend { display:flex; flex-wrap:wrap; gap:10px; padding:10px 14px; border-top:1px solid var(--line); color:var(--muted); font-size:.72rem; }
+.legend-item { display:inline-flex; gap:6px; align-items:center; }
+.legend-dot { width:8px; height:8px; border-radius:50%; background:var(--cyan); }
+.legend-dot.green { background:var(--green); }.legend-dot.red { background:var(--red); }.legend-dot.amber { background:var(--amber); }.legend-dot.purple { background:var(--purple); }
+.small-copy { color:var(--muted); font-size:.79rem; }
+.big-number { font-size:2.1rem; line-height:1; letter-spacing:-.05em; font-weight:950; }
+.hidden { display:none !important; }
+@media (max-width:980px){ .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+@media (max-width:720px){ .button-grid,.factor-grid{grid-template-columns:1fr;} .kpi-grid{grid-template-columns:1fr 1fr;} .bar-row{grid-template-columns:88px minmax(0,1fr) 48px;} .full-span{grid-column:auto;} }
+@media (max-width:470px){ .kpi-grid{grid-template-columns:1fr;} }
+
+
+
+/* Course 3: Options Trading */
+.option-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.option-tile{padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--panel-2);min-width:0}.option-tile span{display:block;color:var(--muted);font-size:.68rem;font-weight:850;letter-spacing:.055em;text-transform:uppercase}.option-tile strong{display:block;margin-top:4px;font-size:1.08rem;overflow-wrap:anywhere}.option-tile small{display:block;margin-top:4px;color:var(--muted);font-size:.71rem;line-height:1.45}
+.contract-card{border:1px solid var(--line-strong);border-radius:16px;background:linear-gradient(145deg,rgba(55,215,231,.07),rgba(157,123,255,.06));overflow:hidden}.contract-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:15px;border-bottom:1px solid var(--line)}.contract-head strong{display:block;font-size:1rem}.contract-head span{display:block;margin-top:3px;color:var(--muted);font-size:.75rem}.contract-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line)}.contract-cell{padding:13px;background:var(--panel-solid);min-width:0}.contract-cell span{display:block;color:var(--muted);font-size:.66rem;font-weight:850;letter-spacing:.05em;text-transform:uppercase}.contract-cell strong{display:block;margin-top:4px;font-size:.91rem;overflow-wrap:anywhere}
+.matrix{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.matrix-card{appearance:none;text-align:left;padding:13px;border:1px solid var(--line);border-radius:13px;background:var(--panel-2);color:var(--text);cursor:pointer;transition:.16s ease}.matrix-card:hover{border-color:var(--line-strong);transform:translateY(-1px)}.matrix-card.active{border-color:var(--cyan);background:rgba(55,215,231,.09);box-shadow:inset 3px 0 0 var(--cyan)}.matrix-card strong{display:block;font-size:.83rem}.matrix-card span{display:block;margin-top:4px;color:var(--muted);font-size:.72rem;line-height:1.45}
+.moneyness-badge{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:5px 8px;border:1px solid var(--line);border-radius:999px;font-size:.66rem;font-weight:950;letter-spacing:.05em}.moneyness-badge.itm{color:var(--green);background:rgba(65,227,155,.09);border-color:rgba(65,227,155,.35)}.moneyness-badge.atm{color:var(--amber);background:rgba(255,200,87,.09);border-color:rgba(255,200,87,.35)}.moneyness-badge.otm{color:var(--muted);background:var(--panel-3)}
+.chain-table{width:100%;border-collapse:collapse;min-width:720px}.chain-table th,.chain-table td{padding:10px 9px;border-bottom:1px solid var(--line);text-align:right;font-size:.74rem}.chain-table th{position:sticky;top:0;z-index:2;background:var(--panel-solid);color:var(--muted);font-size:.63rem;letter-spacing:.055em;text-transform:uppercase}.chain-table th:first-child,.chain-table td:first-child{text-align:left}.chain-table tbody tr{cursor:pointer;transition:background .14s ease}.chain-table tbody tr:hover{background:rgba(55,215,231,.05)}.chain-table tbody tr.selected{background:rgba(55,215,231,.10);box-shadow:inset 3px 0 0 var(--cyan)}.chain-table td.itm{background:rgba(65,227,155,.04)}.chain-table td.warn{color:var(--amber)}.chain-table td.bad{color:var(--red)}
+.value-stack{height:20px;display:flex;border-radius:7px;overflow:hidden;background:var(--panel-3)}.value-stack>span{height:100%;transition:width .2s ease}.value-stack .intrinsic{background:var(--green)}.value-stack .extrinsic{background:var(--purple)}
+.payoff-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.payoff-summary>div{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);min-width:0}.payoff-summary span{display:block;color:var(--muted);font-size:.66rem;font-weight:850;text-transform:uppercase;letter-spacing:.05em}.payoff-summary strong{display:block;margin-top:4px;font-size:.98rem;overflow-wrap:anywhere}
+.greeks-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.greek-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);min-width:0}.greek-card span{display:block;color:var(--muted);font-size:.65rem;font-weight:850;letter-spacing:.05em;text-transform:uppercase}.greek-card strong{display:block;margin-top:4px;font-size:1rem}.greek-card small{display:block;margin-top:3px;color:var(--muted);font-size:.68rem;line-height:1.4}
+.scenario-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.scenario-card{appearance:none;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2);color:var(--text);cursor:pointer}.scenario-card:hover{border-color:var(--line-strong)}.scenario-card.active{border-color:var(--cyan);background:rgba(55,215,231,.08)}.scenario-card strong{display:block;font-size:.78rem}.scenario-card span{display:block;margin-top:3px;color:var(--muted);font-size:.69rem;line-height:1.4}
+.position-leg{display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}.position-leg .side{display:inline-flex;justify-content:center;padding:5px 7px;border-radius:8px;font-size:.65rem;font-weight:950;text-transform:uppercase}.position-leg .side.long{background:rgba(65,227,155,.14);color:var(--green)}.position-leg .side.short{background:rgba(255,110,125,.14);color:var(--red)}.position-leg strong{display:block;font-size:.8rem}.position-leg span{display:block;color:var(--muted);font-size:.7rem}
+.risk-box{padding:12px;border:1px solid rgba(255,200,87,.35);border-radius:12px;background:rgba(255,200,87,.07);font-size:.75rem;line-height:1.55;color:var(--muted)}.risk-box strong{color:var(--text)}
+.exercise-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.exercise-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel-2)}.exercise-card span{display:block;color:var(--muted);font-size:.66rem;font-weight:850;text-transform:uppercase}.exercise-card strong{display:block;margin-top:4px;font-size:.9rem}
+.plan-score{display:flex;align-items:center;gap:14px;padding:13px;border:1px solid var(--line);border-radius:14px;background:var(--panel-2)}.plan-score .score-circle{width:74px;height:74px;display:grid;place-items:center;border-radius:50%;background:conic-gradient(var(--cyan) var(--score,0%),var(--panel-3) 0);position:relative;flex:none}.plan-score .score-circle:before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--panel-solid)}.plan-score .score-circle strong{position:relative;z-index:1;font-size:1.15rem}.plan-score p{margin:3px 0 0;color:var(--muted);font-size:.72rem;line-height:1.45}
+.rule-checks{display:grid;gap:7px}.rule-check{display:grid;grid-template-columns:22px 1fr;gap:8px;align-items:start;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}.rule-check .state{width:20px;height:20px;display:grid;place-items:center;border-radius:6px;background:var(--panel-3);font-size:.66rem;font-weight:950}.rule-check.good .state{background:var(--green);color:var(--on-accent)}.rule-check.warn .state{background:var(--amber);color:var(--on-accent)}.rule-check.bad .state{background:var(--red);color:var(--on-accent)}.rule-check strong{display:block;font-size:.75rem}.rule-check span{display:block;margin-top:2px;color:var(--muted);font-size:.68rem;line-height:1.4}
+.reference-list{display:grid;gap:8px;margin-top:12px}.reference-list a{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);color:var(--text);text-decoration:none;font-size:.73rem;font-weight:800}.reference-list a:hover{border-color:var(--cyan)}.reference-list a span{color:var(--cyan-2);font-size:.65rem}
+.market-chart polyline{fill:none!important}.chart-note{padding:9px 14px 13px;color:var(--muted);font-size:.69rem;line-height:1.45}.chart-tooltip{pointer-events:none}.chart-crosshair{stroke:var(--line-strong);stroke-dasharray:4 4}.chart-focus{fill:var(--panel-solid);stroke-width:2.5}.chart-tooltip-box{fill:var(--panel-solid);stroke:var(--line-strong)}.chart-tooltip-text{fill:var(--text);font-size:11px;font-weight:850}.action-row{display:flex;flex-wrap:wrap;align-items:center;gap:9px}.stack{display:grid;gap:11px}.tab-row{display:flex;flex-wrap:wrap;gap:7px}.tab{appearance:none;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);color:var(--muted);padding:8px 10px;cursor:pointer;font-size:.73rem;font-weight:850}.tab.active{background:var(--cyan);border-color:transparent;color:var(--on-accent)}.pill{display:inline-flex;padding:5px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:.66rem;font-weight:850}.warning-card{padding:12px;border:1px solid rgba(255,110,125,.33);border-radius:12px;background:rgba(255,110,125,.06);color:var(--muted);font-size:.73rem;line-height:1.5}.warning-card strong{color:var(--text)}
+@media(max-width:980px){.contract-body{grid-template-columns:repeat(2,minmax(0,1fr))}.greeks-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.scenario-strip{grid-template-columns:1fr}.exercise-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.option-grid,.matrix,.payoff-summary{grid-template-columns:1fr}.contract-body{grid-template-columns:1fr 1fr}.position-leg{grid-template-columns:64px minmax(0,1fr)}.position-leg> :last-child{grid-column:2}.plan-score{align-items:flex-start}}
+@media(max-width:440px){.contract-body,.greeks-grid{grid-template-columns:1fr}}
+
+
+/* ---- Accessibility, breadcrumb and lesson pager -------------------------- */
+
+/* Visible focus everywhere, in both themes. */
+:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -100px;
+  z-index: 60;
+  padding: 11px 15px;
+  border-radius: 12px;
+  color: var(--on-accent);
+  background: var(--cyan-2);
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: top 140ms ease;
+}
+.skip-link:focus-visible { top: 12px; }
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: 10px 2px 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+.crumbs a {
+  text-decoration: none;
+  color: var(--muted);
+  padding: 6px 9px;
+  border-radius: 9px;
+}
+.crumbs a:hover { color: var(--text); background: var(--line); }
+.crumb-sep { opacity: 0.5; }
+.crumb-current { color: var(--text); padding: 6px 9px; }
+
+.noscript-note {
+  display: block;
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.noscript-note strong { display: block; margin-bottom: 4px; color: var(--text); }
+
+/* Previous / next lesson pager, in course order. The last lesson points back
+   at the course home. Focus is handled by the global :focus-visible rule. */
+.lesson-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.lesson-link {
+  flex: 1 1 240px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--panel-2);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.lesson-link:hover { transform: translateY(-1px); border-color: var(--line-strong); }
+.lesson-link span { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 850; letter-spacing: 0.07em; text-transform: uppercase; }
+.lesson-link strong { display: block; margin-top: 4px; font-size: 0.9rem; }
+.lesson-link.next { margin-left: auto; text-align: right; }
+
+/* One card per row on narrow screens; a two-up pager at 320px is two
+   unreadable columns. */
+@media (max-width: 720px) {
+  .lesson-link { flex-basis: 100%; }
+}
+
+.footer p { margin: 0 0 7px; }
+.footer p:last-child { margin-bottom: 0; }
+</style>
+
+  <noscript>
+    <style>
+      /* The toggle is a JS-only control: without JS it renders, invites a click,
+         and does nothing. Hide it rather than ship a dead affordance. */
+      #themeToggle { display: none; }
+    </style>
+  </noscript>
+
+  <script>
+    /* Applied before first paint so an explicit theme choice never flashes the
+       other theme. This is why it lives LAST in <head> and not with the page
+       script at the bottom of <body>: that runs after the first paint.
+       SAME localStorage key as every other page in the library ('learn-theme')
+       so the choice survives crossing a course boundary.
+       The allowlist matters -- a corrupt value would otherwise be written
+       straight onto data-theme, matching no CSS while still counting as an
+       explicit choice, which permanently mislabels the toggle.
+       No stored value => the prefers-color-scheme block decides. */
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Options Trading course home"><div class="brand-mark" aria-hidden="true">15</div><div class="brand-copy"><strong>Options Trading</strong><span>Course 3 · Standalone interactive lesson</span></div></a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+    </header>
+
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Options Trading</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 15 &middot; Exercise, Assignment, and Expiration</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note">
+        <strong>JavaScript is required for the interactive parts of this lesson.</strong>
+        The expiration simulator, the settlement readout, and the practice drill are drawn in your browser, so they stay blank while JavaScript is disabled. The written explanations, the operating sequence, and the completion standard below still read normally.
+      </div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div><span class="eyebrow"><span class="pulse"></span>Course 3 · Lesson 15 · Operations</span><h1>Exercise, Assignment, and Expiration</h1><p>Determine how moneyness, holder or writer status, exercise style, share ownership, and brokerage procedures can turn an expiring option into a stock or cash obligation.</p><div class="hero-actions"><button class="btn primary" type="button" onclick="scrollToLab()">Open interactive lesson</button><a class="btn ghost" href="#process">Review the process</a></div></div>
+      <div class="hero-visual"><svg viewBox="0 0 520 330" role="img" aria-label="Exercise and assignment timeline"><line x1="70" y1="165" x2="450" y2="165" stroke="var(--line-strong)" stroke-width="4"/><circle cx="92" cy="165" r="13" fill="var(--cyan)"/><circle cx="208" cy="165" r="13" fill="var(--purple)"/><circle cx="324" cy="165" r="13" fill="var(--amber)"/><circle cx="440" cy="165" r="13" fill="var(--red)"/><g fill="var(--text)" font-size="11" font-weight="900"><text x="66" y="124">OPEN</text><text x="178" y="124">MANAGE</text><text x="288" y="124">EXPIRY</text><text x="407" y="124">SETTLE</text></g><g fill="var(--muted)" font-size="10" font-weight="800"><text x="58" y="209">Premium</text><text x="170" y="209">Close / roll</text><text x="285" y="209">Instructions</text><text x="405" y="209">Shares / cash</text></g></svg><div class="float-label" style="left:18px;bottom:18px;">Synthetic educational examples</div></div>
+    </section>
+    <section class="section"><div class="section-head"><div><h2>Core concepts</h2></div><p>Learn the mechanics, calculate the outcome, and connect the contract to a defined risk limit.</p></div><div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Exercise</h3><p>The option holder uses the contractual right to buy or sell the underlying according to the contract terms.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Assignment</h3><p>The writer is selected to fulfill the obligation created by a holder’s exercise.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Expiration handling</h3><p>In-the-money standardized options may be exercised by exception, but contrary instructions and brokerage policies can change the result.</p></article></div></section>
+    <section class="section" id="lab"><div class="section-head"><div><h2>Interactive lesson</h2></div><p>Change the inputs and inspect how the contract, value, payoff, or obligation changes.</p></div>
+<div class="lab-layout">
+  <article class="card chart-card">
+    <div class="chart-toolbar"><div class="chart-title"><strong id="eaTitle">Long call expiration outcome</strong><span>Economic payoff and operational result</span></div></div>
+    <div class="chart-wrap"><svg id="eaChart" class="market-chart" aria-label="Exercise and assignment payoff chart"></svg><div class="chart-tooltip"></div></div>
+    <div style="padding:0 14px 14px;display:grid;gap:10px;">
+      <div class="exercise-grid">
+        <div class="exercise-card"><strong id="eaMoney">In-the-money by $5.00</strong><span id="eaMoneyText">Standard exercise-by-exception handling may apply, subject to contrary instructions and firm policy.</span></div>
+        <div class="exercise-card"><strong id="eaAction">Exercise: buy 100 shares</strong><span id="eaActionText">Cash required at strike: $10,000.</span></div>
+        <div class="exercise-card"><strong id="eaStockResult">Resulting shares: +100</strong><span id="eaStockText">The option position is replaced by the stock transaction if exercised.</span></div>
+        <div class="exercise-card"><strong id="eaPnl">Option P/L: +$300</strong><span>Expiration option P/L before fees; stock consequences continue afterward.</span></div>
+      </div>
+      <div class="timeline">
+        <div class="timeline-step active" id="eaStep1"><div class="step-no">1</div><div><strong>Determine moneyness</strong><span>Compare final underlying price with strike.</span></div></div>
+        <div class="timeline-step" id="eaStep2"><div class="step-no">2</div><div><strong>Apply holder or writer role</strong><span>Long positions may exercise; short positions may be assigned.</span></div></div>
+        <div class="timeline-step" id="eaStep3"><div class="step-no">3</div><div><strong>Determine stock or cash settlement</strong><span>This lab models physically settled equity options.</span></div></div>
+        <div class="timeline-step" id="eaStep4"><div class="step-no">4</div><div><strong>Verify broker handling</strong><span>Firm deadlines, liquidation practices, and exercise instructions can differ.</span></div></div>
+      </div>
+    </div>
+  </article>
+  <aside class="card side-panel" aria-live="polite">
+    <h3>Expiration simulator</h3><p>Model the contract role and likely operational consequence. Actual handling depends on the contract and brokerage firm.</p>
+    <div><span class="small-copy">Position side</span><div class="seg-row" id="eaSide" style="margin-top:7px;"><button class="seg-btn active" data-value="long" data-tone="green" type="button">Long / holder</button><button class="seg-btn" data-value="short" data-tone="red" type="button">Short / writer</button></div></div>
+    <div><span class="small-copy">Option type</span><div class="seg-row" id="eaType" style="margin-top:7px;"><button class="seg-btn active" data-value="call" type="button">Call</button><button class="seg-btn" data-value="put" type="button">Put</button></div></div>
+    <div><span class="small-copy">Exercise style</span><div class="seg-row" id="eaStyle" style="margin-top:7px;"><button class="seg-btn active" data-value="american" type="button">American-style</button><button class="seg-btn" data-value="european" type="button">European-style</button></div></div>
+    <div class="form-grid">
+      <div class="field"><label for="eaStrike">Strike</label><input id="eaStrike" type="number" min="1" step="1" value="100" /></div>
+      <div class="field"><label for="eaFinal">Underlying at expiration</label><input id="eaFinal" type="number" min="0" step="0.01" value="105" /></div>
+      <div class="field"><label for="eaPremium">Entry premium</label><input id="eaPremium" type="number" min="0.01" step="0.05" value="2" /></div>
+      <div class="field"><label for="eaContracts">Contracts</label><input id="eaContracts" type="number" min="1" max="100" step="1" value="1" /></div>
+      <div class="field full-span"><label for="eaOwnedShares">Shares owned before expiration</label><input id="eaOwnedShares" type="number" min="0" step="100" value="0" /></div>
+    </div>
+    <div class="status-banner" id="eaStatus"><strong>American-style:</strong> the holder may exercise before expiration, and a writer can be assigned before expiration. This simulator shows expiration.</div>
+    <div class="risk-box"><strong>Do not rely only on the closing price:</strong> after-hours movement, exercise instructions, firm cutoffs, and mismatched spread legs can create positions different from the screen P/L.</div>
+  </aside>
+</div>
+</section>
+    <section class="section" id="process"><div class="section-head"><div><h2>Manage expiration deliberately</h2></div><p>Operational risk can remain even when maximum theoretical loss is defined.</p></div><div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Identify settlement and style</h3><p>Confirm physical versus cash settlement and American versus European exercise.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Review moneyness and extrinsic value</h3><p>Do not wait until the final minutes to discover an exercise or assignment exposure.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Check buying power and shares</h3><p>Know the cash, margin, and deliverable requirements for every possible outcome.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Submit or close before firm deadlines</h3><p>Use your broker’s actual instructions and cutoff times rather than assumptions.</p></article></div></section>
+    <section class="section"><div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Exercise and assignment</h3><span class="score" id="eaQuizScore">Score 0 / 0</span></div>
+        <p id="eaQuizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="eaQuizChoices"></div>
+        <div class="feedback" id="eaQuizFeedback" aria-live="polite">Choose the best answer.</div>
+        <button class="btn small" id="eaQuizNext" type="button" style="margin-top:10px;">Next question</button>
+      </article>
+      <article class="card card-pad">
+        <h3 style="margin-top:0;">Lesson rule</h3>
+        <div class="rule-output" id="eaRule">Change the inputs, calculate the result, and explain the risk before selecting a contract.</div>
+      </article>
+    </div></section>
+    <section class="section"><div class="grid-2"><article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Assuming an OTM option can never be exercised</strong><span>A holder can sometimes provide exercise instructions even when exercise appears economically unusual.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Ignoring early assignment on short American options</strong><span>Assignment can occur before expiration, especially when remaining extrinsic value is low.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Letting one spread leg expire ITM and the other OTM without review</strong><span>After-hours movement and separate exercise decisions can leave an unexpected stock position.</span></div></div></div></article><article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">✓</div><div><strong>Finish when you can calculate and explain the position before revealing the result.</strong><p>State the contract, premium, breakeven, maximum risk, time exposure, volatility exposure, assignment exposure, and exit condition in plain language.</p></div></div><div class="note" style="margin-top:12px;"><strong>Model scope:</strong> Theoretical values use a simplified European Black–Scholes model with fixed rate assumptions and no dividend input. Listed products, early exercise, dividends, spreads, fees, and market conditions can produce different prices and outcomes.</div><div class="reference-list"><a href="https://www.optionseducation.org/referencelibrary/faq/options-exercise" target="_blank" rel="noopener noreferrer">OIC — Options Exercise<span>Official reference ↗</span></a><a href="https://www.optionseducation.org/referencelibrary/faq/options-assignment" target="_blank" rel="noopener noreferrer">OIC — Options Assignment<span>Official reference ↗</span></a><a href="https://www.finra.org/investors/insights/trading-options-understanding-assignment" target="_blank" rel="noopener noreferrer">FINRA — Trading Options: Understanding Assignment<span>Official reference ↗</span></a><a href="https://www.finra.org/rules-guidance/rulebooks/finra-rules/2360" target="_blank" rel="noopener noreferrer">FINRA Rule 2360 — Options<span>Official reference ↗</span></a></div></article></div></section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../vertical-credit-spreads/" rel="prev">
+        <span>Previous lesson</span>
+        <strong>14 &middot; Vertical Credit Spreads</strong>
+      </a>
+      <a class="lesson-link next" href="../options-trade-planning/" rel="next">
+        <span>Next lesson</span>
+        <strong>16 &middot; Options Trade Planning</strong>
+      </a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Educational course.</strong> Options involve risk and are not suitable for every investor. Prices, chains, scenarios, and outcomes are synthetic. Verify contract specifications, brokerage procedures, costs, and the current Options Disclosure Document before trading.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; charts are synthetic examples, not trade signals.</p>
+    </footer>
+  </div>
+  <script>
+function byId(id){return document.getElementById(id)}
+function setText(id,value){const el=byId(id);if(el)el.textContent=value}
+function setHTML(id,value){const el=byId(id);if(el)el.innerHTML=value}
+function num(value,fallback=0){const n=Number(value);return Number.isFinite(n)?n:fallback}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function money(value,digits=2){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:digits,maximumFractionDigits:digits}).format(num(value))}
+function pct(value,digits=1){return `${num(value).toFixed(digits)}%`}
+function signed(value,digits=3){const n=num(value);return `${n>0?'+':''}${n.toFixed(digits)}`}
+function escapeHTML(value){return String(value).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
+function optionIntrinsic(type,S,K){return type==='call'?Math.max(0,num(S)-num(K)):Math.max(0,num(K)-num(S))}
+function moneyness(type,S,K){S=num(S);K=num(K);const tol=Math.max(.01,Math.abs(S)*.005);if(Math.abs(S-K)<=tol)return 'ATM';return type==='call'?(S>K?'ITM':'OTM'):(S<K?'ITM':'OTM')}
+function normPdf(x){return Math.exp(-.5*x*x)/Math.sqrt(2*Math.PI)}
+function normCdf(x){const sign=x<0?-1:1,z=Math.abs(x)/Math.sqrt(2),t=1/(1+.3275911*z),a1=.254829592,a2=-.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,erf=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-z*z);return .5*(1+sign*erf)}
+function optionModel({type='call',S=100,K=100,dte=30,iv=.30,r=.045,q=0}){
+ S=Math.max(.0001,num(S));K=Math.max(.0001,num(K));dte=Math.max(0,num(dte));iv=Math.max(.0001,num(iv));r=num(r);q=num(q);
+ const intrinsic=optionIntrinsic(type,S,K);
+ if(dte<=0)return {price:intrinsic,intrinsic,extrinsic:0,delta:type==='call'?(S>K?1:0):(S<K?-1:0),gamma:0,theta:0,vega:0,d1:0,d2:0};
+ const T=dte/365,root=Math.sqrt(T),d1=(Math.log(S/K)+(r-q+.5*iv*iv)*T)/(iv*root),d2=d1-iv*root,dr=Math.exp(-r*T),dq=Math.exp(-q*T);
+ let price,delta,theta;
+ if(type==='call'){
+  price=S*dq*normCdf(d1)-K*dr*normCdf(d2);delta=dq*normCdf(d1);theta=(-S*dq*normPdf(d1)*iv/(2*root)-r*K*dr*normCdf(d2)+q*S*dq*normCdf(d1))/365;
+ }else{
+  price=K*dr*normCdf(-d2)-S*dq*normCdf(-d1);delta=dq*(normCdf(d1)-1);theta=(-S*dq*normPdf(d1)*iv/(2*root)+r*K*dr*normCdf(-d2)-q*S*dq*normCdf(-d1))/365;
+ }
+ const gamma=dq*normPdf(d1)/(S*iv*root),vega=S*dq*normPdf(d1)*root/100;
+ price=Math.max(intrinsic,price);return {price,intrinsic,extrinsic:Math.max(0,price-intrinsic),delta,gamma,theta,vega,d1,d2};
+}
+function mid(bid,ask){return (num(bid)+num(ask))/2}
+function spreadPct(bid,ask){const m=mid(bid,ask);return m>0?(num(ask)-num(bid))/m*100:0}
+function payoffPoints(fn,min,max,steps=120){const pts=[];const lo=num(min),hi=num(max);for(let i=0;i<=steps;i++){const x=lo+(hi-lo)*i/steps;pts.push({x,y:num(fn(x))})}return pts}
+function svgNode(tag,attrs={},text=''){const n=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));if(text!==undefined&&text!=='')n.textContent=text;return n}
+function drawPayoffChart(svg,series,options={}){
+ if(!svg)return;svg.innerHTML='';const W=960,H=390,m={l:66,r:26,t:24,b:48};svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+ const all=series.flatMap(s=>s.points||[]);if(!all.length)return;let minX=Math.min(...all.map(p=>p.x)),maxX=Math.max(...all.map(p=>p.x)),minY=Math.min(...all.map(p=>p.y)),maxY=Math.max(...all.map(p=>p.y));
+ if(options.includeZero!==false){minY=Math.min(0,minY);maxY=Math.max(0,maxY)}if(minX===maxX){minX-=1;maxX+=1}if(minY===maxY){minY-=1;maxY+=1}
+ const py=(maxY-minY)*.12||1,px=(maxX-minX)*.025||1;minY-=py;maxY+=py;minX-=px;maxX+=px;const left=m.l,right=W-m.r,top=m.t,bottom=H-m.b,x=v=>left+(v-minX)/(maxX-minX)*(right-left),y=v=>bottom-(v-minY)/(maxY-minY)*(bottom-top);
+ for(let i=0;i<=5;i++){const yy=top+(bottom-top)*i/5,val=maxY-(maxY-minY)*i/5;svg.appendChild(svgNode('line',{x1:left,y1:yy,x2:right,y2:yy,class:'chart-grid'}));svg.appendChild(svgNode('text',{x:left-9,y:yy+4,'text-anchor':'end',class:'chart-axis'},options.yFormat?options.yFormat(val):num(val).toFixed(options.decimals??0)))}
+ for(let i=0;i<=6;i++){const xx=left+(right-left)*i/6,val=minX+(maxX-minX)*i/6;svg.appendChild(svgNode('line',{x1:xx,y1:top,x2:xx,y2:bottom,class:'chart-grid'}));svg.appendChild(svgNode('text',{x:xx,y:bottom+21,'text-anchor':'middle',class:'chart-axis'},options.xFormat?options.xFormat(val):num(val).toFixed(options.xDecimals??0)))}
+ if(minY<=0&&maxY>=0)svg.appendChild(svgNode('line',{x1:left,y1:y(0),x2:right,y2:y(0),class:'level-line tone-amber','stroke-width':2}));
+ (options.verticals||[]).forEach((v,i)=>{const xx=x(v.value),labelY=top+15+(i%3)*14;svg.appendChild(svgNode('line',{x1:xx,y1:top,x2:xx,y2:bottom,class:`level-line tone-${v.tone||'purple'}`,'stroke-dasharray':'7 6','stroke-width':1.8}));svg.appendChild(svgNode('text',{x:clamp(xx+5,left+4,right-100),y:labelY,class:`chart-label tone-${v.tone||'purple'}`},v.label||''))});
+ const tones=['cyan','purple','green','amber','red'];series.forEach((s,idx)=>{const pts=(s.points||[]).map(p=>`${x(p.x)},${y(p.y)}`).join(' ');svg.appendChild(svgNode('polyline',{points:pts,fill:'none',stroke:'currentColor',class:`tone-${s.tone||tones[idx%tones.length]}`,'stroke-width':s.width||3,'stroke-linecap':'round','stroke-linejoin':'round',opacity:s.opacity??1}))});
+ const overlay=svgNode('rect',{x:left,y:top,width:right-left,height:bottom-top,fill:'transparent','data-overlay':'1'});svg.appendChild(overlay);let g=null;
+ overlay.addEventListener('pointermove',e=>{const rect=svg.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width*W,xv=minX+clamp((mx-left)/(right-left),0,1)*(maxX-minX);if(g)g.remove();g=svgNode('g',{});g.appendChild(svgNode('line',{x1:x(xv),y1:top,x2:x(xv),y2:bottom,class:'chart-crosshair'}));const nearest=[];series.forEach((s,idx)=>{let p=(s.points||[]).reduce((a,b)=>Math.abs(b.x-xv)<Math.abs(a.x-xv)?b:a,s.points[0]);if(!p)return;nearest.push({p,tone:s.tone||tones[idx%tones.length]});g.appendChild(svgNode('circle',{cx:x(p.x),cy:y(p.y),r:4,class:`chart-focus tone-${s.tone||tones[idx%tones.length]}`,stroke:'currentColor'}))});const tx=mx>W-210?mx-166:mx+10,ty=top+10,h=30+nearest.length*17;g.appendChild(svgNode('rect',{x:tx,y:ty,width:156,height:h,rx:8,class:'chart-tooltip-box'}));g.appendChild(svgNode('text',{x:tx+9,y:ty+18,class:'chart-tooltip-text'},`x: ${xv.toFixed(options.xDecimals??1)}`));nearest.forEach((v,i)=>g.appendChild(svgNode('text',{x:tx+9,y:ty+36+i*17,class:`chart-tooltip-text tone-${v.tone}`},`y: ${v.p.y.toFixed(options.decimals??2)}`)));svg.appendChild(g)});overlay.addEventListener('pointerleave',()=>{if(g){g.remove();g=null}})
+}
+function bindSegment(containerId,callback){const c=byId(containerId);if(!c)return;c.addEventListener('click',e=>{const b=e.target.closest('[data-value]');if(!b)return;c.querySelectorAll('[data-value]').forEach(x=>x.classList.remove('active'));b.classList.add('active');callback(b.dataset.value,b)})}
+function setupQuiz(config){const q=config.questions||[];let index=0,correct=0,answered=false;const prompt=byId(config.promptId),choices=byId(config.choicesId),feedback=byId(config.feedbackId),score=byId(config.scoreId),next=byId(config.nextId);function render(){answered=false;const item=q[index%q.length];prompt.textContent=item.prompt;choices.innerHTML=item.choices.map((c,i)=>`<button class="choice" type="button" data-index="${i}">${escapeHTML(typeof c==='string'?c:c.label)}</button>`).join('');feedback.className='feedback';feedback.textContent='Choose the best answer.';next.disabled=true;score.textContent=`Score ${correct} / ${index}`};choices.addEventListener('click',e=>{const b=e.target.closest('[data-index]');if(!b||answered)return;answered=true;const item=q[index%q.length],chosen=Number(b.dataset.index),answer=typeof item.answer==='number'?item.answer:item.choices.findIndex(c=>(typeof c==='string'?c:c.value)===item.answer),ok=chosen===answer;if(ok)correct++;choices.querySelectorAll('[data-index]').forEach((x,i)=>{x.disabled=true;if(i===answer)x.classList.add('correct');else if(i===chosen)x.classList.add('incorrect')});feedback.className=`feedback ${ok?'good':'bad'}`;feedback.innerHTML=`<strong>${ok?'Correct.':'Not quite.'}</strong> ${item.explanation}`;next.disabled=false;score.textContent=`Score ${correct} / ${index+1}`});next.addEventListener('click',()=>{index++;render()});render()}
+function setupTheme(){
+ /* The stored choice was already read, validated against the 'light'/'dark'
+    allowlist and applied by the pre-paint <head> script, so data-theme is
+    trustworthy here. This block only owns the toggle and its icon. No chart
+    repaint is scheduled on a theme change on purpose: every colour the SVG
+    charts draw with comes from a CSS class or a var() bound to a token, and
+    nothing samples getComputedStyle at draw time -- if that ever changes, a
+    redraw has to be added to both branches below. */
+ const btn=byId('themeToggle');
+ const lightQuery=window.matchMedia?window.matchMedia('(prefers-color-scheme: light)'):null;
+ // No explicit choice stored means the system preference decides, matching the CSS media block.
+ const effectiveTheme=()=>document.documentElement.dataset.theme||(lightQuery&&lightQuery.matches?'light':'dark');
+ const renderIcon=()=>{if(btn)btn.textContent=effectiveTheme()==='light'?'☀':'☾'};
+ renderIcon();
+ if(btn)btn.addEventListener('click',()=>{
+  const next=effectiveTheme()==='light'?'dark':'light';
+  document.documentElement.dataset.theme=next;
+  try{localStorage.setItem('learn-theme',next)}catch(e){}
+  renderIcon();
+ });
+ if(lightQuery){
+  const onSystemThemeChange=()=>{if(document.documentElement.dataset.theme)return;renderIcon()};
+  if(lightQuery.addEventListener)lightQuery.addEventListener('change',onSystemThemeChange);
+  else if(lightQuery.addListener)lightQuery.addListener(onSystemThemeChange);
+ }
+}
+function scrollToLab(){byId('lab')?.scrollIntoView({behavior:'smooth',block:'start'})}
+function downloadJSON(filename,data){const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)}
+
+
+let eaState={side:'long',type:'call',style:'american'};
+function renderEA(){
+ const K=Math.max(1,num(document.getElementById('eaStrike').value,100)),S=Math.max(0,num(document.getElementById('eaFinal').value,105)),premium=Math.max(.01,num(document.getElementById('eaPremium').value,2)),contracts=Math.max(1,Math.floor(num(document.getElementById('eaContracts').value,1))),shares=contracts*100,owned=Math.max(0,Math.floor(num(document.getElementById('eaOwnedShares').value,0))),intrinsic=optionIntrinsic(eaState.type,S,K),itm=intrinsic>=.01,atm=Math.abs(S-K)<.01,sideSign=eaState.side==='long'?1:-1,pnl=(sideSign*(intrinsic-premium))*shares;
+ setText('eaTitle',`${eaState.side==='long'?'Long':'Short'} ${eaState.type} expiration outcome`);let moneyLabel=atm?'At-the-money':itm?`In-the-money by ${money(intrinsic)}`:'Out-of-the-money';setText('eaMoney',moneyLabel);setText('eaMoneyText',itm?'Standard exercise-by-exception handling may apply when an option is at least $0.01 ITM, subject to contrary instructions and firm policy.':'It would generally not be exercised by exception, although a holder can provide exercise instructions under applicable rules and firm deadlines.');
+ let action='',actionText='',result='',resultText='';
+ if(!itm){action=eaState.side==='long'?'Likely expires without exercise':'Likely no assignment';actionText='No intrinsic value under the displayed expiration price.';result=`Resulting shares: ${owned}`;resultText='The option position ends without a modeled stock transaction.';}
+ else if(eaState.side==='long'&&eaState.type==='call'){action=`Exercise: buy ${shares} shares`;actionText=`Cash required at strike: ${money(K*shares,0)}.`;result=`Resulting shares: +${owned+shares}`;resultText='The holder purchases the deliverable shares at the strike.';}
+ else if(eaState.side==='long'&&eaState.type==='put'){action=`Exercise: sell ${shares} shares`;actionText=`Sale proceeds at strike: ${money(K*shares,0)}.`;result=`Resulting shares: ${owned-shares>=0?'+':''}${owned-shares}`;resultText=owned>=shares?'Owned shares can be delivered.':'Without sufficient shares, exercise may create a short-stock position or be restricted/handled by the broker.';}
+ else if(eaState.side==='short'&&eaState.type==='call'){action=`Assignment: deliver ${shares} shares`;actionText=`Cash received at strike: ${money(K*shares,0)}.`;result=`Resulting shares: ${owned-shares>=0?'+':''}${owned-shares}`;resultText=owned>=shares?'The owned shares cover the delivery.':'An uncovered assignment may create short stock or require shares to be acquired, depending on the account and firm.';}
+ else {action=`Assignment: buy ${shares} shares`;actionText=`Cash required at strike: ${money(K*shares,0)}.`;result=`Resulting shares: +${owned+shares}`;resultText='The short-put writer purchases the deliverable shares at the strike.';}
+ setText('eaAction',action);setText('eaActionText',actionText);setText('eaStockResult',result);setText('eaStockText',resultText);setText('eaPnl',`Option P/L: ${pnl>=0?'+':''}${money(pnl,0)}`);document.getElementById('eaPnl').style.color=pnl>0?'var(--green)':pnl<0?'var(--red)':'var(--text)';
+ const min=Math.max(0,K*.55),max=K*1.45,points=payoffPoints(x=>sideSign*(optionIntrinsic(eaState.type,x,K)-premium)*shares,min,max);drawPayoffChart(document.getElementById('eaChart'),[{points,tone:'cyan'}],{verticals:[{value:K,label:'Strike',tone:'amber'},{value:S,label:'Expiration price',tone:'green'}],decimals:0,xDecimals:0});
+ setHTML('eaStatus',`<strong>${eaState.style==='american'?'American-style':'European-style'}:</strong> ${eaState.style==='american'?'the holder may exercise before expiration and the writer can be assigned before expiration.':'exercise occurs only during the permitted expiration exercise period; early exercise is not available.'} This page models a physically settled equity-style outcome; index and cash-settled contracts can differ.`);['eaStep1','eaStep2','eaStep3','eaStep4'].forEach((id,i)=>{const el=document.getElementById(id);el.classList.toggle('done',i<3);el.classList.toggle('active',i===3);});setText('eaRule',`${eaState.side.toUpperCase()} ${eaState.type.toUpperCase()} · ${eaState.style.toUpperCase()} STYLE · strike ${money(K)} · expiration underlying ${money(S)} · ${moneyLabel.toUpperCase()} · modeled action: ${action}. Verify firm-specific exercise and liquidation procedures before expiration.`);
+}
+bindSegment('eaSide',v=>{eaState.side=v;renderEA();});bindSegment('eaType',v=>{eaState.type=v;renderEA();});bindSegment('eaStyle',v=>{eaState.style=v;renderEA();});['eaStrike','eaFinal','eaPremium','eaContracts','eaOwnedShares'].forEach(id=>document.getElementById(id).addEventListener('input',renderEA));
+setupQuiz({promptId:'eaQuizPrompt',choicesId:'eaQuizChoices',feedbackId:'eaQuizFeedback',scoreId:'eaQuizScore',nextId:'eaQuizNext',questions:[
+ {prompt:'What can happen to a short equity put that is assigned?',choices:['The writer may be required to buy shares at the strike','The writer receives the right to sell shares','The strike disappears','The option becomes a call'],answer:0,explanation:'Assignment on a short put creates an obligation to purchase the deliverable shares at the strike.'},
+ {prompt:'Can an American-style short option be assigned before expiration?',choices:['No','Yes','Only if OTM','Only after the market closes on expiration'],answer:1,explanation:'American-style options can generally be exercised before expiration, so writers can be assigned early.'},
+ {prompt:'Why should a trader verify broker expiration procedures?',choices:['All brokers use identical deadlines and liquidation rules','Firm cutoffs and handling can differ, especially when buying power or share delivery is insufficient','Options never exercise automatically','Only taxes matter'],answer:1,explanation:'Broker deadlines, risk controls, and liquidation practices can materially affect the resulting position.'}
+]});
+setupTheme();renderEA();
+</script>
+</body>
+</html>

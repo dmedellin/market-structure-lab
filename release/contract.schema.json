@@ -299,7 +299,7 @@
         },
         "checks": {
           "type": "array",
-          "minItems": 30,
+          "minItems": 48,
           "uniqueItems": true,
           "items": {"$ref": "#/$defs/acceptanceCheck"},
           "allOf": [
@@ -329,12 +329,30 @@
             {"contains": {"properties": {"id": {"const": "course2-lesson-backtesting"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "course2-lesson-trading-journal"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "course2-lesson-performance-review"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-home"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-options-contract-fundamentals"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-calls-and-puts"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-moneyness"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-option-premium"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-option-chain-and-liquidity"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-expiration-and-time-decay"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-implied-volatility"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-delta-and-gamma"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-theta-and-vega"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-long-calls-and-long-puts"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-covered-calls"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-cash-secured-puts"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-vertical-debit-spreads"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-vertical-credit-spreads"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-exercise-assignment-and-expiration"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "course3-lesson-options-trade-planning"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "journal-schema"}}, "required": ["id"]}},
+            {"contains": {"properties": {"id": {"const": "trade-plan-schema"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "unknown-path-404"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "self-containment"}}, "required": ["id"]}},
             {"contains": {"properties": {"id": {"const": "security-headers"}}, "required": ["id"]}}
           ],
-          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the two-level library - the learning path at /, a home per course (/market-structure-lab/ id course-home, /trade-setup-execution/ id course2-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; course 2 ids are course-scoped because a slug is unique only within a course), and the one published non-HTML asset, /trade-setup-execution/trade-journal-schema.json (id journal-schema), which is fetched and PARSED rather than asserted against page-shaped markers. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
+          "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the two-level library - the learning path at /, a home per course (/market-structure-lab/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; course 2 and course 3 ids are course-scoped because a slug is unique only within a course), and the two published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema) and /options-trading/options-trade-plan-schema.json (id trade-plan-schema), each of which is fetched and PARSED rather than asserted against page-shaped markers. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
         }
       }
     },
@@ -516,7 +534,8 @@
         "id": {
           "type": "string",
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
-          "maxLength": 48
+          "maxLength": 64,
+          "description": "Stable check id, reported verbatim by scripts/smoke.py. A lesson check is course-scoped and carries the lesson's own URL slug (course3-lesson-exercise-assignment-and-expiration is 49 characters), so the bound is on formatting only - the allOf list below still names every required id, and no check can be dropped or swapped for another under any length."
         },
         "description": {"type": "string", "minLength": 1, "maxLength": 256},
         "scope": {
