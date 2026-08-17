@@ -1,0 +1,1497 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Divide-and-Conquer Recurrences | Induction and Recursion | Learn · geterdone.io</title>
+  <meta name="description" content="Algorithms that split a problem into `a` pieces of size `n/b` produce recurrences of one shape. The master theorem settles them by comparing `log_b a` with the exponent in `f(n)`." />
+  <link rel="canonical" href="https://learn.geterdone.io/induction-and-recursion/divide-and-conquer-recurrences/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Divide-and-Conquer Recurrences | Induction and Recursion | Learn · geterdone.io" />
+  <meta property="og:description" content="Algorithms that split a problem into `a` pieces of size `n/b` produce recurrences of one shape. The master theorem settles them by comparing `log_b a` with the exponent in `f(n)`." />
+  <meta property="og:url" content="https://learn.geterdone.io/induction-and-recursion/divide-and-conquer-recurrences/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Divide-and-Conquer Recurrences | Induction and Recursion | Learn · geterdone.io" />
+  <meta name="twitter:description" content="Algorithms that split a problem into `a` pieces of size `n/b` produce recurrences of one shape. The master theorem settles them by comparing `log_b a` with the exponent in `f(n)`." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/induction-and-recursion/divide-and-conquer-recurrences/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Induction and Recursion course home">
+        <span class="brand-mark" aria-hidden="true">11</span>
+        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 &amp;middot; Lesson 11 of 12</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Induction and Recursion</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 11 &amp;middot; Divide-and-Conquer Recurrences</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The algorithms and growth is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 3 &middot; Lesson 11 &middot; Recurrences</span>
+        <h1>Divide-and-Conquer Recurrences</h1>
+        <p>Algorithms that split a problem into <span class="math">a</span> pieces of size <span class="math">n/b</span> produce recurrences of one shape. The master theorem settles them by comparing <span class="math">log_b a</span> with the exponent in <span class="math">f(n)</span>.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">T(n) = a T(n/b) + nᵈ
+log_b a &lt; d   ⟹  T(n) = Θ(nᵈ)              root dominates
+log_b a = d   ⟹  T(n) = Θ(nᵈ log n)        every level equal
+log_b a &gt; d   ⟹  T(n) = Θ(n^{log_b a})     leaves dominate</div>
+        <div class="float-label" style="right:16px;bottom:16px;">One comparison, three cases</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>The three cases are not arbitrary: they are which level of the recursion tree carries most of the work.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The recursion tree explains the three cases</h3><p>Level <span class="math">i</span> has <span class="math">aⁱ</span> subproblems of size <span class="math">n/bⁱ</span>. Whether the work grows, shrinks or stays level down the tree is exactly the comparison.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Merge sort is the balanced case</h3><p><span class="math">a = 2</span>, <span class="math">b = 2</span>, <span class="math">d = 1</span>, so <span class="math">log₂2 = 1 = d</span>. Every level does <span class="math">Θ(n)</span> work and there are <span class="math">log n</span> levels.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Fewer, bigger pieces can beat more, smaller ones</h3><p>Karatsuba multiplication does 3 multiplications of half-size instead of 4, and <span class="math">log₂3 ≈ 1.585 &lt; 2</span> is the entire improvement.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>The master theorem</h2></div><p>Where the recurrence comes from, what the tree looks like, and the statement.</p></div>
+      <article class="card card-pad prose"><p>A divide-and-conquer algorithm splits an input of size <span class="math">n</span> into <span class="math">a</span> subproblems of size <span class="math">n/b</span>, solves each recursively, and spends <span class="math">f(n)</span> combining. The running time therefore satisfies <span class="math">T(n) = aT(n/b) + f(n)</span>.</p><h3>The recursion tree</h3><div class="mathblock">level   subproblems   size      work per level
+  0          1          n            f(n)
+  1          a         n/b         a·f(n/b)
+  2          a²        n/b²        a²·f(n/b²)
+  …
+  L         a^L        1           a^L · f(1)
+
+with L = log_b n levels, so a^L = a^{log_b n} = n^{log_b a}.</div><p>With <span class="math">f(n) = nᵈ</span>, the work at level <span class="math">i</span> is <span class="math">aⁱ(n/bⁱ)ᵈ = nᵈ(a/bᵈ)ⁱ</span> &mdash; a geometric series in <span class="math">i</span> with ratio <span class="math">a/bᵈ</span>. Which end dominates depends entirely on whether that ratio is less than, equal to, or greater than 1, and <span class="math">a/bᵈ</span> compared with 1 is <span class="math">log_b a</span> compared with <span class="math">d</span>. That is the whole theorem.</p><div class="thm"><span class="label">Theorem &middot; Master theorem (polynomial form)</span><p>Let <span class="math">T(n) = aT(n/b) + Θ(nᵈ)</span> with <span class="math">a ≥ 1</span>, <span class="math">b &gt; 1</span>, <span class="math">d ≥ 0</span>. Then <span class="math">T(n) = Θ(nᵈ)</span> if <span class="math">log_b a &lt; d</span>; <span class="math">T(n) = Θ(nᵈ log n)</span> if <span class="math">log_b a = d</span>; and <span class="math">T(n) = Θ(n^{log_b a})</span> if <span class="math">log_b a &gt; d</span>.</p></div><div class="example"><span class="label">Example &middot; Merge sort</span><p><span class="math">T(n) = 2T(n/2) + n</span>: <span class="math">a = 2</span>, <span class="math">b = 2</span>, <span class="math">d = 1</span>, <span class="math">log₂2 = 1 = d</span>. Balanced case, so <span class="math">Θ(n log n)</span>. Every level does <span class="math">n</span> units of merging and there are <span class="math">log₂ n</span> levels.</p></div><div class="example"><span class="label">Example &middot; Binary search</span><p><span class="math">T(n) = T(n/2) + 1</span>: <span class="math">a = 1</span>, <span class="math">b = 2</span>, <span class="math">d = 0</span>, <span class="math">log₂1 = 0 = d</span>. Balanced again, so <span class="math">Θ(log n)</span>. One subproblem and constant work per level.</p></div><div class="example"><span class="label">Example &middot; Karatsuba multiplication</span><p>Multiplying two <span class="math">n</span>-digit numbers by splitting into halves needs four half-size products naively: <span class="math">T(n) = 4T(n/2) + n</span>, and <span class="math">log₂4 = 2 &gt; 1</span>, giving <span class="math">Θ(n²)</span> &mdash; no better than the schoolbook method. Karatsuba's identity does it with three: <span class="math">T(n) = 3T(n/2) + n</span>, and <span class="math">log₂3 ≈ 1.585</span>, giving <span class="math">Θ(n^{1.585})</span>. One fewer multiplication changes the exponent.</p></div><p>Two cautions. The theorem as stated covers <span class="math">f(n) = Θ(nᵈ)</span>; forcing terms like <span class="math">n log n</span> fall between the cases and need the fuller version. And it says nothing about constants &mdash; an algorithm with a better exponent may lose on realistic inputs, which is why Karatsuba is used for large numbers and schoolbook multiplication for small ones.</p><div class="thm"><span class="label">Theorem &middot; Substituting to make it linear</span><p>Setting <span class="math">n = bᵏ</span> and <span class="math">Sₖ = T(bᵏ)</span> turns <span class="math">T(n) = aT(n/b) + nᵈ</span> into <span class="math">Sₖ = aSₖ₋₁ + (bᵈ)ᵏ</span>, an ordinary linear recurrence that lesson 10 solves. The master theorem is that solution, read back.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Algorithms and growth</h2></div><p>Counts from running, not from quoting</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="alTitle">Algorithms and growth</strong><span id="alSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>measured</span><span class="tone-purple"><i class="legend-swatch"></i>predicted</span><span class="tone-amber"><i class="legend-swatch"></i>crossover</span></div>
+      </div>
+      <div class="lab-stage"><svg id="alPlot" viewBox="0 0 520 230" role="img" aria-label="Operation counts plotted against input size."></svg></div>
+      <div class="table-wrap" style="margin-top:12px;"><table class="tt" id="alTable"></table></div>
+      <div class="status-banner" id="alStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>The three cases, tabulated</h3>
+          <p>Each row computes <span class="math">log_b a</span> and compares it with <span class="math">d</span>. The case is decided by that one comparison and nothing else.</p>
+        <div class="field">
+          <label for="alMode">What to examine</label>
+          <select id="alMode">
+            <option value="growth">Growth rates side by side</option>
+            <option value="witness">Is f(n) = O(g(n))? find C and k</option>
+            <option value="search">Linear vs binary search (counted)</option>
+            <option value="sort">Sorting algorithms (counted)</option>
+            <option value="master">Master theorem cases</option>
+            <option value="greedy">Greedy vs dynamic programming</option>
+          </select>
+        </div>
+        <div class="field" id="alFWrap">
+          <label for="alF">f(n)</label>
+          <select id="alF"></select>
+        </div>
+        <div class="field" id="alGWrap">
+          <label for="alG">g(n)</label>
+          <select id="alG"></select>
+        </div>
+        <div id="alNWrap">
+          <div class="range-row"><label class="small-copy" for="alN">n</label><span class="range-value" id="alNOut">16</span></div>
+          <input id="alN" type="range" min="2" max="64" value="16" />
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span id="alK1L">measured</span><strong id="alK1">&mdash;</strong></div>
+          <div class="kpi"><span id="alK2L">predicted</span><strong id="alK2">&mdash;</strong></div>
+        </div>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Applying the master theorem</h2></div><p>Read off <span class="math">a</span>, <span class="math">b</span>, <span class="math">d</span>, then compare.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Identify `a`, `b` and `d`</h3><p><span class="math">a</span> is the number of subproblems, <span class="math">b</span> the shrink factor, <span class="math">d</span> the exponent of the combining work. Reading <span class="math">a</span> off as the shrink factor is the standard slip.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compute `log_b a`</h3><p><span class="math">log₂ 2 = 1</span>, <span class="math">log₂ 3 ≈ 1.585</span>, <span class="math">log₂ 4 = 2</span>, <span class="math">log₂ 8 = 3</span>. These four cover most examples.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Compare with `d` and read the case</h3><p>Less, equal, greater &mdash; root dominates, level, leaves dominate.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Sanity check with the tree</h3><p>Does the work per level grow, stay constant or shrink? The answer should match the case you selected.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Master theorem</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Three recurrences</h3><p>Same theorem, three different answers.</p><div class="mathblock">1.  T(n) = 2T(n/2) + n            a=2  b=2  d=1
+    log₂2 = 1 = d      →  CASE 2  →  Θ(n log n)      merge sort
+
+2.  T(n) = 8T(n/2) + n²           a=8  b=2  d=2
+    log₂8 = 3 &gt; 2      →  CASE 3  →  Θ(n³)           naive matrix mult.
+
+3.  T(n) = 2T(n/2) + n²           a=2  b=2  d=2
+    log₂2 = 1 &lt; 2      →  CASE 1  →  Θ(n²)           root dominates
+
+Strassen improves case 2 above by using 7 multiplications, not 8:
+    T(n) = 7T(n/2) + n²,   log₂7 ≈ 2.807  →  Θ(n^2.807)</div><p>Case 3 is the one where the recursion is doing the damage: <span class="math">n³</span> work arises from <span class="math">n^{log₂8}</span> leaves, not from the combining. Strassen attacks exactly that by reducing <span class="math">a</span> from 8 to 7, and gains an exponent improvement that no faster combining step could have produced.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Mixing up `a` and `b`</strong><span><span class="math">a</span> counts subproblems, <span class="math">b</span> is the shrink factor. <span class="math">T(n) = 2T(n/3) + n</span> has <span class="math">a = 2</span>, <span class="math">b = 3</span>, and swapping them gives the wrong case.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying the polynomial form to a non-polynomial `f`</strong><span><span class="math">f(n) = n log n</span> falls between cases 2 and 3 and needs the general statement. Forcing it into the version here gives a wrong answer.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reading `Θ` as a statement about real running time</strong><span>It describes asymptotic growth. An algorithm with a better exponent and a worse constant can be slower on every input you will ever run.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can decide the case from the tree, not from the formula.</strong><p>For <span class="math">T(n) = 3T(n/4) + n</span>, compute the work at levels 0, 1 and 2 and say whether it is growing or shrinking. Then check that the master theorem gives the case your tree predicted.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The master theorem does not cover every divide-and-conquer recurrence: unequal splits like <span class="math">T(n) = T(n/3) + T(2n/3) + n</span> need the tree argument directly, and that one turns out to be <span class="math">Θ(n log n)</span> &mdash; the same as an even split, which is why quicksort survives an imperfect pivot.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../solving-linear-recurrences/" rel="prev"><span>Previous lesson</span><strong>10 &middot; Solving Linear Recurrences</strong></a>
+      <a class="lesson-link next" href="../loop-invariants-and-correctness/" rel="next"><span>Next lesson</span><strong>12 &middot; Loop Invariants and Program Correctness</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Induction and Recursion.</strong> The induction lab on this course checks a statement for the values you select and reports whether they held. That is deliberately not a proof, and two of its statements are false after passing every check a careful reader would run &mdash; which is the point the whole course is built on.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a worked example is not a proof.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "<span class=\"math\">T(n) = 4T(n/2) + n<\/span>. Which case and what result?", "a": ["Case 1, <span class=\"math\">\u0398(n)<\/span>", "Case 2, <span class=\"math\">\u0398(n log n)<\/span>", "Case 3, <span class=\"math\">\u0398(n\u00b2)<\/span>", "The theorem does not apply"], "c": 2, "why": "<span class=\"math\">log\u20824 = 2 &gt; 1 = d<\/span>, so the leaves dominate and <span class=\"math\">T(n) = \u0398(n\u00b2)<\/span>."}, {"q": "In the balanced case, why does <span class=\"math\">log n<\/span> appear?", "a": ["Because the input is halved", "Because every level does the same work and there are <span class=\"math\">log_b n<\/span> levels", "Because <span class=\"math\">a = b<\/span>", "Because of the combining step"], "c": 1, "why": "Equal work per level times the number of levels. The number of levels is <span class=\"math\">log_b n<\/span> because the size divides by <span class=\"math\">b<\/span> each time."}, {"q": "Karatsuba beats schoolbook multiplication because:", "a": ["it combines faster", "it uses 3 half-size multiplications instead of 4, and <span class=\"math\">log\u20823 &lt; 2<\/span>", "it has a smaller constant", "it uses less memory"], "c": 1, "why": "Reducing <span class=\"math\">a<\/span> from 4 to 3 changes the exponent from <span class=\"math\">log\u20824 = 2<\/span> to <span class=\"math\">log\u20823 \u2248 1.585<\/span>. The combining work is <span class=\"math\">\u0398(n)<\/span> in both."}];
+
+  (function () {
+
+  var modeSel = document.getElementById('alMode'), fSel = document.getElementById('alF'), gSel = document.getElementById('alG');
+  var nS = document.getElementById('alN');
+  var plot = document.getElementById('alPlot'), table = document.getElementById('alTable');
+  var status = document.getElementById('alStatus');
+  var title = document.getElementById('alTitle'), sub = document.getElementById('alSub');
+  var k1 = document.getElementById('alK1'), k2 = document.getElementById('alK2');
+  var k1L = document.getElementById('alK1L'), k2L = document.getElementById('alK2L');
+
+  var FUNCS = [
+    ['1', function (n) { return 1; }],
+    ['log₂ n', function (n) { return Math.log2(n); }],
+    ['n', function (n) { return n; }],
+    ['n log₂ n', function (n) { return n * Math.log2(n); }],
+    ['n²', function (n) { return n * n; }],
+    ['n³', function (n) { return n * n * n; }],
+    ['2ⁿ', function (n) { return Math.pow(2, n); }],
+    ['n!', function (n) { var f = 1; for (var i = 2; i <= n; i += 1) f *= i; return f; }],
+    ['3n² + 5n + 100', function (n) { return 3 * n * n + 5 * n + 100; }],
+    ['100n', function (n) { return 100 * n; }]
+  ];
+  FUNCS.forEach(function (f, i) {
+    [fSel, gSel].forEach(function (sel) {
+      var o = document.createElement('option');
+      o.value = String(i); o.textContent = f[0];
+      sel.appendChild(o);
+    });
+  });
+  fSel.value = '8'; gSel.value = '4';
+
+  function show(ids) {
+    ['alFWrap', 'alGWrap', 'alNWrap'].forEach(function (id) {
+      document.getElementById(id).hidden = ids.indexOf(id) === -1;
+    });
+  }
+
+  function drawSeries(series, xs, logScale) {
+    var maxY = 0;
+    series.forEach(function (s) { s.values.forEach(function (v) { if (isFinite(v) && v > maxY) maxY = v; }); });
+    if (maxY <= 0) maxY = 1;
+    function y(v) {
+      if (!isFinite(v)) return 6;
+      if (logScale) {
+        var lv = Math.log10(Math.max(v, 1)), lm = Math.log10(Math.max(maxY, 10));
+        return 200 - (lv / lm) * 180;
+      }
+      return 200 - (v / maxY) * 180;
+    }
+    function x(i) { return 26 + (i / Math.max(1, xs.length - 1)) * 470; }
+    var s = '<line x1="26" y1="200" x2="500" y2="200" stroke="var(--line-strong)" />'
+      + '<line x1="26" y1="14" x2="26" y2="200" stroke="var(--line-strong)" />';
+    series.forEach(function (ser) {
+      var d = ser.values.map(function (v, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1); }).join(' ');
+      s += '<path d="' + d + '" fill="none" stroke="' + ser.colour + '" stroke-width="2.4" opacity="0.9" />';
+      s += '<text x="' + (x(ser.values.length - 1) - 6) + '" y="' + Math.max(14, y(ser.values[ser.values.length - 1]) - 6)
+        + '" text-anchor="end" font-size="11" font-weight="700" fill="' + ser.colour + '">' + ser.label + '</text>';
+    });
+    s += '<text x="26" y="216" font-size="10" fill="var(--muted)">n = ' + xs[0] + '</text>';
+    s += '<text x="500" y="216" text-anchor="end" font-size="10" fill="var(--muted)">n = ' + xs[xs.length - 1] + '</text>';
+    if (logScale) s += '<text x="30" y="24" font-size="10" fill="var(--muted)">log scale</text>';
+    plot.innerHTML = s;
+  }
+
+  /* --- counted algorithms. Each RUNS and increments a counter. ----------- */
+  function makeArray(n, kind) {
+    var a = [];
+    for (var i = 0; i < n; i += 1) a.push(i + 1);
+    if (kind === 'reverse') a.reverse();
+    else if (kind === 'shuffle') {
+      /* A fixed permutation, generated by a deterministic step so two readers
+         at the same n see the same array and the same counts. */
+      var out = [];
+      var idx = 0;
+      while (a.length) { idx = (idx + 7) % a.length; out.push(a.splice(idx, 1)[0]); }
+      a = out;
+    }
+    return a;
+  }
+
+  function linearSearch(a, target) {
+    var c = 0;
+    for (var i = 0; i < a.length; i += 1) { c += 1; if (a[i] === target) return c; }
+    return c;
+  }
+  function binarySearch(a, target) {
+    var lo = 0, hi = a.length - 1, c = 0;
+    while (lo <= hi) {
+      c += 1;
+      var mid = (lo + hi) >> 1;
+      if (a[mid] === target) return c;
+      if (a[mid] < target) lo = mid + 1; else hi = mid - 1;
+    }
+    return c;
+  }
+  function bubbleSort(a) {
+    var arr = a.slice(), c = 0;
+    for (var i = 0; i < arr.length; i += 1)
+      for (var j = 0; j + 1 < arr.length - i; j += 1) {
+        c += 1;
+        if (arr[j] > arr[j + 1]) { var t = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = t; }
+      }
+    return c;
+  }
+  function insertionSort(a) {
+    var arr = a.slice(), c = 0;
+    for (var i = 1; i < arr.length; i += 1) {
+      var key = arr[i], j = i - 1;
+      while (j >= 0) { c += 1; if (arr[j] <= key) break; arr[j + 1] = arr[j]; j -= 1; }
+      arr[j + 1] = key;
+    }
+    return c;
+  }
+  function mergeSort(a) {
+    var c = 0;
+    function sort(arr) {
+      if (arr.length <= 1) return arr;
+      var mid = arr.length >> 1;
+      var L = sort(arr.slice(0, mid)), R = sort(arr.slice(mid)), out = [], i = 0, j = 0;
+      while (i < L.length && j < R.length) { c += 1; out.push(L[i] <= R[j] ? L[i++] : R[j++]); }
+      while (i < L.length) out.push(L[i++]);
+      while (j < R.length) out.push(R[j++]);
+      return out;
+    }
+    sort(a.slice());
+    return c;
+  }
+
+  /* Coin change: greedy and exact DP, run against each other. */
+  function greedyCoins(coins, amount) {
+    var left = amount, used = 0, picks = [];
+    var sorted = coins.slice().sort(function (x, y) { return y - x; });
+    sorted.forEach(function (c) {
+      while (left >= c) { left -= c; used += 1; picks.push(c); }
+    });
+    return left === 0 ? { count: used, picks: picks } : { count: Infinity, picks: [] };
+  }
+  function dpCoins(coins, amount) {
+    var best = new Array(amount + 1).fill(Infinity), from = new Array(amount + 1).fill(-1);
+    best[0] = 0;
+    for (var v = 1; v <= amount; v += 1) {
+      coins.forEach(function (c) {
+        if (c <= v && best[v - c] + 1 < best[v]) { best[v] = best[v - c] + 1; from[v] = c; }
+      });
+    }
+    var picks = [], cur = amount;
+    while (cur > 0 && from[cur] !== -1) { picks.push(from[cur]); cur -= from[cur]; }
+    return { count: best[amount], picks: picks, table: best };
+  }
+
+  var MODES = {
+    growth: function () {
+      show(['alNWrap']);
+      title.textContent = 'Growth rates';
+      sub.textContent = 'the same axes, log scale';
+      var N = +nS.value, xs = [], series = [];
+      for (var n = 1; n <= N; n += 1) xs.push(n);
+      var picks = [[1, 'var(--green)'], [2, 'var(--cyan)'], [3, 'var(--blue)'], [4, 'var(--purple)'], [6, 'var(--red)']];
+      picks.forEach(function (p) {
+        series.push({ label: FUNCS[p[0]][0], colour: p[1], values: xs.map(function (n) { return FUNCS[p[0]][1](n); }) });
+      });
+      drawSeries(series, xs, true);
+      var rows = '';
+      [4, 8, 16, 32, 64].filter(function (n) { return n <= N; }).forEach(function (n) {
+        rows += '<tr><td>' + n + '</td>' + picks.map(function (p) {
+          var v = FUNCS[p[0]][1](n);
+          return '<td>' + (v > 1e15 ? v.toExponential(2) : Math.round(v).toLocaleString('en-US')) + '</td>';
+        }).join('') + '</tr>';
+      });
+      table.innerHTML = '<thead><tr><th>n</th>' + picks.map(function (p) { return '<th>' + FUNCS[p[0]][0] + '</th>'; }).join('')
+        + '</tr></thead><tbody>' + rows + '</tbody>';
+      k1L.textContent = 'n'; k1.textContent = N;
+      k2L.textContent = '2ⁿ at n'; k2.textContent = Math.pow(2, N) > 1e15 ? Math.pow(2, N).toExponential(2) : Math.pow(2, N).toLocaleString('en-US');
+      status.innerHTML = 'The vertical axis is logarithmic, so a straight line is exponential growth. '
+        + 'At n = 64, n² is ' + (64 * 64).toLocaleString('en-US') + ' and 2ⁿ is about 1.8 × 10¹⁹ — the gap between '
+        + 'polynomial and exponential is not a matter of constants, and no faster machine closes it.';
+    },
+    witness: function () {
+      show(['alFWrap', 'alGWrap', 'alNWrap']);
+      title.textContent = 'Big-O by witness';
+      sub.textContent = 'f(n) ≤ C·g(n) for all n ≥ k';
+      var f = FUNCS[+fSel.value], g = FUNCS[+gSel.value], N = Math.max(8, +nS.value);
+      /* Search a small grid of C and k for a pair that works on 1..4N. The
+         search is honest: if no pair in the grid works, the lab says the
+         relation looks false rather than inventing a constant. */
+      var found = null;
+      var Cs = [1, 2, 3, 4, 5, 10, 20, 50, 100, 1000];
+      for (var ci = 0; ci < Cs.length && !found; ci += 1) {
+        for (var k = 1; k <= 40 && !found; k += 1) {
+          var ok = true;
+          for (var n = k; n <= 4 * N; n += 1) {
+            if (f[1](n) > Cs[ci] * g[1](n) + 1e-9) { ok = false; break; }
+          }
+          if (ok) found = { C: Cs[ci], k: k };
+        }
+      }
+      var xs = [], series = [];
+      for (var n2 = 1; n2 <= N; n2 += 1) xs.push(n2);
+      series.push({ label: f[0], colour: 'var(--cyan)', values: xs.map(f[1]) });
+      series.push({ label: (found ? found.C + '·' : '') + g[0], colour: 'var(--purple)', values: xs.map(function (n) { return (found ? found.C : 1) * g[1](n); }) });
+      drawSeries(series, xs, true);
+      var rows = '';
+      xs.filter(function (n) { return n <= 12 || n % 4 === 0; }).forEach(function (n) {
+        var fv = f[1](n), gv = (found ? found.C : 1) * g[1](n);
+        rows += '<tr' + (fv <= gv ? '' : ' class="focus"') + '><td>' + n + '</td><td>' + fv.toFixed(2) + '</td><td>'
+          + gv.toFixed(2) + '</td><td class="' + (fv <= gv ? 't' : 'f') + '">' + (fv <= gv ? '≤' : '>') + '</td></tr>';
+      });
+      table.innerHTML = '<thead><tr><th>n</th><th>' + f[0] + '</th><th>' + (found ? found.C + '·' : '') + g[0]
+        + '</th><th></th></tr></thead><tbody>' + rows + '</tbody>';
+      k1L.textContent = 'C'; k1.textContent = found ? found.C : '—';
+      k2L.textContent = 'k'; k2.textContent = found ? found.k : '—';
+      status.innerHTML = found
+        ? '<strong>' + f[0] + ' = O(' + g[0] + ')</strong>, witnessed by C = ' + found.C + ' and k = ' + found.k
+          + ': for every n ≥ ' + found.k + ', f(n) ≤ ' + found.C + '·g(n). Big-O is an existence claim about such a '
+          + 'pair, and producing one is the whole proof. Note that the first few n may violate it — that is what k is for.'
+        : '<strong>No constant works.</strong> The search tried C up to 1000 and k up to 40 and found no pair holding '
+          + 'through n = ' + (4 * N) + '. That is strong evidence ' + f[0] + ' is NOT O(' + g[0] + ') — a bigger '
+          + 'constant cannot rescue a faster-growing function, because the ratio itself diverges.';
+    },
+    search: function () {
+      show(['alNWrap']);
+      title.textContent = 'Linear versus binary search';
+      sub.textContent = 'worst-case comparisons, counted by running both';
+      var N = +nS.value, xs = [], lin = [], bin = [];
+      for (var n = 2; n <= Math.max(8, N); n += 1) {
+        var a = makeArray(n, 'sorted');
+        xs.push(n);
+        lin.push(linearSearch(a, n));
+        var worst = 0;
+        for (var t = 1; t <= n; t += 1) worst = Math.max(worst, binarySearch(a, t));
+        bin.push(worst);
+      }
+      drawSeries([
+        { label: 'linear', colour: 'var(--cyan)', values: lin },
+        { label: 'binary', colour: 'var(--purple)', values: bin }
+      ], xs, false);
+      var rows = '';
+      xs.filter(function (n) { return n % Math.max(1, Math.floor(xs.length / 10)) === 0; }).forEach(function (n, i) {
+        var idx = xs.indexOf(n);
+        rows += '<tr><td>' + n + '</td><td>' + lin[idx] + '</td><td>' + bin[idx] + '</td><td>'
+          + (Math.floor(Math.log2(n)) + 1) + '</td></tr>';
+      });
+      table.innerHTML = '<thead><tr><th>n</th><th>linear (worst)</th><th>binary (worst)</th><th>⌊log₂n⌋+1</th></tr></thead><tbody>'
+        + rows + '</tbody>';
+      var last = xs.length - 1;
+      k1L.textContent = 'linear'; k1.textContent = lin[last];
+      k2L.textContent = 'binary'; k2.textContent = bin[last];
+      status.innerHTML = 'At n = ' + xs[last] + ' the counted worst cases are <strong>' + lin[last]
+        + '</strong> and <strong>' + bin[last] + '</strong>. The binary column matches ⌊log₂n⌋+1 exactly, because '
+        + 'each comparison halves the remaining range — and that is only available because the array is SORTED. '
+        + 'Sorting first costs O(n log n), so binary search pays for itself only across many searches.';
+    },
+    sort: function () {
+      show(['alNWrap']);
+      title.textContent = 'Sorting, comparisons counted';
+      sub.textContent = 'the same input through three algorithms';
+      var N = Math.max(4, +nS.value), xs = [], bub = [], ins = [], mer = [], nlogn = [];
+      for (var n = 2; n <= N; n += 1) {
+        var a = makeArray(n, 'shuffle');
+        xs.push(n);
+        bub.push(bubbleSort(a));
+        ins.push(insertionSort(a));
+        mer.push(mergeSort(a));
+        nlogn.push(n * Math.log2(n));
+      }
+      drawSeries([
+        { label: 'bubble', colour: 'var(--red)', values: bub },
+        { label: 'insertion', colour: 'var(--amber)', values: ins },
+        { label: 'merge', colour: 'var(--cyan)', values: mer },
+        { label: 'n log n', colour: 'var(--purple)', values: nlogn }
+      ], xs, false);
+      var rows = '';
+      xs.filter(function (n) { return n % Math.max(1, Math.floor(xs.length / 8)) === 0; }).forEach(function (n) {
+        var i = xs.indexOf(n);
+        rows += '<tr><td>' + n + '</td><td>' + bub[i] + '</td><td>' + ins[i] + '</td><td>' + mer[i]
+          + '</td><td>' + Math.round(n * (n - 1) / 2) + '</td><td>' + Math.round(nlogn[i]) + '</td></tr>';
+      });
+      table.innerHTML = '<thead><tr><th>n</th><th>bubble</th><th>insertion</th><th>merge</th><th>n(n−1)/2</th><th>n log₂ n</th></tr></thead><tbody>'
+        + rows + '</tbody>';
+      var last = xs.length - 1;
+      k1L.textContent = 'bubble'; k1.textContent = bub[last];
+      k2L.textContent = 'merge'; k2.textContent = mer[last];
+      status.innerHTML = 'At n = ' + xs[last] + ': bubble sort made <strong>' + bub[last] + '</strong> comparisons '
+        + 'and merge sort <strong>' + mer[last] + '</strong>. Bubble sort matches n(n−1)/2 exactly, because its two '
+        + 'loops do not depend on the data at all. Insertion sort does — it is the one whose count changes with the '
+        + 'input, and on nearly-sorted data it beats merge sort, which is why real sort implementations switch to it '
+        + 'for small subarrays.';
+    },
+    master: function () {
+      show([]);
+      title.textContent = 'The master theorem';
+      sub.textContent = 'T(n) = a·T(n/b) + n^d';
+      var cases = [
+        [2, 2, 1, 'merge sort'],
+        [2, 2, 0, 'binary-tree traversal'],
+        [1, 2, 0, 'binary search'],
+        [7, 2, 2, "Strassen's matrix multiplication"],
+        [8, 2, 2, 'naive matrix multiplication'],
+        [3, 2, 1, 'Karatsuba multiplication'],
+        [4, 2, 2, 'balanced case'],
+        [2, 4, 1, 'a < b^d']
+      ];
+      var rows = cases.map(function (c) {
+        var a = c[0], b = c[1], d = c[2];
+        var crit = Math.log(a) / Math.log(b);
+        var which, result;
+        if (Math.abs(crit - d) < 1e-9) { which = 'case 2 (a = b^d)'; result = 'Θ(n^' + d + ' log n)'; }
+        else if (crit > d) { which = 'case 1 (a > b^d)'; result = 'Θ(n^log_' + b + ' ' + a + ') ≈ Θ(n^' + crit.toFixed(3) + ')'; }
+        else { which = 'case 3 (a < b^d)'; result = 'Θ(n^' + d + ')'; }
+        return '<tr><td>' + a + '</td><td>' + b + '</td><td>' + d + '</td><td>' + crit.toFixed(3) + '</td><td>'
+          + which + '</td><td>' + result + '</td><td>' + c[3] + '</td></tr>';
+      }).join('');
+      table.innerHTML = '<thead><tr><th>a</th><th>b</th><th>d</th><th>log_b a</th><th>case</th><th>T(n)</th><th>example</th></tr></thead><tbody>'
+        + rows + '</tbody>';
+      var xs = [], series = [];
+      for (var n = 2; n <= 64; n += 1) xs.push(n);
+      series.push({ label: 'n log n', colour: 'var(--cyan)', values: xs.map(function (n) { return n * Math.log2(n); }) });
+      series.push({ label: 'n^1.585', colour: 'var(--purple)', values: xs.map(function (n) { return Math.pow(n, Math.log2(3)); }) });
+      series.push({ label: 'n²', colour: 'var(--red)', values: xs.map(function (n) { return n * n; }) });
+      drawSeries(series, xs, true);
+      k1L.textContent = 'compare'; k1.textContent = 'log_b a vs d';
+      k2L.textContent = 'cases'; k2.textContent = '3';
+      status.innerHTML = 'The whole theorem is one comparison: log_b a against d — whether the work at the leaves '
+        + 'or the work at the root dominates. Karatsuba (a = 3, b = 2, d = 1) beats the naive n² only because '
+        + 'log₂3 ≈ 1.585 &lt; 2; the improvement comes from doing three multiplications instead of four, and nothing else.';
+    },
+    greedy: function () {
+      show(['alNWrap']);
+      title.textContent = 'Greedy versus dynamic programming';
+      sub.textContent = 'making change with coins 1, 3, 4';
+      var amount = Math.max(2, +nS.value);
+      var coinSets = [[1, 5, 10, 25], [1, 3, 4]];
+      var rows = '';
+      var mismatch = null;
+      for (var a = 1; a <= amount; a += 1) {
+        var g1 = greedyCoins(coinSets[0], a), d1 = dpCoins(coinSets[0], a);
+        var g2 = greedyCoins(coinSets[1], a), d2 = dpCoins(coinSets[1], a);
+        if (g2.count !== d2.count && mismatch === null) mismatch = { a: a, greedy: g2, dp: d2 };
+        if (a > amount - 12) {
+          rows += '<tr' + (g2.count !== d2.count ? ' class="focus"' : '') + '><td>' + a + '</td><td>' + g1.count
+            + '</td><td>' + d1.count + '</td><td>' + g2.count + ' (' + g2.picks.join('+') + ')</td><td>'
+            + d2.count + ' (' + d2.picks.join('+') + ')</td></tr>';
+        }
+      }
+      table.innerHTML = '<thead><tr><th>amount</th><th>greedy {1,5,10,25}</th><th>optimal</th><th>greedy {1,3,4}</th><th>optimal</th></tr></thead><tbody>'
+        + rows + '</tbody>';
+      var xs = [], gv = [], dv = [];
+      for (var v = 1; v <= amount; v += 1) {
+        xs.push(v);
+        gv.push(greedyCoins(coinSets[1], v).count);
+        dv.push(dpCoins(coinSets[1], v).count);
+      }
+      drawSeries([
+        { label: 'greedy', colour: 'var(--red)', values: gv },
+        { label: 'optimal', colour: 'var(--cyan)', values: dv }
+      ], xs, false);
+      k1L.textContent = 'first failure'; k1.textContent = mismatch ? mismatch.a : 'none yet';
+      k2L.textContent = 'gap'; k2.textContent = mismatch ? (mismatch.greedy.count - mismatch.dp.count) : 0;
+      status.innerHTML = mismatch
+        ? '<strong>Greedy is wrong at ' + mismatch.a + '.</strong> Taking the largest coin first gives '
+          + mismatch.greedy.picks.join(' + ') + ' — ' + mismatch.greedy.count + ' coins — while the optimum is '
+          + mismatch.dp.picks.join(' + ') + ', just ' + mismatch.dp.count + '. The same greedy rule is OPTIMAL for '
+          + '{1, 5, 10, 25}, which is why "greedy works" is a property of the coin system, never of the strategy. '
+          + 'Dynamic programming gets it right by solving every smaller amount once and reusing the answers.'
+        : 'Raise n past 5 to find where greedy fails on the coin set {1, 3, 4}.';
+    }
+  };
+
+  function redraw() {
+    document.getElementById('alNOut').textContent = nS.value;
+    MODES[modeSel.value]();
+  }
+
+  [nS, fSel, gSel].forEach(function (el) { el.addEventListener('input', redraw); });
+  [modeSel, fSel, gSel].forEach(function (el) { el.addEventListener('change', redraw); });
+  modeSel.value = "master";
+  nS.value = 16;
+  
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

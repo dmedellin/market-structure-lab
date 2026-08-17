@@ -8,15 +8,16 @@ agent) edits this repository and the platform that will eventually serve it.
 An educational static site published as **Learn** at `https://learn.geterdone.io`:
 
 The site is a subject-agnostic LIBRARY OF PATHS. A path is an ordered sequence of
-courses on one subject; trading is the first, and more subjects are planned. The
-published URL space:
+courses on one subject. There are two: **Trading** (8 courses, 118 lessons,
+hand-authored and normalized at intake) and **Discrete Mathematics** (8 courses,
+106 lessons, GENERATED from `content/discrete_math/`). The published URL space:
 
 | URL | Served from |
 | --- | --- |
 | `learn.geterdone.io/` | `site/index.html` — the site index: the paths, plus course search |
-| `learn.geterdone.io/paths/trading/` | `site/paths/trading/index.html` — the trading path page |
-| `learn.geterdone.io/<course>/` | `site/<course>/index.html` — one of the four course homes |
-| `learn.geterdone.io/<course>/<lesson>/` | `site/<course>/<lesson>/index.html` — one of the 54 lessons |
+| `learn.geterdone.io/paths/<subject>/` | `site/paths/<subject>/index.html` — one page per path: `trading`, `discrete-math` |
+| `learn.geterdone.io/<course>/` | `site/<course>/index.html` — one of the sixteen course homes |
+| `learn.geterdone.io/<course>/<lesson>/` | `site/<course>/<lesson>/index.html` — one of the 224 lessons |
 
 The site index and the path pages are SHARED CHROME: they must not assume the
 subject is trading — not in copy, not in a footer, not in metadata. Only course
@@ -27,7 +28,7 @@ it separately rather than classifying pages by URL shape.
 `site/` is the document root. Whatever `site/` contains is exactly what `/` serves;
 an extra directory level in `site/` becomes an extra path segment in the public URL.
 
-The full 60-page map (plus three published JSON assets) is in
+The full 245-page map (plus eight published JSON assets) is in
 [README.md](README.md#url-layout), and it is enforced in five places that must
 agree: `REQUIRED_PAGES` in `tests/test_site_invariants.py`, `scripts/smoke.py`,
 `acceptance.checks` in `release/contract.json`, the "Published URL space is
@@ -44,6 +45,33 @@ again.
 The apex `geterdone.io` is a **separate, live GitHub Pages site that this repository
 does not control**. Do not deploy to it, reconfigure it, or write anything that
 implies we own its records. Linking to it is fine; changing it is out of scope.
+
+## 1a. One path is authored, one is generated
+
+The two paths are built in opposite directions and must be edited differently.
+
+**Trading** arrived as eight hand-authored HTML packages and was normalized INTO
+the library's conventions by `scripts/intake_course.py`. Its pages are the source
+of truth. Edit them directly.
+
+**Discrete Mathematics** is generated. `content/discrete_math/` holds it as data —
+one Python module per course, with the lessons as dicts — and
+`scripts/build_discrete_math.py` renders every page from `scripts/mathpath/`
+(one stylesheet, one chrome renderer, one lab kit). **Never edit a page under a
+discrete-mathematics course slug by hand**: the next build reverts it, so the
+change appears to work and then vanishes.
+
+    python3 scripts/build_discrete_math.py            # rebuild
+    python3 scripts/build_discrete_math.py --check     # fail if any page is stale
+    node scripts/labcheck.js --generated               # execute every lab
+
+`TestGeneratedPathIsCurrent` fails if a published page differs from what the
+content package renders, and if the slug tuple in the test file disagrees with
+the content package. Both are silent failures otherwise.
+
+Adding a lesson: add a dict to the course module, run the build, then add the URL
+to the five declarations listed in section 1 — the suite tells you which are
+missing.
 
 ## 2. The self-containment invariant (non-negotiable)
 

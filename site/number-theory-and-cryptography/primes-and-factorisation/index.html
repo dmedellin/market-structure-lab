@@ -1,0 +1,1436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Primes and Unique Factorisation | Number Theory and Cryptography | Learn · geterdone.io</title>
+  <meta name="description" content="The fundamental theorem of arithmetic. Primes are the multiplicative atoms, there are infinitely many, and the uniqueness of the factorisation is what makes almost every later argument possible." />
+  <link rel="canonical" href="https://learn.geterdone.io/number-theory-and-cryptography/primes-and-factorisation/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Primes and Unique Factorisation | Number Theory and Cryptography | Learn · geterdone.io" />
+  <meta property="og:description" content="The fundamental theorem of arithmetic. Primes are the multiplicative atoms, there are infinitely many, and the uniqueness of the factorisation is what makes almost every later argument possible." />
+  <meta property="og:url" content="https://learn.geterdone.io/number-theory-and-cryptography/primes-and-factorisation/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Primes and Unique Factorisation | Number Theory and Cryptography | Learn · geterdone.io" />
+  <meta name="twitter:description" content="The fundamental theorem of arithmetic. Primes are the multiplicative atoms, there are infinitely many, and the uniqueness of the factorisation is what makes almost every later argument possible." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/number-theory-and-cryptography/primes-and-factorisation/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Number Theory and Cryptography course home">
+        <span class="brand-mark" aria-hidden="true">02</span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 &amp;middot; Lesson 02 of 14</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Number Theory and Cryptography</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 02 &amp;middot; Primes and Unique Factorisation</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The number theory workbench is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 6 &middot; Lesson 02 &middot; Divisibility</span>
+        <h1>Primes and Unique Factorisation</h1>
+        <p>The fundamental theorem of arithmetic. Primes are the multiplicative atoms, there are infinitely many, and the uniqueness of the factorisation is what makes almost every later argument possible.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">prime: exactly two positive divisors, 1 and itself.  1 is NOT prime.
+every n &gt; 1 is a product of primes, uniquely up to order
+there are infinitely many primes                    (Euclid)
+if n is composite it has a prime factor ≤ √n</div>
+        <div class="float-label" style="right:16px;bottom:16px;">The atoms of multiplication</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Existence of a factorisation is easy; uniqueness is the theorem, and it is what everything else uses.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>1 is not prime, by decision</h3><p>Because uniqueness of factorisation would fail: <span class="math">6 = 2·3 = 1·2·3 = 1·1·2·3</span>. The definition is chosen to make the theorem true.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Uniqueness is the substantive half</h3><p>Existence follows from strong induction in three lines. Uniqueness needs Euclid's lemma, which needs Bézout.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Trial division stops at `√n`</h3><p>A composite <span class="math">n</span> has a factor at most <span class="math">√n</span>, so testing beyond that is unnecessary &mdash; and it is why the sieve of lesson 3 stops where it does.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Primes</h2></div><p>The definition, both halves of the fundamental theorem, and Euclid's proof.</p></div>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Prime and composite</span><p>An integer <span class="math">p &gt; 1</span> is <strong>prime</strong> if its only positive divisors are 1 and <span class="math">p</span>. An integer <span class="math">n &gt; 1</span> that is not prime is <strong>composite</strong>. The number 1 is neither.</p></div><p>Excluding 1 is a convention chosen to make the fundamental theorem clean. If 1 were prime, <span class="math">6</span> would factor as <span class="math">2·3</span>, <span class="math">1·2·3</span>, <span class="math">1·1·2·3</span> and so on, and uniqueness would need an awkward qualification.</p><div class="thm"><span class="label">Theorem &middot; Fundamental theorem of arithmetic</span><p>Every integer <span class="math">n &gt; 1</span> can be written as a product of primes, and the factorisation is unique up to the order of the factors.</p></div><div class="proof"><p><strong>Existence</strong>, by strong induction. If <span class="math">n</span> is prime it is a product of one prime. Otherwise <span class="math">n = ab</span> with <span class="math">1 &lt; a, b &lt; n</span>, and by the inductive hypothesis both factor into primes; concatenating the two factorisations gives one for <span class="math">n</span>.</p><p><strong>Uniqueness</strong> requires Euclid's lemma (lesson 6): if a prime <span class="math">p</span> divides <span class="math">ab</span> then <span class="math">p | a</span> or <span class="math">p | b</span>. Given two factorisations of <span class="math">n</span>, the first prime of one divides the product forming the other, hence divides one of its primes, hence equals it. Cancelling and repeating matches the factorisations term by term.</p><p><span class="qed">&#9633;</span></p></div><p>Uniqueness is not obvious and it is not universal. In the number system <span class="math">{a + b√−5}</span> the number 6 factors as <span class="math">2 · 3</span> and as <span class="math">(1 + √−5)(1 − √−5)</span>, with all four factors irreducible. Unique factorisation is a property of <span class="math">ℤ</span>, and it is what course 6 relies on throughout.</p><div class="thm"><span class="label">Theorem &middot; Euclid: infinitely many primes</span><p>For any finite list of primes there is a prime not on it.</p></div><div class="proof"><p>Given primes <span class="math">p₁, …, p_k</span>, let <span class="math">N = p₁p₂⋯p_k + 1</span>. Since <span class="math">N &gt; 1</span> it has a prime factor <span class="math">q</span>.</p><p>If <span class="math">q</span> were some <span class="math">pᵢ</span>, it would divide both <span class="math">p₁⋯p_k</span> and <span class="math">N</span>, hence their difference 1 &mdash; impossible for a prime. So <span class="math">q</span> is not on the list.</p><p><span class="qed">&#9633;</span></p></div><p><span class="math">N</span> itself need not be prime: <span class="math">2·3·5·7·11·13 + 1 = 30031 = 59 · 509</span>. The proof produces a prime not on the list, not necessarily <span class="math">N</span>, and misremembering that is the standard error.</p><div class="thm"><span class="label">Theorem &middot; Trial division bound</span><p>If <span class="math">n &gt; 1</span> is composite, it has a prime factor <span class="math">p ≤ √n</span>.</p></div><div class="proof"><p>Write <span class="math">n = ab</span> with <span class="math">1 &lt; a ≤ b &lt; n</span>. If both exceeded <span class="math">√n</span> their product would exceed <span class="math">n</span>, so <span class="math">a ≤ √n</span>. Any prime factor of <span class="math">a</span> is a prime factor of <span class="math">n</span> and is at most <span class="math">a ≤ √n</span>.</p><p><span class="qed">&#9633;</span></p></div><p>So testing 101 for primality needs only the primes up to 10: 2, 3, 5, 7. None divides it, so it is prime. That is four divisions rather than ninety-nine.</p><h3>How the primes are distributed</h3><p>There are 25 primes below 100, 168 below 1000, and 78 498 below a million. The prime number theorem says the count below <span class="math">n</span> is approximately <span class="math">n / ln n</span>, so primes thin out slowly &mdash; near <span class="math">10¹⁰⁰</span> roughly one number in 230 is prime. That density is what makes RSA key generation practical: random large numbers can be tested until one is prime.</p></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Number theory workbench</h2></div><p>Algorithms with their traces</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="ntTitle">Number theory workbench</strong><span id="ntSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>the step that decides</span></div>
+      </div>
+      <div class="lab-stage"><div class="table-wrap" id="ntOut"></div></div>
+      <div class="status-banner" id="ntStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Factorisation, step by step</h3>
+          <p>Trial division from 2 upward, stopping at <span class="math">√n</span>. The divisor count comes from the exponents, which is the fundamental theorem being used rather than quoted.</p>
+        <div class="field">
+          <label for="ntMode">Mode</label>
+          <select id="ntMode">
+            <option value="div">Division algorithm: a = qb + r</option>
+            <option value="euclid">Euclidean algorithm: gcd(a, b)</option>
+            <option value="bezout">Extended Euclid: ax + by = gcd</option>
+            <option value="modtable">Modular arithmetic tables</option>
+            <option value="modexp">Modular exponentiation by squaring</option>
+            <option value="congr">Solve ax &equiv; b (mod m)</option>
+            <option value="crt">Chinese remainder theorem</option>
+            <option value="fermat">Fermat and Euler</option>
+            <option value="sieve">Sieve of Eratosthenes</option>
+            <option value="factor">Prime factorisation</option>
+          </select>
+        </div>
+        <div class="field" id="ntAWrap">
+          <label for="ntA">a</label>
+          <input id="ntA" type="number" value="1071" />
+        </div>
+        <div class="field" id="ntBWrap">
+          <label for="ntB">b</label>
+          <input id="ntB" type="number" value="462" />
+        </div>
+        <div class="field" id="ntMWrap">
+          <label for="ntM">m (modulus)</label>
+          <input id="ntM" type="number" value="26" />
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span id="ntK1Label">gcd</span><strong id="ntK1">&mdash;</strong></div>
+          <div class="kpi"><span id="ntK2Label">steps</span><strong id="ntK2">&mdash;</strong></div>
+        </div>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Factoring and testing</h2></div><p>Small primes first, stop at the square root.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Divide out the small primes in order</h3><p>2, then 3, then 5, and so on, taking each as many times as it goes.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Stop when the divisor exceeds `√(remaining)`</h3><p>Whatever is left is then prime. This is the bound above, and it is what keeps hand factorisation feasible.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Count divisors from the exponents</h3><p>If <span class="math">n = p₁^{e₁}⋯p_k^{e_k}</span> then <span class="math">n</span> has <span class="math">(e₁+1)⋯(e_k+1)</span> positive divisors, since each exponent is chosen independently from 0 to <span class="math">eᵢ</span>.</p></article><article class="card concept-card"><div class="icon">4</div><h3>To test primality, divide by primes up to `√n`</h3><p>If none divides, it is prime. For large numbers this is hopeless and probabilistic tests are used instead.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Primes</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Factor 360 and count its divisors</h3><p>Trial division, then the divisor formula.</p><div class="mathblock">360 / 2 = 180        360 / 4  = 90        360 / 8 = 45
+  45 / 3 =  15        45 / 9  =  5
+   5 is prime, and 5 &gt; √5 stops the search
+
+   360 = 2³ · 3² · 5
+
+Divisors:  (3+1)(2+1)(1+1) = 4 · 3 · 2 = 24
+
+Check by listing:  1,2,3,4,5,6,8,9,10,12,15,18,20,24,30,36,40,45,
+                   60,72,90,120,180,360        — 24 of them   ✓</div><p>The divisor count is a product rule application: a divisor is determined by choosing an exponent for each prime independently, from 0 up to its exponent in <span class="math">n</span>. Course 4 lesson 1 is doing the work, and the fundamental theorem is what guarantees the choice determines the divisor uniquely.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Calling 1 prime</strong><span>It is neither prime nor composite, and the exclusion is what makes unique factorisation stateable.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Believing Euclid&#x27;s `N` is always prime</strong><span>It has a prime factor outside the list, which is all the proof needs and all it claims.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Trial dividing past the square root</strong><span>Unnecessary. If nothing up to <span class="math">√n</span> divides <span class="math">n</span>, nothing above it does either.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can factor a four-digit number and count its divisors.</strong><p>Factor 2520 completely and predict its divisor count from the exponents before listing anything. <span class="math">2520 = 2³·3²·5·7</span>, so there are <span class="math">4·3·2·2 = 48</span> divisors.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Factoring is easy for small numbers and believed hard for large ones, and that asymmetry is the entire basis of RSA in lesson 14. The best known general algorithms are sub-exponential but not polynomial, and no proof exists that factoring is genuinely hard.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../divisibility-and-the-division-algorithm/" rel="prev"><span>Previous lesson</span><strong>01 &middot; Divisibility and the Division Algorithm</strong></a>
+      <a class="lesson-link next" href="../the-sieve-of-eratosthenes/" rel="next"><span>Next lesson</span><strong>03 &middot; The Sieve of Eratosthenes</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Number Theory and Cryptography.</strong> All arithmetic on this course is exact big-integer arithmetic, because modular exponentiation with four-digit moduli already exceeds what floating point can represent. The RSA lab generates a real key, uses it, and then recovers the private key by factoring &mdash; on primes chosen small enough that it takes microseconds.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a worked example is not a proof.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "Why is 1 not considered prime?", "a": ["It is too small", "Uniqueness of prime factorisation would fail", "It has no divisors", "It is composite"], "c": 1, "why": "Allowing 1 would let any factorisation be padded with 1s. The definition is chosen to make the fundamental theorem clean."}, {"q": "To test whether 149 is prime, you must divide by primes up to:", "a": ["74", "12", "149", "50"], "c": 1, "why": "<span class=\"math\">\u221a149 \u2248 12.2<\/span>, so the primes 2, 3, 5, 7, 11 suffice. A composite has a factor at most its square root."}, {"q": "In Euclid's proof, <span class=\"math\">N = p\u2081\u22efp_k + 1<\/span> is:", "a": ["always prime", "not necessarily prime, but it has a prime factor not on the list", "always composite", "equal to the next prime"], "c": 1, "why": "<span class=\"math\">2\u00b73\u00b75\u00b77\u00b711\u00b713 + 1 = 30031 = 59 \u00b7 509<\/span>. The proof produces a new prime, not necessarily <span class=\"math\">N<\/span> itself."}];
+
+  (function () {
+
+  /* Everything here is BigInt. Modular exponentiation with 4-digit moduli
+     already overflows exact double arithmetic, and a cryptography lab that
+     silently rounded would produce ciphertext that does not decrypt -- with no
+     sign that arithmetic rather than the method was at fault. */
+  function bgcd(a, b) { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b) { var t = a % b; a = b; b = t; } return a; }
+  function egcd(a, b) {
+    /* Returns [g, x, y] with a*x + b*y = g. The coefficients are what make
+       Bezout's identity constructive rather than an existence claim. */
+    var old_r = a, r = b, old_s = 1n, s = 0n, old_t = 0n, t = 1n;
+    while (r !== 0n) {
+      var q = old_r / r;
+      var tmp = old_r - q * r; old_r = r; r = tmp;
+      tmp = old_s - q * s; old_s = s; s = tmp;
+      tmp = old_t - q * t; old_t = t; t = tmp;
+    }
+    return [old_r, old_s, old_t];
+  }
+  function modpow(base, exp, mod) {
+    var result = 1n; base %= mod;
+    if (base < 0n) base += mod;
+    while (exp > 0n) {
+      if (exp & 1n) result = result * base % mod;
+      base = base * base % mod;
+      exp >>= 1n;
+    }
+    return result;
+  }
+  function modinv(a, m) {
+    var e = egcd(((a % m) + m) % m, m);
+    if (e[0] !== 1n) return null;
+    return ((e[1] % m) + m) % m;
+  }
+  function isPrimeBig(n) {
+    if (n < 2n) return false;
+    if (n % 2n === 0n) return n === 2n;
+    for (var d = 3n; d * d <= n; d += 2n) if (n % d === 0n) return false;
+    return true;
+  }
+
+  var modeSel = document.getElementById('ntMode');
+  var aIn = document.getElementById('ntA'), bIn = document.getElementById('ntB'), mIn = document.getElementById('ntM');
+  var out = document.getElementById('ntOut'), status = document.getElementById('ntStatus');
+  var title = document.getElementById('ntTitle'), sub = document.getElementById('ntSub');
+  var k1 = document.getElementById('ntK1'), k2 = document.getElementById('ntK2');
+  var k1L = document.getElementById('ntK1Label'), k2L = document.getElementById('ntK2Label');
+
+  function table(head, rows) {
+    return '<table class="tt"><thead><tr>' + head.map(function (h) { return '<th>' + h + '</th>'; }).join('')
+      + '</tr></thead><tbody>' + rows.join('') + '</tbody></table>';
+  }
+  function row(cells, focus) {
+    return '<tr' + (focus ? ' class="focus"' : '') + '>' + cells.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>';
+  }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  function show(fields) {
+    ['A', 'B', 'M'].forEach(function (f) {
+      document.getElementById('nt' + f + 'Wrap').hidden = fields.indexOf(f) === -1;
+    });
+  }
+
+  var MODES = {
+    div: function (a, b) {
+      show(['A', 'B']);
+      title.textContent = 'Division algorithm';
+      sub.textContent = 'a = qb + r with 0 ≤ r < |b|';
+      if (b === 0n) { out.innerHTML = ''; status.textContent = 'b must not be 0 — division by zero has no quotient.'; return; }
+      var q = a / b, r = a - q * b;
+      if (r < 0n) { q -= (b > 0n ? 1n : -1n); r = a - q * b; }
+      out.innerHTML = table(['a', 'b', 'q', 'r', 'check a = qb + r'],
+        [row([a, b, q, r, q + '·' + b + ' + ' + r + ' = ' + (q * b + r)], true)]);
+      k1L.textContent = 'remainder'; k1.textContent = r;
+      k2L.textContent = 'quotient'; k2.textContent = q;
+      status.innerHTML = 'The theorem says this q and r are <strong>unique</strong>: exactly one pair satisfies '
+        + 'a = qb + r with 0 ≤ r &lt; |b|. Note the remainder is never negative here even when a is — '
+        + 'which is why −7 mod 3 is 2, not −1.';
+    },
+    euclid: function (a, b) {
+      show(['A', 'B']);
+      title.textContent = 'Euclidean algorithm';
+      sub.textContent = 'replace (a, b) by (b, a mod b) until b = 0';
+      var rows = [], x = a < 0n ? -a : a, y = b < 0n ? -b : b, steps = 0;
+      while (y !== 0n) {
+        var q = x / y, r = x % y;
+        rows.push(row([x, y, q, r], r === 0n));
+        x = y; y = r; steps += 1;
+        if (steps > 200) break;
+      }
+      out.innerHTML = table(['a', 'b', 'q = ⌊a/b⌋', 'r = a mod b'], rows);
+      k1L.textContent = 'gcd'; k1.textContent = x;
+      k2L.textContent = 'divisions'; k2.textContent = steps;
+      status.innerHTML = 'gcd(' + a + ', ' + b + ') = <strong>' + x + '</strong> in ' + steps + ' divisions. '
+        + 'Each line is justified by one fact: gcd(a, b) = gcd(b, a mod b), because any common divisor of a and b '
+        + 'divides a − qb. Listing divisors of ' + a + ' instead would take vastly longer.';
+    },
+    bezout: function (a, b) {
+      show(['A', 'B']);
+      title.textContent = 'Extended Euclidean algorithm';
+      sub.textContent = 'ax + by = gcd(a, b)';
+      var e = egcd(a, b);
+      var rows = [row([a, b, e[1], e[2], e[0], a + '·(' + e[1] + ') + ' + b + '·(' + e[2] + ') = ' + (a * e[1] + b * e[2])], true)];
+      out.innerHTML = table(['a', 'b', 'x', 'y', 'gcd', 'check'], rows);
+      k1L.textContent = 'gcd'; k1.textContent = e[0];
+      k2L.textContent = 'x, y'; k2.textContent = e[1] + ', ' + e[2];
+      status.innerHTML = 'Bézout: the gcd is not merely a common divisor, it is the smallest positive '
+        + 'integer expressible as ' + a + 'x + ' + b + 'y. The coefficients above are computed by running '
+        + 'the Euclidean algorithm backwards, which is also where modular inverses come from.';
+    },
+    modtable: function (a, b, m) {
+      show(['M']);
+      title.textContent = 'Arithmetic modulo ' + m;
+      sub.textContent = 'addition and multiplication tables';
+      if (m < 2n || m > 16n) { out.innerHTML = ''; status.textContent = 'Choose a modulus between 2 and 16 so the tables fit.'; return; }
+      var n = Number(m);
+      function build(op, symbol) {
+        var head = [symbol];
+        for (var i = 0; i < n; i += 1) head.push(i);
+        var rows = [];
+        for (var r = 0; r < n; r += 1) {
+          var cells = ['<strong>' + r + '</strong>'];
+          for (var c = 0; c < n; c += 1) cells.push(op(r, c));
+          rows.push(row(cells, false));
+        }
+        return table(head, rows);
+      }
+      out.innerHTML = '<div style="margin-bottom:14px;">' + build(function (x, y) { return (x + y) % n; }, '+')
+        + '</div>' + build(function (x, y) { return (x * y) % n; }, '×');
+      var units = [];
+      for (var u = 1; u < n; u += 1) if (bgcd(BigInt(u), m) === 1n) units.push(u);
+      k1L.textContent = 'units'; k1.textContent = units.length;
+      k2L.textContent = 'prime?'; k2.textContent = isPrimeBig(m) ? 'yes' : 'no';
+      status.innerHTML = 'The ' + units.length + ' elements with a multiplicative inverse are '
+        + units.join(', ') + ' — exactly those coprime to ' + m + '. '
+        + (isPrimeBig(m)
+            ? 'Because ' + m + ' is prime, every nonzero element is invertible, so this is a field.'
+            : 'Because ' + m + ' is composite, some nonzero products are 0 (zero divisors), and those elements have no inverse.');
+    },
+    modexp: function (a, b, m) {
+      show(['A', 'B', 'M']);
+      title.textContent = 'Modular exponentiation';
+      sub.textContent = 'a^b mod m by repeated squaring';
+      if (m < 2n) { out.innerHTML = ''; status.textContent = 'The modulus must be at least 2.'; return; }
+      if (b < 0n) { out.innerHTML = ''; status.textContent = 'Use a non-negative exponent.'; return; }
+      var rows = [], base = ((a % m) + m) % m, exp = b, result = 1n, bit = 0;
+      while (exp > 0n) {
+        var use = (exp & 1n) === 1n;
+        if (use) result = result * base % m;
+        rows.push(row([bit, use ? '1' : '0', base, use ? result : '—'], use));
+        base = base * base % m;
+        exp >>= 1n;
+        bit += 1;
+        if (bit > 64) break;
+      }
+      out.innerHTML = table(['bit of b', 'value', 'a^(2^bit) mod m', 'running result'], rows);
+      k1L.textContent = 'a^b mod m'; k1.textContent = modpow(a, b, m);
+      k2L.textContent = 'multiplications'; k2.textContent = rows.length * 2;
+      status.innerHTML = '<strong>' + a + '^' + b + ' mod ' + m + ' = ' + modpow(a, b, m) + '</strong>, found in about '
+        + (rows.length * 2) + ' multiplications rather than ' + b + '. Reducing mod m at every step is what keeps the '
+        + 'numbers small; computing ' + a + '^' + b + ' first would be an integer with thousands of digits.';
+    },
+    congr: function (a, b, m) {
+      show(['A', 'B', 'M']);
+      title.textContent = 'Linear congruence';
+      sub.textContent = 'ax ≡ b (mod m)';
+      if (m < 2n) { out.innerHTML = ''; status.textContent = 'The modulus must be at least 2.'; return; }
+      var g = bgcd(((a % m) + m) % m, m);
+      var solutions = [];
+      if (b % g === 0n) {
+        var m2 = m / g, a2 = (a / g) % m2, b2 = (b / g) % m2;
+        var inv = modinv(a2, m2);
+        if (inv !== null) {
+          var x0 = ((b2 * inv) % m2 + m2) % m2;
+          for (var i = 0n; i < g; i += 1n) solutions.push((x0 + i * m2) % m);
+        }
+      }
+      var rows = solutions.length
+        ? solutions.map(function (x) { return row([x, ((a * x) % m + m) % m, ((b % m) + m) % m, '✓'], true); })
+        : [row(['none', '—', ((b % m) + m) % m, 'no solution'], true)];
+      out.innerHTML = table(['x', 'ax mod m', 'b mod m', ''], rows);
+      k1L.textContent = 'gcd(a, m)'; k1.textContent = g;
+      k2L.textContent = 'solutions'; k2.textContent = solutions.length;
+      status.innerHTML = solutions.length
+        ? 'gcd(a, m) = ' + g + ' divides b, so there are exactly <strong>' + g + '</strong> solutions modulo ' + m
+          + ', spaced ' + (m / g) + ' apart. The count is the gcd — not one, and not m.'
+        : 'gcd(a, m) = ' + g + ' does <strong>not</strong> divide ' + b + ', so there is <strong>no solution at all</strong>. '
+          + 'That is the whole solvability criterion, and it is checkable before any work is done.';
+    },
+    crt: function (a, b, m) {
+      show(['A', 'B', 'M']);
+      title.textContent = 'Chinese remainder theorem';
+      sub.textContent = 'x ≡ a (mod m), x ≡ b (mod m+1) — two coprime moduli';
+      var m1 = m, m2 = m + 1n;
+      if (m1 < 2n) { out.innerHTML = ''; status.textContent = 'The modulus must be at least 2.'; return; }
+      var r1 = ((a % m1) + m1) % m1, r2 = ((b % m2) + m2) % m2;
+      var M = m1 * m2;
+      var inv1 = modinv(m2 % m1, m1), inv2 = modinv(m1 % m2, m2);
+      var x = ((r1 * m2 % M) * inv1 + (r2 * m1 % M) * inv2) % M;
+      var rows = [
+        row(['x ≡ ' + r1 + ' (mod ' + m1 + ')', m2, inv1, r1 * m2 * inv1 % M], false),
+        row(['x ≡ ' + r2 + ' (mod ' + m2 + ')', m1, inv2, r2 * m1 * inv2 % M], false),
+        row(['<strong>x</strong>', '', '', '<strong>' + x + ' (mod ' + M + ')</strong>'], true)
+      ];
+      out.innerHTML = table(['congruence', 'other modulus', 'its inverse', 'contribution'], rows);
+      k1L.textContent = 'x'; k1.textContent = x;
+      k2L.textContent = 'modulus'; k2.textContent = M;
+      status.innerHTML = 'Consecutive integers are always coprime, so ' + m1 + ' and ' + m2 + ' are, and the theorem '
+        + 'applies: <strong>x = ' + x + '</strong>, unique modulo ' + M + '. Check it: ' + x + ' mod ' + m1 + ' = '
+        + (x % m1) + ' and ' + x + ' mod ' + m2 + ' = ' + (x % m2) + '.';
+    },
+    fermat: function (a, b, m) {
+      show(['A', 'M']);
+      title.textContent = "Fermat's little theorem and Euler's theorem";
+      sub.textContent = 'a^(p−1) ≡ 1 (mod p) when p is prime and p ∤ a';
+      if (m < 2n) { out.innerHTML = ''; status.textContent = 'The modulus must be at least 2.'; return; }
+      var prime = isPrimeBig(m);
+      var phi = 0n;
+      for (var i = 1n; i < m; i += 1n) if (bgcd(i, m) === 1n) phi += 1n;
+      var base = ((a % m) + m) % m;
+      var coprime = bgcd(base, m) === 1n;
+      var rows = [];
+      for (var e = 1n; e <= (m < 14n ? m : 14n); e += 1n) {
+        var v = modpow(base, e, m);
+        rows.push(row([e, v, v === 1n ? '← 1' : ''], v === 1n));
+      }
+      out.innerHTML = table(['e', a + '^e mod ' + m, ''], rows);
+      k1L.textContent = 'φ(m)'; k1.textContent = phi;
+      k2L.textContent = 'a^φ(m) mod m'; k2.textContent = coprime ? modpow(base, phi, m) : 'undefined';
+      status.innerHTML = coprime
+        ? 'φ(' + m + ') = ' + phi + ' and ' + a + '^' + phi + ' ≡ ' + modpow(base, phi, m) + ' (mod ' + m + '). '
+          + (prime
+              ? 'Since ' + m + ' is prime, φ(m) = m − 1 and this is Fermat\'s little theorem — the special case.'
+              : 'Since ' + m + ' is composite, Fermat does not apply but Euler still does; φ(m) counts the units, not m − 1.')
+        : '<strong>gcd(' + a + ', ' + m + ') ≠ 1</strong>, so neither theorem applies: both require a coprime to the modulus, '
+          + 'and no power of ' + a + ' can ever be 1 mod ' + m + '.';
+    },
+    sieve: function (a, b, m) {
+      show(['A']);
+      title.textContent = 'Sieve of Eratosthenes';
+      sub.textContent = 'cross out the multiples of each prime in turn';
+      var N = clamp(Number(a), 10, 200);
+      var composite = new Array(N + 1).fill(false), killedBy = new Array(N + 1).fill(0);
+      for (var p = 2; p * p <= N; p += 1) {
+        if (composite[p]) continue;
+        for (var q = p * p; q <= N; q += p) if (!composite[q]) { composite[q] = true; killedBy[q] = p; }
+      }
+      var cells = '';
+      var primes = 0;
+      for (var i = 2; i <= N; i += 1) {
+        if (!composite[i]) primes += 1;
+        cells += '<span class="chip' + (composite[i] ? '' : ' ok') + '" title="'
+          + (composite[i] ? 'first crossed out as a multiple of ' + killedBy[i] : 'prime') + '">' + i + '</span>';
+      }
+      out.innerHTML = '<div>' + cells + '</div>';
+      k1L.textContent = 'primes ≤ N'; k1.textContent = primes;
+      k2L.textContent = 'N'; k2.textContent = N;
+      status.innerHTML = 'There are <strong>' + primes + '</strong> primes up to ' + N + '. Sieving stops at √N = '
+        + Math.floor(Math.sqrt(N)) + ': any composite has a factor no larger than its square root, so anything still '
+        + 'standing after that is prime. Hover a crossed-out number to see which prime removed it.';
+    },
+    factor: function (a) {
+      show(['A']);
+      title.textContent = 'Prime factorisation';
+      sub.textContent = 'the unique decomposition guaranteed by the fundamental theorem';
+      var n = a < 0n ? -a : a;
+      if (n < 2n) { out.innerHTML = ''; status.textContent = 'Factorisation is defined for integers greater than 1.'; return; }
+      var rows = [], parts = [], left = n, steps = 0;
+      for (var d = 2n; d * d <= left; d += 1n) {
+        var e = 0n;
+        while (left % d === 0n) { left /= d; e += 1n; steps += 1; }
+        if (e > 0n) { rows.push(row([d, e, left], false)); parts.push(d + (e > 1n ? '^' + e : '')); }
+      }
+      if (left > 1n) { rows.push(row([left, 1n, 1n], true)); parts.push(left.toString()); }
+      out.innerHTML = table(['prime', 'exponent', 'remaining'], rows);
+      k1L.textContent = 'factors'; k1.textContent = parts.length;
+      k2L.textContent = 'divisors'; k2.textContent = (function () {
+        var count = 1n, m2 = n;
+        for (var d2 = 2n; d2 * d2 <= m2; d2 += 1n) {
+          var e2 = 0n;
+          while (m2 % d2 === 0n) { m2 /= d2; e2 += 1n; }
+          if (e2 > 0n) count *= (e2 + 1n);
+        }
+        if (m2 > 1n) count *= 2n;
+        return count.toString();
+      })();
+      status.innerHTML = '<strong>' + n + ' = ' + (parts.join(' · ') || n) + '</strong>. '
+        + 'The fundamental theorem of arithmetic says this decomposition exists and is unique up to order — '
+        + 'which is exactly what makes the exponent counting above give the number of divisors.';
+    }
+  };
+
+  function redraw() {
+    var a, b, m;
+    try {
+      a = BigInt(aIn.value || '0'); b = BigInt(bIn.value || '0'); m = BigInt(mIn.value || '2');
+    } catch (e) {
+      status.textContent = 'Enter whole numbers.';
+      return;
+    }
+    MODES[modeSel.value](a, b, m);
+  }
+
+  [aIn, bIn, mIn].forEach(function (el) { el.addEventListener('input', redraw); });
+  modeSel.addEventListener('change', function () {
+    var d = DEFAULTS[modeSel.value];
+    if (d) { aIn.value = d[0]; bIn.value = d[1]; mIn.value = d[2]; }
+    redraw();
+  });
+
+  var DEFAULTS = {
+    div: [1071, 462, 26], euclid: [1071, 462, 26], bezout: [1071, 462, 26],
+    modtable: [3, 5, 12], modexp: [7, 128, 13], congr: [6, 9, 15],
+    crt: [2, 3, 5], fermat: [3, 0, 7], sieve: [100, 0, 26], factor: [360, 0, 26]
+  };
+
+  modeSel.value = "factor";
+  (function () {
+    var d = DEFAULTS[modeSel.value];
+    if (d) { aIn.value = d[0]; bIn.value = d[1]; mIn.value = d[2]; }
+  })();
+  
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

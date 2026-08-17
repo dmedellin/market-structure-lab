@@ -2,7 +2,7 @@
 
 `market-structure-lab` is the repository, the application slug and the image
 title. What it publishes at `https://learn.geterdone.io/` is a **library of
-learning paths** — eight interactive courses and 118 lessons today, all of them
+learning paths** — two paths, sixteen interactive courses and 224 lessons today, all of them
 on one subject, whose path is now complete end to end, with more subjects
 planned. Every page is a single HTML file with its CSS, JavaScript and graphics
 inline — it loads no fonts, no frameworks, no analytics, and no third-party
@@ -580,7 +580,7 @@ and nothing is served at `/paths/` itself — the list of paths is the site inde
 Every course on the path has its own URLs; nothing on the path page is an entry
 without a page behind it.
 
-**130 pages and eight assets. Nothing else is served** — 128 pages of the course tree, plus the capstone's two pages, and the seven course schemas plus the capstone's dataset:
+**245 pages and eight assets. Nothing else is served** — 128 pages of the course tree, plus the capstone's two pages, and the seven course schemas plus the capstone's dataset:
 
 | # | URL | Page | Source |
 | --- | --- | --- | --- |
@@ -902,7 +902,7 @@ AGENTS.md                 working agreement — read before changing anything
 **1. GitHub Pages — live.** `.github/workflows/pages.yml` uploads `site/` on every
 push to `main` and deploys it to `learn.geterdone.io` (`site/CNAME` holds the
 custom domain). Before uploading it re-checks self-containment, asserts that all
-130 pages exist, and parses all eight published JSON assets. This path does not
+245 pages exist, and parses all eight published JSON assets. This path does not
 touch platform-ops, the shared Caddy edge, or any registry reservation, and it
 is **not** a shortcut around those gates — they govern the Hetzner platform,
 which is a different path.
@@ -942,7 +942,7 @@ tree — the site index, the trading path page, all eight course homes, all 118
 lessons, the seven published schemas (trade journal, options trade plan,
 indicator rule, volume and order flow rule, trading risk plan, trading system
 specification, and automated trading system), and the dated real-data capstone
-with its dataset — from the `pages.yml` workflow. 130 pages and 8 assets; the
+with its dataset — from the `pages.yml` workflow. 245 pages and 8 assets; the
 trading path is complete at eight courses, the capstone is a worked example and
 not a ninth, and nothing in the library is announced without a page behind it.
 

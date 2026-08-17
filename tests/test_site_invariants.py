@@ -19,12 +19,19 @@ What is deliberately strict here:
     Containerfile.release publishes site/ as the document root of
     https://learn.geterdone.io/ . An extra directory level silently changes every
     public URL.
-  * The site is a subject-agnostic LIBRARY OF PATHS now. A path is an ordered
-    sequence of courses on one subject; the trading path is the first one, and
-    mathematics, computer science and philosophy are planned. So the shared
-    chrome -- the site index at / and the path page at /paths/<subject>/ -- is
-    tested for the things that must hold for ANY subject, and the trading
-    vocabulary is allowed only on the course and lesson pages themselves.
+  * The site is a subject-agnostic LIBRARY OF PATHS. A path is an ordered
+    sequence of courses on one subject; trading was the first and discrete
+    mathematics is the second. So the shared chrome -- the site index at / and
+    one path page per subject at /paths/<subject>/ -- is tested for the things
+    that must hold for ANY subject, and the trading vocabulary is allowed only
+    on the course and lesson pages themselves.
+  * EVERY per-path invariant is now stated per path and asserted for each of
+    them. PATHS below is the list, and each entry carries its own course tuple,
+    its own length and its own required material notice. A guard that iterates
+    one path's courses and calls the job done is the failure this structure
+    exists to prevent: the trading path was complete and correct on the day the
+    mathematics path shipped with no pager at all, and only a per-path sweep
+    would have caught it.
   * Every invariant that used to be "the course" is stated per course and
     asserted for every one of them. The
     theme localStorage key is checked site-wide for exactly that reason: courses
@@ -296,6 +303,112 @@ COURSES = (
     ("Algorithmic and Automated Trading", COURSE_8_HOME, COURSE_8_LESSONS),
 )
 
+# ---------------------------------------------------------------------------
+# The second path: DISCRETE MATHEMATICS
+# ---------------------------------------------------------------------------
+# Eight courses, 106 lessons, published at /paths/discrete-math/ and at eight
+# further top-level course homes. It is GENERATED: content/discrete_math/ holds
+# the lessons as data and scripts/build_discrete_math.py renders the pages, so
+# the slugs below are a copy of a declaration that lives in the content package.
+# TestGeneratedPathIsCurrent asserts the two agree, which is what stops this
+# list drifting from the pages it claims to describe.
+#
+# No math course home may collide with a trading one, share a prefix with one,
+# or take the /paths/ segment. That is asserted rather than assumed, in
+# test_declared_url_space_is_the_index_the_path_pages_and_the_course_trees.
+MATH_PATH_PAGE = "/paths/discrete-math/"
+
+MATH_COURSE_1_HOME = "/logic-and-proof/"
+MATH_COURSE_1_LESSONS = (
+    "propositions-and-truth-values", "logical-connectives", "truth-tables",
+    "conditional-statements", "logical-equivalence",
+    "tautologies-and-satisfiability", "normal-forms-and-boolean-algebra",
+    "predicates-and-quantifiers", "nested-quantifiers",
+    "negating-quantified-statements", "rules-of-inference", "direct-proof",
+    "contraposition-and-contradiction", "proof-by-cases-and-counterexample",
+)
+
+MATH_COURSE_2_HOME = "/sets-relations-functions/"
+MATH_COURSE_2_LESSONS = (
+    "sets-and-membership", "subsets-and-power-sets", "set-operations",
+    "set-identities", "cartesian-products-and-tuples", "binary-relations",
+    "properties-of-relations", "equivalence-relations-and-partitions",
+    "partial-orders", "functions", "injective-surjective-bijective",
+    "composition-and-inverses", "cardinality-and-countability",
+    "the-pigeonhole-principle",
+)
+
+MATH_COURSE_3_HOME = "/induction-and-recursion/"
+MATH_COURSE_3_LESSONS = (
+    "the-well-ordering-principle", "mathematical-induction",
+    "induction-with-sums-and-products",
+    "induction-with-inequalities-and-divisibility", "strong-induction",
+    "recursive-definitions", "structural-induction", "recursive-algorithms",
+    "recurrence-relations", "solving-linear-recurrences",
+    "divide-and-conquer-recurrences", "loop-invariants-and-correctness",
+)
+
+MATH_COURSE_4_HOME = "/combinatorics-and-counting/"
+MATH_COURSE_4_LESSONS = (
+    "sum-and-product-rules", "counting-with-restrictions", "permutations",
+    "combinations", "binomial-coefficients", "the-binomial-theorem",
+    "permutations-with-repetition", "combinations-with-repetition",
+    "inclusion-exclusion", "derangements", "generalized-pigeonhole",
+    "generating-functions", "combinatorial-proof", "choosing-a-counting-method",
+)
+
+MATH_COURSE_5_HOME = "/discrete-probability/"
+MATH_COURSE_5_LESSONS = (
+    "sample-spaces-and-events", "computing-probabilities", "probability-axioms",
+    "conditional-probability", "independence", "bayes-theorem",
+    "random-variables", "expected-value", "linearity-of-expectation",
+    "variance", "binomial-distribution", "geometric-distribution",
+)
+
+MATH_COURSE_6_HOME = "/number-theory-and-cryptography/"
+MATH_COURSE_6_LESSONS = (
+    "divisibility-and-the-division-algorithm", "primes-and-factorisation",
+    "the-sieve-of-eratosthenes", "greatest-common-divisor",
+    "the-euclidean-algorithm", "bezout-and-modular-inverses",
+    "modular-arithmetic", "modular-exponentiation", "linear-congruences",
+    "chinese-remainder-theorem", "fermat-and-euler",
+    "hashing-and-pseudorandom-numbers", "classical-ciphers", "rsa-encryption",
+)
+
+MATH_COURSE_7_HOME = "/graphs-and-trees/"
+MATH_COURSE_7_LESSONS = (
+    "graphs-and-graph-models", "degree-and-the-handshake-theorem",
+    "graph-representations", "paths-and-connectivity", "graph-isomorphism",
+    "bipartite-graphs", "euler-and-hamilton", "graph-traversal",
+    "shortest-paths", "trees", "tree-traversals", "spanning-trees",
+    "graph-colouring", "planar-graphs",
+)
+
+MATH_COURSE_8_HOME = "/algorithms-and-complexity/"
+MATH_COURSE_8_LESSONS = (
+    "algorithms-and-pseudocode", "correctness-and-termination",
+    "growth-of-functions", "big-o-notation", "analysing-iterative-algorithms",
+    "searching-and-sorting", "divide-and-conquer",
+    "recursion-trees-and-amortised-analysis", "greedy-algorithms",
+    "dynamic-programming", "complexity-classes",
+    "decidability-and-the-halting-problem",
+)
+
+MATH_COURSES = (
+    ("Logic and Proof", MATH_COURSE_1_HOME, MATH_COURSE_1_LESSONS),
+    ("Sets, Relations, and Functions", MATH_COURSE_2_HOME, MATH_COURSE_2_LESSONS),
+    ("Induction and Recursion", MATH_COURSE_3_HOME, MATH_COURSE_3_LESSONS),
+    ("Combinatorics and Counting", MATH_COURSE_4_HOME, MATH_COURSE_4_LESSONS),
+    ("Discrete Probability", MATH_COURSE_5_HOME, MATH_COURSE_5_LESSONS),
+    ("Number Theory and Cryptography", MATH_COURSE_6_HOME, MATH_COURSE_6_LESSONS),
+    ("Graphs and Trees", MATH_COURSE_7_HOME, MATH_COURSE_7_LESSONS),
+    ("Algorithms and Complexity", MATH_COURSE_8_HOME, MATH_COURSE_8_LESSONS),
+)
+
+# Every course on the site, in path order, path by path. Any invariant that is
+# about A COURSE rather than about a particular subject iterates this.
+ALL_COURSES = COURSES + MATH_COURSES
+
 # The trading path is EIGHT courses long and all eight are published. This tuple
 # is EMPTY, and that is the finished state rather than an oversight: an entry
 # here is a promise with no page behind it, and there are none left to make.
@@ -308,6 +421,13 @@ COURSES = (
 # the path links, and no page anywhere still calls a course unavailable.
 PATH_COURSE_COUNT = 8
 UPCOMING_COURSES = ()
+
+# The discrete mathematics path is also complete: eight courses, all published,
+# nothing announced. Same finished state, declared separately so that a future
+# path arriving part-written cannot be smuggled in under the trading path's
+# completeness.
+MATH_PATH_COURSE_COUNT = 8
+MATH_UPCOMING_COURSES = ()
 
 # ---------------------------------------------------------------------------
 # The capstone: a dated, REAL-DATA worked example
@@ -376,10 +496,31 @@ def source_of(url):
 # a mathematics path or a computer-science path without being rewritten. They
 # are published pages like any other, so every whole-tree invariant applies to
 # them -- but the per-course invariants do not, because neither is a course.
-SHARED_CHROME_PAGES = (SITE_INDEX, PATH_PAGE)
+SHARED_CHROME_PAGES = (SITE_INDEX, PATH_PAGE, MATH_PATH_PAGE)
 
-REQUIRED_PAGES = {SITE_INDEX: "index.html", PATH_PAGE: source_of(PATH_PAGE)}
-for _title, _home, _slugs in COURSES:
+# Every path, as one row: the subject name, its page, its courses and the
+# length it claims. Each per-path invariant below iterates THIS, so a third
+# path is a third row plus its pages -- never a relaxed assertion.
+PATHS = (
+    ("Trading", PATH_PAGE, COURSES, PATH_COURSE_COUNT, UPCOMING_COURSES),
+    ("Discrete Mathematics", MATH_PATH_PAGE, MATH_COURSES, MATH_PATH_COURSE_COUNT,
+     MATH_UPCOMING_COURSES),
+)
+
+PATH_PAGES = tuple(page for _t, page, _c, _n, _u in PATHS)
+
+# Which path a course home belongs to. Built from PATHS so it cannot disagree
+# with it, and used by the disclaimer sweep: what a course page must promise
+# its reader depends on the subject, and nothing else in this file does.
+PATH_OF_COURSE = {}
+for _subject, _page, _courses, _n, _upcoming in PATHS:
+    for _t, _home, _slugs in _courses:
+        PATH_OF_COURSE[_home] = _page
+
+REQUIRED_PAGES = {SITE_INDEX: "index.html"}
+for _page in PATH_PAGES:
+    REQUIRED_PAGES[_page] = source_of(_page)
+for _title, _home, _slugs in ALL_COURSES:
     REQUIRED_PAGES[_home] = source_of(_home)
     for _slug in _slugs:
         REQUIRED_PAGES[lesson_url(_home, _slug)] = source_of(lesson_url(_home, _slug))
@@ -427,7 +568,7 @@ NON_HTML_ASSETS = {
 # configures delivery and is not a page or an asset any lesson links to.
 DELIVERY_CONTROL_FILES = frozenset({"CNAME"})
 
-COURSE_HOMES = tuple(home for _title, home, _slugs in COURSES)
+COURSE_HOMES = tuple(home for _title, home, _slugs in ALL_COURSES)
 
 # Everything that is not shared chrome is course material -- all eight course
 # homes as well as all 118 lessons. All of it teaches trading, so all of it
@@ -504,6 +645,30 @@ DISCLAIMER_RE = re.compile(r"(?i)educational use only")
 SYNTHETIC_DISCLAIMER_RE = re.compile(
     r"(?i)charts are synthetic examples,\s*not trade signals"
 )
+
+# ...and the sentence the DISCRETE MATHEMATICS path carries instead.
+#
+# The synthetic-examples sentence would be meaningless on that path: there are
+# no charts of anything and nothing to signal, and a disclaimer that does not
+# apply is worse than none because it is the sentence a reader trusts. What a
+# reader of that material needs told is different, and it is two claims that are
+# both true and both checkable: every figure is computed in the browser from the
+# stated definition (the labs enumerate, count and verify; none ships a
+# precomputed answer), and a worked example is not a proof -- which is the
+# actual intellectual hazard of learning this subject from interactive examples,
+# and the subject of that path's course 3.
+#
+# Only the second half is pinned here, because it is the half that makes a
+# claim about what the material does NOT establish.
+MATH_DISCLAIMER_RE = re.compile(r"(?i)a worked example is not a proof")
+
+# Which sentence each path's course pages must carry. A path is a KEY here, so
+# adding one without deciding what it promises its reader fails immediately
+# rather than inheriting another subject's promise.
+PATH_MATERIAL_DISCLAIMER = {
+    PATH_PAGE: ("the synthetic-examples disclaimer", SYNTHETIC_DISCLAIMER_RE),
+    MATH_PATH_PAGE: ("the worked-example-is-not-a-proof disclaimer", MATH_DISCLAIMER_RE),
+}
 
 # The notice a REAL-DATA page carries instead. Each phrase is asserted
 # separately so a page cannot satisfy the check with a vague gesture at
@@ -765,7 +930,7 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
     than as a page.
     """
 
-    def test_declared_url_space_is_the_index_the_path_page_and_the_course_tree(self):
+    def test_declared_url_space_is_the_index_the_path_pages_and_the_course_trees(self):
         """Site index, path page, a home per course and that course's lessons,
         then the capstone.
 
@@ -781,17 +946,33 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         drift is the course tree, and folding the capstone into it would let a
         course quietly disappear behind a worked example being added.
         """
-        course_tree = (
-            1  # the site index
-            + 1  # the path page
+        trading_tree = (
+            1  # the trading path page
             + len(COURSES)
             + sum(len(slugs) for _t, _h, slugs in COURSES)
         )
+        math_tree = (
+            1  # the discrete mathematics path page
+            + len(MATH_COURSES)
+            + sum(len(slugs) for _t, _h, slugs in MATH_COURSES)
+        )
+        course_tree = 1 + trading_tree + math_tree  # 1 for the site index
         self.assertEqual(
-            128,
+            127,
+            trading_tree,
+            "the trading path is 1 + 8 + 7 + 15 + 16 + 16 + 16 + 16 + 16 + 16 = 127 "
+            "pages, got %d" % trading_tree,
+        )
+        self.assertEqual(
+            115,
+            math_tree,
+            "the discrete mathematics path is 1 + 8 + 14 + 14 + 12 + 14 + 12 + 14 "
+            "+ 14 + 12 = 115 pages, got %d" % math_tree,
+        )
+        self.assertEqual(
+            243,
             course_tree,
-            "the library is 1 + 1 + 8 + 7 + 15 + 16 + 16 + 16 + 16 + 16 + 16 = 128 "
-            "pages, got %d" % course_tree,
+            "the site index plus both path trees is 243 pages, got %d" % course_tree,
         )
         self.assertEqual(
             2,
@@ -800,16 +981,30 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         )
         expected = course_tree + len(REAL_DATA_PAGES)
         self.assertEqual(
-            130,
+            245,
             expected,
-            "128 course-tree pages plus the 2 capstone pages is 130, got %d" % expected,
+            "243 course-tree pages plus the 2 capstone pages is 245, got %d" % expected,
         )
         self.assertEqual(
             expected,
             len(REQUIRED_PAGES),
             "expected %d published URLs, got %d" % (expected, len(REQUIRED_PAGES)),
         )
-        self.assertEqual(8, len(COURSES), "the library publishes eight courses")
+        self.assertEqual(8, len(COURSES), "the trading path publishes eight courses")
+        self.assertEqual(
+            8, len(MATH_COURSES),
+            "the discrete mathematics path publishes eight courses",
+        )
+        self.assertEqual(
+            [14, 14, 12, 14, 12, 14, 14, 12],
+            [len(slugs) for _t, _h, slugs in MATH_COURSES],
+            "the discrete mathematics course lengths, in path order",
+        )
+        self.assertEqual(
+            106,
+            sum(len(slugs) for _t, _h, slugs in MATH_COURSES),
+            "the discrete mathematics path is 106 lessons",
+        )
         self.assertEqual(7, len(COURSE_1_LESSONS), "course 1 is seven lessons")
         self.assertEqual(15, len(COURSE_2_LESSONS), "course 2 is fifteen lessons")
         self.assertEqual(16, len(COURSE_3_LESSONS), "course 3 is sixteen lessons")
@@ -818,27 +1013,32 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         self.assertEqual(16, len(COURSE_6_LESSONS), "course 6 is sixteen lessons")
         self.assertEqual(16, len(COURSE_7_LESSONS), "course 7 is sixteen lessons")
         self.assertEqual(16, len(COURSE_8_LESSONS), "course 8 is sixteen lessons")
-        for index, (title, _home, slugs) in enumerate(COURSES, start=1):
+        for title, _home, slugs in ALL_COURSES:
             with self.subTest(course=title):
                 self.assertEqual(
-                    len(set(slugs)), len(slugs), "duplicate slug in course %d" % index
+                    len(set(slugs)), len(slugs), "duplicate slug in course %r" % title
                 )
-        for _title, home, _slugs in COURSES:
+        for _title, home, _slugs in ALL_COURSES:
             with self.subTest(course=home):
                 self.assertIn(home, REQUIRED_PAGES, "the course home must be published")
         # The path page is published, and it is neither a course home nor a
         # lesson. Stating that here means a future guard cannot quietly start
         # classifying it by URL shape: it is two segments deep exactly like a
         # lesson, and it lives under a first segment no course may take.
-        self.assertIn(PATH_PAGE, REQUIRED_PAGES, "the path page must be published")
-        self.assertNotIn(PATH_PAGE, COURSE_HOMES, "the path page is not a course home")
-        self.assertNotIn(PATH_PAGE, LESSON_PAGES, "the path page is not a lesson")
-        self.assertNotIn(PATH_PAGE, COURSE_PAGES, "the path page is not course material")
-        self.assertTrue(
-            PATH_PAGE.startswith(PATHS_PREFIX),
-            "the path page lives under %s" % PATHS_PREFIX,
+        for page in PATH_PAGES:
+            with self.subTest(path=page):
+                self.assertIn(page, REQUIRED_PAGES, "the path page must be published")
+                self.assertNotIn(page, COURSE_HOMES, "a path page is not a course home")
+                self.assertNotIn(page, LESSON_PAGES, "a path page is not a lesson")
+                self.assertNotIn(page, COURSE_PAGES, "a path page is not course material")
+                self.assertTrue(
+                    page.startswith(PATHS_PREFIX),
+                    "a path page lives under %s" % PATHS_PREFIX,
+                )
+        self.assertEqual(
+            len(set(PATH_PAGES)), len(PATH_PAGES), "two paths declare the same page"
         )
-        for _title, home, _slugs in COURSES:
+        for _title, home, _slugs in ALL_COURSES:
             with self.subTest(course=home):
                 self.assertFalse(
                     home.startswith(PATHS_PREFIX) or PATHS_PREFIX.startswith(home),
@@ -846,9 +1046,12 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
                 )
         # No course home may be a prefix of another: the first path segment
         # must identify the course on its own, or /a/ and /a-b/x/ start
-        # answering for each other in guards that match on prefixes.
-        for _title, home, _slugs in COURSES:
-            for _other_title, other, _other_slugs in COURSES:
+        # answering for each other in guards that match on prefixes. This runs
+        # ACROSS paths as well as within one: both paths publish their courses
+        # at the top level, so a mathematics slug colliding with a trading slug
+        # would be one URL claimed by two builders.
+        for _title, home, _slugs in ALL_COURSES:
+            for _other_title, other, _other_slugs in ALL_COURSES:
                 if home is other:
                     continue
                 with self.subTest(home=home, other=other):
@@ -1317,20 +1520,32 @@ class TestContent(SiteFixture):
             "declared course pages are not published: %s" % missing,
         )
         course_pages = [
-            doc
+            (url, doc)
             for url, doc in sorted(by_url.items())
             if url not in SHARED_CHROME_PAGES and url not in REAL_DATA_PAGES
         ]
         self.assertTrue(course_pages, "no course page found under %s" % SITE_ROOT)
         self.assertEqual(
-            126,
+            240,
             len(course_pages),
-            "eight course homes and 118 lessons carry this disclaimer; found %d "
-            "pages, so a page has been added or removed without being declared"
-            % len(course_pages),
+            "sixteen course homes and 224 lessons carry a material disclaimer; "
+            "found %d pages, so a page has been added or removed without being "
+            "declared" % len(course_pages),
         )
-        for doc in course_pages:
-            with self.subTest(page=str(doc.path.relative_to(REPO_ROOT))):
+        for url, doc in course_pages:
+            page = str(doc.path.relative_to(REPO_ROOT))
+            # Which path a page belongs to is decided by its OWNING COURSE HOME,
+            # never by its URL shape. Both paths publish their courses at the top
+            # level, so the first segment carries no subject information at all.
+            owners = [home for home in COURSE_HOMES if url.startswith(home)]
+            with self.subTest(page=page):
+                self.assertEqual(
+                    1, len(owners),
+                    "a course page belongs to exactly one course home, %s matched %s"
+                    % (url, owners),
+                )
+                path_page = PATH_OF_COURSE[owners[0]]
+                label, pattern = PATH_MATERIAL_DISCLAIMER[path_page]
                 self.assertRegex(
                     doc.text,
                     DISCLAIMER_RE,
@@ -1338,13 +1553,29 @@ class TestContent(SiteFixture):
                 )
                 self.assertRegex(
                     doc.text,
-                    SYNTHETIC_DISCLAIMER_RE,
-                    "course page lost the synthetic-examples disclaimer. Every "
-                    "chart on a course page is generated; the sentence saying so "
-                    "is what stops a reader reading it as a signal. The only "
-                    "pages exempt from it are the declared REAL_DATA_PAGES, "
-                    "which must carry the real-data notice instead.",
+                    pattern,
+                    "course page on the %s path lost %s. What a course page "
+                    "promises its reader depends on the subject: a trading "
+                    "lesson must say its charts are synthetic, and a mathematics "
+                    "lesson must say a worked example is not a proof. Carrying "
+                    "the other path's sentence is worse than carrying none, "
+                    "because it is a sentence the reader trusts."
+                    % (path_page, label),
                 )
+                # ...and it must NOT carry the other path's promise, which would
+                # be a false statement about this material.
+                for other_page, (other_label, other_pattern) in sorted(
+                    PATH_MATERIAL_DISCLAIMER.items()
+                ):
+                    if other_page == path_page:
+                        continue
+                    self.assertNotRegex(
+                        doc.text,
+                        other_pattern,
+                        "a page on the %s path carries %s, which belongs to %s "
+                        "and is not true here"
+                        % (path_page, other_label, other_page),
+                    )
 
     def test_no_secret_like_strings(self):
         for path in sorted(p for p in SITE_ROOT.rglob("*") if p.is_file()):
@@ -1461,7 +1692,7 @@ class TestRealDataPages(SiteFixture):
                     "the capstone belongs to the path as a whole and is "
                     "published beneath %s, got %s" % (PATH_PAGE, url),
                 )
-        for _title, home, slugs in COURSES:
+        for _title, home, slugs in ALL_COURSES:
             with self.subTest(course=home):
                 self.assertNotIn(
                     home,
@@ -1828,7 +2059,7 @@ class TestLessonChain(SiteFixture):
 
     def test_prev_next_links_form_a_complete_chain_per_course(self):
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        for title, home, slugs in COURSES:
+        for title, home, slugs in ALL_COURSES:
             urls = [lesson_url(home, slug) for slug in slugs]
             for index, url in enumerate(urls):
                 doc = by_url.get(url)
@@ -1888,7 +2119,7 @@ class TestLessonChain(SiteFixture):
     def test_every_course_home_links_to_every_one_of_its_lessons(self):
         """The home is the other way in; a lesson it omits is unreachable."""
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        for title, home, slugs in COURSES:
+        for title, home, slugs in ALL_COURSES:
             doc = by_url.get(home)
             with self.subTest(course=title):
                 self.assertIsNotNone(doc, "%s is not published" % home)
@@ -2307,29 +2538,34 @@ class TestPathPosition(SiteFixture):
 
     def test_every_course_home_declares_its_position_in_the_path(self):
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        for index, (title, home, _slugs) in enumerate(COURSES, start=1):
-            doc = by_url.get(home)
-            with self.subTest(course=title):
-                self.assertIsNotNone(doc, "%s is not published" % home)
-                position = re.compile(
-                    r"(?i)\bcourse\s+0?%d\s+of\s+%d\b" % (index, PATH_COURSE_COUNT)
-                )
-                self.assertRegex(
-                    visible_text(doc.text),
-                    position,
-                    "%s does not say it is course %d of %d. The path is eight "
-                    "courses long and all eight are published, so a course home "
-                    "that states a position out of any other number would "
-                    "describe a path that does not exist."
-                    % (home, index, PATH_COURSE_COUNT),
-                )
+        for subject, page, courses, total, _upcoming in PATHS:
+            for index, (title, home, _slugs) in enumerate(courses, start=1):
+                doc = by_url.get(home)
+                with self.subTest(path=subject, course=title):
+                    self.assertIsNotNone(doc, "%s is not published" % home)
+                    position = re.compile(
+                        r"(?i)\bcourse\s+0?%d\s+of\s+%d\b" % (index, total)
+                    )
+                    self.assertRegex(
+                        visible_text(doc.text),
+                        position,
+                        "%s does not say it is course %d of %d. The %s path is %d "
+                        "courses long and all of them are published, so a course "
+                        "home stating a position out of any other number would "
+                        "describe a path that does not exist."
+                        % (home, index, total, page, total),
+                    )
 
     def test_course_pager_points_at_the_adjacent_course_homes(self):
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        homes = [home for _title, home, _slugs in COURSES]
-        for index, (title, home, _slugs) in enumerate(COURSES):
+        for subject, _page, courses, _total, _upcoming in PATHS:
+            self._check_course_pager(by_url, subject, courses)
+
+    def _check_course_pager(self, by_url, subject, courses):
+        homes = [home for _title, home, _slugs in courses]
+        for index, (title, home, _slugs) in enumerate(courses):
             doc = by_url.get(home)
-            with self.subTest(course=title):
+            with self.subTest(path=subject, course=title):
                 self.assertIsNotNone(doc, "%s is not published" % home)
                 previous = self.course_pager(doc, "prev")
                 following = self.course_pager(doc, "next")
@@ -2383,7 +2619,7 @@ class TestPathPosition(SiteFixture):
     def test_course_pager_targets_are_published_pages(self):
         """The href has to resolve to a real page, not merely to the right string."""
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        for title, home, _slugs in COURSES:
+        for title, home, _slugs in ALL_COURSES:
             doc = by_url.get(home)
             if doc is None:
                 continue  # reported above
@@ -2415,25 +2651,27 @@ class TestPathPage(SiteFixture):
     this page or anywhere else still describes a course as unavailable.
     """
 
-    def path_document(self):
+    def path_document(self, page):
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        doc = by_url.get(PATH_PAGE)
-        self.assertIsNotNone(doc, "%s is not published" % PATH_PAGE)
+        doc = by_url.get(page)
+        self.assertIsNotNone(doc, "%s is not published" % page)
         return doc
 
-    def test_the_path_page_links_to_every_published_course_home(self):
-        doc = self.path_document()
-        linked = {
-            urllib.parse.urljoin(PATH_PAGE, value.split("#", 1)[0])
-            for tag, attr, value, _line in doc.urls
-            if tag == "a" and attr == "href" and is_internal_relative(value)
-        }
-        missing = [home for _title, home, _slugs in COURSES if home not in linked]
-        self.assertEqual(
-            [], missing, "%s does not link to %s" % (PATH_PAGE, missing)
-        )
+    def test_every_path_page_links_to_every_one_of_its_course_homes(self):
+        for subject, page, courses, _total, _upcoming in PATHS:
+            doc = self.path_document(page)
+            linked = {
+                urllib.parse.urljoin(page, value.split("#", 1)[0])
+                for tag, attr, value, _line in doc.urls
+                if tag == "a" and attr == "href" and is_internal_relative(value)
+            }
+            missing = [home for _title, home, _slugs in courses if home not in linked]
+            with self.subTest(path=subject):
+                self.assertEqual(
+                    [], missing, "%s does not link to %s" % (page, missing)
+                )
 
-    def test_the_site_index_links_to_the_path_page(self):
+    def test_the_site_index_links_to_every_path_page(self):
         """The index is how a reader reaches a path at all."""
         by_url = {served_path(doc.path): doc for doc in self.documents}
         doc = by_url.get(SITE_INDEX)
@@ -2443,41 +2681,45 @@ class TestPathPage(SiteFixture):
             for tag, attr, value, _line in doc.urls
             if tag == "a" and attr == "href" and is_internal_relative(value)
         }
-        self.assertIn(
-            PATH_PAGE,
-            linked,
-            "the site index does not link to %s; a path nothing links to is a "
-            "path nobody can open" % PATH_PAGE,
-        )
-
-    def test_all_eight_courses_appear_in_path_order(self):
-        doc = self.path_document()
-        copy = visible_text(doc.text)
-        expected = [title for _n, title in UPCOMING_COURSES]
-        names = [title for title, _home, _slugs in COURSES] + expected
-        self.assertEqual(
-            PATH_COURSE_COUNT,
-            len(names),
-            "the path is %d courses long" % PATH_COURSE_COUNT,
-        )
-        positions = []
-        for name in names:
-            index = copy.find(name)
-            with self.subTest(course=name):
-                self.assertNotEqual(
-                    -1,
-                    index,
-                    "%s names no course %r. The path page lists every course on "
-                    "the path, in order, and all eight are published."
-                    % (PATH_PAGE, name),
+        for page in PATH_PAGES:
+            with self.subTest(path=page):
+                self.assertIn(
+                    page,
+                    linked,
+                    "the site index does not link to %s; a path nothing links to "
+                    "is a path nobody can open" % page,
                 )
-            positions.append(index)
-        self.assertEqual(
-            sorted(positions),
-            positions,
-            "the courses are listed out of order: %s"
-            % list(zip(names, positions)),
-        )
+
+    def test_every_path_lists_its_courses_in_path_order(self):
+        for subject, page, courses, total, upcoming in PATHS:
+            doc = self.path_document(page)
+            copy = visible_text(doc.text)
+            names = [title for title, _home, _slugs in courses] + [
+                title for _n, title in upcoming
+            ]
+            with self.subTest(path=subject):
+                self.assertEqual(
+                    total, len(names), "the %s path is %d courses long" % (page, total)
+                )
+            positions = []
+            for name in names:
+                index = copy.find(name)
+                with self.subTest(path=subject, course=name):
+                    self.assertNotEqual(
+                        -1,
+                        index,
+                        "%s names no course %r. A path page lists every course on "
+                        "its path, in order, and all of them are published."
+                        % (page, name),
+                    )
+                positions.append(index)
+            with self.subTest(path=subject):
+                self.assertEqual(
+                    sorted(positions),
+                    positions,
+                    "the courses are listed out of order: %s"
+                    % list(zip(names, positions)),
+                )
 
     def test_every_course_on_the_path_page_is_a_link(self):
         """No entry on the path page is inert any more.
@@ -2488,17 +2730,18 @@ class TestPathPage(SiteFixture):
         positive form of the retired upcoming checks: instead of asserting that
         an announced course is NOT a link, it asserts that every course IS one.
         """
-        doc = self.path_document()
-        links = [text for text in anchor_texts(doc.text) if text]
-        joined = " | ".join(links)
-        for title, home, _slugs in COURSES:
-            with self.subTest(course=title):
-                self.assertIn(
-                    title,
-                    joined,
-                    "%s lists %r without linking it. Every course on the path is "
-                    "published; the entry must open %s." % (PATH_PAGE, title, home),
-                )
+        for subject, page, courses, _total, _upcoming in PATHS:
+            doc = self.path_document(page)
+            links = [text for text in anchor_texts(doc.text) if text]
+            joined = " | ".join(links)
+            for title, home, _slugs in courses:
+                with self.subTest(path=subject, course=title):
+                    self.assertIn(
+                        title,
+                        joined,
+                        "%s lists %r without linking it. Every course on the path "
+                        "is published; the entry must open %s." % (page, title, home),
+                    )
 
 
 class TestPathIsComplete(SiteFixture):
@@ -2601,6 +2844,84 @@ class TestPathIsComplete(SiteFixture):
             [("8 of 8 courses available", 8, 8)],
             availability_claims(_Doc("<p>8 of 8 courses available</p>")),
             "the finished claim is found and simply passes the equality check",
+        )
+
+
+class TestGeneratedPathIsCurrent(unittest.TestCase):
+    """The discrete mathematics pages are DERIVED. Nothing may edit them by hand.
+
+    content/discrete_math/ holds that path as data and
+    scripts/build_discrete_math.py renders it. Two things can therefore drift and
+    both are silent:
+
+      * a page edited directly on disk, which the next build reverts without
+        telling anyone;
+      * this file's MATH_COURSES, which is a copy of a declaration living in the
+        content package, and which nothing else compares against it.
+
+    Both are checked here. The build script's --check mode re-renders every page
+    in memory and reports any that differ, so a hand edit fails the suite rather
+    than surviving until someone rebuilds.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        sys.path.insert(0, str(REPO_ROOT / "content"))
+        try:
+            from discrete_math import PATH
+        except ImportError as exc:  # pragma: no cover - a missing package is a failure
+            raise unittest.SkipTest("cannot import the content package: %s" % exc)
+        cls.path = PATH
+
+    def test_declared_slugs_match_the_content_package(self):
+        """The tuple above and the content package must name the same courses."""
+        from_content = tuple(
+            (course["title"], "/%s/" % course["slug"],
+             tuple(lesson["slug"] for lesson in course["lessons"]))
+            for course in self.path["courses"]
+        )
+        self.assertEqual(
+            MATH_COURSES,
+            from_content,
+            "MATH_COURSES in this file disagrees with content/discrete_math/. "
+            "This file declares the URL space and the content package builds it; "
+            "when they differ, one of them describes pages that do not exist.",
+        )
+
+    def test_the_path_page_slug_matches(self):
+        self.assertEqual(
+            MATH_PATH_PAGE,
+            "/paths/%s/" % self.path["slug"],
+            "the declared path page and the content package's slug disagree",
+        )
+
+    def test_no_generated_page_has_been_edited_by_hand(self):
+        """Re-render every page and compare with what is published.
+
+        A hand edit to a generated page is not a small liberty: it is reverted by
+        the next build, so the change appears to work and then vanishes. Failing
+        here is the only way that gets noticed.
+        """
+        sys.path.insert(0, str(REPO_ROOT / "scripts"))
+        try:
+            from build_discrete_math import pages
+        except ImportError as exc:  # pragma: no cover
+            raise unittest.SkipTest("cannot import the build script: %s" % exc)
+
+        stale = []
+        for relative, markup in pages():
+            target = SITE_ROOT / relative
+            if not target.is_file():
+                stale.append("%s (missing)" % relative)
+            elif target.read_text(encoding="utf-8") != markup:
+                stale.append(relative)
+        self.assertEqual(
+            [],
+            stale,
+            "%d published page(s) differ from what the content package renders. "
+            "Either the content changed and the site was not rebuilt, or a "
+            "generated page was edited by hand and the next build will revert it. "
+            "Run: python3 scripts/build_discrete_math.py" % len(stale),
         )
 
 
@@ -2926,7 +3247,7 @@ class TestPinnedConventions(SiteFixture):
     def test_pager_anchors_use_the_pinned_class_names(self):
         """Exactly lesson-link prev / lesson-link next, and nothing else."""
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        for title, home, slugs in COURSES:
+        for title, home, slugs in ALL_COURSES:
             urls = [lesson_url(home, slug) for slug in slugs]
             for index, url in enumerate(urls):
                 doc = by_url.get(url)
@@ -2974,7 +3295,7 @@ class TestPinnedConventions(SiteFixture):
         relationship that is not true.
         """
         by_url = {served_path(doc.path): doc for doc in self.documents}
-        for title, home, slugs in COURSES:
+        for title, home, slugs in ALL_COURSES:
             urls = [lesson_url(home, slug) for slug in slugs]
             for index, url in enumerate(urls):
                 doc = by_url.get(url)

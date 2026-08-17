@@ -31,7 +31,10 @@
     },
     "notes": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1},
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
       "description": "Non-authoritative human notes. Never used for any decision."
     },
     "unallocated": {
@@ -53,22 +56,42 @@
     "application": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["slug", "tenant_slug", "project_name", "container_name", "title"],
+      "required": [
+        "slug",
+        "tenant_slug",
+        "project_name",
+        "container_name",
+        "title"
+      ],
       "properties": {
         "slug": {
           "const": "market-structure-lab",
           "description": "FROZEN. Must equal the root registry slug for this app once onboarding registers it."
         },
-        "tenant_slug": {"const": "geterdone"},
-        "project_name": {"const": "market-structure-lab"},
-        "container_name": {"const": "market-structure-lab"},
-        "title": {"type": "string", "minLength": 1, "maxLength": 128}
+        "tenant_slug": {
+          "const": "geterdone"
+        },
+        "project_name": {
+          "const": "market-structure-lab"
+        },
+        "container_name": {
+          "const": "market-structure-lab"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
       }
     },
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repository", "revision", "ref"],
+      "required": [
+        "repository",
+        "revision",
+        "ref"
+      ],
       "properties": {
         "repository": {
           "const": "dmedellin/market-structure-lab",
@@ -87,7 +110,11 @@
     "image": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repository", "digest", "reference"],
+      "required": [
+        "repository",
+        "digest",
+        "reference"
+      ],
       "properties": {
         "repository": {
           "const": "ghcr.io/dmedellin/market-structure-lab",
@@ -107,7 +134,12 @@
     "build": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["timestamp", "source_date_epoch", "base_images", "reproducible"],
+      "required": [
+        "timestamp",
+        "source_date_epoch",
+        "base_images",
+        "reproducible"
+      ],
       "properties": {
         "timestamp": {
           "$ref": "#/$defs/rfc3339Utc",
@@ -125,14 +157,31 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["role", "reference", "digest"],
+            "required": [
+              "role",
+              "reference",
+              "digest"
+            ],
             "properties": {
-              "role": {"enum": ["build", "runtime"]},
-              "reference": {"type": "string", "minLength": 1, "description": "Base image repository without a tag or digest."},
+              "role": {
+                "enum": [
+                  "build",
+                  "runtime"
+                ]
+              },
+              "reference": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Base image repository without a tag or digest."
+              },
               "digest": {
                 "oneOf": [
-                  {"$ref": "#/$defs/imageDigest"},
-                  {"$ref": "#/$defs/placeholder"}
+                  {
+                    "$ref": "#/$defs/imageDigest"
+                  },
+                  {
+                    "$ref": "#/$defs/placeholder"
+                  }
                 ],
                 "description": "Pinned base image digest. __BASE_IMAGE_DIGEST__ marks a digest that has NOT been verified against a registry; a fabricated sha256 is a contract violation."
               }
@@ -148,14 +197,20 @@
     "compose": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["template_path", "template_sha256", "rendered_sha256"],
+      "required": [
+        "template_path",
+        "template_sha256",
+        "rendered_sha256"
+      ],
       "properties": {
         "template_path": {
           "type": "string",
           "pattern": "^(?:deploy/)?[A-Za-z0-9._-]+\\.ya?ml$",
           "description": "Repository-relative path of the trusted Compose template. The template is committed at the repository root as compose.template.yaml; deploy/ is accepted as the only other location so this field can name the file wherever the repository keeps it. Absolute paths, traversing paths and any deeper directory are rejected. A pattern match is NOT proof the file exists, and this is the field's real failure mode: a deploy/-only pattern made the committed root path unrepresentable, the example named a file that did not exist, and the release workflow quietly hashed a different template and reported success. The workflow now hashes exactly the file this field names and fails when it names none, because a template_sha256 computed over a file the contract never named certifies nothing."
         },
-        "template_sha256": {"$ref": "#/$defs/sha256Hex"},
+        "template_sha256": {
+          "$ref": "#/$defs/sha256Hex"
+        },
         "rendered_sha256": {
           "$ref": "#/$defs/sha256Hex",
           "description": "SHA-256 of the compose.yaml rendered from the template plus root-registry-authorized values only."
@@ -178,48 +233,101 @@
         "restart"
       ],
       "properties": {
-        "user": {"type": "string", "pattern": "^[0-9]+:[0-9]+$"},
-        "read_only_rootfs": {"const": true},
-        "cap_drop": {"type": "array", "const": ["ALL"]},
-        "no_new_privileges": {"const": true},
+        "user": {
+          "type": "string",
+          "pattern": "^[0-9]+:[0-9]+$"
+        },
+        "read_only_rootfs": {
+          "const": true
+        },
+        "cap_drop": {
+          "type": "array",
+          "const": [
+            "ALL"
+          ]
+        },
+        "no_new_privileges": {
+          "const": true
+        },
         "tmpfs": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"type": "string", "pattern": "^/[A-Za-z0-9/_.-]*:[A-Za-z0-9=,]+$"},
+          "items": {
+            "type": "string",
+            "pattern": "^/[A-Za-z0-9/_.-]*:[A-Za-z0-9=,]+$"
+          },
           "description": "Bounded tmpfs mounts only. Unbounded or host-path mounts are rejected."
         },
-        "cpus": {"type": "number", "exclusiveMinimum": 0, "maximum": 2},
-        "memory_limit_mib": {"type": "integer", "minimum": 16, "maximum": 1024},
-        "memory_reservation_mib": {"type": "integer", "minimum": 0, "maximum": 1024},
-        "pids_limit": {"type": "integer", "minimum": 16, "maximum": 512},
-        "restart": {"const": "unless-stopped"}
+        "cpus": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 2
+        },
+        "memory_limit_mib": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 1024
+        },
+        "memory_reservation_mib": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1024
+        },
+        "pids_limit": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 512
+        },
+        "restart": {
+          "const": "unless-stopped"
+        }
       }
     },
     "network": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["loopback_host", "loopback_port", "internal_port", "subnet", "class"],
+      "required": [
+        "loopback_host",
+        "loopback_port",
+        "internal_port",
+        "subnet",
+        "class"
+      ],
       "properties": {
-        "loopback_host": {"const": "127.0.0.1"},
+        "loopback_host": {
+          "const": "127.0.0.1"
+        },
         "loopback_port": {
           "oneOf": [
-            {"$ref": "#/$defs/allocatedPort"},
-            {"$ref": "#/$defs/unallocatedPortToken"}
+            {
+              "$ref": "#/$defs/allocatedPort"
+            },
+            {
+              "$ref": "#/$defs/unallocatedPortToken"
+            }
           ],
           "description": "Host loopback port, in exactly one of two states: an allocated integer, or the unallocated token. A human must choose the integer and prove with a live preflight that no listener, registry reservation, or neighbor owns it. Automated allocation is forbidden."
         },
         "internal_port": {
           "oneOf": [
-            {"$ref": "#/$defs/allocatedPort"},
-            {"$ref": "#/$defs/unallocatedPortToken"}
+            {
+              "$ref": "#/$defs/allocatedPort"
+            },
+            {
+              "$ref": "#/$defs/unallocatedPortToken"
+            }
           ],
           "description": "Port the in-container web server listens on: the port deploy/Caddyfile binds, Containerfile.release EXPOSEs and HEALTHCHECKs, and the registry entry repeats. Every one of those artifacts still carries the unallocated token there, and compose publishes the loopback port straight through to it, so while unallocated this field carries the SAME token as loopback_port and renders to the SAME integer. Being namespaced does not make it independently choosable, and it must never be pinned to a number the host has already reserved for another app."
         },
         "subnet": {
           "oneOf": [
-            {"$ref": "#/$defs/cidr"},
-            {"const": "__APP_SUBNET__"}
+            {
+              "$ref": "#/$defs/cidr"
+            },
+            {
+              "const": "__APP_SUBNET__"
+            }
           ],
           "description": "Private app bridge subnet. UNALLOCATED: a human must choose it and prove it collides with no live route and no registry reservation. 10.89.2.0/24 is owned by platform-private-edge and must never be used."
         },
@@ -232,30 +340,54 @@
     "health": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path", "success_status", "deadline_seconds", "cache_control"],
+      "required": [
+        "path",
+        "success_status",
+        "deadline_seconds",
+        "cache_control"
+      ],
       "properties": {
         "path": {
           "const": "/healthz",
           "description": "FROZEN. Served by the in-container web server; must match the root registry health path."
         },
-        "success_status": {"const": 200},
-        "deadline_seconds": {"type": "integer", "minimum": 5, "maximum": 600},
-        "cache_control": {"const": "no-store"}
+        "success_status": {
+          "const": 200
+        },
+        "deadline_seconds": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 600
+        },
+        "cache_control": {
+          "const": "no-store"
+        }
       }
     },
     "persistence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["class", "migrations"],
+      "required": [
+        "class",
+        "migrations"
+      ],
       "properties": {
-        "class": {"const": "stateless"},
-        "migrations": {"const": "forbidden"}
+        "class": {
+          "const": "stateless"
+        },
+        "migrations": {
+          "const": "forbidden"
+        }
       }
     },
     "domains": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["canonical", "aliases", "all"],
+      "required": [
+        "canonical",
+        "aliases",
+        "all"
+      ],
       "properties": {
         "canonical": {
           "const": "learn.geterdone.io",
@@ -264,16 +396,27 @@
         "aliases": {
           "type": "array",
           "uniqueItems": true,
-          "items": {"$ref": "#/$defs/domain"}
+          "items": {
+            "$ref": "#/$defs/domain"
+          }
         },
         "all": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"$ref": "#/$defs/domain"},
-          "contains": {"const": "learn.geterdone.io"},
+          "items": {
+            "$ref": "#/$defs/domain"
+          },
+          "contains": {
+            "const": "learn.geterdone.io"
+          },
           "not": {
-            "contains": {"enum": ["geterdone.io", "www.geterdone.io"]}
+            "contains": {
+              "enum": [
+                "geterdone.io",
+                "www.geterdone.io"
+              ]
+            }
           },
           "description": "Every public hostname this app claims. Claiming the apex or its www alias is rejected: they belong to a separate site this platform does not control."
         }
@@ -283,13 +426,19 @@
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "items": {"type": "string", "pattern": "^https://[a-z0-9.-]+/[^\\s]*$"},
+      "items": {
+        "type": "string",
+        "pattern": "^https://[a-z0-9.-]+/[^\\s]*$"
+      },
       "description": "Public endpoints of other tenants on the same host. Each must stay healthy and identity-stable across the release window; drift fails acceptance and rolls back only this app."
     },
     "acceptance": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["deadline_seconds", "checks"],
+      "required": [
+        "deadline_seconds",
+        "checks"
+      ],
       "properties": {
         "deadline_seconds": {
           "type": "integer",
@@ -299,166 +448,3121 @@
         },
         "checks": {
           "type": "array",
-          "minItems": 142,
+          "minItems": 257,
           "uniqueItems": true,
-          "items": {"$ref": "#/$defs/acceptanceCheck"},
+          "items": {
+            "$ref": "#/$defs/acceptanceCheck"
+          },
           "allOf": [
-            {"contains": {"properties": {"id": {"const": "internal-health"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "learn-index"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "trading-path"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "capstone-iren-lab"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "capstone-iren-slides"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course-home"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "lesson-page"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "lesson-ranges-breakouts-liquidity"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "lesson-multi-timeframe-market-structure"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "lesson-pullbacks-entry-models"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "lesson-invalidation-stops-risk-reward"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "lesson-volume-relative-strength"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "lesson-options-contract-selection"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-home"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-trade-thesis"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-support-resistance"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-confluence"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-breakout-setups"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-pullback-setups"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-reversal-setups"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-entry-confirmation"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-stop-loss-placement"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-profit-targets"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-risk-to-reward"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-position-sizing"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-trade-management"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-backtesting"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-trading-journal"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course2-lesson-performance-review"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-home"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-options-contract-fundamentals"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-calls-and-puts"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-moneyness"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-option-premium"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-option-chain-and-liquidity"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-expiration-and-time-decay"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-implied-volatility"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-delta-and-gamma"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-theta-and-vega"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-long-calls-and-long-puts"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-covered-calls"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-cash-secured-puts"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-vertical-debit-spreads"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-vertical-credit-spreads"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-exercise-assignment-and-expiration"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course3-lesson-options-trade-planning"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-home"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-technical-indicator-fundamentals"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-moving-averages"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-moving-average-crossovers"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-relative-strength-index"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-stochastic-oscillator"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-macd"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-average-directional-index"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-average-true-range"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-bollinger-bands"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-keltner-channels"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-donchian-channels"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-rate-of-change-and-momentum"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-indicator-divergence"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-combining-indicators"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-indicator-selection-by-market-regime"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course4-lesson-indicator-based-trading-rules"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-home"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-fundamentals"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-price-volume-relationships"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-relative-volume-and-volume-spikes"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-confirmation"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-on-balance-volume"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-accumulation-distribution-and-chaikin-money-flow"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-weighted-average-price"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-anchored-volume-weighted-average-price"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-profile"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-value-area-poc-hvn-lvn"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-bid-ask-spread-and-order-types"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-time-and-sales"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-footprint-charts-and-bid-ask-delta"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-cumulative-volume-delta"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-order-book-and-market-depth"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course5-lesson-volume-and-order-flow-trading-rules"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-home"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-risk-management-fundamentals"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-account-risk-and-risk-budget"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-risk-per-trade"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-stop-loss-and-structural-invalidation"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-position-sizing"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-reward-to-risk-and-r-multiples"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-win-rate-average-win-loss-and-expectancy"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-losing-streaks-and-drawdown"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-risk-of-ruin"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-volatility-and-atr-based-risk"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-gap-slippage-liquidity-and-execution-risk"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-leverage-and-margin-risk"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-correlation-concentration-and-portfolio-exposure"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-options-risk-management"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-daily-and-weekly-risk-limits"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course6-lesson-trading-risk-plan"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-home"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-backtesting-fundamentals"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-testable-trading-rules-and-hypotheses"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-historical-data-and-data-quality"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-survivorship-selection-and-corporate-actions"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-timeframes-sessions-and-bar-construction"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-signal-timing-look-ahead-bias-and-data-leakage"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-trade-execution-simulation"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-position-sizing-and-portfolio-accounting"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-transaction-costs-spread-slippage-and-liquidity"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-trade-log-equity-curve-and-drawdown"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-performance-metrics-and-expectancy"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-benchmarking-and-risk-adjusted-performance"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-in-sample-validation-and-out-of-sample-data"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-walk-forward-testing"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-overfitting-sensitivity-monte-carlo-and-stress-testing"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course7-lesson-trading-system-specification-and-backtest-report"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "journal-schema"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "trade-plan-schema"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "indicator-rule-schema"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "volume-order-flow-rule-schema"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "trading-risk-plan-schema"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "trading-system-specification-schema"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-home"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-algorithmic-and-automated-trading-fundamentals"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-trading-system-architecture-and-components"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-market-data-ingestion-and-normalization"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-time-sessions-events-and-scheduling"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-signal-engine-and-strategy-state"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-portfolio-position-and-risk-engine"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-broker-apis-and-order-lifecycle"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-order-management-and-execution"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-paper-trading-and-forward-testing"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-scanners-alerts-and-human-approval"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-reliability-idempotency-retries-and-recovery"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-observability-logging-and-auditability"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-security-secrets-permissions-and-kill-switches"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-deployment-environments-and-configuration"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-ai-assisted-and-agentic-trading-workflows"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "course8-lesson-system-specification-and-production-readiness"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "automated-trading-system-schema"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "capstone-iren-dataset"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "unknown-path-404"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "self-containment"}}, "required": ["id"]}},
-            {"contains": {"properties": {"id": {"const": "security-headers"}}, "required": ["id"]}}
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "internal-health"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "learn-index"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "trading-path"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "capstone-iren-lab"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "capstone-iren-slides"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "lesson-page"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "lesson-ranges-breakouts-liquidity"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "lesson-multi-timeframe-market-structure"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "lesson-pullbacks-entry-models"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "lesson-invalidation-stops-risk-reward"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "lesson-volume-relative-strength"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "lesson-options-contract-selection"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-trade-thesis"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-support-resistance"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-confluence"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-breakout-setups"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-pullback-setups"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-reversal-setups"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-entry-confirmation"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-stop-loss-placement"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-profit-targets"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-risk-to-reward"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-position-sizing"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-trade-management"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-backtesting"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-trading-journal"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course2-lesson-performance-review"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-options-contract-fundamentals"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-calls-and-puts"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-moneyness"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-option-premium"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-option-chain-and-liquidity"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-expiration-and-time-decay"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-implied-volatility"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-delta-and-gamma"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-theta-and-vega"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-long-calls-and-long-puts"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-covered-calls"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-cash-secured-puts"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-vertical-debit-spreads"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-vertical-credit-spreads"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-exercise-assignment-and-expiration"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course3-lesson-options-trade-planning"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-technical-indicator-fundamentals"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-moving-averages"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-moving-average-crossovers"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-relative-strength-index"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-stochastic-oscillator"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-macd"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-average-directional-index"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-average-true-range"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-bollinger-bands"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-keltner-channels"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-donchian-channels"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-rate-of-change-and-momentum"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-indicator-divergence"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-combining-indicators"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-indicator-selection-by-market-regime"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course4-lesson-indicator-based-trading-rules"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-volume-fundamentals"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-price-volume-relationships"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-relative-volume-and-volume-spikes"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-volume-confirmation"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-on-balance-volume"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-accumulation-distribution-and-chaikin-money-flow"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-volume-weighted-average-price"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-anchored-volume-weighted-average-price"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-volume-profile"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-value-area-poc-hvn-lvn"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-bid-ask-spread-and-order-types"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-time-and-sales"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-footprint-charts-and-bid-ask-delta"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-cumulative-volume-delta"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-order-book-and-market-depth"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course5-lesson-volume-and-order-flow-trading-rules"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-risk-management-fundamentals"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-account-risk-and-risk-budget"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-risk-per-trade"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-stop-loss-and-structural-invalidation"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-position-sizing"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-reward-to-risk-and-r-multiples"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-win-rate-average-win-loss-and-expectancy"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-losing-streaks-and-drawdown"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-risk-of-ruin"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-volatility-and-atr-based-risk"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-gap-slippage-liquidity-and-execution-risk"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-leverage-and-margin-risk"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-correlation-concentration-and-portfolio-exposure"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-options-risk-management"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-daily-and-weekly-risk-limits"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course6-lesson-trading-risk-plan"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-backtesting-fundamentals"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-testable-trading-rules-and-hypotheses"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-historical-data-and-data-quality"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-survivorship-selection-and-corporate-actions"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-timeframes-sessions-and-bar-construction"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-signal-timing-look-ahead-bias-and-data-leakage"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-trade-execution-simulation"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-position-sizing-and-portfolio-accounting"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-transaction-costs-spread-slippage-and-liquidity"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-trade-log-equity-curve-and-drawdown"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-performance-metrics-and-expectancy"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-benchmarking-and-risk-adjusted-performance"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-in-sample-validation-and-out-of-sample-data"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-walk-forward-testing"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-overfitting-sensitivity-monte-carlo-and-stress-testing"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course7-lesson-trading-system-specification-and-backtest-report"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "journal-schema"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "trade-plan-schema"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "indicator-rule-schema"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "volume-order-flow-rule-schema"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "trading-risk-plan-schema"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "trading-system-specification-schema"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-algorithmic-and-automated-trading-fundamentals"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-trading-system-architecture-and-components"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-market-data-ingestion-and-normalization"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-time-sessions-events-and-scheduling"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-signal-engine-and-strategy-state"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-portfolio-position-and-risk-engine"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-broker-apis-and-order-lifecycle"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-order-management-and-execution"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-paper-trading-and-forward-testing"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-scanners-alerts-and-human-approval"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-reliability-idempotency-retries-and-recovery"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-observability-logging-and-auditability"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-security-secrets-permissions-and-kill-switches"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-deployment-environments-and-configuration"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-ai-assisted-and-agentic-trading-workflows"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "course8-lesson-system-specification-and-production-readiness"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "automated-trading-system-schema"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "capstone-iren-dataset"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "unknown-path-404"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "self-containment"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "security-headers"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "discrete-math-path"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-home"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-propositions-and-truth-values"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-logical-connectives"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-truth-tables"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-conditional-statements"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-logical-equivalence"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-tautologies-and-satisfiability"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-normal-forms-and-boolean-algebra"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-predicates-and-quantifiers"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-nested-quantifiers"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-negating-quantified-statements"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-rules-of-inference"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-direct-proof"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-contraposition-and-contradiction"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course1-lesson-proof-by-cases-and-counterexample"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-sets-and-membership"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-subsets-and-power-sets"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-set-operations"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-set-identities"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-cartesian-products-and-tuples"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-binary-relations"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-properties-of-relations"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-equivalence-relations-and-partitions"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-partial-orders"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-functions"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-injective-surjective-bijective"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-composition-and-inverses"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-cardinality-and-countability"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course2-lesson-the-pigeonhole-principle"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-the-well-ordering-principle"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-mathematical-induction"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-induction-with-sums-and-products"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-induction-with-inequalities-and-divisibility"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-strong-induction"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-recursive-definitions"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-structural-induction"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-recursive-algorithms"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-recurrence-relations"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-solving-linear-recurrences"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-divide-and-conquer-recurrences"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course3-lesson-loop-invariants-and-correctness"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-sum-and-product-rules"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-counting-with-restrictions"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-permutations"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-combinations"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-binomial-coefficients"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-the-binomial-theorem"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-permutations-with-repetition"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-combinations-with-repetition"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-inclusion-exclusion"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-derangements"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-generalized-pigeonhole"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-generating-functions"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-combinatorial-proof"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course4-lesson-choosing-a-counting-method"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-sample-spaces-and-events"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-computing-probabilities"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-probability-axioms"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-conditional-probability"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-independence"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-bayes-theorem"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-random-variables"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-expected-value"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-linearity-of-expectation"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-variance"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-binomial-distribution"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course5-lesson-geometric-distribution"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-divisibility-and-the-division-algorithm"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-primes-and-factorisation"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-the-sieve-of-eratosthenes"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-greatest-common-divisor"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-the-euclidean-algorithm"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-bezout-and-modular-inverses"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-modular-arithmetic"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-modular-exponentiation"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-linear-congruences"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-chinese-remainder-theorem"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-fermat-and-euler"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-hashing-and-pseudorandom-numbers"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-classical-ciphers"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course6-lesson-rsa-encryption"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-graphs-and-graph-models"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-degree-and-the-handshake-theorem"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-graph-representations"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-paths-and-connectivity"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-graph-isomorphism"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-bipartite-graphs"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-euler-and-hamilton"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-graph-traversal"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-shortest-paths"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-trees"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-tree-traversals"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-spanning-trees"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-graph-colouring"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course7-lesson-planar-graphs"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-algorithms-and-pseudocode"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-correctness-and-termination"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-growth-of-functions"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-big-o-notation"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-analysing-iterative-algorithms"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-searching-and-sorting"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-divide-and-conquer"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-recursion-trees-and-amortised-analysis"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-greedy-algorithms"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-dynamic-programming"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-complexity-classes"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            },
+            {
+              "contains": {
+                "properties": {
+                  "id": {
+                    "const": "math-course8-lesson-decidability-and-the-halting-problem"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            }
           ],
           "description": "The complete blocking acceptance matrix: the platform checks, plus one check per published URL of the library - the site index at / (id learn-index), the path page at /paths/trading/ (id trading-path), a home per course (/market-structure/ id course-home, /trade-setup-execution/ id course2-home, /options-trading/ id course3-home, /technical-indicators/ id course4-home, /volume-and-order-flow/ id course5-home, /trading-risk-management/ id course6-home, /backtesting-and-trading-systems/ id course7-home, /algorithmic-and-automated-trading/ id course8-home), each course's lessons beneath its own home (course 1 lab 01 keeps the id lesson-page; the ids of courses 2 to 8 are course-scoped because a slug is unique only within a course - course 2 and course 6 both ship a position-sizing lesson), and the eight published non-HTML assets, /trade-setup-execution/trade-journal-schema.json (id journal-schema), /options-trading/options-trade-plan-schema.json (id trade-plan-schema), /technical-indicators/indicator-rule-schema.json (id indicator-rule-schema), /volume-and-order-flow/volume-order-flow-rule-schema.json (id volume-order-flow-rule-schema), /trading-risk-management/trading-risk-plan-schema.json (id trading-risk-plan-schema), /backtesting-and-trading-systems/trading-system-specification-schema.json (id trading-system-specification-schema) /algorithmic-and-automated-trading/automated-trading-system-schema.json (id automated-trading-system-schema) and the capstone's dataset /paths/trading/iren-analysis-2026-08-16/iren-analysis-data.json (id capstone-iren-dataset, not a schema but the data the capstone's figures derive from), each of which is fetched and PARSED rather than asserted against page-shaped markers. Beside the course tree the path publishes the dated real-data CAPSTONE at /paths/trading/iren-analysis-2026-08-16/ (id capstone-iren-lab) and its slide deck (id capstone-iren-slides). That is 130 pages and 8 assets: the trading path is COMPLETE at eight courses and the capstone is a worked example rather than a ninth, so this list stops growing until a second path is published. The two capstone pages are the only published pages built from REAL market data, so their checks demand the real-data notice and the AS-OF DATE in place of the synthetic-examples disclaimer that would be false on them - a stricter requirement, declared by name here and in tests/test_site_invariants.py (REAL_DATA_PAGES), never a page exempted from being checked. The path page is neither a course home nor a lesson and is checked as itself: it is the only published URL that shows the WHOLE path in one place, and its markers name the LAST course on the path and the link to its home - they used to name the first announced course instead, which is a state this path can no longer be in. Every id below is REQUIRED to be present: minItems alone would let a check be swapped out for another. The retired flat /<lesson>/ URLs and course 1's retired /market-structure-lab/ prefix have no checks because they have no pages. scripts/smoke.py implements the same check ids; a green HTTP 200 alone is never acceptance."
-
         }
       }
     },
     "evidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["audit_path", "app_root", "minimum_retained_accepted_releases", "artifact_name"],
+      "required": [
+        "audit_path",
+        "app_root",
+        "minimum_retained_accepted_releases",
+        "artifact_name"
+      ],
       "properties": {
-        "audit_path": {"const": "/var/log/app-platform/market-structure-lab"},
-        "app_root": {"const": "/srv/apps/market-structure-lab"},
-        "minimum_retained_accepted_releases": {"type": "integer", "minimum": 2},
+        "audit_path": {
+          "const": "/var/log/app-platform/market-structure-lab"
+        },
+        "app_root": {
+          "const": "/srv/apps/market-structure-lab"
+        },
+        "minimum_retained_accepted_releases": {
+          "type": "integer",
+          "minimum": 2
+        },
         "artifact_name": {
           "type": "string",
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
@@ -469,12 +3573,28 @@
     "invocation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repository", "workflow_run_id", "workflow_run_attempt", "environment"],
+      "required": [
+        "repository",
+        "workflow_run_id",
+        "workflow_run_attempt",
+        "environment"
+      ],
       "properties": {
-        "repository": {"const": "dmedellin/market-structure-lab"},
-        "workflow_run_id": {"type": "string", "pattern": "^[0-9]{1,20}$"},
-        "workflow_run_attempt": {"type": "integer", "minimum": 1, "maximum": 100},
-        "environment": {"const": "production"}
+        "repository": {
+          "const": "dmedellin/market-structure-lab"
+        },
+        "workflow_run_id": {
+          "type": "string",
+          "pattern": "^[0-9]{1,20}$"
+        },
+        "workflow_run_attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "environment": {
+          "const": "production"
+        }
       },
       "description": "Delivery/audit identity. It distinguishes executions and never changes release content identity."
     },
@@ -487,32 +3607,62 @@
     {
       "$comment": "DRAFT VARIANT. placeholders_present:true is the ONLY state in which an unallocated token may appear anywhere in this document, and it must be accompanied by the list of what a human still has to allocate. A draft is authorable, auditable, and never deployable.",
       "if": {
-        "properties": {"placeholders_present": {"const": true}},
-        "required": ["placeholders_present"]
+        "properties": {
+          "placeholders_present": {
+            "const": true
+          }
+        },
+        "required": [
+          "placeholders_present"
+        ]
       },
-      "then": {"required": ["unallocated"]}
+      "then": {
+        "required": [
+          "unallocated"
+        ]
+      }
     },
     {
       "$comment": "RELEASE VARIANT. placeholders_present:false is this document's assertion that it is deployable, so every field that has an unallocated state must be in its allocated state, and nothing may still be listed as unallocated. This is the only branch a deploy gate may act on.",
       "if": {
-        "properties": {"placeholders_present": {"const": false}},
-        "required": ["placeholders_present"]
+        "properties": {
+          "placeholders_present": {
+            "const": false
+          }
+        },
+        "required": [
+          "placeholders_present"
+        ]
       },
       "then": {
-        "not": {"required": ["unallocated"]},
+        "not": {
+          "required": [
+            "unallocated"
+          ]
+        },
         "properties": {
           "network": {
             "properties": {
-              "loopback_port": {"$ref": "#/$defs/allocatedPort"},
-              "internal_port": {"$ref": "#/$defs/allocatedPort"},
-              "subnet": {"$ref": "#/$defs/cidr"}
+              "loopback_port": {
+                "$ref": "#/$defs/allocatedPort"
+              },
+              "internal_port": {
+                "$ref": "#/$defs/allocatedPort"
+              },
+              "subnet": {
+                "$ref": "#/$defs/cidr"
+              }
             }
           },
           "build": {
             "properties": {
               "base_images": {
                 "items": {
-                  "properties": {"digest": {"$ref": "#/$defs/imageDigest"}}
+                  "properties": {
+                    "digest": {
+                      "$ref": "#/$defs/imageDigest"
+                    }
+                  }
                 }
               }
             }
@@ -524,71 +3674,135 @@
     {
       "$comment": "An unallocated loopback_port must be declared, not merely present. Declaring it forces placeholders_present true and puts the field's JSON Pointer in the unallocated list, so a reader never has to scan the document to learn what is missing.",
       "if": {
-        "required": ["network"],
+        "required": [
+          "network"
+        ],
         "properties": {
           "network": {
-            "required": ["loopback_port"],
-            "properties": {"loopback_port": {"$ref": "#/$defs/unallocatedPortToken"}}
+            "required": [
+              "loopback_port"
+            ],
+            "properties": {
+              "loopback_port": {
+                "$ref": "#/$defs/unallocatedPortToken"
+              }
+            }
           }
         }
       },
       "then": {
-        "required": ["unallocated"],
+        "required": [
+          "unallocated"
+        ],
         "properties": {
-          "placeholders_present": {"const": true},
-          "unallocated": {"contains": {"const": "/network/loopback_port"}}
+          "placeholders_present": {
+            "const": true
+          },
+          "unallocated": {
+            "contains": {
+              "const": "/network/loopback_port"
+            }
+          }
         }
       }
     },
     {
       "$comment": "Same rule for internal_port. Without it a document could carry the token and still claim there is nothing to allocate.",
       "if": {
-        "required": ["network"],
+        "required": [
+          "network"
+        ],
         "properties": {
           "network": {
-            "required": ["internal_port"],
-            "properties": {"internal_port": {"$ref": "#/$defs/unallocatedPortToken"}}
+            "required": [
+              "internal_port"
+            ],
+            "properties": {
+              "internal_port": {
+                "$ref": "#/$defs/unallocatedPortToken"
+              }
+            }
           }
         }
       },
       "then": {
-        "required": ["unallocated"],
+        "required": [
+          "unallocated"
+        ],
         "properties": {
-          "placeholders_present": {"const": true},
-          "unallocated": {"contains": {"const": "/network/internal_port"}}
+          "placeholders_present": {
+            "const": true
+          },
+          "unallocated": {
+            "contains": {
+              "const": "/network/internal_port"
+            }
+          }
         }
       }
     },
     {
       "$comment": "Same rule for the subnet. Base image digests are deliberately not covered here: their JSON Pointer carries an array index that JSON Schema cannot correlate with the element it came from, so /build/base_images/<n>/digest coverage stays a wrapper check.",
       "if": {
-        "required": ["network"],
+        "required": [
+          "network"
+        ],
         "properties": {
           "network": {
-            "required": ["subnet"],
-            "properties": {"subnet": {"const": "__APP_SUBNET__"}}
+            "required": [
+              "subnet"
+            ],
+            "properties": {
+              "subnet": {
+                "const": "__APP_SUBNET__"
+              }
+            }
           }
         }
       },
       "then": {
-        "required": ["unallocated"],
+        "required": [
+          "unallocated"
+        ],
         "properties": {
-          "placeholders_present": {"const": true},
-          "unallocated": {"contains": {"const": "/network/subnet"}}
+          "placeholders_present": {
+            "const": true
+          },
+          "unallocated": {
+            "contains": {
+              "const": "/network/subnet"
+            }
+          }
         }
       }
     }
   ],
   "$defs": {
-    "sha256Hex": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-    "imageDigest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
-    "gitRevision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "sha256Hex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "imageDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "gitRevision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
     "rfc3339Utc": {
       "type": "string",
       "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
     },
-    "placeholder": {"type": "string", "pattern": "^__[A-Z][A-Z0-9_]*__$"},
-    "allocatedPort": {"type": "integer", "minimum": 1024, "maximum": 65535},
+    "placeholder": {
+      "type": "string",
+      "pattern": "^__[A-Z][A-Z0-9_]*__$"
+    },
+    "allocatedPort": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 65535
+    },
     "unallocatedPortToken": {
       "const": "__LOOPBACK_PORT__",
       "description": "The single token that marks a port as unallocated. Both network ports carry this one token on purpose: compose publishes the host loopback port straight through to the port the container binds, so the two render to one integer. A per-field token would invite them to drift apart, and a free-form placeholder pattern here would let an invented token slip through."
@@ -604,45 +3818,117 @@
     "headerExpectation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "match"],
+      "required": [
+        "name",
+        "match"
+      ],
       "properties": {
-        "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9-]*$"},
-        "match": {"enum": ["present", "absent", "equals", "contains", "regex"]},
-        "value": {"type": "string", "minLength": 1}
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9-]*$"
+        },
+        "match": {
+          "enum": [
+            "present",
+            "absent",
+            "equals",
+            "contains",
+            "regex"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
       },
       "allOf": [
         {
           "if": {
-            "properties": {"match": {"enum": ["equals", "contains", "regex"]}},
-            "required": ["match"]
+            "properties": {
+              "match": {
+                "enum": [
+                  "equals",
+                  "contains",
+                  "regex"
+                ]
+              }
+            },
+            "required": [
+              "match"
+            ]
           },
-          "then": {"required": ["value"]},
-          "else": {"not": {"required": ["value"]}}
+          "then": {
+            "required": [
+              "value"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "value"
+              ]
+            }
+          }
         }
       ]
     },
     "acceptanceCheck": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "description", "scope", "method", "path", "expect", "timeout_seconds", "attempts", "blocking"],
+      "required": [
+        "id",
+        "description",
+        "scope",
+        "method",
+        "path",
+        "expect",
+        "timeout_seconds",
+        "attempts",
+        "blocking"
+      ],
       "properties": {
         "id": {
           "type": "string",
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
           "maxLength": 72,
           "description": "Stable check id, reported verbatim by scripts/smoke.py. A lesson check is course-scoped and carries the lesson's own URL slug, so its length is fixed by the published URL and not by this document: the longest declared id is course7-lesson-overfitting-sensitivity-monte-carlo-and-stress-testing at 69 characters, which is why the bound is 72 rather than the 64 that fitted courses 1 to 6. Course 8 lesson 16 is the one slug that does NOT fit - course8-lesson- plus automated-trading-system-specification-and-production-readiness is 78 - so scripts/smoke.py shortens that ONE id to course8-lesson-system-specification-and-production-readiness and the contract declares it under the same name; the bound is not raised to accommodate a slug, and a shortened id is written down in both files rather than derived differently in each. The bound is on formatting only - the allOf list on acceptance.checks still names every required id, and no check can be dropped or swapped for another under any length."
-
         },
-        "description": {"type": "string", "minLength": 1, "maxLength": 256},
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
         "scope": {
-          "enum": ["container", "loopback", "public"],
+          "enum": [
+            "container",
+            "loopback",
+            "public"
+          ],
           "description": "container = engine healthcheck inside the app network; loopback = 127.0.0.1:<loopback_port>; public = canonical HTTPS through the shared edge."
         },
-        "method": {"enum": ["GET", "HEAD"]},
-        "path": {"type": "string", "pattern": "^/[^\\s#]*$"},
-        "expect": {"$ref": "#/$defs/expectation"},
-        "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 30},
-        "attempts": {"type": "integer", "minimum": 1, "maximum": 3},
+        "method": {
+          "enum": [
+            "GET",
+            "HEAD"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/[^\\s#]*$"
+        },
+        "expect": {
+          "$ref": "#/$defs/expectation"
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
         "blocking": {
           "const": true,
           "description": "There is no warning-only acceptance check. Every check blocks."
@@ -654,26 +3940,44 @@
       "additionalProperties": false,
       "minProperties": 1,
       "properties": {
-        "status": {"type": "integer", "minimum": 100, "maximum": 599},
-        "max_redirects": {"type": "integer", "minimum": 0, "maximum": 5},
-        "same_origin_redirects_only": {"type": "boolean"},
+        "status": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 599
+        },
+        "max_redirects": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "same_origin_redirects_only": {
+          "type": "boolean"
+        },
         "headers": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"$ref": "#/$defs/headerExpectation"}
+          "items": {
+            "$ref": "#/$defs/headerExpectation"
+          }
         },
         "body_contains": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"type": "string", "minLength": 1}
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "body_excludes_patterns": {
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"type": "string", "minLength": 1}
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "no_external_origins": {
           "type": "boolean",

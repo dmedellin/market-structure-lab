@@ -1,0 +1,1512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic Programming | Algorithms and Complexity | Learn · geterdone.io</title>
+  <meta name="description" content="When subproblems overlap, recomputing them is exponentially wasteful. Storing each answer turns an exponential recursion into a polynomial one, and the technique applies exactly when the problem has optimal substructure." />
+  <link rel="canonical" href="https://learn.geterdone.io/algorithms-and-complexity/dynamic-programming/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Dynamic Programming | Algorithms and Complexity | Learn · geterdone.io" />
+  <meta property="og:description" content="When subproblems overlap, recomputing them is exponentially wasteful. Storing each answer turns an exponential recursion into a polynomial one, and the technique applies exactly when the problem has optimal substructure." />
+  <meta property="og:url" content="https://learn.geterdone.io/algorithms-and-complexity/dynamic-programming/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Dynamic Programming | Algorithms and Complexity | Learn · geterdone.io" />
+  <meta name="twitter:description" content="When subproblems overlap, recomputing them is exponentially wasteful. Storing each answer turns an exponential recursion into a polynomial one, and the technique applies exactly when the problem has optimal substructure." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/algorithms-and-complexity/dynamic-programming/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Algorithms and Complexity course home">
+        <span class="brand-mark" aria-hidden="true">10</span>
+        <span class="brand-copy"><strong>Algorithms and Complexity</strong><span>Course 8 &amp;middot; Lesson 10 of 12</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Algorithms and Complexity</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 10 &amp;middot; Dynamic Programming</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The algorithms and growth is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 8 &middot; Lesson 10 &middot; Design</span>
+        <h1>Dynamic Programming</h1>
+        <p>When subproblems overlap, recomputing them is exponentially wasteful. Storing each answer turns an exponential recursion into a polynomial one, and the technique applies exactly when the problem has optimal substructure.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">OPTIMAL SUBSTRUCTURE  an optimal solution contains optimal sub-solutions
+OVERLAPPING SUBPROBLEMS  the same subproblem recurs
+memoise (top down) or fill a table (bottom up)
+naive Fibonacci: ~1.6ⁿ calls.  With memoisation: n.</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Two conditions, one technique</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Both conditions are needed. Optimal substructure without overlap is divide-and-conquer; overlap without optimal substructure is not helped.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Overlap is what makes memoisation pay</h3><p>Merge sort's subproblems are disjoint, so caching them saves nothing. Fibonacci's recur constantly.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Optimal substructure is what makes the recurrence valid</h3><p>The best solution must be assemblable from best sub-solutions. Longest <em>simple</em> path fails this, and no dynamic program for it exists.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Top-down and bottom-up are the same computation</h3><p>Memoised recursion computes only the subproblems it needs; a table computes all of them in dependency order. The complexity is the same.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Dynamic programming</h2></div><p>The two conditions, three worked examples, and the problem it cannot help.</p></div>
+      <article class="card card-pad prose"><h3>The motivating case</h3><p>The naive recursive Fibonacci makes about <span class="math">1.6ⁿ</span> calls because it recomputes the same values exponentially often: <span class="math">F(5)</span> calls <span class="math">F(3)</span> twice, <span class="math">F(2)</span> three times, and so on. Storing each value when first computed reduces the count to <span class="math">n</span>.</p><div class="mathblock">n        naive calls        memoised calls
+10               177                    10
+30           2 692 537                  30
+50    ~ 40 000 000 000                  50</div><div class="defbox"><span class="label">Definition &middot; The two conditions</span><p><strong>Optimal substructure</strong>: an optimal solution is built from optimal solutions to subproblems. <strong>Overlapping subproblems</strong>: the recursion revisits the same subproblems many times.</p></div><p>Both are required. Merge sort has optimal substructure and no overlap, so it is divide-and-conquer and memoisation would help nothing. A problem with overlap and no optimal substructure cannot be solved by combining sub-solutions at all.</p><h3>Coin change</h3><div class="mathblock">best[0] = 0
+best[v] = 1 + min{ best[v − c] : c a coin, c ≤ v }
+
+coins {1,3,4}, target 6:
+   best[1]=1  best[2]=2  best[3]=1  best[4]=1  best[5]=2  best[6]=2
+   best[6] = 1 + min(best[5], best[3], best[2]) = 1 + 1 = 2
+   the two coins are 3 + 3 — which greedy missed</div><p>The recurrence is the optimal substructure written down: the best way to make <span class="math">v</span> uses some coin <span class="math">c</span>, and the rest must be the best way to make <span class="math">v − c</span>. Filling the table costs <span class="math">Θ(v · |coins|)</span>, and the greedy failure of lesson 9 disappears.</p><h3>Longest common subsequence</h3><div class="mathblock">L[i][j] = length of the longest common subsequence of the first i
+          characters of X and the first j of Y
+
+L[i][j] = 0                              if i = 0 or j = 0
+        = L[i−1][j−1] + 1                if X[i] = Y[j]
+        = max(L[i−1][j], L[i][j−1])      otherwise</div><p>Cost <span class="math">Θ(mn)</span>, against exponential for the naive recursion. This is the algorithm behind <span class="math">diff</span>, behind version-control merges, and behind sequence alignment in bioinformatics.</p><h3>Where it does not apply</h3><div class="example"><span class="label">Example &middot; Longest simple path</span><p>Finding the longest path with no repeated vertex has no optimal substructure: the longest path from <span class="math">a</span> to <span class="math">c</span> need not consist of the longest path from <span class="math">a</span> to <span class="math">b</span> plus the longest from <span class="math">b</span> to <span class="math">c</span>, because those may share vertices and the concatenation would not be simple. The problem is NP-hard, and no dynamic program for it exists.</p></div><p>Contrast with the SHORTEST path, which does have optimal substructure &mdash; any subpath of a shortest path is shortest &mdash; and is solved in polynomial time by course 7's Dijkstra. Two problems whose statements differ by one word, on opposite sides of tractability.</p><h3>Top-down or bottom-up</h3><div class="mathblock">MEMOISED (top down)      recursion + a cache
+                         computes only the subproblems needed
+                         natural to write from the recurrence
+
+TABULATED (bottom up)    fill a table in dependency order
+                         no recursion overhead
+                         often allows the space to be reduced</div><p>The two have the same asymptotic cost. Bottom-up often permits dropping old rows of the table &mdash; the Fibonacci table needs only the last two entries &mdash; which is why it is preferred when memory matters.</p></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Algorithms and growth</h2></div><p>Counts from running, not from quoting</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="alTitle">Algorithms and growth</strong><span id="alSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>measured</span><span class="tone-purple"><i class="legend-swatch"></i>predicted</span><span class="tone-amber"><i class="legend-swatch"></i>crossover</span></div>
+      </div>
+      <div class="lab-stage"><svg id="alPlot" viewBox="0 0 520 230" role="img" aria-label="Operation counts plotted against input size."></svg></div>
+      <div class="table-wrap" style="margin-top:12px;"><table class="tt" id="alTable"></table></div>
+      <div class="status-banner" id="alStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Dynamic programming against greed</h3>
+          <p>The optimal columns are computed by the coin-change recurrence above, filling the table from 1 upward. Where greedy differs, the table is right.</p>
+        <div class="field">
+          <label for="alMode">What to examine</label>
+          <select id="alMode">
+            <option value="growth">Growth rates side by side</option>
+            <option value="witness">Is f(n) = O(g(n))? find C and k</option>
+            <option value="search">Linear vs binary search (counted)</option>
+            <option value="sort">Sorting algorithms (counted)</option>
+            <option value="master">Master theorem cases</option>
+            <option value="greedy">Greedy vs dynamic programming</option>
+          </select>
+        </div>
+        <div class="field" id="alFWrap">
+          <label for="alF">f(n)</label>
+          <select id="alF"></select>
+        </div>
+        <div class="field" id="alGWrap">
+          <label for="alG">g(n)</label>
+          <select id="alG"></select>
+        </div>
+        <div id="alNWrap">
+          <div class="range-row"><label class="small-copy" for="alN">n</label><span class="range-value" id="alNOut">16</span></div>
+          <input id="alN" type="range" min="2" max="64" value="16" />
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span id="alK1L">measured</span><strong id="alK1">&mdash;</strong></div>
+          <div class="kpi"><span id="alK2L">predicted</span><strong id="alK2">&mdash;</strong></div>
+        </div>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Designing a dynamic program</h2></div><p>Recurrence first; the implementation follows.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Define the subproblem precisely</h3><p>"The fewest coins making value <span class="math">v</span>", "the LCS of the first <span class="math">i</span> and first <span class="math">j</span> characters". A vague subproblem gives no recurrence.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Write the recurrence</h3><p>How an optimal solution decomposes. This is where optimal substructure is either present or absent.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Identify the base cases</h3><p>The smallest subproblems, answered outright.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Choose memoisation or a table</h3><p>Same cost. Bottom-up if the space can be reduced; top-down if only some subproblems are needed.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Dynamic programming</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Coin change with `{1, 3, 4}`</h3><p>Filling the table from 0 upward.</p><div class="mathblock">v:      0   1   2   3   4   5   6   7   8
+best:   0   1   2   1   1   2   2   2   2
+
+best[6] = 1 + min( best[5], best[3], best[2] )
+        = 1 + min(   2,       1,       2   ) = 2      via coin 3
+
+best[7] = 1 + min( best[6], best[4], best[3] )
+        = 1 + min(   2,       1,       1   ) = 2      via coin 3 or 4
+
+GREEDY at 6:   4 + 1 + 1     three coins
+TABLE at 6:    3 + 3         two coins
+
+Cost: Θ(v · number of coins) — here 6 × 3 = 18 comparisons.</div><p>Every entry was computed once and read several times, which is the whole saving. The naive recursion would recompute <span class="math">best[3]</span> at values 4, 6 and 7, and each of those recomputations would recurse again.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Applying it without checking optimal substructure</strong><span>The recurrence will be written and will be wrong. Longest simple path is the standard example.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Memoising a divide-and-conquer algorithm</strong><span>Merge sort's subproblems never repeat, so the cache never hits and the overhead is pure loss.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Defining the subproblem loosely</strong><span>"The best solution so far" is not a subproblem. It must be a function of explicit parameters.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can write the recurrence before any code.</strong><p>Write the recurrence for the 0/1 knapsack problem &mdash; items with weights and values, a capacity, items cannot be split. Define the subproblem in terms of the first <span class="math">i</span> items and remaining capacity <span class="math">w</span>, and the recurrence writes itself.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The name is historical and misleading: Bellman chose it in the 1950s partly because "programming" then meant planning and partly, by his own account, because it sounded impressive enough to survive a hostile funding review. It has nothing to do with programming in the modern sense.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../greedy-algorithms/" rel="prev"><span>Previous lesson</span><strong>09 &middot; Greedy Algorithms</strong></a>
+      <a class="lesson-link next" href="../complexity-classes/" rel="next"><span>Next lesson</span><strong>11 &middot; P, NP and NP-Completeness</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Algorithms and Complexity.</strong> Every operation count on this course is produced by executing the algorithm with a counter, on a deterministic input, so the measured column is a measurement. Where it diverges from the predicted growth the reason is stated rather than smoothed over.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a worked example is not a proof.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "Dynamic programming requires:", "a": ["recursion only", "optimal substructure and overlapping subproblems", "a greedy choice property", "sorted input"], "c": 1, "why": "Both. Optimal substructure without overlap is divide-and-conquer; overlap without it is not helped."}, {"q": "Memoising the naive Fibonacci reduces the call count from about <span class=\"math\">1.6\u207f<\/span> to:", "a": ["<span class=\"math\">log n<\/span>", "<span class=\"math\">n<\/span>", "<span class=\"math\">n\u00b2<\/span>", "<span class=\"math\">2\u207f<\/span>"], "c": 1, "why": "Each value is computed once and reused thereafter."}, {"q": "Longest simple path has no dynamic program because:", "a": ["it is too large", "it lacks optimal substructure \u2014 subpaths may share vertices", "graphs are not ordered", "it is undecidable"], "c": 1, "why": "Concatenating two longest subpaths may repeat a vertex, so the combination is not a simple path. The problem is NP-hard."}];
+
+  (function () {
+
+  var modeSel = document.getElementById('alMode'), fSel = document.getElementById('alF'), gSel = document.getElementById('alG');
+  var nS = document.getElementById('alN');
+  var plot = document.getElementById('alPlot'), table = document.getElementById('alTable');
+  var status = document.getElementById('alStatus');
+  var title = document.getElementById('alTitle'), sub = document.getElementById('alSub');
+  var k1 = document.getElementById('alK1'), k2 = document.getElementById('alK2');
+  var k1L = document.getElementById('alK1L'), k2L = document.getElementById('alK2L');
+
+  var FUNCS = [
+    ['1', function (n) { return 1; }],
+    ['log₂ n', function (n) { return Math.log2(n); }],
+    ['n', function (n) { return n; }],
+    ['n log₂ n', function (n) { return n * Math.log2(n); }],
+    ['n²', function (n) { return n * n; }],
+    ['n³', function (n) { return n * n * n; }],
+    ['2ⁿ', function (n) { return Math.pow(2, n); }],
+    ['n!', function (n) { var f = 1; for (var i = 2; i <= n; i += 1) f *= i; return f; }],
+    ['3n² + 5n + 100', function (n) { return 3 * n * n + 5 * n + 100; }],
+    ['100n', function (n) { return 100 * n; }]
+  ];
+  FUNCS.forEach(function (f, i) {
+    [fSel, gSel].forEach(function (sel) {
+      var o = document.createElement('option');
+      o.value = String(i); o.textContent = f[0];
+      sel.appendChild(o);
+    });
+  });
+  fSel.value = '8'; gSel.value = '4';
+
+  function show(ids) {
+    ['alFWrap', 'alGWrap', 'alNWrap'].forEach(function (id) {
+      document.getElementById(id).hidden = ids.indexOf(id) === -1;
+    });
+  }
+
+  function drawSeries(series, xs, logScale) {
+    var maxY = 0;
+    series.forEach(function (s) { s.values.forEach(function (v) { if (isFinite(v) && v > maxY) maxY = v; }); });
+    if (maxY <= 0) maxY = 1;
+    function y(v) {
+      if (!isFinite(v)) return 6;
+      if (logScale) {
+        var lv = Math.log10(Math.max(v, 1)), lm = Math.log10(Math.max(maxY, 10));
+        return 200 - (lv / lm) * 180;
+      }
+      return 200 - (v / maxY) * 180;
+    }
+    function x(i) { return 26 + (i / Math.max(1, xs.length - 1)) * 470; }
+    var s = '<line x1="26" y1="200" x2="500" y2="200" stroke="var(--line-strong)" />'
+      + '<line x1="26" y1="14" x2="26" y2="200" stroke="var(--line-strong)" />';
+    series.forEach(function (ser) {
+      var d = ser.values.map(function (v, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1); }).join(' ');
+      s += '<path d="' + d + '" fill="none" stroke="' + ser.colour + '" stroke-width="2.4" opacity="0.9" />';
+      s += '<text x="' + (x(ser.values.length - 1) - 6) + '" y="' + Math.max(14, y(ser.values[ser.values.length - 1]) - 6)
+        + '" text-anchor="end" font-size="11" font-weight="700" fill="' + ser.colour + '">' + ser.label + '</text>';
+    });
+    s += '<text x="26" y="216" font-size="10" fill="var(--muted)">n = ' + xs[0] + '</text>';
+    s += '<text x="500" y="216" text-anchor="end" font-size="10" fill="var(--muted)">n = ' + xs[xs.length - 1] + '</text>';
+    if (logScale) s += '<text x="30" y="24" font-size="10" fill="var(--muted)">log scale</text>';
+    plot.innerHTML = s;
+  }
+
+  /* --- counted algorithms. Each RUNS and increments a counter. ----------- */
+  function makeArray(n, kind) {
+    var a = [];
+    for (var i = 0; i < n; i += 1) a.push(i + 1);
+    if (kind === 'reverse') a.reverse();
+    else if (kind === 'shuffle') {
+      /* A fixed permutation, generated by a deterministic step so two readers
+         at the same n see the same array and the same counts. */
+      var out = [];
+      var idx = 0;
+      while (a.length) { idx = (idx + 7) % a.length; out.push(a.splice(idx, 1)[0]); }
+      a = out;
+    }
+    return a;
+  }
+
+  function linearSearch(a, target) {
+    var c = 0;
+    for (var i = 0; i < a.length; i += 1) { c += 1; if (a[i] === target) return c; }
+    return c;
+  }
+  function binarySearch(a, target) {
+    var lo = 0, hi = a.length - 1, c = 0;
+    while (lo <= hi) {
+      c += 1;
+      var mid = (lo + hi) >> 1;
+      if (a[mid] === target) return c;
+      if (a[mid] < target) lo = mid + 1; else hi = mid - 1;
+    }
+    return c;
+  }
+  function bubbleSort(a) {
+    var arr = a.slice(), c = 0;
+    for (var i = 0; i < arr.length; i += 1)
+      for (var j = 0; j + 1 < arr.length - i; j += 1) {
+        c += 1;
+        if (arr[j] > arr[j + 1]) { var t = arr[j]; arr[j] = arr[j + 1]; arr[j + 1] = t; }
+      }
+    return c;
+  }
+  function insertionSort(a) {
+    var arr = a.slice(), c = 0;
+    for (var i = 1; i < arr.length; i += 1) {
+      var key = arr[i], j = i - 1;
+      while (j >= 0) { c += 1; if (arr[j] <= key) break; arr[j + 1] = arr[j]; j -= 1; }
+      arr[j + 1] = key;
+    }
+    return c;
+  }
+  function mergeSort(a) {
+    var c = 0;
+    function sort(arr) {
+      if (arr.length <= 1) return arr;
+      var mid = arr.length >> 1;
+      var L = sort(arr.slice(0, mid)), R = sort(arr.slice(mid)), out = [], i = 0, j = 0;
+      while (i < L.length && j < R.length) { c += 1; out.push(L[i] <= R[j] ? L[i++] : R[j++]); }
+      while (i < L.length) out.push(L[i++]);
+      while (j < R.length) out.push(R[j++]);
+      return out;
+    }
+    sort(a.slice());
+    return c;
+  }
+
+  /* Coin change: greedy and exact DP, run against each other. */
+  function greedyCoins(coins, amount) {
+    var left = amount, used = 0, picks = [];
+    var sorted = coins.slice().sort(function (x, y) { return y - x; });
+    sorted.forEach(function (c) {
+      while (left >= c) { left -= c; used += 1; picks.push(c); }
+    });
+    return left === 0 ? { count: used, picks: picks } : { count: Infinity, picks: [] };
+  }
+  function dpCoins(coins, amount) {
+    var best = new Array(amount + 1).fill(Infinity), from = new Array(amount + 1).fill(-1);
+    best[0] = 0;
+    for (var v = 1; v <= amount; v += 1) {
+      coins.forEach(function (c) {
+        if (c <= v && best[v - c] + 1 < best[v]) { best[v] = best[v - c] + 1; from[v] = c; }
+      });
+    }
+    var picks = [], cur = amount;
+    while (cur > 0 && from[cur] !== -1) { picks.push(from[cur]); cur -= from[cur]; }
+    return { count: best[amount], picks: picks, table: best };
+  }
+
+  var MODES = {
+    growth: function () {
+      show(['alNWrap']);
+      title.textContent = 'Growth rates';
+      sub.textContent = 'the same axes, log scale';
+      var N = +nS.value, xs = [], series = [];
+      for (var n = 1; n <= N; n += 1) xs.push(n);
+      var picks = [[1, 'var(--green)'], [2, 'var(--cyan)'], [3, 'var(--blue)'], [4, 'var(--purple)'], [6, 'var(--red)']];
+      picks.forEach(function (p) {
+        series.push({ label: FUNCS[p[0]][0], colour: p[1], values: xs.map(function (n) { return FUNCS[p[0]][1](n); }) });
+      });
+      drawSeries(series, xs, true);
+      var rows = '';
+      [4, 8, 16, 32, 64].filter(function (n) { return n <= N; }).forEach(function (n) {
+        rows += '<tr><td>' + n + '</td>' + picks.map(function (p) {
+          var v = FUNCS[p[0]][1](n);
+          return '<td>' + (v > 1e15 ? v.toExponential(2) : Math.round(v).toLocaleString('en-US')) + '</td>';
+        }).join('') + '</tr>';
+      });
+      table.innerHTML = '<thead><tr><th>n</th>' + picks.map(function (p) { return '<th>' + FUNCS[p[0]][0] + '</th>'; }).join('')
+        + '</tr></thead><tbody>' + rows + '</tbody>';
+      k1L.textContent = 'n'; k1.textContent = N;
+      k2L.textContent = '2ⁿ at n'; k2.textContent = Math.pow(2, N) > 1e15 ? Math.pow(2, N).toExponential(2) : Math.pow(2, N).toLocaleString('en-US');
+      status.innerHTML = 'The vertical axis is logarithmic, so a straight line is exponential growth. '
+        + 'At n = 64, n² is ' + (64 * 64).toLocaleString('en-US') + ' and 2ⁿ is about 1.8 × 10¹⁹ — the gap between '
+        + 'polynomial and exponential is not a matter of constants, and no faster machine closes it.';
+    },
+    witness: function () {
+      show(['alFWrap', 'alGWrap', 'alNWrap']);
+      title.textContent = 'Big-O by witness';
+      sub.textContent = 'f(n) ≤ C·g(n) for all n ≥ k';
+      var f = FUNCS[+fSel.value], g = FUNCS[+gSel.value], N = Math.max(8, +nS.value);
+      /* Search a small grid of C and k for a pair that works on 1..4N. The
+         search is honest: if no pair in the grid works, the lab says the
+         relation looks false rather than inventing a constant. */
+      var found = null;
+      var Cs = [1, 2, 3, 4, 5, 10, 20, 50, 100, 1000];
+      for (var ci = 0; ci < Cs.length && !found; ci += 1) {
+        for (var k = 1; k <= 40 && !found; k += 1) {
+          var ok = true;
+          for (var n = k; n <= 4 * N; n += 1) {
+            if (f[1](n) > Cs[ci] * g[1](n) + 1e-9) { ok = false; break; }
+          }
+          if (ok) found = { C: Cs[ci], k: k };
+        }
+      }
+      var xs = [], series = [];
+      for (var n2 = 1; n2 <= N; n2 += 1) xs.push(n2);
+      series.push({ label: f[0], colour: 'var(--cyan)', values: xs.map(f[1]) });
+      series.push({ label: (found ? found.C + '·' : '') + g[0], colour: 'var(--purple)', values: xs.map(function (n) { return (found ? found.C : 1) * g[1](n); }) });
+      drawSeries(series, xs, true);
+      var rows = '';
+      xs.filter(function (n) { return n <= 12 || n % 4 === 0; }).forEach(function (n) {
+        var fv = f[1](n), gv = (found ? found.C : 1) * g[1](n);
+        rows += '<tr' + (fv <= gv ? '' : ' class="focus"') + '><td>' + n + '</td><td>' + fv.toFixed(2) + '</td><td>'
+          + gv.toFixed(2) + '</td><td class="' + (fv <= gv ? 't' : 'f') + '">' + (fv <= gv ? '≤' : '>') + '</td></tr>';
+      });
+      table.innerHTML = '<thead><tr><th>n</th><th>' + f[0] + '</th><th>' + (found ? found.C + '·' : '') + g[0]
+        + '</th><th></th></tr></thead><tbody>' + rows + '</tbody>';
+      k1L.textContent = 'C'; k1.textContent = found ? found.C : '—';
+      k2L.textContent = 'k'; k2.textContent = found ? found.k : '—';
+      status.innerHTML = found
+        ? '<strong>' + f[0] + ' = O(' + g[0] + ')</strong>, witnessed by C = ' + found.C + ' and k = ' + found.k
+          + ': for every n ≥ ' + found.k + ', f(n) ≤ ' + found.C + '·g(n). Big-O is an existence claim about such a '
+          + 'pair, and producing one is the whole proof. Note that the first few n may violate it — that is what k is for.'
+        : '<strong>No constant works.</strong> The search tried C up to 1000 and k up to 40 and found no pair holding '
+          + 'through n = ' + (4 * N) + '. That is strong evidence ' + f[0] + ' is NOT O(' + g[0] + ') — a bigger '
+          + 'constant cannot rescue a faster-growing function, because the ratio itself diverges.';
+    },
+    search: function () {
+      show(['alNWrap']);
+      title.textContent = 'Linear versus binary search';
+      sub.textContent = 'worst-case comparisons, counted by running both';
+      var N = +nS.value, xs = [], lin = [], bin = [];
+      for (var n = 2; n <= Math.max(8, N); n += 1) {
+        var a = makeArray(n, 'sorted');
+        xs.push(n);
+        lin.push(linearSearch(a, n));
+        var worst = 0;
+        for (var t = 1; t <= n; t += 1) worst = Math.max(worst, binarySearch(a, t));
+        bin.push(worst);
+      }
+      drawSeries([
+        { label: 'linear', colour: 'var(--cyan)', values: lin },
+        { label: 'binary', colour: 'var(--purple)', values: bin }
+      ], xs, false);
+      var rows = '';
+      xs.filter(function (n) { return n % Math.max(1, Math.floor(xs.length / 10)) === 0; }).forEach(function (n, i) {
+        var idx = xs.indexOf(n);
+        rows += '<tr><td>' + n + '</td><td>' + lin[idx] + '</td><td>' + bin[idx] + '</td><td>'
+          + (Math.floor(Math.log2(n)) + 1) + '</td></tr>';
+      });
+      table.innerHTML = '<thead><tr><th>n</th><th>linear (worst)</th><th>binary (worst)</th><th>⌊log₂n⌋+1</th></tr></thead><tbody>'
+        + rows + '</tbody>';
+      var last = xs.length - 1;
+      k1L.textContent = 'linear'; k1.textContent = lin[last];
+      k2L.textContent = 'binary'; k2.textContent = bin[last];
+      status.innerHTML = 'At n = ' + xs[last] + ' the counted worst cases are <strong>' + lin[last]
+        + '</strong> and <strong>' + bin[last] + '</strong>. The binary column matches ⌊log₂n⌋+1 exactly, because '
+        + 'each comparison halves the remaining range — and that is only available because the array is SORTED. '
+        + 'Sorting first costs O(n log n), so binary search pays for itself only across many searches.';
+    },
+    sort: function () {
+      show(['alNWrap']);
+      title.textContent = 'Sorting, comparisons counted';
+      sub.textContent = 'the same input through three algorithms';
+      var N = Math.max(4, +nS.value), xs = [], bub = [], ins = [], mer = [], nlogn = [];
+      for (var n = 2; n <= N; n += 1) {
+        var a = makeArray(n, 'shuffle');
+        xs.push(n);
+        bub.push(bubbleSort(a));
+        ins.push(insertionSort(a));
+        mer.push(mergeSort(a));
+        nlogn.push(n * Math.log2(n));
+      }
+      drawSeries([
+        { label: 'bubble', colour: 'var(--red)', values: bub },
+        { label: 'insertion', colour: 'var(--amber)', values: ins },
+        { label: 'merge', colour: 'var(--cyan)', values: mer },
+        { label: 'n log n', colour: 'var(--purple)', values: nlogn }
+      ], xs, false);
+      var rows = '';
+      xs.filter(function (n) { return n % Math.max(1, Math.floor(xs.length / 8)) === 0; }).forEach(function (n) {
+        var i = xs.indexOf(n);
+        rows += '<tr><td>' + n + '</td><td>' + bub[i] + '</td><td>' + ins[i] + '</td><td>' + mer[i]
+          + '</td><td>' + Math.round(n * (n - 1) / 2) + '</td><td>' + Math.round(nlogn[i]) + '</td></tr>';
+      });
+      table.innerHTML = '<thead><tr><th>n</th><th>bubble</th><th>insertion</th><th>merge</th><th>n(n−1)/2</th><th>n log₂ n</th></tr></thead><tbody>'
+        + rows + '</tbody>';
+      var last = xs.length - 1;
+      k1L.textContent = 'bubble'; k1.textContent = bub[last];
+      k2L.textContent = 'merge'; k2.textContent = mer[last];
+      status.innerHTML = 'At n = ' + xs[last] + ': bubble sort made <strong>' + bub[last] + '</strong> comparisons '
+        + 'and merge sort <strong>' + mer[last] + '</strong>. Bubble sort matches n(n−1)/2 exactly, because its two '
+        + 'loops do not depend on the data at all. Insertion sort does — it is the one whose count changes with the '
+        + 'input, and on nearly-sorted data it beats merge sort, which is why real sort implementations switch to it '
+        + 'for small subarrays.';
+    },
+    master: function () {
+      show([]);
+      title.textContent = 'The master theorem';
+      sub.textContent = 'T(n) = a·T(n/b) + n^d';
+      var cases = [
+        [2, 2, 1, 'merge sort'],
+        [2, 2, 0, 'binary-tree traversal'],
+        [1, 2, 0, 'binary search'],
+        [7, 2, 2, "Strassen's matrix multiplication"],
+        [8, 2, 2, 'naive matrix multiplication'],
+        [3, 2, 1, 'Karatsuba multiplication'],
+        [4, 2, 2, 'balanced case'],
+        [2, 4, 1, 'a < b^d']
+      ];
+      var rows = cases.map(function (c) {
+        var a = c[0], b = c[1], d = c[2];
+        var crit = Math.log(a) / Math.log(b);
+        var which, result;
+        if (Math.abs(crit - d) < 1e-9) { which = 'case 2 (a = b^d)'; result = 'Θ(n^' + d + ' log n)'; }
+        else if (crit > d) { which = 'case 1 (a > b^d)'; result = 'Θ(n^log_' + b + ' ' + a + ') ≈ Θ(n^' + crit.toFixed(3) + ')'; }
+        else { which = 'case 3 (a < b^d)'; result = 'Θ(n^' + d + ')'; }
+        return '<tr><td>' + a + '</td><td>' + b + '</td><td>' + d + '</td><td>' + crit.toFixed(3) + '</td><td>'
+          + which + '</td><td>' + result + '</td><td>' + c[3] + '</td></tr>';
+      }).join('');
+      table.innerHTML = '<thead><tr><th>a</th><th>b</th><th>d</th><th>log_b a</th><th>case</th><th>T(n)</th><th>example</th></tr></thead><tbody>'
+        + rows + '</tbody>';
+      var xs = [], series = [];
+      for (var n = 2; n <= 64; n += 1) xs.push(n);
+      series.push({ label: 'n log n', colour: 'var(--cyan)', values: xs.map(function (n) { return n * Math.log2(n); }) });
+      series.push({ label: 'n^1.585', colour: 'var(--purple)', values: xs.map(function (n) { return Math.pow(n, Math.log2(3)); }) });
+      series.push({ label: 'n²', colour: 'var(--red)', values: xs.map(function (n) { return n * n; }) });
+      drawSeries(series, xs, true);
+      k1L.textContent = 'compare'; k1.textContent = 'log_b a vs d';
+      k2L.textContent = 'cases'; k2.textContent = '3';
+      status.innerHTML = 'The whole theorem is one comparison: log_b a against d — whether the work at the leaves '
+        + 'or the work at the root dominates. Karatsuba (a = 3, b = 2, d = 1) beats the naive n² only because '
+        + 'log₂3 ≈ 1.585 &lt; 2; the improvement comes from doing three multiplications instead of four, and nothing else.';
+    },
+    greedy: function () {
+      show(['alNWrap']);
+      title.textContent = 'Greedy versus dynamic programming';
+      sub.textContent = 'making change with coins 1, 3, 4';
+      var amount = Math.max(2, +nS.value);
+      var coinSets = [[1, 5, 10, 25], [1, 3, 4]];
+      var rows = '';
+      var mismatch = null;
+      for (var a = 1; a <= amount; a += 1) {
+        var g1 = greedyCoins(coinSets[0], a), d1 = dpCoins(coinSets[0], a);
+        var g2 = greedyCoins(coinSets[1], a), d2 = dpCoins(coinSets[1], a);
+        if (g2.count !== d2.count && mismatch === null) mismatch = { a: a, greedy: g2, dp: d2 };
+        if (a > amount - 12) {
+          rows += '<tr' + (g2.count !== d2.count ? ' class="focus"' : '') + '><td>' + a + '</td><td>' + g1.count
+            + '</td><td>' + d1.count + '</td><td>' + g2.count + ' (' + g2.picks.join('+') + ')</td><td>'
+            + d2.count + ' (' + d2.picks.join('+') + ')</td></tr>';
+        }
+      }
+      table.innerHTML = '<thead><tr><th>amount</th><th>greedy {1,5,10,25}</th><th>optimal</th><th>greedy {1,3,4}</th><th>optimal</th></tr></thead><tbody>'
+        + rows + '</tbody>';
+      var xs = [], gv = [], dv = [];
+      for (var v = 1; v <= amount; v += 1) {
+        xs.push(v);
+        gv.push(greedyCoins(coinSets[1], v).count);
+        dv.push(dpCoins(coinSets[1], v).count);
+      }
+      drawSeries([
+        { label: 'greedy', colour: 'var(--red)', values: gv },
+        { label: 'optimal', colour: 'var(--cyan)', values: dv }
+      ], xs, false);
+      k1L.textContent = 'first failure'; k1.textContent = mismatch ? mismatch.a : 'none yet';
+      k2L.textContent = 'gap'; k2.textContent = mismatch ? (mismatch.greedy.count - mismatch.dp.count) : 0;
+      status.innerHTML = mismatch
+        ? '<strong>Greedy is wrong at ' + mismatch.a + '.</strong> Taking the largest coin first gives '
+          + mismatch.greedy.picks.join(' + ') + ' — ' + mismatch.greedy.count + ' coins — while the optimum is '
+          + mismatch.dp.picks.join(' + ') + ', just ' + mismatch.dp.count + '. The same greedy rule is OPTIMAL for '
+          + '{1, 5, 10, 25}, which is why "greedy works" is a property of the coin system, never of the strategy. '
+          + 'Dynamic programming gets it right by solving every smaller amount once and reusing the answers.'
+        : 'Raise n past 5 to find where greedy fails on the coin set {1, 3, 4}.';
+    }
+  };
+
+  function redraw() {
+    document.getElementById('alNOut').textContent = nS.value;
+    MODES[modeSel.value]();
+  }
+
+  [nS, fSel, gSel].forEach(function (el) { el.addEventListener('input', redraw); });
+  [modeSel, fSel, gSel].forEach(function (el) { el.addEventListener('change', redraw); });
+  modeSel.value = "greedy";
+  nS.value = 24;
+  
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

@@ -74,6 +74,11 @@ jobs:
           # tests/test_site_invariants.py.
           missing=0
           pages=0
+          # --- the DISCRETE MATHEMATICS path below: one path page, eight
+          # --- course homes and 106 lessons. These pages are GENERATED from
+          # --- content/discrete_math/ by scripts/build_discrete_math.py, and
+          # --- the suite fails if a published page differs from what that
+          # --- script renders (TestGeneratedPathIsCurrent).
           for page in index.html \
                       paths/trading/index.html \
                       paths/trading/iren-analysis-2026-08-16/index.html \
@@ -203,7 +208,122 @@ jobs:
                       algorithmic-and-automated-trading/security-secrets-permissions-and-kill-switches/index.html \
                       algorithmic-and-automated-trading/deployment-environments-and-configuration/index.html \
                       algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows/index.html \
-                      algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/index.html ; do
+                      algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness/index.html \
+                      paths/discrete-math/index.html \
+                      logic-and-proof/index.html \
+                      logic-and-proof/propositions-and-truth-values/index.html \
+                      logic-and-proof/logical-connectives/index.html \
+                      logic-and-proof/truth-tables/index.html \
+                      logic-and-proof/conditional-statements/index.html \
+                      logic-and-proof/logical-equivalence/index.html \
+                      logic-and-proof/tautologies-and-satisfiability/index.html \
+                      logic-and-proof/normal-forms-and-boolean-algebra/index.html \
+                      logic-and-proof/predicates-and-quantifiers/index.html \
+                      logic-and-proof/nested-quantifiers/index.html \
+                      logic-and-proof/negating-quantified-statements/index.html \
+                      logic-and-proof/rules-of-inference/index.html \
+                      logic-and-proof/direct-proof/index.html \
+                      logic-and-proof/contraposition-and-contradiction/index.html \
+                      logic-and-proof/proof-by-cases-and-counterexample/index.html \
+                      sets-relations-functions/index.html \
+                      sets-relations-functions/sets-and-membership/index.html \
+                      sets-relations-functions/subsets-and-power-sets/index.html \
+                      sets-relations-functions/set-operations/index.html \
+                      sets-relations-functions/set-identities/index.html \
+                      sets-relations-functions/cartesian-products-and-tuples/index.html \
+                      sets-relations-functions/binary-relations/index.html \
+                      sets-relations-functions/properties-of-relations/index.html \
+                      sets-relations-functions/equivalence-relations-and-partitions/index.html \
+                      sets-relations-functions/partial-orders/index.html \
+                      sets-relations-functions/functions/index.html \
+                      sets-relations-functions/injective-surjective-bijective/index.html \
+                      sets-relations-functions/composition-and-inverses/index.html \
+                      sets-relations-functions/cardinality-and-countability/index.html \
+                      sets-relations-functions/the-pigeonhole-principle/index.html \
+                      induction-and-recursion/index.html \
+                      induction-and-recursion/the-well-ordering-principle/index.html \
+                      induction-and-recursion/mathematical-induction/index.html \
+                      induction-and-recursion/induction-with-sums-and-products/index.html \
+                      induction-and-recursion/induction-with-inequalities-and-divisibility/index.html \
+                      induction-and-recursion/strong-induction/index.html \
+                      induction-and-recursion/recursive-definitions/index.html \
+                      induction-and-recursion/structural-induction/index.html \
+                      induction-and-recursion/recursive-algorithms/index.html \
+                      induction-and-recursion/recurrence-relations/index.html \
+                      induction-and-recursion/solving-linear-recurrences/index.html \
+                      induction-and-recursion/divide-and-conquer-recurrences/index.html \
+                      induction-and-recursion/loop-invariants-and-correctness/index.html \
+                      combinatorics-and-counting/index.html \
+                      combinatorics-and-counting/sum-and-product-rules/index.html \
+                      combinatorics-and-counting/counting-with-restrictions/index.html \
+                      combinatorics-and-counting/permutations/index.html \
+                      combinatorics-and-counting/combinations/index.html \
+                      combinatorics-and-counting/binomial-coefficients/index.html \
+                      combinatorics-and-counting/the-binomial-theorem/index.html \
+                      combinatorics-and-counting/permutations-with-repetition/index.html \
+                      combinatorics-and-counting/combinations-with-repetition/index.html \
+                      combinatorics-and-counting/inclusion-exclusion/index.html \
+                      combinatorics-and-counting/derangements/index.html \
+                      combinatorics-and-counting/generalized-pigeonhole/index.html \
+                      combinatorics-and-counting/generating-functions/index.html \
+                      combinatorics-and-counting/combinatorial-proof/index.html \
+                      combinatorics-and-counting/choosing-a-counting-method/index.html \
+                      discrete-probability/index.html \
+                      discrete-probability/sample-spaces-and-events/index.html \
+                      discrete-probability/computing-probabilities/index.html \
+                      discrete-probability/probability-axioms/index.html \
+                      discrete-probability/conditional-probability/index.html \
+                      discrete-probability/independence/index.html \
+                      discrete-probability/bayes-theorem/index.html \
+                      discrete-probability/random-variables/index.html \
+                      discrete-probability/expected-value/index.html \
+                      discrete-probability/linearity-of-expectation/index.html \
+                      discrete-probability/variance/index.html \
+                      discrete-probability/binomial-distribution/index.html \
+                      discrete-probability/geometric-distribution/index.html \
+                      number-theory-and-cryptography/index.html \
+                      number-theory-and-cryptography/divisibility-and-the-division-algorithm/index.html \
+                      number-theory-and-cryptography/primes-and-factorisation/index.html \
+                      number-theory-and-cryptography/the-sieve-of-eratosthenes/index.html \
+                      number-theory-and-cryptography/greatest-common-divisor/index.html \
+                      number-theory-and-cryptography/the-euclidean-algorithm/index.html \
+                      number-theory-and-cryptography/bezout-and-modular-inverses/index.html \
+                      number-theory-and-cryptography/modular-arithmetic/index.html \
+                      number-theory-and-cryptography/modular-exponentiation/index.html \
+                      number-theory-and-cryptography/linear-congruences/index.html \
+                      number-theory-and-cryptography/chinese-remainder-theorem/index.html \
+                      number-theory-and-cryptography/fermat-and-euler/index.html \
+                      number-theory-and-cryptography/hashing-and-pseudorandom-numbers/index.html \
+                      number-theory-and-cryptography/classical-ciphers/index.html \
+                      number-theory-and-cryptography/rsa-encryption/index.html \
+                      graphs-and-trees/index.html \
+                      graphs-and-trees/graphs-and-graph-models/index.html \
+                      graphs-and-trees/degree-and-the-handshake-theorem/index.html \
+                      graphs-and-trees/graph-representations/index.html \
+                      graphs-and-trees/paths-and-connectivity/index.html \
+                      graphs-and-trees/graph-isomorphism/index.html \
+                      graphs-and-trees/bipartite-graphs/index.html \
+                      graphs-and-trees/euler-and-hamilton/index.html \
+                      graphs-and-trees/graph-traversal/index.html \
+                      graphs-and-trees/shortest-paths/index.html \
+                      graphs-and-trees/trees/index.html \
+                      graphs-and-trees/tree-traversals/index.html \
+                      graphs-and-trees/spanning-trees/index.html \
+                      graphs-and-trees/graph-colouring/index.html \
+                      graphs-and-trees/planar-graphs/index.html \
+                      algorithms-and-complexity/index.html \
+                      algorithms-and-complexity/algorithms-and-pseudocode/index.html \
+                      algorithms-and-complexity/correctness-and-termination/index.html \
+                      algorithms-and-complexity/growth-of-functions/index.html \
+                      algorithms-and-complexity/big-o-notation/index.html \
+                      algorithms-and-complexity/analysing-iterative-algorithms/index.html \
+                      algorithms-and-complexity/searching-and-sorting/index.html \
+                      algorithms-and-complexity/divide-and-conquer/index.html \
+                      algorithms-and-complexity/recursion-trees-and-amortised-analysis/index.html \
+                      algorithms-and-complexity/greedy-algorithms/index.html \
+                      algorithms-and-complexity/dynamic-programming/index.html \
+                      algorithms-and-complexity/complexity-classes/index.html \
+                      algorithms-and-complexity/decidability-and-the-halting-problem/index.html ; do
             pages=$((pages + 1))
             if [ ! -f "site/$page" ]; then
               echo "::error::missing site/$page -- refusing to publish an incomplete course"

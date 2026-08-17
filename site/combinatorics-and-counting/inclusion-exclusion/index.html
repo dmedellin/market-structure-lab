@@ -1,0 +1,1159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Inclusion&amp;ndash;Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io</title>
+  <meta name="description" content="When sets overlap the sum rule over-counts. Inclusion and exclusion corrects it exactly, with alternating signs, and it is the tool behind derangements, surjection counts and Euler&#x27;s totient function." />
+  <link rel="canonical" href="https://learn.geterdone.io/combinatorics-and-counting/inclusion-exclusion/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="The Inclusion&amp;ndash;Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io" />
+  <meta property="og:description" content="When sets overlap the sum rule over-counts. Inclusion and exclusion corrects it exactly, with alternating signs, and it is the tool behind derangements, surjection counts and Euler&#x27;s totient function." />
+  <meta property="og:url" content="https://learn.geterdone.io/combinatorics-and-counting/inclusion-exclusion/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="The Inclusion&amp;ndash;Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io" />
+  <meta name="twitter:description" content="When sets overlap the sum rule over-counts. Inclusion and exclusion corrects it exactly, with alternating signs, and it is the tool behind derangements, surjection counts and Euler&#x27;s totient function." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/combinatorics-and-counting/inclusion-exclusion/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Combinatorics and Counting course home">
+        <span class="brand-mark" aria-hidden="true">09</span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 &amp;middot; Lesson 09 of 14</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Combinatorics and Counting</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 09 &amp;middot; The Inclusion&amp;ndash;Exclusion Principle</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The inclusion and exclusion is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 4 &middot; Lesson 09 &middot; Corrections</span>
+        <h1>The Inclusion&amp;ndash;Exclusion Principle</h1>
+        <p>When sets overlap the sum rule over-counts. Inclusion and exclusion corrects it exactly, with alternating signs, and it is the tool behind derangements, surjection counts and Euler's totient function.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">|A ∪ B| = |A| + |B| − |A ∩ B|
+|A∪B∪C| = Σ|Aᵢ| − Σ|Aᵢ∩Aⱼ| + |A∩B∩C|
+general: alternating sum over all nonempty subsets of the index set
+usually applied to the COMPLEMENT: none of the properties</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Correcting the over-count</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Each element must be counted exactly once. The alternating signs are what makes that happen for every element regardless of how many sets it lies in.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Adding sizes over-counts overlaps</h3><p>An element in two sets is counted twice, one in three is counted three times. Subtracting pairwise intersections over-corrects the triples, so they are added back.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The signs are forced</h3><p>An element in exactly <span class="math">m</span> of the sets is counted <span class="math">C(m,1) − C(m,2) + C(m,3) − ⋯</span>, which is 1 for every <span class="math">m ≥ 1</span> by the alternating-sum identity of lesson 5.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The complement form is usually what you want</h3><p>"None of the properties" equals the total minus the union, and that is how derangements and surjection counts are computed.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>The principle</h2></div><p>The two-set and three-set cases, the general statement, and why it is exact.</p></div>
+      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Two and three sets</span><p><span class="math">|A ∪ B| = |A| + |B| − |A ∩ B|</span> and <span class="math">|A ∪ B ∪ C| = |A| + |B| + |C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|</span>.</p></div><div class="thm"><span class="label">Theorem &middot; Inclusion&amp;ndash;exclusion</span><p>For finite sets <span class="math">A₁, …, A_n</span>, <span class="math">|A₁ ∪ ⋯ ∪ A_n| = Σ|Aᵢ| − Σ_{i&lt;j}|Aᵢ∩Aⱼ| + Σ_{i&lt;j&lt;k}|Aᵢ∩Aⱼ∩A_k| − ⋯ + (−1)^{n+1}|A₁∩⋯∩A_n|</span> &mdash; an alternating sum over all nonempty subsets of the indices.</p></div><div class="proof"><p>Take an element lying in exactly <span class="math">m</span> of the sets, <span class="math">m ≥ 1</span>. It is counted <span class="math">C(m,1)</span> times in the first sum, <span class="math">C(m,2)</span> times in the second, and so on, so its net contribution is <span class="math">C(m,1) − C(m,2) + C(m,3) − ⋯ = 1 − [C(m,0) − C(m,1) + C(m,2) − ⋯]</span>.</p><p>The bracket is the alternating row sum, which is 0 for <span class="math">m ≥ 1</span> (lesson 5). So the contribution is exactly 1.</p><p>An element in none of the sets contributes 0 to every term. Hence each element of the union is counted once and nothing else is counted.</p><p><span class="qed">&#9633;</span></p></div><p>That proof explains the signs rather than asserting them: they are exactly what is needed to make every element's contribution collapse to 1, and the collapse is the alternating-sum identity from Pascal's triangle.</p><h3>The complement form</h3><div class="thm"><span class="label">Theorem &middot; Counting elements with none of the properties</span><p>If <span class="math">Aᵢ</span> is the set of objects with property <span class="math">i</span>, then the number with none of them is <span class="math">|U| − Σ|Aᵢ| + Σ|Aᵢ∩Aⱼ| − ⋯</span>, the same alternating sum with the signs shifted.</p></div><div class="example"><span class="label">Example &middot; Divisibility</span><p>How many of <span class="math">1, …, 1000</span> are divisible by none of 2, 3, 5? <span class="math">1000 − (500 + 333 + 200) + (166 + 100 + 66) − 33 = 266</span>. Each term is a floor division: <span class="math">⌊1000/6⌋ = 166</span> counts the multiples of both 2 and 3.</p></div><div class="thm"><span class="label">Theorem &middot; Euler&#x27;s totient</span><p>The count of integers in <span class="math">1, …, n</span> coprime to <span class="math">n</span> is <span class="math">φ(n) = n·Π(1 − 1/p)</span> over the distinct primes <span class="math">p</span> dividing <span class="math">n</span>. That product is inclusion and exclusion over the prime divisors, multiplied out. Course 6 uses <span class="math">φ</span> throughout.</p></div><div class="thm"><span class="label">Theorem &middot; Counting surjections</span><p>The number of surjections from an <span class="math">m</span>-set onto an <span class="math">n</span>-set is <span class="math">Σ_{k=0}^{n} (−1)^k C(n,k)(n−k)^m</span> &mdash; total functions minus those missing at least one target, corrected.</p></div><p>The pattern in all three: the direct count is hard and the count of "violates condition <span class="math">i</span>" is easy, so count the violations and alternate. Recognising that shape is what this lesson is for.</p></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Inclusion and exclusion</h2></div><p>Formula and brute force, side by side</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong>How many integers in 1 … N are divisible by a, b or c?</strong><span>Counted two ways</span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>added</span><span class="tone-red"><i class="legend-swatch"></i>subtracted</span></div>
+      </div>
+      <div class="lab-stage"><div class="table-wrap"><table class="tt" id="ieTable"></table></div></div>
+      <div class="status-banner" id="ieStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Both routes to the same number</h3>
+          <p>The table builds the alternating sum term by term while the right-hand count walks 1 to N one integer at a time. They must agree, and watching the running total shows where the naive sum goes wrong.</p>
+        <div>
+          <div class="range-row"><label class="small-copy" for="ieN">N</label><span class="range-value" id="ieNOut">100</span></div>
+          <input id="ieN" type="range" min="10" max="500" step="10" value="100" />
+        </div>
+        <div>
+          <div class="range-row"><label class="small-copy" for="ieA">a</label><span class="range-value" id="ieAOut">2</span></div>
+          <input id="ieA" type="range" min="2" max="12" value="2" />
+        </div>
+        <div>
+          <div class="range-row"><label class="small-copy" for="ieB">b</label><span class="range-value" id="ieBOut">3</span></div>
+          <input id="ieB" type="range" min="2" max="12" value="3" />
+        </div>
+        <div>
+          <div class="range-row"><label class="small-copy" for="ieC">c</label><span class="range-value" id="ieCOut">5</span></div>
+          <input id="ieC" type="range" min="2" max="12" value="5" />
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span>By formula</span><strong id="ieFormula">&mdash;</strong></div>
+          <div class="kpi"><span>By counting</span><strong id="ieBrute">&mdash;</strong></div>
+        </div>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Applying inclusion and exclusion</h2></div><p>Define the sets so the intersections are easy.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Define `Aᵢ` as &quot;has property `i`&quot;</h3><p>Usually the bad property. Counting <span class="math">Aᵢ</span> and its intersections must be easier than counting the objects you want.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compute every intersection size</h3><p>Pairs, triples, and so on. Symmetry often makes many of them equal, which is what keeps the sum manageable.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Alternate the signs</h3><p>Add the singles, subtract the pairs, add the triples. Off by one in the sign pattern gives an answer that is wrong by twice the correction.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Sanity check the magnitude</h3><p>The answer must lie between 0 and the total. A negative result means a sign error; a result above the total means a missed subtraction.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Inclusion and exclusion</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Surjections from a 5-set onto a 3-set</h3><p>How many functions from <span class="math">{1,…,5}</span> onto <span class="math">{a,b,c}</span> hit every target?</p><div class="mathblock">Total functions:  3⁵ = 243
+
+Let Aₓ = functions that MISS target x.
+   |Aₓ| = 2⁵ = 32,  and there are C(3,1) = 3 of them
+   |Aₓ ∩ A_y| = 1⁵ = 1,  and there are C(3,2) = 3 of them
+   |Aₐ ∩ A_b ∩ A_c| = 0⁵ = 0
+
+Functions missing at least one:  3·32 − 3·1 + 0 = 93
+
+Surjections:  243 − 93 = 150
+
+Formula check:  Σ (−1)ᵏ C(3,k)(3−k)⁵
+              = 243 − 3·32 + 3·1 − 0  =  150       ✓</div><p><span class="math">0⁵ = 0</span> is the right value here: no function can miss all three targets when the domain is nonempty. The convention <span class="math">0⁰ = 1</span> would matter if the domain were empty, which is exactly the edge case such formulas are tested on.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Getting the sign pattern wrong</strong><span>Odd-sized intersections are added, even-sized subtracted &mdash; in the union form. The complement form starts from the total and reverses. Write which form you are using.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Missing an intersection term</strong><span>With <span class="math">n</span> sets there are <span class="math">2ⁿ − 1</span> terms. For four sets that is 15, and forgetting one silently changes the answer.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming the intersections are all equal</strong><span>They often are, by symmetry, and when they are not the count must be done term by term.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can set up the sets so the intersections are easy.</strong><p>Count the permutations of <span class="math">1, …, 6</span> in which no element stays in its own position. Define <span class="math">Aᵢ</span> as "element <span class="math">i</span> is fixed", compute the intersections, and alternate. Lesson 10 is that answer in general.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The principle generalises far beyond counting: the same alternating structure appears in Möbius inversion, in the sieve methods of analytic number theory, and in the probabilistic version course 5 uses for <span class="math">P(A ∪ B)</span>.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../combinations-with-repetition/" rel="prev"><span>Previous lesson</span><strong>08 &middot; Combinations with Repetition</strong></a>
+      <a class="lesson-link next" href="../derangements/" rel="next"><span>Next lesson</span><strong>10 &middot; Derangements</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Combinatorics and Counting.</strong> Every count on this course is computed in exact big-integer arithmetic, so a figure like <span class="math">52!</span> is the number and not a floating-point approximation of it. Where the total is small enough to list, the lab lists it and checks the formula against the enumeration.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a worked example is not a proof.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "<span class=\"math\">|A| = 20<\/span>, <span class=\"math\">|B| = 15<\/span>, <span class=\"math\">|A \u2229 B| = 6<\/span>. What is <span class=\"math\">|A \u222a B|<\/span>?", "a": ["35", "29", "41", "26"], "c": 1, "why": "<span class=\"math\">20 + 15 \u2212 6 = 29<\/span>. The six shared elements were counted twice by the naive sum."}, {"q": "In the three-set formula, the triple intersection is:", "a": ["subtracted", "added", "ignored", "counted twice"], "c": 1, "why": "Added back. Elements in all three were counted three times, then subtracted three times by the pairs, leaving zero &mdash; so one addition restores them."}, {"q": "Inclusion and exclusion is usually applied to:", "a": ["the union directly", "the complement \u2014 the objects with none of the properties", "the intersection", "the power set"], "c": 1, "why": "Derangements, surjections and totients are all \"none of the bad properties\" counts, computed as total minus the union of the bad sets."}];
+
+  (function () {
+
+  var nS = document.getElementById('ieN'), aS = document.getElementById('ieA');
+  var bS = document.getElementById('ieB'), cS = document.getElementById('ieC');
+  var table = document.getElementById('ieTable'), status = document.getElementById('ieStatus');
+
+  function lcm(x, y) { var a = x, b = y; while (b) { var t = a % b; a = b; b = t; } return x / a * y; }
+
+  function redraw() {
+    var N = +nS.value, a = +aS.value, b = +bS.value, c = +cS.value;
+    document.getElementById('ieNOut').textContent = N;
+    document.getElementById('ieAOut').textContent = a;
+    document.getElementById('ieBOut').textContent = b;
+    document.getElementById('ieCOut').textContent = c;
+
+    var terms = [
+      ['|A| = ⌊N/' + a + '⌋', Math.floor(N / a), 1],
+      ['|B| = ⌊N/' + b + '⌋', Math.floor(N / b), 1],
+      ['|C| = ⌊N/' + c + '⌋', Math.floor(N / c), 1],
+      ['|A∩B| = ⌊N/lcm(' + a + ',' + b + ')⌋', Math.floor(N / lcm(a, b)), -1],
+      ['|A∩C| = ⌊N/lcm(' + a + ',' + c + ')⌋', Math.floor(N / lcm(a, c)), -1],
+      ['|B∩C| = ⌊N/lcm(' + b + ',' + c + ')⌋', Math.floor(N / lcm(b, c)), -1],
+      ['|A∩B∩C| = ⌊N/lcm(' + a + ',' + b + ',' + c + ')⌋', Math.floor(N / lcm(lcm(a, b), c)), 1]
+    ];
+
+    var running = 0;
+    var h = '<thead><tr><th>term</th><th>sign</th><th>value</th><th>running total</th></tr></thead><tbody>';
+    terms.forEach(function (t) {
+      running += t[2] * t[1];
+      h += '<tr><td>' + t[0] + '</td><td class="' + (t[2] > 0 ? 't' : 'f') + '">'
+        + (t[2] > 0 ? '+' : '−') + '</td><td>' + t[1] + '</td><td>' + running + '</td></tr>';
+    });
+    table.innerHTML = h + '</tbody></table>';
+
+    /* The same count by brute force. Two independent routes to one number is
+       the whole reason to believe either of them. */
+    var brute = 0;
+    for (var i = 1; i <= N; i += 1) if (i % a === 0 || i % b === 0 || i % c === 0) brute += 1;
+
+    document.getElementById('ieFormula').textContent = running;
+    document.getElementById('ieBrute').textContent = brute;
+    var naive = terms[0][1] + terms[1][1] + terms[2][1];
+    if (running === brute) {
+      status.innerHTML = 'Both routes give <strong>' + brute + '</strong>. Adding the three sizes alone gives '
+        + '<strong>' + naive + '</strong> &mdash; too big by ' + (naive - brute) + ', because every number divisible '
+        + 'by two of them was counted twice and every number divisible by all three was counted three times. '
+        + 'That over-count is exactly what the alternating terms remove.';
+    } else {
+      status.innerHTML = '<span class="tone-red">The two routes disagree (' + running + ' vs ' + brute + ').</span>';
+    }
+  }
+
+  [nS, aS, bS, cS].forEach(function (el) { el.addEventListener('input', redraw); });
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

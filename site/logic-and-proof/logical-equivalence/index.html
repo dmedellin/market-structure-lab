@@ -1,0 +1,1362 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logical Equivalence | Logic and Proof | Learn · geterdone.io</title>
+  <meta name="description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws &amp;mdash; De Morgan, distribution, absorption &amp;mdash; and refute it with a single row." />
+  <link rel="canonical" href="https://learn.geterdone.io/logic-and-proof/logical-equivalence/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Logical Equivalence | Logic and Proof | Learn · geterdone.io" />
+  <meta property="og:description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws &amp;mdash; De Morgan, distribution, absorption &amp;mdash; and refute it with a single row." />
+  <meta property="og:url" content="https://learn.geterdone.io/logic-and-proof/logical-equivalence/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Logical Equivalence | Logic and Proof | Learn · geterdone.io" />
+  <meta name="twitter:description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws &amp;mdash; De Morgan, distribution, absorption &amp;mdash; and refute it with a single row." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/logic-and-proof/logical-equivalence/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Logic and Proof course home">
+        <span class="brand-mark" aria-hidden="true">05</span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 &amp;middot; Lesson 05 of 14</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Logic and Proof</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 05 &amp;middot; Logical Equivalence</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The truth table is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 1 &middot; Lesson 05 &middot; Propositional logic</span>
+        <h1>Logical Equivalence</h1>
+        <p>Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws &mdash; De Morgan, distribution, absorption &mdash; and refute it with a single row.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">p ≡ q    means    p ↔ q is a tautology
+¬(p ∧ q) ≡ ¬p ∨ ¬q               De Morgan
+¬(p ∨ q) ≡ ¬p ∧ ¬q               De Morgan
+p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r)  distribution</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Equivalence and three laws</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Equivalence is the relation that lets a complicated formula be replaced by a simple one without changing what it claims.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Equivalence means agreement in every row</h3><p>Not similar structure, not the same variables &mdash; the same truth value under every assignment. <span class="math">p → q</span> and <span class="math">¬p ∨ q</span> look nothing alike and are equivalent.</p></article><article class="card concept-card"><div class="icon">2</div><h3>One row refutes it</h3><p>To disprove an equivalence you exhibit one assignment where the two differ. That is a complete disproof and needs no further argument.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The laws are shortcuts, not new facts</h3><p>Every law in this lesson could be verified by a truth table. Their value is that they let you transform a 32-row formula without writing 32 rows.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Equivalence and the laws</h2></div><p>The definition first, then the toolkit that follows from it.</p></div>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Logical equivalence</span><p>Formulas <span class="math">A</span> and <span class="math">B</span> are <strong>logically equivalent</strong>, written <span class="math">A ≡ B</span>, when they have the same truth value under every assignment &mdash; equivalently, when <span class="math">A ↔ B</span> is a tautology.</p></div><p>Note that <span class="math">≡</span> is not a connective. <span class="math">A ≡ B</span> is a statement <em>about</em> two formulas, made in ordinary mathematical language; <span class="math">A ↔ B</span> is itself a formula. The two are related exactly as stated in the definition.</p><h3>The laws worth knowing by name</h3><div class="mathblock">identity        p ∧ T ≡ p              p ∨ F ≡ p
+domination      p ∨ T ≡ T              p ∧ F ≡ F
+idempotent      p ∧ p ≡ p              p ∨ p ≡ p
+double negation ¬¬p ≡ p
+commutative     p ∧ q ≡ q ∧ p          p ∨ q ≡ q ∨ p
+associative     (p ∧ q) ∧ r ≡ p ∧ (q ∧ r)
+distributive    p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r)
+                p ∨ (q ∧ r) ≡ (p ∨ q) ∧ (p ∨ r)
+De Morgan       ¬(p ∧ q) ≡ ¬p ∨ ¬q     ¬(p ∨ q) ≡ ¬p ∧ ¬q
+absorption      p ∨ (p ∧ q) ≡ p        p ∧ (p ∨ q) ≡ p
+negation        p ∨ ¬p ≡ T             p ∧ ¬p ≡ F
+conditional     p → q ≡ ¬p ∨ q         ¬(p → q) ≡ p ∧ ¬q
+biconditional   p ↔ q ≡ (p → q) ∧ (q → p)</div><p>Two of these repay extra attention. <strong>De Morgan</strong> is how a negation is pushed inward past a connective, and the connective flips as it passes: <span class="math">∧</span> becomes <span class="math">∨</span> and back. <strong>Distribution</strong> works in both directions here, unlike in arithmetic where <span class="math">a + (b × c)</span> is not <span class="math">(a + b) × (a + c)</span>.</p><p>The second distributive law is the one people doubt. Check it: at <span class="math">p = T</span> both sides are <span class="math">T</span>; at <span class="math">p = F</span> the left is <span class="math">q ∧ r</span> and the right is <span class="math">q ∧ r</span>. It holds.</p><div class="thm"><span class="label">Theorem &middot; Substitution</span><p>If <span class="math">A ≡ B</span>, then replacing an occurrence of <span class="math">A</span> inside a larger formula by <span class="math">B</span> produces an equivalent formula. This is what makes chains of rewriting valid.</p></div><div class="example"><span class="label">Example &middot; Simplifying by chain</span><p><span class="math">¬(p → q) ≡ ¬(¬p ∨ q) ≡ ¬¬p ∧ ¬q ≡ p ∧ ¬q</span>. Three steps: conditional law, De Morgan, double negation. The result says what it should &mdash; a conditional fails exactly when the hypothesis holds and the conclusion does not.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Truth table</h2></div><p>Every assignment, evaluated</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong>Truth table</strong><span id="ttCaption">Every assignment, every subexpression</span></div>
+        <div class="inline-legend"><span class="tone-green"><i class="legend-swatch"></i>T</span><span class="tone-red"><i class="legend-swatch"></i>F</span><span class="tone-cyan"><i class="legend-swatch"></i>Whole formula</span></div>
+      </div>
+      <div class="lab-stage"><div class="table-wrap" id="ttOut"></div></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Prove or refute an equivalence</h3>
+          <p>In compare mode the lab highlights any row that separates the two formulas. No highlighted row means equivalent; one is a complete disproof.</p>
+        <div class="field">
+          <label for="ttMode">What to do</label>
+          <select id="ttMode">
+            <option value="one">Classify one formula</option>
+            <option value="two" selected="selected">Compare two formulas</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ttA">Formula A</label>
+          <select id="ttA"><option value="~(p & q)">~(p & q)</option><option value="~p | ~q">~p | ~q</option><option value="~(p | q)">~(p | q)</option><option value="~p & ~q">~p & ~q</option><option value="p & (q | r)">p & (q | r)</option><option value="(p & q) | (p & r)">(p & q) | (p & r)</option><option value="p | (q & r)">p | (q & r)</option><option value="(p | q) & (p | r)">(p | q) & (p | r)</option><option value="p | (p & q)">p | (p & q)</option><option value="p">p</option></select>
+        </div>
+        <div class="field" id="ttBWrap" hidden>
+          <label for="ttB">Formula B</label>
+          <select id="ttB"><option value="~(p & q)">~(p & q)</option><option value="~p | ~q" selected="selected">~p | ~q</option><option value="~(p | q)">~(p | q)</option><option value="~p & ~q">~p & ~q</option><option value="p & (q | r)">p & (q | r)</option><option value="(p & q) | (p & r)">(p & q) | (p & r)</option><option value="p | (q & r)">p | (q & r)</option><option value="(p | q) & (p | r)">(p | q) & (p | r)</option><option value="p | (p & q)">p | (p & q)</option><option value="p">p</option></select>
+        </div>
+        <div class="field">
+          <label for="ttCustom">Or type your own (variables p q r s; operators ~ &amp; | -&gt; &lt;-&gt; ^)</label>
+          <input id="ttCustom" type="text" placeholder="p -&gt; (q | r)" autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span>Rows</span><strong id="ttRows">&mdash;</strong></div>
+          <div class="kpi"><span>True in</span><strong id="ttTrue">&mdash;</strong></div>
+          <div class="kpi"><span>Verdict</span><strong id="ttVerdict">&mdash;</strong></div>
+        </div>
+        <div class="status-banner" id="ttStatus">Pick a formula.</div>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Proving an equivalence</h2></div><p>Two routes. Choose by the number of variables.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Few variables? Build the table</h3><p>Up to three variables a table is eight rows and takes a minute. It cannot be wrong and needs no cleverness.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Many variables? Chain the laws</h3><p>Start from the more complicated side and rewrite toward the simpler one, naming the law used at each step.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Eliminate conditionals first</h3><p>Rewrite every <span class="math">→</span> as <span class="math">¬p ∨ q</span> and every <span class="math">↔</span> as a conjunction of two conditionals. The remaining laws all speak <span class="math">∧</span>, <span class="math">∨</span>, <span class="math">¬</span>.</p></article><article class="card concept-card"><div class="icon">4</div><h3>To refute, hunt for one row</h3><p>Try to make one side true and the other false. Setting a variable to make the two sides disagree is usually easier than checking all rows.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Equivalences</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Show `(p → q) ∧ (p → r) ≡ p → (q ∧ r)`</h3><p>Three variables, so a table would be eight rows. The chain is shorter.</p><div class="mathblock">(p → q) ∧ (p → r)
+  ≡ (¬p ∨ q) ∧ (¬p ∨ r)      conditional law, twice
+  ≡ ¬p ∨ (q ∧ r)             distribution (backwards)
+  ≡ p → (q ∧ r)              conditional law</div><p>Read the result back into English: promising <span class="math">q</span> and promising <span class="math">r</span>, both on the same condition, is promising <span class="math">q ∧ r</span> on that condition. The chain proves it; the sentence is why it should have been expected.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Negating both sides of a connective without flipping it</strong><span><span class="math">¬(p ∧ q)</span> is not <span class="math">¬p ∧ ¬q</span>. The two differ in two of four rows, and De Morgan exists precisely to record the flip.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Treating `≡` as a connective inside a formula</strong><span><span class="math">p ≡ q</span> is a claim about two formulas; <span class="math">p ↔ q</span> is a formula. Writing <span class="math">(p ≡ q) ∧ r</span> is a category error.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Checking a few rows and concluding equivalence</strong><span>Agreement on the rows you looked at is not agreement on all of them. This is the same gap course 3 spends a whole course closing.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can simplify a four-connective formula by named laws and justify each step.</strong><p>Take <span class="math">¬(p ∨ (¬p ∧ q))</span> and reduce it to <span class="math">¬p ∧ ¬q</span>, naming De Morgan, distribution and negation as you use them. A step you cannot name is a step you have guessed.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Every law above has a dual, obtained by swapping <span class="math">∧</span> with <span class="math">∨</span> and <span class="math">T</span> with <span class="math">F</span>. That symmetry is not a coincidence; lesson 7 makes it a structural fact about Boolean algebra.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../conditional-statements/" rel="prev"><span>Previous lesson</span><strong>04 &middot; The Conditional and Its Relatives</strong></a>
+      <a class="lesson-link next" href="../tautologies-and-satisfiability/" rel="next"><span>Next lesson</span><strong>06 &middot; Tautology, Contradiction, Satisfiability</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Logic and Proof.</strong> Truth tables, equivalences and quantifier evaluations on this course are computed in your browser by evaluating the formula under every assignment, so a column is right because the evaluation is right. Verifying a statement on the cases shown is not a proof of it &mdash; lesson 14 and course 3 are about exactly that gap.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a worked example is not a proof.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "<span class=\"math\">\u00ac(p \u2228 q)<\/span> is equivalent to:", "a": ["<span class=\"math\">\u00acp \u2228 \u00acq<\/span>", "<span class=\"math\">\u00acp \u2227 \u00acq<\/span>", "<span class=\"math\">p \u2227 q<\/span>", "<span class=\"math\">\u00acp \u2192 q<\/span>"], "c": 1, "why": "De Morgan: the negation passes inward and the connective flips. \"Not (<span class=\"math\">p<\/span> or <span class=\"math\">q<\/span>)\" is \"neither <span class=\"math\">p<\/span> nor <span class=\"math\">q<\/span>\"."}, {"q": "You want to disprove <span class=\"math\">A \u2261 B<\/span>. What is enough?", "a": ["Show they have different connectives", "Show they differ in at least half the rows", "Exhibit one assignment where their values differ", "Show <span class=\"math\">A<\/span> is a tautology and <span class=\"math\">B<\/span> is not"], "c": 2, "why": "Equivalence requires agreement in every row, so one disagreeing row refutes it completely. Nothing more is needed or helps."}, {"q": "<span class=\"math\">\u00ac(p \u2192 q)<\/span> simplifies to:", "a": ["<span class=\"math\">\u00acp \u2192 \u00acq<\/span>", "<span class=\"math\">p \u2227 \u00acq<\/span>", "<span class=\"math\">\u00acp \u2228 q<\/span>", "<span class=\"math\">q \u2192 p<\/span>"], "c": 1, "why": "A conditional fails exactly when its hypothesis holds and its conclusion does not. By the laws: <span class=\"math\">\u00ac(\u00acp \u2228 q) \u2261 p \u2227 \u00acq<\/span>."}];
+
+  (function () {
+
+  /* ---- propositional logic: tokenizer, parser, evaluator ---------------- */
+  var OPS = {
+    '¬': 'not', '~': 'not', '!': 'not',
+    '∧': 'and', '&': 'and',
+    '∨': 'or', '|': 'or',
+    '⊕': 'xor', '^': 'xor',
+    '→': 'imp', '⇒': 'imp',
+    '↔': 'iff', '⇔': 'iff'
+  };
+  var GLYPH = { not: '¬', and: '∧', or: '∨', xor: '⊕', imp: '→', iff: '↔' };
+
+  function tokenize(src) {
+    var out = [], i = 0;
+    while (i < src.length) {
+      var ch = src[i];
+      if (ch === ' ') { i += 1; continue; }
+      if (src.substr(i, 3) === '<->') { out.push({ t: 'op', v: 'iff' }); i += 3; continue; }
+      if (src.substr(i, 2) === '->') { out.push({ t: 'op', v: 'imp' }); i += 2; continue; }
+      if (ch === '(' || ch === ')') { out.push({ t: ch }); i += 1; continue; }
+      if (OPS[ch]) { out.push({ t: 'op', v: OPS[ch] }); i += 1; continue; }
+      if (/[A-Za-z]/.test(ch)) { out.push({ t: 'var', v: ch }); i += 1; continue; }
+      if (ch === '⊤') { out.push({ t: 'const', v: true }); i += 1; continue; }
+      if (ch === '⊥') { out.push({ t: 'const', v: false }); i += 1; continue; }
+      throw new Error('unexpected character ' + ch);
+    }
+    return out;
+  }
+
+  function parse(src) {
+    var ts = tokenize(src), pos = 0;
+    function peek() { return ts[pos]; }
+    function eat(kind, value) {
+      var t = ts[pos];
+      if (!t || t.t !== kind || (value !== undefined && t.v !== value)) return null;
+      pos += 1;
+      return t;
+    }
+    function primary() {
+      if (eat('(')) {
+        var inner = iff();
+        if (!eat(')')) throw new Error('missing )');
+        return inner;
+      }
+      var n = eat('op', 'not');
+      if (n) return { op: 'not', a: primary() };
+      var c = eat('const');
+      if (c) return { op: 'const', v: c.v };
+      var v = eat('var');
+      if (!v) throw new Error('expected a variable');
+      return { op: 'var', name: v.v };
+    }
+    function binaryLeft(next, names) {
+      var node = next();
+      for (;;) {
+        var t = peek();
+        if (t && t.t === 'op' && names.indexOf(t.v) !== -1) { pos += 1; node = { op: t.v, a: node, b: next() }; }
+        else return node;
+      }
+    }
+    function and() { return binaryLeft(primary, ['and']); }
+    function or() { return binaryLeft(and, ['or', 'xor']); }
+    function imp() {
+      var left = or(), t = peek();
+      if (t && t.t === 'op' && t.v === 'imp') { pos += 1; return { op: 'imp', a: left, b: imp() }; }
+      return left;
+    }
+    function iff() { return binaryLeft(imp, ['iff']); }
+    var tree = iff();
+    if (pos !== ts.length) throw new Error('trailing input');
+    return tree;
+  }
+
+  function evalNode(node, env) {
+    switch (node.op) {
+      case 'var': return !!env[node.name];
+      case 'const': return node.v;
+      case 'not': return !evalNode(node.a, env);
+      case 'and': return evalNode(node.a, env) && evalNode(node.b, env);
+      case 'or': return evalNode(node.a, env) || evalNode(node.b, env);
+      case 'xor': return evalNode(node.a, env) !== evalNode(node.b, env);
+      case 'imp': return !evalNode(node.a, env) || evalNode(node.b, env);
+      case 'iff': return evalNode(node.a, env) === evalNode(node.b, env);
+    }
+    throw new Error('unknown node');
+  }
+
+  function show(node, outer) {
+    switch (node.op) {
+      case 'var': return node.name;
+      case 'const': return node.v ? '⊤' : '⊥';
+      case 'not': return GLYPH.not + show(node.a, false);
+      default: {
+        var s = show(node.a, false) + ' ' + GLYPH[node.op] + ' ' + show(node.b, false);
+        return outer ? s : '(' + s + ')';
+      }
+    }
+  }
+
+  function variablesOf(node, seen) {
+    seen = seen || [];
+    if (node.op === 'var') { if (seen.indexOf(node.name) === -1) seen.push(node.name); }
+    else { if (node.a) variablesOf(node.a, seen); if (node.b) variablesOf(node.b, seen); }
+    return seen;
+  }
+
+  /* Every subexpression, in the order a reader would evaluate them: operands
+     before the operator that combines them. Duplicates collapse, so p appears
+     once however often it is written. */
+  function subexpressions(node, out, seen) {
+    out = out || []; seen = seen || {};
+    if (node.a) subexpressions(node.a, out, seen);
+    if (node.b) subexpressions(node.b, out, seen);
+    if (node.op === 'var' || node.op === 'const') return out;
+    var key = show(node, false);
+    if (!seen[key]) { seen[key] = true; out.push(node); }
+    return out;
+  }
+
+  /* Rows in the conventional order: T before F, leftmost variable slowest. */
+  function assignments(vars) {
+    var rows = [], total = 1 << vars.length;
+    for (var i = 0; i < total; i += 1) {
+      var env = {};
+      for (var j = 0; j < vars.length; j += 1) {
+        env[vars[j]] = ((i >> (vars.length - 1 - j)) & 1) === 0;
+      }
+      rows.push(env);
+    }
+    return rows;
+  }
+
+  var modeSel = document.getElementById('ttMode');
+  var selA = document.getElementById('ttA'), selB = document.getElementById('ttB');
+  var bWrap = document.getElementById('ttBWrap');
+  var custom = document.getElementById('ttCustom');
+  var out = document.getElementById('ttOut');
+  var rowsOut = document.getElementById('ttRows'), trueOut = document.getElementById('ttTrue');
+  var verdictOut = document.getElementById('ttVerdict'), status = document.getElementById('ttStatus');
+  var caption = document.getElementById('ttCaption');
+
+  function cell(v) { return '<td class="' + (v ? 't' : 'f') + '">' + (v ? 'T' : 'F') + '</td>'; }
+
+  function classify(count, total) {
+    if (count === total) return ['Tautology', 'true under every assignment'];
+    if (count === 0) return ['Contradiction', 'false under every assignment'];
+    return ['Contingent', 'true under some assignments and false under others'];
+  }
+
+  function renderOne(tree) {
+    var vars = variablesOf(tree).sort();
+    if (!vars.length) vars = ['p'];
+    var subs = subexpressions(tree);
+    var whole = subs.length ? subs[subs.length - 1] : tree;
+    var rows = assignments(vars);
+    var head = '<tr>' + vars.map(function (v) { return '<th>' + v + '</th>'; }).join('')
+      + subs.map(function (n, i) {
+          var label = show(n, n === whole);
+          return '<th' + (i === subs.length - 1 ? ' class="rowhead"' : '') + '>' + label + '</th>';
+        }).join('') + '</tr>';
+    var body = '', trueCount = 0;
+    rows.forEach(function (env) {
+      var final = evalNode(tree, env);
+      if (final) trueCount += 1;
+      body += '<tr>' + vars.map(function (v) { return cell(env[v]); }).join('')
+        + subs.map(function (n) { return cell(evalNode(n, env)); }).join('') + '</tr>';
+    });
+    if (!subs.length) {
+      body = '';
+      rows.forEach(function (env) {
+        var final = evalNode(tree, env);
+        if (final) trueCount += 1;
+        body += '<tr>' + vars.map(function (v) { return cell(env[v]); }).join('') + '</tr>';
+      });
+    }
+    out.innerHTML = '<table class="tt"><caption>' + rows.length + ' assignments of '
+      + vars.length + ' variable' + (vars.length === 1 ? '' : 's') + '</caption><thead>'
+      + head + '</thead><tbody>' + body + '</tbody></table>';
+    var verdict = classify(trueCount, rows.length);
+    rowsOut.textContent = rows.length;
+    trueOut.textContent = trueCount + ' / ' + rows.length;
+    verdictOut.textContent = verdict[0];
+    status.innerHTML = '<strong>' + show(tree, true) + '</strong> is <strong>' + verdict[0].toLowerCase()
+      + '</strong>: ' + verdict[1] + '. It is satisfiable' + (trueCount ? '' : ' by no assignment')
+      + (trueCount ? ' &mdash; ' + trueCount + ' row' + (trueCount === 1 ? '' : 's') + ' satisfy it' : '') + '.';
+    caption.textContent = 'One formula, ' + subs.length + ' subexpression column' + (subs.length === 1 ? '' : 's');
+  }
+
+  function renderTwo(a, b) {
+    var vars = variablesOf(a, variablesOf(b)).sort();
+    if (!vars.length) vars = ['p'];
+    var rows = assignments(vars);
+    var head = '<tr>' + vars.map(function (v) { return '<th>' + v + '</th>'; }).join('')
+      + '<th>' + show(a, true) + '</th><th>' + show(b, true) + '</th><th class="rowhead">same?</th></tr>';
+    var body = '', differ = null, agree = 0;
+    rows.forEach(function (env) {
+      var va = evalNode(a, env), vb = evalNode(b, env), same = va === vb;
+      if (same) agree += 1; else if (!differ) differ = env;
+      body += '<tr' + (same ? '' : ' class="focus"') + '>'
+        + vars.map(function (v) { return cell(env[v]); }).join('')
+        + cell(va) + cell(vb)
+        + '<td class="' + (same ? 't' : 'f') + '">' + (same ? '=' : '≠') + '</td></tr>';
+    });
+    out.innerHTML = '<table class="tt"><caption>' + rows.length
+      + ' assignments; a highlighted row is one that separates the two formulas</caption><thead>'
+      + head + '</thead><tbody>' + body + '</tbody></table>';
+    rowsOut.textContent = rows.length;
+    trueOut.textContent = agree + ' / ' + rows.length;
+    verdictOut.textContent = differ ? 'Not equivalent' : 'Equivalent';
+    if (differ) {
+      var witness = vars.map(function (v) { return v + ' = ' + (differ[v] ? 'T' : 'F'); }).join(', ');
+      status.innerHTML = 'These are <strong>not equivalent</strong>. One row is enough to prove it: at '
+        + '<strong>' + witness + '</strong> the two formulas take different truth values, so no argument '
+        + 'about the other rows can rescue the claim.';
+    } else {
+      status.innerHTML = 'These are <strong>logically equivalent</strong>: they agree in all '
+        + rows.length + ' rows, which is exactly what equivalence means &mdash; not that they look alike, '
+        + 'but that no assignment separates them.';
+    }
+    caption.textContent = 'Two formulas, compared row by row';
+  }
+
+  /* The try/catch covers PARSING and nothing else. A reader can type an
+     ill-formed formula and must get a helpful message rather than a broken
+     page; a bug in the table renderer must NOT be swallowed by the same
+     handler, because a lab that silently degrades into an error banner looks
+     like bad input and hides a real defect. So the parse is guarded and the
+     render is not. */
+  function redraw() {
+    var two = modeSel.value === 'two';
+    bWrap.hidden = !two;
+    var typed = custom.value.trim();
+    var treeA, treeB;
+    try {
+      treeA = parse(typed || selA.value);
+      if (two) treeB = parse(selB.value);
+    } catch (e) {
+      custom.style.borderColor = 'var(--red)';
+      status.innerHTML = '<strong>That is not a well-formed formula.</strong> '
+        + 'Use variables p q r s and the operators ~ &amp; | -&gt; &lt;-&gt; ^, with balanced parentheses.';
+      return;
+    }
+    custom.style.borderColor = '';
+    if (two) renderTwo(treeA, treeB); else renderOne(treeA);
+  }
+
+  [modeSel, selA, selB].forEach(function (el) { el.addEventListener('change', redraw); });
+  custom.addEventListener('input', redraw);
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

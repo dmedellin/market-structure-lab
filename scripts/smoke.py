@@ -180,6 +180,87 @@ CAPSTONE_SLIDES_PATH = CAPSTONE_PATH + "slides/"
 CAPSTONE_DATASET_PATH = CAPSTONE_PATH + "iren-analysis-data.json"
 CAPSTONE_AS_OF_MARKER = "August 16, 2026"
 
+# ---------------------------------------------------------------------------
+# The second path: DISCRETE MATHEMATICS
+# ---------------------------------------------------------------------------
+# Eight courses and 106 lessons, published at /paths/discrete-math/ and at eight
+# top-level course homes. Declared as DATA and expanded below, because these
+# pages are GENERATED from content/discrete_math/ -- hand-writing 115 blocks
+# would be copying a list that already exists, and the copy is what drifts.
+#
+# The material marker differs from the trading path's. Every course page of that
+# path promises its charts are synthetic; a mathematics page cannot promise that
+# and promises instead that a worked example is not a proof. Asserting the wrong
+# one would pass while checking nothing, so each path carries its own.
+MATH_PATH_PAGE_PATH = "/paths/discrete-math/"
+MATH_MATERIAL_MARKER = "a worked example is not a proof"
+
+MATH_COURSES = (
+    ("logic-and-proof", "Logic and Proof", (
+        "propositions-and-truth-values", "logical-connectives", "truth-tables",
+        "conditional-statements", "logical-equivalence",
+        "tautologies-and-satisfiability", "normal-forms-and-boolean-algebra",
+        "predicates-and-quantifiers", "nested-quantifiers",
+        "negating-quantified-statements", "rules-of-inference", "direct-proof",
+        "contraposition-and-contradiction", "proof-by-cases-and-counterexample",
+    )),
+    ("sets-relations-functions", "Sets, Relations, and Functions", (
+        "sets-and-membership", "subsets-and-power-sets", "set-operations",
+        "set-identities", "cartesian-products-and-tuples", "binary-relations",
+        "properties-of-relations", "equivalence-relations-and-partitions",
+        "partial-orders", "functions", "injective-surjective-bijective",
+        "composition-and-inverses", "cardinality-and-countability",
+        "the-pigeonhole-principle",
+    )),
+    ("induction-and-recursion", "Induction and Recursion", (
+        "the-well-ordering-principle", "mathematical-induction",
+        "induction-with-sums-and-products",
+        "induction-with-inequalities-and-divisibility", "strong-induction",
+        "recursive-definitions", "structural-induction", "recursive-algorithms",
+        "recurrence-relations", "solving-linear-recurrences",
+        "divide-and-conquer-recurrences", "loop-invariants-and-correctness",
+    )),
+    ("combinatorics-and-counting", "Combinatorics and Counting", (
+        "sum-and-product-rules", "counting-with-restrictions", "permutations",
+        "combinations", "binomial-coefficients", "the-binomial-theorem",
+        "permutations-with-repetition", "combinations-with-repetition",
+        "inclusion-exclusion", "derangements", "generalized-pigeonhole",
+        "generating-functions", "combinatorial-proof",
+        "choosing-a-counting-method",
+    )),
+    ("discrete-probability", "Discrete Probability", (
+        "sample-spaces-and-events", "computing-probabilities",
+        "probability-axioms", "conditional-probability", "independence",
+        "bayes-theorem", "random-variables", "expected-value",
+        "linearity-of-expectation", "variance", "binomial-distribution",
+        "geometric-distribution",
+    )),
+    ("number-theory-and-cryptography", "Number Theory and Cryptography", (
+        "divisibility-and-the-division-algorithm", "primes-and-factorisation",
+        "the-sieve-of-eratosthenes", "greatest-common-divisor",
+        "the-euclidean-algorithm", "bezout-and-modular-inverses",
+        "modular-arithmetic", "modular-exponentiation", "linear-congruences",
+        "chinese-remainder-theorem", "fermat-and-euler",
+        "hashing-and-pseudorandom-numbers", "classical-ciphers",
+        "rsa-encryption",
+    )),
+    ("graphs-and-trees", "Graphs and Trees", (
+        "graphs-and-graph-models", "degree-and-the-handshake-theorem",
+        "graph-representations", "paths-and-connectivity", "graph-isomorphism",
+        "bipartite-graphs", "euler-and-hamilton", "graph-traversal",
+        "shortest-paths", "trees", "tree-traversals", "spanning-trees",
+        "graph-colouring", "planar-graphs",
+    )),
+    ("algorithms-and-complexity", "Algorithms and Complexity", (
+        "algorithms-and-pseudocode", "correctness-and-termination",
+        "growth-of-functions", "big-o-notation",
+        "analysing-iterative-algorithms", "searching-and-sorting",
+        "divide-and-conquer", "recursion-trees-and-amortised-analysis",
+        "greedy-algorithms", "dynamic-programming", "complexity-classes",
+        "decidability-and-the-halting-problem",
+    )),
+)
+
 
 def canonical_marker(path):
     """The marker that proves WHICH document was served.
@@ -205,6 +286,22 @@ def page_markers(path, *extra):
     subject-specific disclaimer is not theirs to carry.
     """
     return (canonical_marker(path),) + tuple(extra) + (DISCLAIMER_MARKER,)
+
+
+def math_page_markers(path, *extra):
+    """Identity, then what a DISCRETE MATHEMATICS course page owes its reader.
+
+    Deliberately not page_markers(): the trading path's promise is that its
+    charts are synthetic, and on a mathematics page that sentence would be
+    meaningless. What is asserted instead is the promise those pages actually
+    make -- that every figure is computed from the stated definition, and that a
+    worked example is not a proof. Both paths keep the educational-use line.
+    """
+    return (
+        (canonical_marker(path),)
+        + tuple(extra)
+        + (DISCLAIMER_MARKER, MATH_MATERIAL_MARKER)
+    )
 
 
 def real_data_page_markers(path, *extra):
@@ -591,6 +688,36 @@ COURSE_HOMES = (
 # lessons exchange. Each id also discriminates: no HTML page served by mistake at
 # one of these paths would contain that string inside valid JSON. A second asset
 # is a second ENTRY here, never a reason to loosen a page check so both fit one.
+# (check id, URL path, markers) for the discrete mathematics path: its path
+# page, its eight course homes and its 106 lessons. Generated from MATH_COURSES
+# for the same reason the pages are generated from the content package -- one
+# declaration, expanded, rather than 115 hand-written blocks that can drift.
+MATH_PATH_PAGE_MARKERS = (
+    canonical_marker(MATH_PATH_PAGE_PATH),
+    MATH_COURSES[0][1],
+    MATH_COURSES[-1][1],
+    'href="../../%s/"' % MATH_COURSES[-1][0],
+)
+
+MATH_COURSE_HOMES = tuple(
+    (
+        "math-course%d-home" % number,
+        "/%s/" % slug,
+        math_page_markers("/%s/" % slug, title),
+    )
+    for number, (slug, title, _lessons) in enumerate(MATH_COURSES, start=1)
+)
+
+MATH_COURSE_LESSONS = tuple(
+    (
+        "math-course%d-lesson-%s" % (number, lesson),
+        "/%s/%s/" % (slug, lesson),
+        math_page_markers("/%s/%s/" % (slug, lesson), title),
+    )
+    for number, (slug, title, lessons) in enumerate(MATH_COURSES, start=1)
+    for lesson in lessons
+)
+
 PUBLISHED_ASSETS = (
     (
         "journal-schema",
@@ -648,7 +775,10 @@ def path_page_targets(args):
     either list: those lists carry course-shaped markers (a course title, the
     educational-use disclaimer) that a path page has no reason to satisfy.
     """
-    return [("trading-path", PATH_PAGE_PATH, tuple(args.path_marker))]
+    return [
+        ("trading-path", PATH_PAGE_PATH, tuple(args.path_marker)),
+        ("discrete-math-path", MATH_PATH_PAGE_PATH, MATH_PATH_PAGE_MARKERS),
+    ]
 
 
 def capstone_page_targets(args):
@@ -666,7 +796,7 @@ def course_home_targets(args):
     """(check id, path, markers) for every course home, course 1 first."""
     targets = [("course-home", args.course_path, tuple(args.course_marker))]
     seen = {args.course_path}
-    for check_id, path, markers in COURSE_HOMES:
+    for check_id, path, markers in COURSE_HOMES + MATH_COURSE_HOMES:
         if path in seen:
             continue
         seen.add(path)
@@ -697,6 +827,7 @@ def lesson_targets(args):
         + COURSE_6_LESSONS
         + COURSE_7_LESSONS
         + COURSE_8_LESSONS
+        + MATH_COURSE_LESSONS
     ):
         if path in seen:
             # --lesson-path was pointed at a lesson that is already in the map;

@@ -44,7 +44,7 @@ COPY site/ ./
 # listed in the RUN below, along with the eight published non-HTML assets. That
 # is the same map as REQUIRED_PAGES plus NON_HTML_ASSETS in
 # tests/test_site_invariants.py and acceptance.checks in release/contract.json
-# — 130 pages and 8 assets. Each asset is tested on its own line: a guard that
+# — 245 pages and 8 assets. Each asset is tested on its own line: a guard that
 # let a JSON file satisfy a page check would stop proving anything about either.
 # The extra two pages and the eighth asset are the CAPSTONE: a dated, real-data
 # worked example published under the path page at
@@ -230,6 +230,145 @@ RUN set -eu; \
         test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html (lesson of the Algorithmic and Automated Trading course)"; exit 1; }; \
     done; \
     test -s "/srv/$course/automated-trading-system-schema.json" || { echo "FATAL: missing or empty /srv/$course/automated-trading-system-schema.json. It is a published URL: the course home links to it and lesson 16 exports that shape."; exit 1; }; \
+    test -f /srv/paths/discrete-math/index.html || { echo "FATAL: missing /srv/paths/discrete-math/index.html (the discrete mathematics path page). It is published at learn.geterdone.io/paths/discrete-math/ and is the only page showing all eight courses of that path in one ordered list; the site index links to it, so its absence 404s the only route into the path."; exit 1; }; \
+    course=logic-and-proof; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (discrete mathematics course 1 home)."; exit 1; }; \
+    for lesson in propositions-and-truth-values \
+            logical-connectives \
+            truth-tables \
+            conditional-statements \
+            logical-equivalence \
+            tautologies-and-satisfiability \
+            normal-forms-and-boolean-algebra \
+            predicates-and-quantifiers \
+            nested-quantifiers \
+            negating-quantified-statements \
+            rules-of-inference \
+            direct-proof \
+            contraposition-and-contradiction \
+            proof-by-cases-and-counterexample; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=sets-relations-functions; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (discrete mathematics course 2 home)."; exit 1; }; \
+    for lesson in sets-and-membership \
+            subsets-and-power-sets \
+            set-operations \
+            set-identities \
+            cartesian-products-and-tuples \
+            binary-relations \
+            properties-of-relations \
+            equivalence-relations-and-partitions \
+            partial-orders \
+            functions \
+            injective-surjective-bijective \
+            composition-and-inverses \
+            cardinality-and-countability \
+            the-pigeonhole-principle; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=induction-and-recursion; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (discrete mathematics course 3 home)."; exit 1; }; \
+    for lesson in the-well-ordering-principle \
+            mathematical-induction \
+            induction-with-sums-and-products \
+            induction-with-inequalities-and-divisibility \
+            strong-induction \
+            recursive-definitions \
+            structural-induction \
+            recursive-algorithms \
+            recurrence-relations \
+            solving-linear-recurrences \
+            divide-and-conquer-recurrences \
+            loop-invariants-and-correctness; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=combinatorics-and-counting; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (discrete mathematics course 4 home)."; exit 1; }; \
+    for lesson in sum-and-product-rules \
+            counting-with-restrictions \
+            permutations \
+            combinations \
+            binomial-coefficients \
+            the-binomial-theorem \
+            permutations-with-repetition \
+            combinations-with-repetition \
+            inclusion-exclusion \
+            derangements \
+            generalized-pigeonhole \
+            generating-functions \
+            combinatorial-proof \
+            choosing-a-counting-method; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=discrete-probability; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (discrete mathematics course 5 home)."; exit 1; }; \
+    for lesson in sample-spaces-and-events \
+            computing-probabilities \
+            probability-axioms \
+            conditional-probability \
+            independence \
+            bayes-theorem \
+            random-variables \
+            expected-value \
+            linearity-of-expectation \
+            variance \
+            binomial-distribution \
+            geometric-distribution; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=number-theory-and-cryptography; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (discrete mathematics course 6 home)."; exit 1; }; \
+    for lesson in divisibility-and-the-division-algorithm \
+            primes-and-factorisation \
+            the-sieve-of-eratosthenes \
+            greatest-common-divisor \
+            the-euclidean-algorithm \
+            bezout-and-modular-inverses \
+            modular-arithmetic \
+            modular-exponentiation \
+            linear-congruences \
+            chinese-remainder-theorem \
+            fermat-and-euler \
+            hashing-and-pseudorandom-numbers \
+            classical-ciphers \
+            rsa-encryption; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=graphs-and-trees; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (discrete mathematics course 7 home)."; exit 1; }; \
+    for lesson in graphs-and-graph-models \
+            degree-and-the-handshake-theorem \
+            graph-representations \
+            paths-and-connectivity \
+            graph-isomorphism \
+            bipartite-graphs \
+            euler-and-hamilton \
+            graph-traversal \
+            shortest-paths \
+            trees \
+            tree-traversals \
+            spanning-trees \
+            graph-colouring \
+            planar-graphs; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=algorithms-and-complexity; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (discrete mathematics course 8 home)."; exit 1; }; \
+    for lesson in algorithms-and-pseudocode \
+            correctness-and-termination \
+            growth-of-functions \
+            big-o-notation \
+            analysing-iterative-algorithms \
+            searching-and-sorting \
+            divide-and-conquer \
+            recursion-trees-and-amortised-analysis \
+            greedy-algorithms \
+            dynamic-programming \
+            complexity-classes \
+            decidability-and-the-halting-problem; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
     test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: course 1 lesson 01 is published at learn.geterdone.io/market-structure/market-structure/, never learn.geterdone.io/learn/market-structure/market-structure/. Move site/learn/* up one level."; exit 1; }; \
     test ! -e /srv/market-structure-lab || { echo "FATAL: /srv/market-structure-lab exists. Course 1 was renamed to /market-structure; the old prefix must not be re-added, or the image would publish the same course at two URLs with one canonical between them."; exit 1; }; \
     test ! -e /srv/paths/index.html || { echo "FATAL: /srv/paths/index.html exists. The paths layer publishes one page per path (/paths/<subject>/) and nothing at /paths/ itself; the list of paths is the site index at /. Remove it or move it."; exit 1; }; \
