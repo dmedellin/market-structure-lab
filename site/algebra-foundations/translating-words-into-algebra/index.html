@@ -1,0 +1,2117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Translating Words into Algebra | Foundations of Algebra | Learn · geterdone.io</title>
+  <meta name="description" content="Most word-problem errors are made before any algebra happens, in deciding what the letter stands for and which way round a subtraction goes. The translation itself is a short vocabulary plus two rules: which phrases reverse the order, and which phrases create a bracket." />
+  <link rel="canonical" href="https://learn.geterdone.io/algebra-foundations/translating-words-into-algebra/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Translating Words into Algebra | Foundations of Algebra | Learn · geterdone.io" />
+  <meta property="og:description" content="Most word-problem errors are made before any algebra happens, in deciding what the letter stands for and which way round a subtraction goes. The translation itself is a short vocabulary plus two rules: which phrases reverse the order, and which phrases create a bracket." />
+  <meta property="og:url" content="https://learn.geterdone.io/algebra-foundations/translating-words-into-algebra/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Translating Words into Algebra | Foundations of Algebra | Learn · geterdone.io" />
+  <meta name="twitter:description" content="Most word-problem errors are made before any algebra happens, in deciding what the letter stands for and which way round a subtraction goes. The translation itself is a short vocabulary plus two rules: which phrases reverse the order, and which phrases create a bracket." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/algebra-foundations/translating-words-into-algebra/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Foundations of Algebra course home">
+        <span class="brand-mark" aria-hidden="true">13</span>
+        <span class="brand-copy"><strong>Foundations of Algebra</strong><span>Course 1 · Lesson 13 of 13</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Foundations of Algebra</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 13 · Translating Words into Algebra</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The english into algebra is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 1 &middot; Lesson 13 &middot; Building expressions</span>
+        <h1>Translating Words into Algebra</h1>
+        <p>Most word-problem errors are made before any algebra happens, in deciding what the letter stands for and which way round a subtraction goes. The translation itself is a short vocabulary plus two rules: which phrases reverse the order, and which phrases create a bracket.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">five less than a number n         n − 5        not 5 − n
+twice the sum of n and 3          2(n + 3)
+the sum of twice n and 3          2n + 3
+three less than the square of n   n² − 3       not (n − 3)²</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Four phrases, and the two they are confused with</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>English is ambiguous and algebra is not, so translating always loses something. The skill is knowing which of the possible readings the sentence actually licenses.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Name the unknown before writing anything</h3><p>"Let <span class="math">n</span> be the number of quarters" is a definition you can check against later. "Let <span class="math">n</span> be the quarters" is not, because it does not say whether <span class="math">n</span> counts coins or measures money. Half the errors in course 2 are made in this sentence and inherited by everything after it.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Addition and multiplication do not care about order; subtraction and division do</h3><p><span class="math">n + 5</span> and <span class="math">5 + n</span> are the same expression, so no phrase involving "sum" can be got wrong by ordering. <span class="math">n − 5</span> and <span class="math">5 − n</span> are different, so every phrase involving "less than" or "subtracted from" has to be read carefully.</p></article><article class="card concept-card"><div class="icon">3</div><h3>A bracket is what &quot;the sum of&quot; and &quot;the quantity&quot; produce</h3><p>"Twice the sum of <span class="math">n</span> and 3" is <span class="math">2(n + 3)</span>: the phrase names one quantity and then doubles it. "The sum of twice <span class="math">n</span> and 3" is <span class="math">2n + 3</span>. Word order is doing the work brackets do in algebra, and it does it less clearly.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>From a sentence to an expression</h2></div><p>Naming the unknown, the vocabulary, the phrases that reverse, and the phrases that bracket.</p></div>
+      <article class="card card-pad prose"><h3>Name the unknown first, with its units</h3><p>Before translating anything, write a sentence of the form "let <span class="math">n</span> be the number of ..." or "let <span class="math">c</span> be the cost in dollars of ...". It takes a line and it settles two things that otherwise stay vague: what is being counted or measured, and in what units. The reason is that expressions are checked by substituting, and you cannot check <span class="math">25n</span> unless you know whether <span class="math">n</span> is a number of quarters or an amount of money. If <span class="math">n</span> is the number of quarters then <span class="math">25n</span> is the value in cents and the expression is right; if <span class="math">n</span> is already an amount in dollars then <span class="math">25n</span> is meaningless.</p><h3>The vocabulary</h3><div class="mathblock">the sum of a and b            a + b
+a increased by b              a + b
+the difference of a and b     a − b
+a decreased by b              a − b
+the product of a and b        ab
+twice a,  a doubled           2a
+the quotient of a and b       a/b
+half of a                     a/2
+the square of a               a²
+a more than b                 b + a
+a less than b                 b − a          note the order</div><p>Every line above is a convention of English, not of mathematics. They are worth learning because everyone writing problems uses them the same way, and worth distrusting whenever a sentence is unusual: when the English is genuinely ambiguous, the right move is to say which reading you took, not to guess silently.</p><h3>The phrases that reverse the order</h3><p>Division carries this hazard too: "the quotient of <span class="math">n</span> and 4" is <span class="math">n/4</span>, and so is "4 divided into <span class="math">n</span>", but "<span class="math">n</span> divided into 4" is <span class="math">4/n</span> &mdash; whenever a phrase uses "into", read it twice. Subtraction is where it bites most often, because "less than" and "subtracted from" name the second quantity first:</p><div class="mathblock">five less than a number n        n − 5
+n less than five                 5 − n
+five subtracted from n           n − 5
+
+test at n = 8:   five less than 8 is 3,   and   8 − 5 = 3
+                 5 − 8 = −3,  so 5 − n is the other phrase</div><h3>The phrases that create a bracket</h3><p>"The sum of <span class="math">n</span> and 3" packages two things into one quantity. Anything applied to that package applies to all of it, which in algebra means a bracket:</p><div class="mathblock">twice the sum of n and 3          2(n + 3)
+the sum of twice n and 3          2n + 3
+
+test at n = 5:   the sum is 8, twice it is 16      2(5 + 3) = 16
+                 twice 5 is 10, plus 3 is 13       2(5) + 3 = 13
+
+three less than the square of n   n² − 3
+the square of three less than n   (n − 3)²
+
+test at n = 5:   the square is 25, three less is 22    5² − 3 = 22
+                 three less than 5 is 2, squared is 4  (5 − 3)² = 4</div><p>In each pair the words are almost the same and the expressions are not close: at <span class="math">n = 5</span> they differ by <span class="math">3</span> in the first pair and by <span class="math">18</span> in the second. The bracket is carrying the meaning, and dropping it does not produce a slightly different answer, it produces a different quantity.</p><h3>Quantities that come in families</h3><p>Some phrases describe several unknowns at once, and the point of algebra is that one letter covers them all:</p><ul><li>Three consecutive integers, the smallest being <span class="math">n</span>: <span class="math">n</span>, <span class="math">n + 1</span>, <span class="math">n + 2</span>.</li><li>Three consecutive even integers, the smallest being <span class="math">n</span>: <span class="math">n</span>, <span class="math">n + 2</span>, <span class="math">n + 4</span>. The <span class="math">n</span> itself has to be even, which is a condition on the letter and not part of the expression.</li><li>A rectangle <span class="math">3</span> cm longer than it is wide, width <span class="math">w</span> cm: length <span class="math">w + 3</span>, perimeter <span class="math">2w + 2(w + 3) = 4w + 6</span>, area <span class="math">w(w + 3)</span>.</li><li>The value in cents of <span class="math">q</span> quarters and <span class="math">d</span> dimes: <span class="math">25q + 10d</span>. Two unknowns need two letters, and the units have to match before the terms may be added.</li></ul><div class="example"><span class="label">Example &middot; Checking a translation</span><p>Pick a number, read the English sentence aloud with that number in it, and compare with your expression evaluated there. For "twice the sum of <span class="math">n</span> and 3" at <span class="math">n = 5</span>: the sentence says the sum is <span class="math">8</span> and twice that is <span class="math">16</span>; <span class="math">2(n + 3)</span> gives <span class="math">16</span> and <span class="math">2n + 3</span> gives <span class="math">13</span>. That test rules out <span class="math">2n + 3</span>. It does not prove <span class="math">2(n + 3)</span> is right &mdash; agreement at one number never does &mdash; but a wrong translation almost always fails it.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>English into algebra</h2></div><p>Two readings, tested against each other</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong>English into algebra</strong><span id="exSub"></span></div>
+        <div class="inline-legend"><span class="tone-green"><i class="legend-swatch"></i>agrees</span><span class="tone-red"><i class="legend-swatch"></i>differs</span></div>
+      </div>
+      <div class="lab-stage" id="exStage"></div>
+      <div id="exWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="exStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Two readings of one phrase</h3>
+          <p>Choose a phrase and edit the expression in <span class="math">n</span> you think it means. The lab evaluates your reading and the rival reading at seven values of <span class="math">n</span> and reports where they disagree, which is the check worth copying by hand.</p>
+        <div class="field">
+          <label for="exPreset">Phrase</label>
+          <select id="exPreset"><option value="five less than a number n|n - 5|5 - n">five less than a number n</option><option value="twice the sum of n and 3|2(n + 3)|2n + 3">twice the sum of n and 3</option><option value="the sum of twice n and 3|2n + 3|2(n + 3)">the sum of twice n and 3</option><option value="three less than the square of n|n^2 - 3|(n - 3)^2">three less than the square of n</option><option value="half of n, increased by 4|n/2 + 4|n/(2 + 4)">half of n, increased by 4</option><option value="the quotient of n and 4, decreased by 1|n/4 - 1|n/(4 - 1)">the quotient of n and 4, decreased by 1</option></select>
+        </div>
+        <div class="field">
+          <label for="exExpr">Your expression in n</label>
+          <input id="exExpr" type="text" value="five less than a number n" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid"><div class="kpi"><span>Test values</span><strong id="exK1">&mdash;</strong></div><div class="kpi"><span>Agreements</span><strong id="exK2">&mdash;</strong></div><div class="kpi"><span>Verdict</span><strong id="exK3">&mdash;</strong></div></div>
+        <p class="small-copy" style="margin:0;">Use <code>n</code> for the number the phrase is about. <code>2(n + 3)</code> and <code>2n + 3</code> are both valid algebra; only one of them is what the phrase says.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Translating a sentence</h2></div><p>The first two steps produce no algebra at all, and skipping them is what goes wrong.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Write down what the letter stands for, with units</h3><p>"Let <span class="math">w</span> be the width in centimetres." One line, and every later expression can be checked against it. If the problem has two independent unknowns, it needs two letters.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Express every other quantity in terms of that letter</h3><p>The length is <span class="math">w + 3</span>; the second integer is <span class="math">n + 1</span>; the number of dimes in a purse of 20 coins holding <span class="math">q</span> quarters is <span class="math">20 − q</span>. Do this before assembling anything, so that the final expression is built from pieces you have already justified.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Translate phrase by phrase, bracketing anything the English packages</h3><p>Work outward from the innermost quantity. Wherever the sentence says "the sum of" or "the quantity", put a bracket round it, and only then apply whatever is done to it.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Test with one number, chosen to separate the readings</h3><p>Substitute a value and compute the sentence in English alongside your expression. Avoid <span class="math">0</span> and <span class="math">1</span>, which make too many wrong expressions agree with the right one, and then check that the value you picked does separate the two readings in front of you: <span class="math">n = 5</span> is no use for "five less than <span class="math">n</span>", because <span class="math">n − 5</span> and <span class="math">5 − n</span> are both <span class="math">0</span> there.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>English into algebra</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Four phrases, translated and tested</h3><p>Each translation is followed by the test value that rules out the usual rival reading.</p><div class="mathblock">1.  five less than a number n            n − 5
+        test n = 8    the phrase says 3,      n − 5 = 3
+                      5 − n = −3,             so 5 − n is not it
+
+2.  twice the sum of n and 3             2(n + 3)
+        test n = 5    the sum is 8, twice is 16,   2(5 + 3) = 16
+                      2n + 3 = 13,            so the bracket is needed
+
+3.  the sum of twice n and 3             2n + 3
+        test n = 5    twice 5 is 10, plus 3 is 13,  2(5) + 3 = 13
+
+4.  three less than the square of n      n² − 3
+        test n = 5    the square is 25, three less is 22,  5² − 3 = 22
+                      (n − 3)² = 4,           a different quantity</div><p>Phrases 2 and 3 use the same seven words in a different order and mean different things. English marks the difference with word order alone; algebra marks it with a bracket, which is one reason the translation is worth doing early rather than carrying the sentence around in your head.</p><p>Every test above rules a rival reading out. None of them proves the chosen reading correct, because two different expressions can agree at one value &mdash; <span class="math">n − 5</span> and <span class="math">5 − n</span> both give <span class="math">0</span> at <span class="math">n = 5</span>, which is exactly why <span class="math">n = 5</span> would have been a bad test for phrase 1.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Writing &quot;five less than n&quot; as <span class="math">5 − n</span></strong><span>The English puts the subtracted amount first and algebra puts it second. Subtraction is not commutative, so the two expressions differ at every <span class="math">n</span> except <span class="math">n = 5</span>, where both are <span class="math">0</span>.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Dropping the bracket that &quot;the sum of&quot; asks for</strong><span>"Twice the sum of <span class="math">n</span> and 3" is <span class="math">2(n + 3)</span>, not <span class="math">2n + 3</span>. The phrase names a single quantity and then doubles it, and without the bracket only the first part gets doubled.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Not saying what the letter stands for</strong><span>"Let <span class="math">n</span> be the money" cannot be checked: <span class="math">n</span> might be dollars or cents, and <span class="math">25n</span> is right in one reading and nonsense in the other. Name the quantity and its units in a full sentence before any expression is written.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you write the &quot;let n be ...&quot; line without being asked.</strong><p>Given a sentence you should produce a named unknown with units, an expression for every other quantity in terms of it, and a test value that separates your reading from the obvious rival. That is the whole of what course 2 calls setting up a word problem; solving the equation afterwards is the easy half.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> This is the last lesson of the course, and it is the one that gets used first. Course 2 turns these expressions into equations by setting two of them equal, and every technique it teaches for solving is worthless if the equation was written from a misread sentence.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../evaluating-expressions/" rel="prev"><span>Previous lesson</span><strong>12 &middot; Evaluating Expressions</strong></a>
+      <a class="lesson-link next" href="../"><span>Finish the course</span><strong>Foundations of Algebra &middot; course home</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Foundations of Algebra.</strong> Every value on this course is computed in your browser by applying the rule the lesson states, and the arithmetic is exact &mdash; a third is <span class="math">1/3</span> through every step, not <span class="math">0.3333</span>. Where a lesson is about approximation it says so and shows the rounding it did.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "Which expression is \"five less than a number <span class=\"math\">n<\/span>\"?", "a": ["<span class=\"math\">5 \u2212 n<\/span>", "<span class=\"math\">n \u2212 5<\/span>", "<span class=\"math\">5n<\/span>", "<span class=\"math\">n/5<\/span>"], "c": 1, "why": "\"Less than\" names the amount subtracted first and the thing subtracted from second. At <span class=\"math\">n = 8<\/span> the phrase means <span class=\"math\">3<\/span>, and only <span class=\"math\">n \u2212 5<\/span> gives it; <span class=\"math\">5 \u2212 n<\/span> gives <span class=\"math\">\u22123<\/span>. The other two translate \"times\" and \"divided by\"."}, {"q": "Which expression is \"twice the sum of <span class=\"math\">n<\/span> and 3\"?", "a": ["<span class=\"math\">2n + 3<\/span>", "<span class=\"math\">2(n + 3)<\/span>", "<span class=\"math\">n + 6<\/span>", "<span class=\"math\">2 + n + 3<\/span>"], "c": 1, "why": "\"The sum of <span class=\"math\">n<\/span> and 3\" is one quantity, so it takes a bracket, and \"twice\" applies to all of it. At <span class=\"math\">n = 5<\/span> the phrase means <span class=\"math\">16<\/span>; <span class=\"math\">2n + 3<\/span> gives <span class=\"math\">13<\/span>, <span class=\"math\">n + 6<\/span> doubles only the <span class=\"math\">3<\/span>, and <span class=\"math\">2 + n + 3<\/span> reads \"twice\" as \"add two\"."}, {"q": "A rectangle is 3 cm longer than it is wide. Its width is <span class=\"math\">w<\/span> cm. Which expression is its perimeter, in centimetres?", "a": ["<span class=\"math\">4w + 6<\/span>", "<span class=\"math\">4w + 3<\/span>", "<span class=\"math\">2w + 3<\/span>", "<span class=\"math\">w(w + 3)<\/span>"], "c": 0, "why": "The length is <span class=\"math\">w + 3<\/span>, so the perimeter is <span class=\"math\">2w + 2(w + 3) = 4w + 6<\/span>. <span class=\"math\">4w + 3<\/span> adds the <span class=\"math\">3<\/span> once instead of twice, <span class=\"math\">2w + 3<\/span> adds one width and one length only, and <span class=\"math\">w(w + 3)<\/span> is the area &mdash; a different quantity, measured in square centimetres."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* A polynomial is a dense array of rationals, index = power of x, with the
+     zero polynomial as []. Nothing here is a special case for "nice" numbers:
+     the same routines divide 2x^3 - 3x + 1 by x - 1/2 as divide it by x - 1. */
+  function Pnorm(p) {
+    var out = p.slice();
+    while (out.length && Rzero(out[out.length - 1])) out.pop();
+    return out;
+  }
+  function Pdeg(p) { return Pnorm(p).length - 1; }
+  function Pzero(p) { return Pnorm(p).length === 0; }
+  function Plead(p) { var q = Pnorm(p); return q.length ? q[q.length - 1] : R0; }
+  function Padd(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Radd(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Psub(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Rsub(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Pmul(a, b) {
+    if (!a.length || !b.length) return [];
+    var out = [];
+    for (var i = 0; i < a.length + b.length - 1; i += 1) out.push(R0);
+    for (var j = 0; j < a.length; j += 1) {
+      for (var k = 0; k < b.length; k += 1) out[j + k] = Radd(out[j + k], Rmul(a[j], b[k]));
+    }
+    return Pnorm(out);
+  }
+  function Pscale(p, r) { return Pnorm(p.map(function (c) { return Rmul(c, r); })); }
+  function Ppow(p, k) { var out = [R1]; for (var i = 0; i < k; i += 1) out = Pmul(out, p); return out; }
+  function Peval(p, x) {
+    var acc = R0;
+    for (var i = p.length - 1; i >= 0; i -= 1) acc = Radd(Rmul(acc, x), p[i]);
+    return acc;
+  }
+  function Pderiv(p) {
+    var out = [];
+    for (var i = 1; i < p.length; i += 1) out.push(Rmul(p[i], R(BigInt(i))));
+    return Pnorm(out);
+  }
+  /* Long division, which is lesson material in its own right -- the step list a
+     lab shows IS this loop, printed. */
+  function Pdivmod(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    if (!b.length) throw new Error('division by the zero polynomial');
+    var q = [], r = a.slice(), steps = [];
+    var db = b.length - 1, lb = b[db];
+    while (Pnorm(r).length - 1 >= db && Pnorm(r).length) {
+      r = Pnorm(r);
+      var dr = r.length - 1, coef = Rdiv(r[dr], lb), shift = dr - db;
+      var term = [];
+      for (var i = 0; i < shift; i += 1) term.push(R0);
+      term.push(coef);
+      var product = Pmul(term, b);
+      steps.push({ term: Ptext(term), product: Ptext(product), before: Ptext(r) });
+      r = Psub(r, product);
+      q = Padd(q, term);
+    }
+    return { q: Pnorm(q), r: Pnorm(r), steps: steps };
+  }
+  function Pmonic(p) { var l = Plead(p); return Rzero(l) ? p : Pscale(p, Rinv(l)); }
+  function Pgcd(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    while (b.length) { var r = Pdivmod(a, b).r; a = b; b = r; }
+    return a.length ? Pmonic(a) : a;
+  }
+
+  /* Reader-facing form. The rules here are the ones a marker applies: an
+     implicit coefficient of 1 is not written, a negative term joins with a
+     minus rather than a plus, and a fractional coefficient is bracketed so
+     3/4x^2 can never be misread as 3/(4x^2). */
+  function Ptext(p, v) {
+    v = v || 'x';
+    p = Pnorm(p);
+    if (!p.length) return '0';
+    var out = '';
+    for (var i = p.length - 1; i >= 0; i -= 1) {
+      var c = p[i];
+      if (Rzero(c)) continue;
+      var neg = Rsign(c) < 0, mag = Rabs(c);
+      out += out === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      var one = Requ(mag, R1);
+      var coef = one && i > 0 ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+      var power = i === 0 ? '' : (i === 1 ? v : v + '^' + i);
+      out += coef + power;
+    }
+    return out;
+  }
+  /* Bracketed when it is a sum, so (x + 1)(x - 2) prints correctly. */
+  function Pfactortext(p, v) {
+    var t = Ptext(p, v);
+    return (t.indexOf(' + ') >= 0 || t.indexOf(' - ') >= 0) ? '(' + t + ')' : t;
+  }
+
+  /* ---- factoring over the rationals ----
+     The rational root theorem, applied rather than quoted: clear denominators,
+     list the divisors of the constant and leading terms, and TEST each
+     candidate. A reader who runs this on x^2 + 1 sees the search come back
+     empty, which is the point of the lesson that pairs with it. */
+  function bdivisors(n) {
+    if (n < 0n) n = -n;
+    if (n === 0n) return [];
+    var out = [], i = 1n;
+    while (i * i <= n) {
+      if (n % i === 0n) { out.push(i); if (i * i !== n) out.push(n / i); }
+      i += 1n;
+      if (out.length > 512) break;   /* lesson-sized numbers only; see Pfactor */
+    }
+    out.sort(function (a, b) { return a < b ? -1 : (a > b ? 1 : 0); });
+    return out;
+  }
+  /* The same polynomial with integer, coprime coefficients and a positive
+     leading term, plus the rational that was taken out. */
+  function Pprimitive(p) {
+    p = Pnorm(p);
+    if (!p.length) return { poly: [], content: R1 };
+    var den = 1n;
+    p.forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ints = p.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ints.forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    if (ints[ints.length - 1] < 0n) g = -g;
+    return {
+      poly: ints.map(function (v) { return R(v / g); }),
+      content: R(g, den)
+    };
+  }
+  function Prationalroots(p) {
+    var prim = Pprimitive(p).poly;
+    if (prim.length < 2) return [];
+    var roots = [], seen = {};
+    var a0 = prim[0].n, an = prim[prim.length - 1].n;
+    if (a0 === 0n) { roots.push(R0); seen['0/1'] = 1; }
+    var ps = bdivisors(a0 === 0n ? an : a0), qs = bdivisors(an);
+    for (var i = 0; i < ps.length; i += 1) {
+      for (var j = 0; j < qs.length; j += 1) {
+        for (var s = 0; s < 2; s += 1) {
+          var cand = R(s ? -ps[i] : ps[i], qs[j]);
+          var key = Rtext(cand);
+          if (seen[key]) continue;
+          seen[key] = 1;
+          if (Rzero(Peval(prim, cand))) roots.push(cand);
+        }
+      }
+    }
+    roots.sort(Rcmp);
+    return roots;
+  }
+  /* Full factorisation over Q: a rational content, integer linear factors with
+     their multiplicities, and whatever is left that has no rational root.
+     `complete` is false when the leftover is not linear or quadratic -- the lab
+     says so rather than implying the factorisation finished. */
+  function Pfactor(p) {
+    p = Pnorm(p);
+    if (!p.length) return { content: R0, factors: [], rest: [], complete: true };
+    var prim = Pprimitive(p);
+    var content = prim.content, work = prim.poly, factors = [];
+    var guard = 0;
+    while (Pdeg(work) > 0 && guard < 64) {
+      guard += 1;
+      var roots = Prationalroots(work);
+      if (!roots.length) break;
+      var r = roots[0];
+      /* root p/q  ->  integer factor (qx - p), which keeps every coefficient
+         whole and is the form the reader is asked to produce. */
+      var factor = [Rneg(R(r.n)), R(r.d)];
+      var mult = 0;
+      while (Pdeg(work) > 0) {
+        var dm = Pdivmod(work, factor);
+        if (!Pzero(dm.r)) break;
+        work = dm.q; mult += 1;
+      }
+      factors.push({ poly: factor, mult: mult, root: r });
+    }
+    /* Whatever scalar the integer divisions left behind belongs to the content. */
+    if (Pdeg(work) === 0) { content = Rmul(content, work[0]); work = [R1]; }
+    var rest = Pdeg(work) > 0 ? work : [];
+    return { content: content, factors: factors, rest: rest, complete: Pdeg(work) <= 2 };
+  }
+  function Pfactortextfull(p, v) {
+    var f = Pfactor(p);
+    if (!f.factors.length && !f.rest.length) return Rtext(f.content);
+    var pieces = [];
+    f.factors.forEach(function (item) { pieces.push({ poly: item.poly, mult: item.mult }); });
+    if (f.rest.length) pieces.push({ poly: f.rest, mult: 1 });
+    /* A polynomial that does not factor is written as itself. Bracketing a
+       lone factor -- "(x^2 + 1)" -- suggests something was multiplied by
+       something, which is the opposite of what that result says. */
+    if (pieces.length === 1 && pieces[0].mult === 1 && Requ(f.content, R1)) {
+      return Ptext(pieces[0].poly, v);
+    }
+    var out = '';
+    if (!Requ(f.content, R1)) out += Requ(f.content, R(-1n)) ? '-' : Rterm(f.content);
+    pieces.forEach(function (item) {
+      out += Pfactortext(item.poly, v) + (item.mult > 1 ? '^' + item.mult : '');
+    });
+    return out || '1';
+  }
+
+  /* A parser for what a reader actually types.
+
+     It accepts implicit multiplication -- 2x, 3(x+1), (x+1)(x-2), 4x^2 --
+     because that is how algebra is written on paper, and a lab that rejected
+     "2x" would be teaching its own notation rather than the subject's. A
+     single letter is a variable; a name of two or more letters is a function,
+     which is what lets xy mean x times y while sqrt(x) stays one call. */
+  function Etokenize(src) {
+    var out = [], i = 0, s = String(src);
+    while (i < s.length) {
+      var c = s[i];
+      if (c === ' ' || c === '\t') { i += 1; continue; }
+      if (/[0-9.]/.test(c)) {
+        var j = i;
+        while (j < s.length && /[0-9.]/.test(s[j])) j += 1;
+        out.push({ t: 'num', v: s.slice(i, j) }); i = j; continue;
+      }
+      if (/[A-Za-z]/.test(c)) {
+        var k = i;
+        while (k < s.length && /[A-Za-z]/.test(s[k])) k += 1;
+        var word = s.slice(i, k);
+        if (word.length > 1 && FUNCS[word.toLowerCase()]) {
+          out.push({ t: 'fn', v: word.toLowerCase() }); i = k; continue;
+        }
+        /* Not a known function: every letter is its own variable, so "xy" is a
+           product and a typo like "sqrtt(x)" fails loudly instead of silently
+           becoming a product of six variables named s, q, r, t, t. */
+        if (word.length > 1 && /^[a-z]+$/.test(word) && word.length > 3) {
+          throw new Error('unknown function "' + word + '"');
+        }
+        for (var m = i; m < k; m += 1) out.push({ t: 'var', v: s[m] });
+        i = k; continue;
+      }
+      if ('+-*/^(),'.indexOf(c) >= 0) { out.push({ t: c }); i += 1; continue; }
+      throw new Error('unexpected character "' + c + '"');
+    }
+    return out;
+  }
+
+  var FUNCS = {
+    sqrt: function (v) { return Math.sqrt(v); },
+    cbrt: function (v) { return Math.cbrt(v); },
+    abs: function (v) { return Math.abs(v); },
+    ln: function (v) { return Math.log(v); },
+    log: function (v) { return Math.log(v) / Math.LN10; },
+    log2: function (v) { return Math.log(v) / Math.LN2; },
+    exp: function (v) { return Math.exp(v); }
+  };
+
+  function Eparse(src) {
+    var toks = Etokenize(src), pos = 0;
+    function peek() { return toks[pos]; }
+    function eat(t) { if (toks[pos] && toks[pos].t === t) { pos += 1; return true; } return false; }
+    function expect(t) { if (!eat(t)) throw new Error('expected "' + t + '"'); }
+
+    function primary() {
+      var tk = peek();
+      if (!tk) throw new Error('the expression ends early');
+      if (tk.t === 'num') { pos += 1; return { k: 'num', v: tk.v }; }
+      if (tk.t === 'var') { pos += 1; return { k: 'var', v: tk.v }; }
+      if (tk.t === 'fn') { pos += 1; expect('('); var a = sum(); expect(')'); return { k: 'fn', v: tk.v, a: a }; }
+      if (tk.t === '(') { pos += 1; var e = sum(); expect(')'); return e; }
+      if (tk.t === '-') { pos += 1; return { k: 'neg', a: unary() }; }
+      if (tk.t === '+') { pos += 1; return unary(); }
+      throw new Error('unexpected "' + (tk.v || tk.t) + '"');
+    }
+    /* ^ binds tighter than unary minus on the left and is right-associative,
+       so -x^2 is -(x^2) and 2^3^2 is 2^9. Both are the conventions a reader
+       is marked against. */
+    function power() {
+      var base = primary();
+      if (eat('^')) return { k: 'pow', a: base, b: unary() };
+      return base;
+    }
+    function unary() {
+      if (eat('-')) return { k: 'neg', a: unary() };
+      if (eat('+')) return unary();
+      return power();
+    }
+    function implicit(node) {
+      /* juxtaposition is multiplication: 2x, 3(x+1), (x+1)(x-2), 2sqrt(x) */
+      while (peek() && (peek().t === 'num' || peek().t === 'var' || peek().t === 'fn' || peek().t === '(')) {
+        node = { k: 'mul', a: node, b: power() };
+      }
+      return node;
+    }
+    function product() {
+      var node = implicit(unary());
+      while (peek() && (peek().t === '*' || peek().t === '/')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '*' ? 'mul' : 'div', a: node, b: implicit(unary()) };
+      }
+      return node;
+    }
+    function sum() {
+      var node = product();
+      while (peek() && (peek().t === '+' || peek().t === '-')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '+' ? 'add' : 'sub', a: node, b: product() };
+      }
+      return node;
+    }
+    var tree = sum();
+    if (pos < toks.length) throw new Error('unexpected "' + (toks[pos].v || toks[pos].t) + '"');
+    return tree;
+  }
+
+  /* Numeric evaluation, for drawing. Returns NaN outside the domain rather
+     than throwing, because a grapher must be able to ask for f(-1) on sqrt(x)
+     and simply not plot a point there. */
+  function Eeval(node, env) {
+    switch (node.k) {
+      case 'num': return parseFloat(node.v);
+      case 'var': return (env && node.v in env) ? env[node.v] : NaN;
+      case 'neg': return -Eeval(node.a, env);
+      case 'add': return Eeval(node.a, env) + Eeval(node.b, env);
+      case 'sub': return Eeval(node.a, env) - Eeval(node.b, env);
+      case 'mul': return Eeval(node.a, env) * Eeval(node.b, env);
+      case 'div': return Eeval(node.a, env) / Eeval(node.b, env);
+      case 'pow': return Math.pow(Eeval(node.a, env), Eeval(node.b, env));
+      case 'fn': return FUNCS[node.v](Eeval(node.a, env));
+    }
+    return NaN;
+  }
+
+  /* The same tree as a polynomial over Q in one variable, or null when it is
+     not one. This is what lets a reader type a polynomial and have the EXACT
+     machinery -- factoring, division, the rational root search -- run on it,
+     rather than a floating-point approximation of it. */
+  function Epoly(node, v) {
+    v = v || 'x';
+    switch (node.k) {
+      case 'num': { var r = Rparse(node.v); return r === null ? null : (Rzero(r) ? [] : [r]); }
+      case 'var': return node.v === v ? [R0, R1] : null;
+      case 'neg': { var a = Epoly(node.a, v); return a === null ? null : Pscale(a, R(-1n)); }
+      case 'add': case 'sub': case 'mul': {
+        var l = Epoly(node.a, v), r2 = Epoly(node.b, v);
+        if (l === null || r2 === null) return null;
+        return node.k === 'add' ? Padd(l, r2) : (node.k === 'sub' ? Psub(l, r2) : Pmul(l, r2));
+      }
+      case 'div': {
+        var num = Epoly(node.a, v), den = Epoly(node.b, v);
+        if (num === null || den === null || Pdeg(den) !== 0) return null;
+        return Pscale(num, Rinv(den[0]));   /* division by a constant only */
+      }
+      case 'pow': {
+        var base = Epoly(node.a, v), ex = Epoly(node.b, v);
+        if (base === null || ex === null || Pdeg(ex) > 0) return null;
+        var e = ex.length ? ex[0] : R0;
+        if (!Rint(e) || e.n < 0n || e.n > 64n) return null;
+        return Ppow(base, Number(e.n));
+      }
+    }
+    return null;
+  }
+  function Epolyof(src, v) {
+    try { return Epoly(Eparse(src), v || 'x'); } catch (e) { return null; }
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function td(text, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + text + '</td>'; }
+  function tdl(text, cls) {
+    return '<td style="text-align:left;"' + (cls ? ' class="' + cls + '"' : '') + '>' + text + '</td>';
+  }
+  function th(text) { return '<th>' + text + '</th>'; }
+  function rowhead(text) { return '<th class="rowhead">' + text + '</th>'; }
+  function tr(cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.join('') + '</tr>'; }
+  function table(caption, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption + '</caption><tbody>'
+      + rows.join('') + '</tbody></table></div>';
+  }
+  function step(label, detail) { return tr([rowhead(label), tdl(detail)]); }
+  function chip(text, kind) { return '<span class="chip' + (kind ? ' ' + kind : '') + '">' + text + '</span>'; }
+  function tone(text, kind) { return '<span class="tone-' + kind + '">' + text + '</span>'; }
+  /* Rparse throws on a denominator of zero, and 1/0 is a thing a reader can
+     type. Every call on reader input goes through this instead, so a bad
+     fraction becomes an explanation rather than an exception. */
+  function Rread(text) {
+    try { return Rparse(String(text).trim()); } catch (err) { return null; }
+  }
+  /* A decimal that a lesson has decided to show. Never used to decide anything;
+     every comparison and every verdict on this path is made on the exact side. */
+  function approx(x, places) {
+    var v = Number(x);
+    if (!isFinite(v)) return 'not a real number';
+    return v.toFixed(places === undefined ? 6 : places);
+  }
+
+  function Vkey(v) {
+    var ks = [], k;
+    for (k in v) if (v.hasOwnProperty(k) && v[k]) ks.push(k);
+    ks.sort();
+    return ks.map(function (n) { return n + '^' + v[n]; }).join(' ');
+  }
+  function Vdeg(v) { var d = 0, k; for (k in v) if (v.hasOwnProperty(k)) d += v[k]; return d; }
+  function Vmul(a, b) {
+    var out = {}, k;
+    for (k in a) if (a.hasOwnProperty(k)) out[k] = a[k];
+    for (k in b) if (b.hasOwnProperty(k)) out[k] = (out[k] || 0) + b[k];
+    return out;
+  }
+  /* The variable part as the reader writes it: x^2y, with the letters in
+     alphabetical order so that 3yx and 3xy come out identical -- which is the
+     whole content of the like-terms lesson. */
+  function Vtext(v) {
+    var ks = [], k;
+    for (k in v) if (v.hasOwnProperty(k) && v[k]) ks.push(k);
+    ks.sort();
+    return ks.map(function (n) { return v[n] === 1 ? n : n + '^' + v[n]; }).join('');
+  }
+  function Mnorm(list) {
+    var byKey = {}, order = [];
+    list.forEach(function (t) {
+      var key = Vkey(t.v);
+      if (!byKey[key]) { byKey[key] = { c: R0, v: t.v, key: key }; order.push(key); }
+      byKey[key].c = Radd(byKey[key].c, t.c);
+    });
+    var out = [];
+    order.forEach(function (key) { if (!Rzero(byKey[key].c)) out.push(byKey[key]); });
+    /* Highest total degree first, and within a degree the way a reader writes
+       it: x^2y before xy^2, because the exponent of the alphabetically first
+       letter is compared first and the larger one leads. */
+    out.sort(function (a, b) {
+      var da = Vdeg(a.v), db = Vdeg(b.v);
+      if (da !== db) return db - da;
+      var names = {}, k;
+      for (k in a.v) if (a.v.hasOwnProperty(k) && a.v[k]) names[k] = 1;
+      for (k in b.v) if (b.v.hasOwnProperty(k) && b.v[k]) names[k] = 1;
+      var ks = Object.keys(names).sort();
+      for (var i = 0; i < ks.length; i += 1) {
+        var ea = a.v[ks[i]] || 0, eb = b.v[ks[i]] || 0;
+        if (ea !== eb) return eb - ea;
+      }
+      return 0;
+    });
+    return out;
+  }
+  function Madd(a, b) { return Mnorm(a.concat(b)); }
+  function Mneg(a) { return a.map(function (t) { return { c: Rneg(t.c), v: t.v }; }); }
+  function Msub(a, b) { return Mnorm(a.concat(Mneg(b))); }
+  function Mmul(a, b) {
+    var out = [];
+    a.forEach(function (s) {
+      b.forEach(function (t) { out.push({ c: Rmul(s.c, t.c), v: Vmul(s.v, t.v) }); });
+    });
+    return Mnorm(out);
+  }
+  function Mpow(a, k) { var out = [{ c: R1, v: {} }]; for (var i = 0; i < k; i += 1) out = Mmul(out, a); return out; }
+  function Mconst(a) { return a.length === 0 || (a.length === 1 && Vdeg(a[0].v) === 0); }
+  function Mequ(a, b) { return Msub(a, b).length === 0; }
+  /* One term, with the conventions a marker applies: an implicit coefficient of
+     1 is not written, and a fraction is bracketed so (3/4)x cannot be misread
+     as 3/(4x). */
+  function Mtermtext(t) {
+    var vt = Vtext(t.v), one = Requ(Rabs(t.c), R1);
+    var sign = Rsign(t.c) < 0 ? '-' : '';
+    var mag = Rabs(t.c);
+    if (one && vt) return sign + vt;
+    return sign + (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')') + vt;
+  }
+  function Mtext(list) {
+    if (!list.length) return '0';
+    var out = '';
+    list.forEach(function (t) {
+      var neg = Rsign(t.c) < 0, mag = Rabs(t.c), vt = Vtext(t.v);
+      out += out === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      var one = Requ(mag, R1);
+      out += (one && vt ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')')) + vt;
+    });
+    return out;
+  }
+  /* The parse tree as a sum of monomials, or a thrown explanation. Everything
+     that can go wrong here is something a reader can legitimately type, so each
+     failure says what it was rather than returning null. */
+  function Mof(node) {
+    switch (node.k) {
+      case 'num': {
+        var r = Rread(node.v);
+        if (r === null) throw new Error('"' + esc(node.v) + '" is not a number I can read exactly');
+        return Rzero(r) ? [] : [{ c: r, v: {} }];
+      }
+      case 'var': { var v = {}; v[node.v] = 1; return [{ c: R1, v: v }]; }
+      case 'neg': return Mneg(Mof(node.a));
+      case 'add': return Madd(Mof(node.a), Mof(node.b));
+      case 'sub': return Msub(Mof(node.a), Mof(node.b));
+      case 'mul': return Mmul(Mof(node.a), Mof(node.b));
+      case 'div': {
+        var d = Mof(node.b);
+        if (!d.length) throw new Error('this divides by zero, and nothing divided by zero has a value');
+        if (!Mconst(d)) throw new Error('dividing by ' + Mtext(d) + ' does not give a polynomial, so this lesson cannot take it apart into terms');
+        return Mmul(Mof(node.a), [{ c: Rinv(d[0].c), v: {} }]);
+      }
+      case 'pow': {
+        var e = Mof(node.b);
+        if (!Mconst(e)) throw new Error('an exponent with a letter in it is a later lesson');
+        var k = e.length ? e[0].c : R0;
+        if (!Rint(k) || k.n < 0n) throw new Error('the exponent ' + Rtext(k) + ' is not a whole number, so this is a root rather than a polynomial term');
+        if (k.n > 12n) throw new Error('powers above 12 are more than this lesson needs');
+        return Mpow(Mof(node.a), Number(k.n));
+      }
+      case 'fn': throw new Error(node.v + '(...) is not a polynomial term');
+    }
+    throw new Error('I cannot read that expression');
+  }
+
+  /* `sub` marks a number that arrived by substitution. Those are printed
+     inside brackets wherever they sit, because the habit the lesson is trying
+     to build is bracketing the value every time rather than only when it turns
+     out to matter -- and the reader cannot tell in advance which time that is. */
+  function numnode(r, sub) { return { k: 'num', v: Rtext(r), r: r, sub: !!sub }; }
+  function nodeR(node) {
+    if (node.r) return node.r;
+    var r = Rread(node.v);
+    if (r === null) throw new Error('"' + esc(node.v) + '" is not a number I can read exactly');
+    return r;
+  }
+  var PREC = { add: 1, sub: 1, mul: 2, div: 2, neg: 3, pow: 4 };
+  var OPSYM = { add: '+', sub: '-', mul: '*', div: '/' };
+  function precof(n) { return PREC[n.k] === undefined ? 5 : PREC[n.k]; }
+
+  /* Brackets are printed where the expression needs them and nowhere else, so
+     the printed line is always a faithful reading of the tree being reduced. */
+  function parenNeeded(parent, child, side) {
+    if (child.k === 'num') {
+      if (child.sub) return parent.k !== 'fn';
+      var r = child.r || Rread(child.v);
+      /* -3 and 3/4 are bracketed as operands, the same convention Rterm uses:
+         2 + (-3) and (3/4) * 2 can never be misread. */
+      return !!(r && (Rsign(r) < 0 || !Rint(r)) && parent.k !== 'fn');
+    }
+    if (parent.k === 'fn') return false;
+    var pc = precof(child), pp = precof(parent);
+    if (parent.k === 'pow') return side === 'l' ? pc <= 4 : pc < 5;
+    if (parent.k === 'neg') return pc <= 2;
+    if (pc < pp) return true;
+    return pc === pp && side === 'r' && (parent.k === 'sub' || parent.k === 'div');
+  }
+  function Eshow(node, target, cls) {
+    function kid(child, side) {
+      var s = Eshow(child, target, cls);
+      return parenNeeded(node, child, side) ? '(' + s + ')' : s;
+    }
+    var body;
+    if (node.k === 'num') body = node.r ? Rtext(node.r) : node.v;
+    else if (node.k === 'var') body = node.v;
+    else if (node.k === 'neg') body = '-' + kid(node.a, 'r');
+    else if (node.k === 'fn') body = node.v + '(' + Eshow(node.a, target, cls) + ')';
+    else if (node.k === 'pow') body = kid(node.a, 'l') + '^' + kid(node.b, 'r');
+    else body = kid(node.a, 'l') + ' ' + OPSYM[node.k] + ' ' + kid(node.b, 'r');
+    if (target && node === target && cls) body = '<span class="' + cls + '">' + body + '</span>';
+    return body;
+  }
+  function isnum(n) { return n.k === 'num'; }
+  /* The next operation: leftmost, innermost, both operands already numbers. */
+  function findTarget(node) {
+    if (node.k === 'num' || node.k === 'var') return null;
+    if (node.k === 'neg' || node.k === 'fn') {
+      var t = findTarget(node.a);
+      return t ? t : (isnum(node.a) ? node : null);
+    }
+    var l = findTarget(node.a);
+    if (l) return l;
+    var r = findTarget(node.b);
+    if (r) return r;
+    return (isnum(node.a) && isnum(node.b)) ? node : null;
+  }
+  /* Is the operation inside brackets in the printed line? Answered by walking
+     the path to it and asking the printer, so the rule quoted to the reader and
+     the brackets they can see always come from the same decision. */
+  function bracketed(root, target) {
+    var found = false;
+    (function walk(node, wrapped) {
+      if (node === target) { found = wrapped; return true; }
+      if (node.k === 'num' || node.k === 'var') return false;
+      if (node.k === 'neg' || node.k === 'fn') return walk(node.a, wrapped || parenNeeded(node, node.a, 'r'));
+      if (walk(node.a, wrapped || parenNeeded(node, node.a, 'l'))) return true;
+      return walk(node.b, wrapped || parenNeeded(node, node.b, 'r'));
+    })(root, false);
+    return found;
+  }
+  function ruleFor(root, target) {
+    if (bracketed(root, target)) return 'brackets first: this one is inside a bracket';
+    if (target.k === 'fn') return 'the function acts on the number inside its brackets';
+    if (target.k === 'pow') return 'powers before multiplying and dividing';
+    if (target.k === 'neg') return 'the minus sign in front applies last, to the whole power';
+    if (target.k === 'mul' || target.k === 'div') return 'multiply and divide before adding, left to right';
+    return 'add and subtract last, left to right';
+  }
+  function Estep(node) {
+    var a = node.a ? nodeR(node.a) : null, b = node.b ? nodeR(node.b) : null;
+    if (node.k === 'neg') return Rneg(a);
+    if (node.k === 'add') return Radd(a, b);
+    if (node.k === 'sub') return Rsub(a, b);
+    if (node.k === 'mul') return Rmul(a, b);
+    if (node.k === 'div') {
+      if (Rzero(b)) throw new Error('this expression divides by zero, and nothing divided by zero has a value');
+      return Rdiv(a, b);
+    }
+    if (node.k === 'pow') {
+      if (!Rint(b)) throw new Error('the exponent ' + Rtext(b) + ' is a fraction, which makes this a root: the radicals lesson does those');
+      if (Rzero(a) && b.n < 0n) throw new Error('0 to a negative power means dividing by zero');
+      if (b.n > 40n || b.n < -40n) throw new Error('the exponent ' + Rtext(b) + ' is larger than this lesson needs');
+      return Rpow(a, Number(b.n));
+    }
+    throw new Error('the function ' + (node.v || node.k) + ' is not part of this lesson');
+  }
+  function Ereplace(node, target, repl) {
+    if (node === target) return repl;
+    if (node.k === 'num' || node.k === 'var') return node;
+    if (node.k === 'neg' || node.k === 'fn') return { k: node.k, v: node.v, a: Ereplace(node.a, target, repl) };
+    return { k: node.k, v: node.v, a: Ereplace(node.a, target, repl), b: Ereplace(node.b, target, repl) };
+  }
+  /* Reduce to a number, collecting the queue on the way. Throws with a reader-
+     facing sentence; every caller puts that sentence in the status banner. */
+  function Equeue(tree) {
+    var node = tree, steps = [], guard = 0;
+    while (guard < 60) {
+      guard += 1;
+      var t = findTarget(node);
+      if (!t) break;
+      var rule = ruleFor(node, t), before = Eshow(node, t, 'tone-cyan');
+      var did = t.k === 'neg' ? '-(' + Eshow(t.a, null, '') + ')' : Eshow(t, null, '');
+      var value;
+      /* A step that cannot be done stops the queue where it stopped. The
+         reader is shown the operations that did run and the one that could
+         not, which locates the problem; a bare error message does not. */
+      try { value = Estep(t); }
+      catch (err) { return { steps: steps, value: null, rest: Eshow(node, t, 'tone-red'), error: err.message, stuck: did }; }
+      node = Ereplace(node, t, numnode(value));
+      steps.push({ rule: rule, before: before, did: did, value: value, after: Eshow(node, null, '') });
+    }
+    if (node.k !== 'num') return { steps: steps, value: null, rest: Eshow(node, null, ''), error: null };
+    return { steps: steps, value: nodeR(node), rest: null, error: null };
+  }
+  /* The same expression read the way a reader who ignores precedence reads it.
+     `right` false groups strictly left to right; `right` true does the last
+     operation first, which is what "8 - 3 + 2 is 8 - 5" and "24 / 4 / 2 is
+     24 / 2" actually are. Neither is a straw man -- between them they are most
+     of the wrong answers -- and the lab computes both rather than asserting
+     that they differ. */
+  function Enaive(src, right) {
+    var toks = Etokenize(src), pos = 0;
+    function prim() {
+      var tk = toks[pos];
+      if (!tk) throw new Error('the expression ends early');
+      if (tk.t === 'num') { pos += 1; return { k: 'num', v: tk.v }; }
+      if (tk.t === 'var') { pos += 1; return { k: 'var', v: tk.v }; }
+      if (tk.t === '-') { pos += 1; return { k: 'neg', a: prim() }; }
+      if (tk.t === '+') { pos += 1; return prim(); }
+      if (tk.t === 'fn') {
+        pos += 1;
+        if (toks[pos] && toks[pos].t === '(') pos += 1;
+        var a = chain();
+        if (toks[pos] && toks[pos].t === ')') pos += 1;
+        return { k: 'fn', v: tk.v, a: a };
+      }
+      if (tk.t === '(') {
+        pos += 1;
+        var e = chain();
+        if (toks[pos] && toks[pos].t === ')') pos += 1; else throw new Error('a bracket is never closed');
+        return e;
+      }
+      throw new Error('unexpected symbol "' + (tk.v || tk.t) + '"');
+    }
+    function chain() {
+      var node = prim();
+      while (pos < toks.length) {
+        var tk = toks[pos], kinds = { '+': 'add', '-': 'sub', '*': 'mul', '/': 'div', '^': 'pow' };
+        if (tk.t === ')' || tk.t === ',') break;
+        if (kinds[tk.t]) {
+          pos += 1;
+          if (right) return { k: kinds[tk.t], a: node, b: chain() };
+          node = { k: kinds[tk.t], a: node, b: prim() };
+          continue;
+        }
+        if (tk.t === 'num' || tk.t === 'var' || tk.t === '(' || tk.t === 'fn') {
+          if (right) return { k: 'mul', a: node, b: chain() };
+          node = { k: 'mul', a: node, b: prim() };
+          continue;
+        }
+        break;
+      }
+      return node;
+    }
+    var tree = chain();
+    if (pos < toks.length) throw new Error('unexpected symbol');
+    return tree;
+  }
+  /* The terms AS WRITTEN: the top-level + and - only. 5(x + 2) is ONE term
+     until somebody expands it, and the difference between that and the two
+     terms it becomes is the whole of the distributive lesson. */
+  function Esplit(node, sign, out) {
+    if (node.k === 'add') { Esplit(node.a, sign, out); Esplit(node.b, sign, out); return out; }
+    if (node.k === 'sub') { Esplit(node.a, sign, out); Esplit(node.b, -sign, out); return out; }
+    if (node.k === 'neg') { Esplit(node.a, -sign, out); return out; }
+    out.push({ node: node, sign: sign });
+    return out;
+  }
+  function Efactors(node, out) {
+    if (node.k === 'mul') { Efactors(node.a, out); Efactors(node.b, out); return out; }
+    if (node.k === 'neg') { out.push(numnode(R(-1n))); Efactors(node.a, out); return out; }
+    out.push(node);
+    return out;
+  }
+  function Evars(node, out) {
+    if (node.k === 'var') { if (out.indexOf(node.v) < 0) out.push(node.v); return out; }
+    if (node.a) Evars(node.a, out);
+    if (node.b) Evars(node.b, out);
+    return out;
+  }
+
+  function Esubst(node, env) {
+    if (node.k === 'var') return env[node.v] === undefined ? node : numnode(env[node.v], true);
+    if (node.k === 'num') return node;
+    if (node.k === 'neg' || node.k === 'fn') return { k: node.k, v: node.v, a: Esubst(node.a, env) };
+    return { k: node.k, v: node.v, a: Esubst(node.a, env), b: Esubst(node.b, env) };
+  }
+  function Meval(list, env) {
+    var acc = R0;
+    list.forEach(function (t) {
+      var term = t.c, k;
+      for (k in t.v) if (t.v.hasOwnProperty(k)) {
+        if (env[k] === undefined) throw new Error('no value was given for ' + k);
+        term = Rmul(term, Rpow(env[k], t.v[k]));
+      }
+      acc = Radd(acc, term);
+    });
+    return acc;
+  }
+  /* Substitute, then reduce the tree operation by operation. Returns null where
+     the arithmetic has no value (a division by zero), never throws. */
+  function treeValue(tree, env) {
+    var q = Equeue(Esubst(tree, env));
+    return q.value ? q.value : null;
+  }
+
+  var HINT = "Use <code>n<\/code> for the number the phrase is about. <code>2(n + 3)<\/code> and <code>2n + 3<\/code> are both valid algebra; only one of them is what the phrase says.";
+
+  var preset = document.getElementById('exPreset');
+  var stage = document.getElementById('exStage');
+  var work = document.getElementById('exWork');
+  var status = document.getElementById('exStatus');
+  var subOut = document.getElementById('exSub');
+  var kA = document.getElementById('exK1'), kB = document.getElementById('exK2'), kC = document.getElementById('exK3');
+  function kpis(a, b, c) { kA.textContent = a; kB.textContent = b; kC.textContent = c; }
+  /* Bad input is a state the lab has to be able to be in. It says what is
+     wrong, keeps the panel populated, and never throws. */
+  function fail(lead, detail) {
+    stage.innerHTML = table('nothing computed yet', [step('input', tone(esc(lead), 'red'))]);
+    work.innerHTML = '';
+    kpis('&mdash;', '&mdash;', '&mdash;');
+    status.innerHTML = '<strong>' + lead + '</strong> ' + detail + ' ' + HINT;
+  }
+
+  var input = document.getElementById('exExpr');
+  var INPUTS = [input];
+  function applyPreset(parts) { input.value = (parts[2] || '').trim(); }
+
+  /* Eight values of n, chosen to include the value at which each phrase's two
+     readings happen to agree -- n = 5 for one preset, n = 2 for another,
+     n = -12 for two more. That value is why "I checked it with a number" is not
+     a method. Which value it is for a given phrase is not written down here:
+     the lab solves for it below, from the two expressions. */
+  var TESTS = ['-12', '-3', '-1', '0', '1/2', '2', '3', '5'].map(Rparse);
+
+  function valueOf(src, n) {
+    var tree;
+    try { tree = Eparse(src); } catch (err) { return { v: null, why: err.message }; }
+    var env = { n: n };
+    var q = Equeue(Esubst(tree, env));
+    if (q.value) return { v: q.value, why: null };
+    return { v: null, why: q.error || 'it does not reduce to a number' };
+  }
+
+  function redraw() {
+    var parts = preset.value.split('|');
+    var phrase = parts[0], intended = parts[1] || '', tempting = parts[2] || '';
+    var mine = input.value.trim();
+    subOut.textContent = phrase;
+    if (!mine) { fail('Type an expression in n.', 'The phrase is "' + esc(phrase) + '", and the box is empty.'); return; }
+    try { Eparse(mine); }
+    catch (err) { fail('Your expression does not parse.', esc(err.message) + '.'); return; }
+
+    var rows = [tr([th('n'), th('the phrase: ' + esc(intended)), th('yours: ' + esc(mine)), th('the usual misreading: ' + esc(tempting)), th('yours agrees?')])];
+    var agree = 0, defined = 0;
+    TESTS.forEach(function (n) {
+      var a = valueOf(intended, n), b = valueOf(mine, n), c = valueOf(tempting, n);
+      var same = a.v && b.v && Requ(a.v, b.v);
+      if (a.v && b.v) defined += 1;
+      if (same) agree += 1;
+      rows.push(tr([
+        td(Rtext(n)),
+        td(a.v ? Rtext(a.v) : tone('undefined', 'red')),
+        td(b.v ? Rtext(b.v) : tone('undefined', 'red')),
+        td(c.v ? Rtext(c.v) : tone('undefined', 'red')),
+        td(same ? 'yes' : 'no', same ? 't' : 'f'),
+      ], same ? '' : 'focus'));
+    });
+
+    /* The test values are evidence. When both readings are polynomials the lab
+       can do better than evidence: it compares them coefficient by coefficient,
+       and it solves for the values of n at which the misreading passes. */
+    var exact = null, exactWhy = null;
+    try {
+      var pa = Mof(Eparse(intended)), pb = Mof(Eparse(mine));
+      exact = Mequ(pa, pb);
+      exactWhy = 'expanded, the phrase is ' + Mtext(pa) + ' and yours is ' + Mtext(pb);
+    } catch (err) { exactWhy = 'one of them is not a polynomial (' + esc(err.message) + '), so the ' + TESTS.length + ' test values are all the evidence there is'; }
+
+    function agreesWhere(one, other) {
+      var d;
+      try { d = Msub(Mof(Eparse(one)), Mof(Eparse(other))); }
+      catch (err) { return null; }
+      if (!d.length) return 'everywhere: these are the same expression written two ways';
+      var deg = 0;
+      d.forEach(function (t) { deg = Math.max(deg, Vdeg(t.v)); });
+      if (deg === 0) return 'nowhere: the two readings differ by ' + Rtext(d[0].c) + ' at every value of n';
+      if (deg === 1 && d.length <= 2) {
+        var a = R0, b = R0;
+        d.forEach(function (t) { if (Vdeg(t.v) === 1) a = t.c; else b = t.c; });
+        return 'at n = ' + Rtext(Rdiv(Rneg(b), a)) + ' and nowhere else, since they differ by ' + Mtext(d);
+      }
+      return 'exactly where ' + Mtext(d) + ' = 0';
+    }
+    var whereTempting = agreesWhere(intended, tempting);
+
+    var tempSame = 0;
+    TESTS.forEach(function (n) {
+      var a = valueOf(intended, n), c = valueOf(tempting, n);
+      if (a.v && c.v && Requ(a.v, c.v)) tempSame += 1;
+    });
+
+    stage.innerHTML = table('one phrase, two readings', [
+      step('the phrase', esc(phrase)),
+      step('what it says', esc(intended)),
+      step('what it is usually read as', esc(tempting)),
+      step('yours', esc(mine)),
+      step('agreement with the phrase', agree + ' of ' + TESTS.length + ' test values'),
+    ]);
+    work.innerHTML = table('Both readings, evaluated at ' + TESTS.length + ' values of n', rows)
+      + table('The exact comparison', [
+        step('yours against the phrase', exact === null ? 'not available: ' + exactWhy
+          : (exact ? '<span class="chip ok">identical as expressions</span> &mdash; ' + exactWhy
+                   : '<span class="chip no">different expressions</span> &mdash; ' + exactWhy)),
+        step('the usual misreading against the phrase', tempSame + ' of ' + TESTS.length
+          + ' test values agree'),
+        step('and it agrees with the phrase', whereTempting || 'only at the test values above'),
+      ]);
+    kpis(String(TESTS.length), agree + '/' + TESTS.length,
+      exact === null ? (agree === TESTS.length ? 'agrees' : 'differs') : (exact ? 'the same' : 'different'));
+
+    var msg;
+    if (exact === true || (exact === null && agree === TESTS.length)) {
+      msg = '<strong>Your expression says what the phrase says.</strong> ';
+      msg += exact === true
+        ? 'That is not a matter of the seven values above: expanded, both are ' + Mtext(Mof(Eparse(mine)))
+          + ', so they agree at every number there is.'
+        : 'They agree at all seven test values, which is strong evidence but not a proof here.';
+    } else {
+      msg = '<strong>Your expression is not what the phrase says.</strong> It agrees at ' + agree
+        + ' of the ' + TESTS.length + ' test values and differs at the rest. ';
+    }
+    msg += ' The last column is the reading most people give this phrase. It matches the phrase '
+      + (whereTempting ? whereTempting : 'at ' + tempSame + ' of the ' + TESTS.length + ' test values')
+      + (tempSame === 1 ? ', and one of the test values above is exactly that number: check your '
+          + 'algebra against a single value of n and that is the value you can be unlucky enough '
+          + 'to pick.' : '.')
+      + ' Word order in English is not the order of operations. A phrase usually names the last '
+      + 'thing you do first &mdash; "twice the SUM of n and 3" &mdash; and the bracket is where '
+      + 'that reversal shows up in the algebra.';
+    status.innerHTML = msg;
+  }
+
+  preset.addEventListener('change', function () { applyPreset(preset.value.split('|')); redraw(); });
+  INPUTS.forEach(function (el) { el.addEventListener('input', redraw); });
+  applyPreset(preset.value.split('|'));
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

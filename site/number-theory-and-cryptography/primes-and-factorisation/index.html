@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Number Theory and Cryptography course home">
         <span class="brand-mark" aria-hidden="true">02</span>
-        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 &amp;middot; Lesson 02 of 14</span></span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 · Lesson 02 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Number Theory and Cryptography</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 02 &amp;middot; Primes and Unique Factorisation</span>
+      <span class="crumb-current" aria-current="page">Lesson 02 · Primes and Unique Factorisation</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ if n is composite it has a prime factor ≤ √n</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Existence of a factorisation is easy; uniqueness is the theorem, and it is what everything else uses.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>1 is not prime, by decision</h3><p>Because uniqueness of factorisation would fail: <span class="math">6 = 2·3 = 1·2·3 = 1·1·2·3</span>. The definition is chosen to make the theorem true.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Uniqueness is the substantive half</h3><p>Existence follows from strong induction in three lines. Uniqueness needs Euclid's lemma, which needs Bézout.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Trial division stops at `√n`</h3><p>A composite <span class="math">n</span> has a factor at most <span class="math">√n</span>, so testing beyond that is unnecessary &mdash; and it is why the sieve of lesson 3 stops where it does.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>1 is not prime, by decision</h3><p>Because uniqueness of factorisation would fail: <span class="math">6 = 2·3 = 1·2·3 = 1·1·2·3</span>. The definition is chosen to make the theorem true.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Uniqueness is the substantive half</h3><p>Existence follows from strong induction in three lines. Uniqueness needs Euclid's lemma, which needs Bézout.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Trial division stops at <span class="math">√n</span></h3><p>A composite <span class="math">n</span> has a factor at most <span class="math">√n</span>, so testing beyond that is unnecessary &mdash; and it is why the sieve of lesson 3 stops where it does.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Primes</h2></div><p>The definition, both halves of the fundamental theorem, and Euclid's proof.</p></div>
@@ -983,7 +1014,7 @@ if n is composite it has a prime factor ≤ √n</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Factoring and testing</h2></div><p>Small primes first, stop at the square root.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Divide out the small primes in order</h3><p>2, then 3, then 5, and so on, taking each as many times as it goes.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Stop when the divisor exceeds `√(remaining)`</h3><p>Whatever is left is then prime. This is the bound above, and it is what keeps hand factorisation feasible.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Count divisors from the exponents</h3><p>If <span class="math">n = p₁^{e₁}⋯p_k^{e_k}</span> then <span class="math">n</span> has <span class="math">(e₁+1)⋯(e_k+1)</span> positive divisors, since each exponent is chosen independently from 0 to <span class="math">eᵢ</span>.</p></article><article class="card concept-card"><div class="icon">4</div><h3>To test primality, divide by primes up to `√n`</h3><p>If none divides, it is prime. For large numbers this is hopeless and probabilistic tests are used instead.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Divide out the small primes in order</h3><p>2, then 3, then 5, and so on, taking each as many times as it goes.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Stop when the divisor exceeds <span class="math">√(remaining)</span></h3><p>Whatever is left is then prime. This is the bound above, and it is what keeps hand factorisation feasible.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Count divisors from the exponents</h3><p>If <span class="math">n = p₁^{e₁}⋯p_k^{e_k}</span> then <span class="math">n</span> has <span class="math">(e₁+1)⋯(e_k+1)</span> positive divisors, since each exponent is chosen independently from 0 to <span class="math">eᵢ</span>.</p></article><article class="card concept-card"><div class="icon">4</div><h3>To test primality, divide by primes up to <span class="math">√n</span></h3><p>If none divides, it is prime. For large numbers this is hopeless and probabilistic tests are used instead.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1008,7 +1039,7 @@ Check by listing:  1,2,3,4,5,6,8,9,10,12,15,18,20,24,30,36,40,45,
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Calling 1 prime</strong><span>It is neither prime nor composite, and the exclusion is what makes unique factorisation stateable.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Believing Euclid&#x27;s `N` is always prime</strong><span>It has a prime factor outside the list, which is all the proof needs and all it claims.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Trial dividing past the square root</strong><span>Unnecessary. If nothing up to <span class="math">√n</span> divides <span class="math">n</span>, nothing above it does either.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Calling 1 prime</strong><span>It is neither prime nor composite, and the exclusion is what makes unique factorisation stateable.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Believing Euclid&#x27;s <span class="math">N</span> is always prime</strong><span>It has a prime factor outside the list, which is all the proof needs and all it claims.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Trial dividing past the square root</strong><span>Unnecessary. If nothing up to <span class="math">√n</span> divides <span class="math">n</span>, nothing above it does either.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can factor a four-digit number and count its divisors.</strong><p>Factor 2520 completely and predict its divisor count from the exponents before listing anything. <span class="math">2520 = 2³·3²·5·7</span>, so there are <span class="math">4·3·2·2 = 48</span> divisors.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Factoring is easy for small numbers and believed hard for large ones, and that asymmetry is the entire basis of RSA in lesson 14. The best known general algorithms are sub-exponential but not polynomial, and no proof exists that factoring is genuinely hard.</div></article>
       </div>
     </section>

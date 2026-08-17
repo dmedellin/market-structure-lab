@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Sieve of Eratosthenes | Number Theory and Cryptography | Learn · geterdone.io</title>
-  <meta name="description" content="The oldest algorithm still in use. It finds every prime up to `n` by removing multiples, stops at `√n` for the reason lesson 2 gave, and costs far less than testing each number separately." />
+  <meta name="description" content="The oldest algorithm still in use. It finds every prime up to n by removing multiples, stops at √n for the reason lesson 2 gave, and costs far less than testing each number separately." />
   <link rel="canonical" href="https://learn.geterdone.io/number-theory-and-cryptography/the-sieve-of-eratosthenes/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="The Sieve of Eratosthenes | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta property="og:description" content="The oldest algorithm still in use. It finds every prime up to `n` by removing multiples, stops at `√n` for the reason lesson 2 gave, and costs far less than testing each number separately." />
+  <meta property="og:description" content="The oldest algorithm still in use. It finds every prime up to n by removing multiples, stops at √n for the reason lesson 2 gave, and costs far less than testing each number separately." />
   <meta property="og:url" content="https://learn.geterdone.io/number-theory-and-cryptography/the-sieve-of-eratosthenes/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="The Sieve of Eratosthenes | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta name="twitter:description" content="The oldest algorithm still in use. It finds every prime up to `n` by removing multiples, stops at `√n` for the reason lesson 2 gave, and costs far less than testing each number separately." />
+  <meta name="twitter:description" content="The oldest algorithm still in use. It finds every prime up to n by removing multiples, stops at √n for the reason lesson 2 gave, and costs far less than testing each number separately." />
   <meta name="twitter:url" content="https://learn.geterdone.io/number-theory-and-cryptography/the-sieve-of-eratosthenes/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Number Theory and Cryptography course home">
         <span class="brand-mark" aria-hidden="true">03</span>
-        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 &amp;middot; Lesson 03 of 14</span></span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 · Lesson 03 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Number Theory and Cryptography</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 03 &amp;middot; The Sieve of Eratosthenes</span>
+      <span class="crumb-current" aria-current="page">Lesson 03 · The Sieve of Eratosthenes</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ cost ≈ n log log n operations</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>The sieve is the standard example of an algorithm that beats the obvious approach by reorganising the work.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Crossing out is cheaper than testing</h3><p>Testing each number separately repeats work. The sieve marks each composite once per distinct prime factor and no more.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Start at `p²`</h3><p>Multiples of <span class="math">p</span> below <span class="math">p²</span> have a smaller prime factor and were already crossed out. Starting at <span class="math">2p</span> is correct and wasteful.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Stop at `√n`</h3><p>After sieving by every prime up to <span class="math">√n</span>, anything uncrossed has no factor below its square root and is prime, by lesson 2's bound.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Crossing out is cheaper than testing</h3><p>Testing each number separately repeats work. The sieve marks each composite once per distinct prime factor and no more.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Start at <span class="math">p²</span></h3><p>Multiples of <span class="math">p</span> below <span class="math">p²</span> have a smaller prime factor and were already crossed out. Starting at <span class="math">2p</span> is correct and wasteful.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Stop at <span class="math">√n</span></h3><p>After sieving by every prime up to <span class="math">√n</span>, anything uncrossed has no factor below its square root and is prime, by lesson 2's bound.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>The sieve</h2></div><p>The algorithm, its two optimisations, and its cost.</p></div>
@@ -995,7 +1026,7 @@ cost ≈ n log log n operations</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Running the sieve</h2></div><p>One pass per prime, starting at its square.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>List the candidates</h3><p>2 through <span class="math">n</span>. The number 1 is excluded from the start.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Take the smallest uncrossed number</h3><p>It is prime, because nothing smaller divides it.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Cross out its multiples from `p²` upward</h3><p>Smaller multiples already went. This is the optimisation that halves the work at small primes.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Stop when `p² &gt; n`</h3><p>Everything still uncrossed is prime, by the trial-division bound.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>List the candidates</h3><p>2 through <span class="math">n</span>. The number 1 is excluded from the start.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Take the smallest uncrossed number</h3><p>It is prime, because nothing smaller divides it.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Cross out its multiples from <span class="math">p²</span> upward</h3><p>Smaller multiples already went. This is the optimisation that halves the work at small primes.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Stop when <span class="math">p² &gt; n</span></h3><p>Everything still uncrossed is prime, by the trial-division bound.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1020,7 +1051,7 @@ Note the p = 3 pass started at 9, not 6, and the p = 5 pass at 25.</div><p>The p
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Sieving past `√n`</strong><span>Passes for larger primes remove nothing new. The bound is the same one that limits trial division.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Starting the inner loop at `2p`</strong><span>Correct but wasteful: those multiples have already been removed by smaller primes.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Expecting the sieve to scale to cryptographic sizes</strong><span>It needs memory proportional to <span class="math">n</span>. Finding a 1024-bit prime uses probabilistic testing, not sieving.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Sieving past <span class="math">√n</span></strong><span>Passes for larger primes remove nothing new. The bound is the same one that limits trial division.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Starting the inner loop at <span class="math">2p</span></strong><span>Correct but wasteful: those multiples have already been removed by smaller primes.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Expecting the sieve to scale to cryptographic sizes</strong><span>It needs memory proportional to <span class="math">n</span>. Finding a 1024-bit prime uses probabilistic testing, not sieving.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can predict the passes and the stopping point.</strong><p>Before sieving to 200, say which primes need passes and roughly how many numbers each will cross out. Then run it and compare &mdash; the prediction is the understanding.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The sieve is over two thousand years old and is still the fastest way to enumerate the primes in a range. Modern variants (segmented sieves, the sieve of Atkin) improve the constants and the memory profile without changing the idea.</div></article>
       </div>
     </section>

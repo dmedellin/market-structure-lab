@@ -808,7 +808,7 @@ LESSONS = [
                      "A problem is <strong>NP-complete</strong> if it is in NP and every "
                      "problem in NP reduces to it. It is <strong>NP-hard</strong> if the "
                      "second condition holds whether or not it is in NP.")),
-            ("thm", ("Cook&ndash;Levin theorem (1971)",
+            ("thm", ("Cook-Levin theorem (1971)",
                      "SAT &mdash; deciding whether a propositional formula is satisfiable "
                      "&mdash; is NP-complete. It was the first problem shown to be so, and "
                      "every subsequent NP-completeness proof reduces from a problem already "

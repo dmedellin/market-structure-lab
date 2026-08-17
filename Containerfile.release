@@ -369,6 +369,144 @@ RUN set -eu; \
             decidability-and-the-halting-problem; do \
         test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
     done; \
+    test -f /srv/paths/algebra/index.html || { echo "FATAL: missing /srv/paths/algebra/index.html (the algebra path page). It is published at learn.geterdone.io/paths/algebra/ and is the only page showing all eight courses of that path in one ordered list; the site index links to it, so its absence 404s the only route into the path."; exit 1; }; \
+    course=algebra-foundations; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 1 home)."; exit 1; }; \
+    for lesson in real-numbers-and-the-number-line \
+            properties-of-the-real-numbers \
+            order-of-operations \
+            absolute-value \
+            integer-exponents \
+            scientific-notation \
+            roots-and-radicals \
+            rational-exponents \
+            algebraic-expressions-and-terms \
+            the-distributive-law \
+            combining-like-terms \
+            evaluating-expressions \
+            translating-words-into-algebra; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=linear-equations-and-inequalities; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 2 home)."; exit 1; }; \
+    for lesson in what-it-means-to-solve-an-equation \
+            one-and-two-step-equations \
+            variables-on-both-sides \
+            equations-with-fractions \
+            literal-equations-and-formulas \
+            identities-and-contradictions \
+            ratio-proportion-and-percent \
+            modelling-with-linear-equations \
+            linear-inequalities \
+            compound-inequalities \
+            absolute-value-equations \
+            absolute-value-inequalities \
+            interval-and-set-builder-notation; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=lines-functions-and-graphs; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 3 home)."; exit 1; }; \
+    for lesson in the-coordinate-plane \
+            graphing-a-linear-equation \
+            slope \
+            slope-intercept-form \
+            point-slope-and-standard-form \
+            parallel-and-perpendicular-lines \
+            what-a-function-is \
+            function-notation \
+            domain-and-range \
+            piecewise-functions \
+            transformations-of-graphs \
+            composition-of-functions \
+            inverse-functions \
+            linear-inequalities-in-two-variables; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=polynomials-and-factoring; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 4 home)."; exit 1; }; \
+    for lesson in polynomials-degree-and-standard-form \
+            adding-and-subtracting-polynomials \
+            multiplying-polynomials \
+            special-products \
+            factoring-out-the-greatest-common-factor \
+            factoring-by-grouping \
+            factoring-simple-trinomials \
+            the-ac-method \
+            factoring-special-forms \
+            polynomial-long-division \
+            synthetic-division-and-the-remainder-theorem \
+            the-factor-theorem-and-rational-roots \
+            graphs-of-polynomial-functions; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=rational-and-radical-expressions; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 5 home)."; exit 1; }; \
+    for lesson in rational-expressions-and-their-domains \
+            simplifying-rational-expressions \
+            multiplying-and-dividing-rational-expressions \
+            adding-and-subtracting-rational-expressions \
+            complex-fractions \
+            solving-rational-equations \
+            graphs-and-asymptotes \
+            simplifying-radical-expressions \
+            operations-with-radicals \
+            rationalizing-denominators \
+            solving-radical-equations \
+            radical-functions-and-their-graphs; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=quadratics-and-complex-numbers; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 6 home)."; exit 1; }; \
+    for lesson in quadratic-equations-and-the-zero-product-property \
+            solving-by-factoring \
+            the-square-root-property \
+            completing-the-square \
+            the-quadratic-formula \
+            the-discriminant \
+            complex-numbers \
+            operations-with-complex-numbers \
+            complex-roots-of-quadratics \
+            graphs-of-quadratic-functions \
+            vertex-form-and-the-axis-of-symmetry \
+            maximum-and-minimum-problems \
+            quadratic-inequalities \
+            equations-reducible-to-quadratic-form; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=exponential-and-logarithmic-functions; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 7 home)."; exit 1; }; \
+    for lesson in exponential-functions \
+            growth-and-decay \
+            the-number-e \
+            what-a-logarithm-is \
+            logarithmic-functions-and-their-graphs \
+            the-laws-of-logarithms \
+            common-and-natural-logarithms \
+            change-of-base \
+            solving-exponential-equations \
+            solving-logarithmic-equations \
+            compound-interest-and-continuous-growth \
+            logarithmic-scales; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=systems-matrices-and-sequences; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 8 home)."; exit 1; }; \
+    for lesson in systems-of-two-linear-equations \
+            solving-by-substitution \
+            solving-by-elimination \
+            systems-in-three-variables \
+            matrices-and-row-operations \
+            gaussian-elimination \
+            matrix-arithmetic \
+            determinants-and-cramers-rule \
+            inverse-matrices \
+            systems-of-inequalities-and-linear-programming \
+            sequences-and-recursion \
+            arithmetic-sequences-and-series \
+            geometric-sequences-and-series \
+            the-binomial-theorem; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
     test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: course 1 lesson 01 is published at learn.geterdone.io/market-structure/market-structure/, never learn.geterdone.io/learn/market-structure/market-structure/. Move site/learn/* up one level."; exit 1; }; \
     test ! -e /srv/market-structure-lab || { echo "FATAL: /srv/market-structure-lab exists. Course 1 was renamed to /market-structure; the old prefix must not be re-added, or the image would publish the same course at two URLs with one canonical between them."; exit 1; }; \
     test ! -e /srv/paths/index.html || { echo "FATAL: /srv/paths/index.html exists. The paths layer publishes one page per path (/paths/<subject>/) and nothing at /paths/ itself; the list of paths is the site index at /. Remove it or move it."; exit 1; }; \

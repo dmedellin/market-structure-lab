@@ -1,0 +1,2220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Complex Numbers | Quadratics and Complex Numbers | Learn · geterdone.io</title>
+  <meta name="description" content="x² = -1 has no real solution, so a number i with i² = -1 is defined and joined to the reals. A complex number is a + bi with a and b real; every real number is one of them, and the system is built so that all the algebra of courses 1 to 5 keeps working unchanged." />
+  <link rel="canonical" href="https://learn.geterdone.io/quadratics-and-complex-numbers/complex-numbers/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Complex Numbers | Quadratics and Complex Numbers | Learn · geterdone.io" />
+  <meta property="og:description" content="x² = -1 has no real solution, so a number i with i² = -1 is defined and joined to the reals. A complex number is a + bi with a and b real; every real number is one of them, and the system is built so that all the algebra of courses 1 to 5 keeps working unchanged." />
+  <meta property="og:url" content="https://learn.geterdone.io/quadratics-and-complex-numbers/complex-numbers/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Complex Numbers | Quadratics and Complex Numbers | Learn · geterdone.io" />
+  <meta name="twitter:description" content="x² = -1 has no real solution, so a number i with i² = -1 is defined and joined to the reals. A complex number is a + bi with a and b real; every real number is one of them, and the system is built so that all the algebra of courses 1 to 5 keeps working unchanged." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/quadratics-and-complex-numbers/complex-numbers/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Quadratics and Complex Numbers course home">
+        <span class="brand-mark" aria-hidden="true">07</span>
+        <span class="brand-copy"><strong>Quadratics and Complex Numbers</strong><span>Course 6 · Lesson 07 of 14</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Quadratics and Complex Numbers</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 07 · Complex Numbers</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The the complex plane is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 6 &middot; Lesson 07 &middot; Complex numbers</span>
+        <h1>Complex Numbers</h1>
+        <p><span class="math">x² = -1</span> has no real solution, so a number <span class="math">i</span> with <span class="math">i² = -1</span> is defined and joined to the reals. A complex number is <span class="math">a + bi</span> with <span class="math">a</span> and <span class="math">b</span> real; every real number is one of them, and the system is built so that all the algebra of courses 1 to 5 keeps working unchanged.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">i² = -1                      the defining property
+a + bi,  a and b real        real part a,  imaginary part b
+√(-9) = 3i                   since (3i)² = 9i² = -9
+a + bi = c + di    ⟺    a = c  and  b = d</div>
+        <div class="float-label" style="right:16px;bottom:16px;">The definition, and what follows from it</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Extending the number system to solve an equation is not a new move. It has happened three times already on this path, and every time for the same reason.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>i is defined by exactly one property</h3><p><span class="math">i² = -1</span>, and nothing else about it is assumed. Everything else &mdash; how to add, multiply and divide with it &mdash; follows from that one equation together with the ordinary laws of algebra, which is what lesson 8 works out.</p></article><article class="card concept-card"><div class="icon">2</div><h3>A complex number has two real parts</h3><p>In <span class="math">a + bi</span>, both <span class="math">a</span> and <span class="math">b</span> are real numbers. The imaginary part of <span class="math">3 - 7i</span> is <span class="math">-7</span>, not <span class="math">-7i</span>: it is a real number by universal convention, and the convention exists so that "imaginary part" names a coordinate you can compare and equate.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Every real number is complex</h3><p><span class="math">5</span> is <span class="math">5 + 0i</span>. The reals are not replaced or contradicted; they sit inside the complex numbers as the ones with imaginary part <span class="math">0</span>. Everything proved in courses 1 to 5 goes on holding, for exactly the numbers it held for before.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>A number whose square is negative</h2></div><p>Why the extension is legitimate, what the objects are, and how to write a root of a negative number.</p></div>
+      <article class="card card-pad prose"><p>Lesson 6 ended with <span class="math">D &lt; 0</span> and the answer "no real solution". The word carrying the weight in that phrase is <em>real</em>. <span class="math">x² + 1 = 0</span> needs a number whose square is <span class="math">-1</span>, and no point on the number line has one, because the square of a real number is <span class="math">0</span> or positive.</p><h3>This has happened before</h3><p>Each earlier number system was extended for the same reason: an equation with no solution inside it.</p><ul><li><span class="math">x + 3 = 1</span> has no solution among the counting numbers. The negative integers were joined on, and subtraction became always possible.</li><li><span class="math">3x = 1</span> has no solution among the integers. The fractions were joined on, and division by a non-zero number became always possible.</li><li><span class="math">x² = 2</span> has no solution among the rationals. The irrationals were joined on, and the number line was filled in.</li><li><span class="math">x² = -1</span> has no solution among the reals. This lesson joins on <span class="math">i</span>, and every quadratic acquires solutions.</li></ul><p>At each stage the new numbers were called unnatural, then absurd, then irrational, then imaginary, and each time the name stuck while the objection did not. "Imaginary" is a seventeenth-century insult that hardened into a technical term. It does not mean these numbers are less legitimate than the others, and nothing in the arithmetic treats them as such.</p><div class="defbox"><span class="label">Definition &middot; The imaginary unit</span><p><span class="math">i</span> is the number defined by the property <span class="math">i² = -1</span>. It is not a real number.</p><p>That <span class="math">i</span> is not real is a consequence rather than an assumption: every real number <span class="math">r</span> satisfies <span class="math">r² ≥ 0</span>, and <span class="math">-1 &lt; 0</span>.</p></div><div class="defbox"><span class="label">Definition &middot; Complex number</span><p>A <strong>complex number</strong> is one that can be written <span class="math">a + bi</span> with <span class="math">a</span> and <span class="math">b</span> real. <span class="math">a</span> is the <strong>real part</strong> and <span class="math">b</span> is the <strong>imaginary part</strong>, and both of them are real numbers.</p><p><span class="math">a + bi</span> is called <strong>standard form</strong>. A complex number with <span class="math">b = 0</span> is real; one with <span class="math">a = 0</span> and <span class="math">b ≠ 0</span> is called <strong>pure imaginary</strong>.</p></div><p>So <span class="math">3 - 7i</span> has real part <span class="math">3</span> and imaginary part <span class="math">-7</span>. Calling the imaginary part <span class="math">-7i</span> is a common slip and a consequential one: the two coordinates of a complex number are both real numbers, and that is what makes the next theorem sayable.</p><div class="thm"><span class="label">Theorem &middot; Equality of complex numbers</span><p>For real <span class="math">a</span>, <span class="math">b</span>, <span class="math">c</span> and <span class="math">d</span>: <span class="math">a + bi = c + di</span> if and only if <span class="math">a = c</span> and <span class="math">b = d</span>.</p></div><div class="proof"><p>If <span class="math">a = c</span> and <span class="math">b = d</span> the two expressions are identical, so they are equal.</p><p>Conversely, suppose <span class="math">a + bi = c + di</span>. Rearranging gives <span class="math">a - c = (d - b)i</span>. If <span class="math">d - b</span> were not <span class="math">0</span>, dividing by it would give <span class="math">i = (a - c)/(d - b)</span>, a quotient of two real numbers with a non-zero denominator and therefore itself real &mdash; and <span class="math">i</span> is not real. So <span class="math">d - b = 0</span>, that is <span class="math">b = d</span>; and then <span class="math">a - c = 0</span>, that is <span class="math">a = c</span>.</p><p><span class="qed">&#9633;</span></p></div><p>One equation between complex numbers is therefore two equations between real numbers. That is used constantly from here on, and it is why complex numbers behave like points in a plane: <span class="math">a + bi</span> corresponds to the point <span class="math">(a, b)</span>, with the real numbers lying along the horizontal axis and the pure imaginary ones up the vertical.</p><p>The plane picture also explains an absence. No ordering of the complex numbers is compatible with their arithmetic, so the words "positive", "greater than" and "between" are not available for them, and neither are the signs <span class="math">&lt;</span> and <span class="math">≤</span>. Points in a plane do not come in an order. From here on, those words are used only where the numbers involved are real.</p><h3>Square roots of negative numbers</h3><div class="defbox"><span class="label">Definition &middot; The root of a negative number</span><p>For a positive real number <span class="math">k</span>, <span class="math">√(-k)</span> is defined to be <span class="math">i√k</span>.</p><p>One line checks it: <span class="math">(i√k)² = i²(√k)² = (-1)k = -k</span>. The other square root of <span class="math">-k</span> is <span class="math">-i√k</span>, exactly as a positive number has two real square roots and the symbol names one of them.</p><p>Convert to <span class="math">i</span> before doing anything else with the expression. The rule <span class="math">√a · √b = √(ab)</span> is stated for non-negative <span class="math">a</span> and <span class="math">b</span> and does not survive down here, as lesson 8 shows in detail.</p></div><div class="mathblock">√(-9)  = 3i          since (3i)²  = 9i²   = -9
+√(-25) = 5i          since (5i)²  = 25i²  = -25
+√(-12) = 2i√3        since √12 = 2√3, and (2i√3)² = 4·3·i² = -12</div><div class="example"><span class="label">Example &middot; The shape a quadratic produces</span><p>Applied to an equation with <span class="math">D &lt; 0</span>, the formula hands back something like <span class="math">(-6 + √(-8))/2</span>. Convert the root first: <span class="math">√(-8) = 2i√2</span>. Then <span class="math">(-6 + 2i√2)/2 = -3 + i√2</span>, which is standard form with real part <span class="math">-3</span> and imaginary part <span class="math">√2</span>.</p><p>Both terms of the numerator were divided by <span class="math">2</span>, exactly as in lesson 5. Lesson 9 does this systematically; the point here is only that the result is an ordinary complex number, of the shape this lesson defined.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>The complex plane</h2></div><p>Parts, conjugate, modulus, and the powers of i found by multiplying</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="cxTitle">Complex numbers</strong><span id="cxSub"></span></div>
+        <div class="inline-legend"><span class="tone-amber"><i class="legend-swatch"></i>z</span><span class="tone-cyan"><i class="legend-swatch"></i>conjugate</span><span class="tone-purple"><i class="legend-swatch"></i>negative</span></div>
+      </div>
+      <div class="lab-stage" id="cxStage"><svg id="cxPlot"></svg></div>
+      <div id="cxWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="cxStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>The plane the reals sit inside</h3>
+          <p>Set the real and the imaginary part and watch the point move. Setting the imaginary part to <span class="math">0</span> puts the point back on the horizontal axis, which is the number line of course 1, unchanged and still there.</p>
+        <div class="field" id="cxFieldPreset">
+          <label for="cxPreset">Worked example</label>
+          <select id="cxPreset"><option value="3|4|0|0">3 + 4i          the modulus is a whole number</option><option value="1|1|0|0">1 + i           the modulus is not</option><option value="-2|0|0|0">-2              a real number is a complex number</option><option value="0|3|0|0">3i              pure imaginary</option><option value="1/2|-3/4|0|0">1/2 - (3/4)i    rational parts stay rational</option><option value="0|1|0|0">i               the number the whole course is about</option></select>
+        </div>
+        <div class="field" id="cxAField">
+          <label for="cxA">Real part  a</label>
+          <input id="cxA" type="text" value="0" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field" id="cxBField">
+          <label for="cxB">Imaginary part  b</label>
+          <input id="cxB" type="text" value="0" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span id="cxK1Lab">&mdash;</span><strong id="cxK1">&mdash;</strong></div>
+          <div class="kpi"><span id="cxK2Lab">&mdash;</span><strong id="cxK2">&mdash;</strong></div>
+          <div class="kpi"><span id="cxK3Lab">&mdash;</span><strong id="cxK3">&mdash;</strong></div>
+        </div>
+        <p class="small-copy" id="cxHint" style="margin:0;">Every box takes a whole number or an exact fraction such as <code>-3/4</code>. Nothing below is rounded except where it says so, and the Argand plane draws the numbers the tables computed.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Writing a complex number in standard form</h2></div><p>Standard form is a + bi with a and b real. Four moves get anything there.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Convert every root of a negative number to i first</h3><p><span class="math">√(-12)</span> becomes <span class="math">i√12</span>. Do this before any multiplying: the radical laws of course 5 assume non-negative radicands, and they stop being reliable the moment a negative goes under a root.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Simplify the radical that is left</h3><p><span class="math">√12 = 2√3</span> by course 5, so <span class="math">i√12</span> becomes <span class="math">2i√3</span>. An unsimplified radical is as unfinished here as it was there.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Separate the real and the imaginary parts</h3><p>Collect everything without an <span class="math">i</span> into <span class="math">a</span> and everything with one into <span class="math">bi</span>. A real number is <span class="math">a + 0i</span> and a pure imaginary is <span class="math">0 + bi</span>; both are in standard form once written that way.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Divide through if there is a denominator</h3><p><span class="math">(-6 + 2i√2)/2</span> is <span class="math">-3 + i√2</span>. Every term of the numerator gets divided, which is the same reduction lesson 5 needed and the same place it goes wrong.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>i and standard form</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Five numbers, put into standard form</h3><p>Each one ends as a + bi, with a and b named and both of them real.</p><div class="mathblock">1.  √(-25)       =  5i        =  0 + 5i         a = 0,   b = 5
+
+2.  7                         =  7 + 0i         a = 7,   b = 0
+
+3.  √(-12)       =  2i√3      =  0 + 2√3 i      a = 0,   b = 2√3
+
+4.  (-6 + √(-8)) / 2
+        √(-8) = 2i√2                            convert the root first
+        (-6 + 2i√2)/2  =  -3 + i√2              a = -3,  b = √2
+
+5.  x² = -49     →  x = 7i  or  x = -7i         (7i)² = 49i² = -49</div><p>Line 2 is the one worth pausing on. <span class="math">7</span> is a complex number, with imaginary part <span class="math">0</span>. Nothing about it changed in this lesson; the definition was written so as to include it.</p><p>Line 5 is the square root property of lesson 3, applied where it previously reported nothing. <span class="math">x² = -49</span> has two solutions among the complex numbers, and they are negatives of one another, exactly as <span class="math">x² = 49</span> had two real ones. Lesson 9 shows that the pairing is not a coincidence.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Writing <span class="math">√(-9) = -3</span></strong><span><span class="math">(-3)² = 9</span>, not <span class="math">-9</span>, so <span class="math">-3</span> is not a square root of <span class="math">-9</span> at all. The minus sign under the radical comes out as <span class="math">i</span>, not as a minus in front: <span class="math">√(-9) = 3i</span>.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Calling the imaginary part <span class="math">bi</span></strong><span>The imaginary part of <span class="math">3 - 7i</span> is <span class="math">-7</span>, a real number. This is a convention and it is universal, and keeping to it is what makes "equate the real parts, then the imaginary parts" a statement about real numbers rather than a circular one.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Treating the reals and the complex numbers as rival systems</strong><span>Every real number is complex, with imaginary part <span class="math">0</span>. <span class="math">x² - 4 = 0</span> does not acquire new solutions in the larger system &mdash; it still has exactly <span class="math">2</span> and <span class="math">-2</span>. Extending the numbers adds objects; it does not disturb anything that was already true.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when a + bi is the only form you leave an answer in.</strong><p>Convert any root of a negative number to <span class="math">i</span> immediately, simplify the radical, and name the real and imaginary parts as real numbers. You should also be able to say what <span class="math">i</span> is defined by &mdash; one equation, <span class="math">i² = -1</span> &mdash; and resist the idea that anything further about it has been assumed.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> This lesson defines the objects. Lesson 8 gives them arithmetic, and lesson 9 sends them back to the quadratics lesson 6 had to set aside. The pattern worth keeping in view is the one all four extensions share: the system grows exactly enough to solve the equation that defeated it, and nothing that was true beforehand stops being true.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../the-discriminant/" rel="prev"><span>Previous lesson</span><strong>06 &middot; The Discriminant</strong></a>
+      <a class="lesson-link next" href="../operations-with-complex-numbers/" rel="next"><span>Next lesson</span><strong>08 &middot; Operations with Complex Numbers</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Quadratics and Complex Numbers.</strong> Every quadratic on this course is solved by all four methods at once, in exact arithmetic, and the four answers are compared on screen &mdash; they agree because they are computed independently. Roots, vertex and axis are marked on the parabola using the same numbers printed beside it.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "<span class=\"math\">\u221a(-16)<\/span> equals:", "a": ["<span class=\"math\">4i<\/span>", "<span class=\"math\">-4<\/span>", "<span class=\"math\">16i<\/span>", "<span class=\"math\">4<\/span>"], "c": 0, "why": "<span class=\"math\">\u221a(-16) = i\u221a16 = 4i<\/span>, and the check is <span class=\"math\">(4i)\u00b2 = 16i\u00b2 = -16<\/span>. <span class=\"math\">-4<\/span> squares to <span class=\"math\">+16<\/span>, so it is a square root of <span class=\"math\">16<\/span> and not of <span class=\"math\">-16<\/span>; <span class=\"math\">16i<\/span> squares to <span class=\"math\">-256<\/span>."}, {"q": "The imaginary part of <span class=\"math\">3 - 7i<\/span> is:", "a": ["<span class=\"math\">-7i<\/span>", "<span class=\"math\">-7<\/span>", "<span class=\"math\">7<\/span>", "<span class=\"math\">3<\/span>"], "c": 1, "why": "By definition the imaginary part of <span class=\"math\">a + bi<\/span> is the real number <span class=\"math\">b<\/span>, and here <span class=\"math\">b = -7<\/span>; the minus sign belongs to it. Calling it <span class=\"math\">-7i<\/span> is the usual slip, and it breaks the equality rule, which compares one real number on each side."}, {"q": "If <span class=\"math\">x + yi = 5 - 2i<\/span>, with <span class=\"math\">x<\/span> and <span class=\"math\">y<\/span> real, then:", "a": ["<span class=\"math\">x = 5<\/span> and <span class=\"math\">y = -2<\/span>", "<span class=\"math\">x = 5<\/span> and <span class=\"math\">y = 2<\/span>", "<span class=\"math\">x = 5<\/span> and <span class=\"math\">y = -2i<\/span>", "There is not enough information"], "c": 0, "why": "Equality of complex numbers is equality of both parts, so <span class=\"math\">x = 5<\/span> and <span class=\"math\">y = -2<\/span>. <span class=\"math\">y<\/span> was stated to be real, which rules out <span class=\"math\">-2i<\/span>; and one complex equation always pins down two real unknowns, which rules out the last option."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* A polynomial is a dense array of rationals, index = power of x, with the
+     zero polynomial as []. Nothing here is a special case for "nice" numbers:
+     the same routines divide 2x^3 - 3x + 1 by x - 1/2 as divide it by x - 1. */
+  function Pnorm(p) {
+    var out = p.slice();
+    while (out.length && Rzero(out[out.length - 1])) out.pop();
+    return out;
+  }
+  function Pdeg(p) { return Pnorm(p).length - 1; }
+  function Pzero(p) { return Pnorm(p).length === 0; }
+  function Plead(p) { var q = Pnorm(p); return q.length ? q[q.length - 1] : R0; }
+  function Padd(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Radd(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Psub(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Rsub(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Pmul(a, b) {
+    if (!a.length || !b.length) return [];
+    var out = [];
+    for (var i = 0; i < a.length + b.length - 1; i += 1) out.push(R0);
+    for (var j = 0; j < a.length; j += 1) {
+      for (var k = 0; k < b.length; k += 1) out[j + k] = Radd(out[j + k], Rmul(a[j], b[k]));
+    }
+    return Pnorm(out);
+  }
+  function Pscale(p, r) { return Pnorm(p.map(function (c) { return Rmul(c, r); })); }
+  function Ppow(p, k) { var out = [R1]; for (var i = 0; i < k; i += 1) out = Pmul(out, p); return out; }
+  function Peval(p, x) {
+    var acc = R0;
+    for (var i = p.length - 1; i >= 0; i -= 1) acc = Radd(Rmul(acc, x), p[i]);
+    return acc;
+  }
+  function Pderiv(p) {
+    var out = [];
+    for (var i = 1; i < p.length; i += 1) out.push(Rmul(p[i], R(BigInt(i))));
+    return Pnorm(out);
+  }
+  /* Long division, which is lesson material in its own right -- the step list a
+     lab shows IS this loop, printed. */
+  function Pdivmod(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    if (!b.length) throw new Error('division by the zero polynomial');
+    var q = [], r = a.slice(), steps = [];
+    var db = b.length - 1, lb = b[db];
+    while (Pnorm(r).length - 1 >= db && Pnorm(r).length) {
+      r = Pnorm(r);
+      var dr = r.length - 1, coef = Rdiv(r[dr], lb), shift = dr - db;
+      var term = [];
+      for (var i = 0; i < shift; i += 1) term.push(R0);
+      term.push(coef);
+      var product = Pmul(term, b);
+      steps.push({ term: Ptext(term), product: Ptext(product), before: Ptext(r) });
+      r = Psub(r, product);
+      q = Padd(q, term);
+    }
+    return { q: Pnorm(q), r: Pnorm(r), steps: steps };
+  }
+  function Pmonic(p) { var l = Plead(p); return Rzero(l) ? p : Pscale(p, Rinv(l)); }
+  function Pgcd(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    while (b.length) { var r = Pdivmod(a, b).r; a = b; b = r; }
+    return a.length ? Pmonic(a) : a;
+  }
+
+  /* Reader-facing form. The rules here are the ones a marker applies: an
+     implicit coefficient of 1 is not written, a negative term joins with a
+     minus rather than a plus, and a fractional coefficient is bracketed so
+     3/4x^2 can never be misread as 3/(4x^2). */
+  function Ptext(p, v) {
+    v = v || 'x';
+    p = Pnorm(p);
+    if (!p.length) return '0';
+    var out = '';
+    for (var i = p.length - 1; i >= 0; i -= 1) {
+      var c = p[i];
+      if (Rzero(c)) continue;
+      var neg = Rsign(c) < 0, mag = Rabs(c);
+      out += out === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      var one = Requ(mag, R1);
+      var coef = one && i > 0 ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+      var power = i === 0 ? '' : (i === 1 ? v : v + '^' + i);
+      out += coef + power;
+    }
+    return out;
+  }
+  /* Bracketed when it is a sum, so (x + 1)(x - 2) prints correctly. */
+  function Pfactortext(p, v) {
+    var t = Ptext(p, v);
+    return (t.indexOf(' + ') >= 0 || t.indexOf(' - ') >= 0) ? '(' + t + ')' : t;
+  }
+
+  /* ---- factoring over the rationals ----
+     The rational root theorem, applied rather than quoted: clear denominators,
+     list the divisors of the constant and leading terms, and TEST each
+     candidate. A reader who runs this on x^2 + 1 sees the search come back
+     empty, which is the point of the lesson that pairs with it. */
+  function bdivisors(n) {
+    if (n < 0n) n = -n;
+    if (n === 0n) return [];
+    var out = [], i = 1n;
+    while (i * i <= n) {
+      if (n % i === 0n) { out.push(i); if (i * i !== n) out.push(n / i); }
+      i += 1n;
+      if (out.length > 512) break;   /* lesson-sized numbers only; see Pfactor */
+    }
+    out.sort(function (a, b) { return a < b ? -1 : (a > b ? 1 : 0); });
+    return out;
+  }
+  /* The same polynomial with integer, coprime coefficients and a positive
+     leading term, plus the rational that was taken out. */
+  function Pprimitive(p) {
+    p = Pnorm(p);
+    if (!p.length) return { poly: [], content: R1 };
+    var den = 1n;
+    p.forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ints = p.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ints.forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    if (ints[ints.length - 1] < 0n) g = -g;
+    return {
+      poly: ints.map(function (v) { return R(v / g); }),
+      content: R(g, den)
+    };
+  }
+  function Prationalroots(p) {
+    var prim = Pprimitive(p).poly;
+    if (prim.length < 2) return [];
+    var roots = [], seen = {};
+    var a0 = prim[0].n, an = prim[prim.length - 1].n;
+    if (a0 === 0n) { roots.push(R0); seen['0/1'] = 1; }
+    var ps = bdivisors(a0 === 0n ? an : a0), qs = bdivisors(an);
+    for (var i = 0; i < ps.length; i += 1) {
+      for (var j = 0; j < qs.length; j += 1) {
+        for (var s = 0; s < 2; s += 1) {
+          var cand = R(s ? -ps[i] : ps[i], qs[j]);
+          var key = Rtext(cand);
+          if (seen[key]) continue;
+          seen[key] = 1;
+          if (Rzero(Peval(prim, cand))) roots.push(cand);
+        }
+      }
+    }
+    roots.sort(Rcmp);
+    return roots;
+  }
+  /* Full factorisation over Q: a rational content, integer linear factors with
+     their multiplicities, and whatever is left that has no rational root.
+     `complete` is false when the leftover is not linear or quadratic -- the lab
+     says so rather than implying the factorisation finished. */
+  function Pfactor(p) {
+    p = Pnorm(p);
+    if (!p.length) return { content: R0, factors: [], rest: [], complete: true };
+    var prim = Pprimitive(p);
+    var content = prim.content, work = prim.poly, factors = [];
+    var guard = 0;
+    while (Pdeg(work) > 0 && guard < 64) {
+      guard += 1;
+      var roots = Prationalroots(work);
+      if (!roots.length) break;
+      var r = roots[0];
+      /* root p/q  ->  integer factor (qx - p), which keeps every coefficient
+         whole and is the form the reader is asked to produce. */
+      var factor = [Rneg(R(r.n)), R(r.d)];
+      var mult = 0;
+      while (Pdeg(work) > 0) {
+        var dm = Pdivmod(work, factor);
+        if (!Pzero(dm.r)) break;
+        work = dm.q; mult += 1;
+      }
+      factors.push({ poly: factor, mult: mult, root: r });
+    }
+    /* Whatever scalar the integer divisions left behind belongs to the content. */
+    if (Pdeg(work) === 0) { content = Rmul(content, work[0]); work = [R1]; }
+    var rest = Pdeg(work) > 0 ? work : [];
+    return { content: content, factors: factors, rest: rest, complete: Pdeg(work) <= 2 };
+  }
+  function Pfactortextfull(p, v) {
+    var f = Pfactor(p);
+    if (!f.factors.length && !f.rest.length) return Rtext(f.content);
+    var pieces = [];
+    f.factors.forEach(function (item) { pieces.push({ poly: item.poly, mult: item.mult }); });
+    if (f.rest.length) pieces.push({ poly: f.rest, mult: 1 });
+    /* A polynomial that does not factor is written as itself. Bracketing a
+       lone factor -- "(x^2 + 1)" -- suggests something was multiplied by
+       something, which is the opposite of what that result says. */
+    if (pieces.length === 1 && pieces[0].mult === 1 && Requ(f.content, R1)) {
+      return Ptext(pieces[0].poly, v);
+    }
+    var out = '';
+    if (!Requ(f.content, R1)) out += Requ(f.content, R(-1n)) ? '-' : Rterm(f.content);
+    pieces.forEach(function (item) {
+      out += Pfactortext(item.poly, v) + (item.mult > 1 ? '^' + item.mult : '');
+    });
+    return out || '1';
+  }
+
+  /* Exact irrational answers.
+
+     sqrt(D) for a rational D is either rational or irrational, and the second
+     case is not a failure -- it is the answer. A lesson that solves
+     x^2 - 2x - 4 = 0 wants "1 +- sqrt(5)", not "3.2360679...", so the roots of
+     every quadratic on this path are carried as  p + q*sqrt(k)  with p and q
+     exact rationals and k a squarefree integer. */
+  function bsqrtsimp(n) {
+    /* n = s^2 * k with k squarefree; returns [s, k]. */
+    var s = 1n, k = n, f = 2n;
+    while (f * f <= k) {
+      while (k % (f * f) === 0n) { k /= f * f; s *= f; }
+      f += 1n;
+      if (f > 100000n) break;   /* lesson-sized radicands */
+    }
+    return [s, k];
+  }
+  /* sqrt(a) for a rational a >= 0, as { q, k } meaning q * sqrt(k). k === 1n
+     exactly when the root is rational. */
+  function Rsurd(a) {
+    if (a.n < 0n) return null;
+    if (a.n === 0n) return { q: R0, k: 1n };
+    /* sqrt(p/d) = sqrt(p*d)/d */
+    var pair = bsqrtsimp(a.n * a.d);
+    return { q: R(pair[0], a.d), k: pair[1] };
+  }
+  function surdtext(s) {
+    if (s.k === 1n) return Rtext(s.q);
+    if (Requ(s.q, R1)) return 'sqrt(' + s.k + ')';
+    return Rterm(s.q) + 'sqrt(' + s.k + ')';
+  }
+  /* "p +- q sqrt(k)", the form a reader is expected to write down. */
+  function pmtext(p, s, imaginary) {
+    var unit = imaginary ? 'i' : '';
+    if (s.k === 1n && Rzero(s.q)) return Rtext(p);
+    var mag = surdtext(s);
+    if (s.k !== 1n && Requ(Rabs(s.q), R1)) mag = 'sqrt(' + s.k + ')';
+    else if (s.k !== 1n) mag = Rterm(Rabs(s.q)) + 'sqrt(' + s.k + ')';
+    else mag = Rtext(Rabs(s.q));
+    var right = unit ? (mag === '1' ? 'i' : mag + 'i') : mag;
+    if (Rzero(p)) return '+-' + right;
+    return Rtext(p) + ' +- ' + right;
+  }
+  /* The exact roots of ax^2 + bx + c, whatever the discriminant does.
+     Returns { disc, kind, p, s, roots } where each root is p +- s (times i when
+     the discriminant is negative), and `roots` holds the rational ones only. */
+  function quadroots(a, b, c) {
+    var disc = Rsub(Rmul(b, b), Rmul(R(4n), Rmul(a, c)));
+    var p = Rdiv(Rneg(b), Rmul(R(2n), a));
+    var sign = Rsign(disc);
+    var mag = Rsurd(sign < 0 ? Rneg(disc) : disc);
+    var s = { q: Rdiv(mag.q, Rabs(Rmul(R(2n), a))), k: mag.k };
+    var kind = sign < 0 ? 'complex' : (sign === 0 ? 'double' : (s.k === 1n ? 'rational' : 'irrational'));
+    var roots = [];
+    if (kind === 'double') roots = [p];
+    else if (kind === 'rational') roots = [Radd(p, s.q), Rsub(p, s.q)].sort(Rcmp);
+    return { disc: disc, kind: kind, p: p, s: s, roots: roots };
+  }
+
+  /* The grapher.
+
+     Every curve on this path is SAMPLED from the function the lesson is about.
+     There is not one stored path string anywhere in these labs, which is what
+     makes a drawing evidence rather than decoration: when a lab prints a vertex
+     at (3, -4) and draws the parabola through it, the label and the picture
+     came out of the same evaluation and cannot disagree.
+
+     Coordinates are the one deliberate use of floating point here -- a pixel is
+     a pixel. Everything the reader is told in words comes from the exact side. */
+  var PLOT_W = 660, PLOT_H = 420, PAD_L = 44, PAD_R = 16, PAD_T = 16, PAD_B = 34;
+
+  function svgel(name, attrs) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  /* A grid step a reader can count on: 1, 2 or 5 times a power of ten, chosen
+     so the axis carries roughly eight divisions whatever the window is. */
+  function nicestep(span) {
+    var raw = span / 8, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+    var n = raw / mag;
+    return (n < 1.5 ? 1 : (n < 3.5 ? 2 : (n < 7.5 ? 5 : 10))) * mag;
+  }
+  function ticktext(v, step) {
+    if (Math.abs(v) < step / 1000) return '0';
+    var places = Math.max(0, -Math.floor(Math.log(step) / Math.LN10));
+    return v.toFixed(Math.min(places, 4)).replace(/\.?0+$/, function (m) {
+      return m.indexOf('.') === 0 ? '' : m;
+    });
+  }
+
+  function Plot(svg, win) {
+    var xmin = win.xmin, xmax = win.xmax, ymin = win.ymin, ymax = win.ymax;
+    var iw = PLOT_W - PAD_L - PAD_R, ih = PLOT_H - PAD_T - PAD_B;
+    svg.setAttribute('viewBox', '0 0 ' + PLOT_W + ' ' + PLOT_H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+
+    function sx(x) { return PAD_L + (x - xmin) / (xmax - xmin) * iw; }
+    function sy(y) { return PAD_T + (ymax - y) / (ymax - ymin) * ih; }
+
+    var defs = svgel('defs', {});
+    var clip = svgel('clipPath', { id: 'plotclip' });
+    clip.appendChild(svgel('rect', { x: PAD_L, y: PAD_T, width: iw, height: ih }));
+    defs.appendChild(clip);
+    svg.appendChild(defs);
+
+    var plotted = svgel('g', { 'clip-path': 'url(#plotclip)' });
+
+    var api = {
+      sx: sx, sy: sy, win: win,
+      /* Grid, axes, ticks. Drawn first so every curve sits on top of them. */
+      frame: function () {
+        var gx = nicestep(xmax - xmin), gy = nicestep(ymax - ymin);
+        var g = svgel('g', {});
+        var start = Math.ceil(xmin / gx) * gx, v;
+        for (v = start; v <= xmax + gx / 2; v += gx) {
+          if (Math.abs(v) < gx / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: sx(v), y1: PAD_T, x2: sx(v), y2: PAD_T + ih }));
+        }
+        start = Math.ceil(ymin / gy) * gy;
+        for (v = start; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: PAD_L, y1: sy(v), x2: PAD_L + iw, y2: sy(v) }));
+        }
+        /* The axes sit at zero when zero is in view and at the near edge when
+           it is not, so a window like 10 <= x <= 20 still has a labelled frame
+           rather than two axes drawn off-screen. */
+        var ay = ymin <= 0 && ymax >= 0 ? sy(0) : (ymin > 0 ? PAD_T + ih : PAD_T);
+        var ax = xmin <= 0 && xmax >= 0 ? sx(0) : (xmin > 0 ? PAD_L : PAD_L + iw);
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: PAD_L, y1: ay, x2: PAD_L + iw, y2: ay }));
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: ax, y1: PAD_T, x2: ax, y2: PAD_T + ih }));
+        for (v = Math.ceil(xmin / gx) * gx; v <= xmax + gx / 2; v += gx) {
+          var tx = svgel('text', { class: 'plot-tick', x: sx(v), y: PAD_T + ih + 15, 'text-anchor': 'middle' });
+          tx.textContent = ticktext(v, gx);
+          g.appendChild(tx);
+        }
+        for (v = Math.ceil(ymin / gy) * gy; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          var ty = svgel('text', { class: 'plot-tick', x: PAD_L - 7, y: sy(v) + 3.5, 'text-anchor': 'end' });
+          ty.textContent = ticktext(v, gy);
+          g.appendChild(ty);
+        }
+        svg.appendChild(g);
+        svg.appendChild(plotted);
+        return api;
+      },
+      /* Sample the function across the drawing width and join the samples.
+         A segment is BROKEN where the value stops being a real number and
+         where it jumps by more than three window heights between neighbouring
+         pixels -- that jump is a pole, and joining across it would draw a
+         vertical line that is not part of the graph. Readers meet exactly that
+         line in every graphing tool, and it is the reason they think 1/x is
+         connected. */
+      curve: function (fn, cls) {
+        var runs = [], run = [], prev = null, steps = 480;
+        for (var i = 0; i <= steps; i += 1) {
+          var x = xmin + (xmax - xmin) * i / steps, y = fn(x);
+          if (typeof y !== 'number' || !isFinite(y)) { if (run.length > 1) runs.push(run); run = []; prev = null; continue; }
+          if (prev !== null && Math.abs(y - prev) > 3 * (ymax - ymin)) {
+            if (run.length > 1) runs.push(run);
+            run = [];
+          }
+          run.push(sx(x) + ',' + sy(Math.max(ymin - (ymax - ymin), Math.min(ymax + (ymax - ymin), y))));
+          prev = y;
+        }
+        if (run.length > 1) runs.push(run);
+        runs.forEach(function (pts) {
+          plotted.appendChild(svgel('polyline', { class: cls || 'plot-curve', points: pts.join(' ') }));
+        });
+        return api;
+      },
+      point: function (x, y, cls, label) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: cls || 'plot-point', cx: sx(x), cy: sy(y), r: 5 }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 9, y: sy(y) - 8 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hole: function (x, y) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: 'plot-hole', cx: sx(x), cy: sy(y), r: 5 }));
+        return api;
+      },
+      vline: function (x, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: sx(x), y1: PAD_T, x2: sx(x), y2: PAD_T + ih }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 6, y: PAD_T + 14 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hline: function (y, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: PAD_L, y1: sy(y), x2: PAD_L + iw, y2: sy(y) }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: PAD_L + 6, y: sy(y) - 6 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      segment: function (x1, y1, x2, y2, cls) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-aux', x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2) }));
+        return api;
+      },
+      /* The solution set of an inequality, shaded by testing the predicate on
+         a grid of sample points rather than by reasoning about the boundary. */
+      shade: function (test, cls) {
+        var cols = 90, rows = 58;
+        for (var i = 0; i < cols; i += 1) {
+          for (var j = 0; j < rows; j += 1) {
+            var x = xmin + (xmax - xmin) * (i + 0.5) / cols;
+            var y = ymin + (ymax - ymin) * (j + 0.5) / rows;
+            if (!test(x, y)) continue;
+            plotted.appendChild(svgel('rect', {
+              class: cls || 'plot-shade', x: sx(x) - iw / cols / 2, y: sy(y) - ih / rows / 2,
+              width: iw / cols + 0.6, height: ih / rows + 0.6
+            }));
+          }
+        }
+        return api;
+      },
+      label: function (x, y, text, cls) {
+        var t = svgel('text', { class: cls || 'plot-label', x: sx(x), y: sy(y) });
+        t.textContent = text;
+        plotted.appendChild(t);
+        return api;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return api; }
+    };
+    return api;
+  }
+
+  /* A one-dimensional cousin: the number line every inequality lesson needs. */
+  function NumberLine(svg, lo, hi) {
+    var W = 660, H = 88, pad = 30, iw = W - 2 * pad;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+    function sx(x) { return pad + (x - lo) / (hi - lo) * iw; }
+    svg.appendChild(svgel('line', { class: 'plot-axis', x1: pad, y1: 44, x2: W - pad, y2: 44 }));
+    var step = nicestep(hi - lo);
+    for (var v = Math.ceil(lo / step) * step; v <= hi + step / 2; v += step) {
+      svg.appendChild(svgel('line', { class: 'plot-tickmark', x1: sx(v), y1: 38, x2: sx(v), y2: 50 }));
+      var t = svgel('text', { class: 'plot-tick', x: sx(v), y: 68, 'text-anchor': 'middle' });
+      t.textContent = ticktext(v, step);
+      svg.appendChild(t);
+    }
+    return {
+      sx: sx,
+      /* Closed ends are filled, open ends are hollow -- the distinction the
+         lesson is usually about. */
+      interval: function (a, b, closedA, closedB) {
+        var x1 = sx(Math.max(a, lo)), x2 = sx(Math.min(b, hi));
+        svg.appendChild(svgel('line', { class: 'plot-interval', x1: x1, y1: 44, x2: x2, y2: 44 }));
+        if (a >= lo) svg.appendChild(svgel('circle', { class: closedA ? 'plot-end closed' : 'plot-end open', cx: x1, cy: 44, r: 6 }));
+        if (b <= hi) svg.appendChild(svgel('circle', { class: closedB ? 'plot-end closed' : 'plot-end open', cx: x2, cy: 44, r: 6 }));
+        return this;
+      },
+      point: function (x, closed) {
+        svg.appendChild(svgel('circle', { class: closed ? 'plot-end closed' : 'plot-end open', cx: sx(x), cy: 44, r: 6 }));
+        return this;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return this; }
+    };
+  }
+
+  /* ---- complex numbers with exact rational parts ----
+
+     { a, b } meaning a + bi, with a and b rationals from RATIONAL_JS. Nothing
+     here is a float, which is the only way (1 + 2i)/(3 - i) can come back as
+     1/10 + 7/10 i instead of 0.1 + 0.7000000000000001 i. The Argand plane is
+     the one place a coordinate becomes a float, and only to become a pixel. */
+  function Cnew(a, b) { return { a: a, b: b }; }
+  var C0 = Cnew(R0, R0), C1 = Cnew(R1, R0), CI = Cnew(R0, R1);
+  function Cadd(z, w) { return Cnew(Radd(z.a, w.a), Radd(z.b, w.b)); }
+  function Csub(z, w) { return Cnew(Rsub(z.a, w.a), Rsub(z.b, w.b)); }
+  /* (a + bi)(c + di) = (ac - bd) + (ad + bc)i. The minus sign is i^2 = -1 and
+     nothing else; it is the only place the definition is used. */
+  function Cmul(z, w) {
+    return Cnew(Rsub(Rmul(z.a, w.a), Rmul(z.b, w.b)), Radd(Rmul(z.a, w.b), Rmul(z.b, w.a)));
+  }
+  function Cneg(z) { return Cnew(Rneg(z.a), Rneg(z.b)); }
+  function Cconj(z) { return Cnew(z.a, Rneg(z.b)); }
+  function Czero(z) { return Rzero(z.a) && Rzero(z.b); }
+  function Cequ(z, w) { return Requ(z.a, w.a) && Requ(z.b, w.b); }
+  /* z * conj(z) = a^2 + b^2, a RATIONAL number. That fact is the whole method
+     for division, so it is computed rather than assumed anywhere below. */
+  function Cabs2(z) { return Radd(Rmul(z.a, z.a), Rmul(z.b, z.b)); }
+  function Cdiv(z, w) {
+    var m = Cabs2(w);
+    if (Rzero(m)) return null;
+    var t = Cmul(z, Cconj(w));
+    return Cnew(Rdiv(t.a, m), Rdiv(t.b, m));
+  }
+  function Cpow(z, k) { var out = C1, i; for (i = 0; i < k; i += 1) out = Cmul(out, z); return out; }
+  /* The imaginary part as a reader writes it: i, -i, 3i, (-3/4)i -- never 1i
+     and never 3*i. */
+  function Cimtext(b) {
+    if (Requ(b, R1)) return 'i';
+    if (Requ(b, R(-1n))) return '-i';
+    return (Rint(b) ? Rtext(b) : '(' + Rtext(b) + ')') + 'i';
+  }
+  function Ctext(z) {
+    if (Rzero(z.b)) return Rtext(z.a);
+    if (Rzero(z.a)) return Cimtext(z.b);
+    var mag = Rabs(z.b);
+    var piece = Requ(mag, R1) ? 'i' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')') + 'i';
+    return Rtext(z.a) + (Rsign(z.b) < 0 ? ' - ' : ' + ') + piece;
+  }
+  /* |z| exactly: sqrt of a rational, which is rational when it can be and a
+     surd when it cannot. sqrt(25) is 5 and belongs on the page as 5. */
+  function Cmod(z) { return Rsurd(Cabs2(z)); }
+  function Cx(z) { return Rnum(z.a); }
+  function Cy(z) { return Rnum(z.b); }
+
+  var MODE = 'intro', NFIELDS = 2;
+
+  var preset = document.getElementById('cxPreset');
+  var inputs = [document.getElementById('cxA'), document.getElementById('cxB')];
+  if (NFIELDS > 2) inputs.push(document.getElementById('cxC'));
+  if (NFIELDS > 3) inputs.push(document.getElementById('cxD'));
+  var work = document.getElementById('cxWork');
+  var status = document.getElementById('cxStatus');
+  var titleOut = document.getElementById('cxTitle');
+  var subOut = document.getElementById('cxSub');
+  var svg = document.getElementById('cxPlot');
+  var kval = [document.getElementById('cxK1'), document.getElementById('cxK2'), document.getElementById('cxK3')];
+  var klab = [document.getElementById('cxK1Lab'), document.getElementById('cxK2Lab'), document.getElementById('cxK3Lab')];
+  var LABELS = ['Real part  a', 'Imaginary part  b'];
+
+  function esc(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function row(label, detail) {
+    return '<tr><th class="rowhead">' + label + '</th><td style="text-align:left;">' + detail + '</td></tr>';
+  }
+  function focusrow(label, detail) {
+    return '<tr class="focus"><th class="rowhead">' + label + '</th><td style="text-align:left;">' + detail + '</td></tr>';
+  }
+  function table(caption, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption
+      + '</caption><tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  function chip(kind, text) { return '<span class="chip ' + kind + '">' + text + '</span>'; }
+  function setkpi(list) {
+    for (var i = 0; i < 3; i += 1) { klab[i].textContent = list[i][0]; kval[i].textContent = list[i][1]; }
+  }
+  /* " + 3i" or " - 6i", never " + -6i" and never "1i". */
+  function addend(r, unit) {
+    var mag = Rabs(r);
+    var body = (Requ(mag, R1) ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')')) + unit;
+    return (Rsign(r) < 0 ? ' - ' : ' + ') + body;
+  }
+
+  /* Rparse throws on 1/0 rather than returning null, so both outcomes are
+     caught here and answered in words. */
+  function readR(el, label) {
+    var s = String(el.value === undefined || el.value === null ? '' : el.value).trim();
+    if (!s) {
+      return { ok: false, msg: '<strong>' + label + ' is empty.</strong> Every part here is an exact '
+        + 'rational number: type a whole number such as <code>3</code>, a negative such as '
+        + '<code>-2</code>, or a fraction such as <code>-3/4</code>.' };
+    }
+    var v = null;
+    try { v = Rparse(s); } catch (err) { v = null; }
+    if (v === null) {
+      return { ok: false, msg: '<strong>' + label + ' is not a number this lab can hold exactly: &ldquo;'
+        + esc(s) + '&rdquo;.</strong> Whole numbers, negatives, decimals and fractions such as '
+        + '<code>-3/4</code> all work. A fraction with 0 underneath does not, and neither does a letter '
+        + '&mdash; every value here has to be exact, because the whole point is that 1/3 stays 1/3.' };
+    }
+    return { ok: true, r: v };
+  }
+
+  /* One unit is the same number of pixels along both axes, so a right angle in
+     the plane is a right angle on the screen. The drawing area is 600 x 370. */
+  function argand(points) {
+    var xs = [0], ys = [0];
+    points.forEach(function (p) {
+      if (isFinite(p.x) && isFinite(p.y)) { xs.push(p.x); ys.push(p.y); }
+    });
+    var xmin = Math.min.apply(null, xs), xmax = Math.max.apply(null, xs);
+    var ymin = Math.min.apply(null, ys), ymax = Math.max.apply(null, ys);
+    var ratio = 600 / 370;
+    var halfY = Math.max((ymax - ymin) / 2, (xmax - xmin) / 2 / ratio, 1) * 1.45;
+    var halfX = halfY * ratio;
+    var cx = (xmin + xmax) / 2, cy = (ymin + ymax) / 2;
+    var plot = Plot(svg, { xmin: cx - halfX, xmax: cx + halfX, ymin: cy - halfY, ymax: cy + halfY });
+    plot.frame();
+    return plot;
+  }
+
+  /* ================================================================= intro */
+  function modeIntro(z) {
+    var m2 = Cabs2(z), m = Cmod(z);
+    var blocks = [];
+    blocks.push(table('The number, and its two parts', [
+      row('z', Ctext(z)),
+      row('real part  Re(z)', Rtext(z.a)),
+      row('imaginary part  Im(z)', Rtext(z.b) + (Rzero(z.b)
+        ? ' &mdash; there is no imaginary part, which is what makes this a real number'
+        : ' &mdash; the imaginary part is the real number ' + Rtext(z.b) + ', not ' + Cimtext(z.b)
+          + '. That distinction is the one every later formula relies on.')),
+      row('as a point', '(' + Rtext(z.a) + ', ' + Rtext(z.b) + ') on the Argand plane above'),
+      row('is it real?', Rzero(z.b) ? chip('ok', 'yes') + ' a real number is the special case b = 0'
+        : chip('no', 'no') + ' the imaginary part is ' + Rtext(z.b)),
+      row('is it pure imaginary?', Rzero(z.a) && !Rzero(z.b) ? chip('ok', 'yes')
+        : chip('no', 'no') + ' the real part is ' + Rtext(z.a))
+    ]));
+
+    var conj = Cconj(z), neg = Cneg(z);
+    blocks.push(table('Conjugate and negative, and what each one is for', [
+      row('conjugate  conj(z)', Ctext(conj) + ' &mdash; the reflection of z in the real axis'),
+      row('negative  -z', Ctext(neg) + ' &mdash; the same point turned through half a revolution'),
+      row('z + conj(z)', Ctext(Cadd(z, conj)) + ' &mdash; always real, and always 2 &times; Re(z)'),
+      row('z - conj(z)', Ctext(Csub(z, conj)) + ' &mdash; always pure imaginary'),
+      focusrow('z &times; conj(z)', Rtext(m2) + ' &mdash; always a real number, and equal to '
+        + 'a^2 + b^2 = ' + Rtext(Rmul(z.a, z.a)) + ' + ' + Rtext(Rmul(z.b, z.b))
+        + '. This is the fact that makes division possible at all.')
+    ]));
+
+    var modText = m.k === 1n
+      ? surdtext(m) + ' &mdash; exact, because ' + Rtext(m2) + ' is a perfect square'
+      : surdtext(m) + ' &mdash; irrational, so this is the answer. Rounded it is about '
+        + Math.sqrt(Rnum(m2)).toFixed(6) + ', and that decimal is a rounding of the exact value, not the value.';
+    blocks.push(table('Modulus', [
+      row('|z|^2 = a^2 + b^2', Rtext(m2)),
+      focusrow('|z|', modText),
+      row('|conj(z)|', 'the same: reflecting in the real axis cannot change a distance from the origin')
+    ]));
+
+    /* The cycle is FOUND by multiplying, not quoted from a table. */
+    var pw = C1, irows = [];
+    for (var k = 0; k <= 7; k += 1) {
+      irows.push(row('i^' + k, Ctext(pw) + (k > 0 ? '  &nbsp;(= i^' + (k - 1) + ' &times; i)' : '  &nbsp;(anything to the power 0)')));
+      pw = Cmul(pw, CI);
+    }
+    blocks.push(table('The powers of i, each one computed from the one before it', irows));
+
+    var zp = C1, zrows = [];
+    for (k = 1; k <= 5; k += 1) {
+      zp = Cmul(zp, z);
+      zrows.push(row('z^' + k, Ctext(zp) + ' &nbsp;&nbsp;|z^' + k + '|^2 = ' + Rtext(Cabs2(zp))));
+    }
+    blocks.push(table('Powers of z, by repeated multiplication', zrows));
+
+    var pts = [{ x: Cx(z), y: Cy(z) }, { x: Cx(conj), y: Cy(conj) }, { x: Cx(neg), y: Cy(neg) }];
+    var plot = argand(pts);
+    plot.segment(0, 0, Cx(z), Cy(z), 'plot-aux');
+    plot.segment(0, 0, Cx(conj), Cy(conj), 'plot-aux');
+    plot.point(Cx(z), Cy(z), 'plot-point', 'z = ' + Ctext(z));
+    plot.point(Cx(conj), Cy(conj), 'plot-point root', 'conj(z)');
+    plot.point(Cx(neg), Cy(neg), 'plot-point vertex', '-z');
+    plot.describe('The Argand plane with z at (' + Rtext(z.a) + ', ' + Rtext(z.b)
+      + '), its conjugate reflected in the real axis, and its negative opposite the origin.');
+
+    var msg;
+    if (Rzero(z.b)) {
+      msg = '<strong>' + Ctext(z) + ' is a real number, and it is also a complex number.</strong> '
+        + 'Its imaginary part is 0, it sits on the horizontal axis, and it is its own conjugate. '
+        + 'The reals are not a separate system that complex numbers replaced &mdash; they are the '
+        + 'horizontal line through the middle of this plane.';
+    } else if (Rzero(z.a)) {
+      msg = '<strong>' + Ctext(z) + ' is pure imaginary: it sits on the vertical axis.</strong> '
+        + 'Squaring it gives ' + Ctext(Cmul(z, z)) + ', a real number, and a negative one. '
+        + 'That is the property the reals could not supply and the reason this plane exists.';
+    } else {
+      msg = '<strong>' + Ctext(z) + ' is at (' + Rtext(z.a) + ', ' + Rtext(z.b) + ') with modulus '
+        + surdtext(m) + '.</strong> Look at the powers table: ' + Ctext(z) + ' squared is '
+        + Ctext(Cmul(z, z)) + ', and the modulus squared each time &mdash; |z^2|^2 = '
+        + Rtext(Cabs2(Cmul(z, z))) + ' = ' + Rtext(m2) + '^2. Multiplying complex numbers multiplies '
+        + 'their distances from the origin, which is why the powers march away from or towards 0 and '
+        + 'never wander.';
+    }
+    return {
+      title: 'z = ' + Ctext(z),
+      sub: 'Re = ' + Rtext(z.a) + ',  Im = ' + Rtext(z.b) + ',  |z| = ' + surdtext(m),
+      blocks: blocks,
+      status: msg,
+      kpi: [['|z|', surdtext(m)], ['z &times; conj(z)', Rtext(m2)], ['z + conj(z)', Ctext(Cadd(z, conj))]]
+    };
+  }
+
+  /* ================================================================= arith */
+  function modeArith(z, w) {
+    var sum = Cadd(z, w), diff = Csub(z, w), prod = Cmul(z, w);
+    var conj = Cconj(w), m2 = Cabs2(w);
+    var quot = Cdiv(z, w);
+    var blocks = [];
+
+    blocks.push(table('Adding and subtracting: the parts never mix', [
+      row('z + w', '(' + Rtext(z.a) + ' + ' + Rterm(w.a) + ') + (' + Rtext(z.b) + ' + ' + Rterm(w.b)
+        + ')i = ' + Ctext(sum)),
+      row('z - w', '(' + Rtext(z.a) + ' - ' + Rterm(w.a) + ') + (' + Rtext(z.b) + ' - ' + Rterm(w.b)
+        + ')i = ' + Ctext(diff)),
+      row('on the plane', 'z + w is the fourth corner of the parallelogram with corners 0, z and w &mdash; '
+        + 'drawn above with dashed sides')
+    ]));
+
+    var ac = Rmul(z.a, w.a), ad = Rmul(z.a, w.b), bc = Rmul(z.b, w.a), bd = Rmul(z.b, w.b);
+    blocks.push(table('Multiplying: ordinary expansion, and then i^2 = -1', [
+      row('expand', '(' + Ctext(z) + ')(' + Ctext(w) + ')'),
+      row('four products', Rtext(ac) + addend(ad, 'i') + addend(bc, 'i') + addend(bd, 'i^2')),
+      focusrow('replace i^2 by -1', 'the i^2 term is ' + Rterm(bd) + ' &times; i^2 = ' + Rterm(bd)
+        + ' &times; (-1) = ' + Rtext(Rneg(bd))
+        + ', which is why the real part loses bd rather than gaining it'),
+      row('collect', 'real: ' + Rtext(ac) + ' - ' + Rterm(bd) + ' = ' + Rtext(Rsub(ac, bd))
+        + '&nbsp;&nbsp;&nbsp;imaginary: ' + Rtext(ad) + ' + ' + Rterm(bc) + ' = ' + Rtext(Radd(ad, bc))),
+      focusrow('z &times; w', Ctext(prod))
+    ]));
+
+    var r3 = [
+      row('conj(w)', Ctext(conj)),
+      focusrow('w &times; conj(w)', Rtext(m2) + ' &mdash; a real number, computed as '
+        + Rtext(Rmul(w.a, w.a)) + ' + ' + Rtext(Rmul(w.b, w.b)))
+    ];
+    if (quot === null) {
+      r3.push(row('divide by it?', chip('no', 'not possible')
+        + ' w is 0, so conj(w) is 0 and w &times; conj(w) is 0. The trick turns the bottom into a real '
+        + 'number, and here that real number is 0 &mdash; which is exactly as forbidden in the complex '
+        + 'numbers as it is in the reals. Adding i did not repeal division by zero.'));
+    } else {
+      var t = Cmul(z, conj);
+      r3.push(row('multiply top and bottom by conj(w)', '(' + Ctext(z) + ')(' + Ctext(conj)
+        + ') over (' + Ctext(w) + ')(' + Ctext(conj) + ')'));
+      r3.push(row('numerator', Ctext(t)));
+      r3.push(row('denominator', Rtext(m2) + ' &mdash; real, so the division is now two ordinary divisions'));
+      r3.push(focusrow('z &divide; w', '(' + Ctext(t) + ') / ' + Rtext(m2)
+        + ' &mdash; divide each part by ' + Rtext(m2) + ' &mdash; = ' + Ctext(quot)));
+    }
+    blocks.push(table('Dividing: turn the bottom into a real number', r3));
+
+    if (quot !== null) {
+      var back = Cmul(quot, w);
+      blocks.push(table('Check the division by undoing it', [
+        row('(z &divide; w) &times; w', '(' + Ctext(quot) + ')(' + Ctext(w) + ') = ' + Ctext(back)),
+        row('z', Ctext(z)),
+        focusrow('equal?', Cequ(back, z)
+          ? chip('ok', 'yes') + ' the product was computed from the quotient without looking at z, so '
+            + 'this is a check rather than a restatement'
+          : chip('no', 'no') + ' this should never appear')
+      ]));
+    }
+
+    var pts = [{ x: Cx(z), y: Cy(z) }, { x: Cx(w), y: Cy(w) }, { x: Cx(sum), y: Cy(sum) },
+               { x: Cx(prod), y: Cy(prod) }];
+    if (quot !== null) pts.push({ x: Cx(quot), y: Cy(quot) });
+    var plot = argand(pts);
+    plot.segment(0, 0, Cx(z), Cy(z), 'plot-aux');
+    plot.segment(0, 0, Cx(w), Cy(w), 'plot-aux');
+    plot.segment(Cx(z), Cy(z), Cx(sum), Cy(sum), 'plot-aux');
+    plot.segment(Cx(w), Cy(w), Cx(sum), Cy(sum), 'plot-aux');
+    plot.point(Cx(z), Cy(z), 'plot-point', 'z');
+    plot.point(Cx(w), Cy(w), 'plot-point', 'w');
+    plot.point(Cx(sum), Cy(sum), 'plot-point root', 'z + w');
+    plot.point(Cx(prod), Cy(prod), 'plot-point vertex', 'z x w');
+    if (quot !== null) plot.point(Cx(quot), Cy(quot), 'plot-point vertex', 'z / w');
+    plot.describe('The Argand plane with z, w, their sum at the fourth corner of a parallelogram, '
+      + 'their product and their quotient.');
+
+    var msg;
+    if (quot === null) {
+      msg = '<strong>w = 0, so z &divide; w does not exist.</strong> Everything else on this page still '
+        + 'works: the sum is ' + Ctext(sum) + ' and the product is ' + Ctext(prod) + ', which is 0 '
+        + 'because a product is 0 exactly when one of its factors is. Division is the one operation '
+        + 'complex numbers did not make more forgiving, and a lab that quietly printed a number here '
+        + 'would be teaching the opposite of that.';
+    } else if (Rzero(w.a) && !Rzero(w.b)) {
+      msg = '<strong>Dividing by ' + Ctext(w) + ': the obvious wrong move is to divide the parts.</strong> '
+        + 'Re(z)/Re(w) is ' + Rtext(z.a) + '/0, which is not a number, and yet z &divide; w = '
+        + Ctext(quot) + ' is perfectly ordinary. Division is not done part by part; it is done by '
+        + 'multiplying above and below by conj(w) = ' + Ctext(conj) + ', which turns the bottom into the '
+        + 'real number ' + Rtext(m2) + '.';
+    } else if (Cequ(z, Cconj(w)) || Requ(prod.b, R0)) {
+      msg = '<strong>' + Ctext(z) + ' times ' + Ctext(w) + ' is ' + Ctext(prod)
+        + ', a real number.</strong> Two numbers that are not real multiplied to one that is: the '
+        + 'imaginary parts, ' + Rtext(ad) + ' and ' + Rtext(bc) + ', cancelled. That is not a '
+        + 'coincidence when w is the conjugate of z, and it is the mechanism the division below uses.';
+    } else {
+      msg = '<strong>z &times; w = ' + Ctext(prod) + ' and z &divide; w = ' + Ctext(quot) + '.</strong> '
+        + 'Both parts of the quotient are exact fractions over ' + Rtext(m2) + ', which is w &times; conj(w). '
+        + 'The multiplication row above shows where the minus sign in the real part comes from: it is '
+        + 'the single substitution i^2 = -1, applied once.';
+    }
+    return {
+      title: 'z = ' + Ctext(z) + ',  w = ' + Ctext(w),
+      sub: 'z + w = ' + Ctext(sum) + ',  z x w = ' + Ctext(prod),
+      blocks: blocks,
+      status: msg,
+      kpi: [['z &times; w', Ctext(prod)], ['z &divide; w', quot === null ? 'undefined' : Ctext(quot)],
+            ['Check', quot === null ? 'n/a' : (Cequ(Cmul(quot, w), z) ? 'passes' : 'FAILS')]]
+    };
+  }
+
+  /* ================================================================= roots */
+  function modeRoots(a, b, c) {
+    if (Rzero(a)) {
+      return { fail: '<strong>With a = 0 this is not a quadratic, so there is no pair of roots to find.</strong> '
+        + Ptext([c, b]) + ' = 0 is linear and has one solution. Every formula below divides by a, which '
+        + 'is precisely why the definition of a quadratic insists a is not 0.' };
+    }
+    var r = quadroots(a, b, c);
+    var poly = [c, b, a];
+    /* s^2, where each root is p +- s (times i when the discriminant is
+       negative). It is rational whichever case we are in, which is what makes
+       the sum and product of the pair rational as well. */
+    var sq = Rmul(Rmul(r.s.q, r.s.q), R(BigInt(r.s.k)));
+    var sum = Rmul(R(2n), r.p);
+    var prod = r.kind === 'complex' ? Radd(Rmul(r.p, r.p), sq) : Rsub(Rmul(r.p, r.p), sq);
+    var rootText = r.kind === 'complex' ? pmtext(r.p, r.s, true) : pmtext(r.p, r.s);
+    var blocks = [];
+
+    blocks.push(table('Step 1 &middot; the discriminant decides which world the roots live in', [
+      row('the quadratic', Ptext(poly) + ' = 0'),
+      row('b^2 - 4ac', Rtext(Rmul(b, b)) + ' - ' + Rtext(Rmul(R(4n), Rmul(a, c))) + ' = ' + Rtext(r.disc)),
+      focusrow('verdict', r.kind === 'complex'
+        ? chip('hi', 'negative') + ' no real root, and exactly two complex ones'
+        : (r.kind === 'double'
+            ? chip('no', 'zero') + ' one repeated REAL root, and no complex pair at all'
+            : chip('no', 'positive') + ' two REAL roots, and again no complex pair'))
+    ]));
+
+    var r2 = [
+      row('x = (-b +- sqrt(b^2 - 4ac)) / 2a', '(' + Rtext(Rneg(b)) + ' +- sqrt(' + Rtext(r.disc)
+        + ')) / ' + Rtext(Rmul(R(2n), a)))
+    ];
+    if (r.kind === 'complex') {
+      r2.push(row('sqrt of a negative', 'sqrt(' + Rtext(r.disc) + ') = sqrt(' + Rtext(Rneg(r.disc))
+        + ') &middot; i = ' + surdtext(Rsurd(Rneg(r.disc))) + 'i &mdash; this is the step that needs i to exist'));
+      r2.push(focusrow('the conjugate pair', 'x = ' + rootText));
+      var imtxt = surdtext(r.s);
+      var imwhole = imtxt === '1' ? 'i' : imtxt + 'i';
+      r2.push(row('the two roots, separately',
+        'r1 = ' + (Rzero(r.p) ? imwhole : Rtext(r.p) + ' + ' + imwhole)
+        + '&nbsp;&nbsp;&nbsp;r2 = ' + (Rzero(r.p) ? '-' + imwhole : Rtext(r.p) + ' - ' + imwhole)));
+      r2.push(row('why they come in pairs', 'a, b and c are real, so conjugating the whole equation '
+        + 'changes nothing on the right and turns one root into the other. A real quadratic cannot have '
+        + 'just one non-real root.'));
+    } else if (r.kind === 'double') {
+      r2.push(focusrow('one repeated root', 'x = ' + Rtext(r.p)));
+    } else {
+      r2.push(focusrow('two real roots', 'x = ' + rootText));
+    }
+    blocks.push(table('Step 2 &middot; the roots', r2));
+
+    /* The proof: multiply the pair back together and see the quadratic
+       reappear. Sum and product are computed from p and s alone. */
+    var monic = [prod, Rneg(sum), R1];
+    var rebuilt = Pscale(monic, a);
+    var same = Pzero(Psub(rebuilt, Pnorm(poly)));
+    var r3 = [
+      row('(x - r1)(x - r2)', 'x^2 - (r1 + r2)x + r1&middot;r2'),
+      row('r1 + r2', r.kind === 'complex'
+        ? '(' + Rtext(r.p) + ' + ' + surdtext(r.s) + 'i) + (' + Rtext(r.p) + ' - ' + surdtext(r.s)
+          + 'i) = ' + Rtext(sum) + ' &mdash; the imaginary parts cancel'
+        : Rtext(sum)),
+      row('r1 &middot; r2', r.kind === 'complex'
+        ? '(' + Rtext(r.p) + ')^2 + (' + surdtext(r.s) + ')^2 = ' + Rtext(Rmul(r.p, r.p)) + ' + '
+          + Rtext(sq) + ' = ' + Rtext(prod)
+          + ' &mdash; a difference of squares with i^2 = -1 in it, so the two minus signs make a plus'
+        : Rtext(Rmul(r.p, r.p)) + ' - ' + Rtext(sq) + ' = ' + Rtext(prod)),
+      row('so the monic quadratic is', Ptext(monic) + ' = 0'),
+      row('multiply by a = ' + Rtext(a), Ptext(rebuilt)),
+      focusrow('is that the quadratic we started with?', same
+        ? chip('ok', 'yes') + ' ' + Ptext(rebuilt) + ' is exactly ' + Ptext(poly)
+          + '. The roots were built from a, b and c; multiplying them back reproduces a, b and c, and '
+          + 'nothing in between was copied from anything else.'
+        : chip('no', 'no') + ' this should never appear')
+    ];
+    blocks.push(table('Step 3 &middot; multiply the roots back together', r3));
+
+    var vietaSum = Rdiv(Rneg(b), a), vietaProd = Rdiv(c, a);
+    blocks.push(table('Step 4 &middot; the same two numbers, straight from the coefficients', [
+      row('-b/a', Rtext(vietaSum)),
+      row('r1 + r2 from step 3', Rtext(sum)),
+      row('c/a', Rtext(vietaProd)),
+      row('r1 &middot; r2 from step 3', Rtext(prod)),
+      focusrow('agree?', (Requ(vietaSum, sum) && Requ(vietaProd, prod))
+        ? chip('ok', 'both') + ' two independent routes to the sum and the product of the roots, '
+          + 'and they land on the same rationals'
+        : chip('no', 'no') + ' this should never appear')
+    ]));
+
+    var pts = [];
+    var im = Rnum(r.s.q) * Math.sqrt(Number(r.s.k));
+    if (r.kind === 'complex') {
+      pts.push({ x: Rnum(r.p), y: im }, { x: Rnum(r.p), y: -im });
+    } else if (r.kind === 'double') {
+      pts.push({ x: Rnum(r.p), y: 0 });
+    } else {
+      pts.push({ x: Rnum(r.p) + im, y: 0 }, { x: Rnum(r.p) - im, y: 0 });
+    }
+    var plot = argand(pts);
+    if (r.kind === 'complex') {
+      plot.segment(0, 0, Rnum(r.p), im, 'plot-aux');
+      plot.segment(0, 0, Rnum(r.p), -im, 'plot-aux');
+      plot.segment(Rnum(r.p), im, Rnum(r.p), -im, 'plot-aux');
+      plot.point(Rnum(r.p), im, 'plot-point root', rootText);
+      plot.point(Rnum(r.p), -im, 'plot-point root', '');
+    } else if (r.kind === 'double') {
+      plot.point(Rnum(r.p), 0, 'plot-point root', 'x = ' + Rtext(r.p));
+    } else if (r.kind === 'rational') {
+      plot.point(Rnum(r.p) + im, 0, 'plot-point root', Rtext(Radd(r.p, r.s.q)));
+      plot.point(Rnum(r.p) - im, 0, 'plot-point root', Rtext(Rsub(r.p, r.s.q)));
+    } else {
+      /* An irrational root has no finite decimal, so the point is labelled with
+         a rounding and says so with the ~. The exact value is in step 2. */
+      plot.point(Rnum(r.p) + im, 0, 'plot-point root', '~' + (Rnum(r.p) + im).toFixed(3));
+      plot.point(Rnum(r.p) - im, 0, 'plot-point root', '~' + (Rnum(r.p) - im).toFixed(3));
+    }
+    plot.describe('The Argand plane with the roots of ' + Ptext(poly) + ' marked'
+      + (r.kind === 'complex' ? ' as a conjugate pair either side of the real axis.' : ' on the real axis.')
+      + (r.kind === 'irrational' ? ' The point labels are rounded to three places; the exact roots are '
+          + rootText + '.' : ''));
+
+    var msg;
+    if (r.kind === 'complex') {
+      msg = '<strong>The discriminant is ' + Rtext(r.disc) + ', so the roots are ' + rootText + '.</strong> '
+        + 'They are a conjugate pair: same real part, opposite imaginary parts, mirror images in the '
+        + 'real axis. Step 3 is the part worth dwelling on &mdash; multiplying them back together gives '
+        + Ptext(rebuilt) + ', the quadratic you typed, with every trace of i gone. '
+        + 'The pair sums to the real number ' + Rtext(sum) + ' and multiplies to the real number '
+        + Rtext(prod) + ', which is how two non-real numbers can be the roots of an equation with '
+        + 'nothing imaginary anywhere in it.';
+    } else if (r.kind === 'double') {
+      msg = '<strong>The discriminant is exactly 0, so there is no conjugate pair here at all.</strong> '
+        + 'There is one repeated real root, x = ' + Rtext(r.p) + '. This preset is in the list to make '
+        + 'the hypothesis visible: &ldquo;complex roots come in conjugate pairs&rdquo; is a statement '
+        + 'about a NEGATIVE discriminant, and this one is not negative. Step 3 still works &mdash; the '
+        + '&ldquo;pair&rdquo; is that root twice, and multiplying it back still rebuilds ' + Ptext(rebuilt) + '.';
+    } else {
+      msg = '<strong>The discriminant is ' + Rtext(r.disc) + ', which is positive: two real roots, '
+        + rootText + ', and no complex pair.</strong> Nothing here needs i. That is worth seeing next '
+        + 'to the presets that do: complex roots are not what happens when a quadratic is difficult, '
+        + 'they are what happens when b^2 is smaller than 4ac. Step 3 rebuilds ' + Ptext(rebuilt)
+        + ' from these two real roots by exactly the same arithmetic.';
+    }
+    return {
+      title: Ptext(poly) + ' = 0',
+      sub: 'x = ' + rootText,
+      blocks: blocks,
+      status: msg,
+      kpi: [['Discriminant', Rtext(r.disc)], ['Roots', rootText],
+            ['r1 &middot; r2', Rtext(prod)]]
+    };
+  }
+
+  /* ================================================================ driver */
+  function fail(msg) {
+    status.innerHTML = msg;
+    work.innerHTML = table('Nothing computed yet', [
+      row('waiting for', 'exact rational values in every box above'),
+      row('values that work', '<code>3</code>, <code>-2</code>, <code>1/2</code>, <code>-3/4</code>, <code>0.25</code>')
+    ]);
+    titleOut.textContent = 'Nothing to show';
+    subOut.textContent = 'fix the values above';
+    svg.textContent = '';
+    setkpi([['Status', '--'], ['Status', '--'], ['Status', '--']]);
+  }
+
+  function redraw() {
+    var vals = [];
+    for (var i = 0; i < inputs.length; i += 1) {
+      var got = readR(inputs[i], LABELS[i]);
+      if (!got.ok) { fail(got.msg); return; }
+      vals.push(got.r);
+    }
+    var out;
+    try {
+      if (MODE === 'intro') out = modeIntro(Cnew(vals[0], vals[1]));
+      else if (MODE === 'arith') out = modeArith(Cnew(vals[0], vals[1]), Cnew(vals[2], vals[3]));
+      else out = modeRoots(vals[0], vals[1], vals[2]);
+    } catch (err) {
+      fail('<strong>Those values are more than this lab can carry: ' + (err && err.message) + '.</strong> '
+        + 'Everything here is exact rational arithmetic over BigInt, and a few inputs &mdash; enormous '
+        + 'numerators, denominators of 0 &mdash; run past what it will do. Try a preset and edit it a '
+        + 'little at a time.');
+      return;
+    }
+    if (out.fail) { fail(out.fail); return; }
+    titleOut.innerHTML = out.title;
+    subOut.textContent = out.sub;
+    work.innerHTML = out.blocks.join('');
+    status.innerHTML = out.status;
+    setkpi(out.kpi);
+  }
+
+  function loadPreset() {
+    var parts = String(preset.value).split('|');
+    for (var i = 0; i < inputs.length; i += 1) inputs[i].value = parts[i] === undefined ? '0' : parts[i];
+  }
+  preset.addEventListener('change', function () { loadPreset(); redraw(); });
+  inputs.forEach(function (el) { el.addEventListener('input', redraw); });
+  loadPreset();
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

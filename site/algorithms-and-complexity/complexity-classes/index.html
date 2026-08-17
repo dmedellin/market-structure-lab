@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Algorithms and Complexity course home">
         <span class="brand-mark" aria-hidden="true">11</span>
-        <span class="brand-copy"><strong>Algorithms and Complexity</strong><span>Course 8 &amp;middot; Lesson 11 of 12</span></span>
+        <span class="brand-copy"><strong>Algorithms and Complexity</strong><span>Course 8 · Lesson 11 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Algorithms and Complexity</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 11 &amp;middot; P, NP and NP-Completeness</span>
+      <span class="crumb-current" aria-current="page">Lesson 11 · P, NP and NP-Completeness</span>
     </nav>
 
     <noscript>
@@ -938,7 +969,7 @@ shortest path                     yes         yes
 is this formula satisfiable?      unknown     yes
 does a Hamilton circuit exist?    unknown     yes
 graph colouring with 3 colours    unknown     yes
-does this program halt?           NO           NO — undecidable</div><p>Every problem in P is in NP: if you can solve it quickly you can verify a claimed answer quickly by solving it and comparing. The reverse inclusion is the open question.</p><h3>Reductions</h3><div class="defbox"><span class="label">Definition &middot; Polynomial-time reduction</span><p>Problem <span class="math">A</span> <strong>reduces</strong> to <span class="math">B</span> if any instance of <span class="math">A</span> can be transformed in polynomial time into an instance of <span class="math">B</span> with the same answer. Then an efficient algorithm for <span class="math">B</span> gives one for <span class="math">A</span>, so <span class="math">B</span> is at least as hard as <span class="math">A</span>.</p></div><div class="defbox"><span class="label">Definition &middot; NP-complete</span><p>A problem is <strong>NP-complete</strong> if it is in NP and every problem in NP reduces to it. It is <strong>NP-hard</strong> if the second condition holds whether or not it is in NP.</p></div><div class="thm"><span class="label">Theorem &middot; Cook&amp;ndash;Levin theorem (1971)</span><p>SAT &mdash; deciding whether a propositional formula is satisfiable &mdash; is NP-complete. It was the first problem shown to be so, and every subsequent NP-completeness proof reduces from a problem already known to be complete.</p></div><p>Course 1 lesson 6 raised the question and named the result; here is what it means. Thousands of problems are now known to be NP-complete: Hamilton circuit, 3-colouring, subset sum, the travelling salesman decision problem, 0/1 knapsack, and clique among them.</p><p>They are all equivalent in the sense that matters: a polynomial-time algorithm for any one would give one for all of them, and hence <span class="math">P = NP</span>. Fifty years of effort has produced neither such an algorithm nor a proof that none exists.</p><h3>What the classification means in practice</h3><ul><li><strong>In P.</strong> Look for a good polynomial algorithm and expect to find one.</li><li><strong>NP-complete.</strong> Stop looking for an efficient exact algorithm. Consider approximation algorithms with proved ratios, heuristics with no guarantee, exact methods on restricted inputs, or solvers that are fast in practice.</li><li><strong>Undecidable.</strong> Stop entirely. No algorithm exists, and lesson 12 is about what that means.</li></ul><p>Being NP-complete is a worst-case statement and does not mean instances are hard in practice. Industrial SAT solvers routinely handle formulas with millions of variables, because real instances have structure. The classification tells you what to expect in general and not what will happen on your data.</p><p>If <span class="math">P = NP</span> were proved constructively, essentially every optimisation problem would become tractable and public-key cryptography would collapse. Most researchers expect <span class="math">P ≠ NP</span>; nobody has proved it, and it is one of the Clay Millennium Problems.</p></article>
+does this program halt?           NO           NO — undecidable</div><p>Every problem in P is in NP: if you can solve it quickly you can verify a claimed answer quickly by solving it and comparing. The reverse inclusion is the open question.</p><h3>Reductions</h3><div class="defbox"><span class="label">Definition &middot; Polynomial-time reduction</span><p>Problem <span class="math">A</span> <strong>reduces</strong> to <span class="math">B</span> if any instance of <span class="math">A</span> can be transformed in polynomial time into an instance of <span class="math">B</span> with the same answer. Then an efficient algorithm for <span class="math">B</span> gives one for <span class="math">A</span>, so <span class="math">B</span> is at least as hard as <span class="math">A</span>.</p></div><div class="defbox"><span class="label">Definition &middot; NP-complete</span><p>A problem is <strong>NP-complete</strong> if it is in NP and every problem in NP reduces to it. It is <strong>NP-hard</strong> if the second condition holds whether or not it is in NP.</p></div><div class="thm"><span class="label">Theorem &middot; Cook-Levin theorem (1971)</span><p>SAT &mdash; deciding whether a propositional formula is satisfiable &mdash; is NP-complete. It was the first problem shown to be so, and every subsequent NP-completeness proof reduces from a problem already known to be complete.</p></div><p>Course 1 lesson 6 raised the question and named the result; here is what it means. Thousands of problems are now known to be NP-complete: Hamilton circuit, 3-colouring, subset sum, the travelling salesman decision problem, 0/1 knapsack, and clique among them.</p><p>They are all equivalent in the sense that matters: a polynomial-time algorithm for any one would give one for all of them, and hence <span class="math">P = NP</span>. Fifty years of effort has produced neither such an algorithm nor a proof that none exists.</p><h3>What the classification means in practice</h3><ul><li><strong>In P.</strong> Look for a good polynomial algorithm and expect to find one.</li><li><strong>NP-complete.</strong> Stop looking for an efficient exact algorithm. Consider approximation algorithms with proved ratios, heuristics with no guarantee, exact methods on restricted inputs, or solvers that are fast in practice.</li><li><strong>Undecidable.</strong> Stop entirely. No algorithm exists, and lesson 12 is about what that means.</li></ul><p>Being NP-complete is a worst-case statement and does not mean instances are hard in practice. Industrial SAT solvers routinely handle formulas with millions of variables, because real instances have structure. The classification tells you what to expect in general and not what will happen on your data.</p><p>If <span class="math">P = NP</span> were proved constructively, essentially every optimisation problem would become tractable and public-key cryptography would collapse. Most researchers expect <span class="math">P ≠ NP</span>; nobody has proved it, and it is one of the Clay Millennium Problems.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Algorithms and growth</h2></div><p>Counts from running, not from quoting</p></div>

@@ -1,0 +1,3197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>What a Logarithm Is | Exponential and Logarithmic Functions | Learn · geterdone.io</title>
+  <meta name="description" content="log_b(x) is the exponent you put on b to get x. Everything later in this course — the graphs, the three laws, both kinds of equation — is that one sentence applied, and nearly every error is a step taken without it." />
+  <link rel="canonical" href="https://learn.geterdone.io/exponential-and-logarithmic-functions/what-a-logarithm-is/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="What a Logarithm Is | Exponential and Logarithmic Functions | Learn · geterdone.io" />
+  <meta property="og:description" content="log_b(x) is the exponent you put on b to get x. Everything later in this course — the graphs, the three laws, both kinds of equation — is that one sentence applied, and nearly every error is a step taken without it." />
+  <meta property="og:url" content="https://learn.geterdone.io/exponential-and-logarithmic-functions/what-a-logarithm-is/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="What a Logarithm Is | Exponential and Logarithmic Functions | Learn · geterdone.io" />
+  <meta name="twitter:description" content="log_b(x) is the exponent you put on b to get x. Everything later in this course — the graphs, the three laws, both kinds of equation — is that one sentence applied, and nearly every error is a step taken without it." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/exponential-and-logarithmic-functions/what-a-logarithm-is/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Exponential and Logarithmic Functions course home">
+        <span class="brand-mark" aria-hidden="true">04</span>
+        <span class="brand-copy"><strong>Exponential and Logarithmic Functions</strong><span>Course 7 · Lesson 04 of 12</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Exponential and Logarithmic Functions</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 04 · What a Logarithm Is</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The two ways to say one thing is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 7 &middot; Lesson 04 &middot; Logarithms</span>
+        <h1>What a Logarithm Is</h1>
+        <p><span class="math">log_b(x)</span> is the exponent you put on <span class="math">b</span> to get <span class="math">x</span>. Everything later in this course &mdash; the graphs, the three laws, both kinds of equation &mdash; is that one sentence applied, and nearly every error is a step taken without it.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">log_b(x) = y      means exactly      b^y = x
+                  with  b &gt; 0,  b ≠ 1,  x &gt; 0
+log_2(8) = 3      because   2³ = 8
+log_9(3) = 1/2    because   9^(1/2) = 3</div>
+        <div class="float-label" style="right:16px;bottom:16px;">One fact, written two ways</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Say the definition out loud until it is automatic. Everything in this lesson is a consequence of it, including the two restrictions.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>A logarithm is an exponent</h3><p>Not a length, not an operation on digits, not a button. <span class="math">log_5(125)</span> is the answer to "5 to what power gives 125?", and the answer is <span class="math">3</span>. Read every logarithm you meet as that question.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The two forms carry identical information</h3><p><span class="math">b^y = x</span> and <span class="math">log_b(x) = y</span> are the same statement. Moving between them is not a step in a calculation, it is a change of notation, and it costs nothing.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The argument must be positive</h3><p><span class="math">b^y</span> is positive for every real <span class="math">y</span>, so no exponent produces <span class="math">0</span> and none produces a negative number. <span class="math">log_2(0)</span> and <span class="math">log_2(−8)</span> name nothing &mdash; not because they are difficult, but because the question they ask has no answer.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>The definition, read in both directions</h2></div><p>One definition, the restrictions that come with it, and the evaluations you should be able to do without a calculator.</p></div>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Logarithm</span><p>For <span class="math">b &gt; 0</span> with <span class="math">b ≠ 1</span>, and for <span class="math">x &gt; 0</span>, <strong><span class="math">log_b(x)</span></strong> is the unique real number <span class="math">y</span> with <span class="math">b^y = x</span>. The number <span class="math">b</span> is the <strong>base</strong> of the logarithm and <span class="math">x</span> is its <strong>argument</strong>.</p></div><p>The word <em>unique</em> is carrying weight. Lesson 1 fenced the base in so that <span class="math">b^y</span> is strictly increasing (when <span class="math">b &gt; 1</span>) or strictly decreasing (when <span class="math">0 &lt; b &lt; 1</span>). Either way it takes each positive value exactly once, so there is one <span class="math">y</span> and not two. That is also why <span class="math">b = 1</span> is barred: <span class="math">1^y = 1</span> for every <span class="math">y</span>, so <span class="math">log_1(1)</span> would have every number as an answer and <span class="math">log_1(5)</span> would have none.</p><div class="mathblock">exponential form         logarithmic form
+────────────────────────────────────────────────
+b^y = x                  log_b(x) = y
+2³ = 8                   log_2(8) = 3
+10^(−3) = 1/1000         log_10(1/1000) = −3
+5^0 = 1                  log_5(1) = 0
+7^1 = 7                  log_7(7) = 1
+9^(1/2) = 3              log_9(3) = 1/2</div><p>Read the table left to right and you are converting a power into a logarithm; read it right to left and you are doing the reverse. Three roles move around: the base of the power stays the base of the logarithm, the result of the power becomes the argument, and the exponent becomes the value. Nothing else happens.</p><div class="thm"><span class="label">Theorem &middot; The two cancellation identities</span><p><span class="math">b^(log_b(x)) = x</span> for every <span class="math">x &gt; 0</span>, and <span class="math">log_b(b^y) = y</span> for every real <span class="math">y</span>. The first says that raising <span class="math">b</span> to the exponent which produces <span class="math">x</span> produces <span class="math">x</span>. The second says that the exponent which produces <span class="math">b^y</span> is <span class="math">y</span>. Both are the definition said aloud, and lesson 5 restates them as the statement that the two functions are inverse.</p></div><h3>Evaluating without a calculator</h3><p>Ask the question. <span class="math">log_3(81)</span>: three to what power is <span class="math">81</span>? <span class="math">3⁴ = 81</span>, so the value is <span class="math">4</span>. When the answer is not a whole number the same question still works, provided both numbers can be written as powers of one common base.</p><div class="example"><span class="label">Example &middot; log_8(4), in full</span><p>Both <span class="math">8</span> and <span class="math">4</span> are powers of <span class="math">2</span>: <span class="math">8 = 2³</span> and <span class="math">4 = 2²</span>. If <span class="math">8^y = 4</span> then <span class="math">(2³)^y = 2²</span>, so <span class="math">2^(3y) = 2²</span>. Since <span class="math">2^t</span> takes each value exactly once, <span class="math">3y = 2</span> and <span class="math">y = 2/3</span>. Check: <span class="math">8^(2/3) = (∛8)² = 2² = 4</span>, so <span class="math">log_8(4) = 2/3</span>.</p></div><p>With a base greater than <span class="math">1</span>, a logarithm is negative exactly when the argument lies strictly between <span class="math">0</span> and <span class="math">1</span>; with a base below <span class="math">1</span> it is negative exactly when the argument is above <span class="math">1</span>. <span class="math">log_5(1/25) = −2</span>, because <span class="math">5^(−2) = 1/25</span>. The restriction is on the argument; the value is free to be any real number at all.</p><p>Most logarithms are irrational. <span class="math">log_2(10)</span> sits between <span class="math">3</span> and <span class="math">4</span>, because <span class="math">2³ = 8</span> and <span class="math">2⁴ = 16</span> bracket <span class="math">10</span>, and its value is <span class="math">3.321928…</span> &mdash; a number with no exact decimal form. The exact statement is <span class="math">2^(log_2(10)) = 10</span>; the decimal is a rounding, and lesson 8 is about producing it.</p><p>Notation. The base is written as a subscript, and the argument gets brackets whenever there is any doubt: <span class="math">log_2(x + 1)</span> and <span class="math">log_2(x) + 1</span> are different numbers. Two bases are used so often that they drop the subscript &mdash; base 10 and base <span class="math">e</span> &mdash; and lesson 7 introduces that shorthand.</p></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Two ways to say one thing</h2></div><p>log_b(x) = y and b^y = x are the same sentence</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="lgTitle">Logarithm</strong><span id="lgSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>y = b^t</span><span class="tone-red"><i class="legend-swatch"></i>the value x</span><span class="tone-amber"><i class="legend-swatch"></i>the exponent</span></div>
+      </div>
+      <div class="lab-stage"><svg id="lgPlot"></svg></div>
+      <div id="lgWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="lgStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>The same fact, both ways round</h3>
+          <p>Type a base and an argument and the lab answers by searching for a rational exponent <span class="math">p/q</span> with <span class="math">b^p = x^q</span>, in exact integer arithmetic. So <span class="math">log_9(3)</span> comes back as <span class="math">1/2</span> rather than <span class="math">0.5</span>, and when no such fraction exists the lab says so before it prints anything rounded.</p>
+        <div class="field">
+          <label for="lgPreset">Example</label>
+          <select id="lgPreset"><option value="2|8">log_2(8)</option><option value="10|1/1000">log_10(1/1000)</option><option value="9|3">log_9(3) &mdash; the exponent is a fraction</option><option value="2|10">log_2(10) &mdash; the search comes back empty</option><option value="2|0">log_2(0) &mdash; no power of 2 is ever 0</option><option value="1|5">log_1(5) &mdash; base 1 cannot be undone</option></select>
+        </div>
+        <div class="field">
+          <label for="lgBase">b (the base)</label>
+          <input id="lgBase" type="text" value="2" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="lgX">x (the argument)</label>
+          <input id="lgX" type="text" value="8" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid"><div class="kpi"><span>log_b(x)</span><strong id="lgKpi1">&mdash;</strong></div><div class="kpi"><span>Written as a power</span><strong id="lgKpi2">&mdash;</strong></div><div class="kpi"><span>Exact?</span><strong id="lgKpi3">&mdash;</strong></div></div>
+        <p class="small-copy" id="lgHint" style="margin:0;">Whole numbers or fractions. The lab searches for an exact exponent first and only reaches for a decimal when the search fails.</p>
+
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Evaluating a logarithm by hand</h2></div><p>Four steps, and the last one is the one that catches a flipped fraction.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Write the question as an equation</h3><p><span class="math">log_b(x)</span> asks "<span class="math">b</span> to what power is <span class="math">x</span>?". Put it in exponential form, <span class="math">b^y = x</span>, with <span class="math">y</span> the unknown. Everything after this is ordinary algebra.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Write both sides as powers of one base</h3><p><span class="math">log_8(4)</span> becomes <span class="math">2^(3y) = 2²</span>. Whenever <span class="math">b</span> and <span class="math">x</span> are powers of a common number this works, and the answer comes out as a fraction.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Match the exponents</h3><p><span class="math">b^m = b^n</span> forces <span class="math">m = n</span> when <span class="math">b &gt; 0</span> and <span class="math">b ≠ 1</span>, because such an exponential takes each value exactly once. Solve the linear equation that leaves.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check by raising the base to your answer</h3><p><span class="math">8^(2/3) = 4</span>. One line, and it catches the inverted fraction, which is the usual way this goes wrong.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Reading the definition</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Eight logarithms, by asking the question</h3><p>No calculator is used or needed. The middle column is the question; the right column is the answer to it.</p><div class="mathblock">log_2(8)          2 to what power is 8?         2³ = 8            3
+log_3(81)         3 to what power is 81?        3⁴ = 81           4
+log_5(1/25)       5 to what power is 1/25?      5^(−2) = 1/25    −2
+log_9(3)          9 to what power is 3?         9^(1/2) = 3     1/2
+log_8(4)          8 to what power is 4?         8^(2/3) = 4     2/3
+log_(1/2)(8)      1/2 to what power is 8?       (1/2)^(−3) = 8   −3
+log_6(1)          6 to what power is 1?         6^0 = 1           0
+log_7(−7)         7 to what power is −7?        nothing works    undefined
+
+checks:   9^(1/2) = √9 = 3                     ✓
+          8^(2/3) = (∛8)² = 2² = 4             ✓
+          (1/2)^(−3) = 2³ = 8                  ✓</div><p>The sixth line is the one that surprises people. A base below <span class="math">1</span> gives a negative logarithm for an argument above <span class="math">1</span>, and a positive one for an argument below <span class="math">1</span> &mdash; the whole scale runs backwards, which is exactly what lesson 5 sees as a decreasing curve.</p><p>The last line is not a hard case, it is an impossible one. <span class="math">7^y</span> is positive for every real <span class="math">y</span>, so no exponent gives <span class="math">−7</span>. Logarithms of negative numbers are not covered in this course and are not merely difficult here; within the real numbers there is nothing to compute.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Swapping the base and the argument</strong><span><span class="math">log_2(8) = 3</span> and <span class="math">log_8(2) = 1/3</span>. They are reciprocals, not equals. Say the base out loud when you read the symbol: it is the number being raised to a power.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Expecting log_b(0) to be 0, or −∞</strong><span>No real exponent makes <span class="math">2^y</span> equal <span class="math">0</span>; the values shrink without ever arriving. <span class="math">log_2(0)</span> is undefined, and <span class="math">−∞</span> is not a real number that can serve as an answer.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Refusing a negative logarithm</strong><span><span class="math">log_5(1/25) = −2</span> is an ordinary value. The positivity restriction is on the argument. The output of a logarithm runs over every real number, negatives included, which is the range statement of lesson 5.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you convert between the two forms without thinking.</strong><p>Given <span class="math">log_4(x) = 3/2</span> you should write <span class="math">4^(3/2) = x</span> and get <span class="math">8</span> in one line. Given <span class="math">3^y = 1/27</span> you should write <span class="math">y = log_3(1/27) = −3</span> in one. If either takes a moment of translation, the definition is not yet automatic and the laws in lesson 6 will feel arbitrary.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Every exact logarithm the lab reports was found by searching for a rational exponent, never by calling a logarithm function. That is the honest shape of the subject: <span class="math">log_2(8)</span> is <span class="math">3</span> exactly, and <span class="math">log_2(10)</span> is a number that can only be bracketed and then rounded.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../the-number-e/" rel="prev"><span>Previous lesson</span><strong>03 &middot; The Number e</strong></a>
+      <a class="lesson-link next" href="../logarithmic-functions-and-their-graphs/" rel="next"><span>Next lesson</span><strong>05 &middot; Logarithmic Functions and Their Graphs</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Exponential and Logarithmic Functions.</strong> Exponential and logarithmic values are irrational, so this is the one course on the path where the labs show rounded decimals &mdash; and they say where they rounded. The exact statements, the laws and the domains, are computed exactly and the rounding never enters them.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "What is <span class=\"math\">log_4(8)<\/span>?", "a": ["<span class=\"math\">2<\/span>", "<span class=\"math\">3/2<\/span>", "<span class=\"math\">2/3<\/span>", "<span class=\"math\">32<\/span>"], "c": 1, "why": "<span class=\"math\">4^y = 8<\/span> gives <span class=\"math\">2^(2y) = 2\u00b3<\/span>, so <span class=\"math\">2y = 3<\/span> and <span class=\"math\">y = 3/2<\/span>; <span class=\"math\">4^(3/2) = (\u221a4)\u00b3 = 8<\/span> confirms it. <span class=\"math\">2<\/span> is <span class=\"math\">log_4(16)<\/span>; <span class=\"math\">2/3<\/span> is <span class=\"math\">log_8(4)<\/span>, the same two numbers the other way round; <span class=\"math\">32<\/span> is <span class=\"math\">4\u00b78<\/span>, which is not a logarithm of anything here."}, {"q": "What is <span class=\"math\">log_7(0)<\/span>?", "a": ["<span class=\"math\">0<\/span>", "<span class=\"math\">1<\/span>", "It does not exist: no exponent makes <span class=\"math\">7^y<\/span> equal <span class=\"math\">0<\/span>", "<span class=\"math\">\u22127<\/span>"], "c": 2, "why": "<span class=\"math\">7^y<\/span> is positive for every real <span class=\"math\">y<\/span>. It gets small as <span class=\"math\">y<\/span> falls &mdash; <span class=\"math\">7^(\u221210) = 1/282475249<\/span> &mdash; and never arrives at <span class=\"math\">0<\/span>. Choice one confuses <span class=\"math\">log_7(0)<\/span> with <span class=\"math\">log_7(1)<\/span>, which is <span class=\"math\">0<\/span> because <span class=\"math\">7^0 = 1<\/span>."}, {"q": "Written as a logarithm, <span class=\"math\">5\u00b3 = 125<\/span> is:", "a": ["<span class=\"math\">log_5(125) = 3<\/span>", "<span class=\"math\">log_3(125) = 5<\/span>", "<span class=\"math\">log_125(5) = 3<\/span>", "<span class=\"math\">log_5(3) = 125<\/span>"], "c": 0, "why": "The base of the power stays the base of the logarithm, the result becomes the argument, and the exponent becomes the value. The other three permute those roles; <span class=\"math\">log_125(5)<\/span> is in fact <span class=\"math\">1/3<\/span>, not <span class=\"math\">3<\/span>."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* A polynomial is a dense array of rationals, index = power of x, with the
+     zero polynomial as []. Nothing here is a special case for "nice" numbers:
+     the same routines divide 2x^3 - 3x + 1 by x - 1/2 as divide it by x - 1. */
+  function Pnorm(p) {
+    var out = p.slice();
+    while (out.length && Rzero(out[out.length - 1])) out.pop();
+    return out;
+  }
+  function Pdeg(p) { return Pnorm(p).length - 1; }
+  function Pzero(p) { return Pnorm(p).length === 0; }
+  function Plead(p) { var q = Pnorm(p); return q.length ? q[q.length - 1] : R0; }
+  function Padd(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Radd(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Psub(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Rsub(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Pmul(a, b) {
+    if (!a.length || !b.length) return [];
+    var out = [];
+    for (var i = 0; i < a.length + b.length - 1; i += 1) out.push(R0);
+    for (var j = 0; j < a.length; j += 1) {
+      for (var k = 0; k < b.length; k += 1) out[j + k] = Radd(out[j + k], Rmul(a[j], b[k]));
+    }
+    return Pnorm(out);
+  }
+  function Pscale(p, r) { return Pnorm(p.map(function (c) { return Rmul(c, r); })); }
+  function Ppow(p, k) { var out = [R1]; for (var i = 0; i < k; i += 1) out = Pmul(out, p); return out; }
+  function Peval(p, x) {
+    var acc = R0;
+    for (var i = p.length - 1; i >= 0; i -= 1) acc = Radd(Rmul(acc, x), p[i]);
+    return acc;
+  }
+  function Pderiv(p) {
+    var out = [];
+    for (var i = 1; i < p.length; i += 1) out.push(Rmul(p[i], R(BigInt(i))));
+    return Pnorm(out);
+  }
+  /* Long division, which is lesson material in its own right -- the step list a
+     lab shows IS this loop, printed. */
+  function Pdivmod(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    if (!b.length) throw new Error('division by the zero polynomial');
+    var q = [], r = a.slice(), steps = [];
+    var db = b.length - 1, lb = b[db];
+    while (Pnorm(r).length - 1 >= db && Pnorm(r).length) {
+      r = Pnorm(r);
+      var dr = r.length - 1, coef = Rdiv(r[dr], lb), shift = dr - db;
+      var term = [];
+      for (var i = 0; i < shift; i += 1) term.push(R0);
+      term.push(coef);
+      var product = Pmul(term, b);
+      steps.push({ term: Ptext(term), product: Ptext(product), before: Ptext(r) });
+      r = Psub(r, product);
+      q = Padd(q, term);
+    }
+    return { q: Pnorm(q), r: Pnorm(r), steps: steps };
+  }
+  function Pmonic(p) { var l = Plead(p); return Rzero(l) ? p : Pscale(p, Rinv(l)); }
+  function Pgcd(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    while (b.length) { var r = Pdivmod(a, b).r; a = b; b = r; }
+    return a.length ? Pmonic(a) : a;
+  }
+
+  /* Reader-facing form. The rules here are the ones a marker applies: an
+     implicit coefficient of 1 is not written, a negative term joins with a
+     minus rather than a plus, and a fractional coefficient is bracketed so
+     3/4x^2 can never be misread as 3/(4x^2). */
+  function Ptext(p, v) {
+    v = v || 'x';
+    p = Pnorm(p);
+    if (!p.length) return '0';
+    var out = '';
+    for (var i = p.length - 1; i >= 0; i -= 1) {
+      var c = p[i];
+      if (Rzero(c)) continue;
+      var neg = Rsign(c) < 0, mag = Rabs(c);
+      out += out === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      var one = Requ(mag, R1);
+      var coef = one && i > 0 ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+      var power = i === 0 ? '' : (i === 1 ? v : v + '^' + i);
+      out += coef + power;
+    }
+    return out;
+  }
+  /* Bracketed when it is a sum, so (x + 1)(x - 2) prints correctly. */
+  function Pfactortext(p, v) {
+    var t = Ptext(p, v);
+    return (t.indexOf(' + ') >= 0 || t.indexOf(' - ') >= 0) ? '(' + t + ')' : t;
+  }
+
+  /* ---- factoring over the rationals ----
+     The rational root theorem, applied rather than quoted: clear denominators,
+     list the divisors of the constant and leading terms, and TEST each
+     candidate. A reader who runs this on x^2 + 1 sees the search come back
+     empty, which is the point of the lesson that pairs with it. */
+  function bdivisors(n) {
+    if (n < 0n) n = -n;
+    if (n === 0n) return [];
+    var out = [], i = 1n;
+    while (i * i <= n) {
+      if (n % i === 0n) { out.push(i); if (i * i !== n) out.push(n / i); }
+      i += 1n;
+      if (out.length > 512) break;   /* lesson-sized numbers only; see Pfactor */
+    }
+    out.sort(function (a, b) { return a < b ? -1 : (a > b ? 1 : 0); });
+    return out;
+  }
+  /* The same polynomial with integer, coprime coefficients and a positive
+     leading term, plus the rational that was taken out. */
+  function Pprimitive(p) {
+    p = Pnorm(p);
+    if (!p.length) return { poly: [], content: R1 };
+    var den = 1n;
+    p.forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ints = p.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ints.forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    if (ints[ints.length - 1] < 0n) g = -g;
+    return {
+      poly: ints.map(function (v) { return R(v / g); }),
+      content: R(g, den)
+    };
+  }
+  function Prationalroots(p) {
+    var prim = Pprimitive(p).poly;
+    if (prim.length < 2) return [];
+    var roots = [], seen = {};
+    var a0 = prim[0].n, an = prim[prim.length - 1].n;
+    if (a0 === 0n) { roots.push(R0); seen['0/1'] = 1; }
+    var ps = bdivisors(a0 === 0n ? an : a0), qs = bdivisors(an);
+    for (var i = 0; i < ps.length; i += 1) {
+      for (var j = 0; j < qs.length; j += 1) {
+        for (var s = 0; s < 2; s += 1) {
+          var cand = R(s ? -ps[i] : ps[i], qs[j]);
+          var key = Rtext(cand);
+          if (seen[key]) continue;
+          seen[key] = 1;
+          if (Rzero(Peval(prim, cand))) roots.push(cand);
+        }
+      }
+    }
+    roots.sort(Rcmp);
+    return roots;
+  }
+  /* Full factorisation over Q: a rational content, integer linear factors with
+     their multiplicities, and whatever is left that has no rational root.
+     `complete` is false when the leftover is not linear or quadratic -- the lab
+     says so rather than implying the factorisation finished. */
+  function Pfactor(p) {
+    p = Pnorm(p);
+    if (!p.length) return { content: R0, factors: [], rest: [], complete: true };
+    var prim = Pprimitive(p);
+    var content = prim.content, work = prim.poly, factors = [];
+    var guard = 0;
+    while (Pdeg(work) > 0 && guard < 64) {
+      guard += 1;
+      var roots = Prationalroots(work);
+      if (!roots.length) break;
+      var r = roots[0];
+      /* root p/q  ->  integer factor (qx - p), which keeps every coefficient
+         whole and is the form the reader is asked to produce. */
+      var factor = [Rneg(R(r.n)), R(r.d)];
+      var mult = 0;
+      while (Pdeg(work) > 0) {
+        var dm = Pdivmod(work, factor);
+        if (!Pzero(dm.r)) break;
+        work = dm.q; mult += 1;
+      }
+      factors.push({ poly: factor, mult: mult, root: r });
+    }
+    /* Whatever scalar the integer divisions left behind belongs to the content. */
+    if (Pdeg(work) === 0) { content = Rmul(content, work[0]); work = [R1]; }
+    var rest = Pdeg(work) > 0 ? work : [];
+    return { content: content, factors: factors, rest: rest, complete: Pdeg(work) <= 2 };
+  }
+  function Pfactortextfull(p, v) {
+    var f = Pfactor(p);
+    if (!f.factors.length && !f.rest.length) return Rtext(f.content);
+    var pieces = [];
+    f.factors.forEach(function (item) { pieces.push({ poly: item.poly, mult: item.mult }); });
+    if (f.rest.length) pieces.push({ poly: f.rest, mult: 1 });
+    /* A polynomial that does not factor is written as itself. Bracketing a
+       lone factor -- "(x^2 + 1)" -- suggests something was multiplied by
+       something, which is the opposite of what that result says. */
+    if (pieces.length === 1 && pieces[0].mult === 1 && Requ(f.content, R1)) {
+      return Ptext(pieces[0].poly, v);
+    }
+    var out = '';
+    if (!Requ(f.content, R1)) out += Requ(f.content, R(-1n)) ? '-' : Rterm(f.content);
+    pieces.forEach(function (item) {
+      out += Pfactortext(item.poly, v) + (item.mult > 1 ? '^' + item.mult : '');
+    });
+    return out || '1';
+  }
+
+  /* Exact irrational answers.
+
+     sqrt(D) for a rational D is either rational or irrational, and the second
+     case is not a failure -- it is the answer. A lesson that solves
+     x^2 - 2x - 4 = 0 wants "1 +- sqrt(5)", not "3.2360679...", so the roots of
+     every quadratic on this path are carried as  p + q*sqrt(k)  with p and q
+     exact rationals and k a squarefree integer. */
+  function bsqrtsimp(n) {
+    /* n = s^2 * k with k squarefree; returns [s, k]. */
+    var s = 1n, k = n, f = 2n;
+    while (f * f <= k) {
+      while (k % (f * f) === 0n) { k /= f * f; s *= f; }
+      f += 1n;
+      if (f > 100000n) break;   /* lesson-sized radicands */
+    }
+    return [s, k];
+  }
+  /* sqrt(a) for a rational a >= 0, as { q, k } meaning q * sqrt(k). k === 1n
+     exactly when the root is rational. */
+  function Rsurd(a) {
+    if (a.n < 0n) return null;
+    if (a.n === 0n) return { q: R0, k: 1n };
+    /* sqrt(p/d) = sqrt(p*d)/d */
+    var pair = bsqrtsimp(a.n * a.d);
+    return { q: R(pair[0], a.d), k: pair[1] };
+  }
+  function surdtext(s) {
+    if (s.k === 1n) return Rtext(s.q);
+    if (Requ(s.q, R1)) return 'sqrt(' + s.k + ')';
+    return Rterm(s.q) + 'sqrt(' + s.k + ')';
+  }
+  /* "p +- q sqrt(k)", the form a reader is expected to write down. */
+  function pmtext(p, s, imaginary) {
+    var unit = imaginary ? 'i' : '';
+    if (s.k === 1n && Rzero(s.q)) return Rtext(p);
+    var mag = surdtext(s);
+    if (s.k !== 1n && Requ(Rabs(s.q), R1)) mag = 'sqrt(' + s.k + ')';
+    else if (s.k !== 1n) mag = Rterm(Rabs(s.q)) + 'sqrt(' + s.k + ')';
+    else mag = Rtext(Rabs(s.q));
+    var right = unit ? (mag === '1' ? 'i' : mag + 'i') : mag;
+    if (Rzero(p)) return '+-' + right;
+    return Rtext(p) + ' +- ' + right;
+  }
+  /* The exact roots of ax^2 + bx + c, whatever the discriminant does.
+     Returns { disc, kind, p, s, roots } where each root is p +- s (times i when
+     the discriminant is negative), and `roots` holds the rational ones only. */
+  function quadroots(a, b, c) {
+    var disc = Rsub(Rmul(b, b), Rmul(R(4n), Rmul(a, c)));
+    var p = Rdiv(Rneg(b), Rmul(R(2n), a));
+    var sign = Rsign(disc);
+    var mag = Rsurd(sign < 0 ? Rneg(disc) : disc);
+    var s = { q: Rdiv(mag.q, Rabs(Rmul(R(2n), a))), k: mag.k };
+    var kind = sign < 0 ? 'complex' : (sign === 0 ? 'double' : (s.k === 1n ? 'rational' : 'irrational'));
+    var roots = [];
+    if (kind === 'double') roots = [p];
+    else if (kind === 'rational') roots = [Radd(p, s.q), Rsub(p, s.q)].sort(Rcmp);
+    return { disc: disc, kind: kind, p: p, s: s, roots: roots };
+  }
+
+  /* The grapher.
+
+     Every curve on this path is SAMPLED from the function the lesson is about.
+     There is not one stored path string anywhere in these labs, which is what
+     makes a drawing evidence rather than decoration: when a lab prints a vertex
+     at (3, -4) and draws the parabola through it, the label and the picture
+     came out of the same evaluation and cannot disagree.
+
+     Coordinates are the one deliberate use of floating point here -- a pixel is
+     a pixel. Everything the reader is told in words comes from the exact side. */
+  var PLOT_W = 660, PLOT_H = 420, PAD_L = 44, PAD_R = 16, PAD_T = 16, PAD_B = 34;
+
+  function svgel(name, attrs) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  /* A grid step a reader can count on: 1, 2 or 5 times a power of ten, chosen
+     so the axis carries roughly eight divisions whatever the window is. */
+  function nicestep(span) {
+    var raw = span / 8, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+    var n = raw / mag;
+    return (n < 1.5 ? 1 : (n < 3.5 ? 2 : (n < 7.5 ? 5 : 10))) * mag;
+  }
+  function ticktext(v, step) {
+    if (Math.abs(v) < step / 1000) return '0';
+    var places = Math.max(0, -Math.floor(Math.log(step) / Math.LN10));
+    return v.toFixed(Math.min(places, 4)).replace(/\.?0+$/, function (m) {
+      return m.indexOf('.') === 0 ? '' : m;
+    });
+  }
+
+  function Plot(svg, win) {
+    var xmin = win.xmin, xmax = win.xmax, ymin = win.ymin, ymax = win.ymax;
+    var iw = PLOT_W - PAD_L - PAD_R, ih = PLOT_H - PAD_T - PAD_B;
+    svg.setAttribute('viewBox', '0 0 ' + PLOT_W + ' ' + PLOT_H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+
+    function sx(x) { return PAD_L + (x - xmin) / (xmax - xmin) * iw; }
+    function sy(y) { return PAD_T + (ymax - y) / (ymax - ymin) * ih; }
+
+    var defs = svgel('defs', {});
+    var clip = svgel('clipPath', { id: 'plotclip' });
+    clip.appendChild(svgel('rect', { x: PAD_L, y: PAD_T, width: iw, height: ih }));
+    defs.appendChild(clip);
+    svg.appendChild(defs);
+
+    var plotted = svgel('g', { 'clip-path': 'url(#plotclip)' });
+
+    var api = {
+      sx: sx, sy: sy, win: win,
+      /* Grid, axes, ticks. Drawn first so every curve sits on top of them. */
+      frame: function () {
+        var gx = nicestep(xmax - xmin), gy = nicestep(ymax - ymin);
+        var g = svgel('g', {});
+        var start = Math.ceil(xmin / gx) * gx, v;
+        for (v = start; v <= xmax + gx / 2; v += gx) {
+          if (Math.abs(v) < gx / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: sx(v), y1: PAD_T, x2: sx(v), y2: PAD_T + ih }));
+        }
+        start = Math.ceil(ymin / gy) * gy;
+        for (v = start; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: PAD_L, y1: sy(v), x2: PAD_L + iw, y2: sy(v) }));
+        }
+        /* The axes sit at zero when zero is in view and at the near edge when
+           it is not, so a window like 10 <= x <= 20 still has a labelled frame
+           rather than two axes drawn off-screen. */
+        var ay = ymin <= 0 && ymax >= 0 ? sy(0) : (ymin > 0 ? PAD_T + ih : PAD_T);
+        var ax = xmin <= 0 && xmax >= 0 ? sx(0) : (xmin > 0 ? PAD_L : PAD_L + iw);
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: PAD_L, y1: ay, x2: PAD_L + iw, y2: ay }));
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: ax, y1: PAD_T, x2: ax, y2: PAD_T + ih }));
+        for (v = Math.ceil(xmin / gx) * gx; v <= xmax + gx / 2; v += gx) {
+          var tx = svgel('text', { class: 'plot-tick', x: sx(v), y: PAD_T + ih + 15, 'text-anchor': 'middle' });
+          tx.textContent = ticktext(v, gx);
+          g.appendChild(tx);
+        }
+        for (v = Math.ceil(ymin / gy) * gy; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          var ty = svgel('text', { class: 'plot-tick', x: PAD_L - 7, y: sy(v) + 3.5, 'text-anchor': 'end' });
+          ty.textContent = ticktext(v, gy);
+          g.appendChild(ty);
+        }
+        svg.appendChild(g);
+        svg.appendChild(plotted);
+        return api;
+      },
+      /* Sample the function across the drawing width and join the samples.
+         A segment is BROKEN where the value stops being a real number and
+         where it jumps by more than three window heights between neighbouring
+         pixels -- that jump is a pole, and joining across it would draw a
+         vertical line that is not part of the graph. Readers meet exactly that
+         line in every graphing tool, and it is the reason they think 1/x is
+         connected. */
+      curve: function (fn, cls) {
+        var runs = [], run = [], prev = null, steps = 480;
+        for (var i = 0; i <= steps; i += 1) {
+          var x = xmin + (xmax - xmin) * i / steps, y = fn(x);
+          if (typeof y !== 'number' || !isFinite(y)) { if (run.length > 1) runs.push(run); run = []; prev = null; continue; }
+          if (prev !== null && Math.abs(y - prev) > 3 * (ymax - ymin)) {
+            if (run.length > 1) runs.push(run);
+            run = [];
+          }
+          run.push(sx(x) + ',' + sy(Math.max(ymin - (ymax - ymin), Math.min(ymax + (ymax - ymin), y))));
+          prev = y;
+        }
+        if (run.length > 1) runs.push(run);
+        runs.forEach(function (pts) {
+          plotted.appendChild(svgel('polyline', { class: cls || 'plot-curve', points: pts.join(' ') }));
+        });
+        return api;
+      },
+      point: function (x, y, cls, label) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: cls || 'plot-point', cx: sx(x), cy: sy(y), r: 5 }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 9, y: sy(y) - 8 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hole: function (x, y) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: 'plot-hole', cx: sx(x), cy: sy(y), r: 5 }));
+        return api;
+      },
+      vline: function (x, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: sx(x), y1: PAD_T, x2: sx(x), y2: PAD_T + ih }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 6, y: PAD_T + 14 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hline: function (y, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: PAD_L, y1: sy(y), x2: PAD_L + iw, y2: sy(y) }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: PAD_L + 6, y: sy(y) - 6 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      segment: function (x1, y1, x2, y2, cls) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-aux', x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2) }));
+        return api;
+      },
+      /* The solution set of an inequality, shaded by testing the predicate on
+         a grid of sample points rather than by reasoning about the boundary. */
+      shade: function (test, cls) {
+        var cols = 90, rows = 58;
+        for (var i = 0; i < cols; i += 1) {
+          for (var j = 0; j < rows; j += 1) {
+            var x = xmin + (xmax - xmin) * (i + 0.5) / cols;
+            var y = ymin + (ymax - ymin) * (j + 0.5) / rows;
+            if (!test(x, y)) continue;
+            plotted.appendChild(svgel('rect', {
+              class: cls || 'plot-shade', x: sx(x) - iw / cols / 2, y: sy(y) - ih / rows / 2,
+              width: iw / cols + 0.6, height: ih / rows + 0.6
+            }));
+          }
+        }
+        return api;
+      },
+      label: function (x, y, text, cls) {
+        var t = svgel('text', { class: cls || 'plot-label', x: sx(x), y: sy(y) });
+        t.textContent = text;
+        plotted.appendChild(t);
+        return api;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return api; }
+    };
+    return api;
+  }
+
+  /* A one-dimensional cousin: the number line every inequality lesson needs. */
+  function NumberLine(svg, lo, hi) {
+    var W = 660, H = 88, pad = 30, iw = W - 2 * pad;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+    function sx(x) { return pad + (x - lo) / (hi - lo) * iw; }
+    svg.appendChild(svgel('line', { class: 'plot-axis', x1: pad, y1: 44, x2: W - pad, y2: 44 }));
+    var step = nicestep(hi - lo);
+    for (var v = Math.ceil(lo / step) * step; v <= hi + step / 2; v += step) {
+      svg.appendChild(svgel('line', { class: 'plot-tickmark', x1: sx(v), y1: 38, x2: sx(v), y2: 50 }));
+      var t = svgel('text', { class: 'plot-tick', x: sx(v), y: 68, 'text-anchor': 'middle' });
+      t.textContent = ticktext(v, step);
+      svg.appendChild(t);
+    }
+    return {
+      sx: sx,
+      /* Closed ends are filled, open ends are hollow -- the distinction the
+         lesson is usually about. */
+      interval: function (a, b, closedA, closedB) {
+        var x1 = sx(Math.max(a, lo)), x2 = sx(Math.min(b, hi));
+        svg.appendChild(svgel('line', { class: 'plot-interval', x1: x1, y1: 44, x2: x2, y2: 44 }));
+        if (a >= lo) svg.appendChild(svgel('circle', { class: closedA ? 'plot-end closed' : 'plot-end open', cx: x1, cy: 44, r: 6 }));
+        if (b <= hi) svg.appendChild(svgel('circle', { class: closedB ? 'plot-end closed' : 'plot-end open', cx: x2, cy: 44, r: 6 }));
+        return this;
+      },
+      point: function (x, closed) {
+        svg.appendChild(svgel('circle', { class: closed ? 'plot-end closed' : 'plot-end open', cx: sx(x), cy: 44, r: 6 }));
+        return this;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return this; }
+    };
+  }
+
+  /* ---- decimals, and the one honest way to leave the exact world ---- */
+
+  /* A fraction whose numerator and denominator have both left the range of a
+     double still has to land on a pixel. Dividing in integers first is the
+     difference between a point on the curve and a NaN. */
+  function Rfloat(a) {
+    var quick = Number(a.n) / Number(a.d);
+    if (isFinite(quick)) return quick;
+    var neg = a.n < 0n, n = neg ? -a.n : a.n;
+    var scaled = (n * 100000000000000000000n) / a.d;      /* 10^20 */
+    var s = scaled.toString();
+    if (s === '0') return 0;
+    var head = s.slice(0, 17);
+    var v = Number(head) * Math.pow(10, s.length - head.length - 20);
+    return neg ? -v : v;
+  }
+
+  /* Rounding done in integers, so the decimal a lab prints is the correct
+     rounding of the exact fraction and not of a double that already lost the
+     digits. Half rounds up. Every caller states the number of places. */
+  function Rdecimal(a, places) {
+    if (places === undefined) places = 6;
+    var neg = Rsign(a) < 0, m = Rabs(a);
+    var scale = 10n ** BigInt(places);
+    var q = (m.n * scale * 2n / m.d + 1n) / 2n;
+    var s = q.toString();
+    while (s.length <= places) s = '0' + s;
+    var whole = s.slice(0, s.length - places);
+    var frac = places > 0 ? '.' + s.slice(s.length - places) : '';
+    return (neg ? '-' : '') + whole + frac;
+  }
+  /* The exact fraction when it fits on the page, and a rounding marked with an
+     "approximately" sign when it does not. A 40,000-digit numerator is exact
+     and unreadable; the reader is told which of the two they are looking at.
+     The size test compares BigInts rather than building the string, because
+     the string is the expensive part and is usually thrown away. */
+  var SHOWMAX = 100000000000000000000n;
+  function Rbig(a) { return (a.n < 0n ? -a.n : a.n) >= SHOWMAX || a.d >= SHOWMAX; }
+  function Rshow(a, places) {
+    if (!Rbig(a)) return Rtext(a);
+    return '&asymp;&nbsp;' + Rdecimal(a, places === undefined ? 6 : places);
+  }
+
+  /* ---- exact powers that stay affordable ----
+
+     Rpow reduces after every multiplication, and a gcd on two 40,000-digit
+     integers costs seconds. It never needs to: p/q in lowest terms makes
+     p^k/q^k in lowest terms already. Skipping the reduction is what lets this
+     page compound daily for thirty years EXACTLY instead of approximately. */
+  function Rpowfast(a, k) {
+    if (k < 0) return Rinv(Rpowfast(a, -k));
+    var e = BigInt(k);
+    return { n: a.n ** e, d: a.d ** e };
+  }
+  /* The same bargain for a single product: correct, unreduced, and destined to
+     be rounded to a decimal rather than printed as a fraction. */
+  function Rmulraw(a, b) { return { n: a.n * b.n, d: a.d * b.d }; }
+  function pct(a, places) { return Rdecimal(Rmul(a, R(100n)), places === undefined ? 4 : places) + '%'; }
+  /* 37/5 is exact and 7.4 is the same number written the way a reader typed it.
+     A fraction whose denominator is built only from 2s and 5s has a decimal
+     that terminates, so this is exactness in a friendlier notation -- and every
+     other fraction keeps its slash rather than being silently rounded. */
+  function Rdectext(a) {
+    if (Rint(a)) return Rtext(a);
+    var d = a.d, twos = 0, fives = 0;
+    while (d % 2n === 0n) { d /= 2n; twos += 1; }
+    while (d % 5n === 0n) { d /= 5n; fives += 1; }
+    if (d !== 1n) return Rtext(a);
+    return Rdecimal(a, Math.max(twos, fives));
+  }
+
+  /* ---- the exponent search: every exact logarithm on this page ----
+
+     log_b(x) = p/q  <=>  b^p = x^q, and that is a question about exact
+     rationals. So this searches: it builds b^p for every p in range, raises x
+     to each q, and compares. log_2(8) comes back 3, log_9(3) comes back 1/2,
+     and log_2(10) comes back EMPTY -- which is not a failure of the search but
+     the fact the lesson beside it is about. */
+  var PMAX = 48, QMAX = 12;
+  function ratpow(b, x) {
+    if (Rsign(b) <= 0 || Rsign(x) <= 0 || Requ(b, R1)) return null;
+    if (Rtext(b).length > 40 || Rtext(x).length > 40) return null;   /* lesson-sized */
+    var powers = [], p;
+    for (p = -PMAX; p <= PMAX; p += 1) powers.push(Rpow(b, p));
+    for (var q = 1; q <= QMAX; q += 1) {
+      var xq = Rpow(x, q);
+      for (p = -PMAX; p <= PMAX; p += 1) {
+        if (!Requ(powers[p + PMAX], xq)) continue;
+        var g = bgcd(BigInt(p < 0 ? -p : p), BigInt(q)) || 1n;
+        return R(BigInt(p) / g, BigInt(q) / g);
+      }
+    }
+    return null;
+  }
+
+  /* The integer part of log_b(x), found by multiplying by b until x is passed.
+     It returns the two powers that trap x, so a lab can show 2^3 < 10 < 2^4 as
+     an exact statement before it shows any decimal at all. */
+  function bracketexp(b, x) {
+    if (Rsign(b) <= 0 || Requ(b, R1) || Rsign(x) <= 0) return null;
+    var up = Rcmp(b, R1) > 0, k = 0, cur = R1, guard = 0;
+    while (guard++ < 2000) {
+      var next = Rmul(cur, b);
+      if (!(up ? Rcmp(next, x) <= 0 : Rcmp(next, x) >= 0)) break;
+      cur = next; k += 1;
+    }
+    if (guard >= 2000) return null;
+    guard = 0;
+    while (guard++ < 2000) {
+      if (!(up ? Rcmp(cur, x) > 0 : Rcmp(cur, x) < 0)) break;
+      cur = Rdiv(cur, b); k -= 1;
+    }
+    if (guard >= 2000) return null;
+    return { k: k, low: cur, high: Rmul(cur, b) };
+  }
+
+  /* One logarithm, with its provenance attached. kind is 'exact' when the
+     search found the exponent, 'searched' when it did not (and then br holds
+     the powers that bracket x and v is a rounded double), and a named refusal
+     when the base or the argument is outside the definition. */
+  function logvalue(b, x) {
+    if (Rsign(b) <= 0) return { kind: 'badbase' };
+    if (Requ(b, R1)) return { kind: 'base1' };
+    if (Rsign(x) <= 0) return { kind: 'domain' };
+    var y = ratpow(b, x);
+    if (y !== null) return { kind: 'exact', y: y, v: Rfloat(y) };
+    var br = bracketexp(b, x);
+    /* A whole-number exponent past the end of the search is still exact: if the
+       lower power in the bracket IS x, the logarithm is that integer. b = 2 and
+       x = 2^100 would otherwise be reported as "no exact answer", which is
+       false, and a lab that says something false about its own search is worse
+       than one that searches a smaller range. */
+    if (br !== null && Requ(br.low, x)) return { kind: 'exact', y: R(BigInt(br.k)), v: br.k };
+    return { kind: 'searched', br: br, v: Math.log(Rfloat(x)) / Math.log(Rfloat(b)) };
+  }
+  /* What to print for one logarithm, exact or not, in six characters or sixty. */
+  function logtext(lv, places) {
+    if (places === undefined) places = 6;
+    if (lv.kind === 'exact') return Rtext(lv.y);
+    if (lv.kind === 'searched') return '&asymp;&nbsp;' + lv.v.toFixed(places);
+    if (lv.kind === 'domain') return 'undefined';
+    if (lv.kind === 'base1') return 'undefined (base 1)';
+    return 'undefined (base &le; 0)';
+  }
+  function logfloat(lv) { return lv.kind === 'exact' ? Rfloat(lv.y) : lv.v; }
+
+  /* ---- small HTML the two labs share ---- */
+  function cell(t, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + t + '</td>'; }
+  function rowhead(t) { return '<th class="rowhead">' + t + '</th>'; }
+  function trow(cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.join('') + '</tr>'; }
+  function ttable(caption, heads, rows) {
+    var head = heads.length
+      ? '<thead><tr>' + heads.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead>'
+      : '';
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption + '</caption>'
+      + head + '<tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  /* The two-column "step / what it says" table the exemplar uses. */
+  function steps(caption, pairs) {
+    return ttable(caption, [], pairs.map(function (p) {
+      return trow([rowhead(p[0]), cell(p[1])]);
+    }));
+  }
+  function chip(text, cls) { return '<span class="chip ' + cls + '">' + text + '</span>'; }
+
+  var MODE = 'define';
+  var FIELDS = ['lgBase', 'lgX'];
+  var preset = document.getElementById('lgPreset');
+  var svg = document.getElementById('lgPlot');
+  var work = document.getElementById('lgWork'), status = document.getElementById('lgStatus');
+  var titleOut = document.getElementById('lgTitle'), subOut = document.getElementById('lgSub');
+  var kpi1 = document.getElementById('lgKpi1');
+  var kpi2 = document.getElementById('lgKpi2');
+  var kpi3 = document.getElementById('lgKpi3');
+
+  function readnum(id) {
+    var el = document.getElementById(id);
+    if (!el) return null;
+    try { return Rparse(el.value); } catch (err) { return null; }
+  }
+  function readtext(id) {
+    var el = document.getElementById(id);
+    return el ? String(el.value).trim() : '';
+  }
+  /* The base, which is the one input that may be the irrational e. Modes that
+     need exact arithmetic refuse it by name rather than by silently rounding. */
+  function readbase(id) {
+    var raw = readtext(id);
+    if (raw.toLowerCase() === 'e') return { kind: 'e', v: Math.E, text: 'e' };
+    var r = readnum(id);
+    return r === null ? null : { kind: 'q', r: r, v: Rfloat(r), text: Rterm(r) };
+  }
+  function setkpis(a, b, c) { kpi1.innerHTML = a; kpi2.innerHTML = b; kpi3.innerHTML = c; }
+  function blankStage() {
+    var p = Plot(svg, { xmin: -1, xmax: 9, ymin: -4, ymax: 4 });
+    p.frame();
+    p.describe('an empty frame: the values in the panel do not describe a logarithm.');
+    return p;
+  }
+  function fail(message) {
+    status.innerHTML = message;
+    work.innerHTML = '';
+    setkpis('&mdash;', '&mdash;', '&mdash;');
+    blankStage();
+  }
+  /* "x", "x - 2", "x + 3" -- the argument of a logarithm, written the way it
+     would be written by hand. */
+  function argtext(p) {
+    if (Rzero(p)) return 'x';
+    return Rsign(p) > 0 ? 'x - ' + Rtext(p) : 'x + ' + Rtext(Rneg(p));
+  }
+  function logname(b, arg) { return 'log_' + b + '(' + arg + ')'; }
+
+  /* Every mode that needs one uses the same sentence for a refusal, so the
+     reader meets the same three conditions on a base everywhere. */
+  function baseProblem(bb, allowOne) {
+    if (bb === null) return '<strong>The base has to be a whole number or a fraction.</strong> '
+      + 'Try 2, 10 or 3/2.';
+    if (bb.kind === 'e') return null;
+    if (allowOne && Requ(bb.r, R1) && Rsign(bb.r) > 0) return null;   /* the graph draws it */
+    if (Rsign(bb.r) <= 0) {
+      return '<strong>A base has to be positive.</strong> With b = ' + Rtext(bb.r)
+        + ', b^(1/2) is not a real number, so b^y is not defined for every y and the exponent '
+        + 'cannot be undone. That is the whole reason the definition insists on b &gt; 0.';
+    }
+    if (Requ(bb.r, R1)) {
+      return '<strong>Base 1 has no logarithm.</strong> 1^y = 1 for every y, so 1^y = x has no '
+        + 'solution at all when x is not 1, and every y at once when x is 1. A function that is '
+        + 'constant cannot be inverted, which is exactly what a logarithm is: an inverse.';
+    }
+    return null;
+  }
+
+  /* ----------------------------------------------------------- define ---- */
+
+  function drawDefine() {
+    var bb = readbase('lgBase'), x = readnum('lgX');
+    var problem = baseProblem(bb);
+    if (problem) { fail(problem); return; }
+    if (bb.kind === 'e') {
+      fail('<strong>This mode needs an exact base.</strong> e is irrational, so there is no '
+        + 'fraction p/q with e^p = x^q to search for and nothing here could be exact. Try 2, 10 or '
+        + '9; the graph mode will draw base e.');
+      return;
+    }
+    if (x === null) {
+      fail('<strong>x has to be a whole number or a fraction.</strong> Try 8, 1/1000 or 10.');
+      return;
+    }
+    var b = bb.r;
+    titleOut.textContent = 'log_' + Rterm(b) + '(' + Rtext(x) + ') = y   means   '
+      + Rterm(b) + '^y = ' + Rtext(x);
+    subOut.textContent = 'one fact, written two ways';
+
+    /* The table is the definition, read in both directions. */
+    var rows = [], k;
+    for (k = -3; k <= 3; k += 1) {
+      var v = Rpow(b, k);
+      rows.push(trow([
+        cell(Rterm(b) + '^' + k + ' = ' + Rshow(v)),
+        cell('log_' + Rterm(b) + '(' + Rshow(v) + ') = ' + k),
+        cell(Requ(v, x) ? chip('this is your x', 'ok') : '')
+      ], Requ(v, x) ? 'focus' : ''));
+    }
+    var blocks = [ttable('the same seven facts, each written both ways',
+      ['as a power', 'as a logarithm', ''], rows)];
+
+    var lv = logvalue(b, x);
+    var pairs = [];
+    if (lv.kind === 'domain') {
+      pairs.push(['the question', 'log_' + Rterm(b) + '(' + Rtext(x) + ') asks for a y with '
+        + Rterm(b) + '^y = ' + Rtext(x) + '.']);
+      pairs.push(['why there is no answer', 'every entry in the middle column above is positive, '
+        + 'and that is not an accident of the range shown: a positive base raised to any real '
+        + 'power is positive. So no y gives ' + Rtext(x)
+        + ', and log_' + Rterm(b) + '(' + Rtext(x) + ') is undefined. The domain of a logarithm is '
+        + 'x &gt; 0, and it is the range of the exponential turned on its side.']);
+    } else if (lv.kind === 'exact') {
+      var y = lv.y;
+      pairs.push(['the search', 'looking for an exponent p/q with ' + Rterm(b) + '^p = '
+        + Rtext(x) + '^q, over every p from -48 to 48 and every q up to 12.']);
+      pairs.push(['it found one', 'p/q = ' + Rtext(y) + ', so log_' + Rterm(b) + '('
+        + Rtext(x) + ') = ' + Rtext(y) + ' exactly.']);
+      var lhs = Rpow(b, Number(y.n)), rhs = Rpow(x, Number(y.d));
+      pairs.push(['the check, in exact arithmetic', Rterm(b) + '^' + String(y.n) + ' = ' + Rshow(lhs)
+        + ' and ' + Rterm(x) + '^' + String(y.d) + ' = ' + Rshow(rhs) + '. '
+        + (Requ(lhs, rhs) ? 'They are equal, so the exponent is right.' : 'They differ.')]);
+    } else {
+      pairs.push(['the search', 'no p/q with |p| &le; 48 and q &le; 12 satisfies ' + Rterm(b)
+        + '^p = ' + Rtext(x) + '^q, and x is not a whole power of ' + Rterm(b)
+        + ' either. So the answer is not a fraction of that size; where no fraction works at all, '
+        + 'the logarithm is irrational and no decimal will ever be equal to it.']);
+      if (lv.br) {
+        pairs.push(['what is still exact', Rterm(b) + '^' + lv.br.k + ' = ' + Rshow(lv.br.low)
+          + ' and ' + Rterm(b) + '^' + (lv.br.k + 1) + ' = ' + Rshow(lv.br.high) + ', and '
+          + Rshow(lv.br.low) + ' &lt; ' + Rtext(x) + ' &lt; ' + Rshow(lv.br.high)
+          + '. So ' + lv.br.k + ' &lt; log_' + Rterm(b) + '(' + Rtext(x) + ') &lt; ' + (lv.br.k + 1)
+          + ', proved by multiplication alone.']);
+      }
+      pairs.push(['only now, a decimal', 'log_' + Rterm(b) + '(' + Rtext(x) + ') &asymp; '
+        + lv.v.toFixed(8) + ', rounded to 8 places. It is a rounding of an irrational number and '
+        + 'not the number itself.']);
+    }
+    blocks.push(steps('your x', pairs));
+    work.innerHTML = blocks.join('');
+
+    /* The picture is the definition too: the height of b^t reaching x. */
+    var bv = Rfloat(b), xv = Rfloat(x);
+    var yv = lv.kind === 'exact' ? Rfloat(lv.y) : (lv.kind === 'searched' ? lv.v : null);
+    var lo = -3, hi = 3;
+    if (yv !== null && isFinite(yv)) { lo = Math.min(lo, yv - 1); hi = Math.max(hi, yv + 1); }
+    var top = Math.max(Math.abs(xv) * 1.4, Math.pow(bv, hi), 2);
+    if (!isFinite(top) || top > 1e6) top = Math.max(Math.abs(xv) * 1.4, 2);
+    var plot = Plot(svg, { xmin: lo, xmax: hi, ymin: -top * 0.12, ymax: top });
+    plot.frame();
+    plot.curve(function (t) { return Math.pow(bv, t); });
+    if (Rsign(x) > 0) plot.hline(xv, 'plot-asym', 'y = ' + Rtext(x));
+    if (yv !== null && isFinite(yv)) {
+      plot.segment(yv, 0, yv, xv, 'plot-aux');
+      plot.point(yv, xv, 'plot-point', 'y = ' + (lv.kind === 'exact' ? Rtext(lv.y) : lv.v.toFixed(4)));
+    }
+    plot.describe('the curve y = ' + Rterm(b) + '^t with the horizontal line y = ' + Rtext(x)
+      + ', meeting where t is the logarithm.');
+
+    if (lv.kind === 'exact') {
+      setkpis(Rtext(lv.y), Rterm(b) + '^' + Rterm(lv.y) + ' = ' + Rtext(x), chip('exact', 'ok'));
+      status.innerHTML = '<strong>log_' + Rterm(b) + '(' + Rtext(x) + ') = ' + Rtext(lv.y)
+        + ', and that is a statement about an exponent.</strong> The logarithm asks one question '
+        + 'and only one: what power of ' + Rterm(b) + ' gives ' + Rtext(x)
+        + '? Every row of the table above is the same question answered in advance, read left to '
+        + 'right as a power and right to left as a logarithm. Nothing was looked up &mdash; the '
+        + 'exponent was searched for in exact arithmetic and then checked by raising ' + Rterm(b)
+        + ' to it.';
+    } else if (lv.kind === 'domain') {
+      setkpis('undefined', 'no y at all', chip('outside the domain', 'no'));
+      status.innerHTML = '<strong>There is no such exponent.</strong> log_' + Rterm(b) + '('
+        + Rtext(x) + ') would be a y with ' + Rterm(b) + '^y = ' + Rtext(x)
+        + ', and a positive base raised to a real power is always positive &mdash; large for big y, '
+        + 'small for very negative y, and never zero or below. The curve above has the horizontal '
+        + 'axis as an asymptote for exactly this reason, which is why the domain of every '
+        + 'logarithm is x &gt; 0.';
+    } else {
+      setkpis('&asymp; ' + lv.v.toFixed(6),
+        lv.br ? (lv.br.k + ' &lt; y &lt; ' + (lv.br.k + 1)) : 'between two powers',
+        chip('no exact power', 'hi'));
+      status.innerHTML = '<strong>The exact search came back empty, and that is the answer.</strong> '
+        + 'No fraction p/q in the search range has ' + Rterm(b) + '^p = ' + Rtext(x) + '^q, so '
+        + 'log_' + Rterm(b) + '(' + Rtext(x) + ') is not a fraction of that size &mdash; and for a '
+        + 'pair like this one no fraction works at all, which is what "irrational" means. What is '
+        + 'still exact is the bracket: '
+        + (lv.br ? (Rshow(lv.br.low) + ' &lt; ' + Rtext(x) + ' &lt; ' + Rshow(lv.br.high) + ', so '
+                    + lv.br.k + ' &lt; log_' + Rterm(b) + '(' + Rtext(x) + ') &lt; ' + (lv.br.k + 1) + '. ')
+                 : '')
+        + 'The decimal ' + lv.v.toFixed(8) + ' comes last, and it is a rounding.';
+    }
+  }
+
+  /* ------------------------------------------------------------ graph ---- */
+
+  function drawGraph() {
+    var bb = readbase('lgBase'), x = readnum('lgX');
+    /* Base 1 is allowed IN here, on purpose: the reader is meant to watch a
+       constant function fail to have an inverse rather than be told it does. */
+    var problem = baseProblem(bb, true);
+    if (problem) { fail(problem); return; }
+    if (x === null) {
+      fail('<strong>The point to trace has to be a number.</strong> It is the x at which the two '
+        + 'curves are sampled; try 1, 2 or 3.');
+      return;
+    }
+    var exact = bb.kind === 'q';
+    var bv = bb.v, btext = bb.text;
+    var constant = exact && Requ(bb.r, R1);
+    titleOut.textContent = 'y = ' + btext + '^x   and   y = log_' + btext + '(x)';
+    subOut.textContent = constant ? 'a constant function has no inverse'
+                                  : 'each is the other reflected in y = x';
+
+    var rows = [], t;
+    for (t = -2; t <= 3; t += 1) {
+      var v = exact ? Rpow(bb.r, t) : Math.pow(bv, t);
+      var vtext = exact ? Rshow(v) : v.toFixed(6);
+      rows.push(trow([
+        cell(String(t)), cell(vtext),
+        cell('(' + t + ', ' + vtext + ')'),
+        cell('(' + vtext + ', ' + t + ')'),
+        cell(exact ? chip('exact', 'ok') : chip('rounded', 'no'))
+      ]));
+    }
+    var pairs = [
+      ['the exponential', constant
+        ? 'domain: every real x. Range: the single value 1. A constant function is still a '
+          + 'function, and that is the only good thing to say about this one.'
+        : 'domain: every real x. Range: y &gt; 0. It has the horizontal line y = 0 as an asymptote '
+          + 'and never touches it.'],
+      ['the logarithm', constant
+        ? 'there is none. Undoing 1^x would mean answering "which x gave this 1?", and every x did.'
+        : 'domain: x &gt; 0. Range: every real y. It has the vertical line x = 0 as an asymptote '
+          + '&mdash; the same asymptote, reflected.'],
+      ['the reflection', constant
+        ? 'the fourth column is still the third column with its coordinates swapped, and look at '
+          + 'what it produces: (1, -2), (1, -1), (1, 0), ... one x with every y at once. That is a '
+          + 'vertical line, and a vertical line is not the graph of a function. There is no log '
+          + 'base 1 to draw, which is why the picture above has only one curve.'
+        : 'swapping the coordinates of a point is exactly what reflecting in y = x does, and the '
+          + 'fourth column above is the third column with its pair swapped. That is the whole '
+          + 'relationship: log_' + btext + ' undoes ' + btext + '^x, so its graph is that graph '
+          + 'seen from the other axis.']
+    ];
+    if (!constant && !exact) {
+      pairs.push(['base e', 'e is irrational, so every value in the table is a decimal rounded to '
+        + '6 places rather than a fraction. The shape of the picture is unaffected; the exactness '
+        + 'is what is lost, and it is worth noticing where.']);
+    }
+    work.innerHTML = ttable('points on one curve, and the same points on the other',
+      ['t', btext + '^t', 'on y = ' + btext + '^x',
+       constant ? 'reflected in y = x' : 'on y = log_' + btext + '(x)', 'arithmetic'], rows)
+      + steps('what the reflection means', pairs);
+
+    var span = Math.max(4, Math.abs(Rfloat(x)) + 2);
+    var lim = Math.min(span, 12);
+    var plot = Plot(svg, { xmin: -lim, xmax: lim, ymin: -lim, ymax: lim });
+    plot.frame();
+    plot.curve(function (t) { return t; }, 'plot-curve parent');
+    plot.hline(0, 'plot-asym', 'y = 0');
+    plot.vline(0, 'plot-asym', 'x = 0');
+    plot.curve(function (t) { return Math.pow(bv, t); });
+    if (!constant) {
+      plot.curve(function (t) { return t > 0 ? Math.log(t) / Math.log(bv) : NaN; }, 'plot-curve alt');
+    }
+    var xv = Rfloat(x), yv = Math.pow(bv, xv);
+    if (isFinite(yv) && Math.abs(yv) < 1e6) {
+      plot.point(xv, yv, 'plot-point', '(' + Rtext(x) + ', ' + yv.toFixed(3) + ')');
+      if (!constant) plot.point(yv, xv, 'plot-point vertex', '(' + yv.toFixed(3) + ', ' + Rtext(x) + ')');
+      plot.segment(xv, yv, yv, xv, 'plot-aux');
+    }
+    plot.describe('y = ' + btext + '^x and y = log_' + btext + '(x) drawn together with the line '
+      + 'y = x, and one point shown on both curves with its coordinates swapped.');
+
+    setkpis(isFinite(yv) ? (exact ? Rshow(Rpow(bb.r, Math.round(xv))) : yv.toFixed(6)) : 'too large',
+      '(' + (isFinite(yv) ? yv.toFixed(3) : '?') + ', ' + Rtext(x) + ')',
+      constant ? 'flat' : (bv > 1 ? 'both rise' : 'both fall'));
+
+    if (constant) {
+      status.innerHTML = '<strong>Base 1 is where the picture stops working.</strong> y = 1^x is a '
+        + 'horizontal line, and every horizontal line fails the test an inverse needs: two '
+        + 'different x values share one y, so undoing it has no single answer. Reflected in y = x '
+        + 'the line becomes vertical, which is not the graph of a function at all. That is why '
+        + 'b = 1 is excluded from the definition, and it is the same exclusion that kept it out '
+        + 'of the exponential.';
+    } else {
+      status.innerHTML = '<strong>The two curves are one curve, looked at from the other axis.</strong> '
+        + (bv > 1 ? 'With b = ' + btext + ' &gt; 1 both rise: the exponential steeply and the '
+                    + 'logarithm ever more slowly. '
+                  : 'With 0 &lt; b = ' + btext + ' &lt; 1 both fall, which is the case people '
+                    + 'forget: a logarithm is not automatically an increasing function. ')
+        + 'The traced point is at ' + Rtext(x) + ' on the exponential, and the same pair of numbers '
+        + 'in the other order sits on the logarithm, on the far side of the dashed line y = x. '
+        + 'The exponential\'s horizontal asymptote y = 0 reflects to the logarithm\'s vertical '
+        + 'asymptote x = 0, which is the graph saying what the domain already said: the argument '
+        + 'of a logarithm is positive, and as it approaches zero the log falls without bound.';
+    }
+  }
+
+  /* ------------------------------------------------------------- laws ---- */
+
+  /* A quantity that may or may not be exact, so that a law can be CHECKED
+     exactly when both sides are exact and numerically when they are not --
+     and can say which of the two just happened. */
+  function Q(lv) {
+    return lv.kind === 'exact' ? { exact: true, r: lv.y, v: Rfloat(lv.y) }
+                               : { exact: false, r: null, v: lv.v };
+  }
+  function Qnum(r) { return { exact: true, r: r, v: Rfloat(r) }; }
+  function Qadd(a, b) {
+    return (a.exact && b.exact) ? Qnum(Radd(a.r, b.r)) : { exact: false, r: null, v: a.v + b.v };
+  }
+  function Qsub(a, b) {
+    return (a.exact && b.exact) ? Qnum(Rsub(a.r, b.r)) : { exact: false, r: null, v: a.v - b.v };
+  }
+  function Qmul(a, b) {
+    return (a.exact && b.exact) ? Qnum(Rmul(a.r, b.r)) : { exact: false, r: null, v: a.v * b.v };
+  }
+  function Qdiv(a, b) {
+    if (a.exact && b.exact && !Rzero(b.r)) return Qnum(Rdiv(a.r, b.r));
+    return { exact: false, r: null, v: a.v / b.v };
+  }
+  function Qtext(q, places) {
+    if (q.exact) return Rtext(q.r);
+    if (!isFinite(q.v)) return 'undefined';
+    return '&asymp;&nbsp;' + q.v.toFixed(places === undefined ? 8 : places);
+  }
+  /* Equal exactly, or equal as far as a double can see. The distinction is
+     reported rather than smoothed over. */
+  function Qeq(a, b) {
+    if (a.exact && b.exact) return { same: Requ(a.r, b.r), how: 'exact' };
+    if (!isFinite(a.v) || !isFinite(b.v)) return { same: false, how: 'undefined' };
+    return { same: Math.abs(a.v - b.v) < 1e-9, how: 'numerical' };
+  }
+
+  function drawLaws() {
+    var bb = readbase('lgBase'), M = readnum('lgM'), N = readnum('lgN'), p = readnum('lgP');
+    var problem = baseProblem(bb);
+    if (problem) { fail(problem); return; }
+    if (bb.kind === 'e') {
+      fail('<strong>This mode needs an exact base.</strong> With e the checks below could only be '
+        + 'numerical, and a law that is only ever checked to twelve decimal places is a law the '
+        + 'reader has to take on trust. Try 2, 10, 3 or 4.');
+      return;
+    }
+    if (M === null || N === null || p === null) {
+      fail('<strong>M, N and p all have to be numbers.</strong> M and N are the arguments of the '
+        + 'logarithms and p is the exponent in the power law.');
+      return;
+    }
+    if (Rsign(M) <= 0 || Rsign(N) <= 0) {
+      fail('<strong>Every law here is about log_b(M) and log_b(N), so M and N must be positive.</strong> '
+        + 'With M = ' + Rtext(M) + ' and N = ' + Rtext(N) + ', at least one of those logarithms does '
+        + 'not exist, and a law cannot be checked on a quantity that is undefined. That is not a '
+        + 'technicality: it is why log(MN) = log M + log N needs both arguments positive even '
+        + 'though the product of two negatives would be positive.');
+      return;
+    }
+    if (!Rint(p) || p.n > 40n || p.n < -40n) {
+      fail('<strong>p has to be a whole number between -40 and 40.</strong> M^p is then an exact '
+        + 'fraction and the power law can be checked in fractions rather than to eight decimal '
+        + 'places. A fractional p would make both sides approximate, which proves less; a huge one '
+        + 'would make M^p a number with more digits than the page.');
+      return;
+    }
+    var b = bb.r, pn = Number(p.n);
+    titleOut.textContent = 'base ' + Rterm(b) + ',  M = ' + Rtext(M) + ',  N = ' + Rtext(N)
+      + ',  p = ' + Rtext(p);
+    subOut.textContent = 'every row below is computed twice, from each side';
+
+    var lM = Q(logvalue(b, M)), lN = Q(logvalue(b, N)), lb = Q(logvalue(b, b));
+    /* Each law is stated in general and then computed on these numbers, so the
+       reader can see which statement the two value columns belong to. */
+    function lg(v) { return 'log_' + Rterm(b) + '(' + Rshow(v) + ')'; }
+    var laws = [
+      ['the product law<br>log_b(MN) = log_b(M) + log_b(N)',
+        lg(Rmul(M, N)), Q(logvalue(b, Rmul(M, N))), lg(M) + ' + ' + lg(N), Qadd(lM, lN)],
+      ['the quotient law<br>log_b(M/N) = log_b(M) - log_b(N)',
+        lg(Rdiv(M, N)), Q(logvalue(b, Rdiv(M, N))), lg(M) + ' - ' + lg(N), Qsub(lM, lN)],
+      ['the power law<br>log_b(M^p) = p log_b(M)',
+        lg(Rpow(M, pn)), Q(logvalue(b, Rpow(M, pn))), Rterm(p) + ' ' + lg(M), Qmul(Qnum(p), lM)],
+      ['the log of 1<br>log_b(1) = 0', lg(R1), Q(logvalue(b, R1)), '0', Qnum(R0)],
+      ['the log of the base<br>log_b(b) = 1', lg(b), lb, '1', Qnum(R1)],
+      ['the reciprocal<br>log_b(1/N) = -log_b(N)',
+        lg(Rinv(N)), Q(logvalue(b, Rinv(N))), '-' + lg(N), Qsub(Qnum(R0), lN)]
+    ];
+    var held = 0, anyNumeric = false;
+    var rows = laws.map(function (law) {
+      var verdict = Qeq(law[2], law[4]);
+      if (verdict.same) held += 1;
+      if (verdict.how === 'numerical') anyNumeric = true;
+      return trow([
+        rowhead(law[0]), cell(law[1]), cell(Qtext(law[2])), cell(law[3]), cell(Qtext(law[4])),
+        cell(verdict.same ? 'holds' : 'FAILS', verdict.same ? 't' : 'f'),
+        cell(verdict.how === 'exact' ? chip('exact', 'ok') : chip(verdict.how, 'hi'))
+      ]);
+    });
+
+    /* The two laws nobody was taught and everybody writes down anyway. */
+    var invented = [
+      ['"the log of a sum is the sum of the logs"<br>log_b(M + N) = log_b(M) + log_b(N)',
+        lg(Radd(M, N)), Q(logvalue(b, Radd(M, N))), lg(M) + ' + ' + lg(N), Qadd(lM, lN)],
+      ['"dividing the arguments divides the logs"<br>log_b(M/N) = log_b(M) / log_b(N)',
+        lg(Rdiv(M, N)), Q(logvalue(b, Rdiv(M, N))), lg(M) + ' / ' + lg(N), Qdiv(lM, lN)]
+    ];
+    var inventedHeld = 0;
+    var irows = invented.map(function (law) {
+      var verdict = Qeq(law[2], law[4]);
+      if (verdict.same) inventedHeld += 1;
+      return trow([
+        rowhead(law[0]), cell(law[1]), cell(Qtext(law[2])), cell(law[3]), cell(Qtext(law[4])),
+        cell(verdict.same ? 'holds here' : 'FAILS', verdict.same ? 't' : 'f'),
+        cell(verdict.how === 'exact' ? chip('exact', 'ok') : chip(verdict.how, 'hi'))
+      ]);
+    });
+
+    work.innerHTML = ttable('the laws, each side computed on its own',
+      ['law', 'left side', 'value', 'right side', 'value', 'verdict', 'checked'], rows)
+      + ttable('the two laws that do not exist, on the same numbers',
+        ['the claim', 'left side', 'value', 'right side', 'value', 'verdict', 'checked'], irows)
+      + steps('why the first six hold and the last two cannot', [
+        ['where the laws come from', 'b^u &middot; b^v = b^(u+v). Write M = b^u and N = b^v and '
+          + 'that line says log_b(MN) = u + v = log_b(M) + log_b(N). Every law in the first table '
+          + 'is one exponent rule read backwards, which is why they need no separate proof.'],
+        ['why the sum has no law', 'there is no rule turning b^u + b^v into a single power of b, '
+          + 'so there is nothing for log_b(M + N) to be. The first row of the second table shows '
+          + 'the gap on real numbers: ' + Qtext(Q(logvalue(b, Radd(M, N))), 6) + ' against '
+          + Qtext(Qadd(lM, lN), 6) + '.'],
+        ['why the quotient of logs is not the log of the quotient', 'log_b(M) / log_b(N) is a real '
+          + 'thing &mdash; it is log_N(M), the change of base formula &mdash; and it answers a '
+          + 'different question. The second row shows the two side by side: '
+          + Qtext(Q(logvalue(b, Rdiv(M, N))), 6) + ' against ' + Qtext(Qdiv(lM, lN), 6) + '.'],
+        ['what "checked exactly" means here', 'a row marked exact was decided by comparing two '
+          + 'fractions, not two decimals. A row marked numerical had at least one irrational '
+          + 'logarithm in it and was compared to within 1e-9, which is evidence rather than proof.']
+      ]);
+
+    /* The product law as a picture: three heights on one curve, two of them
+       adding to the third. */
+    var bv = Rfloat(b), Mv = Rfloat(M), Nv = Rfloat(N), MNv = Mv * Nv;
+    var xmax = Math.max(MNv * 1.15, 2);
+    if (!isFinite(xmax) || xmax > 1e6) xmax = Math.max(Mv, Nv) * 2 + 2;
+    var lows = [Math.log(Mv), Math.log(Nv), Math.log(MNv)].map(function (v) { return v / Math.log(bv); });
+    var ylo = Math.min.apply(null, lows.concat([0])), yhi = Math.max.apply(null, lows.concat([0]));
+    var ypad = Math.max(0.6, (yhi - ylo) * 0.2);
+    var plot = Plot(svg, { xmin: -xmax * 0.05, xmax: xmax, ymin: ylo - ypad, ymax: yhi + ypad });
+    plot.frame();
+    plot.vline(0, 'plot-asym', 'x = 0');
+    plot.curve(function (t) { return t > 0 ? Math.log(t) / Math.log(bv) : NaN; });
+    [[Mv, 'M'], [Nv, 'N'], [MNv, 'MN']].forEach(function (item) {
+      if (!isFinite(item[0]) || item[0] <= 0 || item[0] > xmax) return;
+      var h = Math.log(item[0]) / Math.log(bv);
+      plot.segment(item[0], 0, item[0], h, 'plot-aux');
+      plot.point(item[0], h, 'plot-point', item[1]);
+    });
+    plot.describe('y = log_' + Rterm(b) + '(x) with M, N and MN marked, the height at MN being the '
+      + 'sum of the heights at M and at N.');
+
+    setkpis(held + ' of ' + laws.length, inventedHeld + ' of 2',
+      anyNumeric ? chip('some numerically', 'hi') : chip('all exactly', 'ok'));
+
+    var sameMN = Requ(M, N);
+    status.innerHTML = '<strong>' + held + ' of the ' + laws.length + ' laws held on these numbers, '
+      + 'and ' + (inventedHeld === 0 ? 'neither invented one did' : inventedHeld + ' of the invented ones did')
+      + '.</strong> '
+      + (sameMN
+        ? 'With M = N the second table is at its clearest: log_b(M + N) is log_b of double M, one '
+          + 'step further along the curve, while log_b(M) + log_b(N) is double the height &mdash; '
+          + 'two completely different operations that happen to be spelled similarly. '
+        : 'The gap is not small and it is not a rounding: the two columns in the second table are '
+          + 'answers to different questions. ')
+      + 'A law is a statement about every M and N, so one honest counterexample settles it, while '
+      + 'no number of agreeing examples would prove it. The first table is a check, not a proof; '
+      + 'the proof is the exponent rule quoted underneath it.';
+  }
+
+  /* ----------------------------------------------------------- common ---- */
+
+  function drawCommon() {
+    var x = readnum('lgX');
+    if (x === null) {
+      fail('<strong>x has to be a whole number or a fraction.</strong> Try 5000, 1/500 or 7.');
+      return;
+    }
+    titleOut.textContent = 'log_10(' + Rtext(x) + ')   and   ln(' + Rtext(x) + ')';
+    subOut.textContent = 'the two bases a calculator carries';
+    if (Rsign(x) <= 0) {
+      var plot0 = Plot(svg, { xmin: -1, xmax: 12, ymin: -3, ymax: 2 });
+      plot0.frame();
+      plot0.vline(0, 'plot-asym', 'x = 0');
+      plot0.curve(function (t) { return t > 0 ? Math.log(t) / Math.LN10 : NaN; });
+      plot0.curve(function (t) { return t > 0 ? Math.log(t) : NaN; }, 'plot-curve alt');
+      plot0.describe('y = log_10(x) and y = ln(x), both stopping at x = 0, which is where the '
+        + 'requested value lies.');
+      work.innerHTML = steps('what happens at x = ' + Rtext(x), [
+        ['the characteristic', 'there is none. The characteristic is the k with 10^k &le; x, and '
+          + 'no power of ten is zero or negative, so the search has nothing to return.'],
+        ['what a calculator does', 'it prints an error, or -Infinity for zero. -Infinity is not a '
+          + 'number and not an answer: it is the machine reporting that log_10(x) falls without '
+          + 'bound as x approaches 0 from above, which the curve above shows.'],
+        ['the domain', 'x &gt; 0, for every base. The curve on the left of the picture simply does '
+          + 'not exist.']
+      ]);
+      setkpis('none', 'undefined', 'undefined');
+      status.innerHTML = '<strong>log_10(' + Rtext(x) + ') has no value.</strong> A logarithm asks '
+        + 'for the exponent that produces x, and 10 raised to any real power is positive. As x '
+        + 'falls toward 0 the logarithm falls without bound &mdash; which is a description of the '
+        + 'asymptote, not a value at 0. Everything else in this mode needs x &gt; 0.';
+      return;
+    }
+
+    /* The characteristic is found by comparing x with powers of ten. That part
+       is exact; the mantissa is the part that is not. */
+    var br = bracketexp(R(10n), x);
+    if (br === null) {
+      fail('<strong>That number is too far from 1 for this lab to bracket.</strong> The search '
+        + 'multiplies by ten until it passes x, and it gives up after 2000 steps rather than '
+        + 'pretending. Try something between 10^-100 and 10^100.');
+      return;
+    }
+    var k = br.k, mant = Rdiv(x, Rpow(R(10n), k));
+    var xv = Rfloat(x);
+    var log10 = Math.log(xv) / Math.LN10, ln = Math.log(xv), log2 = Math.log(xv) / Math.LN2;
+    var mantlog = Math.log(Rfloat(mant)) / Math.LN10;
+    var exactly = Requ(mant, R1);
+
+    work.innerHTML = ttable('the two parts of a common logarithm',
+      ['part', 'value', 'where it comes from', 'arithmetic'], [
+        trow([rowhead('x in scientific notation'), cell(Rshow(mant) + ' &times; 10^' + k),
+          cell('10^' + k + ' = ' + Rshow(br.low) + ' &le; ' + Rtext(x) + ' &lt; '
+            + Rshow(br.high) + ' = 10^' + (k + 1)), cell(chip('exact', 'ok'))]),
+        trow([rowhead('characteristic'), cell(String(k)),
+          cell('the whole number part: how many powers of ten fit inside x'), cell(chip('exact', 'ok'))]),
+        trow([rowhead('mantissa'), cell(exactly ? '0' : '&asymp;&nbsp;' + mantlog.toFixed(8)),
+          cell('log_10(' + Rshow(mant) + '), a number in [0, 1)'),
+          cell(exactly ? chip('exact', 'ok') : chip('irrational', 'hi'))]),
+        trow([rowhead('log_10(x)'), cell(exactly ? String(k) : '&asymp;&nbsp;' + log10.toFixed(8)),
+          cell('characteristic + mantissa = ' + k + (exactly ? '' : ' + ' + mantlog.toFixed(8))),
+          cell(exactly ? chip('exact', 'ok') : chip('rounded', 'no'))]),
+        trow([rowhead('ln(x)'), cell('&asymp;&nbsp;' + ln.toFixed(8)),
+          cell('log_10(x) &times; ln(10) = ' + log10.toFixed(8) + ' &times; ' + Math.LN10.toFixed(8)
+            + ' &asymp; ' + (log10 * Math.LN10).toFixed(8) + ', which agrees'),
+          cell(chip('rounded', 'no'))]),
+        trow([rowhead('log_2(x)'), cell('&asymp;&nbsp;' + log2.toFixed(8)),
+          cell('log_10(x) / log_10(2) &asymp; ' + (log10 / (Math.LN2 / Math.LN10)).toFixed(8)),
+          cell(chip('rounded', 'no'))])
+      ])
+      + steps('why this split is the whole history of the subject', [
+        ['ten times x has the same mantissa', 'x = ' + Rtext(x) + ' and 10x = ' + Rtext(Rmul(x, R(10n)))
+          + ' differ by exactly 1 in the characteristic and not at all in the mantissa, because '
+          + 'log_10(10x) = log_10(10) + log_10(x) = 1 + log_10(x). A table of logarithms therefore '
+          + 'only ever had to list mantissas for numbers between 1 and 10; the reader supplied the '
+          + 'characteristic by looking at the number.'],
+        ['what is exact here', 'the characteristic ' + k + ' and the scientific-notation form '
+          + Rshow(mant) + ' &times; 10^' + k + '. Both came from comparing fractions with powers of '
+          + 'ten, which is multiplication and nothing else.'],
+        ['what is not', exactly
+          ? 'nothing, on this x: the mantissa is 0 because x is exactly a power of ten, so '
+            + 'log_10(x) = ' + k + ' with no rounding anywhere.'
+          : 'the mantissa. log_10(' + Rshow(mant) + ') is irrational, and every decimal in the '
+            + 'last four rows is a rounding of it to 8 places.'],
+        ['ln against log', 'the two differ by the constant factor ln(10) &asymp; '
+          + Math.LN10.toFixed(8) + '. Which one a formula uses is a matter of convention, and the '
+          + 'row above checks the conversion by computing ln(x) twice, once directly and once '
+          + 'through log_10.']
+      ]);
+
+    var top = Math.max(xv * 1.3, 12);
+    var plot = Plot(svg, { xmin: -top * 0.04, xmax: top,
+                           ymin: Math.min(-2, ln - 2), ymax: Math.max(2, ln + 2) });
+    plot.frame();
+    plot.vline(0, 'plot-asym', 'x = 0');
+    plot.curve(function (t) { return t > 0 ? Math.log(t) / Math.LN10 : NaN; });
+    plot.curve(function (t) { return t > 0 ? Math.log(t) : NaN; }, 'plot-curve alt');
+    plot.point(xv, log10, 'plot-point', 'log_10 &asymp; ' + log10.toFixed(4));
+    plot.point(xv, ln, 'plot-point vertex');
+    plot.describe('y = log_10(x) and y = ln(x) with x = ' + Rtext(x) + ' marked on both.');
+
+    setkpis(String(k), exactly ? String(k) : '&asymp; ' + log10.toFixed(6), '&asymp; ' + ln.toFixed(6));
+
+    status.innerHTML = exactly
+      ? '<strong>log_10(' + Rtext(x) + ') = ' + k + ' exactly.</strong> x is a whole power of ten, '
+        + 'so the mantissa is zero and there is nothing to round. These are the only arguments for '
+        + 'which a common logarithm is exact, which is worth remembering when a page prints '
+        + 'log_10(2) = 0.3010 without a word about where the rest of the digits went.'
+      : '<strong>The characteristic is ' + k + ' and it is exact; the mantissa is not.</strong> '
+        + 'Writing x as ' + Rshow(mant) + ' &times; 10^' + k + ' splits log_10(x) into a whole '
+        + 'number anybody can read off and an irrational remainder in [0, 1) that has to be '
+        + 'computed. log_10(' + Rtext(x) + ') &asymp; ' + log10.toFixed(8) + ' is that sum, rounded '
+        + 'to 8 places, and ln(' + Rtext(x) + ') &asymp; ' + ln.toFixed(8) + ' is the same number '
+        + 'scaled by ln(10).';
+  }
+
+  /* ------------------------------------------------------------- base ---- */
+
+  function drawBase() {
+    var bb = readbase('lgBase'), x = readnum('lgX');
+    var problem = baseProblem(bb);
+    if (problem) { fail(problem); return; }
+    if (bb.kind === 'e') {
+      fail('<strong>Put a rational base here.</strong> This mode changes FROM base b TO the three '
+        + 'bases a calculator carries, and one of those three is e already.');
+      return;
+    }
+    if (x === null) {
+      fail('<strong>x has to be a whole number or a fraction.</strong> Try 343, 27 or 10.');
+      return;
+    }
+    var b = bb.r, bv = Rfloat(b);
+    titleOut.textContent = 'log_' + Rterm(b) + '(' + Rtext(x) + ')';
+    subOut.textContent = 'computed directly, and again through three other bases';
+
+    if (Rsign(x) <= 0) {
+      var pl = Plot(svg, { xmin: -1, xmax: 12, ymin: -4, ymax: 4 });
+      pl.frame();
+      pl.vline(0, 'plot-asym', 'x = 0');
+      pl.curve(function (t) { return t > 0 ? Math.log(t) / Math.log(bv) : NaN; });
+      pl.describe('y = log_' + Rterm(b) + '(x), which stops at x = 0.');
+      work.innerHTML = steps('change of base cannot rescue this', [
+        ['the formula', 'log_b(x) = log_c(x) / log_c(b). Changing base changes the tool, not the '
+          + 'question, and the question is still which power of ' + Rterm(b) + ' gives ' + Rtext(x) + '.'],
+        ['what happens to the numerator', 'log_c(' + Rtext(x) + ') is undefined for every base c, '
+          + 'because no positive base raised to a real power is zero or negative. A fraction with '
+          + 'an undefined numerator is not a number.'],
+        ['the honest answer', 'log_' + Rterm(b) + '(' + Rtext(x) + ') does not exist. x &gt; 0 is a '
+          + 'condition on the argument, not on the base.']
+      ]);
+      setkpis('undefined', 'undefined', chip('outside the domain', 'no'));
+      status.innerHTML = '<strong>An argument of ' + Rtext(x) + ' has no logarithm in any base.</strong> '
+        + 'Change of base multiplies a logarithm by a constant; it cannot create one where none '
+        + 'exists. The domain x &gt; 0 survives every change of base, which is one way of seeing '
+        + 'that the formula is a rescaling of the same curve rather than a different function.';
+      return;
+    }
+
+    var lv = logvalue(b, x);
+    /* An exact change of base: a base c that BOTH b and x are exact powers of.
+       When it exists the whole formula runs in fractions -- log_9(27) = 3/2 the
+       hard way, with nothing rounded anywhere. */
+    var shared = null, c;
+    for (c = 2; c <= 30 && shared === null; c += 1) {
+      var cr = R(BigInt(c)), eb = ratpow(cr, b), ex = ratpow(cr, x);
+      if (eb !== null && ex !== null && !Rzero(eb)) shared = { c: c, lb: eb, lx: ex };
+    }
+    var xv = Rfloat(x);
+    var helpers = [['10', Math.LN10], ['e', 1], ['2', Math.LN2]];
+    var rows = helpers.map(function (h) {
+      var lx = Math.log(xv) / h[1], lb2 = Math.log(bv) / h[1];
+      return trow([
+        cell('c = ' + h[0]), cell(lx.toFixed(8)), cell(lb2.toFixed(8)),
+        cell((lx / lb2).toFixed(8)), cell(chip('rounded', 'no'))
+      ]);
+    });
+    if (shared) {
+      rows.push(trow([
+        cell('c = ' + shared.c + ' (exact)'), cell(Rtext(shared.lx)), cell(Rtext(shared.lb)),
+        cell(Rtext(Rdiv(shared.lx, shared.lb))), cell(chip('exact', 'ok'))
+      ], 'focus'));
+    }
+
+    var pairs = [
+      ['the derivation', 'let y = log_b(x), so b^y = x. Take log_c of both sides: '
+        + 'log_c(b^y) = log_c(x). The power law makes the left side y&middot;log_c(b), so '
+        + 'y = log_c(x) / log_c(b). Nothing about c was used, which is why any c will do.'],
+      ['why a calculator only needs two buttons', 'log and ln are enough for every base, because '
+        + 'the formula turns log_' + Rterm(b) + ' into a division of two of them. The rows above '
+        + 'are three different c values landing on the same number.']
+    ];
+    if (shared) {
+      pairs.push(['the exact route', 'both ' + Rterm(b) + ' and ' + Rtext(x) + ' are powers of '
+        + shared.c + ': ' + shared.c + '^' + Rtext(shared.lb) + ' = ' + Rterm(b) + ' and '
+        + shared.c + '^' + Rtext(shared.lx) + ' = ' + Rtext(x) + '. So log_' + Rterm(b) + '('
+        + Rtext(x) + ') = ' + Rtext(shared.lx) + ' / ' + Rtext(shared.lb) + ' = '
+        + Rtext(Rdiv(shared.lx, shared.lb)) + ', in fractions, with nothing rounded.']);
+    } else {
+      pairs.push(['no exact route here', 'no whole number c up to 30 has both ' + Rterm(b)
+        + ' and ' + Rtext(x) + ' as exact powers, so every row above is a rounded decimal. They '
+        + 'agree to eight places, which is evidence that the formula is right and not a proof of '
+        + 'it &mdash; the proof is the derivation above.']);
+    }
+    work.innerHTML = ttable('log_' + Rterm(b) + '(' + Rtext(x) + ') = log_c(' + Rtext(x)
+      + ') / log_c(' + Rterm(b) + '), through four helper bases',
+      ['helper base c', 'log_c(x)', 'log_c(b)', 'the ratio', 'arithmetic'], rows)
+      + steps('where the formula comes from', pairs);
+
+    var xmax = Math.max(xv * 1.25, 12);
+    var ys = [Math.log(xv) / Math.log(bv), Math.log(xv) / Math.LN10, Math.log(xv), Math.log(xv) / Math.LN2];
+    var ylo = Math.min.apply(null, ys.concat([0])), yhi = Math.max.apply(null, ys.concat([0]));
+    var pad = Math.max(1, (yhi - ylo) * 0.2);
+    var plot = Plot(svg, { xmin: -xmax * 0.04, xmax: xmax, ymin: ylo - pad, ymax: yhi + pad });
+    plot.frame();
+    plot.vline(0, 'plot-asym', 'x = 0');
+    plot.curve(function (t) { return t > 0 ? Math.log(t) / Math.log(bv) : NaN; });
+    plot.curve(function (t) { return t > 0 ? Math.log(t) / Math.LN10 : NaN; }, 'plot-curve alt');
+    plot.curve(function (t) { return t > 0 ? Math.log(t) : NaN; }, 'plot-curve alt');
+    plot.curve(function (t) { return t > 0 ? Math.log(t) / Math.LN2 : NaN; }, 'plot-curve alt');
+    plot.point(xv, Math.log(xv) / Math.log(bv), 'plot-point', 'log_' + Rterm(b));
+    plot.describe('y = log_' + Rterm(b) + '(x) with log_10, ln and log_2 drawn beside it: the same '
+      + 'curve at four different vertical scales.');
+
+    var direct = Math.log(xv) / Math.log(bv);
+    var spread = Math.max.apply(null, helpers.map(function (h) {
+      return Math.abs((Math.log(xv) / h[1]) / (Math.log(bv) / h[1]) - direct);
+    }));
+    setkpis(lv.kind === 'exact' ? Rtext(lv.y) : '&asymp; ' + direct.toFixed(6),
+      '&asymp; ' + ((Math.log(xv) / Math.LN10) / (Math.log(bv) / Math.LN10)).toFixed(6),
+      spread < 1e-9 ? chip('agree to 1e-9', 'ok') : chip('differ', 'no'));
+
+    status.innerHTML = lv.kind === 'exact'
+      ? '<strong>log_' + Rterm(b) + '(' + Rtext(x) + ') = ' + Rtext(lv.y) + ', exactly.</strong> '
+        + 'The exponent search settled it without any change of base at all'
+        + (shared ? ', and the exact row above reaches the same fraction through base ' + shared.c
+                    + ' &mdash; two independent routes to ' + Rtext(lv.y) + '. ' : '. ')
+        + 'The three decimal rows agree with it to eight places, which is what the formula '
+        + 'promises: changing base rescales the whole curve by a constant and cannot move a value '
+        + 'that was already right.'
+      : '<strong>No exact exponent exists here, so the change of base formula is how the number is '
+        + 'reached at all.</strong> log_' + Rterm(b) + '(' + Rtext(x) + ') &asymp; '
+        + direct.toFixed(8) + ', and the three helper bases above land within 1e-9 of each other. '
+        + 'They must: log_c(x)/log_c(b) has the constant ln(c) in both parts, and it cancels. That '
+        + 'is the same reason all four curves in the picture have the same shape and differ only '
+        + 'in vertical scale.';
+  }
+
+  /* --------------------------------------------------------- solveexp ---- */
+
+  function drawSolveExp() {
+    var a = readnum('lgA'), bb = readbase('lgBase'), c = readnum('lgC');
+    var d = readnum('lgD'), k = readnum('lgK');
+    var problem = baseProblem(bb);
+    if (problem) { fail(problem); return; }
+    if (bb.kind === 'e') {
+      fail('<strong>Use a rational base here.</strong> The first method below asks whether the '
+        + 'right-hand side is an exact power of the base, and that question only has an exact '
+        + 'answer for a rational base. Try 2, 3, 4 or 10.');
+      return;
+    }
+    if (a === null || c === null || d === null || k === null) {
+      fail('<strong>a, c, d and k all have to be numbers.</strong> The equation is '
+        + 'a&middot;b^(cx + d) = k.');
+      return;
+    }
+    var b = bb.r, bv = Rfloat(b);
+    /* The equation, written the way it would be written by hand: no coefficient
+       glued to a base (5 and 2 side by side would read as fifty-two), and no
+       brackets round an exponent that is a single letter. */
+    var coef = Requ(a, R1) ? '' : (Requ(a, R(-1n)) ? '-' : Rtext(a));
+    var basetext = Rterm(b);
+    if (coef !== '' && coef !== '-' && basetext.charAt(0) !== '(') basetext = '(' + basetext + ')';
+    var expText = (Requ(c, R1) ? 'x' : (Requ(c, R(-1n)) ? '-x' : Rterm(c) + 'x'))
+      + (Rzero(d) ? '' : (Rsign(d) > 0 ? ' + ' + Rtext(d) : ' - ' + Rtext(Rabs(d))));
+    var expDisp = (expText === 'x' || expText === '-x') ? expText : '(' + expText + ')';
+    var expr = coef + basetext + '^' + expDisp;
+    titleOut.textContent = expr + ' = ' + Rtext(k);
+    subOut.textContent = 'matched powers first, logarithms second';
+
+    if (Rzero(a)) {
+      fail('<strong>With a = 0 the left side is 0 whatever x does.</strong> The equation is then '
+        + '0 = ' + Rtext(k) + ', which is either false for every x or true for every x &mdash; and '
+        + 'neither is what "solve for x" means. Set a to something non-zero.');
+      return;
+    }
+    var rhs = Rdiv(k, a);
+    var pairs = [['isolate the power', Requ(a, R1)
+      ? 'there is nothing to divide by: the power already stands alone, equal to ' + Rtext(rhs) + '.'
+      : 'divide both sides by ' + Rtext(a) + ': ' + Rterm(b) + '^' + expDisp + ' = ' + Rtext(rhs)
+        + '.']];
+
+    var solved = null, method = '', exactY = null;
+    if (Rsign(rhs) <= 0) {
+      pairs.push(['stop here', Rterm(b) + ' raised to any real power is positive &mdash; large '
+        + 'for big exponents, small for very negative ones, never zero and never negative. The '
+        + 'right-hand side is ' + Rtext(rhs) + ', so there is no exponent that could produce it, '
+        + 'and the equation has no solution. Taking logarithms of both sides at this point would '
+        + 'produce a number, and that number would be wrong.']);
+    } else {
+      exactY = ratpow(b, rhs);
+      if (exactY !== null) {
+        pairs.push(['both sides as powers of ' + Rterm(b), Rtext(rhs) + ' = ' + Rterm(b) + '^'
+          + Rterm(exactY) + ', found by searching exponents p/q with ' + Rterm(b) + '^p = '
+          + Rterm(rhs) + '^q. An exponential is one-to-one, so equal values force equal exponents: '
+          + expText + ' = ' + Rtext(exactY) + '.']);
+        if (Rzero(c)) {
+          var holds = Requ(d, exactY);
+          pairs.push(['c is 0, so x has vanished', holds
+            ? 'the equation reduces to a true statement, so every real x is a solution. That is an '
+              + 'identity rather than an equation to solve.'
+            : 'the equation reduces to ' + Rtext(d) + ' = ' + Rtext(exactY)
+              + ', which is false, so no x satisfies it.']);
+        } else {
+          solved = Rdiv(Rsub(exactY, d), c);
+          method = 'matched powers';
+          pairs.push(['solve the linear equation', 'x = (' + Rtext(exactY) + ' - ' + Rterm(d)
+            + ') / ' + Rterm(c) + ' = ' + Rtext(solved) + ', exactly.']);
+          var back = Radd(Rmul(c, solved), d);
+          /* The check stays exact even when the exponent is a fraction: b^(p/q)
+             is rhs precisely when b^p = rhs^q, and those are two whole numbers
+             to compare. */
+          pairs.push(['check by substitution', Rint(back)
+            ? Rterm(b) + '^' + Rterm(back) + ' = ' + Rshow(Rpow(b, Number(back.n))) + ', and '
+              + Rtext(k) + ' / ' + Rtext(a) + ' = ' + Rtext(rhs) + '. The two agree, in fractions.'
+            : Rterm(b) + '^' + String(back.n) + ' = ' + Rshow(Rpow(b, Number(back.n))) + ' and '
+              + Rterm(rhs) + '^' + String(back.d) + ' = ' + Rshow(Rpow(rhs, Number(back.d)))
+              + ', and those two are equal &mdash; which is exactly what ' + Rterm(b) + '^'
+              + Rterm(back) + ' = ' + Rtext(rhs) + ' means. No decimal was involved.']);
+        }
+      } else {
+        pairs.push(['no exact match', 'the search found no p/q with ' + Rterm(b) + '^p = '
+          + Rtext(rhs) + '^q, so the two sides cannot be written as powers of one base and the '
+          + 'first method has nothing to offer. This is the ordinary case, not the exceptional '
+          + 'one.']);
+      }
+      if (!Rzero(c)) {
+        var logv = Math.log(Rfloat(rhs)) / Math.log(bv);
+        var xnum = (logv - Rfloat(d)) / Rfloat(c);
+        var logExpr = 'log_' + Rterm(b) + '(' + Rtext(rhs) + ')';
+        if (!Rzero(d)) logExpr = '(' + logExpr + ' - ' + Rterm(d) + ')';
+        if (!Requ(c, R1)) logExpr = logExpr + ' / ' + Rterm(c);
+        pairs.push(['take logarithms of both sides', 'log_' + Rterm(b) + '(' + Rterm(b) + '^'
+          + expDisp + ') = ' + expText + ' by the power law, so ' + expText + ' = log_' + Rterm(b)
+          + '(' + Rtext(rhs) + ') &asymp; ' + logv.toFixed(8) + ', which gives x &asymp; '
+          + xnum.toFixed(8) + '.']);
+        pairs.push(['which of the two to trust', exactY !== null
+          ? 'they agree: ' + Rtext(solved === null ? exactY : solved) + ' against '
+            + xnum.toFixed(8) + '. The first is exact and the second is a rounding of it, so the '
+            + 'exact one is the answer to write down.'
+          : 'only the logarithm method applies, and its answer is irrational. '
+            + xnum.toFixed(8) + ' is a rounding to 8 places; the exact answer is the expression x = '
+            + logExpr + ', and leaving it in that form is not laziness.']);
+      }
+    }
+    work.innerHTML = steps('solving ' + expr + ' = ' + Rtext(k), pairs);
+
+    var av = Rfloat(a), cv = Rfloat(c), dv = Rfloat(d), kv = Rfloat(k);
+    var f = function (t) { return av * Math.pow(bv, cv * t + dv); };
+    var centre = 0;
+    if (solved !== null) centre = Rfloat(solved);
+    else if (Rsign(rhs) > 0 && !Rzero(c)) centre = (Math.log(Rfloat(rhs)) / Math.log(bv) - dv) / cv;
+    if (!isFinite(centre)) centre = 0;
+    var xmin = centre - 4, xmax = centre + 4;
+    var ys = [kv, f(xmin), f(xmax), 0];
+    var ylo = Math.min.apply(null, ys), yhi = Math.max.apply(null, ys);
+    if (!isFinite(ylo) || !isFinite(yhi) || yhi - ylo > 1e6) { ylo = Math.min(0, kv * 1.5); yhi = Math.max(1, kv * 1.5, 4); }
+    var span = Math.max(yhi - ylo, 1);
+    var plot = Plot(svg, { xmin: xmin, xmax: xmax, ymin: ylo - span * 0.12, ymax: yhi + span * 0.12 });
+    plot.frame();
+    plot.hline(kv, 'plot-asym', 'y = ' + Rtext(k));
+    plot.curve(f);
+    if (solved !== null) plot.point(Rfloat(solved), kv, 'plot-point root', 'x = ' + Rtext(solved));
+    else if (Rsign(rhs) > 0 && !Rzero(c) && isFinite(centre)) {
+      plot.point(centre, kv, 'plot-point root', 'x &asymp; ' + centre.toFixed(4));
+    }
+    plot.describe('y = ' + expr + ' and the horizontal line y = ' + Rtext(k)
+      + (Rsign(rhs) <= 0 ? ', which the curve never reaches.' : ', meeting at the solution.'));
+
+    if (Rsign(rhs) <= 0) {
+      setkpis('no solution', 'positivity', chip('nothing to check', 'no'));
+      status.innerHTML = '<strong>No solution, and the reason is worth more than the answer.</strong> '
+        + 'After dividing by ' + Rtext(a) + ' the equation asks for a power of ' + Rterm(b)
+        + ' equal to ' + Rtext(rhs) + '. The curve above has y = 0 as an asymptote and lives '
+        + 'entirely on one side of it, so the line y = ' + Rtext(k) + ' never meets it. A reader '
+        + 'who takes logarithms of both sides here gets log of a non-positive number, which most '
+        + 'calculators return as an error and some return as a complex number &mdash; neither is a '
+        + 'solution to this equation.';
+    } else if (solved !== null) {
+      setkpis(Rtext(solved), method, chip('substituted back', 'ok'));
+      status.innerHTML = '<strong>x = ' + Rtext(solved) + ', exactly.</strong> Both sides were '
+        + 'written as powers of ' + Rterm(b) + ' and the exponents matched, which is legitimate '
+        + 'precisely because ' + Rterm(b) + '^t is one-to-one: it takes each value once, so equal '
+        + 'values force equal exponents. The logarithm method gives the same number as a decimal; '
+        + 'it is the method to reach for when the matching fails, which is most of the time.';
+    } else if (Rzero(c)) {
+      setkpis('x has vanished', 'not an equation in x', chip('degenerate', 'no'));
+      status.innerHTML = '<strong>With c = 0 there is no x in the equation.</strong> The exponent is '
+        + 'the constant ' + Rtext(d) + ', so the left side is a fixed number and the statement is '
+        + 'either true for every x or for none. It is worth meeting once: "solve for x" assumes x '
+        + 'is still there after the algebra.';
+    } else {
+      var approx = (Math.log(Rfloat(rhs)) / Math.log(bv) - Rfloat(d)) / Rfloat(c);
+      setkpis('&asymp; ' + approx.toFixed(6), 'logarithms', chip('irrational', 'hi'));
+      var logExpr2 = 'log_' + Rterm(b) + '(' + Rtext(rhs) + ')';
+      if (!Rzero(d)) logExpr2 = '(' + logExpr2 + ' - ' + Rterm(d) + ')';
+      if (!Requ(c, R1)) logExpr2 = logExpr2 + ' / ' + Rterm(c);
+      status.innerHTML = '<strong>This one has no exact power to match, so logarithms are the '
+        + 'method rather than a shortcut.</strong> x = ' + logExpr2
+        + ' &asymp; ' + approx.toFixed(8) + ', rounded to 8 '
+        + 'places. The exact answer is that expression, not the decimal: writing '
+        + approx.toFixed(4) + ' and calling it x throws away everything after the fourth place '
+        + 'without saying so.';
+    }
+  }
+
+  /* --------------------------------------------------------- solvelog ---- */
+
+  /* The sign of c + s*sqrt(kk), decided exactly. A domain check on an
+     irrational candidate is exactly where a float comparison would quietly
+     accept a root that is a hair outside the domain. */
+  function surdsign(d, s, kk) {
+    var sd = Rsign(d), ss = Rsign(s);
+    if (ss === 0 || kk === 1n) return Rsign(Radd(d, Rmul(s, R1)));
+    if (sd >= 0 && ss > 0) return (sd === 0 && ss === 0) ? 0 : 1;
+    if (sd <= 0 && ss < 0) return -1;
+    var cmp = Rcmp(Rmul(d, d), Rmul(Rmul(s, s), R(kk)));
+    if (sd > 0) return cmp > 0 ? 1 : (cmp === 0 ? 0 : -1);
+    return cmp < 0 ? 1 : (cmp === 0 ? 0 : -1);
+  }
+  function candrational(cd) {
+    return (Rzero(cd.s) || cd.k === 1n) ? Radd(cd.c, Rmul(cd.s, R1)) : null;
+  }
+  function candtext(cd) {
+    var r = candrational(cd);
+    if (r !== null) return Rtext(r);
+    var mag = surdtext({ q: Rabs(cd.s), k: cd.k });
+    if (Rzero(cd.c)) return (Rsign(cd.s) < 0 ? '-' : '') + mag;
+    return Rtext(cd.c) + (Rsign(cd.s) < 0 ? ' - ' : ' + ') + mag;
+  }
+  function candfloat(cd) {
+    return Rfloat(cd.c) + Rfloat(cd.s) * Math.sqrt(Number(cd.k));
+  }
+
+  function drawSolveLog() {
+    var shape = readtext('lgShape') || 'sum';
+    var bb = readbase('lgBase'), p = readnum('lgP'), q = readnum('lgQ'), k = readnum('lgK');
+    var problem = baseProblem(bb);
+    if (problem) { fail(problem); return; }
+    if (bb.kind === 'e') {
+      fail('<strong>Use a rational base here.</strong> The right-hand side becomes b^k, and that '
+        + 'has to be an exact number for the domain check below to be exact too.');
+      return;
+    }
+    if (p === null || q === null || k === null) {
+      fail('<strong>p, q and k all have to be numbers.</strong> p and q are subtracted inside the '
+        + 'logarithms; k is the right-hand side.');
+      return;
+    }
+    if (!Rint(k) || k.n > 40n || k.n < -40n) {
+      fail('<strong>k has to be a whole number between -40 and 40.</strong> b^k is then an exact '
+        + 'fraction, and the whole solution &mdash; including the domain check that decides which '
+        + 'candidate survives &mdash; stays exact.');
+      return;
+    }
+    var b = bb.r, bv = Rfloat(b), bk = Rpow(b, Number(k.n));
+    var lhs, args, quad = null;
+    if (shape === 'sum') {
+      lhs = logname(Rterm(b), argtext(p)) + ' + ' + logname(Rterm(b), argtext(q));
+      args = [argtext(p), argtext(q)];
+    } else if (shape === 'diff') {
+      lhs = logname(Rterm(b), argtext(p)) + ' - ' + logname(Rterm(b), argtext(q));
+      args = [argtext(p), argtext(q)];
+    } else if (shape === 'square') {
+      lhs = logname(Rterm(b), 'x^2' + (Rzero(p) ? '' : (Rsign(p) > 0 ? ' - ' + Rtext(p) : ' + ' + Rtext(Rneg(p)))));
+      args = [(Rzero(p) ? 'x^2' : 'x^2' + (Rsign(p) > 0 ? ' - ' + Rtext(p) : ' + ' + Rtext(Rneg(p))))];
+    } else {
+      lhs = logname(Rterm(b), argtext(p));
+      args = [argtext(p)];
+    }
+    titleOut.textContent = lhs + ' = ' + Rtext(k);
+    subOut.textContent = 'candidates first, then the domain';
+
+    var pairs = [], cands = [], note = null;
+    if (shape === 'sum') {
+      pairs.push(['combine the logarithms', 'the product law turns the left side into '
+        + logname(Rterm(b), '(' + argtext(p) + ')(' + argtext(q) + ')') + ' = ' + Rtext(k) + '.']);
+      pairs.push(['undo the logarithm', '(' + argtext(p) + ')(' + argtext(q) + ') = '
+        + Rterm(b) + '^' + Rtext(k) + ' = ' + Rshow(bk) + '.']);
+      var poly = [Rsub(Rmul(p, q), bk), Rneg(Radd(p, q)), R1];
+      pairs.push(['a quadratic', Ptext(poly) + ' = 0.']);
+      quad = quadroots(R1, poly[1], poly[0]);
+      if (quad.kind === 'complex') {
+        note = 'The quadratic ' + Ptext(poly) + ' = 0 has discriminant ' + Rtext(quad.disc)
+          + ', which is negative, so it has no real root. The equation fails in the algebra, '
+          + 'before the domain is ever consulted &mdash; a different kind of "no solution" from '
+          + 'the one where a candidate appears and is then rejected.';
+        pairs.push(['no real candidates', note]);
+      } else if (quad.kind === 'double') {
+        cands.push({ c: quad.p, s: R0, k: 1n });
+      } else {
+        cands.push({ c: quad.p, s: quad.s.q, k: quad.s.k });
+        cands.push({ c: quad.p, s: Rneg(quad.s.q), k: quad.s.k });
+      }
+    } else if (shape === 'diff') {
+      pairs.push(['combine the logarithms', 'the quotient law turns the left side into '
+        + logname(Rterm(b), '(' + argtext(p) + ') / (' + argtext(q) + ')') + ' = ' + Rtext(k) + '.']);
+      pairs.push(['undo the logarithm', '(' + argtext(p) + ') / (' + argtext(q) + ') = '
+        + Rterm(b) + '^' + Rtext(k) + ' = ' + Rshow(bk) + '.']);
+      var denom = Rsub(R1, bk);
+      if (Rzero(denom)) {
+        note = Requ(p, q)
+          ? 'With b^k = 1 the equation says the two arguments are equal, and they are the same '
+            + 'expression, so every x in the domain is a solution. That is an identity, not an '
+            + 'equation with an answer.'
+          : 'With k = 0, b^k = 1, so the equation says ' + argtext(p) + ' = ' + argtext(q)
+            + ' &mdash; that is, ' + Rtext(Rneg(p)) + ' = ' + Rtext(Rneg(q))
+            + ', which is false. There is no x at all, and no candidate to test.';
+        pairs.push(['the x terms cancel', note]);
+      } else {
+        var xv2 = Rdiv(Rsub(p, Rmul(bk, q)), denom);
+        pairs.push(['solve the linear equation', argtext(p) + ' = ' + Rshow(bk) + '('
+          + argtext(q) + ') gives x = ' + Rtext(xv2) + '.']);
+        cands.push({ c: xv2, s: R0, k: 1n });
+      }
+    } else if (shape === 'square') {
+      pairs.push(['undo the logarithm', 'x^2' + (Rzero(p) ? '' : (Rsign(p) > 0 ? ' - ' + Rtext(p) : ' + ' + Rtext(Rneg(p))))
+        + ' = ' + Rterm(b) + '^' + Rtext(k) + ' = ' + Rshow(bk) + ', so x^2 = ' + Rshow(Radd(bk, p)) + '.']);
+      var sq = Radd(bk, p);
+      if (Rsign(sq) < 0) {
+        note = 'x^2 = ' + Rshow(sq) + ' has no real solution, because a square is never negative. '
+          + 'The equation fails in the algebra, before the domain is ever consulted &mdash; and '
+          + 'notice that the argument x^2 ' + (Rsign(p) > 0 ? '- ' + Rtext(p) : '+ ' + Rtext(Rneg(p)))
+          + ' is at least ' + Rshow(Rneg(p)) + ' for every real x, while b^k = ' + Rshow(bk)
+          + ' is smaller than that. No x could have worked.';
+        pairs.push(['no real candidates', note]);
+      } else {
+        var sr = Rsurd(sq);
+        pairs.push(['two square roots', 'x = +-' + surdtext(sr) + '. Both are candidates; the '
+          + 'domain decides, not the sign.']);
+        cands.push({ c: R0, s: sr.q, k: sr.k });
+        if (!Rzero(sr.q)) cands.push({ c: R0, s: Rneg(sr.q), k: sr.k });
+      }
+    } else {
+      pairs.push(['undo the logarithm', Rzero(p)
+        ? 'x = ' + Rterm(b) + '^' + Rtext(k) + ' = ' + Rshow(bk) + '.'
+        : argtext(p) + ' = ' + Rterm(b) + '^' + Rtext(k) + ' = ' + Rshow(bk) + ', so x = '
+          + Rtext(p) + ' + ' + Rshow(bk) + ' = ' + Rshow(Radd(p, bk)) + '.']);
+      cands.push({ c: Radd(p, bk), s: R0, k: 1n });
+    }
+
+    /* ---- the domain check, exactly, on every candidate ---- */
+    function argvalue(cd, which) {
+      /* the value of one argument at a candidate, as (c + s*sqrt(k)) */
+      if (shape === 'square') {
+        var cc = Radd(Rmul(cd.c, cd.c), Rmul(Rmul(cd.s, cd.s), R(cd.k)));
+        return { c: Rsub(cc, p), s: Rmul(R(2n), Rmul(cd.c, cd.s)), k: cd.k };
+      }
+      var t = which === 0 ? p : q;
+      return { c: Rsub(cd.c, t), s: cd.s, k: cd.k };
+    }
+    var accepted = [], rejected = [], crows = [];
+    cands.forEach(function (cd) {
+      var details = [], ok = true;
+      for (var i = 0; i < args.length; i += 1) {
+        var av = argvalue(cd, i);
+        var sgn = surdsign(av.c, av.s, av.k);
+        var shown = candtext(av);
+        details.push(args[i] + ' = ' + shown + ' ' + (sgn > 0 ? chip('positive', 'ok')
+          : chip(sgn === 0 ? 'zero' : 'negative', 'no')));
+        if (sgn <= 0) ok = false;
+      }
+      (ok ? accepted : rejected).push(cd);
+      crows.push(trow([
+        cell('x = ' + candtext(cd)), cell(candfloat(cd).toFixed(6)),
+        cell(details.join('<br>')),
+        cell(ok ? 'accepted' : 'rejected', ok ? 't' : 'f')
+      ], ok ? 'focus' : ''));
+    });
+
+    var blocks = [steps('the algebra', pairs)];
+    if (crows.length) {
+      blocks.push(ttable('every candidate, tested against the domain of each logarithm',
+        ['candidate', 'as a decimal', 'the arguments at that x', 'verdict'], crows));
+    }
+    /* Substituting the survivors back, exactly where the arguments are exact
+       powers of the base and numerically where they are not. */
+    var checks = [];
+    accepted.forEach(function (cd) {
+      var r = candrational(cd), line;
+      if (r !== null) {
+        var parts = [], total = { exact: true, r: R0, v: 0 };
+        for (var i = 0; i < args.length; i += 1) {
+          var av = argvalue(cd, i), rv = candrational(av);
+          var lvv = rv === null ? { kind: 'searched', v: NaN } : logvalue(b, rv);
+          var qv = Q(lvv);
+          parts.push(logname(Rterm(b), Rtext(rv)) + ' = ' + Qtext(qv, 6));
+          total = (shape === 'diff' && i === 1) ? Qsub(total, qv) : Qadd(total, qv);
+        }
+        var match = Qeq(total, Qnum(k));
+        line = parts.join(',  ') + ' &rarr; ' + Qtext(total, 6) + ' against k = ' + Rtext(k)
+          + '. ' + (match.same ? 'They agree, ' + match.how + 'ly.' : 'They do not agree.');
+      } else {
+        var f = logFor(shape, b, p, q, bv);
+        line = 'x is irrational here, so the check is numerical: the left side comes to '
+          + f(candfloat(cd)).toFixed(8) + ' against k = ' + Rtext(k) + '.';
+      }
+      checks.push(['x = ' + candtext(cd), line]);
+    });
+    if (checks.length) blocks.push(steps('substituting the survivors back', checks));
+    work.innerHTML = blocks.join('');
+
+    /* The picture draws the left side only where it is defined, so the domain
+       is visible rather than asserted. */
+    var f = logFor(shape, b, p, q, bv);
+    var marks = cands.map(candfloat).filter(function (v) { return isFinite(v); });
+    var lowm = marks.length ? Math.min.apply(null, marks) : 0;
+    var highm = marks.length ? Math.max.apply(null, marks) : 1;
+    var edge = shape === 'square' ? 0 : Math.max(Rfloat(p), shape === 'single' ? Rfloat(p) : Rfloat(q));
+    var xmin = Math.min(lowm, edge) - 3, xmax = Math.max(highm, edge) + 3;
+    var kv = Rfloat(k);
+    var plot = Plot(svg, { xmin: xmin, xmax: xmax, ymin: kv - 5, ymax: kv + 5 });
+    plot.frame();
+    plot.hline(kv, 'plot-asym', 'y = ' + Rtext(k));
+    plot.curve(f);
+    accepted.forEach(function (cd) { plot.point(candfloat(cd), kv, 'plot-point root', 'x = ' + candtext(cd)); });
+    rejected.forEach(function (cd) { plot.hole(candfloat(cd), kv); });
+    plot.describe('y = ' + lhs + ' drawn only where every argument is positive, with the line y = '
+      + Rtext(k) + '; accepted solutions are filled and rejected candidates are hollow.');
+
+    setkpis(String(cands.length), String(accepted.length), String(rejected.length));
+
+    var msg;
+    if (!cands.length) {
+      msg = '<strong>There is no candidate to test.</strong> ' + (note || 'The algebra ran out '
+        + 'before any x appeared.')
+        + ' An equation with no solution is a legitimate answer, and it is not the same thing as a '
+        + 'candidate that appears and is then rejected by the domain &mdash; the two presets '
+        + 'either side of this one show both.';
+    } else if (!accepted.length) {
+      msg = '<strong>Every candidate was rejected, so the equation has no solution.</strong> '
+        + 'The algebra produced x = ' + cands.map(candtext).join(' and x = ')
+        + ', and at that value at least one argument above is zero or negative &mdash; a logarithm '
+        + 'of it does not exist, so the original equation was never satisfied. This is why the '
+        + 'domain check is a step and not a formality: the arithmetic that produced the candidate '
+        + 'was correct, and the candidate is still not a solution.';
+    } else if (rejected.length) {
+      msg = '<strong>' + accepted.length + ' of the ' + cands.length + ' candidates survived.</strong> '
+        + 'x = ' + accepted.map(candtext).join(', ') + ' keeps every argument positive; x = '
+        + rejected.map(candtext).join(', ') + ' does not, and gets thrown away. Combining two '
+        + 'logarithms into one widened the domain &mdash; log(A) + log(B) needs A and B positive '
+        + 'while log(AB) only needs the product positive &mdash; so the combined equation has '
+        + 'solutions the original does not. Every one of them shows up here.';
+    } else if (accepted.length === 1) {
+      msg = '<strong>The one candidate survived the domain check.</strong> x = '
+        + candtext(accepted[0]) + ' keeps every argument positive, so it is a solution of the '
+        + 'original equation and not only of the combined one. The check still had to be made: '
+        + 'the presets either side of this one produce candidates that fail it.';
+    } else {
+      msg = '<strong>All ' + accepted.length + ' candidates survived the domain check.</strong> '
+        + 'Rejection is not automatic: x = ' + accepted.map(candtext).join(' and x = ')
+        + ' each keep every argument positive, so each is a genuine solution. A reader who has '
+        + 'learned to discard the negative root by reflex gets this one wrong.';
+    }
+    status.innerHTML = msg;
+  }
+
+  /* The left-hand side as a function of x, defined only on its domain: Math.log
+     of a non-positive number is NaN, and the grapher breaks the curve there. */
+  function logFor(shape, b, p, q, bv) {
+    var pv = Rfloat(p), qv = Rfloat(q), lb = Math.log(bv);
+    if (shape === 'sum') return function (t) { return (Math.log(t - pv) + Math.log(t - qv)) / lb; };
+    if (shape === 'diff') return function (t) { return (Math.log(t - pv) - Math.log(t - qv)) / lb; };
+    if (shape === 'square') return function (t) { return Math.log(t * t - pv) / lb; };
+    return function (t) { return Math.log(t - pv) / lb; };
+  }
+
+  /* ------------------------------------------------------------ scale ---- */
+
+  /* 10^e, exactly when e is a whole number and honestly rounded when it is not.
+     A decibel difference of 30 is a factor of exactly 1000; a difference of 3
+     is a factor of about 1.995, and the lab must not print the second as though
+     it were the first. */
+  function powten(e) {
+    if (Rint(e) && e.n >= -60n && e.n <= 60n) {
+      var val = Rpow(R(10n), Number(e.n));
+      return { exact: true, r: val, v: Rfloat(val) };
+    }
+    return { exact: false, r: null, v: Math.pow(10, Rfloat(e)) };
+  }
+  /* An exact power of ten that is very large or very small is exact and
+     unreadable at the same time, so the scientific form is offered beside it
+     rather than instead of it. */
+  function showpow(t) {
+    if (!t.exact) {
+      if (!isFinite(t.v)) return 'past anything a double can hold';
+      return '&asymp;&nbsp;' + t.v.toPrecision(8);
+    }
+    var text = Rshow(t.r, 6);
+    if (t.v !== 0 && (Math.abs(t.v) < 0.001 || Math.abs(t.v) >= 1e7)) {
+      text += ' = ' + t.v.toExponential(0);
+    }
+    return text;
+  }
+
+  var SCALES = {
+    db: { unit: 'dB', name: 'sound level', formula: 'L = 10 log_10(I / I0)',
+          quantity: 'intensity I / I0', per: '10' },
+    ph: { unit: '', name: 'pH', formula: 'pH = -log_10(H+ concentration)',
+          quantity: 'concentration in mol/L', per: '1' },
+    rich: { unit: '', name: 'magnitude', formula: 'M = log_10(A / A0)',
+            quantity: 'amplitude A / A0', per: '1' }
+  };
+
+  function drawScale() {
+    var kind = readtext('lgScale') || 'db';
+    if (!SCALES[kind]) kind = 'db';
+    var v1 = readnum('lgV1'), v2 = readnum('lgV2');
+    if (v1 === null || v2 === null) {
+      fail('<strong>Both readings have to be numbers.</strong> They are two measurements on the '
+        + 'same scale, such as 60 and 120 decibels, or 3 and 7 on the pH scale.');
+      return;
+    }
+    var sc = SCALES[kind];
+    titleOut.textContent = sc.formula;
+    subOut.textContent = 'two readings: ' + Rtext(v1) + ' and ' + Rtext(v2);
+
+    /* The exponent that turns a reading into the quantity behind it. */
+    function quantityExp(v) {
+      if (kind === 'db') return Rdiv(v, R(10n));
+      if (kind === 'ph') return Rneg(v);
+      return v;
+    }
+    var e1 = quantityExp(v1), e2 = quantityExp(v2);
+    var t1 = powten(e1), t2 = powten(e2);
+    var diff = Rsub(v1, v2);
+    var factorExp = Rsub(e1, e2);
+    var factor = powten(factorExp);
+    var rows = [
+      trow([rowhead('first reading'), cell(Rdectext(v1) + ' ' + sc.unit),
+        cell('10^(' + Rdectext(e1) + ') = ' + showpow(t1)),
+        cell(t1.exact ? chip('exact', 'ok') : chip('irrational', 'hi'))]),
+      trow([rowhead('second reading'), cell(Rdectext(v2) + ' ' + sc.unit),
+        cell('10^(' + Rdectext(e2) + ') = ' + showpow(t2)),
+        cell(t2.exact ? chip('exact', 'ok') : chip('irrational', 'hi'))]),
+      trow([rowhead('difference, first minus second'), cell(Rdectext(diff) + ' ' + sc.unit),
+        cell('a difference on the scale, which is not a ratio of anything'),
+        cell(chip('exact', 'ok'))]),
+      trow([rowhead('the first ' + sc.quantity + ', divided by the second'), cell(showpow(factor)),
+        cell('10^(' + Rdectext(factorExp) + '), because subtracting logarithms divides the '
+          + 'quantities' + (kind === 'ph' ? ' &mdash; and the minus sign in the pH formula turns '
+            + 'the difference round, so the lower reading is the larger concentration' : '')),
+        cell(factor.exact ? chip('exact', 'ok') : chip('irrational', 'hi'))], 'focus')
+    ];
+
+    var extra = [];
+    if (kind === 'db') {
+      var sum = 10 * Math.log(Math.pow(10, Rfloat(v1) / 10) + Math.pow(10, Rfloat(v2) / 10)) / Math.LN10;
+      rows.push(trow([rowhead('the two sources together'), cell('&asymp;&nbsp;' + sum.toFixed(4) + ' dB'),
+        cell('10 log_10(10^(' + Rdectext(v1) + '/10) + 10^(' + Rdectext(v2) + '/10)): the intensities add, '
+          + 'and the level is the logarithm of the total'), cell(chip('rounded', 'no'))]));
+      extra.push(['adding decibels does not add decibels', 'two equal sources are 10 log_10(2) '
+        + '&asymp; 3.0103 dB louder than one, not twice as many decibels. Here the pair comes to '
+        + '&asymp; ' + sum.toFixed(4) + ' dB, against the ' + Rdectext(Radd(v1, v2))
+        + ' dB that adding the numbers would suggest.']);
+      extra.push(['what the reference is', 'I0 = 10^-12 W/m^2, roughly the quietest audible sound. '
+        + 'A level is always a ratio to something, which is why a decibel on its own is not a '
+        + 'quantity of anything.']);
+    } else if (kind === 'ph') {
+      extra.push(['lower pH means more acid', 'the minus sign in pH = -log_10(concentration) '
+        + 'reverses the order: pH ' + Rdectext(v1) + ' has ' + showpow(t1) + ' mol/L and pH '
+        + Rdectext(v2) + ' has ' + showpow(t2) + ' mol/L, so the '
+        + (Rcmp(v1, v2) < 0 ? 'first' : 'second') + ' is the more acidic of the two.']);
+      extra.push(['each step is a factor of ten', 'a pH difference of ' + Rdectext(diff)
+        + ' means the first concentration is ' + showpow(powten(Rneg(diff))) + ' times the '
+        + 'second, or equivalently the second is ' + showpow(powten(diff)) + ' times the first. '
+        + 'Reading a pH gap as a small difference is the error the scale invites and the reason '
+        + 'it is worth converting back to concentration before saying anything about it.']);
+    } else {
+      var energyExp = Rmul(R(3n, 2n), diff);
+      var energy = powten(energyExp);
+      rows.push(trow([rowhead('factor on the energy released'), cell(showpow(energy)),
+        cell('10^(1.5 &times; ' + Rdectext(diff) + '), from the empirical law log_10(E) = 1.5M + constant'),
+        cell(energy.exact ? chip('exact', 'ok') : chip('irrational', 'hi'))]));
+      extra.push(['a magnitude 8 is not twice a magnitude 4', 'it is 10^4 = 10000 times the ground '
+        + 'amplitude and about 10^6 times the energy. On these two readings the amplitude factor '
+        + 'is ' + showpow(factor) + ' and the energy factor is ' + showpow(energy) + '.']);
+      extra.push(['why the energy exponent is 1.5', 'it is measured, not derived: energy rises '
+        + 'faster than amplitude, and the constant 1.5 comes from seismology rather than from '
+        + 'algebra. When the difference is odd the exponent 1.5 &times; difference is not a whole '
+        + 'number, and the factor is irrational.']);
+    }
+    /* "a factor of 1/1000000" is the same fact as "a factor of 1000000" and
+       reads like a different one, so the span is always stated as the larger
+       of the two. */
+    var spanUp = Math.abs(factor.v) >= 1 ? factor
+      : (factor.exact ? { exact: true, r: Rinv(factor.r), v: 1 / factor.v }
+                      : { exact: false, r: null, v: 1 / factor.v });
+    extra.push(['why a scale like this exists at all', 'the two quantities behind these readings '
+      + 'differ by a factor of ' + showpow(spanUp) + '. A logarithm turns that into the difference '
+      + Rdectext(diff) + ', which fits on an axis and in a sentence &mdash; and the price is that '
+      + 'the difference no longer looks like the gap it stands for.']);
+
+    work.innerHTML = ttable(sc.formula + ' &mdash; reading by reading',
+      ['', 'on the scale', 'behind the scale', 'arithmetic'], rows)
+      + steps('what the scale hides', extra);
+
+    var lo = Math.min(Rfloat(v1), Rfloat(v2)), hi = Math.max(Rfloat(v1), Rfloat(v2));
+    var pad = Math.max((hi - lo) * 0.35, 1);
+    var line = NumberLine(svg, lo - pad, hi + pad);
+    if (hi > lo) line.interval(lo, hi, true, true); else line.point(lo, true);
+    line.point(Rfloat(v1), true);
+    line.point(Rfloat(v2), true);
+    line.describe('the two readings ' + Rtext(v1) + ' and ' + Rtext(v2) + ' on the ' + sc.name
+      + ' scale, with the span between them marked.');
+
+    setkpis(Rdectext(diff) + ' ' + sc.unit, showpow(factor),
+      factor.exact ? chip('exact', 'ok') : chip('rounded', 'no'));
+
+    status.innerHTML = '<strong>A difference of ' + Rdectext(diff) + ' on this scale means the '
+      + 'first reading\'s ' + sc.quantity + ' is ' + showpow(factor) + ' times the second\'s.</strong> '
+      + 'That is the whole content of a logarithmic scale: the readings are exponents, so '
+      + 'subtracting them divides the quantities. '
+      + (factor.exact
+        ? 'Here the exponent came out a whole number, so the factor is exact &mdash; no decimal '
+          + 'is involved anywhere in that claim.'
+        : 'Here the exponent is ' + Rdectext(factorExp) + ', which is not a whole number, so '
+          + 'the factor is irrational and every digit shown is a rounding.')
+      + ' The readings themselves are small and comparable; the things they describe are not, and '
+      + 'that is exactly the trade the scale was invented to make.';
+  }
+
+  /* ---------------------------------------------------------- wiring ---- */
+
+  function redraw() {
+    if (MODE === 'define') drawDefine();
+    else if (MODE === 'graph') drawGraph();
+    else if (MODE === 'laws') drawLaws();
+    else if (MODE === 'common') drawCommon();
+    else if (MODE === 'base') drawBase();
+    else if (MODE === 'solveexp') drawSolveExp();
+    else if (MODE === 'solvelog') drawSolveLog();
+    else drawScale();
+  }
+
+  function applyPreset() {
+    var parts = (preset.value || '').split('|');
+    FIELDS.forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el && parts[i] !== undefined) el.value = parts[i];
+    });
+    redraw();
+  }
+
+  preset.addEventListener('change', applyPreset);
+  FIELDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', redraw);
+      el.addEventListener('change', redraw);
+    }
+  });
+  applyPreset();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

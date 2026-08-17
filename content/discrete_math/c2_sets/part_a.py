@@ -393,7 +393,7 @@ LESSONS = [
                   "equivalence from course 1 lesson 5, applied pointwise to membership. "
                   "De Morgan for sets and De Morgan for propositions are the same theorem "
                   "in two notations, and knowing that halves what has to be memorised."),
-            ("thm", ("Inclusion&ndash;exclusion for two sets",
+            ("thm", ("Inclusion-exclusion for two sets",
                      "For finite sets, `|A ∪ B| = |A| + |B| − |A ∩ B|`.")),
             ("proof", [
                 "Adding `|A|` and `|B|` counts every element of `A ∩ B` twice &mdash; once "

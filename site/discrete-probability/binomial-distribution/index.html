@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bernoulli Trials and the Binomial Distribution | Discrete Probability | Learn · geterdone.io</title>
-  <meta name="description" content="`n` independent trials, each succeeding with probability `p`. The number of successes has `P(X = k) = C(n,k)p^k(1−p)^{n−k}`, mean `np` and variance `np(1−p)`." />
+  <meta name="description" content="n independent trials, each succeeding with probability p. The number of successes has P(X = k) = C(n,k)p^k(1−p)^{n−k}, mean np and variance np(1−p)." />
   <link rel="canonical" href="https://learn.geterdone.io/discrete-probability/binomial-distribution/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Bernoulli Trials and the Binomial Distribution | Discrete Probability | Learn · geterdone.io" />
-  <meta property="og:description" content="`n` independent trials, each succeeding with probability `p`. The number of successes has `P(X = k) = C(n,k)p^k(1−p)^{n−k}`, mean `np` and variance `np(1−p)`." />
+  <meta property="og:description" content="n independent trials, each succeeding with probability p. The number of successes has P(X = k) = C(n,k)p^k(1−p)^{n−k}, mean np and variance np(1−p)." />
   <meta property="og:url" content="https://learn.geterdone.io/discrete-probability/binomial-distribution/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Bernoulli Trials and the Binomial Distribution | Discrete Probability | Learn · geterdone.io" />
-  <meta name="twitter:description" content="`n` independent trials, each succeeding with probability `p`. The number of successes has `P(X = k) = C(n,k)p^k(1−p)^{n−k}`, mean `np` and variance `np(1−p)`." />
+  <meta name="twitter:description" content="n independent trials, each succeeding with probability p. The number of successes has P(X = k) = C(n,k)p^k(1−p)^{n−k}, mean np and variance np(1−p)." />
   <meta name="twitter:url" content="https://learn.geterdone.io/discrete-probability/binomial-distribution/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Discrete Probability course home">
         <span class="brand-mark" aria-hidden="true">11</span>
-        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 &amp;middot; Lesson 11 of 12</span></span>
+        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 · Lesson 11 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Discrete Probability</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 11 &amp;middot; Bernoulli Trials and the Binomial Distribution</span>
+      <span class="crumb-current" aria-current="page">Lesson 11 · Bernoulli Trials and the Binomial Distribution</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ requires: FIXED n, INDEPENDENT trials, CONSTANT p</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Three assumptions define it. When they hold the formula applies exactly; when they do not it can be badly wrong.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The coefficient counts the positions</h3><p><span class="math">C(n,k)</span> is the number of ways the <span class="math">k</span> successes can be arranged, and <span class="math">p^k(1−p)^{n−k}</span> is the probability of any one such arrangement.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The mean is `np` by linearity</h3><p>Write <span class="math">X</span> as a sum of <span class="math">n</span> indicators each with expectation <span class="math">p</span>. No summation over the distribution is needed.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The assumptions are the fragile part</h3><p>Fixed <span class="math">n</span>, independent trials, constant <span class="math">p</span>. Sampling without replacement violates the last two and needs the hypergeometric distribution instead.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The coefficient counts the positions</h3><p><span class="math">C(n,k)</span> is the number of ways the <span class="math">k</span> successes can be arranged, and <span class="math">p^k(1−p)^{n−k}</span> is the probability of any one such arrangement.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The mean is <span class="math">np</span> by linearity</h3><p>Write <span class="math">X</span> as a sum of <span class="math">n</span> indicators each with expectation <span class="math">p</span>. No summation over the distribution is needed.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The assumptions are the fragile part</h3><p>Fixed <span class="math">n</span>, independent trials, constant <span class="math">p</span>. Sampling without replacement violates the last two and needs the hypergeometric distribution instead.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>The binomial distribution</h2></div><p>Derivation, moments, and where the assumptions fail.</p></div>
@@ -975,7 +1006,7 @@ requires: FIXED n, INDEPENDENT trials, CONSTANT p</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Applying the binomial</h2></div><p>Check the three assumptions before using the formula.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Confirm `n` is fixed in advance</h3><p>If the number of trials depends on the results, this is not a binomial &mdash; lesson 12 handles the commonest such case.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Confirm the trials are independent</h3><p>Sampling without replacement is the standard violation, and it matters when the sample is a substantial fraction of the population.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Confirm `p` is constant</h3><p>Same probability every trial. Drift breaks the model even when the trials are independent.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Then compute</h3><p><span class="math">C(n,k)p^k(1−p)^{n−k}</span> for a single <span class="math">k</span>, or sum over a range for "at least" questions &mdash; often via the complement.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Confirm <span class="math">n</span> is fixed in advance</h3><p>If the number of trials depends on the results, this is not a binomial &mdash; lesson 12 handles the commonest such case.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Confirm the trials are independent</h3><p>Sampling without replacement is the standard violation, and it matters when the sample is a substantial fraction of the population.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Confirm <span class="math">p</span> is constant</h3><p>Same probability every trial. Drift breaks the model even when the trials are independent.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Then compute</h3><p><span class="math">C(n,k)p^k(1−p)^{n−k}</span> for a single <span class="math">k</span>, or sum over a range for "at least" questions &mdash; often via the complement.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Permutations with Repetition | Combinatorics and Counting | Learn · geterdone.io</title>
-  <meta name="description" content="Two different situations share this name. Choosing `r` items from `n` with repetition allowed and order mattering gives `nʳ`. Arranging a multiset divides by the factorials of the repetition counts." />
+  <meta name="description" content="Two different situations share this name. Choosing r items from n with repetition allowed and order mattering gives nʳ. Arranging a multiset divides by the factorials of the repetition counts." />
   <link rel="canonical" href="https://learn.geterdone.io/combinatorics-and-counting/permutations-with-repetition/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Permutations with Repetition | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta property="og:description" content="Two different situations share this name. Choosing `r` items from `n` with repetition allowed and order mattering gives `nʳ`. Arranging a multiset divides by the factorials of the repetition counts." />
+  <meta property="og:description" content="Two different situations share this name. Choosing r items from n with repetition allowed and order mattering gives nʳ. Arranging a multiset divides by the factorials of the repetition counts." />
   <meta property="og:url" content="https://learn.geterdone.io/combinatorics-and-counting/permutations-with-repetition/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Permutations with Repetition | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Two different situations share this name. Choosing `r` items from `n` with repetition allowed and order mattering gives `nʳ`. Arranging a multiset divides by the factorials of the repetition counts." />
+  <meta name="twitter:description" content="Two different situations share this name. Choosing r items from n with repetition allowed and order mattering gives nʳ. Arranging a multiset divides by the factorials of the repetition counts." />
   <meta name="twitter:url" content="https://learn.geterdone.io/combinatorics-and-counting/permutations-with-repetition/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Combinatorics and Counting course home">
         <span class="brand-mark" aria-hidden="true">07</span>
-        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 &amp;middot; Lesson 07 of 14</span></span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 · Lesson 07 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Combinatorics and Counting</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 07 &amp;middot; Permutations with Repetition</span>
+      <span class="crumb-current" aria-current="page">Lesson 07 · Permutations with Repetition</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ The divisor is the symmetry you are quotienting out.</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Repetition appears in two guises, and they need different formulas. Distinguishing them is the lesson.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Drawing with replacement gives `nʳ`</h3><p>Each of the <span class="math">r</span> positions is filled independently from all <span class="math">n</span> options. This is the product rule with no shrinkage.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Identical objects divide out</h3><p>Arranging <span class="math">n</span> objects of which some are indistinguishable gives <span class="math">n!</span> divided by the factorial of each repetition count.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The divisor is a symmetry group size</h3><p>Swapping two identical letters produces the same word, so each distinct word was counted once for every such swap &mdash; exactly the circular-arrangement argument of lesson 3.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Drawing with replacement gives <span class="math">nʳ</span></h3><p>Each of the <span class="math">r</span> positions is filled independently from all <span class="math">n</span> options. This is the product rule with no shrinkage.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Identical objects divide out</h3><p>Arranging <span class="math">n</span> objects of which some are indistinguishable gives <span class="math">n!</span> divided by the factorial of each repetition count.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The divisor is a symmetry group size</h3><p>Swapping two identical letters produces the same word, so each distinct word was counted once for every such swap &mdash; exactly the circular-arrangement argument of lesson 3.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Repetition in arrangements</h2></div><p>Both counts, derived, and the connection to binomial coefficients.</p></div>
@@ -972,7 +1003,7 @@ The divisor is the symmetry you are quotienting out.</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Counting with repetition</h2></div><p>Decide which of the two situations you are in.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Are you drawing with replacement, or arranging a fixed multiset?</h3><p>Drawing gives <span class="math">nʳ</span>; arranging gives the factorial quotient. They are different questions with different answers.</p></article><article class="card concept-card"><div class="icon">2</div><h3>For drawing, apply the product rule</h3><p><span class="math">n</span> options at every one of the <span class="math">r</span> positions, with no shrinkage.</p></article><article class="card concept-card"><div class="icon">3</div><h3>For arranging, count the repetitions of each type</h3><p>The divisor is the product of the factorials of those counts. Missing a repeated letter inflates the answer.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check the exponents sum to `n`</h3><p><span class="math">n₁ + ⋯ + n_k</span> must equal the total number of objects. If it does not, a type has been miscounted.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Are you drawing with replacement, or arranging a fixed multiset?</h3><p>Drawing gives <span class="math">nʳ</span>; arranging gives the factorial quotient. They are different questions with different answers.</p></article><article class="card concept-card"><div class="icon">2</div><h3>For drawing, apply the product rule</h3><p><span class="math">n</span> options at every one of the <span class="math">r</span> positions, with no shrinkage.</p></article><article class="card concept-card"><div class="icon">3</div><h3>For arranging, count the repetitions of each type</h3><p>The divisor is the product of the factorials of those counts. Missing a repeated letter inflates the answer.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check the exponents sum to <span class="math">n</span></h3><p><span class="math">n₁ + ⋯ + n_k</span> must equal the total number of objects. If it does not, a type has been miscounted.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">

@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Discrete Probability course home">
         <span class="brand-mark" aria-hidden="true">09</span>
-        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 &amp;middot; Lesson 09 of 12</span></span>
+        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 · Lesson 09 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Discrete Probability</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 09 &amp;middot; Linearity of Expectation</span>
+      <span class="crumb-current" aria-current="page">Lesson 09 · Linearity of Expectation</span>
     </nav>
 
     <noscript>
@@ -931,7 +962,7 @@ Decompose into INDICATORS and sum.</div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Linearity</h2></div><p>The theorem, why independence is irrelevant, and four applications.</p></div>
-      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Linearity of expectation</span><p>For random variables <span class="math">X, Y</span> on the same sample space and constants <span class="math">a, b</span>: <span class="math">E[aX + bY] = aE[X] + bE[Y]</span>. No independence assumption is needed.</p></div><div class="proof"><p>Summing over outcomes, <span class="math">E[aX + bY] = Σ_s (aX(s) + bY(s))P(s) = a Σ_s X(s)P(s) + b Σ_s Y(s)P(s) = aE[X] + bE[Y]</span>.</p><p>Nothing about the joint behaviour of <span class="math">X</span> and <span class="math">Y</span> entered, which is exactly why independence is not required.</p><p><span class="qed">&#9633;</span></p></div><p>The proof is three lines and the consequence is enormous. <span class="math">E[XY]</span> by contrast genuinely depends on the joint distribution, and the two facts are worth keeping apart deliberately.</p><h3>Indicator decomposition</h3><div class="thm"><span class="label">Theorem &middot; Expectation of an indicator</span><p><span class="math">E[I_A] = 1 · P(A) + 0 · P(Ā) = P(A)</span>.</p></div><p>So if <span class="math">X</span> counts how many of the events <span class="math">A₁, …, A_n</span> occur, then <span class="math">X = I_{A₁} + ⋯ + I_{A_n}</span> and <span class="math">E[X] = Σ P(Aᵢ)</span>. The events may overlap, depend on each other, or be governed by anything at all.</p><div class="example"><span class="label">Example &middot; Heads in `n` flips</span><p><span class="math">X = Σ Iᵢ</span> where <span class="math">Iᵢ</span> indicates heads on flip <span class="math">i</span>. Each has expectation <span class="math">p</span>, so <span class="math">E[X] = np</span> &mdash; without computing the binomial distribution at all.</p></div><div class="example"><span class="label">Example &middot; Fixed points of a random permutation</span><p><span class="math">X</span> counts the elements left in place. <span class="math">X = Σ Iᵢ</span> where <span class="math">Iᵢ</span> indicates that <span class="math">i</span> is fixed, and <span class="math">P(Iᵢ = 1) = 1/n</span>. So <span class="math">E[X] = n · (1/n) = 1</span>, for every <span class="math">n</span>. The indicators are dependent &mdash; knowing <span class="math">n − 1</span> elements are fixed forces the last &mdash; and linearity does not care.</p></div><p>That result is worth pausing on. On average exactly one person gets their own hat back, whether there are 5 people or 5 million. Computing it from the derangement distribution of course 4 would be considerably harder.</p><div class="example"><span class="label">Example &middot; The coupon collector</span><p>There are <span class="math">n</span> distinct coupons, one per box at random. How many boxes to collect them all? Let <span class="math">Xᵢ</span> be the number of boxes bought while holding exactly <span class="math">i − 1</span> distinct coupons. Then <span class="math">E[Xᵢ] = n/(n − i + 1)</span> (lesson 12 supplies that), so <span class="math">E[total] = n(1 + 1/2 + ⋯ + 1/n) ≈ n ln n</span>. For <span class="math">n = 50</span> that is about 225 boxes.</p></div><div class="example"><span class="label">Example &middot; Matching pairs</span><p>Two shuffled decks are dealt face up side by side. The expected number of positions where the cards match is <span class="math">52 · (1/52) = 1</span>. Same computation as the hat problem, and again the indicators are dependent.</p></div><div class="thm"><span class="label">Theorem &middot; Products need independence</span><p>If <span class="math">X</span> and <span class="math">Y</span> are independent then <span class="math">E[XY] = E[X]E[Y]</span>. Without independence this fails: take <span class="math">Y = X</span> with <span class="math">X</span> a fair coin scored 0 or 1, so <span class="math">E[X] = 1/2</span> and <span class="math">E[XY] = E[X²] = 1/2 ≠ 1/4</span>.</p></div></article>
+      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Linearity of expectation</span><p>For random variables <span class="math">X, Y</span> on the same sample space and constants <span class="math">a, b</span>: <span class="math">E[aX + bY] = aE[X] + bE[Y]</span>. No independence assumption is needed.</p></div><div class="proof"><p>Summing over outcomes, <span class="math">E[aX + bY] = Σ_s (aX(s) + bY(s))P(s) = a Σ_s X(s)P(s) + b Σ_s Y(s)P(s) = aE[X] + bE[Y]</span>.</p><p>Nothing about the joint behaviour of <span class="math">X</span> and <span class="math">Y</span> entered, which is exactly why independence is not required.</p><p><span class="qed">&#9633;</span></p></div><p>The proof is three lines and the consequence is enormous. <span class="math">E[XY]</span> by contrast genuinely depends on the joint distribution, and the two facts are worth keeping apart deliberately.</p><h3>Indicator decomposition</h3><div class="thm"><span class="label">Theorem &middot; Expectation of an indicator</span><p><span class="math">E[I_A] = 1 · P(A) + 0 · P(Ā) = P(A)</span>.</p></div><p>So if <span class="math">X</span> counts how many of the events <span class="math">A₁, …, A_n</span> occur, then <span class="math">X = I_{A₁} + ⋯ + I_{A_n}</span> and <span class="math">E[X] = Σ P(Aᵢ)</span>. The events may overlap, depend on each other, or be governed by anything at all.</p><div class="example"><span class="label">Example &middot; Heads in <span class="math">n</span> flips</span><p><span class="math">X = Σ Iᵢ</span> where <span class="math">Iᵢ</span> indicates heads on flip <span class="math">i</span>. Each has expectation <span class="math">p</span>, so <span class="math">E[X] = np</span> &mdash; without computing the binomial distribution at all.</p></div><div class="example"><span class="label">Example &middot; Fixed points of a random permutation</span><p><span class="math">X</span> counts the elements left in place. <span class="math">X = Σ Iᵢ</span> where <span class="math">Iᵢ</span> indicates that <span class="math">i</span> is fixed, and <span class="math">P(Iᵢ = 1) = 1/n</span>. So <span class="math">E[X] = n · (1/n) = 1</span>, for every <span class="math">n</span>. The indicators are dependent &mdash; knowing <span class="math">n − 1</span> elements are fixed forces the last &mdash; and linearity does not care.</p></div><p>That result is worth pausing on. On average exactly one person gets their own hat back, whether there are 5 people or 5 million. Computing it from the derangement distribution of course 4 would be considerably harder.</p><div class="example"><span class="label">Example &middot; The coupon collector</span><p>There are <span class="math">n</span> distinct coupons, one per box at random. How many boxes to collect them all? Let <span class="math">Xᵢ</span> be the number of boxes bought while holding exactly <span class="math">i − 1</span> distinct coupons. Then <span class="math">E[Xᵢ] = n/(n − i + 1)</span> (lesson 12 supplies that), so <span class="math">E[total] = n(1 + 1/2 + ⋯ + 1/n) ≈ n ln n</span>. For <span class="math">n = 50</span> that is about 225 boxes.</p></div><div class="example"><span class="label">Example &middot; Matching pairs</span><p>Two shuffled decks are dealt face up side by side. The expected number of positions where the cards match is <span class="math">52 · (1/52) = 1</span>. Same computation as the hat problem, and again the indicators are dependent.</p></div><div class="thm"><span class="label">Theorem &middot; Products need independence</span><p>If <span class="math">X</span> and <span class="math">Y</span> are independent then <span class="math">E[XY] = E[X]E[Y]</span>. Without independence this fails: take <span class="math">Y = X</span> with <span class="math">X</span> a fair coin scored 0 or 1, so <span class="math">E[X] = 1/2</span> and <span class="math">E[XY] = E[X²] = 1/2 ≠ 1/4</span>.</p></div></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Distribution, expectation, variance</h2></div><p>Definition first, formula second</p></div>
@@ -946,7 +977,7 @@ Decompose into INDICATORS and sum.</div>
       <div class="status-banner" id="dsStatus" style="margin-top:12px;"></div>
         </article>
         <aside class="card side-panel" aria-live="polite">
-          <h3>`np`, from the definition and from linearity</h3>
+          <h3><span class="math">np</span>, from the definition and from linearity</h3>
           <p>The lab sums <span class="math">k·P(X = k)</span> term by term and compares it with <span class="math">np</span>. Linearity gives <span class="math">np</span> in one line, without the distribution.</p>
         <div class="field">
           <label for="dsKind">Distribution</label>

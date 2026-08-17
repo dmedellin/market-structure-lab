@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Learn library">
         <span class="brand-mark" aria-hidden="true">05</span>
-        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 of 8 &amp;middot; Discrete Mathematics path</span></span>
+        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 of 8 · Discrete Mathematics path</span></span>
       </a>
 
       <nav class="topnav" aria-label="Primary">
@@ -940,7 +971,7 @@ E[X + Y] = E[X] + E[Y]           always, independent or not</div>
     </section>
     <section class="section" id="syllabus">
       <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2></div><p>Lessons 1 to 3 set up the model, 4 to 6 are conditioning, and 7 to 12 are random variables and the two distributions worth knowing by name.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./sample-spaces-and-events/"><div class="num">01</div><div><strong>Sample Spaces and Events</strong><span>The set of outcomes, and the subsets we ask about.</span></div></a><a class="syllabus-item" href="./computing-probabilities/"><div class="num">02</div><div><strong>Computing Probabilities</strong><span>Counting the event, counting the space, dividing.</span></div></a><a class="syllabus-item" href="./probability-axioms/"><div class="num">03</div><div><strong>The Probability Axioms</strong><span>Three rules that every probability assignment obeys.</span></div></a><a class="syllabus-item" href="./conditional-probability/"><div class="num">04</div><div><strong>Conditional Probability</strong><span>Restricting the sample space to what you now know.</span></div></a><a class="syllabus-item" href="./independence/"><div class="num">05</div><div><strong>Independence</strong><span>`P(A ∩ B) = P(A)P(B)`, and nothing more.</span></div></a><a class="syllabus-item" href="./bayes-theorem/"><div class="num">06</div><div><strong>Bayes&#x27; Theorem</strong><span>Reversing a conditional, and why the base rate dominates.</span></div></a><a class="syllabus-item" href="./random-variables/"><div class="num">07</div><div><strong>Random Variables</strong><span>A number attached to each outcome.</span></div></a><a class="syllabus-item" href="./expected-value/"><div class="num">08</div><div><strong>Expected Value</strong><span>The probability-weighted average, and what it does not mean.</span></div></a><a class="syllabus-item" href="./linearity-of-expectation/"><div class="num">09</div><div><strong>Linearity of Expectation</strong><span>`E[X + Y] = E[X] + E[Y]`, whether or not they are independent.</span></div></a><a class="syllabus-item" href="./variance/"><div class="num">10</div><div><strong>Variance and Standard Deviation</strong><span>How far from the mean, on average — squared.</span></div></a><a class="syllabus-item" href="./binomial-distribution/"><div class="num">11</div><div><strong>Bernoulli Trials and the Binomial Distribution</strong><span>Counting successes in a fixed number of independent trials.</span></div></a><a class="syllabus-item" href="./geometric-distribution/"><div class="num">12</div><div><strong>The Geometric Distribution and Waiting Times</strong><span>How long until the first success — and why the average misleads.</span></div></a></div>
+      <div class="syllabus"><a class="syllabus-item" href="./sample-spaces-and-events/"><div class="num">01</div><div><strong>Sample Spaces and Events</strong><span>The set of outcomes, and the subsets we ask about.</span></div></a><a class="syllabus-item" href="./computing-probabilities/"><div class="num">02</div><div><strong>Computing Probabilities</strong><span>Counting the event, counting the space, dividing.</span></div></a><a class="syllabus-item" href="./probability-axioms/"><div class="num">03</div><div><strong>The Probability Axioms</strong><span>Three rules that every probability assignment obeys.</span></div></a><a class="syllabus-item" href="./conditional-probability/"><div class="num">04</div><div><strong>Conditional Probability</strong><span>Restricting the sample space to what you now know.</span></div></a><a class="syllabus-item" href="./independence/"><div class="num">05</div><div><strong>Independence</strong><span><span class="math">P(A ∩ B) = P(A)P(B)</span>, and nothing more.</span></div></a><a class="syllabus-item" href="./bayes-theorem/"><div class="num">06</div><div><strong>Bayes&#x27; Theorem</strong><span>Reversing a conditional, and why the base rate dominates.</span></div></a><a class="syllabus-item" href="./random-variables/"><div class="num">07</div><div><strong>Random Variables</strong><span>A number attached to each outcome.</span></div></a><a class="syllabus-item" href="./expected-value/"><div class="num">08</div><div><strong>Expected Value</strong><span>The probability-weighted average, and what it does not mean.</span></div></a><a class="syllabus-item" href="./linearity-of-expectation/"><div class="num">09</div><div><strong>Linearity of Expectation</strong><span><span class="math">E[X + Y] = E[X] + E[Y]</span>, whether or not they are independent.</span></div></a><a class="syllabus-item" href="./variance/"><div class="num">10</div><div><strong>Variance and Standard Deviation</strong><span>How far from the mean, on average — squared.</span></div></a><a class="syllabus-item" href="./binomial-distribution/"><div class="num">11</div><div><strong>Bernoulli Trials and the Binomial Distribution</strong><span>Counting successes in a fixed number of independent trials.</span></div></a><a class="syllabus-item" href="./geometric-distribution/"><div class="num">12</div><div><strong>The Geometric Distribution and Waiting Times</strong><span>How long until the first success — and why the average misleads.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">

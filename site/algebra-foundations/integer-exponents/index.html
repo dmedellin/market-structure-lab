@@ -1,0 +1,1578 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Integer Exponents | Foundations of Algebra | Learn · geterdone.io</title>
+  <meta name="description" content="Three laws, each of which is counting factors rather than remembering a rule. A zero exponent and a negative exponent are then defined — not derived — and the definitions are chosen as the only ones that keep the three laws true for every integer." />
+  <link rel="canonical" href="https://learn.geterdone.io/algebra-foundations/integer-exponents/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Integer Exponents | Foundations of Algebra | Learn · geterdone.io" />
+  <meta property="og:description" content="Three laws, each of which is counting factors rather than remembering a rule. A zero exponent and a negative exponent are then defined — not derived — and the definitions are chosen as the only ones that keep the three laws true for every integer." />
+  <meta property="og:url" content="https://learn.geterdone.io/algebra-foundations/integer-exponents/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Integer Exponents | Foundations of Algebra | Learn · geterdone.io" />
+  <meta name="twitter:description" content="Three laws, each of which is counting factors rather than remembering a rule. A zero exponent and a negative exponent are then defined — not derived — and the definitions are chosen as the only ones that keep the three laws true for every integer." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/algebra-foundations/integer-exponents/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Foundations of Algebra course home">
+        <span class="brand-mark" aria-hidden="true">05</span>
+        <span class="brand-copy"><strong>Foundations of Algebra</strong><span>Course 1 · Lesson 05 of 13</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Foundations of Algebra</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 05 · Integer Exponents</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The the exponent laws, twice each is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 1 &middot; Lesson 05 &middot; Exponents and radicals</span>
+        <h1>Integer Exponents</h1>
+        <p>Three laws, each of which is counting factors rather than remembering a rule. A zero exponent and a negative exponent are then defined &mdash; not derived &mdash; and the definitions are chosen as the only ones that keep the three laws true for every integer.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">xᵐ · xⁿ  =  xᵐ⁺ⁿ           exponents add
+xᵐ / xⁿ  =  xᵐ⁻ⁿ           exponents subtract
+(xᵐ)ⁿ  =  xᵐⁿ              exponents multiply
+x⁰ = 1   and   x⁻ⁿ = 1/xⁿ  both require x ≠ 0</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Three laws and two definitions</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>The laws are short enough to memorise and short enough to rederive. Rederiving them is better, because it also tells you when they do not apply.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The laws are counting, not memory</h3><p><span class="math">x² · x³</span> is two <span class="math">x</span>s multiplied by three <span class="math">x</span>s, which is five <span class="math">x</span>s. If you cannot recall whether the exponents add or multiply, write the factors out for a small case and read the answer off.</p></article><article class="card concept-card"><div class="icon">2</div><h3>x⁰ and x⁻ⁿ are choices, made to keep the laws</h3><p>"Multiply <span class="math">x</span> by itself zero times" is not a meaningful instruction. The quotient law is what forces the value: extended to equal exponents it makes <span class="math">x³ / x³</span> into <span class="math">x⁰</span>, and arithmetic makes it <span class="math">1</span>, so <span class="math">x⁰</span> must be <span class="math">1</span>. The definition is designed backwards from the law it has to preserve.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Every law is about a single base</h3><p><span class="math">x² · y³</span> does not combine, and <span class="math">2³ · 3²</span> is <span class="math">72</span> &mdash; a number, not a power of anything you can read off. The laws move exponents around when the base is the same and say nothing otherwise.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Three laws, then two definitions</h2></div><p>Where each law comes from, why zero and negative exponents have the values they do, and where the distribution stops.</p></div>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Power with a positive integer exponent</span><p>For an integer <span class="math">n ≥ 1</span>, <span class="math">xⁿ</span> means the product of <span class="math">n</span> factors of <span class="math">x</span>. <span class="math">x</span> is the <strong>base</strong> and <span class="math">n</span> is the <strong>exponent</strong>.</p><p><span class="math">x¹ = x</span>. Note that this definition says nothing at all about <span class="math">n = 0</span> or <span class="math">n</span> negative; those cases are handled below, and they have to be handled separately.</p></div><h3>The three laws, from counting factors</h3><div class="thm"><span class="label">Theorem &middot; Product, quotient and power laws</span><p>For a base <span class="math">x</span> and positive integers <span class="math">m</span> and <span class="math">n</span>: <span class="math">xᵐ · xⁿ = xᵐ⁺ⁿ</span>; <span class="math">xᵐ / xⁿ = xᵐ⁻ⁿ</span> when <span class="math">x ≠ 0</span> and <span class="math">m &gt; n</span>; and <span class="math">(xᵐ)ⁿ = xᵐⁿ</span>.</p></div><div class="proof"><p>The first: <span class="math">xᵐ</span> is <span class="math">m</span> factors and <span class="math">xⁿ</span> is <span class="math">n</span> factors, so their product is <span class="math">m + n</span> factors, which is <span class="math">xᵐ⁺ⁿ</span>.</p><p>The second: in <span class="math">xᵐ / xⁿ</span> each of the <span class="math">n</span> factors below cancels one of the <span class="math">m</span> above, leaving <span class="math">m − n</span> factors.</p><p>The third: <span class="math">(xᵐ)ⁿ</span> is <span class="math">n</span> copies of a block of <span class="math">m</span> factors, so <span class="math">mn</span> factors in all.</p><p><span class="qed">&#9633;</span></p></div><div class="mathblock">x² · x³  =  (x·x)(x·x·x)      =  x⁵
+x⁵ / x²  =  (x·x·x·x·x)/(x·x) =  x³
+(x²)³    =  (x·x)(x·x)(x·x)   =  x⁶</div><p>Two more, and they are the ones that get overextended: <span class="math">(xy)ⁿ = xⁿyⁿ</span> and <span class="math">(x/y)ⁿ = xⁿ/yⁿ</span> for <span class="math">y ≠ 0</span>. An exponent distributes over a product and over a quotient. It does <em>not</em> distribute over a sum: <span class="math">(x + y)²</span> is not <span class="math">x² + y²</span>, and at <span class="math">x = 1</span>, <span class="math">y = 3</span> those are <span class="math">16</span> and <span class="math">10</span>.</p><h3>Zero and negative exponents</h3><p>Neither case is covered by the laws as stated, because those were proved for positive exponents by counting factors. So ask instead what the laws <em>would</em> say if they were extended, and let arithmetic say what the value would then have to be:</p><div class="mathblock">if the quotient law is to hold when the exponents are equal
+    x³ / x³  =  x³⁻³  =  x⁰
+and arithmetic gives
+    x³ / x³  =  1                     for x ≠ 0
+so           x⁰  =  1
+
+if the product law is to hold for a negative exponent
+    x³ · x⁻³  =  x³⁺⁽⁻³⁾  =  x⁰  =  1
+so            x⁻³  =  1 / x³</div><div class="defbox"><span class="label">Definition &middot; Zero and negative exponents</span><p>For <span class="math">x ≠ 0</span> and a positive integer <span class="math">n</span>: <span class="math">x⁰ = 1</span> and <span class="math">x⁻ⁿ = 1/xⁿ</span>.</p><p>These are definitions, not consequences. They are the only values that keep the three laws true for every integer exponent, which is the reason they were chosen. <span class="math">0⁰</span> is left undefined on this course, because both arguments above need <span class="math">x ≠ 0</span>.</p></div><p>A negative exponent does not make the value negative. <span class="math">2⁻³</span> is <span class="math">1/8</span>, a positive number. The exponent's sign says which side of the fraction bar the power belongs on; the value's sign comes from the base.</p><p>That gives a useful move: a factor may cross the fraction bar if its exponent changes sign. <span class="math">x⁻²/y⁻³</span> is <span class="math">y³/x²</span>. It is not a new rule &mdash; it is the definition applied twice.</p><div class="example"><span class="label">Example &middot; An expression with every law in it</span><p><span class="math">(2x⁻³y²)⁻²</span>. The outer exponent distributes over the product: <span class="math">2⁻² = 1/4</span>, <span class="math">(x⁻³)⁻² = x⁶</span> and <span class="math">(y²)⁻² = y⁻⁴</span>. Collecting, that is <span class="math">x⁶ / (4y⁴)</span>, valid for <span class="math">x ≠ 0</span> and <span class="math">y ≠ 0</span>.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>The exponent laws, twice each</h2></div><p>By the law, and by writing the powers out</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong>The exponent laws, twice each</strong><span id="pwSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>by the law</span><span class="tone-purple"><i class="legend-swatch"></i>written out in full</span><span class="tone-red"><i class="legend-swatch"></i>the two disagree</span></div>
+      </div>
+      <div class="lab-stage" id="pwStage"></div>
+      <div id="pwWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="pwStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Each law, computed twice</h3>
+          <p>Choose <span class="math">a</span>, <span class="math">b</span>, <span class="math">m</span> and <span class="math">n</span>. Every law is evaluated once by the law itself and once by writing all the powers out as products and multiplying the factors one at a time, so the two columns agree only when the law is real. The last row of the summary is not a law, and it is on the list to be caught.</p>
+        <div class="field">
+          <label for="pwLaw">Claim</label>
+          <select id="pwLaw"><option value="product">b^m * b^n = b^(m+n)</option><option value="quotient">b^m / b^n = b^(m-n)</option><option value="power">(b^m)^n = b^(mn)</option><option value="product_base">(ab)^n = a^n b^n</option><option value="zero">b^0 = 1</option><option value="negative">b^(-n) = 1 / b^n</option><option value="sum">(a+b)^n = a^n + b^n</option></select>
+        </div>
+        <div class="field">
+          <label for="pwPreset">Numbers</label>
+          <select id="pwPreset"><option value="2|3|3|4">a = 2, b = 3, m = 3, n = 4</option><option value="2|3|2|5">a = 2, b = 3, m = 2, n = 5</option><option value="-2|5|3|2">a = -2, b = 5, m = 3, n = 2</option><option value="2/3|-3/4|4|0">a = 2/3, b = -3/4, m = 4, n = 0</option><option value="0|7|0|3">a = 0, b = 7, m = 0, n = 3</option><option value="3|4|2|2">a = 3, b = 4, m = 2, n = 2</option></select>
+        </div>
+        <div class="field">
+          <label for="pwA">a</label>
+          <input id="pwA" type="text" value="2" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="pwB">b</label>
+          <input id="pwB" type="text" value="3" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="pwM">m</label>
+          <input id="pwM" type="text" value="3" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="pwN">n</label>
+          <input id="pwN" type="text" value="4" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid"><div class="kpi"><span>By the law</span><strong id="pwK1">&mdash;</strong></div><div class="kpi"><span>Written out</span><strong id="pwK2">&mdash;</strong></div><div class="kpi"><span>Laws that hold</span><strong id="pwK3">&mdash;</strong></div></div>
+        <p class="small-copy" style="margin:0;">a and b may be fractions such as <code>-3/4</code>; m and n are whole numbers between -12 and 12, negative ones included.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Simplifying a power expression</h2></div><p>Outermost first, then one base at a time, then the negatives. Changing that order is what produces stray factors.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Deal with the outermost exponent first</h3><p>An exponent on a bracket distributes over every factor inside it, including the numerical one: in <span class="math">(2x³)⁴</span> the <span class="math">2</span> is raised too, giving <span class="math">16x¹²</span>. It distributes over a quotient as well, and over a sum never.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Collect one base at a time</h3><p>Gather all the powers of <span class="math">x</span>, then all the powers of <span class="math">y</span>, then the plain numbers. Each base is tracked separately and they never mix, so this turns one hard problem into three easy ones.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Convert negative exponents last</h3><p>Do the arithmetic on the exponents while they are still exponents &mdash; adding <span class="math">−6</span> and <span class="math">−1</span> is easier than manipulating two nested fractions. Move factors across the bar only once the exponents are final.</p></article><article class="card concept-card"><div class="icon">4</div><h3>State the restrictions</h3><p>Every quotient law and every negative exponent needs its base to be nonzero. Writing <span class="math">x ≠ 0</span> beside the answer is not pedantry; in course 5 the excluded values become the first thing you are asked for.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Powers</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>One expression, every law used once</h3><p><span class="math">(2x³y⁻²)⁻² · (4x⁻¹y³)</span>, with <span class="math">x ≠ 0</span> and <span class="math">y ≠ 0</span>.</p><div class="mathblock">(2x³y⁻²)⁻² · (4x⁻¹y³)
+
+outer exponent, over each factor of the bracket
+    2⁻² = 1/4      (x³)⁻² = x⁻⁶      (y⁻²)⁻² = y⁴
+    →  (1/4)x⁻⁶y⁴ · 4x⁻¹y³
+
+the numbers
+    (1/4) · 4  =  1
+
+the x factors
+    x⁻⁶ · x⁻¹  =  x⁻⁶⁺⁽⁻¹⁾  =  x⁻⁷
+
+the y factors
+    y⁴ · y³    =  y⁴⁺³      =  y⁷
+
+    →  x⁻⁷y⁷
+
+negative exponent last
+    x⁻⁷  =  1/x⁷
+
+answer      y⁷ / x⁷</div><p>Four exponent arithmetics decided the whole thing: <span class="math">3 · (−2) = −6</span> and <span class="math">(−2)(−2) = 4</span> inside the first bracket, then <span class="math">−6 + (−1) = −7</span> and <span class="math">4 + 3 = 7</span>. Every one of them is signed integer addition or multiplication, which is why the bracket-and-sign care of lesson 3 matters here.</p><p>Check at <span class="math">x = 2</span> and <span class="math">y = 3</span>. The first bracket is <span class="math">2 · 8 · (1/9) = 16/9</span>, and <span class="math">(16/9)⁻² = 81/256</span>. The second factor is <span class="math">4 · (1/2) · 27 = 54</span>. Their product is <span class="math">4374/256</span>, which reduces to <span class="math">2187/128</span>. And <span class="math">y⁷/x⁷</span> is <span class="math">2187/128</span>. Agreement at one pair of values is not a proof, but a disagreement would have been decisive.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Multiplying the exponents when the bases are multiplied</strong><span><span class="math">x² · x³ = x⁵</span>, not <span class="math">x⁶</span>. Exponents multiply for a power of a power, <span class="math">(x²)³ = x⁶</span>, and the two rules get swapped under pressure. Writing out <span class="math">(x·x)(x·x·x)</span> settles it in five seconds.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying a law across two different bases</strong><span><span class="math">2³ · 3²</span> is <span class="math">8 · 9 = 72</span>. There is no law that combines it into a single power, because every law here begins "for a base <span class="math">x</span>". Different bases stay apart.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reading a negative exponent as a negative value</strong><span><span class="math">2⁻³</span> is <span class="math">1/8</span>, and <span class="math">(−2)³</span> is <span class="math">−8</span>. The exponent's sign controls which side of the fraction bar the power sits on; the base's sign controls whether the value is negative.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can produce x⁰ = 1 from the quotient law instead of recalling it.</strong><p>The test is not whether you know the value but whether you can say why it has to be that value and where the condition <span class="math">x ≠ 0</span> comes from. Lesson 8 asks the same question about <span class="math">x^(1/n)</span> and answers it the same way, so the argument is worth having in hand rather than the conclusion.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Lesson 6 uses these laws on powers of ten and nothing else, which makes them concrete. Lesson 8 pushes the exponent out of the integers altogether: if <span class="math">x^(1/2) · x^(1/2)</span> is to equal <span class="math">x¹</span>, then <span class="math">x^(1/2)</span> has no choice but to be a square root. Every extension of the exponent on this path is made by that same argument.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../absolute-value/" rel="prev"><span>Previous lesson</span><strong>04 &middot; Absolute Value</strong></a>
+      <a class="lesson-link next" href="../scientific-notation/" rel="next"><span>Next lesson</span><strong>06 &middot; Scientific Notation</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Foundations of Algebra.</strong> Every value on this course is computed in your browser by applying the rule the lesson states, and the arithmetic is exact &mdash; a third is <span class="math">1/3</span> through every step, not <span class="math">0.3333</span>. Where a lesson is about approximation it says so and shows the rounding it did.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "Simplify <span class=\"math\">x\u2075 \u00b7 x\u00b3<\/span>.", "a": ["<span class=\"math\">x\u00b9\u2075<\/span>", "<span class=\"math\">x\u2078<\/span>", "<span class=\"math\">2x\u2078<\/span>", "<span class=\"math\">x\u00b2<\/span>"], "c": 1, "why": "Five factors times three factors is eight factors, so the exponents add. <span class=\"math\">x\u00b9\u2075<\/span> multiplies them, which is the rule for <span class=\"math\">(x\u2075)\u00b3<\/span>. <span class=\"math\">2x\u2078<\/span> adds a coefficient that was never there. <span class=\"math\">x\u00b2<\/span> subtracts, which is the quotient law applied to a product."}, {"q": "What is <span class=\"math\">5\u207b\u00b2<\/span>?", "a": ["<span class=\"math\">\u221225<\/span>", "<span class=\"math\">1/25<\/span>", "<span class=\"math\">\u22121/25<\/span>", "<span class=\"math\">1/10<\/span>"], "c": 1, "why": "<span class=\"math\">5\u207b\u00b2 = 1/5\u00b2 = 1/25<\/span>. The minus sign in the exponent moves the power below the bar; it does not move to the value. <span class=\"math\">\u221225<\/span> and <span class=\"math\">\u22121/25<\/span> both read it as a sign, and <span class=\"math\">1/10<\/span> reads the exponent as a multiplier."}, {"q": "Which expression equals <span class=\"math\">(2x)\u00b3<\/span>?", "a": ["<span class=\"math\">2x\u00b3<\/span>", "<span class=\"math\">8x\u00b3<\/span>", "<span class=\"math\">6x\u00b3<\/span>", "<span class=\"math\">2x\u2076<\/span>"], "c": 1, "why": "The exponent distributes over the whole product: <span class=\"math\">(2x)\u00b3 = 2\u00b3x\u00b3 = 8x\u00b3<\/span>. <span class=\"math\">2x\u00b3<\/span> raises only the <span class=\"math\">x<\/span>, which is what <span class=\"math\">2 \u00b7 x\u00b3<\/span> means. <span class=\"math\">6x\u00b3<\/span> multiplies the <span class=\"math\">2<\/span> by the exponent, and <span class=\"math\">2x\u2076<\/span> multiplies the exponents."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function td(text, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + text + '</td>'; }
+  function tdl(text, cls) {
+    return '<td style="text-align:left;"' + (cls ? ' class="' + cls + '"' : '') + '>' + text + '</td>';
+  }
+  function th(text) { return '<th>' + text + '</th>'; }
+  function rowhead(text) { return '<th class="rowhead">' + text + '</th>'; }
+  function tr(cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.join('') + '</tr>'; }
+  function table(caption, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption + '</caption><tbody>'
+      + rows.join('') + '</tbody></table></div>';
+  }
+  function step(label, detail) { return tr([rowhead(label), tdl(detail)]); }
+  function chip(text, kind) { return '<span class="chip' + (kind ? ' ' + kind : '') + '">' + text + '</span>'; }
+  function tone(text, kind) { return '<span class="tone-' + kind + '">' + text + '</span>'; }
+  /* Rparse throws on a denominator of zero, and 1/0 is a thing a reader can
+     type. Every call on reader input goes through this instead, so a bad
+     fraction becomes an explanation rather than an exception. */
+  function Rread(text) {
+    try { return Rparse(String(text).trim()); } catch (err) { return null; }
+  }
+  /* A decimal that a lesson has decided to show. Never used to decide anything;
+     every comparison and every verdict on this path is made on the exact side. */
+  function approx(x, places) {
+    var v = Number(x);
+    if (!isFinite(v)) return 'not a real number';
+    return v.toFixed(places === undefined ? 6 : places);
+  }
+
+  /* b^e as an explicit product. Returns the factor list, the running products
+     that built it, and the value -- or a reason it has none. */
+  function expandPow(b, e) {
+    var k = e < 0 ? -e : e, factors = [], running = [], acc = R1;
+    for (var i = 0; i < k; i += 1) { factors.push(Rterm(b)); acc = Rmul(acc, b); running.push(Rtext(acc)); }
+    var body = k === 0 ? '1, the empty product' : factors.join(' * ');
+    if (e < 0) {
+      if (Rzero(acc)) {
+        return { text: '1 / (' + body + ')', running: running, value: null,
+                 why: '0 has no reciprocal, so a negative power of 0 is not a number' };
+      }
+      return { text: '1 / (' + body + ')', running: running, value: Rdiv(R1, acc), why: null };
+    }
+    return { text: body, running: running, value: acc, why: null };
+  }
+  function powOr(b, e) {
+    /* The law side. Rpow itself divides by zero for 0^negative, which is the
+       thing the reader needs told rather than thrown. */
+    if (Rzero(b) && e < 0) return { value: null, why: '0 to a negative power divides by zero' };
+    return { value: Rpow(b, e), why: null };
+  }
+  function powtext(base, e) { return base + '^' + (e < 0 ? '(' + e + ')' : e); }
+  function expText(b, e) { return powtext(Rterm(b), e); }
+
+  var HINT = "a and b may be fractions such as <code>-3/4<\/code>; m and n are whole numbers between -12 and 12, negative ones included.";
+
+  var preset = document.getElementById('pwPreset');
+  var stage = document.getElementById('pwStage');
+  var work = document.getElementById('pwWork');
+  var status = document.getElementById('pwStatus');
+  var subOut = document.getElementById('pwSub');
+  var kA = document.getElementById('pwK1'), kB = document.getElementById('pwK2'), kC = document.getElementById('pwK3');
+  function kpis(a, b, c) { kA.textContent = a; kB.textContent = b; kC.textContent = c; }
+  function fail(lead, detail) {
+    stage.innerHTML = table('nothing computed yet', [step('input', tone(esc(lead), 'red'))]);
+    work.innerHTML = '';
+    kpis('&mdash;', '&mdash;', '&mdash;');
+    status.innerHTML = '<strong>' + lead + '</strong> ' + detail + ' ' + HINT;
+  }
+
+  var lawSel = document.getElementById('pwLaw');
+  var inA = document.getElementById('pwA'), inB = document.getElementById('pwB');
+  var inM = document.getElementById('pwM'), inN = document.getElementById('pwN');
+  var INPUTS = [inA, inB, inM, inN], EXTRA = [lawSel];
+  function applyPreset(parts) {
+    inA.value = (parts[0] || '').trim(); inB.value = (parts[1] || '').trim();
+    inM.value = (parts[2] || '').trim(); inN.value = (parts[3] || '').trim();
+  }
+
+  /* Each claim knows how to state itself, how to work itself out by the law,
+     and how to work itself out from the definition of a power. It does NOT
+     know whether it is true; that is the last column, and it is computed. */
+  var LAWS = {
+    product: {
+      name: 'multiplying powers of the same base',
+      claim: function (A, B, m, n) { return powtext(B, m) + ' * ' + powtext(B, n) + ' = ' + powtext(B, m + n); },
+      law: function (a, b, m, n) {
+        var r = powOr(b, m + n);
+        return { value: r.value, why: r.why, how: 'add the exponents: ' + m + ' + ' + n + ' = ' + (m + n) + ', so the answer is ' + expText(b, m + n) };
+      },
+      full: function (a, b, m, n) {
+        var l = expandPow(b, m), r = expandPow(b, n);
+        if (l.value === null || r.value === null) return { value: null, why: l.why || r.why, how: '&mdash;' };
+        return { value: Rmul(l.value, r.value), why: null,
+                 how: '(' + l.text + ') * (' + r.text + '), ' + (m >= 0 && n >= 0
+                   ? 'which is ' + (m + n) + ' factors of ' + Rterm(b) + ' in one row'
+                   : 'and once the reciprocals cancel against the factors above them, ' + (m + n) + ' net factors are left') };
+      }
+    },
+    quotient: {
+      name: 'dividing powers of the same base',
+      claim: function (A, B, m, n) { return powtext(B, m) + ' / ' + powtext(B, n) + ' = ' + powtext(B, m - n); },
+      law: function (a, b, m, n) {
+        var r = powOr(b, m - n);
+        return { value: r.value, why: r.why, how: 'subtract the exponents: ' + m + ' - ' + n + ' = ' + (m - n) + ', so the answer is ' + expText(b, m - n) };
+      },
+      full: function (a, b, m, n) {
+        var l = expandPow(b, m), r = expandPow(b, n);
+        if (l.value === null || r.value === null || Rzero(r.value)) {
+          return { value: null, why: l.why || r.why || 'the bottom is 0, so this is a division by zero', how: '&mdash;' };
+        }
+        return { value: Rdiv(l.value, r.value), why: null,
+                 how: '(' + l.text + ') / (' + r.text + ')' + (m >= 0 && n >= 0
+                   ? ', and ' + Math.min(m, n) + ' factor(s) cancel top and bottom'
+                   : '') };
+      }
+    },
+    power: {
+      name: 'a power of a power',
+      claim: function (A, B, m, n) { return powtext('(' + powtext(B, m) + ')', n) + ' = ' + powtext(B, m * n); },
+      law: function (a, b, m, n) {
+        var r = powOr(b, m * n);
+        return { value: r.value, why: r.why, how: 'multiply the exponents: ' + m + ' * ' + n + ' = ' + (m * n) + ', so the answer is ' + expText(b, m * n) };
+      },
+      full: function (a, b, m, n) {
+        var inner = expandPow(b, m);
+        if (inner.value === null) return { value: null, why: inner.why, how: '&mdash;' };
+        var outer = expandPow(inner.value, n);
+        if (outer.value === null) return { value: null, why: outer.why, how: '&mdash;' };
+        return { value: outer.value, why: null,
+                 how: n + ' cop' + (n === 1 ? 'y' : 'ies') + ' of (' + inner.text + '), which is ' + Math.abs(m * n) + ' factors of ' + Rterm(b) };
+      }
+    },
+    product_base: {
+      name: 'a power of a product',
+      claim: function (A, B, m, n) { return powtext('(' + A + ' * ' + B + ')', n) + ' = ' + powtext(A, n) + ' * ' + powtext(B, n); },
+      law: function (a, b, m, n) {
+        var l = powOr(a, n), r = powOr(b, n);
+        if (l.value === null || r.value === null) return { value: null, why: l.why || r.why, how: '&mdash;' };
+        return { value: Rmul(l.value, r.value), why: null,
+                 how: 'give each factor the exponent: ' + expText(a, n) + ' * ' + expText(b, n) };
+      },
+      full: function (a, b, m, n) {
+        var e = expandPow(Rmul(a, b), n);
+        return { value: e.value, why: e.why,
+                 how: n + ' cop' + (n === 1 ? 'y' : 'ies') + ' of (' + Rterm(a) + ' * ' + Rterm(b) + '), which is ' + e.text };
+      }
+    },
+    zero: {
+      name: 'the zero exponent',
+      claim: function (A, B, m, n) { return powtext(B, 0) + ' = 1'; },
+      law: function (a, b, m, n) {
+        return { value: R1, why: null,
+                 how: expText(b, n) + ' / ' + expText(b, n) + ' is ' + expText(b, n - n) + ' by the quotient law, and anything nonzero over itself is 1' };
+      },
+      full: function (a, b, m, n) {
+        var e = expandPow(b, n);
+        if (e.value === null || Rzero(e.value)) {
+          return { value: null, why: 'with b = 0 there is nothing to cancel: 0/0 is not 1, it is nothing at all', how: '&mdash;' };
+        }
+        return { value: Rdiv(e.value, e.value), why: null,
+                 how: '(' + e.text + ') / (' + e.text + '): every factor cancels and an empty product is left, which is 1' };
+      }
+    },
+    negative: {
+      name: 'a negative exponent',
+      claim: function (A, B, m, n) { return powtext(B, -n) + ' = 1 / ' + powtext(B, n); },
+      law: function (a, b, m, n) {
+        var r = powOr(b, -n);
+        return { value: r.value, why: r.why, how: 'a negative exponent is the reciprocal of the positive one' };
+      },
+      full: function (a, b, m, n) {
+        var e = expandPow(b, n);
+        if (e.value === null || Rzero(e.value)) return { value: null, why: '1 divided by 0 is not a number', how: '&mdash;' };
+        return { value: Rdiv(R1, e.value), why: null, how: '1 / (' + e.text + ')' };
+      }
+    },
+    sum: {
+      name: 'a power of a SUM, which is the one everybody wants to be a law',
+      claim: function (A, B, m, n) { return powtext('(' + A + ' + ' + B + ')', n) + ' = ' + powtext(A, n) + ' + ' + powtext(B, n); },
+      law: function (a, b, m, n) {
+        var l = powOr(a, n), r = powOr(b, n);
+        if (l.value === null || r.value === null) return { value: null, why: l.why || r.why, how: '&mdash;' };
+        return { value: Radd(l.value, r.value), why: null, how: 'give each term the exponent: ' + expText(a, n) + ' + ' + expText(b, n) };
+      },
+      full: function (a, b, m, n) {
+        var e = expandPow(Radd(a, b), n);
+        return { value: e.value, why: e.why,
+                 how: n + ' cop' + (n === 1 ? 'y' : 'ies') + ' of (' + Rterm(a) + ' + ' + Rterm(b) + ') = ' + Rterm(Radd(a, b)) + ', which is ' + e.text };
+      }
+    }
+  };
+  var ORDER = ['product', 'quotient', 'power', 'product_base', 'zero', 'negative', 'sum'];
+
+  /* Agreement on one set of numbers is not much. For the claim on screen the
+     lab also goes looking: 256 combinations of base and exponent, and the first
+     one on which the two routes disagree. A claim that survives that is a law;
+     a claim that does not is a claim whose counterexample is printed. */
+  var GBASE = ['2', '3', '-2', '1/2'].map(Rparse), GEXP = [2, 3, 1, 0];
+  function separates(law) {
+    for (var i = 0; i < GBASE.length; i += 1) {
+      for (var j = 0; j < GBASE.length; j += 1) {
+        for (var p = 0; p < GEXP.length; p += 1) {
+          for (var q = 0; q < GEXP.length; q += 1) {
+            var bl, fl;
+            try { bl = law.law(GBASE[i], GBASE[j], GEXP[p], GEXP[q]); fl = law.full(GBASE[i], GBASE[j], GEXP[p], GEXP[q]); }
+            catch (err) { continue; }
+            if (bl.value === null || fl.value === null) continue;
+            if (!Requ(bl.value, fl.value)) {
+              return { a: GBASE[i], b: GBASE[j], m: GEXP[p], n: GEXP[q], law: bl.value, full: fl.value };
+            }
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  function redraw() {
+    var a = Rread(inA.value), b = Rread(inB.value), m = Rread(inM.value), n = Rread(inN.value);
+    if (a === null || b === null || m === null || n === null) {
+      fail('a, b, m and n all have to be numbers.', 'a and b may be fractions; m and n must be whole numbers.');
+      return;
+    }
+    if (!Rint(m) || !Rint(n)) {
+      fail('m and n have to be whole numbers here.',
+        'A fractional exponent is a root, and the radicals lab is where those live.');
+      return;
+    }
+    if (m.n > 12n || m.n < -12n || n.n > 12n || n.n < -12n) {
+      fail('Keep m and n between -12 and 12.',
+        'Every power below is written out as an actual list of factors, and a list of a thousand '
+        + 'factors teaches nothing that a list of seven does not.');
+      return;
+    }
+    var mi = Number(m.n), ni = Number(n.n);
+    var key = lawSel.value, law = LAWS[key] || LAWS.product;
+    subOut.textContent = 'a = ' + Rtext(a) + ', b = ' + Rtext(b) + ', m = ' + mi + ', n = ' + ni;
+
+    var byLaw = law.law(a, b, mi, ni), inFull = law.full(a, b, mi, ni);
+    var same = byLaw.value !== null && inFull.value !== null && Requ(byLaw.value, inFull.value);
+    var claim = law.claim(Rterm(a), Rterm(b), mi, ni);
+
+    stage.innerHTML = table('the claim, worked out both ways', [
+      step('the claim', claim),
+      step('by the law', byLaw.value === null ? tone(esc(byLaw.why), 'red') : tone(Rtext(byLaw.value), 'cyan')),
+      step('written out in full', inFull.value === null ? tone(esc(inFull.why), 'red') : tone(Rtext(inFull.value), 'purple')),
+      step('the same number?', byLaw.value === null || inFull.value === null
+        ? '<span class="chip">one side has no value</span>'
+        : (same ? '<span class="chip ok">yes</span>' : '<span class="chip no">no, and so this is not a law</span>')),
+    ]);
+
+    var cx = separates(law);
+    var detail = [tr([th('route'), th('what it does'), th('answer')])];
+    detail.push(tr([tdl('by the law'), tdl(byLaw.how), td(byLaw.value === null ? tone(esc(byLaw.why), 'red') : Rtext(byLaw.value))]));
+    detail.push(tr([tdl('written out in full'), tdl(inFull.how), td(inFull.value === null ? tone(esc(inFull.why), 'red') : Rtext(inFull.value))], 'focus'));
+    detail.push(tr([tdl('the same search over 256 other cases'),
+      tdl(cx ? 'a case where the two routes part company was found'
+             : 'no case anywhere in the search made the two routes disagree'),
+      tdl(cx ? '<span class="chip no">a = ' + Rtext(cx.a) + ', b = ' + Rtext(cx.b) + ', m = ' + cx.m
+            + ', n = ' + cx.n + ': ' + Rtext(cx.law) + ' against ' + Rtext(cx.full) + '</span>'
+             : '<span class="chip ok">nothing found</span>')]));
+
+    var growth = [tr([th('power'), th('as a product'), th('value')])];
+    for (var e = 0; e <= Math.max(1, Math.abs(ni) || Math.abs(mi)); e += 1) {
+      var ex = expandPow(b, e);
+      growth.push(tr([td(expText(b, e)), tdl(e === 0 ? 'an empty product' : ex.text), td(ex.value === null ? '&mdash;' : Rtext(ex.value))], e === 0 ? 'focus' : ''));
+    }
+
+    /* Every claim on the list, on the same numbers. The point of the summary is
+       that it is one list: the true ones and the false one are computed the
+       same way and only the last column tells them apart. */
+    var all = [tr([th('claim'), th('by the law'), th('written out'), th('agree?')])];
+    var holds = 0, total = 0;
+    ORDER.forEach(function (id) {
+      var L = LAWS[id];
+      var bl = L.law(a, b, mi, ni), fl = L.full(a, b, mi, ni);
+      var ok = bl.value !== null && fl.value !== null && Requ(bl.value, fl.value);
+      if (bl.value !== null && fl.value !== null) { total += 1; if (ok) holds += 1; }
+      all.push(tr([
+        tdl(L.claim(Rterm(a), Rterm(b), mi, ni)),
+        td(bl.value === null ? 'undefined' : Rtext(bl.value)),
+        td(fl.value === null ? 'undefined' : Rtext(fl.value)),
+        td(bl.value === null || fl.value === null ? '&mdash;' : (ok ? 'yes' : 'no'), bl.value === null || fl.value === null ? '' : (ok ? 't' : 'f')),
+      ], id === key ? 'focus' : ''));
+    });
+
+    work.innerHTML = table('The chosen claim: ' + law.name, detail)
+      + table('Powers of ' + Rterm(b) + ', each one written out', growth)
+      + table('Every claim on the list, on these same numbers', all);
+    kpis(byLaw.value === null ? 'undefined' : Rtext(byLaw.value),
+      inFull.value === null ? 'undefined' : Rtext(inFull.value), holds + ' of ' + total);
+
+    var msg;
+    if (byLaw.value === null || inFull.value === null) {
+      msg = '<strong>' + claim + ' has no value for these numbers.</strong> '
+        + esc(byLaw.why || inFull.why) + '. That is not a failure of the law: the law is about '
+        + 'numbers, and this expression is not one.';
+    } else if (same && cx) {
+      msg = '<strong>' + claim + ' comes out true on these numbers &mdash; both routes give '
+        + Rtext(byLaw.value) + ' &mdash; and it is still not a law.</strong> The search found '
+        + 'a = ' + Rtext(cx.a) + ', b = ' + Rtext(cx.b) + ', m = ' + cx.m + ', n = ' + cx.n
+        + ', where the rule gives ' + Rtext(cx.law) + ' and writing the powers out gives '
+        + Rtext(cx.full) + '. Numbers like the ones in the boxes cannot tell the two apart, which '
+        + 'is exactly how a wrong rule survives being checked.';
+    } else if (same) {
+      msg = '<strong>' + claim + ', and both routes give ' + Rtext(byLaw.value) + '.</strong> '
+        + 'The second route did not use the law at all &mdash; it wrote every power out as a list '
+        + 'of factors and multiplied them one at a time &mdash; so the agreement is evidence for '
+        + 'the law rather than a restatement of it, and no case in the 256 searched separated them '
+        + 'either. That is also the proof in miniature: counting the factors on each side is the '
+        + 'whole argument.';
+    } else {
+      msg = '<strong>' + claim + ' is false: the law side gives ' + Rtext(byLaw.value)
+        + ' and writing it out gives ' + Rtext(inFull.value) + '.</strong> Exponents distribute '
+        + 'over multiplication and division, and over nothing else. A power of a sum has to be '
+        + 'multiplied out, which is the distributing lesson, and for n = 2 that is where the '
+        + 'middle term comes from.';
+    }
+    if (Rzero(b) && (mi === 0 || ni === 0)) {
+      msg += ' With b = 0 and a zero exponent, the summary above shows 0^0 as 1, and that is a '
+        + 'convention rather than a computation: the empty product is 1, while 0 to every positive '
+        + 'power is 0, and the two habits pull in opposite directions. Analysis leaves 0^0 '
+        + 'undefined for exactly that reason.';
+    }
+    status.innerHTML = msg;
+  }
+
+  preset.addEventListener('change', function () { applyPreset(preset.value.split('|')); redraw(); });
+  EXTRA.forEach(function (el) { el.addEventListener('change', redraw); });
+  INPUTS.forEach(function (el) { el.addEventListener('input', redraw); });
+  applyPreset(preset.value.split('|'));
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

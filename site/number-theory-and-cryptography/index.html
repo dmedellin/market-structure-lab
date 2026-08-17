@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Learn library">
         <span class="brand-mark" aria-hidden="true">06</span>
-        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 of 8 &amp;middot; Discrete Mathematics path</span></span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 of 8 · Discrete Mathematics path</span></span>
       </a>
 
       <nav class="topnav" aria-label="Primary">
@@ -940,7 +971,7 @@ ed ≡ 1 (mod φ(n))  ⟹  m^{ed} ≡ m  (mod n)     RSA</div>
     </section>
     <section class="section" id="syllabus">
       <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 6 are divisibility and gcd, 7 to 11 are modular arithmetic, and 12 to 14 apply all of it.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./divisibility-and-the-division-algorithm/"><div class="num">01</div><div><strong>Divisibility and the Division Algorithm</strong><span>Every division leaves a unique quotient and remainder.</span></div></a><a class="syllabus-item" href="./primes-and-factorisation/"><div class="num">02</div><div><strong>Primes and Unique Factorisation</strong><span>Every integer above 1 factors into primes, in exactly one way.</span></div></a><a class="syllabus-item" href="./the-sieve-of-eratosthenes/"><div class="num">03</div><div><strong>The Sieve of Eratosthenes</strong><span>Cross out the multiples; what survives is prime.</span></div></a><a class="syllabus-item" href="./greatest-common-divisor/"><div class="num">04</div><div><strong>Greatest Common Divisor</strong><span>The largest number dividing both, and how not to find it.</span></div></a><a class="syllabus-item" href="./the-euclidean-algorithm/"><div class="num">05</div><div><strong>The Euclidean Algorithm</strong><span>Replace `(a, b)` by `(b, a mod b)` until the remainder is zero.</span></div></a><a class="syllabus-item" href="./bezout-and-modular-inverses/"><div class="num">06</div><div><strong>Bézout&#x27;s Identity and Modular Inverses</strong><span>The gcd is a linear combination — and that gives inverses.</span></div></a><a class="syllabus-item" href="./modular-arithmetic/"><div class="num">07</div><div><strong>Modular Arithmetic</strong><span>Arithmetic on remainders, and why it is well defined.</span></div></a><a class="syllabus-item" href="./modular-exponentiation/"><div class="num">08</div><div><strong>Modular Exponentiation</strong><span>Compute `aᵇ mod m` without ever forming `aᵇ`.</span></div></a><a class="syllabus-item" href="./linear-congruences/"><div class="num">09</div><div><strong>Linear Congruences</strong><span>`ax ≡ b (mod m)`: solvable exactly when `gcd(a,m)` divides `b`.</span></div></a><a class="syllabus-item" href="./chinese-remainder-theorem/"><div class="num">10</div><div><strong>The Chinese Remainder Theorem</strong><span>Simultaneous congruences with coprime moduli have exactly one solution.</span></div></a><a class="syllabus-item" href="./fermat-and-euler/"><div class="num">11</div><div><strong>Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem</strong><span>Exponents reduce modulo `φ(m)`, not modulo `m`.</span></div></a><a class="syllabus-item" href="./hashing-and-pseudorandom-numbers/"><div class="num">12</div><div><strong>Hashing and Pseudorandom Numbers</strong><span>Two everyday uses of modular arithmetic.</span></div></a><a class="syllabus-item" href="./classical-ciphers/"><div class="num">13</div><div><strong>Classical Ciphers</strong><span>Shift, affine and Vigenère — and why each one falls.</span></div></a><a class="syllabus-item" href="./rsa-encryption/"><div class="num">14</div><div><strong>RSA Encryption</strong><span>Public-key encryption from Euler&#x27;s theorem — and what its security rests on.</span></div></a></div>
+      <div class="syllabus"><a class="syllabus-item" href="./divisibility-and-the-division-algorithm/"><div class="num">01</div><div><strong>Divisibility and the Division Algorithm</strong><span>Every division leaves a unique quotient and remainder.</span></div></a><a class="syllabus-item" href="./primes-and-factorisation/"><div class="num">02</div><div><strong>Primes and Unique Factorisation</strong><span>Every integer above 1 factors into primes, in exactly one way.</span></div></a><a class="syllabus-item" href="./the-sieve-of-eratosthenes/"><div class="num">03</div><div><strong>The Sieve of Eratosthenes</strong><span>Cross out the multiples; what survives is prime.</span></div></a><a class="syllabus-item" href="./greatest-common-divisor/"><div class="num">04</div><div><strong>Greatest Common Divisor</strong><span>The largest number dividing both, and how not to find it.</span></div></a><a class="syllabus-item" href="./the-euclidean-algorithm/"><div class="num">05</div><div><strong>The Euclidean Algorithm</strong><span>Replace <span class="math">(a, b)</span> by <span class="math">(b, a mod b)</span> until the remainder is zero.</span></div></a><a class="syllabus-item" href="./bezout-and-modular-inverses/"><div class="num">06</div><div><strong>Bézout&#x27;s Identity and Modular Inverses</strong><span>The gcd is a linear combination — and that gives inverses.</span></div></a><a class="syllabus-item" href="./modular-arithmetic/"><div class="num">07</div><div><strong>Modular Arithmetic</strong><span>Arithmetic on remainders, and why it is well defined.</span></div></a><a class="syllabus-item" href="./modular-exponentiation/"><div class="num">08</div><div><strong>Modular Exponentiation</strong><span>Compute <span class="math">aᵇ mod m</span> without ever forming <span class="math">aᵇ</span>.</span></div></a><a class="syllabus-item" href="./linear-congruences/"><div class="num">09</div><div><strong>Linear Congruences</strong><span><span class="math">ax ≡ b (mod m)</span>: solvable exactly when <span class="math">gcd(a,m)</span> divides <span class="math">b</span>.</span></div></a><a class="syllabus-item" href="./chinese-remainder-theorem/"><div class="num">10</div><div><strong>The Chinese Remainder Theorem</strong><span>Simultaneous congruences with coprime moduli have exactly one solution.</span></div></a><a class="syllabus-item" href="./fermat-and-euler/"><div class="num">11</div><div><strong>Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem</strong><span>Exponents reduce modulo <span class="math">φ(m)</span>, not modulo <span class="math">m</span>.</span></div></a><a class="syllabus-item" href="./hashing-and-pseudorandom-numbers/"><div class="num">12</div><div><strong>Hashing and Pseudorandom Numbers</strong><span>Two everyday uses of modular arithmetic.</span></div></a><a class="syllabus-item" href="./classical-ciphers/"><div class="num">13</div><div><strong>Classical Ciphers</strong><span>Shift, affine and Vigenère — and why each one falls.</span></div></a><a class="syllabus-item" href="./rsa-encryption/"><div class="num">14</div><div><strong>RSA Encryption</strong><span>Public-key encryption from Euler&#x27;s theorem — and what its security rests on.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">

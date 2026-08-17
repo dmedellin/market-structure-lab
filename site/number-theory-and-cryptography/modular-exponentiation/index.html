@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Modular Exponentiation | Number Theory and Cryptography | Learn · geterdone.io</title>
-  <meta name="description" content="Repeated squaring computes `aᵇ mod m` in about `2 log₂ b` multiplications rather than `b` of them, reducing at every step so the numbers stay small. It is what makes RSA possible." />
+  <meta name="description" content="Repeated squaring computes aᵇ mod m in about 2 log₂ b multiplications rather than b of them, reducing at every step so the numbers stay small. It is what makes RSA possible." />
   <link rel="canonical" href="https://learn.geterdone.io/number-theory-and-cryptography/modular-exponentiation/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Modular Exponentiation | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta property="og:description" content="Repeated squaring computes `aᵇ mod m` in about `2 log₂ b` multiplications rather than `b` of them, reducing at every step so the numbers stay small. It is what makes RSA possible." />
+  <meta property="og:description" content="Repeated squaring computes aᵇ mod m in about 2 log₂ b multiplications rather than b of them, reducing at every step so the numbers stay small. It is what makes RSA possible." />
   <meta property="og:url" content="https://learn.geterdone.io/number-theory-and-cryptography/modular-exponentiation/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Modular Exponentiation | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Repeated squaring computes `aᵇ mod m` in about `2 log₂ b` multiplications rather than `b` of them, reducing at every step so the numbers stay small. It is what makes RSA possible." />
+  <meta name="twitter:description" content="Repeated squaring computes aᵇ mod m in about 2 log₂ b multiplications rather than b of them, reducing at every step so the numbers stay small. It is what makes RSA possible." />
   <meta name="twitter:url" content="https://learn.geterdone.io/number-theory-and-cryptography/modular-exponentiation/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Number Theory and Cryptography course home">
         <span class="brand-mark" aria-hidden="true">08</span>
-        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 &amp;middot; Lesson 08 of 14</span></span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 · Lesson 08 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Number Theory and Cryptography</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 08 &amp;middot; Modular Exponentiation</span>
+      <span class="crumb-current" aria-current="page">Lesson 08 · Modular Exponentiation</span>
     </nav>
 
     <noscript>
@@ -940,7 +971,7 @@ cost: about 2·log₂(b) multiplications, not b
         b    = b div 2
     return result</div><p>The loop reads <span class="math">b</span> in binary from the least significant bit. <span class="math">base</span> holds <span class="math">a^{2^i} mod m</span> at step <span class="math">i</span>, and the result accumulates exactly those powers whose bit is set. Since <span class="math">b = Σ bᵢ2ⁱ</span>, the product of the selected powers is <span class="math">a^b</span>.</p><div class="thm"><span class="label">Theorem &middot; Correctness</span><p>MODPOW returns <span class="math">a^b mod m</span>.</p></div><div class="proof"><p>The loop invariant is <span class="math">result · base^b ≡ a^{b₀} (mod m)</span>, where <span class="math">b₀</span> is the original exponent.</p><p>Initially <span class="math">result = 1</span> and <span class="math">base = a</span>, so it holds. If <span class="math">b</span> is even, <span class="math">base^b = (base²)^{b/2}</span>, and the update preserves it. If <span class="math">b</span> is odd, <span class="math">base^b = base · (base²)^{(b−1)/2}</span>, and multiplying <span class="math">result</span> by <span class="math">base</span> before the halving preserves it.</p><p>At exit <span class="math">b = 0</span>, so the invariant reads <span class="math">result ≡ a^{b₀}</span>.</p><p><span class="qed">&#9633;</span></p></div><h3>The cost</h3><p>The loop runs <span class="math">⌊log₂ b⌋ + 1</span> times, with one squaring per iteration and at most one extra multiplication. So the total is at most about <span class="math">2 log₂ b</span> modular multiplications.</p><div class="mathblock">b = 128:      naive 128 multiplications,  fast 8 squarings
 b = 10⁶:      naive a million,            fast about 20 squarings
-b = 2¹⁰²⁴:    naive impossible,           fast about 1024 squarings</div><div class="example"><span class="label">Example &middot; `7^128 mod 13`</span><p><span class="math">7² = 49 ≡ 10</span>; <span class="math">10² = 100 ≡ 9</span>; <span class="math">9² = 81 ≡ 3</span>; <span class="math">3² = 9</span>; <span class="math">9² = 81 ≡ 3</span>; <span class="math">3² ≡ 9</span>; <span class="math">9² ≡ 3</span>. Since <span class="math">128 = 2⁷</span>, seven squarings give <span class="math">7^128 ≡ 3 (mod 13)</span>. No number above 144 ever appeared.</p></div><p>That bound is the second essential point: every intermediate is a product of two numbers below <span class="math">m</span>, hence below <span class="math">m²</span>. For a 2048-bit modulus the intermediates are 4096 bits, which is entirely routine, while <span class="math">a^b</span> itself would have about <span class="math">2^1024</span> bits.</p><h3>Where it is used</h3><ul><li><strong>RSA</strong> (lesson 14): both encryption and decryption are a single modular exponentiation, with 2048-bit exponents.</li><li><strong>Diffie&ndash;Hellman key exchange</strong> and the whole family of discrete-logarithm systems.</li><li><strong>Primality testing</strong>: Fermat and Miller&ndash;Rabin both compute <span class="math">a^{n−1} mod n</span>, which is only feasible this way.</li></ul><p>It is worth appreciating the asymmetry the algorithm creates. Computing <span class="math">a^b mod m</span> is fast; recovering <span class="math">b</span> from <span class="math">a</span>, <span class="math">a^b mod m</span> and <span class="math">m</span> &mdash; the discrete logarithm &mdash; is believed hard. A great deal of cryptography lives in that gap.</p></article>
+b = 2¹⁰²⁴:    naive impossible,           fast about 1024 squarings</div><div class="example"><span class="label">Example &middot; <span class="math">7^128 mod 13</span></span><p><span class="math">7² = 49 ≡ 10</span>; <span class="math">10² = 100 ≡ 9</span>; <span class="math">9² = 81 ≡ 3</span>; <span class="math">3² = 9</span>; <span class="math">9² = 81 ≡ 3</span>; <span class="math">3² ≡ 9</span>; <span class="math">9² ≡ 3</span>. Since <span class="math">128 = 2⁷</span>, seven squarings give <span class="math">7^128 ≡ 3 (mod 13)</span>. No number above 144 ever appeared.</p></div><p>That bound is the second essential point: every intermediate is a product of two numbers below <span class="math">m</span>, hence below <span class="math">m²</span>. For a 2048-bit modulus the intermediates are 4096 bits, which is entirely routine, while <span class="math">a^b</span> itself would have about <span class="math">2^1024</span> bits.</p><h3>Where it is used</h3><ul><li><strong>RSA</strong> (lesson 14): both encryption and decryption are a single modular exponentiation, with 2048-bit exponents.</li><li><strong>Diffie&ndash;Hellman key exchange</strong> and the whole family of discrete-logarithm systems.</li><li><strong>Primality testing</strong>: Fermat and Miller&ndash;Rabin both compute <span class="math">a^{n−1} mod n</span>, which is only feasible this way.</li></ul><p>It is worth appreciating the asymmetry the algorithm creates. Computing <span class="math">a^b mod m</span> is fast; recovering <span class="math">b</span> from <span class="math">a</span>, <span class="math">a^b mod m</span> and <span class="math">m</span> &mdash; the discrete logarithm &mdash; is believed hard. A great deal of cryptography lives in that gap.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Number theory workbench</h2></div><p>Algorithms with their traces</p></div>
@@ -1003,7 +1034,7 @@ b = 2¹⁰²⁴:    naive impossible,           fast about 1024 squarings</div><
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>`3^200 mod 50`</h3><p><span class="math">200 = 11001000₂</span>, so the set bits are at positions 3, 6 and 7.</p><div class="mathblock">bit  power of 3      value mod 50     used?
+      <article class="card card-pad prose"><h3><span class="math">3^200 mod 50</span></h3><p><span class="math">200 = 11001000₂</span>, so the set bits are at positions 3, 6 and 7.</p><div class="mathblock">bit  power of 3      value mod 50     used?
  0   3^1                 3             no
  1   3^2                 9             no
  2   3^4                31             no      (9² = 81 ≡ 31)
@@ -1021,7 +1052,7 @@ result = 11 · 31 · 11 mod 50
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Reducing the exponent modulo `m`</strong><span>Exponents reduce modulo <span class="math">φ(m)</span>, not <span class="math">m</span>, and only when the base is coprime to <span class="math">m</span>. Lesson 11 states the rule.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Computing `a^b` before reducing</strong><span>The intermediate is astronomically large. Reducing at every step is the whole point.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Multiplying in the wrong powers</strong><span>Only the set bits of the exponent contribute. Writing <span class="math">b</span> in binary first makes this mechanical.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Reducing the exponent modulo <span class="math">m</span></strong><span>Exponents reduce modulo <span class="math">φ(m)</span>, not <span class="math">m</span>, and only when the base is coprime to <span class="math">m</span>. Lesson 11 states the rule.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Computing <span class="math">a^b</span> before reducing</strong><span>The intermediate is astronomically large. Reducing at every step is the whole point.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Multiplying in the wrong powers</strong><span>Only the set bits of the exponent contribute. Writing <span class="math">b</span> in binary first makes this mechanical.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can trace the algorithm on paper.</strong><p>Compute <span class="math">5^117 mod 19</span> by square and multiply, writing 117 in binary first. Seven squarings and four multiplications, and no intermediate above 361.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The same algorithm works for any associative operation: matrix powers, compositions of functions, and group elements generally. The exponent's binary expansion is what is being exploited, and multiplication is incidental.</div></article>
       </div>
     </section>

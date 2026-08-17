@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hashing and Pseudorandom Numbers | Number Theory and Cryptography | Learn · geterdone.io</title>
-  <meta name="description" content="Hash functions map keys to a small range with `mod`, and linear congruential generators produce pseudorandom sequences the same way. Both work because of number theory, and both fail in ways number theory predicts." />
+  <meta name="description" content="Hash functions map keys to a small range with mod, and linear congruential generators produce pseudorandom sequences the same way. Both work because of number theory, and both fail in ways number theory predicts." />
   <link rel="canonical" href="https://learn.geterdone.io/number-theory-and-cryptography/hashing-and-pseudorandom-numbers/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Hashing and Pseudorandom Numbers | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta property="og:description" content="Hash functions map keys to a small range with `mod`, and linear congruential generators produce pseudorandom sequences the same way. Both work because of number theory, and both fail in ways number theory predicts." />
+  <meta property="og:description" content="Hash functions map keys to a small range with mod, and linear congruential generators produce pseudorandom sequences the same way. Both work because of number theory, and both fail in ways number theory predicts." />
   <meta property="og:url" content="https://learn.geterdone.io/number-theory-and-cryptography/hashing-and-pseudorandom-numbers/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Hashing and Pseudorandom Numbers | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Hash functions map keys to a small range with `mod`, and linear congruential generators produce pseudorandom sequences the same way. Both work because of number theory, and both fail in ways number theory predicts." />
+  <meta name="twitter:description" content="Hash functions map keys to a small range with mod, and linear congruential generators produce pseudorandom sequences the same way. Both work because of number theory, and both fail in ways number theory predicts." />
   <meta name="twitter:url" content="https://learn.geterdone.io/number-theory-and-cryptography/hashing-and-pseudorandom-numbers/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Number Theory and Cryptography course home">
         <span class="brand-mark" aria-hidden="true">12</span>
-        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 &amp;middot; Lesson 12 of 14</span></span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 · Lesson 12 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Number Theory and Cryptography</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 12 &amp;middot; Hashing and Pseudorandom Numbers</span>
+      <span class="crumb-current" aria-current="page">Lesson 12 · Hashing and Pseudorandom Numbers</span>
     </nav>
 
     <noscript>
@@ -931,7 +962,7 @@ full period ⟺ Hull–Dobell conditions on a, c, m</div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Hashing and pseudorandomness</h2></div><p>Both constructions, the number theory behind them, and their failure modes.</p></div>
-      <article class="card card-pad prose"><h3>Hash functions</h3><div class="defbox"><span class="label">Definition &middot; Hash function</span><p>A function <span class="math">h</span> mapping a large key space into <span class="math">{0, 1, …, m−1}</span>. The simplest is <span class="math">h(k) = k mod m</span>.</p></div><p>Since the key space is larger than the range, collisions are unavoidable: by the pigeonhole principle of course 2 lesson 14, some slot receives more than one key. A hash table is therefore designed around collisions &mdash; by chaining, or by probing for another slot.</p><div class="thm"><span class="label">Theorem &middot; Why the modulus should be prime</span><p>If <span class="math">m = 2^r</span>, then <span class="math">k mod m</span> depends only on the low <span class="math">r</span> bits of <span class="math">k</span>. Keys sharing those bits &mdash; addresses aligned to a boundary, identifiers with a common suffix &mdash; all collide. A prime modulus has no such structure to exploit.</p></div><div class="example"><span class="label">Example &middot; A bad choice</span><p>Hashing memory addresses with <span class="math">m = 16</span> when every address is a multiple of 16 sends every key to slot 0. With <span class="math">m = 17</span> the same keys spread across all seventeen slots.</p></div><p>The birthday problem of course 5 lesson 2 gives the collision rate: with <span class="math">m</span> slots and <span class="math">n</span> keys, collisions become likely once <span class="math">n</span> is around <span class="math">√m</span>. A table of a million slots sees its first collision after about a thousand insertions, which is why load factors are managed rather than collisions avoided.</p><h3>Linear congruential generators</h3><div class="defbox"><span class="label">Definition &middot; LCG</span><p><span class="math">x_{n+1} = (a·x_n + c) mod m</span>, from a seed <span class="math">x₀</span>. The parameters <span class="math">a</span> (multiplier), <span class="math">c</span> (increment) and <span class="math">m</span> (modulus) determine the whole sequence.</p></div><p>The sequence must eventually repeat, since there are only <span class="math">m</span> possible values &mdash; pigeonhole again. The <strong>period</strong> is how long it takes, and it is at most <span class="math">m</span>.</p><div class="thm"><span class="label">Theorem &middot; Hull&amp;ndash;Dobell theorem</span><p>An LCG has full period <span class="math">m</span> for every seed if and only if: <span class="math">gcd(c, m) = 1</span>; <span class="math">a − 1</span> is divisible by every prime dividing <span class="math">m</span>; and <span class="math">a − 1</span> is divisible by 4 if <span class="math">m</span> is.</p></div><div class="example"><span class="label">Example &middot; A bad generator</span><p><span class="math">a = 5</span>, <span class="math">c = 3</span>, <span class="math">m = 8</span>, seed 0: <span class="math">0, 3, 2, 5, 4, 7, 6, 1, 0, …</span> &mdash; full period 8, and the conditions hold. Change <span class="math">a</span> to 4 and the sequence is <span class="math">0, 3, 7, 7, 7, …</span>: it collapses almost immediately, because <span class="math">a − 1 = 3</span> is not divisible by 2.</p></div><p>Even a full-period LCG is not statistically good. Consecutive values fall on a small number of hyperplanes in higher dimensions &mdash; the Marsaglia effect &mdash; and the low bits of a power-of-two-modulus LCG have very short periods. RANDU, an LCG shipped by IBM in the 1960s, was so bad in three dimensions that results computed with it were later retracted.</p><h3>Cryptographic requirements are different</h3><p>An LCG is trivially predictable: observing a few outputs determines the parameters and hence every future value. That is fine for a simulation and fatal for a key or a session token. Cryptographic generators are built so that predicting the next output is as hard as a problem believed intractable &mdash; and "looks random" is not the same requirement as "cannot be predicted".</p></article>
+      <article class="card card-pad prose"><h3>Hash functions</h3><div class="defbox"><span class="label">Definition &middot; Hash function</span><p>A function <span class="math">h</span> mapping a large key space into <span class="math">{0, 1, …, m−1}</span>. The simplest is <span class="math">h(k) = k mod m</span>.</p></div><p>Since the key space is larger than the range, collisions are unavoidable: by the pigeonhole principle of course 2 lesson 14, some slot receives more than one key. A hash table is therefore designed around collisions &mdash; by chaining, or by probing for another slot.</p><div class="thm"><span class="label">Theorem &middot; Why the modulus should be prime</span><p>If <span class="math">m = 2^r</span>, then <span class="math">k mod m</span> depends only on the low <span class="math">r</span> bits of <span class="math">k</span>. Keys sharing those bits &mdash; addresses aligned to a boundary, identifiers with a common suffix &mdash; all collide. A prime modulus has no such structure to exploit.</p></div><div class="example"><span class="label">Example &middot; A bad choice</span><p>Hashing memory addresses with <span class="math">m = 16</span> when every address is a multiple of 16 sends every key to slot 0. With <span class="math">m = 17</span> the same keys spread across all seventeen slots.</p></div><p>The birthday problem of course 5 lesson 2 gives the collision rate: with <span class="math">m</span> slots and <span class="math">n</span> keys, collisions become likely once <span class="math">n</span> is around <span class="math">√m</span>. A table of a million slots sees its first collision after about a thousand insertions, which is why load factors are managed rather than collisions avoided.</p><h3>Linear congruential generators</h3><div class="defbox"><span class="label">Definition &middot; LCG</span><p><span class="math">x_{n+1} = (a·x_n + c) mod m</span>, from a seed <span class="math">x₀</span>. The parameters <span class="math">a</span> (multiplier), <span class="math">c</span> (increment) and <span class="math">m</span> (modulus) determine the whole sequence.</p></div><p>The sequence must eventually repeat, since there are only <span class="math">m</span> possible values &mdash; pigeonhole again. The <strong>period</strong> is how long it takes, and it is at most <span class="math">m</span>.</p><div class="thm"><span class="label">Theorem &middot; Hull-Dobell theorem</span><p>An LCG has full period <span class="math">m</span> for every seed if and only if: <span class="math">gcd(c, m) = 1</span>; <span class="math">a − 1</span> is divisible by every prime dividing <span class="math">m</span>; and <span class="math">a − 1</span> is divisible by 4 if <span class="math">m</span> is.</p></div><div class="example"><span class="label">Example &middot; A bad generator</span><p><span class="math">a = 5</span>, <span class="math">c = 3</span>, <span class="math">m = 8</span>, seed 0: <span class="math">0, 3, 2, 5, 4, 7, 6, 1, 0, …</span> &mdash; full period 8, and the conditions hold. Change <span class="math">a</span> to 4 and the sequence is <span class="math">0, 3, 7, 7, 7, …</span>: it collapses almost immediately, because <span class="math">a − 1 = 3</span> is not divisible by 2.</p></div><p>Even a full-period LCG is not statistically good. Consecutive values fall on a small number of hyperplanes in higher dimensions &mdash; the Marsaglia effect &mdash; and the low bits of a power-of-two-modulus LCG have very short periods. RANDU, an LCG shipped by IBM in the 1960s, was so bad in three dimensions that results computed with it were later retracted.</p><h3>Cryptographic requirements are different</h3><p>An LCG is trivially predictable: observing a few outputs determines the parameters and hence every future value. That is fine for a simulation and fatal for a key or a session token. Cryptographic generators are built so that predicting the next output is as hard as a problem believed intractable &mdash; and "looks random" is not the same requirement as "cannot be predicted".</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Number theory workbench</h2></div><p>Algorithms with their traces</p></div>
@@ -983,7 +1014,7 @@ full period ⟺ Hull–Dobell conditions on a, c, m</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Choosing parameters</h2></div><p>The modulus decides the behaviour.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>For a hash table, prefer a prime modulus</h3><p>It uses all the bits of the key. A power of two uses only the low ones, which is where structured keys collide.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Expect collisions and plan for them</h3><p>Chaining or open addressing. By the birthday argument they begin around <span class="math">√m</span> insertions.</p></article><article class="card concept-card"><div class="icon">3</div><h3>For an LCG, check the Hull&amp;ndash;Dobell conditions</h3><p>They guarantee full period. Failing them can collapse the sequence to a handful of values.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Never use an LCG where prediction matters</h3><p>Session tokens, keys and nonces need a cryptographic generator. The distinction is about predictability, not about statistics.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>For a hash table, prefer a prime modulus</h3><p>It uses all the bits of the key. A power of two uses only the low ones, which is where structured keys collide.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Expect collisions and plan for them</h3><p>Chaining or open addressing. By the birthday argument they begin around <span class="math">√m</span> insertions.</p></article><article class="card concept-card"><div class="icon">3</div><h3>For an LCG, check the Hull-Dobell conditions</h3><p>They guarantee full period. Failing them can collapse the sequence to a handful of values.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Never use an LCG where prediction matters</h3><p>Session tokens, keys and nonces need a cryptographic generator. The distinction is about predictability, not about statistics.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1009,7 +1040,7 @@ every value to a constant.</div><p>This is why the theorem is worth having. The 
     <section class="section">
       <div class="grid-2">
         <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Using a power of two as a hash modulus with structured keys</strong><span>Only the low bits matter, so aligned or suffixed keys cluster. A prime modulus removes the structure.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Assuming a full-period LCG is statistically good</strong><span>Full period is necessary and far from sufficient. Consecutive tuples fall on hyperplanes, which broke real scientific results.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Using a general-purpose generator for security</strong><span>"Looks random" and "cannot be predicted" are different properties, and only the second matters for keys.</span></div></div></div></article>
-        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can check the Hull&amp;ndash;Dobell conditions.</strong><p>For <span class="math">m = 100</span>, find a multiplier and increment giving full period, and one that fails. The three conditions are quick to verify and the failure is dramatic.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Cryptographic hash functions &mdash; SHA-256 and the like &mdash; are a different object from the hash functions here: they must also be collision-resistant against an adversary who is trying, which is a requirement <span class="math">k mod m</span> does not begin to meet.</div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can check the Hull-Dobell conditions.</strong><p>For <span class="math">m = 100</span>, find a multiplier and increment giving full period, and one that fails. The three conditions are quick to verify and the failure is dramatic.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Cryptographic hash functions &mdash; SHA-256 and the like &mdash; are a different object from the hash functions here: they must also be collision-resistant against an adversary who is trying, which is a requirement <span class="math">k mod m</span> does not begin to meet.</div></article>
       </div>
     </section>
     </main>

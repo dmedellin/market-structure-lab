@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Linear Congruences | Number Theory and Cryptography | Learn · geterdone.io</title>
-  <meta name="description" content="The modular analogue of a linear equation. It has either no solutions or exactly `gcd(a,m)` of them, and which case you are in is decided before any work is done." />
+  <meta name="description" content="The modular analogue of a linear equation. It has either no solutions or exactly gcd(a,m) of them, and which case you are in is decided before any work is done." />
   <link rel="canonical" href="https://learn.geterdone.io/number-theory-and-cryptography/linear-congruences/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Linear Congruences | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta property="og:description" content="The modular analogue of a linear equation. It has either no solutions or exactly `gcd(a,m)` of them, and which case you are in is decided before any work is done." />
+  <meta property="og:description" content="The modular analogue of a linear equation. It has either no solutions or exactly gcd(a,m) of them, and which case you are in is decided before any work is done." />
   <meta property="og:url" content="https://learn.geterdone.io/number-theory-and-cryptography/linear-congruences/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Linear Congruences | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta name="twitter:description" content="The modular analogue of a linear equation. It has either no solutions or exactly `gcd(a,m)` of them, and which case you are in is decided before any work is done." />
+  <meta name="twitter:description" content="The modular analogue of a linear equation. It has either no solutions or exactly gcd(a,m) of them, and which case you are in is decided before any work is done." />
   <meta name="twitter:url" content="https://learn.geterdone.io/number-theory-and-cryptography/linear-congruences/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Number Theory and Cryptography course home">
         <span class="brand-mark" aria-hidden="true">09</span>
-        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 &amp;middot; Lesson 09 of 14</span></span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 · Lesson 09 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Number Theory and Cryptography</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 09 &amp;middot; Linear Congruences</span>
+      <span class="crumb-current" aria-current="page">Lesson 09 · Linear Congruences</span>
     </nav>
 
     <noscript>
@@ -927,10 +958,10 @@ if g = 1 the solution is x ≡ a⁻¹b, unique</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Unlike a linear equation over the reals, this can have no solutions or many &mdash; and the gcd decides which.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Solvability is a divisibility test</h3><p><span class="math">g = gcd(a,m)</span> must divide <span class="math">b</span>. That check is one gcd computation and it settles the question.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The solution count is exactly `g`</h3><p>Not one, and not <span class="math">m</span>. The solutions form one class modulo <span class="math">m/g</span>, which splits into <span class="math">g</span> classes modulo <span class="math">m</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Coprime is the clean case</h3><p><span class="math">gcd(a,m) = 1</span> gives a unique solution <span class="math">x ≡ a⁻¹b</span>, computed by the extended algorithm of lesson 6.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Solvability is a divisibility test</h3><p><span class="math">g = gcd(a,m)</span> must divide <span class="math">b</span>. That check is one gcd computation and it settles the question.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The solution count is exactly <span class="math">g</span></h3><p>Not one, and not <span class="math">m</span>. The solutions form one class modulo <span class="math">m/g</span>, which splits into <span class="math">g</span> classes modulo <span class="math">m</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Coprime is the clean case</h3><p><span class="math">gcd(a,m) = 1</span> gives a unique solution <span class="math">x ≡ a⁻¹b</span>, computed by the extended algorithm of lesson 6.</p></article></div>
     </section>
     <section class="section" id="read">
-      <div class="section-head"><div><p class="kicker">The material</p><h2>Solving `ax ≡ b (mod m)`</h2></div><p>The criterion, the count, and the method.</p></div>
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Solving <span class="math">ax ≡ b (mod m)</span></h2></div><p>The criterion, the count, and the method.</p></div>
       <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Solvability and count</span><p>Let <span class="math">g = gcd(a, m)</span>. The congruence <span class="math">ax ≡ b (mod m)</span> has a solution if and only if <span class="math">g | b</span>, and in that case it has exactly <span class="math">g</span> solutions modulo <span class="math">m</span>.</p></div><div class="proof"><p><span class="math">ax ≡ b (mod m)</span> means <span class="math">ax − my = b</span> for some integer <span class="math">y</span>. By Bézout the set of values <span class="math">ax − my</span> is exactly the multiples of <span class="math">g</span>, so a solution exists precisely when <span class="math">g | b</span>.</p><p>Suppose <span class="math">g | b</span> and divide through: <span class="math">(a/g)x ≡ (b/g) (mod m/g)</span>. Now <span class="math">gcd(a/g, m/g) = 1</span>, so this reduced congruence has a unique solution <span class="math">x₀</span> modulo <span class="math">m/g</span>.</p><p>Lifting back, the solutions modulo <span class="math">m</span> are <span class="math">x₀, x₀ + m/g, x₀ + 2m/g, …, x₀ + (g−1)m/g</span> &mdash; exactly <span class="math">g</span> of them.</p><p><span class="qed">&#9633;</span></p></div><div class="example"><span class="label">Example &middot; No solution</span><p><span class="math">6x ≡ 7 (mod 15)</span>. <span class="math">gcd(6,15) = 3</span> and <span class="math">3 ∤ 7</span>, so there is no solution at all. Note that this is decided in one line, before any attempt to solve.</p></div><div class="example"><span class="label">Example &middot; Three solutions</span><p><span class="math">6x ≡ 9 (mod 15)</span>. <span class="math">gcd(6,15) = 3</span> and <span class="math">3 | 9</span>, so three solutions exist. Divide through: <span class="math">2x ≡ 3 (mod 5)</span>, and since <span class="math">2⁻¹ ≡ 3 (mod 5)</span>, <span class="math">x ≡ 9 ≡ 4 (mod 5)</span>. Lifting: <span class="math">x ≡ 4, 9, 14 (mod 15)</span>. Check: <span class="math">6·4 = 24 ≡ 9</span>, <span class="math">6·9 = 54 ≡ 9</span>, <span class="math">6·14 = 84 ≡ 9</span>. All three work.</p></div><div class="example"><span class="label">Example &middot; One solution</span><p><span class="math">7x ≡ 3 (mod 26)</span>. <span class="math">gcd(7,26) = 1</span>, so exactly one solution. The inverse of 7 mod 26 is 15, since <span class="math">7 · 15 = 105 = 4·26 + 1</span>. So <span class="math">x ≡ 45 ≡ 19 (mod 26)</span>.</p></div><h3>Why the count is the gcd</h3><p>The reduced congruence lives modulo <span class="math">m/g</span> and has one solution there. Each class modulo <span class="math">m/g</span> contains exactly <span class="math">g</span> classes modulo <span class="math">m</span>, so one solution downstairs becomes <span class="math">g</span> upstairs. Answering "one" or "m" both miss this, and the count matters for the systems of lesson 10.</p><h3>Comparison with ordinary linear equations</h3><div class="mathblock">over ℝ            ax = b            exactly one solution when a ≠ 0
 mod m             ax ≡ b (mod m)    zero, or exactly gcd(a,m) solutions
 
@@ -987,7 +1018,7 @@ The difference: ℝ is a field, so every nonzero a is invertible.
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Solving a linear congruence</h2></div><p>Compute the gcd first; it answers most of the question.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Compute `g = gcd(a, m)`</h3><p>One run of Euclid. If <span class="math">g ∤ b</span>, there is no solution and you are finished.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Divide the congruence through by `g`</h3><p>All three of <span class="math">a</span>, <span class="math">b</span> and the modulus. The reduced coefficient is now coprime to the reduced modulus.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Invert and solve</h3><p><span class="math">x ≡ (a/g)⁻¹(b/g) (mod m/g)</span>, using the extended algorithm of lesson 6.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Lift to the original modulus</h3><p>Add multiples of <span class="math">m/g</span> to produce all <span class="math">g</span> solutions modulo <span class="math">m</span>, and check at least one by substitution.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Compute <span class="math">g = gcd(a, m)</span></h3><p>One run of Euclid. If <span class="math">g ∤ b</span>, there is no solution and you are finished.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Divide the congruence through by <span class="math">g</span></h3><p>All three of <span class="math">a</span>, <span class="math">b</span> and the modulus. The reduced coefficient is now coprime to the reduced modulus.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Invert and solve</h3><p><span class="math">x ≡ (a/g)⁻¹(b/g) (mod m/g)</span>, using the extended algorithm of lesson 6.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Lift to the original modulus</h3><p>Add multiples of <span class="math">m/g</span> to produce all <span class="math">g</span> solutions modulo <span class="math">m</span>, and check at least one by substitution.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -998,7 +1029,7 @@ The difference: ℝ is a field, so every nonzero a is invertible.
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>`14x ≡ 30 (mod 100)`</h3><p>A case with several solutions, worked in full.</p><div class="mathblock">g = gcd(14, 100) = 2,   and  2 | 30,  so TWO solutions exist.
+      <article class="card card-pad prose"><h3><span class="math">14x ≡ 30 (mod 100)</span></h3><p>A case with several solutions, worked in full.</p><div class="mathblock">g = gcd(14, 100) = 2,   and  2 | 30,  so TWO solutions exist.
 
 Divide through by 2:      7x ≡ 15 (mod 50)
 
@@ -1014,7 +1045,7 @@ CHECK   14 · 45 = 630 = 6·100 + 30      ✓
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Reporting only one solution when there are `g`</strong><span>The lift back to modulus <span class="math">m</span> produces <span class="math">g</span> classes. Stopping after the reduced congruence gives a correct statement about the wrong modulus.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Attempting to solve before checking the gcd</strong><span>One gcd computation decides solvability. Without it you can search a long time for a solution that does not exist.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Dividing only the coefficient by `g`</strong><span>All three of <span class="math">a</span>, <span class="math">b</span> and <span class="math">m</span> must be divided. Leaving the modulus alone gives the wrong solution set.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Reporting only one solution when there are <span class="math">g</span></strong><span>The lift back to modulus <span class="math">m</span> produces <span class="math">g</span> classes. Stopping after the reduced congruence gives a correct statement about the wrong modulus.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Attempting to solve before checking the gcd</strong><span>One gcd computation decides solvability. Without it you can search a long time for a solution that does not exist.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Dividing only the coefficient by <span class="math">g</span></strong><span>All three of <span class="math">a</span>, <span class="math">b</span> and <span class="math">m</span> must be divided. Leaving the modulus alone gives the wrong solution set.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when the gcd is the first thing you compute.</strong><p>Solve <span class="math">15x ≡ 25 (mod 35)</span>, stating the number of solutions before finding any. <span class="math">gcd(15,35) = 5</span> divides 25, so there are five, spaced 7 apart.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The same criterion governs the linear Diophantine equation <span class="math">ax + by = c</span>, which is solvable in integers exactly when <span class="math">gcd(a,b) | c</span>. The two statements are the same theorem written with and without congruence notation.</div></article>
       </div>
     </section>

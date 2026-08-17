@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cartesian Products and Tuples | Sets, Relations, and Functions | Learn · geterdone.io</title>
-  <meta name="description" content="A tuple has order and allows repetition, which a set does not. The Cartesian product collects every ordered pair, has size `|A| · |B|`, and is where relations and functions will live." />
+  <meta name="description" content="A tuple has order and allows repetition, which a set does not. The Cartesian product collects every ordered pair, has size |A| · |B|, and is where relations and functions will live." />
   <link rel="canonical" href="https://learn.geterdone.io/sets-relations-functions/cartesian-products-and-tuples/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Cartesian Products and Tuples | Sets, Relations, and Functions | Learn · geterdone.io" />
-  <meta property="og:description" content="A tuple has order and allows repetition, which a set does not. The Cartesian product collects every ordered pair, has size `|A| · |B|`, and is where relations and functions will live." />
+  <meta property="og:description" content="A tuple has order and allows repetition, which a set does not. The Cartesian product collects every ordered pair, has size |A| · |B|, and is where relations and functions will live." />
   <meta property="og:url" content="https://learn.geterdone.io/sets-relations-functions/cartesian-products-and-tuples/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Cartesian Products and Tuples | Sets, Relations, and Functions | Learn · geterdone.io" />
-  <meta name="twitter:description" content="A tuple has order and allows repetition, which a set does not. The Cartesian product collects every ordered pair, has size `|A| · |B|`, and is where relations and functions will live." />
+  <meta name="twitter:description" content="A tuple has order and allows repetition, which a set does not. The Cartesian product collects every ordered pair, has size |A| · |B|, and is where relations and functions will live." />
   <meta name="twitter:url" content="https://learn.geterdone.io/sets-relations-functions/cartesian-products-and-tuples/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Sets, Relations, and Functions course home">
         <span class="brand-mark" aria-hidden="true">05</span>
-        <span class="brand-copy"><strong>Sets, Relations, and Functions</strong><span>Course 2 &amp;middot; Lesson 05 of 14</span></span>
+        <span class="brand-copy"><strong>Sets, Relations, and Functions</strong><span>Course 2 · Lesson 05 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Sets, Relations, and Functions</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 05 &amp;middot; Cartesian Products and Tuples</span>
+      <span class="crumb-current" aria-current="page">Lesson 05 · Cartesian Products and Tuples</span>
     </nav>
 
     <noscript>
@@ -998,8 +1029,8 @@ Length 4 from a 3-letter alphabet must repeat: pigeonhole (lesson 14).</div><p>T
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Treating `A × B` and `B × A` as the same set</strong><span>They contain different objects. There is a natural bijection between them, which is a statement about size, not about equality.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Adding sizes instead of multiplying</strong><span><span class="math">|A × B|</span> is a product because the choices are made together, not alternatively. Course 4 lesson 1 draws the line between the two rules.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Writing `{a, b}` when order matters</strong><span>If swapping the entries changes the meaning, you need a tuple. Using a set throws away exactly the information you were relying on.</span></div></div></div></article>
-        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can say why `2ⁿ` counts both subsets and bit strings.</strong><p>Describe the bijection explicitly: given a subset, produce its bit string; given a bit string, produce its subset. That construction is the pattern lesson 12 formalises and course 4 uses constantly.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Formally an ordered pair can be defined purely in terms of sets, as <span class="math">(a, b) = {{a}, {a, b}}</span> &mdash; Kuratowski's definition &mdash; which does satisfy the equality property. Nothing on this path needs it; it is worth knowing that order is not an extra primitive.</div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Treating <span class="math">A × B</span> and <span class="math">B × A</span> as the same set</strong><span>They contain different objects. There is a natural bijection between them, which is a statement about size, not about equality.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Adding sizes instead of multiplying</strong><span><span class="math">|A × B|</span> is a product because the choices are made together, not alternatively. Course 4 lesson 1 draws the line between the two rules.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Writing <span class="math">{a, b}</span> when order matters</strong><span>If swapping the entries changes the meaning, you need a tuple. Using a set throws away exactly the information you were relying on.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can say why <span class="math">2ⁿ</span> counts both subsets and bit strings.</strong><p>Describe the bijection explicitly: given a subset, produce its bit string; given a bit string, produce its subset. That construction is the pattern lesson 12 formalises and course 4 uses constantly.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Formally an ordered pair can be defined purely in terms of sets, as <span class="math">(a, b) = {{a}, {a, b}}</span> &mdash; Kuratowski's definition &mdash; which does satisfy the equality property. Nothing on this path needs it; it is worth knowing that order is not an extra primitive.</div></article>
       </div>
     </section>
     </main>

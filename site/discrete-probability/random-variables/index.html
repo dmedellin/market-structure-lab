@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Discrete Probability course home">
         <span class="brand-mark" aria-hidden="true">07</span>
-        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 &amp;middot; Lesson 07 of 12</span></span>
+        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 · Lesson 07 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Discrete Probability</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 07 &amp;middot; Random Variables</span>
+      <span class="crumb-current" aria-current="page">Lesson 07 · Random Variables</span>
     </nav>
 
     <noscript>
@@ -979,7 +1010,7 @@ sum = 36/36 = 1                                        ✓</div><h3>Indicator va
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Working with a random variable</h2></div><p>Define the function before computing anything about it.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Say what `X(s)` is for each outcome</h3><p>"The number of heads", "the sum", "1 if it rains". A random variable with no stated rule is not defined.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Collect the outcomes by value</h3><p><span class="math">P(X = k)</span> is the probability of the set of outcomes giving <span class="math">k</span>. This is course 4's counting again.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Check the distribution sums to 1</h3><p>Every outcome contributes to exactly one value, so the probabilities must total 1. A free check that catches missed cases.</p></article><article class="card concept-card"><div class="icon">4</div><h3>For several variables, build the joint table</h3><p>Independence is a statement about every entry of it, not about a summary.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Say what <span class="math">X(s)</span> is for each outcome</h3><p>"The number of heads", "the sum", "1 if it rains". A random variable with no stated rule is not defined.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Collect the outcomes by value</h3><p><span class="math">P(X = k)</span> is the probability of the set of outcomes giving <span class="math">k</span>. This is course 4's counting again.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Check the distribution sums to 1</h3><p>Every outcome contributes to exactly one value, so the probabilities must total 1. A free check that catches missed cases.</p></article><article class="card concept-card"><div class="icon">4</div><h3>For several variables, build the joint table</h3><p>Independence is a statement about every entry of it, not about a summary.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1006,7 +1037,7 @@ Independent?   P(X=3, Y=1) = 1/8
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Treating `X` as random rather than as a function</strong><span><span class="math">X</span> is fixed. Which outcome occurs is what varies, and keeping that straight makes joint distributions readable.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Confusing the value with the event</strong><span><span class="math">X = 3</span> is an event &mdash; a set of outcomes. <span class="math">P(X = 3)</span> is the probability of that set.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming variables on the same space are independent</strong><span>The first die and the sum live on one sample space and are strongly dependent. Independence must be checked on the joint distribution.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Treating <span class="math">X</span> as random rather than as a function</strong><span><span class="math">X</span> is fixed. Which outcome occurs is what varies, and keeping that straight makes joint distributions readable.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Confusing the value with the event</strong><span><span class="math">X = 3</span> is an event &mdash; a set of outcomes. <span class="math">P(X = 3)</span> is the probability of that set.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming variables on the same space are independent</strong><span>The first die and the sum live on one sample space and are strongly dependent. Independence must be checked on the joint distribution.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can build a distribution from a sample space unaided.</strong><p>Roll two dice and let <span class="math">X</span> be the larger of the two values. Write the distribution of <span class="math">X</span> and check it sums to 1. <span class="math">P(X = k)</span> is <span class="math">(2k − 1)/36</span>, and deriving that is the exercise.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Random variables are how one probability space answers many questions: the 36 dice outcomes support the sum, the maximum, the difference, and any other function you care to define, each with its own distribution.</div></article>
       </div>
     </section>

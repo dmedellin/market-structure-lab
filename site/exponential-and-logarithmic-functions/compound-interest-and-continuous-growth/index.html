@@ -1,0 +1,2147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compound Interest and Continuous Growth | Exponential and Logarithmic Functions | Learn · geterdone.io</title>
+  <meta name="description" content="Two formulas that look like conventions until they are built. A = P(1 + r/n)^(nt) is one multiplication repeated nt times, and A = P · e^(rt) is the value that expression settles down to as n grows. The second is lesson 3&#x27;s limit with letters in it, and no new fact about money is involved." />
+  <link rel="canonical" href="https://learn.geterdone.io/exponential-and-logarithmic-functions/compound-interest-and-continuous-growth/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Compound Interest and Continuous Growth | Exponential and Logarithmic Functions | Learn · geterdone.io" />
+  <meta property="og:description" content="Two formulas that look like conventions until they are built. A = P(1 + r/n)^(nt) is one multiplication repeated nt times, and A = P · e^(rt) is the value that expression settles down to as n grows. The second is lesson 3&#x27;s limit with letters in it, and no new fact about money is involved." />
+  <meta property="og:url" content="https://learn.geterdone.io/exponential-and-logarithmic-functions/compound-interest-and-continuous-growth/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Compound Interest and Continuous Growth | Exponential and Logarithmic Functions | Learn · geterdone.io" />
+  <meta name="twitter:description" content="Two formulas that look like conventions until they are built. A = P(1 + r/n)^(nt) is one multiplication repeated nt times, and A = P · e^(rt) is the value that expression settles down to as n grows. The second is lesson 3&#x27;s limit with letters in it, and no new fact about money is involved." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/exponential-and-logarithmic-functions/compound-interest-and-continuous-growth/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Exponential and Logarithmic Functions course home">
+        <span class="brand-mark" aria-hidden="true">11</span>
+        <span class="brand-copy"><strong>Exponential and Logarithmic Functions</strong><span>Course 7 · Lesson 11 of 12</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Exponential and Logarithmic Functions</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 11 · Compound Interest and Continuous Growth</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The compounding is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 7 &middot; Lesson 11 &middot; Applications</span>
+        <h1>Compound Interest and Continuous Growth</h1>
+        <p>Two formulas that look like conventions until they are built. <span class="math">A = P(1 + r/n)^(nt)</span> is one multiplication repeated <span class="math">nt</span> times, and <span class="math">A = P · e^(rt)</span> is the value that expression settles down to as <span class="math">n</span> grows. The second is lesson 3's limit with letters in it, and no new fact about money is involved.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">A = P(1 + r/n)^(nt)     n compoundings a year, over t years
+A = P · e^(rt)          compounded continuously
+r is a DECIMAL per year:   5% → r = 0.05 = 1/20
+$1000 at 5% for 10 yr:  yearly 1628.89  monthly 1647.01  cont. 1648.72</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Two formulas and what they pay</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>One idea builds the first formula, one limit builds the second, and one habit of units keeps both of them right.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Each period multiplies, it does not add</h3><p>One period at rate <span class="math">r/n</span> turns <span class="math">P</span> into <span class="math">P(1 + r/n)</span>. A second period multiplies by that same factor again. After <span class="math">nt</span> periods the factor has been applied <span class="math">nt</span> times, which is the entire derivation of <span class="math">A = P(1 + r/n)^(nt)</span>.</p></article><article class="card concept-card"><div class="icon">2</div><h3>More frequent compounding converges, it does not explode</h3><p>On <span class="math">$1000</span> at <span class="math">5%</span> for <span class="math">10</span> years, moving from yearly to monthly gains <span class="math">$18.11</span>; moving from monthly to continuous gains <span class="math">$1.71</span> more. The sequence increases with <span class="math">n</span> but is bounded, and its limit is the continuous value.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The continuous formula is lesson 3&#x27;s limit, relabelled</h3><p><span class="math">(1 + 1/m)^m → e</span>. Put <span class="math">m = n/r</span>, and <span class="math">(1 + r/n)^(nt) = [(1 + 1/m)^m]^(rt)</span>, which tends to <span class="math">e^(rt)</span>. <span class="math">e</span> was not introduced for finance; finance is where the limit was first noticed.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Where the two formulas come from</h2></div><p>One repeated multiplication, one limit, and the units that make both of them wrong when they are wrong.</p></div>
+      <article class="card card-pad prose"><p>A principal <span class="math">P</span> is invested at a nominal annual rate <span class="math">r</span>, compounded <span class="math">n</span> times a year, for <span class="math">t</span> years. Every quantity in that sentence has a unit attached, and most errors with these formulas are unit errors rather than algebra errors.</p><div class="defbox"><span class="label">Definition &middot; Nominal rate</span><p>The <strong>nominal</strong> annual rate <span class="math">r</span> is quoted per year and split evenly among the <span class="math">n</span> periods, so one period carries the rate <span class="math">r/n</span>. A nominal <span class="math">5%</span> compounded monthly means <span class="math">5/12</span> of a percent a month. It is a name for twelve times the monthly rate, not the growth actually achieved over a year.</p></div><p>The first formula is a repeated multiplication and nothing more. Each period multiplies the balance by <span class="math">1 + r/n</span>, so the balances form a geometric sequence.</p><div class="mathblock">after 1 period     P(1 + r/n)
+after 2 periods    P(1 + r/n)²
+after k periods    P(1 + r/n)^k
+
+t years is nt periods, so     A = P(1 + r/n)^(nt)</div><div class="defbox"><span class="label">Definition &middot; Effective annual rate</span><p>The <strong>effective</strong> annual rate is <span class="math">(1 + r/n)^n − 1</span>: the single yearly rate that would produce the same balance after one year. For a nominal <span class="math">5%</span> compounded monthly it is <span class="math">(1 + 0.05/12)^12 − 1 ≈ 0.051162</span>, that is <span class="math">5.1162%</span>. Two accounts quoted at different frequencies can only be compared through this number.</p></div><p>Now increase <span class="math">n</span> and watch. The numbers below are <span class="math">$1000</span> at a nominal <span class="math">5%</span> for <span class="math">10</span> years, each rounded to the nearest cent.</p><div class="mathblock">n = 1     yearly        1000(1.05)^10           =  1628.89
+n = 2     half-yearly   1000(1.025)^20          =  1638.62
+n = 4     quarterly     1000(1.0125)^40         =  1643.62
+n = 12    monthly       1000(1 + 0.05/12)^120   =  1647.01
+n = 365   daily         1000(1 + 0.05/365)^3650 =  1648.66
+n → ∞     continuous    1000 · e^0.5            =  1648.72
+
+          simple interest, for scale   1000(1 + 0.05 · 10)  =  1500.00</div><p>The column climbs and then stops climbing. Daily and continuous differ by about six cents over ten years on a thousand dollars. "Compounded continuously" is not a claim about speed &mdash; it is the ceiling of the process, and the last few frequencies are already sitting against it.</p><div class="thm"><span class="label">Theorem &middot; The continuous limit</span><p>As <span class="math">n → ∞</span>, <span class="math">P(1 + r/n)^(nt) → P · e^(rt)</span>.</p><p>Substitute <span class="math">m = n/r</span>, so that <span class="math">r/n = 1/m</span> and <span class="math">nt = m · rt</span>. The expression becomes <span class="math">P[(1 + 1/m)^m]^(rt)</span>, and <span class="math">m → ∞</span> as <span class="math">n → ∞</span>. The inner bracket tends to <span class="math">e</span> by lesson 3, so the whole expression tends to <span class="math">P · e^(rt)</span>.</p></div><h3>Solving for the other letters</h3><p><span class="math">P</span> and <span class="math">A</span> come out by dividing. <span class="math">r</span> and <span class="math">t</span> sit in the exponent, so they need lesson 9. To double a balance under continuous growth, set <span class="math">2P = P · e^(rt)</span>; the <span class="math">P</span> cancels, <span class="math">2 = e^(rt)</span>, and <span class="math">rt = ln 2</span>, so <span class="math">t = ln 2 / r</span>.</p><p>That the principal cancels is the characteristic property of exponential growth from lesson 2: the time to double does not depend on where you start. At <span class="math">5%</span> continuous it is <span class="math">ln 2 / 0.05 ≈ 13.86</span> years, and compounded yearly instead it is <span class="math">ln 2 / ln(1.05) ≈ 14.21</span> years.</p><p>The banker's shortcut follows from <span class="math">ln 2 ≈ 0.6931</span>. Doubling time is roughly <span class="math">70</span> divided by the rate as a percent, which at <span class="math">5%</span> gives <span class="math">14</span> years against a true <span class="math">13.86</span>. It is an approximation of a logarithm, and it drifts at large rates: at <span class="math">20%</span> the rule says <span class="math">3.5</span> years and the continuous answer is <span class="math">3.47</span>, but at <span class="math">100%</span> it says <span class="math">0.7</span> and the answer is <span class="math">0.69</span>.</p><div class="example"><span class="label">Example &middot; What a percent sign costs</span><p>Entering <span class="math">5</span> instead of <span class="math">0.05</span> for a monthly-compounded account makes the monthly factor <span class="math">1 + 5/12</span>, a rate of <span class="math">500%</span> a year. Over ten years <span class="math">$1000</span> becomes about <span class="math">1.4 · 10^21</span> dollars. The formula reports it without complaint, because nothing in the algebra knows what a percent is.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Compounding</h2></div><p>Six frequencies against the continuous limit</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="exTitle">Exponential</strong><span id="exSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>yearly</span><span class="tone-purple"><i class="legend-swatch"></i>monthly</span><span class="tone-green"><i class="legend-swatch"></i>continuous</span><span class="tone-muted"><i class="legend-swatch"></i>simple interest</span></div>
+      </div>
+      <div class="lab-stage"><svg id="exPlot"></svg></div>
+      <div id="exWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="exStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Six frequencies and the ceiling</h3>
+          <p>Set a principal, a rate and a term; every frequency is then computed from those three numbers, exactly as a fraction whenever <span class="math">n · t</span> is a whole number. Simple interest sits alongside as the method that quietly loses money.</p>
+        <div class="field">
+          <label for="exPreset">Example</label>
+          <select id="exPreset"><option value="1|100|1">$1 at 100% for 1 year &mdash; where e comes from</option><option value="1000|5|10">$1000 at 5% for 10 years</option><option value="2500|7|30">$2500 at 7% for 30 years</option><option value="1000|12|1">$1000 at 12% for 1 year &mdash; monthly is not annual</option><option value="1000|200|1">$1000 at 200% for 1 year &mdash; frequency stops being a detail</option><option value="1000|5|1/2">$1000 at 5% for half a year &mdash; n*t is not always whole</option></select>
+        </div>
+        <div class="field">
+          <label for="exP">P (principal)</label>
+          <input id="exP" type="text" value="1000" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="exR">r (annual rate, in percent)</label>
+          <input id="exR" type="text" value="5" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="exT">t (years)</label>
+          <input id="exT" type="text" value="10" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid"><div class="kpi"><span>Yearly</span><strong id="exKpi1">&mdash;</strong></div><div class="kpi"><span>Continuous</span><strong id="exKpi2">&mdash;</strong></div><div class="kpi"><span>The gap</span><strong id="exKpi3">&mdash;</strong></div></div>
+        <p class="small-copy" id="exHint" style="margin:0;">A rate is a percentage: <code>5</code> means 5% a year. Every balance is exact whenever n*t is a whole number, and says so when it is not.</p>
+
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Using the compound interest formula</h2></div><p>Four steps, and two of them are about units rather than algebra.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Convert the rate to a decimal per year</h3><p><span class="math">5%</span> is <span class="math">0.05</span>. Entered as <span class="math">5</span> it is a rate of <span class="math">500%</span>, and every later step will run perfectly and return a number that is wrong by a factor of billions.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Count periods, not years</h3><p><span class="math">n</span> is periods per year and <span class="math">t</span> is years, so the exponent is their product. Quarterly for five years is <span class="math">20</span> periods &mdash; not <span class="math">5</span>, and not <span class="math">4</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Build the base, then raise it once</h3><p>Compute <span class="math">1 + r/n</span> exactly if you can: <span class="math">1 + 0.06/4 = 1.015</span> is exact, while <span class="math">1 + 0.05/12</span> is not. Rounding the base before raising it to the <span class="math">120</span>th power moves the error up into the dollars.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Compare accounts by effective annual rate</h3><p><span class="math">(1 + r/n)^n − 1</span> for periodic compounding, <span class="math">e^r − 1</span> for continuous. Two nominal rates quoted at different frequencies cannot be compared as they stand.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Rates, periods and limits</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>$1000 at a nominal 6% for 5 years, compounded quarterly</h3><p>Four numbers go in. The only thinking is which of them belongs where.</p><div class="mathblock">P = 1000     r = 6/100 = 0.06     n = 4     t = 5
+
+r/n = 0.06/4 = 0.015              the rate for ONE quarter
+n · t = 4 · 5 = 20                the number of quarters
+
+A = 1000(1 + 0.015)^20
+  = 1000(1.015)^20
+  ≈ 1346.86                       to the nearest cent
+
+for comparison:
+  yearly       1000(1.06)^5     ≈ 1338.23
+  continuous   1000 · e^(0.30)  ≈ 1349.86
+  effective annual rate   (1.015)^4 − 1 ≈ 0.061364  =  6.1364%</div><p>Quarterly beats yearly by <span class="math">$8.63</span> and loses to continuous by <span class="math">$3.00</span>. Both gaps are small next to the <span class="math">$346.86</span> of interest itself, which is the honest summary of compounding frequency: it matters, and it matters far less than the rate and the term.</p><p>The effective rate is what makes the account comparable with anything else. A flat <span class="math">6.1%</span> paid once a year sounds better than <span class="math">6%</span>, and it is not: <span class="math">6%</span> compounded quarterly earns <span class="math">6.1364%</span> a year.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Entering the rate as a percent</strong><span><span class="math">5</span> instead of <span class="math">0.05</span> makes the monthly factor <span class="math">1 + 5/12</span> and turns <span class="math">$1000</span> into about <span class="math">1.4 · 10^21</span> dollars over ten years. Nothing in the formula can detect it, because a formula does not know that <span class="math">r</span> was meant to be a proportion.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Using t where nt belongs</strong><span>Quarterly for five years is <span class="math">20</span> compoundings. <span class="math">1000(1.015)^5</span> prices five quarters &mdash; fifteen months &mdash; and comes to <span class="math">$1077.28</span> against the correct <span class="math">$1346.86</span>. The exponent is periods, and the periods are <span class="math">n · t</span>.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Comparing two nominal rates directly</strong><span><span class="math">6%</span> compounded monthly and <span class="math">6.1%</span> compounded yearly do not rank the way the quoted numbers do. The first has effective rate <span class="math">(1 + 0.06/12)^12 − 1 ≈ 6.1678%</span>, so it is the better of the two. Convert both to effective rates and then compare.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can build the formula instead of recalling it.</strong><p>Asked for a monthly-compounded balance, you should be able to write <span class="math">1 + r/12</span> for one month and <span class="math">12t</span> for the number of months, and assemble <span class="math">A = P(1 + r/12)^(12t)</span> from those two facts alone. A recalled formula with <span class="math">n</span> and <span class="math">t</span> in the wrong places looks exactly like a correct one until the money is wrong.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> <span class="math">e</span> entered this course in lesson 3 as the limit of <span class="math">(1 + 1/n)^n</span>, with no application attached to it. This is the application, and it is also the historical order: the limit was first met by asking what happens to an account compounded more and more often.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../solving-logarithmic-equations/" rel="prev"><span>Previous lesson</span><strong>10 &middot; Solving Logarithmic Equations</strong></a>
+      <a class="lesson-link next" href="../logarithmic-scales/" rel="next"><span>Next lesson</span><strong>12 &middot; Logarithmic Scales</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Exponential and Logarithmic Functions.</strong> Exponential and logarithmic values are irrational, so this is the one course on the path where the labs show rounded decimals &mdash; and they say where they rounded. The exact statements, the laws and the domains, are computed exactly and the rounding never enters them.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "<span class=\"math\">$2000<\/span> at a nominal <span class=\"math\">8%<\/span> compounded semi-annually for <span class=\"math\">3<\/span> years. Which expression is <span class=\"math\">A<\/span>?", "a": ["<span class=\"math\">2000(1.08)^3<\/span>", "<span class=\"math\">2000(1.04)^6<\/span>", "<span class=\"math\">2000(1.04)^3<\/span>", "<span class=\"math\">2000(1 + 8/2)^6<\/span>"], "c": 1, "why": "<span class=\"math\">r/n = 0.08/2 = 0.04<\/span> per half-year and <span class=\"math\">n \u00b7 t = 6<\/span> half-years, so <span class=\"math\">A = 2000(1.04)^6 \u2248 2530.64<\/span>. The first ignores the compounding frequency entirely; the third uses the period rate with the number of years; the fourth enters <span class=\"math\">8<\/span> rather than <span class=\"math\">0.08<\/span>, which is a rate of <span class=\"math\">800%<\/span>."}, {"q": "Under continuous growth the doubling time is <span class=\"math\">t = ln 2 / r<\/span>. What does it depend on?", "a": ["The rate only", "The principal and the rate", "The principal only", "The rate and the final amount"], "c": 0, "why": "Setting <span class=\"math\">2P = P \u00b7 e^(rt)<\/span> cancels <span class=\"math\">P<\/span> before any logarithm is taken. Doubling <span class=\"math\">$100<\/span> and doubling <span class=\"math\">$100<\/span> million take the same time, which is the property that defines exponential growth. At <span class=\"math\">r = 0.05<\/span> it is <span class=\"math\">ln 2 / 0.05 \u2248 13.86<\/span> years, whatever the balance."}, {"q": "On <span class=\"math\">$1000<\/span> at <span class=\"math\">5%<\/span> for <span class=\"math\">10<\/span> years, which gain is larger: yearly to monthly compounding, or monthly to continuous?", "a": ["Yearly to monthly, by about <span class=\"math\">$16<\/span>", "Monthly to continuous, by about <span class=\"math\">$16<\/span>", "The two gains are equal", "Monthly to continuous, since continuous growth is unbounded"], "c": 0, "why": "Yearly pays <span class=\"math\">1628.89<\/span>, monthly <span class=\"math\">1647.01<\/span>, continuous <span class=\"math\">1648.72<\/span>. The first step gains <span class=\"math\">$18.11<\/span> and the second <span class=\"math\">$1.71<\/span>, a difference of about <span class=\"math\">$16.40<\/span>. The sequence increases with <span class=\"math\">n<\/span> but is bounded above by the continuous value, so the returns to frequency shrink."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* The grapher.
+
+     Every curve on this path is SAMPLED from the function the lesson is about.
+     There is not one stored path string anywhere in these labs, which is what
+     makes a drawing evidence rather than decoration: when a lab prints a vertex
+     at (3, -4) and draws the parabola through it, the label and the picture
+     came out of the same evaluation and cannot disagree.
+
+     Coordinates are the one deliberate use of floating point here -- a pixel is
+     a pixel. Everything the reader is told in words comes from the exact side. */
+  var PLOT_W = 660, PLOT_H = 420, PAD_L = 44, PAD_R = 16, PAD_T = 16, PAD_B = 34;
+
+  function svgel(name, attrs) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  /* A grid step a reader can count on: 1, 2 or 5 times a power of ten, chosen
+     so the axis carries roughly eight divisions whatever the window is. */
+  function nicestep(span) {
+    var raw = span / 8, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+    var n = raw / mag;
+    return (n < 1.5 ? 1 : (n < 3.5 ? 2 : (n < 7.5 ? 5 : 10))) * mag;
+  }
+  function ticktext(v, step) {
+    if (Math.abs(v) < step / 1000) return '0';
+    var places = Math.max(0, -Math.floor(Math.log(step) / Math.LN10));
+    return v.toFixed(Math.min(places, 4)).replace(/\.?0+$/, function (m) {
+      return m.indexOf('.') === 0 ? '' : m;
+    });
+  }
+
+  function Plot(svg, win) {
+    var xmin = win.xmin, xmax = win.xmax, ymin = win.ymin, ymax = win.ymax;
+    var iw = PLOT_W - PAD_L - PAD_R, ih = PLOT_H - PAD_T - PAD_B;
+    svg.setAttribute('viewBox', '0 0 ' + PLOT_W + ' ' + PLOT_H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+
+    function sx(x) { return PAD_L + (x - xmin) / (xmax - xmin) * iw; }
+    function sy(y) { return PAD_T + (ymax - y) / (ymax - ymin) * ih; }
+
+    var defs = svgel('defs', {});
+    var clip = svgel('clipPath', { id: 'plotclip' });
+    clip.appendChild(svgel('rect', { x: PAD_L, y: PAD_T, width: iw, height: ih }));
+    defs.appendChild(clip);
+    svg.appendChild(defs);
+
+    var plotted = svgel('g', { 'clip-path': 'url(#plotclip)' });
+
+    var api = {
+      sx: sx, sy: sy, win: win,
+      /* Grid, axes, ticks. Drawn first so every curve sits on top of them. */
+      frame: function () {
+        var gx = nicestep(xmax - xmin), gy = nicestep(ymax - ymin);
+        var g = svgel('g', {});
+        var start = Math.ceil(xmin / gx) * gx, v;
+        for (v = start; v <= xmax + gx / 2; v += gx) {
+          if (Math.abs(v) < gx / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: sx(v), y1: PAD_T, x2: sx(v), y2: PAD_T + ih }));
+        }
+        start = Math.ceil(ymin / gy) * gy;
+        for (v = start; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: PAD_L, y1: sy(v), x2: PAD_L + iw, y2: sy(v) }));
+        }
+        /* The axes sit at zero when zero is in view and at the near edge when
+           it is not, so a window like 10 <= x <= 20 still has a labelled frame
+           rather than two axes drawn off-screen. */
+        var ay = ymin <= 0 && ymax >= 0 ? sy(0) : (ymin > 0 ? PAD_T + ih : PAD_T);
+        var ax = xmin <= 0 && xmax >= 0 ? sx(0) : (xmin > 0 ? PAD_L : PAD_L + iw);
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: PAD_L, y1: ay, x2: PAD_L + iw, y2: ay }));
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: ax, y1: PAD_T, x2: ax, y2: PAD_T + ih }));
+        for (v = Math.ceil(xmin / gx) * gx; v <= xmax + gx / 2; v += gx) {
+          var tx = svgel('text', { class: 'plot-tick', x: sx(v), y: PAD_T + ih + 15, 'text-anchor': 'middle' });
+          tx.textContent = ticktext(v, gx);
+          g.appendChild(tx);
+        }
+        for (v = Math.ceil(ymin / gy) * gy; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          var ty = svgel('text', { class: 'plot-tick', x: PAD_L - 7, y: sy(v) + 3.5, 'text-anchor': 'end' });
+          ty.textContent = ticktext(v, gy);
+          g.appendChild(ty);
+        }
+        svg.appendChild(g);
+        svg.appendChild(plotted);
+        return api;
+      },
+      /* Sample the function across the drawing width and join the samples.
+         A segment is BROKEN where the value stops being a real number and
+         where it jumps by more than three window heights between neighbouring
+         pixels -- that jump is a pole, and joining across it would draw a
+         vertical line that is not part of the graph. Readers meet exactly that
+         line in every graphing tool, and it is the reason they think 1/x is
+         connected. */
+      curve: function (fn, cls) {
+        var runs = [], run = [], prev = null, steps = 480;
+        for (var i = 0; i <= steps; i += 1) {
+          var x = xmin + (xmax - xmin) * i / steps, y = fn(x);
+          if (typeof y !== 'number' || !isFinite(y)) { if (run.length > 1) runs.push(run); run = []; prev = null; continue; }
+          if (prev !== null && Math.abs(y - prev) > 3 * (ymax - ymin)) {
+            if (run.length > 1) runs.push(run);
+            run = [];
+          }
+          run.push(sx(x) + ',' + sy(Math.max(ymin - (ymax - ymin), Math.min(ymax + (ymax - ymin), y))));
+          prev = y;
+        }
+        if (run.length > 1) runs.push(run);
+        runs.forEach(function (pts) {
+          plotted.appendChild(svgel('polyline', { class: cls || 'plot-curve', points: pts.join(' ') }));
+        });
+        return api;
+      },
+      point: function (x, y, cls, label) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: cls || 'plot-point', cx: sx(x), cy: sy(y), r: 5 }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 9, y: sy(y) - 8 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hole: function (x, y) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: 'plot-hole', cx: sx(x), cy: sy(y), r: 5 }));
+        return api;
+      },
+      vline: function (x, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: sx(x), y1: PAD_T, x2: sx(x), y2: PAD_T + ih }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 6, y: PAD_T + 14 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hline: function (y, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: PAD_L, y1: sy(y), x2: PAD_L + iw, y2: sy(y) }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: PAD_L + 6, y: sy(y) - 6 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      segment: function (x1, y1, x2, y2, cls) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-aux', x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2) }));
+        return api;
+      },
+      /* The solution set of an inequality, shaded by testing the predicate on
+         a grid of sample points rather than by reasoning about the boundary. */
+      shade: function (test, cls) {
+        var cols = 90, rows = 58;
+        for (var i = 0; i < cols; i += 1) {
+          for (var j = 0; j < rows; j += 1) {
+            var x = xmin + (xmax - xmin) * (i + 0.5) / cols;
+            var y = ymin + (ymax - ymin) * (j + 0.5) / rows;
+            if (!test(x, y)) continue;
+            plotted.appendChild(svgel('rect', {
+              class: cls || 'plot-shade', x: sx(x) - iw / cols / 2, y: sy(y) - ih / rows / 2,
+              width: iw / cols + 0.6, height: ih / rows + 0.6
+            }));
+          }
+        }
+        return api;
+      },
+      label: function (x, y, text, cls) {
+        var t = svgel('text', { class: cls || 'plot-label', x: sx(x), y: sy(y) });
+        t.textContent = text;
+        plotted.appendChild(t);
+        return api;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return api; }
+    };
+    return api;
+  }
+
+  /* A one-dimensional cousin: the number line every inequality lesson needs. */
+  function NumberLine(svg, lo, hi) {
+    var W = 660, H = 88, pad = 30, iw = W - 2 * pad;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+    function sx(x) { return pad + (x - lo) / (hi - lo) * iw; }
+    svg.appendChild(svgel('line', { class: 'plot-axis', x1: pad, y1: 44, x2: W - pad, y2: 44 }));
+    var step = nicestep(hi - lo);
+    for (var v = Math.ceil(lo / step) * step; v <= hi + step / 2; v += step) {
+      svg.appendChild(svgel('line', { class: 'plot-tickmark', x1: sx(v), y1: 38, x2: sx(v), y2: 50 }));
+      var t = svgel('text', { class: 'plot-tick', x: sx(v), y: 68, 'text-anchor': 'middle' });
+      t.textContent = ticktext(v, step);
+      svg.appendChild(t);
+    }
+    return {
+      sx: sx,
+      /* Closed ends are filled, open ends are hollow -- the distinction the
+         lesson is usually about. */
+      interval: function (a, b, closedA, closedB) {
+        var x1 = sx(Math.max(a, lo)), x2 = sx(Math.min(b, hi));
+        svg.appendChild(svgel('line', { class: 'plot-interval', x1: x1, y1: 44, x2: x2, y2: 44 }));
+        if (a >= lo) svg.appendChild(svgel('circle', { class: closedA ? 'plot-end closed' : 'plot-end open', cx: x1, cy: 44, r: 6 }));
+        if (b <= hi) svg.appendChild(svgel('circle', { class: closedB ? 'plot-end closed' : 'plot-end open', cx: x2, cy: 44, r: 6 }));
+        return this;
+      },
+      point: function (x, closed) {
+        svg.appendChild(svgel('circle', { class: closed ? 'plot-end closed' : 'plot-end open', cx: sx(x), cy: 44, r: 6 }));
+        return this;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return this; }
+    };
+  }
+
+  /* ---- decimals, and the one honest way to leave the exact world ---- */
+
+  /* A fraction whose numerator and denominator have both left the range of a
+     double still has to land on a pixel. Dividing in integers first is the
+     difference between a point on the curve and a NaN. */
+  function Rfloat(a) {
+    var quick = Number(a.n) / Number(a.d);
+    if (isFinite(quick)) return quick;
+    var neg = a.n < 0n, n = neg ? -a.n : a.n;
+    var scaled = (n * 100000000000000000000n) / a.d;      /* 10^20 */
+    var s = scaled.toString();
+    if (s === '0') return 0;
+    var head = s.slice(0, 17);
+    var v = Number(head) * Math.pow(10, s.length - head.length - 20);
+    return neg ? -v : v;
+  }
+
+  /* Rounding done in integers, so the decimal a lab prints is the correct
+     rounding of the exact fraction and not of a double that already lost the
+     digits. Half rounds up. Every caller states the number of places. */
+  function Rdecimal(a, places) {
+    if (places === undefined) places = 6;
+    var neg = Rsign(a) < 0, m = Rabs(a);
+    var scale = 10n ** BigInt(places);
+    var q = (m.n * scale * 2n / m.d + 1n) / 2n;
+    var s = q.toString();
+    while (s.length <= places) s = '0' + s;
+    var whole = s.slice(0, s.length - places);
+    var frac = places > 0 ? '.' + s.slice(s.length - places) : '';
+    return (neg ? '-' : '') + whole + frac;
+  }
+  /* The exact fraction when it fits on the page, and a rounding marked with an
+     "approximately" sign when it does not. A 40,000-digit numerator is exact
+     and unreadable; the reader is told which of the two they are looking at.
+     The size test compares BigInts rather than building the string, because
+     the string is the expensive part and is usually thrown away. */
+  var SHOWMAX = 100000000000000000000n;
+  function Rbig(a) { return (a.n < 0n ? -a.n : a.n) >= SHOWMAX || a.d >= SHOWMAX; }
+  function Rshow(a, places) {
+    if (!Rbig(a)) return Rtext(a);
+    return '&asymp;&nbsp;' + Rdecimal(a, places === undefined ? 6 : places);
+  }
+
+  /* ---- exact powers that stay affordable ----
+
+     Rpow reduces after every multiplication, and a gcd on two 40,000-digit
+     integers costs seconds. It never needs to: p/q in lowest terms makes
+     p^k/q^k in lowest terms already. Skipping the reduction is what lets this
+     page compound daily for thirty years EXACTLY instead of approximately. */
+  function Rpowfast(a, k) {
+    if (k < 0) return Rinv(Rpowfast(a, -k));
+    var e = BigInt(k);
+    return { n: a.n ** e, d: a.d ** e };
+  }
+  /* The same bargain for a single product: correct, unreduced, and destined to
+     be rounded to a decimal rather than printed as a fraction. */
+  function Rmulraw(a, b) { return { n: a.n * b.n, d: a.d * b.d }; }
+  function pct(a, places) { return Rdecimal(Rmul(a, R(100n)), places === undefined ? 4 : places) + '%'; }
+  /* 37/5 is exact and 7.4 is the same number written the way a reader typed it.
+     A fraction whose denominator is built only from 2s and 5s has a decimal
+     that terminates, so this is exactness in a friendlier notation -- and every
+     other fraction keeps its slash rather than being silently rounded. */
+  function Rdectext(a) {
+    if (Rint(a)) return Rtext(a);
+    var d = a.d, twos = 0, fives = 0;
+    while (d % 2n === 0n) { d /= 2n; twos += 1; }
+    while (d % 5n === 0n) { d /= 5n; fives += 1; }
+    if (d !== 1n) return Rtext(a);
+    return Rdecimal(a, Math.max(twos, fives));
+  }
+
+  /* ---- the exponent search: every exact logarithm on this page ----
+
+     log_b(x) = p/q  <=>  b^p = x^q, and that is a question about exact
+     rationals. So this searches: it builds b^p for every p in range, raises x
+     to each q, and compares. log_2(8) comes back 3, log_9(3) comes back 1/2,
+     and log_2(10) comes back EMPTY -- which is not a failure of the search but
+     the fact the lesson beside it is about. */
+  var PMAX = 48, QMAX = 12;
+  function ratpow(b, x) {
+    if (Rsign(b) <= 0 || Rsign(x) <= 0 || Requ(b, R1)) return null;
+    if (Rtext(b).length > 40 || Rtext(x).length > 40) return null;   /* lesson-sized */
+    var powers = [], p;
+    for (p = -PMAX; p <= PMAX; p += 1) powers.push(Rpow(b, p));
+    for (var q = 1; q <= QMAX; q += 1) {
+      var xq = Rpow(x, q);
+      for (p = -PMAX; p <= PMAX; p += 1) {
+        if (!Requ(powers[p + PMAX], xq)) continue;
+        var g = bgcd(BigInt(p < 0 ? -p : p), BigInt(q)) || 1n;
+        return R(BigInt(p) / g, BigInt(q) / g);
+      }
+    }
+    return null;
+  }
+
+  /* The integer part of log_b(x), found by multiplying by b until x is passed.
+     It returns the two powers that trap x, so a lab can show 2^3 < 10 < 2^4 as
+     an exact statement before it shows any decimal at all. */
+  function bracketexp(b, x) {
+    if (Rsign(b) <= 0 || Requ(b, R1) || Rsign(x) <= 0) return null;
+    var up = Rcmp(b, R1) > 0, k = 0, cur = R1, guard = 0;
+    while (guard++ < 2000) {
+      var next = Rmul(cur, b);
+      if (!(up ? Rcmp(next, x) <= 0 : Rcmp(next, x) >= 0)) break;
+      cur = next; k += 1;
+    }
+    if (guard >= 2000) return null;
+    guard = 0;
+    while (guard++ < 2000) {
+      if (!(up ? Rcmp(cur, x) > 0 : Rcmp(cur, x) < 0)) break;
+      cur = Rdiv(cur, b); k -= 1;
+    }
+    if (guard >= 2000) return null;
+    return { k: k, low: cur, high: Rmul(cur, b) };
+  }
+
+  /* One logarithm, with its provenance attached. kind is 'exact' when the
+     search found the exponent, 'searched' when it did not (and then br holds
+     the powers that bracket x and v is a rounded double), and a named refusal
+     when the base or the argument is outside the definition. */
+  function logvalue(b, x) {
+    if (Rsign(b) <= 0) return { kind: 'badbase' };
+    if (Requ(b, R1)) return { kind: 'base1' };
+    if (Rsign(x) <= 0) return { kind: 'domain' };
+    var y = ratpow(b, x);
+    if (y !== null) return { kind: 'exact', y: y, v: Rfloat(y) };
+    var br = bracketexp(b, x);
+    /* A whole-number exponent past the end of the search is still exact: if the
+       lower power in the bracket IS x, the logarithm is that integer. b = 2 and
+       x = 2^100 would otherwise be reported as "no exact answer", which is
+       false, and a lab that says something false about its own search is worse
+       than one that searches a smaller range. */
+    if (br !== null && Requ(br.low, x)) return { kind: 'exact', y: R(BigInt(br.k)), v: br.k };
+    return { kind: 'searched', br: br, v: Math.log(Rfloat(x)) / Math.log(Rfloat(b)) };
+  }
+  /* What to print for one logarithm, exact or not, in six characters or sixty. */
+  function logtext(lv, places) {
+    if (places === undefined) places = 6;
+    if (lv.kind === 'exact') return Rtext(lv.y);
+    if (lv.kind === 'searched') return '&asymp;&nbsp;' + lv.v.toFixed(places);
+    if (lv.kind === 'domain') return 'undefined';
+    if (lv.kind === 'base1') return 'undefined (base 1)';
+    return 'undefined (base &le; 0)';
+  }
+  function logfloat(lv) { return lv.kind === 'exact' ? Rfloat(lv.y) : lv.v; }
+
+  /* ---- small HTML the two labs share ---- */
+  function cell(t, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + t + '</td>'; }
+  function rowhead(t) { return '<th class="rowhead">' + t + '</th>'; }
+  function trow(cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.join('') + '</tr>'; }
+  function ttable(caption, heads, rows) {
+    var head = heads.length
+      ? '<thead><tr>' + heads.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '</tr></thead>'
+      : '';
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption + '</caption>'
+      + head + '<tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  /* The two-column "step / what it says" table the exemplar uses. */
+  function steps(caption, pairs) {
+    return ttable(caption, [], pairs.map(function (p) {
+      return trow([rowhead(p[0]), cell(p[1])]);
+    }));
+  }
+  function chip(text, cls) { return '<span class="chip ' + cls + '">' + text + '</span>'; }
+
+  var MODE = 'interest';
+  var FIELDS = ['exP', 'exR', 'exT'];
+  var RANGES = [];
+  var preset = document.getElementById('exPreset');
+  var svg = document.getElementById('exPlot');
+  var work = document.getElementById('exWork'), status = document.getElementById('exStatus');
+  var titleOut = document.getElementById('exTitle'), subOut = document.getElementById('exSub');
+  var kpi1 = document.getElementById('exKpi1');
+  var kpi2 = document.getElementById('exKpi2');
+  var kpi3 = document.getElementById('exKpi3');
+
+  /* Reader input is a string until proved otherwise, and Rparse throws on
+     "1/0" -- which is a thing a reader types -- so every read comes through
+     here and a bad value becomes null rather than an exception. */
+  function readnum(id) {
+    var el = document.getElementById(id);
+    if (!el) return null;
+    try { return Rparse(el.value); } catch (err) { return null; }
+  }
+  function readint(id, fallback) {
+    var el = document.getElementById(id);
+    var v = el ? parseInt(el.value, 10) : NaN;
+    return isFinite(v) ? v : fallback;
+  }
+  function setkpis(a, b, c) { kpi1.innerHTML = a; kpi2.innerHTML = b; kpi3.innerHTML = c; }
+  /* A frame with nothing in it is still an answer: it says "there is no curve
+     here", which is the honest picture for a base that is zero or negative. */
+  function blankStage() {
+    var p = Plot(svg, { xmin: -4, xmax: 4, ymin: -2, ymax: 8 });
+    p.frame();
+    p.describe('an empty frame: the values in the panel do not define a curve.');
+    return p;
+  }
+  function fail(message) {
+    status.innerHTML = message;
+    work.innerHTML = '';
+    setkpis('&mdash;', '&mdash;', '&mdash;');
+    blankStage();
+  }
+
+  /* f(x) = a*b^x + k, exactly, at whole x. */
+  function fexact(a, b, k, x) { return Radd(Rmul(a, Rpow(b, x)), k); }
+  /* "3(1/2)^x", "-2^x", "5(1)^x + 3". The base is bracketed whenever a
+     coefficient is written in front of it, because 5 and 1 side by side would
+     read as fifty-one. */
+  function ftext(a, b, k, v) {
+    var coef = Requ(a, R1) ? '' : (Requ(a, R(-1n)) ? '-' : Rtext(a));
+    var base = Rterm(b);
+    if (coef !== '' && coef !== '-' && base.charAt(0) !== '(') base = '(' + base + ')';
+    var s = coef + base + '^' + (v || 'x');
+    if (!Rzero(k)) s += Rsign(k) > 0 ? ' + ' + Rtext(k) : ' - ' + Rtext(Rabs(k));
+    return s;
+  }
+
+  /* ------------------------------------------------------------ intro ---- */
+  function drawIntro() {
+    var a = readnum('exA'), b = readnum('exB'), k = readnum('exShift');
+    if (a === null || b === null || k === null) {
+      fail('<strong>a, b and k each have to be a whole number or a fraction.</strong> '
+        + 'Try 3, -2 or 4/5. Nothing below can be computed from a value that is not a number, and '
+        + 'guessing what was meant would be worse than saying so.');
+      return;
+    }
+    if (Rzero(b)) {
+      fail('<strong>0 is not a base.</strong> 0^x is 0 for every positive x, is 1 at x = 0 by the '
+        + 'empty-product convention, and is undefined for every negative x because it would ask for '
+        + '1/0. Three rules on one function is not a function worth having, which is why the '
+        + 'definition of an exponential requires b &gt; 0.');
+      return;
+    }
+    titleOut.textContent = 'f(x) = ' + ftext(a, b, k);
+    subOut.textContent = 'a = ' + Rtext(a) + ',  b = ' + Rtext(b) + ',  k = ' + Rtext(k);
+
+    var lo = -3, hi = 4, rows = [], xs = [], x;
+    var f0 = fexact(a, b, k, 0), f1 = fexact(a, b, k, 1), slope = Rsub(f1, f0);
+    for (x = lo; x <= hi; x += 1) {
+      var v = fexact(a, b, k, x);
+      var gap = Rsub(v, k);
+      var prev = x > lo ? fexact(a, b, k, x - 1) : null;
+      var ratio = '&mdash;', constant = false;
+      if (prev !== null) {
+        var pgap = Rsub(prev, k);
+        if (Rzero(pgap)) { ratio = '0 / 0, undefined'; }
+        else { var q = Rdiv(gap, pgap); ratio = Rtext(q); constant = Requ(q, b); }
+      }
+      var line = Radd(f0, Rmul(slope, R(BigInt(x))));
+      rows.push(trow([
+        cell(String(x)), cell(Rshow(v)), cell(Rshow(gap)),
+        cell(prev === null ? '&mdash;' : Rshow(Rsub(v, prev))),
+        cell(ratio, constant ? 'on' : ''),
+        cell(Rshow(line))
+      ]));
+      xs.push({ x: x, v: v });
+    }
+    work.innerHTML = ttable('f(x) = ' + ftext(a, b, k) + ', evaluated exactly at each whole x',
+      ['x', 'f(x)', 'f(x) - k', 'change', 'ratio of the gaps', 'the line through f(0), f(1)'], rows);
+
+    var av = Rfloat(a), bv = Rfloat(b), kv = Rfloat(k), sv = Rfloat(slope), f0v = Rfloat(f0);
+    var vals = xs.map(function (p) { return Rfloat(p.v); }).concat([kv, f0v, f0v + sv * hi]);
+    var ymin = Math.min.apply(null, vals), ymax = Math.max.apply(null, vals);
+    var pad = Math.max(1, (ymax - ymin) * 0.15);
+    var plot = Plot(svg, { xmin: lo - 0.4, xmax: hi + 0.4, ymin: ymin - pad, ymax: ymax + pad });
+    plot.frame();
+    plot.hline(kv, 'plot-asym', 'y = ' + Rtext(k));
+    plot.curve(function (t) { return f0v + sv * t; }, 'plot-curve parent');
+    if (Rsign(b) > 0) plot.curve(function (t) { return av * Math.pow(bv, t) + kv; });
+    xs.forEach(function (p) { plot.point(p.x, Rfloat(p.v), 'plot-point'); });
+    plot.describe('f(x) = ' + ftext(a, b, k) + ', its horizontal asymptote y = ' + Rtext(k)
+      + ', and the straight line through the same first two points.');
+
+    setkpis(Rshow(f0), Rtext(b), 'y = ' + Rtext(k));
+
+    var msg;
+    if (Rsign(b) < 0) {
+      msg = '<strong>A negative base has no curve.</strong> The table is fine &mdash; b^x at whole x '
+        + 'just alternates sign, and every entry above is exact. But halfway between two of those '
+        + 'rows, at x = 1/2, the value would have to be a square root of ' + Rtext(b) + ', and no '
+        + 'real number squares to a negative. There is nothing to draw between the dots, which is '
+        + 'the reason the definition asks for b &gt; 0.';
+    } else if (Rzero(a)) {
+      msg = '<strong>With a = 0 there is no exponential left.</strong> f(x) = 0&middot;'
+        + Rterm(b) + '^x + ' + Rtext(k) + ' is the constant ' + Rtext(k) + ', the ratio column is '
+        + '0/0, and the curve lies along its own asymptote. An exponential needs a non-zero value '
+        + 'at x = 0.';
+    } else if (Requ(b, R1)) {
+      msg = '<strong>Base 1 is the degenerate case.</strong> 1^x is 1 for every x, so f is the '
+        + 'constant ' + Rshow(Radd(a, k)) + ': the ratio column is 1 and the change column is 0. '
+        + 'It is not growth and it is not decay. It is also the reason the definition excludes '
+        + 'b = 1 &mdash; a constant function has no inverse, so log base 1 could not exist.';
+    } else {
+      msg = '<strong>The ratio column is constant at ' + Rtext(b) + '. The change column is not.</strong> '
+        + 'That is the entire difference between this and the straight line in the last column, '
+        + 'which adds ' + Rshow(slope) + ' every step and never anything else. The distance from '
+        + 'the asymptote, f(x) - k, is multiplied by ' + Rtext(b) + ' each step, so it '
+        + (Rcmp(b, R1) > 0 ? 'grows without bound' : 'shrinks toward zero') + '. '
+        + 'f(x) never equals y = ' + Rtext(k) + ': that would need a&middot;b^x = 0, and a product '
+        + 'of non-zero numbers is never zero. That is what a horizontal asymptote is.';
+    }
+    status.innerHTML = msg;
+  }
+
+  /* ----------------------------------------------------------- growth ---- */
+
+  /* The least n with b^n past a target, found by multiplying. A question about
+     a whole number of steps is answered with whole numbers of steps -- no
+     logarithm, no rounding, no "about 70". b^n stays in lowest terms on its
+     own, so the reduction Rmul would do every round is skipped. */
+  function stepsToFactor(b, target, cap) {
+    var up = Rcmp(b, R1) > 0, cur = R1, n = 0;
+    while (n < cap) {
+      cur = { n: cur.n * b.n, d: cur.d * b.d };
+      n += 1;
+      if (up ? Rcmp(cur, target) >= 0 : Rcmp(cur, target) <= 0) return { n: n, value: cur };
+    }
+    return null;
+  }
+
+  function drawGrowth() {
+    var a = readnum('exA'), b = readnum('exB');
+    var n = readint('exSteps', 10);
+    var out = document.getElementById('exStepsOut');
+    if (out) out.textContent = String(n);
+    if (a === null || b === null) {
+      fail('<strong>a and b each have to be a whole number or a fraction.</strong> The base is the '
+        + 'interesting one: try 2, 3/2, 9/10 or 101/100.');
+      return;
+    }
+    if (Rsign(b) <= 0) {
+      fail('<strong>Growth and decay need a positive base.</strong> With b = ' + Rtext(b)
+        + ' the values alternate in sign or are undefined, so neither word describes anything. '
+        + 'Every statement about a rate on this page assumes b &gt; 0.');
+      return;
+    }
+    titleOut.textContent = 'f(n) = ' + ftext(a, b, R0, 'n') + ',  n = 0 to ' + n;
+    subOut.textContent = 'every step multiplies by ' + Rtext(b);
+
+    var rate = Rsub(b, R1), rows = [], cum = R1, val = a, i;
+    for (i = 0; i <= n; i += 1) {
+      rows.push(trow([
+        cell(String(i)), cell(Rshow(val)), cell(Rshow(cum)),
+        cell(i === 0 ? '&mdash;' : Rshow(Rmul(Rdiv(val, b), rate))),
+        cell(i === 0 ? '&mdash;' : pct(rate, 4))
+      ]));
+      cum = Rmulraw(cum, b);
+      val = Rmul(val, b);
+    }
+
+    var doubling = Rcmp(b, R1) > 0 ? stepsToFactor(b, R(2n), 400) : null;
+    var halving = Rcmp(b, R1) < 0 ? stepsToFactor(b, R(1n, 2n), 400) : null;
+    var hit = doubling || halving;
+    var pairs = [];
+    if (hit) {
+      pairs.push([(doubling ? 'first n with b^n &ge; 2' : 'first n with b^n &le; 1/2'),
+        'n = ' + hit.n + ', where b^' + hit.n + ' = ' + Rshow(hit.value, 8)
+        + '. Found by multiplying by ' + Rtext(b) + ' until the target was passed, so it is the '
+        + 'exact first step and not a rounded one.']);
+      var real = Math.log(2) / Math.abs(Math.log(Rfloat(b)));
+      pairs.push(['the continuous ' + (doubling ? 'doubling' : 'half') + ' time',
+        'ln 2 / |ln ' + Rtext(b) + '| &asymp; ' + real.toFixed(4) + ' steps. This one is irrational '
+        + 'and is rounded to 4 places; the whole number above is the first step at which the factor '
+        + 'has really been reached.']);
+      var pv = Math.abs(Rfloat(rate) * 100);
+      if (pv > 0) {
+        pairs.push(['the "rule of 70"',
+          '70 / ' + Rdecimal(Rabs(Rmul(rate, R(100n))), 4) + ' &asymp; ' + (70 / pv).toFixed(2)
+          + ' steps against the true ' + real.toFixed(4) + '. The rule rounds ln 2 &asymp; 0.6931 up '
+          + 'to 0.70 and ignores that the step is discrete, so it drifts as the rate gets large.']);
+      }
+    } else if (Requ(b, R1)) {
+      pairs.push(['first n with b^n &ge; 2',
+        'there is none. b = 1 makes b^n = 1 for every n, so the sequence never moves and no number '
+        + 'of steps doubles anything.']);
+    } else {
+      pairs.push(['first n with b^n past the target',
+        'not within 400 steps at this rate. The search stops there rather than pretending; try a '
+        + 'base further from 1.']);
+    }
+    work.innerHTML = ttable('every step, exactly &mdash; a value past 20 digits is shown '
+      + 'rounded to 6 places and marked with an approximation sign',
+      ['n', 'f(n)', 'b^n', 'change from the step before', 'change as a percent'], rows)
+      + steps('how long a factor of two takes', pairs);
+
+    var av = Rfloat(a), bv = Rfloat(b);
+    var top = Math.max(Math.abs(av * Math.pow(bv, n)), Math.abs(av * Math.pow(1 / bv, n)), Math.abs(av), 1);
+    if (!isFinite(top) || top > 1e9) top = Math.abs(av) * 100 || 1;
+    var plot = Plot(svg, { xmin: -0.4, xmax: n + 0.4, ymin: -top * 0.12, ymax: top * 1.1 });
+    plot.frame();
+    plot.hline(0, 'plot-asym', 'y = 0');
+    plot.curve(function (t) { return av * Math.pow(bv, t); });
+    plot.curve(function (t) { return av * Math.pow(1 / bv, t); }, 'plot-curve alt');
+    for (i = 0; i <= n; i += 1) plot.point(i, av * Math.pow(bv, i), 'plot-point');
+    if (hit && hit.n <= n) plot.point(hit.n, av * Math.pow(bv, hit.n), 'plot-point root', 'n = ' + hit.n);
+    plot.describe('a&middot;b^x with b = ' + Rtext(b) + ' drawn against its mirror a&middot;(1/b)^x, '
+      + 'both sampled from the same definition, with the asymptote y = 0.');
+
+    setkpis(pct(rate, 4), hit ? String(hit.n) : 'never', hit ? Rshow(hit.value, 6) : '1');
+
+    var msg;
+    if (Requ(b, R1)) {
+      msg = '<strong>b = 1 is the border between growth and decay, and it is neither.</strong> '
+        + 'The change column reads 0% on every row. Anything strictly greater than 1 grows without '
+        + 'bound; anything strictly between 0 and 1 decays toward zero; 1 itself does nothing, '
+        + 'forever.';
+    } else if (Rcmp(b, R1) > 0) {
+      msg = '<strong>b = ' + Rtext(b) + ' is greater than 1, so this grows by exactly '
+        + pct(rate, 4) + ' every step.</strong> The percentage is the same on every row while the '
+        + 'absolute change gets larger and larger &mdash; that is what people mean when they call '
+        + 'growth "exponential", and it is a statement about the ratio, not about the speed. After '
+        + n + ' steps the multiplier is b^' + n + ' = ' + Rshow(Rpowfast(b, n), 6)
+        + '. The purple curve is base 1/b = ' + Rtext(Rinv(b))
+        + ': decay is this same function reflected in the vertical axis, not a different species.';
+    } else {
+      msg = '<strong>b = ' + Rtext(b) + ' lies between 0 and 1, so this decays by '
+        + pct(Rneg(rate), 4) + ' every step.</strong> It never reaches zero: b^n is a positive '
+        + 'fraction however large n gets, which is why the axis is an asymptote and not a '
+        + 'destination. After ' + n + ' steps the multiplier is ' + Rshow(Rpowfast(b, n), 8)
+        + '. The purple curve, base 1/b = ' + Rtext(Rinv(b)) + ', is the same decay run backwards.';
+    }
+    status.innerHTML = msg;
+  }
+
+  /* ---------------------------------------------------------------- e ---- */
+
+  /* Exact arithmetic on ((n+1)/n)^n stops being affordable somewhere, and the
+     honest move is to name where rather than to quietly switch. Past this n a
+     row is computed with doubles and is labelled as such -- and the last preset
+     is chosen so the reader watches the doubles fail. */
+  var EXACT_MAX = 100000;
+
+  function esequence(kind, terms) {
+    var out = [], i;
+    for (i = 0; i < terms; i += 1) {
+      if (kind === 'count') out.push(i + 1);
+      else if (kind === 'double') out.push(Math.pow(2, i));
+      else if (kind === 'ten') out.push(Math.pow(10, i));
+      else if (kind === 'arith') out.push(10 * (i + 1));
+      else out.push(Math.pow(10, 9 + i));
+    }
+    return out;
+  }
+  /* The partial sums of 1 + 1/1! + 1/2! + ..., exactly. */
+  function eseries(terms) {
+    var sums = [], fact = R1, acc = R0, k;
+    for (k = 0; k < terms; k += 1) {
+      if (k > 0) fact = Rmul(fact, R(BigInt(k)));
+      acc = Radd(acc, Rinv(fact));
+      sums.push({ k: k, term: Rinv(fact), sum: acc });
+    }
+    return sums;
+  }
+  function convergent(n) {
+    return n <= EXACT_MAX
+      ? { dec: Rdecimal(Rpowfast(R(BigInt(n) + 1n, BigInt(n)), n), 12), exact: true }
+      : { dec: Math.pow(1 + 1 / n, n).toFixed(12), exact: false };
+  }
+  /* How many leading digits two decimal strings share. */
+  function agreedigits(a, b) {
+    var n = 0;
+    for (var i = 0; i < Math.min(a.length, b.length); i += 1) {
+      if (a[i] !== b[i]) break;
+      if (a[i] !== '.') n += 1;
+    }
+    return n;
+  }
+
+  function drawE() {
+    var terms = readint('exTerms', 8);
+    if (!(terms >= 3)) terms = 3;
+    if (terms > 12) terms = 12;
+    var out = document.getElementById('exTermsOut');
+    if (out) out.textContent = String(terms);
+    var kind = (preset.value || 'count').split('|')[0];
+
+    /* e, summed here from 30 terms of the series. Everything past the 30th
+       term is smaller than 1/30!, which is below 1e-32, so the 18 places
+       printed are right -- and they were computed on this page, not pasted in
+       from somewhere the reader cannot check. */
+    var ref = eseries(30), eexact = ref[ref.length - 1].sum, eref = Rdecimal(eexact, 18);
+
+    titleOut.textContent = '(1 + 1/n)^n  as n grows';
+    subOut.textContent = 'against 1 + 1/1! + 1/2! + ... , and against the two shortcuts';
+
+    var ns = esequence(kind, terms), rows = [], last = null, seen = [];
+    ns.forEach(function (n) {
+      var c = convergent(n);
+      last = { dec: c.dec, exact: c.exact, digits: agreedigits(c.dec, eref) };
+      seen.push({ n: n, dec: c.dec, v: parseFloat(c.dec), digits: last.digits });
+      rows.push(trow([
+        cell(String(n)), cell(c.dec), cell(String(last.digits)),
+        cell(c.exact ? chip('exact', 'ok') : chip('double', 'no')),
+        cell('1.000000000000'), cell('2.000000000000')
+      ]));
+    });
+    var series = eseries(terms);
+    var srows = series.map(function (item) {
+      var dec = Rdecimal(item.sum, 18);
+      return trow([cell(String(item.k)), cell(Rshow(item.term)), cell(dec),
+                   cell(String(agreedigits(dec, eref)))]);
+    });
+    var lastSum = series[series.length - 1].sum;
+
+    work.innerHTML = ttable(
+      'the limit definition, beside the two readings of it that look reasonable and are wrong',
+      ['n', '(1 + 1/n)^n to 12 places', 'digits of e it has right', 'arithmetic',
+       'base rounded to 1 first', 'exponent cancelled first'], rows)
+      + ttable('the series 1 + 1/1! + 1/2! + ..., summed exactly',
+        ['k', '1/k!', 'partial sum to 18 places', 'digits of e it has right'], srows)
+      + steps('what the two tables are for', [
+        ['the definition is rational', '(1 + 1/n)^n = ((n+1)/n)^n is a fraction for every whole n. '
+          + 'The rows marked exact are that fraction, rounded once at the end and never before.'],
+        ['and it is a bad way to compute e', 'the error falls like 1/n, so each further digit '
+          + 'costs a factor of ten in n. Over the same ' + terms + ' rows the series reaches '
+          + agreedigits(Rdecimal(lastSum, 18), eref) + ' correct digits and the limit reaches '
+          + last.digits + ', because 1/k! falls faster than anything of the form 1/n.'],
+        ['the two shortcuts', '1 + 1/n does tend to 1, and 1 raised to any power is 1. n&middot;(1/n) '
+          + 'does equal 1, so the binomial\'s first two terms do give 2. Both readings are '
+          + 'arithmetic applied to a limit in the wrong order, and the columns show them stuck at '
+          + '1 and at 2 while the real value climbs past both.'],
+        ['the reference', 'e above is the series to 30 terms &mdash; an exact fraction, rounded to '
+          + '18 places at the very end: ' + eref + '. e is irrational, so every decimal on this '
+          + 'page is a rounding of it and none of them is it.']
+      ]);
+
+    var plot = Plot(svg, { xmin: 0.4, xmax: terms + 0.6, ymin: 0.7, ymax: 3.2 });
+    plot.frame();
+    plot.hline(Rfloat(eexact), 'plot-asym', 'e');
+    ns.forEach(function (n, i) { plot.point(i + 1, parseFloat(convergent(n).dec), 'plot-point'); });
+    series.forEach(function (item, i) { plot.point(i + 1, Rfloat(item.sum), 'plot-point root'); });
+    plot.describe('the sequence (1 + 1/n)^n rising toward e from below, with the partial sums of '
+      + 'the series arriving far sooner, both against the row number.');
+
+    setkpis(last.dec + (last.exact ? '' : ' (double)'), Rdecimal(lastSum, 12), eref);
+
+    /* The closing paragraph is written from the rows that were just computed:
+       which one first collapses to 1, which one overshoots, how many digits
+       the series got. Nothing here is a claim about a number the reader cannot
+       see in the table above. */
+    var collapsed = null, over = null, best = 0, i;
+    for (i = 0; i < seen.length; i += 1) {
+      if (collapsed === null && seen[i].v === 1) collapsed = seen[i];
+      if (seen[i].v > 2.72 && (over === null || seen[i].v > over.v)) over = seen[i];
+      if (seen[i].digits > best) best = seen[i].digits;
+    }
+    var seriesDigits = agreedigits(Rdecimal(lastSum, 18), eref);
+    var msg;
+    if (kind === 'big') {
+      msg = '<strong>This is where floating point gives up.</strong> Past n = ' + EXACT_MAX
+        + ' the rows above are doubles rather than fractions. The best any of them manages is '
+        + best + ' correct digits';
+      if (over) {
+        msg += ', and at n = ' + over.n + ' the answer is ' + over.dec
+          + ' &mdash; past e, which the true sequence never is, because it increases toward e from '
+          + 'below';
+      }
+      if (collapsed) {
+        msg += '. At n = ' + collapsed.n + ' it reads exactly ' + collapsed.dec
+          + ': 1 + 1/n has rounded to 1 in a double, and 1 to any power is 1';
+      }
+      msg += '. That is a fact about doubles, not about e. The exact rows and the series both say '
+        + '2.718..., and they are the ones to believe.';
+    } else {
+      msg = '<strong>After ' + terms + ' rows the limit definition has '
+        + last.digits + (last.digits === 1 ? ' correct digit' : ' correct digits')
+        + ' and the series has ' + seriesDigits + '.</strong> Both climb to the same number and '
+        + 'neither arrives: e is irrational, so no (1 + 1/n)^n and no partial sum of the series is '
+        + 'ever equal to it. The last two columns are the two shortcuts, wrong on every row '
+        + '&mdash; and worth taking seriously, because each is a correct piece of arithmetic done '
+        + 'before the limit instead of after it. e &asymp; ' + eref + ', computed here.';
+    }
+    status.innerHTML = msg;
+  }
+
+  /* --------------------------------------------------------- interest ---- */
+
+  var FREQS = [[1, 'once a year'], [2, 'twice a year'], [4, 'quarterly'], [12, 'monthly'],
+               [52, 'weekly'], [365, 'daily']];
+
+  function drawInterest() {
+    var P = readnum('exP'), rpc = readnum('exR'), t = readnum('exT');
+    if (P === null || rpc === null || t === null) {
+      fail('<strong>P, r and t each have to be a number.</strong> The rate is a percentage, so '
+        + '<code>5</code> means 5% a year, and t may be a fraction such as <code>1/2</code>.');
+      return;
+    }
+    if (Rsign(t) < 0) {
+      fail('<strong>t is a number of years, and this lab will not take a negative one.</strong> '
+        + 'The formula would answer &mdash; it would tell you the balance before the deposit '
+        + 'existed &mdash; but that answer is not about this account.');
+      return;
+    }
+    if (Rcmp(Rdiv(rpc, R(100n)), R(-1n)) <= 0) {
+      fail('<strong>A rate of ' + Rtext(rpc) + '% wipes out the balance within a single period.</strong> '
+        + '1 + r/n has to stay positive for the powers below to mean anything, so this needs '
+        + 'r &gt; -100%.');
+      return;
+    }
+    var r = Rdiv(rpc, R(100n));
+    titleOut.textContent = 'A = P(1 + r/n)^(nt)';
+    subOut.textContent = 'P = ' + Rtext(P) + ',  r = ' + Rtext(rpc) + '%,  t = ' + Rtext(t)
+      + ', against A = Pe^(rt)';
+
+    var contv = Rfloat(P) * Math.exp(Rfloat(r) * Rfloat(t));
+    var years = Rtext(t) + (Requ(t, R1) ? ' year' : ' years');
+    var rows = [], annual = null, daily = null;
+    FREQS.forEach(function (item) {
+      var n = item[0], name = item[1];
+      var per = Radd(R1, Rdiv(r, R(BigInt(n))));        /* 1 + r/n, exact */
+      var apy = Rsub(Rpowfast(per, n), R1);             /* the effective annual rate, exact */
+      var expo = Rmul(R(BigInt(n)), t);                 /* n*t */
+      var exact = Rint(expo) && expo.n >= 0n && expo.n <= 50000n && per.n < 1000000000000n;
+      /* The balance is exact whenever the exponent is a whole number. It is
+         rounded to the cent for the column and kept at full width for the gap,
+         so the last row of the table is not compared against a rounding. */
+      var amount = exact ? Rmulraw(P, Rpowfast(per, Number(expo.n))) : null;
+      var shown = exact ? Rdecimal(amount, 2)
+                        : (Rfloat(P) * Math.pow(Rfloat(per), Rfloat(expo))).toFixed(2);
+      var value = exact ? Rfloat(amount) : parseFloat(shown);
+      if (n === 1) annual = { shown: shown, value: value };
+      if (n === 365) daily = { shown: shown, value: value };
+      rows.push(trow([
+        cell(name), cell(String(n)), cell(Rtext(expo)), cell(shown),
+        cell(exact ? chip('exact', 'ok') : chip('rounded', 'no')),
+        cell(pct(apy, 4)), cell((contv - value).toFixed(6))
+      ]));
+    });
+    var simple = Rmul(P, Radd(R1, Rmul(r, t)));         /* simple interest, exact */
+    rows.push(trow([
+      cell('continuously'), cell('&rarr; unbounded'), cell('&mdash;'), cell(contv.toFixed(2)),
+      cell(chip('irrational', 'hi')),
+      cell(((Math.exp(Rfloat(r)) - 1) * 100).toFixed(4) + '% (rounded)'), cell('0.000000')
+    ], 'focus'));
+    rows.push(trow([
+      cell('not at all: simple interest'), cell('&mdash;'), cell('&mdash;'), cell(Rdecimal(simple, 2)),
+      cell(chip('exact', 'ok')), cell(pct(r, 4)), cell((contv - Rfloat(simple)).toFixed(6))
+    ]));
+
+    work.innerHTML = ttable('the same money, compounded seven different ways',
+      ['compounded', 'n', 'n&middot;t', 'balance after ' + years + ', to the cent', 'arithmetic',
+       'effective annual rate', 'gap to continuous'], rows)
+      + steps('why the last two rows are different in kind', [
+        ['the exact rows', 'A = P(1 + r/n)^(nt) is a product of fractions whenever n&middot;t is a '
+          + 'whole number, so those balances are exact and are rounded to the cent once, at the '
+          + 'end. Where n&middot;t is not whole &mdash; half a year compounded once a year &mdash; '
+          + 'the power is a root and is generally irrational, and the row says so instead of '
+          + 'pretending.'],
+        ['the continuous row', 'A = Pe^(rt), and e is irrational: that balance is a rounding no '
+          + 'matter how it is computed. It is the limit of the column above it rather than a '
+          + 'seventh frequency you could ask a bank for.'],
+        ['simple interest', 'P(1 + rt) = ' + Rshow(simple, 2) + ', exactly: the rate applied once '
+          + 'to the original principal, with the interest never earning anything itself. The gap '
+          + 'between that row and the first one is the whole subject.']
+      ]);
+
+    var Pv = Rfloat(P), rv = Rfloat(r), tv = Rfloat(t);
+    var hi = Math.max(Pv, contv, Pv * (1 + rv * tv)), lowv = Math.min(Pv, contv, Pv * (1 + rv * tv));
+    var plot = Plot(svg, { xmin: 0, xmax: Math.max(tv, 0.0001),
+                           ymin: Math.min(0, lowv * 0.9), ymax: hi * 1.08 + 0.001 });
+    plot.frame();
+    plot.curve(function (s) { return Pv * Math.pow(1 + rv, s); });
+    plot.curve(function (s) { return Pv * Math.pow(1 + rv / 12, 12 * s); }, 'plot-curve alt');
+    plot.curve(function (s) { return Pv * Math.exp(rv * s); }, 'plot-curve good');
+    plot.curve(function (s) { return Pv * (1 + rv * s); }, 'plot-curve parent');
+    plot.describe('the balance over ' + years + ' compounded yearly, monthly and '
+      + 'continuously, with simple interest as the straight line below them.');
+
+    setkpis(annual.shown, contv.toFixed(2), (contv - annual.value).toFixed(6));
+
+    var apy12 = Rsub(Rpowfast(Radd(R1, Rdiv(r, R(12n))), 12), R1);
+    status.innerHTML = '<strong>' + Rtext(rpc) + '% a year compounded monthly is not '
+      + Rtext(rpc) + '% a year.</strong> Twelve payments of ' + pct(Rdiv(r, R(12n)), 6)
+      + ' compound to an effective ' + pct(apy12, 4) + ' &mdash; exactly, from the fraction '
+      + '(1 + r/12)^12 - 1 &mdash; and the difference is interest earning interest. Raising the '
+      + 'frequency raises the balance every time, but never past a ceiling: the daily row reaches '
+      + daily.shown + ' against the continuous ' + contv.toFixed(2) + ', and the gap between them '
+      + 'is ' + (contv - daily.value).toFixed(6) + ' on a principal of ' + Rtext(P)
+      + '. That ceiling is Pe^(rt), and the e in it is the number (1 + 1/n)^n was climbing toward.';
+  }
+
+  function redraw() {
+    if (MODE === 'intro') drawIntro();
+    else if (MODE === 'growth') drawGrowth();
+    else if (MODE === 'e') drawE();
+    else drawInterest();
+  }
+
+  function applyPreset() {
+    var parts = (preset.value || '').split('|');
+    FIELDS.forEach(function (id, i) {
+      var el = document.getElementById(id);
+      if (el && parts[i] !== undefined) el.value = parts[i];
+    });
+    redraw();
+  }
+
+  preset.addEventListener('change', applyPreset);
+  FIELDS.concat(RANGES).forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', redraw);
+  });
+  applyPreset();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

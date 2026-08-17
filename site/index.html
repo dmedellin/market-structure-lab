@@ -408,13 +408,33 @@
       padding: 0;
       display: grid;
       gap: 22px;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+      grid-template-columns: minmax(0, 1fr);
+    }
+    /* Two columns, stated rather than inferred. repeat(auto-fit, ...) was right
+       while the library held one path and then two; at three it produced a
+       two-column grid with the last card alone beside an empty half-row, and no
+       selector can identify that orphan without knowing the column count. With
+       the count fixed, it can: an odd-numbered card that is also the last one is
+       exactly the card with nothing beside it, at any number of paths. It takes
+       the whole row, and the container queries above then lay it out as a wide
+       card rather than a stretched narrow one. */
+    @media (min-width: 940px) {
+      .paths { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .paths > .path-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+      /* A full-row card gets a wider drawing to fill the band it now has. */
+      .paths > .path-card:last-child:nth-child(odd) .path-cover svg { max-width: 620px; }
     }
 
     .path-card {
       position: relative;
       display: grid;
       grid-template-columns: minmax(0, 1fr);
+      /* The COPY row absorbs the slack, never the artwork row. Cards in a row
+         are stretched to the tallest one, and two auto rows split that slack
+         between them -- so the card with the shorter copy grew a taller plate
+         and every band inside the two cards sat at a different height. Pinning
+         the artwork to its natural height lines the cards up with each other. */
+      grid-template-rows: auto minmax(0, 1fr);
       min-width: 0;
       overflow: hidden;
       border: 1px solid var(--line);
@@ -444,9 +464,28 @@
         var(--panel-2);
       background-size: 26px 26px;
     }
-    .path-cover svg { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 auto; }
+    .path-cover svg { display: block; width: 100%; max-width: 460px; height: auto; margin: 0 auto; }
 
+    /* The COPY COLUMN is the container, and every breakpoint inside the card is
+       a @container query against it rather than a viewport media query. A card
+       is the full width of the page with one path in the library, half of it
+       with two, and a third of it beside its own artwork on the wide card; a
+       viewport query cannot tell those apart. It fired on the page width and
+       laid a half-width card out as though it had the whole page, which is what
+       crushed the stats and the course strip when the second path landed.
+
+       It is the copy column rather than the card for two further reasons: a
+       container query cannot style its own container, so keying the side-on
+       layout below to the card could never have worked; and on that layout the
+       card is 1220px while this column has 860px, so a query on the card would
+       size three stat blocks for room they do not have.
+
+       Where container queries are unsupported the card stays in its narrow form
+       at every width: nothing overflows, and one column is used where two would
+       fit. */
     .path-body {
+      container-type: inline-size;
+      container-name: pathcopy;
       display: flex;
       flex-direction: column;
       min-width: 0;
@@ -495,9 +534,14 @@
     /* Three counts, so what a path holds is legible before it is opened. */
     .stats {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
       gap: 10px;
       margin: 2px 0 0;
+    }
+    /* Three across only once each column can hold "Available now" and
+       "Complete" without clipping them. */
+    @container pathcopy (min-width: 392px) {
+      .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
     .stats > div {
       padding: 10px 12px;
@@ -565,7 +609,7 @@
       display: grid;
       gap: 8px 20px;
     }
-    @media (min-width: 720px) {
+    @container pathcopy (min-width: 580px) {
       .course-strip { grid-template-columns: 1fr 1fr; }
     }
 
@@ -577,6 +621,13 @@
       font-size: 0.855rem;
       line-height: 1.35;
       overflow-wrap: anywhere;
+    }
+
+    /* Narrow card: the lesson count moves under the title rather than
+       competing with it for a share of one line. */
+    @container pathcopy (max-width: 300px) {
+      .course-strip li { grid-template-columns: auto minmax(0, 1fr); }
+      .course-strip .cs-tag { grid-column: 2; }
     }
 
     .cs-num {
@@ -656,11 +707,37 @@
 
     .level { color: var(--muted); font-size: 0.74rem; font-weight: 700; }
 
-    /* From 1000px a card turns on its side — artwork left, copy right — so one
-       path reads as a wide, deliberate object instead of a tall column. */
-    @media (min-width: 1000px) {
-      .path-card { grid-template-columns: 360px minmax(0, 1fr); }
-      .path-cover { padding: 0; border-bottom: 0; border-right: 1px solid var(--line); }
+    /* Artwork beside the copy, for the full-row card only.
+
+       This layout used to apply to EVERY card above 1000px of viewport, which is
+       what broke: it was written when the library held one path and a card was
+       the width of the page, so at two paths it handed a 599px card a fixed
+       360px picture and left 240px for eight course titles and three stat
+       blocks. It is scoped here by the same selector that gives that card the
+       whole row, so it cannot reach a card that is half the page -- and the card
+       it does reach is one where artwork on top would mean a drawing marooned in
+       a 1220px band.
+
+       This one is a media query rather than a @container query, deliberately: it
+       styles .path-card, and a container query cannot style its own container.
+       That is also why the container moved down to .path-body.
+
+       1060px rather than 940px, because a card takes the row from 940px but
+       spending 400px of it on artwork would leave the copy too narrow for two
+       strip columns -- the card grows tall and the picture panel stretches to
+       match and empties out, which is the failure this whole section exists to
+       fix. Below that width the full-row card keeps its artwork on top, where a
+       wide band suits it, and gets a larger drawing to fill it. */
+    @media (min-width: 1060px) {
+      .paths > .path-card:last-child:nth-child(odd) {
+        grid-template-columns: 400px minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+      }
+      .paths > .path-card:last-child:nth-child(odd) .path-cover {
+        padding: 20px;
+        border-bottom: 0;
+        border-right: 1px solid var(--line);
+      }
     }
 
     /* ---------- Course search ----------
@@ -883,8 +960,8 @@
       .section-head { display: block; }
       .count-chip { display: inline-block; margin-top: 12px; }
       .path-body { padding: 16px 16px 17px; }
+      .path-cover { padding: 12px; }
       .search-panel { padding: 15px 15px 17px; }
-      .stats { grid-template-columns: 1fr; }
       footer { display: block; }
       footer p { margin: 0 0 6px; }
     }
@@ -1043,9 +1120,9 @@
           <div>
             <p class="kicker">Library</p>
             <h2 id="paths-title">Paths</h2>
-            <p>A path is an ordered sequence of courses on one subject, meant to be taken front to back. Each subject arrives as its own path, so a course always sits in a sequence rather than alone on a shelf. Two paths are open today; more are being written. Looking for a single course instead? <a href="#find">Search by title or topic</a>.</p>
+            <p>A path is an ordered sequence of courses on one subject, meant to be taken front to back. Each subject arrives as its own path, so a course always sits in a sequence rather than alone on a shelf. Three paths are open today; more are being written. Looking for a single course instead? <a href="#find">Search by title or topic</a>.</p>
           </div>
-          <p class="count-chip">2 paths · 16 courses available</p>
+          <p class="count-chip">3 paths · 24 courses available</p>
         </div>
 
         <!-- ===================================================================
@@ -1301,6 +1378,110 @@
             </div>
           </li>
 
+
+          <li class="path-card">
+            <div class="path-cover">
+              <svg viewBox="0 0 400 272" role="img" aria-label="Eight courses in order on one rail, all of them drawn as solid bars whose length is that course&#39;s lesson count &mdash; 13, 13, 14, 13, 12, 14, 12 and 14 lessons.">
+                <line class="sv-rail-live" x1="34" y1="20" x2="34" y2="251" />
+
+                <!-- Available: bar length = lesson count -->
+                <circle class="sv-node" cx="34" cy="20" r="11" />
+                <text class="sv-num" x="34" y="24">1</text>
+                <rect class="sv-bar" x="54" y="14" width="212" height="12" rx="6" />
+                <text class="sv-text" x="274" y="24">13</text>
+
+                <circle class="sv-node" cx="34" cy="53" r="11" />
+                <text class="sv-num" x="34" y="57">2</text>
+                <rect class="sv-bar" x="54" y="47" width="212" height="12" rx="6" />
+                <text class="sv-text" x="274" y="57">13</text>
+
+                <circle class="sv-node" cx="34" cy="86" r="11" />
+                <text class="sv-num" x="34" y="90">3</text>
+                <rect class="sv-bar" x="54" y="80" width="228" height="12" rx="6" />
+                <text class="sv-text" x="290" y="90">14</text>
+
+                <circle class="sv-node" cx="34" cy="119" r="11" />
+                <text class="sv-num" x="34" y="123">4</text>
+                <rect class="sv-bar" x="54" y="113" width="212" height="12" rx="6" />
+                <text class="sv-text" x="274" y="123">13</text>
+
+                <circle class="sv-node" cx="34" cy="152" r="11" />
+                <text class="sv-num" x="34" y="156">5</text>
+                <rect class="sv-bar" x="54" y="146" width="195" height="12" rx="6" />
+                <text class="sv-text" x="257" y="156">12</text>
+
+                <circle class="sv-node" cx="34" cy="185" r="11" />
+                <text class="sv-num" x="34" y="189">6</text>
+                <rect class="sv-bar" x="54" y="179" width="228" height="12" rx="6" />
+                <text class="sv-text" x="290" y="189">14</text>
+
+                <circle class="sv-node" cx="34" cy="218" r="11" />
+                <text class="sv-num" x="34" y="222">7</text>
+                <rect class="sv-bar" x="54" y="212" width="195" height="12" rx="6" />
+                <text class="sv-text" x="257" y="222">12</text>
+
+                <circle class="sv-node" cx="34" cy="251" r="11" />
+                <text class="sv-num" x="34" y="255">8</text>
+                <rect class="sv-bar" x="54" y="245" width="228" height="12" rx="6" />
+                <text class="sv-text" x="290" y="255">14</text>
+              </svg>
+            </div>
+
+            <div class="path-body">
+              <div class="meta-row">
+                <span class="subject-tag">Subject &middot; Mathematics</span>
+                <span class="meta-note">8 of 8 courses available</span>
+              </div>
+
+              <h3><a class="path-link" href="./paths/algebra/">Algebra</a></h3>
+
+              <p class="tagline">The language the rest of mathematics is written in: expressions and the rules for rearranging them, equations and what it means to solve one, functions and their graphs, polynomials and factoring, quadratics and the complex numbers they force into existence, exponentials and logarithms, and systems solved several unknowns at a time.</p>
+
+              <dl class="stats">
+                <div>
+                  <dt>Courses</dt>
+                  <dd>8<small>in a fixed order</small></dd>
+                </div>
+                <div>
+                  <dt>Available now</dt>
+                  <dd>8<small>105 lessons</small></dd>
+                </div>
+                <div>
+                  <dt>Status</dt>
+                  <dd>Complete<small>every course published</small></dd>
+                </div>
+              </dl>
+
+              <div class="meter" aria-hidden="true">
+                <span class="ready"></span><span class="ready"></span><span class="ready"></span><span class="ready"></span><span class="ready"></span>
+                <span class="ready"></span><span class="ready"></span><span class="ready"></span>
+              </div>
+
+              <div class="strip">
+                <p class="strip-head" id="algebra-courses">All 8 courses, in order</p>
+                <ol class="course-strip" aria-labelledby="algebra-courses">
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>01</span> <span class="cs-title">Foundations of Algebra</span> <span class="cs-tag">13 lessons</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>02</span> <span class="cs-title">Linear Equations and Inequalities</span> <span class="cs-tag">13 lessons</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>03</span> <span class="cs-title">Lines, Functions and Graphs</span> <span class="cs-tag">14 lessons</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>04</span> <span class="cs-title">Polynomials and Factoring</span> <span class="cs-tag">13 lessons</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>05</span> <span class="cs-title">Rational and Radical Expressions</span> <span class="cs-tag">12 lessons</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>06</span> <span class="cs-title">Quadratics and Complex Numbers</span> <span class="cs-tag">14 lessons</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>07</span> <span class="cs-title">Exponential and Logarithmic Functions</span> <span class="cs-tag">12 lessons</span></li>
+                  <li><span class="cs-num"><span class="visually-hidden">Course </span>08</span> <span class="cs-title">Systems, Matrices and Sequences</span> <span class="cs-tag">14 lessons</span></li>
+                </ol>
+              </div>
+
+              <div class="path-foot">
+                <span class="go">
+                  See all 8 courses
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M5 12h13" /><path d="M12 5l7 7-7 7" />
+                  </svg>
+                </span>
+                <span class="level">Beginner &rarr; Advanced</span>
+              </div>
+            </div>
+          </li>
         </ul>
 
         <p class="edu-note">
@@ -1557,6 +1738,70 @@
           position: 'Course 8',
           lessons: 12,
           href: './algorithms-and-complexity/'
+        },
+        {
+          title: 'Foundations of Algebra',
+          description: 'The real numbers and the rules for operating on them: order of operations, the properties that license every rearrangement you will make, integer and rational exponents, radicals, absolute value, and the step from arithmetic to an expression with a letter in it.',
+          path: 'Algebra',
+          position: 'Course 1',
+          lessons: 13,
+          href: './algebra-foundations/'
+        },
+        {
+          title: 'Linear Equations and Inequalities',
+          description: 'Solving for an unknown: what a solution is, the operations that preserve one, equations with fractions and with the variable on both sides, formulas rearranged for any letter, inequalities and their one surprising rule, and absolute value.',
+          path: 'Algebra',
+          position: 'Course 2',
+          lessons: 13,
+          href: './linear-equations-and-inequalities/'
+        },
+        {
+          title: 'Lines, Functions and Graphs',
+          description: 'The plane, the line, and the idea of a function: slope and the forms of a linear equation, parallel and perpendicular, what makes a rule a function, domain and range, piecewise definitions, transformations, composition and inverses.',
+          path: 'Algebra',
+          position: 'Course 3',
+          lessons: 14,
+          href: './lines-functions-and-graphs/'
+        },
+        {
+          title: 'Polynomials and Factoring',
+          description: 'Polynomial arithmetic and the reverse of it: degree and standard form, the four operations, special products, every standard factoring technique, long and synthetic division, the remainder and factor theorems, rational roots and polynomial graphs.',
+          path: 'Algebra',
+          position: 'Course 4',
+          lessons: 13,
+          href: './polynomials-and-factoring/'
+        },
+        {
+          title: 'Rational and Radical Expressions',
+          description: 'Algebraic fractions and roots: domains and the values that break them, simplifying and operating on rational expressions, complex fractions, rational equations and the extraneous solutions they produce, asymptotes, radical arithmetic and radical equations.',
+          path: 'Algebra',
+          position: 'Course 5',
+          lessons: 12,
+          href: './rational-and-radical-expressions/'
+        },
+        {
+          title: 'Quadratics and Complex Numbers',
+          description: 'The quadratic, four ways: factoring, the square root property, completing the square and the formula that completing the square proves. Then the discriminant, the complex numbers that appear when it is negative, parabolas, optimisation and quadratic inequalities.',
+          path: 'Algebra',
+          position: 'Course 6',
+          lessons: 14,
+          href: './quadratics-and-complex-numbers/'
+        },
+        {
+          title: 'Exponential and Logarithmic Functions',
+          description: 'Growth that compounds, and the function that undoes it: exponential functions and their graphs, decay, the number e, the logarithm as an inverse, the three laws, change of base, solving equations of both kinds, and the scales built on logarithms.',
+          path: 'Algebra',
+          position: 'Course 7',
+          lessons: 12,
+          href: './exponential-and-logarithmic-functions/'
+        },
+        {
+          title: 'Systems, Matrices and Sequences',
+          description: 'Several equations at once, the array that organises them, and the ordered lists that algebra ends on: substitution and elimination, three-variable systems, row reduction, matrix arithmetic, determinants and inverses, linear programming, arithmetic and geometric sequences and series, and the binomial theorem.',
+          path: 'Algebra',
+          position: 'Course 8',
+          lessons: 14,
+          href: './systems-matrices-and-sequences/'
         }
       ];
 
@@ -1657,10 +1902,22 @@
           return;
         }
 
-        var matches = COURSES.filter(function (course) {
-          return course.title.toLowerCase().indexOf(needle) !== -1
-            || course.description.toLowerCase().indexOf(needle) !== -1;
+        /* A match in the TITLE ranks above a match in the description, and
+           within each group the library's own order is kept. A plain filter was
+           enough while no path shared a word with another path's material; with
+           a path called Algebra, typing "algebra" put Sets, Relations and
+           Functions first, because its description mentions set algebra and it
+           sits earlier in the array. The reader who types a course's name
+           should be given that course. */
+        var titleHits = [], bodyHits = [];
+        COURSES.forEach(function (course) {
+          if (course.title.toLowerCase().indexOf(needle) !== -1) {
+            titleHits.push(course);
+          } else if (course.description.toLowerCase().indexOf(needle) !== -1) {
+            bodyHits.push(course);
+          }
         });
+        var matches = titleHits.concat(bodyHits);
 
         if (matches.length === 0) {
           results.appendChild(emptyState(query));

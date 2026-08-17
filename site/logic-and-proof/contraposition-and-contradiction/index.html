@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contraposition and Contradiction | Logic and Proof | Learn · geterdone.io</title>
-  <meta name="description" content="To prove `p → q` by contraposition, prove `¬q → ¬p` instead &amp;mdash; a different theorem with the same meaning. To prove `s` by contradiction, assume `¬s` and derive an impossibility. They are not the same technique." />
+  <meta name="description" content="To prove p → q by contraposition, prove ¬q → ¬p instead — a different theorem with the same meaning. To prove s by contradiction, assume ¬s and derive an impossibility. They are not the same technique." />
   <link rel="canonical" href="https://learn.geterdone.io/logic-and-proof/contraposition-and-contradiction/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Contraposition and Contradiction | Logic and Proof | Learn · geterdone.io" />
-  <meta property="og:description" content="To prove `p → q` by contraposition, prove `¬q → ¬p` instead &amp;mdash; a different theorem with the same meaning. To prove `s` by contradiction, assume `¬s` and derive an impossibility. They are not the same technique." />
+  <meta property="og:description" content="To prove p → q by contraposition, prove ¬q → ¬p instead — a different theorem with the same meaning. To prove s by contradiction, assume ¬s and derive an impossibility. They are not the same technique." />
   <meta property="og:url" content="https://learn.geterdone.io/logic-and-proof/contraposition-and-contradiction/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Contraposition and Contradiction | Logic and Proof | Learn · geterdone.io" />
-  <meta name="twitter:description" content="To prove `p → q` by contraposition, prove `¬q → ¬p` instead &amp;mdash; a different theorem with the same meaning. To prove `s` by contradiction, assume `¬s` and derive an impossibility. They are not the same technique." />
+  <meta name="twitter:description" content="To prove p → q by contraposition, prove ¬q → ¬p instead — a different theorem with the same meaning. To prove s by contradiction, assume ¬s and derive an impossibility. They are not the same technique." />
   <meta name="twitter:url" content="https://learn.geterdone.io/logic-and-proof/contraposition-and-contradiction/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Logic and Proof course home">
         <span class="brand-mark" aria-hidden="true">13</span>
-        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 &amp;middot; Lesson 13 of 14</span></span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 · Lesson 13 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Logic and Proof</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 13 &amp;middot; Contraposition and Contradiction</span>
+      <span class="crumb-current" aria-current="page">Lesson 13 · Contraposition and Contradiction</span>
     </nav>
 
     <noscript>
@@ -931,7 +962,7 @@ Use contradiction when ¬s gives you something concrete to hold.</div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Indirect proof</h2></div><p>Each technique, a worked instance, and the rule for choosing between them.</p></div>
-      <article class="card card-pad prose"><h3>Proof by contraposition</h3><div class="defbox"><span class="label">Definition &middot; Proof by contraposition</span><p>To prove <span class="math">p → q</span>, prove <span class="math">¬q → ¬p</span>. Since the two are logically equivalent, a proof of either is a proof of both.</p></div><div class="thm"><span class="label">Theorem &middot; If `n²` is even then `n` is even</span><p>For every integer <span class="math">n</span>, if <span class="math">n²</span> is even then <span class="math">n</span> is even.</p></div><div class="proof"><p>We prove the contrapositive: if <span class="math">n</span> is odd then <span class="math">n²</span> is odd.</p><p>Let <span class="math">n</span> be an odd integer, so <span class="math">n = 2k + 1</span> for some integer <span class="math">k</span>. Then <span class="math">n² = 4k² + 4k + 1 = 2(2k² + 2k) + 1</span>, which is odd since <span class="math">2k² + 2k</span> is an integer.</p><p>The contrapositive holds, so the original statement holds.</p><p><span class="qed">&#9633;</span></p></div><p>Compare with the direct attempt. Assuming <span class="math">n²</span> is even gives <span class="math">n² = 2m</span>, and there is nowhere useful to go: extracting information about <span class="math">n</span> from a statement about <span class="math">n²</span> requires the unique factorisation of course 6. The contrapositive hands you <span class="math">n</span> itself, in a form you can compute with. That asymmetry is the whole reason to choose it.</p><h3>Proof by contradiction</h3><div class="defbox"><span class="label">Definition &middot; Proof by contradiction</span><p>To prove <span class="math">s</span>, assume <span class="math">¬s</span> and derive a statement known to be false. Since a false conclusion cannot follow from a true assumption, <span class="math">¬s</span> must be false, so <span class="math">s</span> holds.</p></div><div class="thm"><span class="label">Theorem &middot; √2 is irrational</span><p>There is no rational number whose square is 2.</p></div><div class="proof"><p>Suppose, for contradiction, that <span class="math">√2</span> is rational. Then <span class="math">√2 = a/b</span> for integers <span class="math">a, b</span> with <span class="math">b ≠ 0</span>, and we may take the fraction in lowest terms, so <span class="math">a</span> and <span class="math">b</span> share no common factor greater than 1.</p><p>Squaring: <span class="math">2 = a²/b²</span>, hence <span class="math">a² = 2b²</span>. So <span class="math">a²</span> is even, and by the theorem above <span class="math">a</span> is even. Write <span class="math">a = 2c</span>.</p><p>Substituting: <span class="math">4c² = 2b²</span>, so <span class="math">b² = 2c²</span>. Then <span class="math">b²</span> is even, so <span class="math">b</span> is even. But then <span class="math">a</span> and <span class="math">b</span> are both divisible by 2, contradicting that the fraction was in lowest terms.</p><p>The assumption is therefore false, and <span class="math">√2</span> is irrational.</p><p><span class="qed">&#9633;</span></p></div><p>That proof is worth studying for its structure as much as its result. The contradiction is not with a law of arithmetic but with a condition we imposed ourselves &mdash; lowest terms &mdash; and imposing it was the move that made the proof possible.</p><h3>Choosing between them</h3><ul><li>The statement is a conditional and <span class="math">¬q</span> is concrete: use <strong>contraposition</strong>. "<span class="math">n</span> is odd" is workable; "<span class="math">n²</span> is even" is not.</li><li>The statement asserts non-existence or impossibility: use <strong>contradiction</strong>. Assuming the thing exists gives you an object to work with, which is the only handle available.</li><li>The statement is a conditional and you find yourself assuming <span class="math">p ∧ ¬q</span> and deriving <span class="math">¬p</span>: you are doing contraposition. Say so &mdash; the proof gets shorter and clearer.</li></ul><div class="thm"><span class="label">Theorem &middot; There are infinitely many primes (Euclid)</span><p>For any finite list of primes, there is a prime not on it.</p></div><div class="proof"><p>Suppose <span class="math">p₁, …, pₙ</span> are primes and consider <span class="math">N = p₁p₂⋯pₙ + 1</span>. <span class="math">N</span> is greater than 1, so it has a prime factor <span class="math">q</span>.</p><p>If <span class="math">q</span> were one of the <span class="math">pᵢ</span>, it would divide both the product <span class="math">p₁⋯pₙ</span> and <span class="math">N</span>, hence their difference, which is 1. No prime divides 1, so <span class="math">q</span> is not on the list.</p><p>Every finite list of primes therefore omits one, so no finite list contains them all.</p><p><span class="qed">&#9633;</span></p></div><p>This is often presented as a proof by contradiction &mdash; "assume finitely many primes" &mdash; but as written it is direct and constructive: given any list, it produces a prime not on it. That is a stronger result, and it is worth noticing that the contradiction was never needed.</p></article>
+      <article class="card card-pad prose"><h3>Proof by contraposition</h3><div class="defbox"><span class="label">Definition &middot; Proof by contraposition</span><p>To prove <span class="math">p → q</span>, prove <span class="math">¬q → ¬p</span>. Since the two are logically equivalent, a proof of either is a proof of both.</p></div><div class="thm"><span class="label">Theorem &middot; If <span class="math">n²</span> is even then <span class="math">n</span> is even</span><p>For every integer <span class="math">n</span>, if <span class="math">n²</span> is even then <span class="math">n</span> is even.</p></div><div class="proof"><p>We prove the contrapositive: if <span class="math">n</span> is odd then <span class="math">n²</span> is odd.</p><p>Let <span class="math">n</span> be an odd integer, so <span class="math">n = 2k + 1</span> for some integer <span class="math">k</span>. Then <span class="math">n² = 4k² + 4k + 1 = 2(2k² + 2k) + 1</span>, which is odd since <span class="math">2k² + 2k</span> is an integer.</p><p>The contrapositive holds, so the original statement holds.</p><p><span class="qed">&#9633;</span></p></div><p>Compare with the direct attempt. Assuming <span class="math">n²</span> is even gives <span class="math">n² = 2m</span>, and there is nowhere useful to go: extracting information about <span class="math">n</span> from a statement about <span class="math">n²</span> requires the unique factorisation of course 6. The contrapositive hands you <span class="math">n</span> itself, in a form you can compute with. That asymmetry is the whole reason to choose it.</p><h3>Proof by contradiction</h3><div class="defbox"><span class="label">Definition &middot; Proof by contradiction</span><p>To prove <span class="math">s</span>, assume <span class="math">¬s</span> and derive a statement known to be false. Since a false conclusion cannot follow from a true assumption, <span class="math">¬s</span> must be false, so <span class="math">s</span> holds.</p></div><div class="thm"><span class="label">Theorem &middot; √2 is irrational</span><p>There is no rational number whose square is 2.</p></div><div class="proof"><p>Suppose, for contradiction, that <span class="math">√2</span> is rational. Then <span class="math">√2 = a/b</span> for integers <span class="math">a, b</span> with <span class="math">b ≠ 0</span>, and we may take the fraction in lowest terms, so <span class="math">a</span> and <span class="math">b</span> share no common factor greater than 1.</p><p>Squaring: <span class="math">2 = a²/b²</span>, hence <span class="math">a² = 2b²</span>. So <span class="math">a²</span> is even, and by the theorem above <span class="math">a</span> is even. Write <span class="math">a = 2c</span>.</p><p>Substituting: <span class="math">4c² = 2b²</span>, so <span class="math">b² = 2c²</span>. Then <span class="math">b²</span> is even, so <span class="math">b</span> is even. But then <span class="math">a</span> and <span class="math">b</span> are both divisible by 2, contradicting that the fraction was in lowest terms.</p><p>The assumption is therefore false, and <span class="math">√2</span> is irrational.</p><p><span class="qed">&#9633;</span></p></div><p>That proof is worth studying for its structure as much as its result. The contradiction is not with a law of arithmetic but with a condition we imposed ourselves &mdash; lowest terms &mdash; and imposing it was the move that made the proof possible.</p><h3>Choosing between them</h3><ul><li>The statement is a conditional and <span class="math">¬q</span> is concrete: use <strong>contraposition</strong>. "<span class="math">n</span> is odd" is workable; "<span class="math">n²</span> is even" is not.</li><li>The statement asserts non-existence or impossibility: use <strong>contradiction</strong>. Assuming the thing exists gives you an object to work with, which is the only handle available.</li><li>The statement is a conditional and you find yourself assuming <span class="math">p ∧ ¬q</span> and deriving <span class="math">¬p</span>: you are doing contraposition. Say so &mdash; the proof gets shorter and clearer.</li></ul><div class="thm"><span class="label">Theorem &middot; There are infinitely many primes (Euclid)</span><p>For any finite list of primes, there is a prime not on it.</p></div><div class="proof"><p>Suppose <span class="math">p₁, …, pₙ</span> are primes and consider <span class="math">N = p₁p₂⋯pₙ + 1</span>. <span class="math">N</span> is greater than 1, so it has a prime factor <span class="math">q</span>.</p><p>If <span class="math">q</span> were one of the <span class="math">pᵢ</span>, it would divide both the product <span class="math">p₁⋯pₙ</span> and <span class="math">N</span>, hence their difference, which is 1. No prime divides 1, so <span class="math">q</span> is not on the list.</p><p>Every finite list of primes therefore omits one, so no finite list contains them all.</p><p><span class="qed">&#9633;</span></p></div><p>This is often presented as a proof by contradiction &mdash; "assume finitely many primes" &mdash; but as written it is direct and constructive: given any list, it produces a prime not on it. That is a stronger result, and it is worth noticing that the contradiction was never needed.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Truth table</h2></div><p>Every assignment, evaluated</p></div>
@@ -987,7 +1018,7 @@ Use contradiction when ¬s gives you something concrete to hold.</div>
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>If `3n + 2` is odd then `n` is odd</h3><p>Direct is awkward; the contrapositive is two lines.</p><div class="mathblock">Contrapositive:  if n is EVEN then 3n + 2 is EVEN.
+      <article class="card card-pad prose"><h3>If <span class="math">3n + 2</span> is odd then <span class="math">n</span> is odd</h3><p>Direct is awkward; the contrapositive is two lines.</p><div class="mathblock">Contrapositive:  if n is EVEN then 3n + 2 is EVEN.
 
 Let n be even, so n = 2k for some integer k.
    3n + 2 = 3(2k) + 2 = 6k + 2 = 2(3k + 1)

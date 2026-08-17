@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Discrete Probability course home">
         <span class="brand-mark" aria-hidden="true">02</span>
-        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 &amp;middot; Lesson 02 of 12</span></span>
+        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 · Lesson 02 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Discrete Probability</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 02 &amp;middot; Computing Probabilities</span>
+      <span class="crumb-current" aria-current="page">Lesson 02 · Computing Probabilities</span>
     </nav>
 
     <noscript>
@@ -981,7 +1012,7 @@ The hard part is the counting, not the division.</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Computing a probability</h2></div><p>Denominator first; it is often easier and it anchors the model.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Count the sample space</h3><p>This confirms what an outcome is. If <span class="math">|S|</span> is hard to write down, the model is probably wrong.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Count the event</h3><p>Using course 4. Classify by order and repetition exactly as there.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Consider the complement</h3><p>"At least one" and "not all" almost always count more easily the other way round.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check the answer lies in `[0,1]`</h3><p>And that it is plausible. A probability of 0.99 for a rare event is a counting error announcing itself.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Count the sample space</h3><p>This confirms what an outcome is. If <span class="math">|S|</span> is hard to write down, the model is probably wrong.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Count the event</h3><p>Using course 4. Classify by order and repetition exactly as there.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Consider the complement</h3><p>"At least one" and "not all" almost always count more easily the other way round.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check the answer lies in <span class="math">[0,1]</span></h3><p>And that it is plausible. A probability of 0.99 for a rare event is a counting error announcing itself.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">

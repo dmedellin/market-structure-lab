@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Induction and Recursion course home">
         <span class="brand-mark" aria-hidden="true">03</span>
-        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 &amp;middot; Lesson 03 of 12</span></span>
+        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 · Lesson 03 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Induction and Recursion</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 03 &amp;middot; Induction with Sums and Products</span>
+      <span class="crumb-current" aria-current="page">Lesson 03 · Induction with Sums and Products</span>
     </nav>
 
     <noscript>
@@ -966,7 +997,7 @@
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Proving a sum identity</h2></div><p>Write the target first; the algebra then has somewhere to go.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Write the claim at `k+1` before starting</h3><p>Substituting <span class="math">k+1</span> into the formula tells you what the algebra must produce. Working forward blindly is how these stall.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Peel the last term off the sum</h3><p><span class="math">Σ_{i≤k+1} = (Σ_{i≤k}) + f(k+1)</span>. This is the only structural move.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Substitute the hypothesis and factor</h3><p>Take out the common factor &mdash; usually <span class="math">(k+1)</span> &mdash; and simplify what remains toward the target.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check the base case at the right place</h3><p><span class="math">n = 0</span> and <span class="math">n = 1</span> are different starting points and give different base cases. Use whichever the statement claims.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Write the claim at <span class="math">k+1</span> before starting</h3><p>Substituting <span class="math">k+1</span> into the formula tells you what the algebra must produce. Working forward blindly is how these stall.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Peel the last term off the sum</h3><p><span class="math">Σ_{i≤k+1} = (Σ_{i≤k}) + f(k+1)</span>. This is the only structural move.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Substitute the hypothesis and factor</h3><p>Take out the common factor &mdash; usually <span class="math">(k+1)</span> &mdash; and simplify what remains toward the target.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check the base case at the right place</h3><p><span class="math">n = 0</span> and <span class="math">n = 1</span> are different starting points and give different base cases. Use whichever the statement claims.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -977,7 +1008,7 @@
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>Prove `Σ_{i=1}^{n} i·i! = (n+1)! − 1`</h3><p>A less familiar identity, same shape of proof.</p><div class="mathblock">BASE   n = 1:  left = 1·1! = 1,   right = 2! − 1 = 1.     ✓
+      <article class="card card-pad prose"><h3>Prove <span class="math">Σ_{i=1}^{n} i·i! = (n+1)! − 1</span></h3><p>A less familiar identity, same shape of proof.</p><div class="mathblock">BASE   n = 1:  left = 1·1! = 1,   right = 2! − 1 = 1.     ✓
 
 STEP   Assume  Σ_{i≤k} i·i! = (k+1)! − 1.
 

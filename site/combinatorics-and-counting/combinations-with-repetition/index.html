@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Combinations with Repetition | Combinatorics and Counting | Learn · geterdone.io</title>
-  <meta name="description" content="Choosing `r` items from `n` types with repetition allowed and order irrelevant. The count is `C(n+r−1, r)`, and the reason is a bijection with arrangements of stars and bars." />
+  <meta name="description" content="Choosing r items from n types with repetition allowed and order irrelevant. The count is C(n+r−1, r), and the reason is a bijection with arrangements of stars and bars." />
   <link rel="canonical" href="https://learn.geterdone.io/combinatorics-and-counting/combinations-with-repetition/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Combinations with Repetition | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta property="og:description" content="Choosing `r` items from `n` types with repetition allowed and order irrelevant. The count is `C(n+r−1, r)`, and the reason is a bijection with arrangements of stars and bars." />
+  <meta property="og:description" content="Choosing r items from n types with repetition allowed and order irrelevant. The count is C(n+r−1, r), and the reason is a bijection with arrangements of stars and bars." />
   <meta property="og:url" content="https://learn.geterdone.io/combinatorics-and-counting/combinations-with-repetition/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Combinations with Repetition | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Choosing `r` items from `n` types with repetition allowed and order irrelevant. The count is `C(n+r−1, r)`, and the reason is a bijection with arrangements of stars and bars." />
+  <meta name="twitter:description" content="Choosing r items from n types with repetition allowed and order irrelevant. The count is C(n+r−1, r), and the reason is a bijection with arrangements of stars and bars." />
   <meta name="twitter:url" content="https://learn.geterdone.io/combinatorics-and-counting/combinations-with-repetition/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Combinatorics and Counting course home">
         <span class="brand-mark" aria-hidden="true">08</span>
-        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 &amp;middot; Lesson 08 of 14</span></span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 · Lesson 08 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Combinatorics and Counting</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 08 &amp;middot; Combinations with Repetition</span>
+      <span class="crumb-current" aria-current="page">Lesson 08 · Combinations with Repetition</span>
     </nav>
 
     <noscript>
@@ -1000,7 +1031,7 @@ Without the constraint:  C(3 + 12 − 1, 12) = C(14,12) = 91</div><p>Lower bound
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Using `n` bars instead of `n − 1`</strong><span>The bars separate the groups, so there is one fewer of them than there are types. The picture makes it obvious; the formula does not.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying it to distinguishable items</strong><span>Stars and bars needs the items interchangeable. Distributing distinct objects into boxes is the multinomial count of lesson 7.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Trying to handle an upper bound by substitution</strong><span>Lower bounds shift cleanly; upper bounds require subtracting the violations, which is inclusion and exclusion.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Using <span class="math">n</span> bars instead of <span class="math">n − 1</span></strong><span>The bars separate the groups, so there is one fewer of them than there are types. The picture makes it obvious; the formula does not.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying it to distinguishable items</strong><span>Stars and bars needs the items interchangeable. Distributing distinct objects into boxes is the multinomial count of lesson 7.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Trying to handle an upper bound by substitution</strong><span>Lower bounds shift cleanly; upper bounds require subtracting the violations, which is inclusion and exclusion.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can translate between the three phrasings.</strong><p>Take "how many ways to put 8 identical balls into 4 labelled boxes", restate it as an equation and as a stars-and-bars diagram, and compute. All three descriptions are the same problem, and recognising that is the point.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The complementary problem &mdash; identical balls into identical boxes &mdash; is counted by partition numbers, which have no closed form and grow subexponentially. Labelling the boxes is what makes this lesson's problem tractable.</div></article>
       </div>
     </section>
@@ -1008,7 +1039,7 @@ Without the constraint:  C(3 + 12 − 1, 12) = C(14,12) = 91</div><p>Lower bound
 
     <nav class="lesson-nav" aria-label="Lesson navigation">
       <a class="lesson-link prev" href="../permutations-with-repetition/" rel="prev"><span>Previous lesson</span><strong>07 &middot; Permutations with Repetition</strong></a>
-      <a class="lesson-link next" href="../inclusion-exclusion/" rel="next"><span>Next lesson</span><strong>09 &middot; The Inclusion&amp;ndash;Exclusion Principle</strong></a>
+      <a class="lesson-link next" href="../inclusion-exclusion/" rel="next"><span>Next lesson</span><strong>09 &middot; The Inclusion-Exclusion Principle</strong></a>
     </nav>
 
     <footer class="footer">

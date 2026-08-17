@@ -1,0 +1,2760 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Slope | Lines, Functions and Graphs | Learn · geterdone.io</title>
+  <meta name="description" content="Slope is the constant ratio of vertical change to horizontal change along a line. Getting it right is a matter of subtracting in a consistent order, and of keeping zero and undefined firmly apart." />
+  <link rel="canonical" href="https://learn.geterdone.io/lines-functions-and-graphs/slope/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Slope | Lines, Functions and Graphs | Learn · geterdone.io" />
+  <meta property="og:description" content="Slope is the constant ratio of vertical change to horizontal change along a line. Getting it right is a matter of subtracting in a consistent order, and of keeping zero and undefined firmly apart." />
+  <meta property="og:url" content="https://learn.geterdone.io/lines-functions-and-graphs/slope/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Slope | Lines, Functions and Graphs | Learn · geterdone.io" />
+  <meta name="twitter:description" content="Slope is the constant ratio of vertical change to horizontal change along a line. Getting it right is a matter of subtracting in a consistent order, and of keeping zero and undefined firmly apart." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/lines-functions-and-graphs/slope/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Lines, Functions and Graphs course home">
+        <span class="brand-mark" aria-hidden="true">03</span>
+        <span class="brand-copy"><strong>Lines, Functions and Graphs</strong><span>Course 3 · Lesson 03 of 14</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Lines, Functions and Graphs</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 03 · Slope</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The slope is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 3 &middot; Lesson 03 &middot; Lines</span>
+        <h1>Slope</h1>
+        <p>Slope is the constant ratio of vertical change to horizontal change along a line. Getting it right is a matter of subtracting in a consistent order, and of keeping zero and undefined firmly apart.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">m = (y₂ − y₁)/(x₂ − x₁)          rise over run
+same order top and bottom, or the sign flips
+horizontal:  m = 0          vertical:  m undefined
+m &gt; 0 rises left to right,  m &lt; 0 falls</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Slope in four lines</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Lesson 2 noticed that equal steps in <span class="math">x</span> gave equal steps in <span class="math">y</span>. Slope is that observation turned into a number that can be computed and compared.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Slope is a ratio, not an angle</h3><p>It is a quotient of two differences, so it survives any rescaling of the drawing. This is why slope is the reliable measure of steepness and the visual impression is not.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The answer does not depend on the two points</h3><p>Pick any two distinct points on a line and the ratio comes out the same. Similar triangles are the reason, and it is what makes "the" slope of a line a well-defined thing at all.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Zero and undefined are opposite situations</h3><p>A horizontal line has <span class="math">m = 0</span>: the rise is zero. A vertical line has no slope at all: the run is zero and the division is illegal. Calling a vertical line's slope zero merges the two flattest and steepest cases.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Measuring steepness</h2></div><p>One formula, one ordering rule, and two special cases.</p></div>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Slope</span><p>For two distinct points <span class="math">(x₁, y₁)</span> and <span class="math">(x₂, y₂)</span> on a line with <span class="math">x₁ ≠ x₂</span>, the <strong>slope</strong> is <span class="math">m = (y₂ − y₁)/(x₂ − x₁)</span>, the <strong>rise</strong> divided by the <strong>run</strong>.</p></div><p>Read it as a rate: <span class="math">m</span> is how much <span class="math">y</span> changes per unit increase in <span class="math">x</span>. A slope of <span class="math">3/2</span> means that going 2 to the right takes you 3 up, and equally that going 1 to the right takes you <span class="math">3/2</span> up. Both readings are useful and they are the same statement.</p><div class="thm"><span class="label">Theorem &middot; Slope is well defined</span><p>Any two distinct points on a line give the same slope. Two choices of point pair produce similar right triangles &mdash; equal angles, because the hypotenuses lie along the same line and the legs are parallel to the axes &mdash; and similar triangles have proportional sides, so the ratio rise/run agrees.</p></div><p>Without that theorem the phrase "the slope of the line" would be meaningless, because different people would compute different numbers for the same line. It is the reason a single number can stand in for a whole line's steepness in every formula that follows.</p><h3>The ordering rule</h3><p>The subtraction must run in the same direction in the numerator and the denominator. Both <span class="math">(y₂ − y₁)/(x₂ − x₁)</span> and <span class="math">(y₁ − y₂)/(x₁ − x₂)</span> are correct and equal, because negating both parts of a fraction leaves it unchanged. What is wrong is mixing them:</p><div class="mathblock">points  (-2, 1)  and  (4, 10)
+
+correct    (10 - 1) / (4 - (-2))   =   9 /  6   =   3/2
+correct    (1 - 10) / (-2 - 4)     =  -9 / -6   =   3/2
+
+WRONG      (10 - 1) / (-2 - 4)     =   9 / -6   =  -3/2
+                                              sign flipped</div><p>The wrong version is not a small error. It reports a line that falls where the real one rises, and every later form built on that slope inherits the mistake. Fix the order once, at the point of writing the fraction: decide which point is first and use it first in both differences.</p><h3>Sign and the two special cases</h3><ul><li><strong><span class="math">m &gt; 0</span></strong> &mdash; the line rises from left to right.</li><li><strong><span class="math">m &lt; 0</span></strong> &mdash; the line falls from left to right.</li><li><strong><span class="math">m = 0</span></strong> &mdash; horizontal. The rise is zero for every pair of points, so the quotient is zero.</li><li><strong>undefined</strong> &mdash; vertical. The run is zero, and division by zero is not an operation.</li></ul><p>The last two are worth separating carefully, because English blurs them. "No slope" is ambiguous and best avoided; say <span class="math">m = 0</span> for horizontal and "slope undefined" for vertical. The distinction returns with consequences in lesson 6, where the perpendicular rule needs both slopes to exist, and again in lesson 7.</p><div class="example"><span class="label">Example &middot; Four slopes</span><p><span class="math">(−2, 1)</span> to <span class="math">(4, 10)</span>: <span class="math">9/6 = 3/2</span>, rising. <span class="math">(1, 7)</span> to <span class="math">(3, 1)</span>: <span class="math">−6/2 = −3</span>, falling. <span class="math">(−3, 4)</span> to <span class="math">(6, 4)</span>: <span class="math">0/9 = 0</span>, horizontal. <span class="math">(5, 2)</span> to <span class="math">(5, 9)</span>: run is <span class="math">0</span>, so the slope is undefined.</p></div><p>One habit worth forming now: after computing a slope, glance at the two points and ask whether the sign is plausible. Going from <span class="math">(1, 7)</span> to <span class="math">(3, 1)</span> clearly moves right and down, so a negative answer is expected and <span class="math">−3</span> passes the glance. This catches the ordering error in the time it takes to read.</p></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Slope</h2></div><p>Rise over run, drawn as the triangle it is</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="lnTitle">A line</strong><span id="lnSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>the line</span><span class="tone-amber"><i class="legend-swatch"></i>your two points</span><span class="tone-green"><i class="legend-swatch"></i>intercepts</span><span class="tone-purple"><i class="legend-swatch"></i>second line</span></div>
+      </div>
+      <div class="lab-stage"><svg id="lnPlot"></svg></div>
+      <div id="lnWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="lnStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Move two points, watch the ratio</h3>
+          <p>Drag either point and the rise, the run and the quotient are recomputed exactly. Slide the two points along the line without leaving it and the slope does not move &mdash; that is the well-definedness theorem, checked rather than asserted.</p>
+        <div class="field">
+          <label for="lnPreset">Example</label>
+          <select id="lnPreset"><option value="0|0|4|3|2|-3">rise 3, run 4: (0, 0) to (4, 3)</option><option value="-2|5|3|-5|2|-3">negative: (-2, 5) to (3, -5)</option><option value="1|2|4|3|2|-3">a fraction: (1, 2) to (4, 3)</option><option value="-3|2|5|2|2|-3">horizontal: (-3, 2) to (5, 2), m = 0</option><option value="4|-1|4|6|2|-3">vertical: (4, -1) to (4, 6), no slope</option><option value="2|2|2|2|2|-3">the same point twice: (2, 2) to (2, 2)</option></select>
+        </div>
+        <div class="field">
+          <label for="lnX1">P1: x</label>
+          <select id="lnX1"><option value="-8">-8</option><option value="-7">-7</option><option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option><option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
+        </div>
+        <div class="field">
+          <label for="lnY1">P1: y</label>
+          <select id="lnY1"><option value="-8">-8</option><option value="-7">-7</option><option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option><option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
+        </div>
+        <div class="field">
+          <label for="lnX2">P2: x</label>
+          <select id="lnX2"><option value="-8">-8</option><option value="-7">-7</option><option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option><option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
+        </div>
+        <div class="field">
+          <label for="lnY2">P2: y</label>
+          <select id="lnY2"><option value="-8">-8</option><option value="-7">-7</option><option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option><option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span>Rise</span><strong id="lnKa">&mdash;</strong></div>
+          <div class="kpi"><span>Run</span><strong id="lnKb">&mdash;</strong></div>
+          <div class="kpi"><span>Slope</span><strong id="lnKc">&mdash;</strong></div>
+        </div>
+        <p class="small-copy" id="lnHint" style="margin:0;">Every number below is recomputed from the two points as exact fractions &mdash; nothing is rounded, and nothing is stored.</p>
+
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Computing a slope from two points</h2></div><p>Label, subtract in order, simplify, sanity-check the sign.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Label the points</h3><p>Write <span class="math">(x₁, y₁)</span> and <span class="math">(x₂, y₂)</span> above the numbers. Which point you call first does not matter; that you then stay with the choice does.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Check for a vertical line first</h3><p>If <span class="math">x₁ = x₂</span> the run is zero and the slope is undefined. Stop here rather than writing a fraction with zero underneath.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Subtract in the same order top and bottom</h3><p><span class="math">(y₂ − y₁)</span> over <span class="math">(x₂ − x₁)</span>. Watch the double negatives: subtracting a negative x-coordinate adds.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Simplify, then check the sign against the picture</h3><p>Reduce the fraction. Then confirm: right-and-up or left-and-down means positive, right-and-down means negative.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Rise over run</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>The slope through (−2, 1) and (4, 10), three ways</h3><p>Once in each order, then from a third point on the same line, to see that all three agree.</p><div class="mathblock">taking (-2, 1) first:
+     m = (10 - 1) / (4 - (-2))  =  9 / (4 + 2)  =  9/6  =  3/2
+
+taking (4, 10) first:
+     m = (1 - 10) / (-2 - 4)    =  -9 / -6      =  9/6  =  3/2
+
+the point (0, 4) is on this line too, since  3/2 · 0 + 4 = 4:
+     with (-2, 1):   (4 - 1) / (0 - (-2))   =  3/2
+     with (4, 10):   (10 - 4) / (4 - 0)     =  6/4  =  3/2
+
+all four computations:   3/2</div><p>The step <span class="math">4 − (−2) = 6</span> is where arithmetic errors cluster. Subtracting a negative adds, and writing the parentheses rather than doing it in your head is what keeps the run from coming out as 2.</p><p>That every pair gives <span class="math">3/2</span> is the theorem in action. It is also the reason lesson 5 can build the line from whichever point is convenient.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Mixing the order of subtraction</strong><span>Consistency is the whole rule. <span class="math">(y₂ − y₁)/(x₂ − x₁)</span> and <span class="math">(y₁ − y₂)/(x₁ − x₂)</span> are both fine; one of each is a sign error that the answer alone will not reveal.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Writing run over rise</strong><span>The definition is vertical change divided by horizontal change. Inverting it turns a slope of <span class="math">3</span> into <span class="math">1/3</span>, which is a genuinely different line and, as lesson 6 shows, not even the perpendicular one.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Saying a vertical line has slope zero</strong><span>Zero rise gives <span class="math">m = 0</span> and describes a horizontal line. Zero run gives no slope at all. Merging them makes the flattest and the steepest lines indistinguishable in every formula that takes <span class="math">m</span> as input.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can compute a slope from any two points, including negative coordinates, and classify the two degenerate cases correctly.</strong><p>Given eight point pairs, some with negative coordinates, one horizontal and one vertical, you should produce eight correct answers with the right signs and the word "undefined" exactly once. Slope feeds every form in lessons 4 and 5, so a sign error here is a wrong line there.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Slope is the first rate of change in this library. The same quotient, taken between two points that are brought closer and closer together, is the derivative &mdash; which is calculus and out of scope here. What makes the linear case special is that the ratio is the same for every pair of points, so one number describes the whole line.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../graphing-a-linear-equation/" rel="prev"><span>Previous lesson</span><strong>02 &middot; Graphing a Linear Equation</strong></a>
+      <a class="lesson-link next" href="../slope-intercept-form/" rel="next"><span>Next lesson</span><strong>04 &middot; Slope-Intercept Form</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Lines, Functions and Graphs.</strong> Every curve on this course is drawn by evaluating the function at hundreds of points and joining them; nothing is a stored shape. When a lab marks a vertex or an intercept, the label and the picture come from the same computation, so the drawing cannot flatter the answer.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "What is the slope through <span class=\"math\">(1, 7)<\/span> and <span class=\"math\">(3, 1)<\/span>?", "a": ["<span class=\"math\">3<\/span>", "<span class=\"math\">\u22123<\/span>", "<span class=\"math\">\u22121/3<\/span>", "<span class=\"math\">1/3<\/span>"], "c": 1, "why": "<span class=\"math\">(1 \u2212 7)/(3 \u2212 1) = \u22126/2 = \u22123<\/span>. The points move right and down, so a negative slope is expected; <span class=\"math\">\u22121/3<\/span> inverts the ratio."}, {"q": "What is the slope of the line through <span class=\"math\">(5, 2)<\/span> and <span class=\"math\">(5, 9)<\/span>?", "a": ["<span class=\"math\">0<\/span>", "<span class=\"math\">7<\/span>", "Undefined", "<span class=\"math\">1<\/span>"], "c": 2, "why": "The run is <span class=\"math\">5 \u2212 5 = 0<\/span>, and division by zero is not defined. This is a vertical line. Zero would be the answer for a horizontal one."}, {"q": "A student computes <span class=\"math\">(y\u2082 \u2212 y\u2081)/(x\u2081 \u2212 x\u2082)<\/span>. What is wrong with the answer?", "a": ["Nothing &mdash; it is an equivalent form", "It is the reciprocal of the correct slope", "It has the correct magnitude but the wrong sign", "It is only wrong when the slope is negative"], "c": 2, "why": "The denominator has been negated but the numerator has not, so the whole fraction is negated. The size is right and the direction is reversed, whatever the true sign happens to be."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* A polynomial is a dense array of rationals, index = power of x, with the
+     zero polynomial as []. Nothing here is a special case for "nice" numbers:
+     the same routines divide 2x^3 - 3x + 1 by x - 1/2 as divide it by x - 1. */
+  function Pnorm(p) {
+    var out = p.slice();
+    while (out.length && Rzero(out[out.length - 1])) out.pop();
+    return out;
+  }
+  function Pdeg(p) { return Pnorm(p).length - 1; }
+  function Pzero(p) { return Pnorm(p).length === 0; }
+  function Plead(p) { var q = Pnorm(p); return q.length ? q[q.length - 1] : R0; }
+  function Padd(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Radd(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Psub(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Rsub(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Pmul(a, b) {
+    if (!a.length || !b.length) return [];
+    var out = [];
+    for (var i = 0; i < a.length + b.length - 1; i += 1) out.push(R0);
+    for (var j = 0; j < a.length; j += 1) {
+      for (var k = 0; k < b.length; k += 1) out[j + k] = Radd(out[j + k], Rmul(a[j], b[k]));
+    }
+    return Pnorm(out);
+  }
+  function Pscale(p, r) { return Pnorm(p.map(function (c) { return Rmul(c, r); })); }
+  function Ppow(p, k) { var out = [R1]; for (var i = 0; i < k; i += 1) out = Pmul(out, p); return out; }
+  function Peval(p, x) {
+    var acc = R0;
+    for (var i = p.length - 1; i >= 0; i -= 1) acc = Radd(Rmul(acc, x), p[i]);
+    return acc;
+  }
+  function Pderiv(p) {
+    var out = [];
+    for (var i = 1; i < p.length; i += 1) out.push(Rmul(p[i], R(BigInt(i))));
+    return Pnorm(out);
+  }
+  /* Long division, which is lesson material in its own right -- the step list a
+     lab shows IS this loop, printed. */
+  function Pdivmod(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    if (!b.length) throw new Error('division by the zero polynomial');
+    var q = [], r = a.slice(), steps = [];
+    var db = b.length - 1, lb = b[db];
+    while (Pnorm(r).length - 1 >= db && Pnorm(r).length) {
+      r = Pnorm(r);
+      var dr = r.length - 1, coef = Rdiv(r[dr], lb), shift = dr - db;
+      var term = [];
+      for (var i = 0; i < shift; i += 1) term.push(R0);
+      term.push(coef);
+      var product = Pmul(term, b);
+      steps.push({ term: Ptext(term), product: Ptext(product), before: Ptext(r) });
+      r = Psub(r, product);
+      q = Padd(q, term);
+    }
+    return { q: Pnorm(q), r: Pnorm(r), steps: steps };
+  }
+  function Pmonic(p) { var l = Plead(p); return Rzero(l) ? p : Pscale(p, Rinv(l)); }
+  function Pgcd(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    while (b.length) { var r = Pdivmod(a, b).r; a = b; b = r; }
+    return a.length ? Pmonic(a) : a;
+  }
+
+  /* Reader-facing form. The rules here are the ones a marker applies: an
+     implicit coefficient of 1 is not written, a negative term joins with a
+     minus rather than a plus, and a fractional coefficient is bracketed so
+     3/4x^2 can never be misread as 3/(4x^2). */
+  function Ptext(p, v) {
+    v = v || 'x';
+    p = Pnorm(p);
+    if (!p.length) return '0';
+    var out = '';
+    for (var i = p.length - 1; i >= 0; i -= 1) {
+      var c = p[i];
+      if (Rzero(c)) continue;
+      var neg = Rsign(c) < 0, mag = Rabs(c);
+      out += out === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      var one = Requ(mag, R1);
+      var coef = one && i > 0 ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+      var power = i === 0 ? '' : (i === 1 ? v : v + '^' + i);
+      out += coef + power;
+    }
+    return out;
+  }
+  /* Bracketed when it is a sum, so (x + 1)(x - 2) prints correctly. */
+  function Pfactortext(p, v) {
+    var t = Ptext(p, v);
+    return (t.indexOf(' + ') >= 0 || t.indexOf(' - ') >= 0) ? '(' + t + ')' : t;
+  }
+
+  /* ---- factoring over the rationals ----
+     The rational root theorem, applied rather than quoted: clear denominators,
+     list the divisors of the constant and leading terms, and TEST each
+     candidate. A reader who runs this on x^2 + 1 sees the search come back
+     empty, which is the point of the lesson that pairs with it. */
+  function bdivisors(n) {
+    if (n < 0n) n = -n;
+    if (n === 0n) return [];
+    var out = [], i = 1n;
+    while (i * i <= n) {
+      if (n % i === 0n) { out.push(i); if (i * i !== n) out.push(n / i); }
+      i += 1n;
+      if (out.length > 512) break;   /* lesson-sized numbers only; see Pfactor */
+    }
+    out.sort(function (a, b) { return a < b ? -1 : (a > b ? 1 : 0); });
+    return out;
+  }
+  /* The same polynomial with integer, coprime coefficients and a positive
+     leading term, plus the rational that was taken out. */
+  function Pprimitive(p) {
+    p = Pnorm(p);
+    if (!p.length) return { poly: [], content: R1 };
+    var den = 1n;
+    p.forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ints = p.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ints.forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    if (ints[ints.length - 1] < 0n) g = -g;
+    return {
+      poly: ints.map(function (v) { return R(v / g); }),
+      content: R(g, den)
+    };
+  }
+  function Prationalroots(p) {
+    var prim = Pprimitive(p).poly;
+    if (prim.length < 2) return [];
+    var roots = [], seen = {};
+    var a0 = prim[0].n, an = prim[prim.length - 1].n;
+    if (a0 === 0n) { roots.push(R0); seen['0/1'] = 1; }
+    var ps = bdivisors(a0 === 0n ? an : a0), qs = bdivisors(an);
+    for (var i = 0; i < ps.length; i += 1) {
+      for (var j = 0; j < qs.length; j += 1) {
+        for (var s = 0; s < 2; s += 1) {
+          var cand = R(s ? -ps[i] : ps[i], qs[j]);
+          var key = Rtext(cand);
+          if (seen[key]) continue;
+          seen[key] = 1;
+          if (Rzero(Peval(prim, cand))) roots.push(cand);
+        }
+      }
+    }
+    roots.sort(Rcmp);
+    return roots;
+  }
+  /* Full factorisation over Q: a rational content, integer linear factors with
+     their multiplicities, and whatever is left that has no rational root.
+     `complete` is false when the leftover is not linear or quadratic -- the lab
+     says so rather than implying the factorisation finished. */
+  function Pfactor(p) {
+    p = Pnorm(p);
+    if (!p.length) return { content: R0, factors: [], rest: [], complete: true };
+    var prim = Pprimitive(p);
+    var content = prim.content, work = prim.poly, factors = [];
+    var guard = 0;
+    while (Pdeg(work) > 0 && guard < 64) {
+      guard += 1;
+      var roots = Prationalroots(work);
+      if (!roots.length) break;
+      var r = roots[0];
+      /* root p/q  ->  integer factor (qx - p), which keeps every coefficient
+         whole and is the form the reader is asked to produce. */
+      var factor = [Rneg(R(r.n)), R(r.d)];
+      var mult = 0;
+      while (Pdeg(work) > 0) {
+        var dm = Pdivmod(work, factor);
+        if (!Pzero(dm.r)) break;
+        work = dm.q; mult += 1;
+      }
+      factors.push({ poly: factor, mult: mult, root: r });
+    }
+    /* Whatever scalar the integer divisions left behind belongs to the content. */
+    if (Pdeg(work) === 0) { content = Rmul(content, work[0]); work = [R1]; }
+    var rest = Pdeg(work) > 0 ? work : [];
+    return { content: content, factors: factors, rest: rest, complete: Pdeg(work) <= 2 };
+  }
+  function Pfactortextfull(p, v) {
+    var f = Pfactor(p);
+    if (!f.factors.length && !f.rest.length) return Rtext(f.content);
+    var pieces = [];
+    f.factors.forEach(function (item) { pieces.push({ poly: item.poly, mult: item.mult }); });
+    if (f.rest.length) pieces.push({ poly: f.rest, mult: 1 });
+    /* A polynomial that does not factor is written as itself. Bracketing a
+       lone factor -- "(x^2 + 1)" -- suggests something was multiplied by
+       something, which is the opposite of what that result says. */
+    if (pieces.length === 1 && pieces[0].mult === 1 && Requ(f.content, R1)) {
+      return Ptext(pieces[0].poly, v);
+    }
+    var out = '';
+    if (!Requ(f.content, R1)) out += Requ(f.content, R(-1n)) ? '-' : Rterm(f.content);
+    pieces.forEach(function (item) {
+      out += Pfactortext(item.poly, v) + (item.mult > 1 ? '^' + item.mult : '');
+    });
+    return out || '1';
+  }
+
+  /* Exact irrational answers.
+
+     sqrt(D) for a rational D is either rational or irrational, and the second
+     case is not a failure -- it is the answer. A lesson that solves
+     x^2 - 2x - 4 = 0 wants "1 +- sqrt(5)", not "3.2360679...", so the roots of
+     every quadratic on this path are carried as  p + q*sqrt(k)  with p and q
+     exact rationals and k a squarefree integer. */
+  function bsqrtsimp(n) {
+    /* n = s^2 * k with k squarefree; returns [s, k]. */
+    var s = 1n, k = n, f = 2n;
+    while (f * f <= k) {
+      while (k % (f * f) === 0n) { k /= f * f; s *= f; }
+      f += 1n;
+      if (f > 100000n) break;   /* lesson-sized radicands */
+    }
+    return [s, k];
+  }
+  /* sqrt(a) for a rational a >= 0, as { q, k } meaning q * sqrt(k). k === 1n
+     exactly when the root is rational. */
+  function Rsurd(a) {
+    if (a.n < 0n) return null;
+    if (a.n === 0n) return { q: R0, k: 1n };
+    /* sqrt(p/d) = sqrt(p*d)/d */
+    var pair = bsqrtsimp(a.n * a.d);
+    return { q: R(pair[0], a.d), k: pair[1] };
+  }
+  function surdtext(s) {
+    if (s.k === 1n) return Rtext(s.q);
+    if (Requ(s.q, R1)) return 'sqrt(' + s.k + ')';
+    return Rterm(s.q) + 'sqrt(' + s.k + ')';
+  }
+  /* "p +- q sqrt(k)", the form a reader is expected to write down. */
+  function pmtext(p, s, imaginary) {
+    var unit = imaginary ? 'i' : '';
+    if (s.k === 1n && Rzero(s.q)) return Rtext(p);
+    var mag = surdtext(s);
+    if (s.k !== 1n && Requ(Rabs(s.q), R1)) mag = 'sqrt(' + s.k + ')';
+    else if (s.k !== 1n) mag = Rterm(Rabs(s.q)) + 'sqrt(' + s.k + ')';
+    else mag = Rtext(Rabs(s.q));
+    var right = unit ? (mag === '1' ? 'i' : mag + 'i') : mag;
+    if (Rzero(p)) return '+-' + right;
+    return Rtext(p) + ' +- ' + right;
+  }
+  /* The exact roots of ax^2 + bx + c, whatever the discriminant does.
+     Returns { disc, kind, p, s, roots } where each root is p +- s (times i when
+     the discriminant is negative), and `roots` holds the rational ones only. */
+  function quadroots(a, b, c) {
+    var disc = Rsub(Rmul(b, b), Rmul(R(4n), Rmul(a, c)));
+    var p = Rdiv(Rneg(b), Rmul(R(2n), a));
+    var sign = Rsign(disc);
+    var mag = Rsurd(sign < 0 ? Rneg(disc) : disc);
+    var s = { q: Rdiv(mag.q, Rabs(Rmul(R(2n), a))), k: mag.k };
+    var kind = sign < 0 ? 'complex' : (sign === 0 ? 'double' : (s.k === 1n ? 'rational' : 'irrational'));
+    var roots = [];
+    if (kind === 'double') roots = [p];
+    else if (kind === 'rational') roots = [Radd(p, s.q), Rsub(p, s.q)].sort(Rcmp);
+    return { disc: disc, kind: kind, p: p, s: s, roots: roots };
+  }
+
+  /* A parser for what a reader actually types.
+
+     It accepts implicit multiplication -- 2x, 3(x+1), (x+1)(x-2), 4x^2 --
+     because that is how algebra is written on paper, and a lab that rejected
+     "2x" would be teaching its own notation rather than the subject's. A
+     single letter is a variable; a name of two or more letters is a function,
+     which is what lets xy mean x times y while sqrt(x) stays one call. */
+  function Etokenize(src) {
+    var out = [], i = 0, s = String(src);
+    while (i < s.length) {
+      var c = s[i];
+      if (c === ' ' || c === '\t') { i += 1; continue; }
+      if (/[0-9.]/.test(c)) {
+        var j = i;
+        while (j < s.length && /[0-9.]/.test(s[j])) j += 1;
+        out.push({ t: 'num', v: s.slice(i, j) }); i = j; continue;
+      }
+      if (/[A-Za-z]/.test(c)) {
+        var k = i;
+        while (k < s.length && /[A-Za-z]/.test(s[k])) k += 1;
+        var word = s.slice(i, k);
+        if (word.length > 1 && FUNCS[word.toLowerCase()]) {
+          out.push({ t: 'fn', v: word.toLowerCase() }); i = k; continue;
+        }
+        /* Not a known function: every letter is its own variable, so "xy" is a
+           product and a typo like "sqrtt(x)" fails loudly instead of silently
+           becoming a product of six variables named s, q, r, t, t. */
+        if (word.length > 1 && /^[a-z]+$/.test(word) && word.length > 3) {
+          throw new Error('unknown function "' + word + '"');
+        }
+        for (var m = i; m < k; m += 1) out.push({ t: 'var', v: s[m] });
+        i = k; continue;
+      }
+      if ('+-*/^(),'.indexOf(c) >= 0) { out.push({ t: c }); i += 1; continue; }
+      throw new Error('unexpected character "' + c + '"');
+    }
+    return out;
+  }
+
+  var FUNCS = {
+    sqrt: function (v) { return Math.sqrt(v); },
+    cbrt: function (v) { return Math.cbrt(v); },
+    abs: function (v) { return Math.abs(v); },
+    ln: function (v) { return Math.log(v); },
+    log: function (v) { return Math.log(v) / Math.LN10; },
+    log2: function (v) { return Math.log(v) / Math.LN2; },
+    exp: function (v) { return Math.exp(v); }
+  };
+
+  function Eparse(src) {
+    var toks = Etokenize(src), pos = 0;
+    function peek() { return toks[pos]; }
+    function eat(t) { if (toks[pos] && toks[pos].t === t) { pos += 1; return true; } return false; }
+    function expect(t) { if (!eat(t)) throw new Error('expected "' + t + '"'); }
+
+    function primary() {
+      var tk = peek();
+      if (!tk) throw new Error('the expression ends early');
+      if (tk.t === 'num') { pos += 1; return { k: 'num', v: tk.v }; }
+      if (tk.t === 'var') { pos += 1; return { k: 'var', v: tk.v }; }
+      if (tk.t === 'fn') { pos += 1; expect('('); var a = sum(); expect(')'); return { k: 'fn', v: tk.v, a: a }; }
+      if (tk.t === '(') { pos += 1; var e = sum(); expect(')'); return e; }
+      if (tk.t === '-') { pos += 1; return { k: 'neg', a: unary() }; }
+      if (tk.t === '+') { pos += 1; return unary(); }
+      throw new Error('unexpected "' + (tk.v || tk.t) + '"');
+    }
+    /* ^ binds tighter than unary minus on the left and is right-associative,
+       so -x^2 is -(x^2) and 2^3^2 is 2^9. Both are the conventions a reader
+       is marked against. */
+    function power() {
+      var base = primary();
+      if (eat('^')) return { k: 'pow', a: base, b: unary() };
+      return base;
+    }
+    function unary() {
+      if (eat('-')) return { k: 'neg', a: unary() };
+      if (eat('+')) return unary();
+      return power();
+    }
+    function implicit(node) {
+      /* juxtaposition is multiplication: 2x, 3(x+1), (x+1)(x-2), 2sqrt(x) */
+      while (peek() && (peek().t === 'num' || peek().t === 'var' || peek().t === 'fn' || peek().t === '(')) {
+        node = { k: 'mul', a: node, b: power() };
+      }
+      return node;
+    }
+    function product() {
+      var node = implicit(unary());
+      while (peek() && (peek().t === '*' || peek().t === '/')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '*' ? 'mul' : 'div', a: node, b: implicit(unary()) };
+      }
+      return node;
+    }
+    function sum() {
+      var node = product();
+      while (peek() && (peek().t === '+' || peek().t === '-')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '+' ? 'add' : 'sub', a: node, b: product() };
+      }
+      return node;
+    }
+    var tree = sum();
+    if (pos < toks.length) throw new Error('unexpected "' + (toks[pos].v || toks[pos].t) + '"');
+    return tree;
+  }
+
+  /* Numeric evaluation, for drawing. Returns NaN outside the domain rather
+     than throwing, because a grapher must be able to ask for f(-1) on sqrt(x)
+     and simply not plot a point there. */
+  function Eeval(node, env) {
+    switch (node.k) {
+      case 'num': return parseFloat(node.v);
+      case 'var': return (env && node.v in env) ? env[node.v] : NaN;
+      case 'neg': return -Eeval(node.a, env);
+      case 'add': return Eeval(node.a, env) + Eeval(node.b, env);
+      case 'sub': return Eeval(node.a, env) - Eeval(node.b, env);
+      case 'mul': return Eeval(node.a, env) * Eeval(node.b, env);
+      case 'div': return Eeval(node.a, env) / Eeval(node.b, env);
+      case 'pow': return Math.pow(Eeval(node.a, env), Eeval(node.b, env));
+      case 'fn': return FUNCS[node.v](Eeval(node.a, env));
+    }
+    return NaN;
+  }
+
+  /* The same tree as a polynomial over Q in one variable, or null when it is
+     not one. This is what lets a reader type a polynomial and have the EXACT
+     machinery -- factoring, division, the rational root search -- run on it,
+     rather than a floating-point approximation of it. */
+  function Epoly(node, v) {
+    v = v || 'x';
+    switch (node.k) {
+      case 'num': { var r = Rparse(node.v); return r === null ? null : (Rzero(r) ? [] : [r]); }
+      case 'var': return node.v === v ? [R0, R1] : null;
+      case 'neg': { var a = Epoly(node.a, v); return a === null ? null : Pscale(a, R(-1n)); }
+      case 'add': case 'sub': case 'mul': {
+        var l = Epoly(node.a, v), r2 = Epoly(node.b, v);
+        if (l === null || r2 === null) return null;
+        return node.k === 'add' ? Padd(l, r2) : (node.k === 'sub' ? Psub(l, r2) : Pmul(l, r2));
+      }
+      case 'div': {
+        var num = Epoly(node.a, v), den = Epoly(node.b, v);
+        if (num === null || den === null || Pdeg(den) !== 0) return null;
+        return Pscale(num, Rinv(den[0]));   /* division by a constant only */
+      }
+      case 'pow': {
+        var base = Epoly(node.a, v), ex = Epoly(node.b, v);
+        if (base === null || ex === null || Pdeg(ex) > 0) return null;
+        var e = ex.length ? ex[0] : R0;
+        if (!Rint(e) || e.n < 0n || e.n > 64n) return null;
+        return Ppow(base, Number(e.n));
+      }
+    }
+    return null;
+  }
+  function Epolyof(src, v) {
+    try { return Epoly(Eparse(src), v || 'x'); } catch (e) { return null; }
+  }
+
+  /* The grapher.
+
+     Every curve on this path is SAMPLED from the function the lesson is about.
+     There is not one stored path string anywhere in these labs, which is what
+     makes a drawing evidence rather than decoration: when a lab prints a vertex
+     at (3, -4) and draws the parabola through it, the label and the picture
+     came out of the same evaluation and cannot disagree.
+
+     Coordinates are the one deliberate use of floating point here -- a pixel is
+     a pixel. Everything the reader is told in words comes from the exact side. */
+  var PLOT_W = 660, PLOT_H = 420, PAD_L = 44, PAD_R = 16, PAD_T = 16, PAD_B = 34;
+
+  function svgel(name, attrs) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  /* A grid step a reader can count on: 1, 2 or 5 times a power of ten, chosen
+     so the axis carries roughly eight divisions whatever the window is. */
+  function nicestep(span) {
+    var raw = span / 8, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+    var n = raw / mag;
+    return (n < 1.5 ? 1 : (n < 3.5 ? 2 : (n < 7.5 ? 5 : 10))) * mag;
+  }
+  function ticktext(v, step) {
+    if (Math.abs(v) < step / 1000) return '0';
+    var places = Math.max(0, -Math.floor(Math.log(step) / Math.LN10));
+    return v.toFixed(Math.min(places, 4)).replace(/\.?0+$/, function (m) {
+      return m.indexOf('.') === 0 ? '' : m;
+    });
+  }
+
+  function Plot(svg, win) {
+    var xmin = win.xmin, xmax = win.xmax, ymin = win.ymin, ymax = win.ymax;
+    var iw = PLOT_W - PAD_L - PAD_R, ih = PLOT_H - PAD_T - PAD_B;
+    svg.setAttribute('viewBox', '0 0 ' + PLOT_W + ' ' + PLOT_H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+
+    function sx(x) { return PAD_L + (x - xmin) / (xmax - xmin) * iw; }
+    function sy(y) { return PAD_T + (ymax - y) / (ymax - ymin) * ih; }
+
+    var defs = svgel('defs', {});
+    var clip = svgel('clipPath', { id: 'plotclip' });
+    clip.appendChild(svgel('rect', { x: PAD_L, y: PAD_T, width: iw, height: ih }));
+    defs.appendChild(clip);
+    svg.appendChild(defs);
+
+    var plotted = svgel('g', { 'clip-path': 'url(#plotclip)' });
+
+    var api = {
+      sx: sx, sy: sy, win: win,
+      /* Grid, axes, ticks. Drawn first so every curve sits on top of them. */
+      frame: function () {
+        var gx = nicestep(xmax - xmin), gy = nicestep(ymax - ymin);
+        var g = svgel('g', {});
+        var start = Math.ceil(xmin / gx) * gx, v;
+        for (v = start; v <= xmax + gx / 2; v += gx) {
+          if (Math.abs(v) < gx / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: sx(v), y1: PAD_T, x2: sx(v), y2: PAD_T + ih }));
+        }
+        start = Math.ceil(ymin / gy) * gy;
+        for (v = start; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: PAD_L, y1: sy(v), x2: PAD_L + iw, y2: sy(v) }));
+        }
+        /* The axes sit at zero when zero is in view and at the near edge when
+           it is not, so a window like 10 <= x <= 20 still has a labelled frame
+           rather than two axes drawn off-screen. */
+        var ay = ymin <= 0 && ymax >= 0 ? sy(0) : (ymin > 0 ? PAD_T + ih : PAD_T);
+        var ax = xmin <= 0 && xmax >= 0 ? sx(0) : (xmin > 0 ? PAD_L : PAD_L + iw);
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: PAD_L, y1: ay, x2: PAD_L + iw, y2: ay }));
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: ax, y1: PAD_T, x2: ax, y2: PAD_T + ih }));
+        for (v = Math.ceil(xmin / gx) * gx; v <= xmax + gx / 2; v += gx) {
+          var tx = svgel('text', { class: 'plot-tick', x: sx(v), y: PAD_T + ih + 15, 'text-anchor': 'middle' });
+          tx.textContent = ticktext(v, gx);
+          g.appendChild(tx);
+        }
+        for (v = Math.ceil(ymin / gy) * gy; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          var ty = svgel('text', { class: 'plot-tick', x: PAD_L - 7, y: sy(v) + 3.5, 'text-anchor': 'end' });
+          ty.textContent = ticktext(v, gy);
+          g.appendChild(ty);
+        }
+        svg.appendChild(g);
+        svg.appendChild(plotted);
+        return api;
+      },
+      /* Sample the function across the drawing width and join the samples.
+         A segment is BROKEN where the value stops being a real number and
+         where it jumps by more than three window heights between neighbouring
+         pixels -- that jump is a pole, and joining across it would draw a
+         vertical line that is not part of the graph. Readers meet exactly that
+         line in every graphing tool, and it is the reason they think 1/x is
+         connected. */
+      curve: function (fn, cls) {
+        var runs = [], run = [], prev = null, steps = 480;
+        for (var i = 0; i <= steps; i += 1) {
+          var x = xmin + (xmax - xmin) * i / steps, y = fn(x);
+          if (typeof y !== 'number' || !isFinite(y)) { if (run.length > 1) runs.push(run); run = []; prev = null; continue; }
+          if (prev !== null && Math.abs(y - prev) > 3 * (ymax - ymin)) {
+            if (run.length > 1) runs.push(run);
+            run = [];
+          }
+          run.push(sx(x) + ',' + sy(Math.max(ymin - (ymax - ymin), Math.min(ymax + (ymax - ymin), y))));
+          prev = y;
+        }
+        if (run.length > 1) runs.push(run);
+        runs.forEach(function (pts) {
+          plotted.appendChild(svgel('polyline', { class: cls || 'plot-curve', points: pts.join(' ') }));
+        });
+        return api;
+      },
+      point: function (x, y, cls, label) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: cls || 'plot-point', cx: sx(x), cy: sy(y), r: 5 }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 9, y: sy(y) - 8 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hole: function (x, y) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: 'plot-hole', cx: sx(x), cy: sy(y), r: 5 }));
+        return api;
+      },
+      vline: function (x, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: sx(x), y1: PAD_T, x2: sx(x), y2: PAD_T + ih }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 6, y: PAD_T + 14 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hline: function (y, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: PAD_L, y1: sy(y), x2: PAD_L + iw, y2: sy(y) }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: PAD_L + 6, y: sy(y) - 6 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      segment: function (x1, y1, x2, y2, cls) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-aux', x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2) }));
+        return api;
+      },
+      /* The solution set of an inequality, shaded by testing the predicate on
+         a grid of sample points rather than by reasoning about the boundary. */
+      shade: function (test, cls) {
+        var cols = 90, rows = 58;
+        for (var i = 0; i < cols; i += 1) {
+          for (var j = 0; j < rows; j += 1) {
+            var x = xmin + (xmax - xmin) * (i + 0.5) / cols;
+            var y = ymin + (ymax - ymin) * (j + 0.5) / rows;
+            if (!test(x, y)) continue;
+            plotted.appendChild(svgel('rect', {
+              class: cls || 'plot-shade', x: sx(x) - iw / cols / 2, y: sy(y) - ih / rows / 2,
+              width: iw / cols + 0.6, height: ih / rows + 0.6
+            }));
+          }
+        }
+        return api;
+      },
+      label: function (x, y, text, cls) {
+        var t = svgel('text', { class: cls || 'plot-label', x: sx(x), y: sy(y) });
+        t.textContent = text;
+        plotted.appendChild(t);
+        return api;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return api; }
+    };
+    return api;
+  }
+
+  /* A one-dimensional cousin: the number line every inequality lesson needs. */
+  function NumberLine(svg, lo, hi) {
+    var W = 660, H = 88, pad = 30, iw = W - 2 * pad;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+    function sx(x) { return pad + (x - lo) / (hi - lo) * iw; }
+    svg.appendChild(svgel('line', { class: 'plot-axis', x1: pad, y1: 44, x2: W - pad, y2: 44 }));
+    var step = nicestep(hi - lo);
+    for (var v = Math.ceil(lo / step) * step; v <= hi + step / 2; v += step) {
+      svg.appendChild(svgel('line', { class: 'plot-tickmark', x1: sx(v), y1: 38, x2: sx(v), y2: 50 }));
+      var t = svgel('text', { class: 'plot-tick', x: sx(v), y: 68, 'text-anchor': 'middle' });
+      t.textContent = ticktext(v, step);
+      svg.appendChild(t);
+    }
+    return {
+      sx: sx,
+      /* Closed ends are filled, open ends are hollow -- the distinction the
+         lesson is usually about. */
+      interval: function (a, b, closedA, closedB) {
+        var x1 = sx(Math.max(a, lo)), x2 = sx(Math.min(b, hi));
+        svg.appendChild(svgel('line', { class: 'plot-interval', x1: x1, y1: 44, x2: x2, y2: 44 }));
+        if (a >= lo) svg.appendChild(svgel('circle', { class: closedA ? 'plot-end closed' : 'plot-end open', cx: x1, cy: 44, r: 6 }));
+        if (b <= hi) svg.appendChild(svgel('circle', { class: closedB ? 'plot-end closed' : 'plot-end open', cx: x2, cy: 44, r: 6 }));
+        return this;
+      },
+      point: function (x, closed) {
+        svg.appendChild(svgel('circle', { class: closed ? 'plot-end closed' : 'plot-end open', cx: sx(x), cy: 44, r: 6 }));
+        return this;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return this; }
+    };
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Shared by the labs in this file. Everything here is exact; the only  */
+  /* floating point is a pixel or a genuinely irrational quantity, and    */
+  /* every place that prints one of those says which it is.               */
+  /* ------------------------------------------------------------------ */
+
+  function row(label, detail) {
+    return '<tr><th class="rowhead">' + label + '</th><td style="text-align:left;">' + detail + '</td></tr>';
+  }
+  function table(caption, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption
+      + '</caption><tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  function chip(text, kind) {
+    return '<span class="chip' + (kind ? ' ' + kind : '') + '">' + text + '</span>';
+  }
+  function muted(text) { return '<span class="tone-muted">' + text + '</span>'; }
+
+  /* Rparse throws on a zero denominator, which is precisely what a reader types
+     when they are exploring what "undefined" means. Every lab in this file
+     reads through here so that 1/0 produces an explanation rather than a
+     stack trace. */
+  function readR(text) {
+    try { return Rparse(text); } catch (err) { return null; }
+  }
+
+  /* The reader writes "y = 2x - 1" or "f(x) = 2x - 1", because that is what a
+     function looks like. Rejecting the left-hand side would be teaching our
+     notation rather than the subject's. */
+  function bodyof(src) {
+    var s = String(src === undefined || src === null ? '' : src).trim();
+    var m = /^(?:y|[fgh]\s*\(\s*[a-z]\s*\))\s*=\s*([\s\S]*)$/i.exec(s);
+    return (m ? m[1] : s).trim();
+  }
+
+  /* Whole coefficients: multiply out the denominators, divide by the gcd, and
+     make the first non-zero one positive. Standard form is only standard when
+     it is written like that, and the lab DERIVES it rather than printing back
+     what a preset handed it. */
+  function clearden(coeffs) {
+    var den = 1n, i;
+    coeffs.forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ints = coeffs.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ints.forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    for (i = 0; i < ints.length; i += 1) {
+      if (ints[i] !== 0n) { if (ints[i] < 0n) g = -g; break; }
+    }
+    return ints.map(function (v) { return R(v / g); });
+  }
+
+  /* a + b and a - b with the signs already tidied: "3 - 2" rather than
+     "3 + -2", which is the form a reader is asked to produce. */
+  function sumtext(a, b) {
+    return Rsign(b) < 0 ? Rtext(a) + ' - ' + Rtext(Rabs(b)) : Rtext(a) + ' + ' + Rtext(b);
+  }
+  function subtext(a, b) {
+    return Rtext(a) + ' - ' + (Rsign(b) < 0 ? '(' + Rtext(b) + ')' : Rtext(b));
+  }
+  /* "x - 3", "x + 3", "x": the shift as a reader writes it. Point-slope form
+     is the place where a minus sign in front of a negative number turns into
+     the plus that confuses everybody, so it is built once, here. */
+  function shifttext(v, sym) {
+    if (Rzero(v)) return sym;
+    return sym + (Rsign(v) > 0 ? ' - ' : ' + ') + Rtext(Rabs(v));
+  }
+  /* A coefficient in front of a bracket: 1 and -1 are not written out. */
+  function coeftext(m) {
+    if (Requ(m, R1)) return '';
+    if (Requ(m, R(-1n))) return '-';
+    return Rterm(m);
+  }
+
+  /* Replace the variable x inside a formula the reader typed, leaving function
+     names alone -- the x in "exp" is not a variable. This is how a substitution
+     is SHOWN the way it is written on paper, and how a composite formula is
+     built for the parser to read back. */
+  function subx(src, repl) {
+    var out = '', i = 0;
+    while (i < src.length) {
+      var c = src[i];
+      if (/[A-Za-z]/.test(c)) {
+        var j = i;
+        while (j < src.length && /[A-Za-z]/.test(src[j])) j += 1;
+        var word = src.slice(i, j);
+        out += (word.length > 1 && FUNCS[word.toLowerCase()]) ? word : word.replace(/x/g, repl);
+        i = j;
+        continue;
+      }
+      out += c;
+      i += 1;
+    }
+    return out;
+  }
+
+  /* A curve that is not a function of x -- a sideways parabola, a graph
+     reflected in y = x -- from sampled points, broken wherever a sample stops
+     being a real number, for the same reason Plot.curve breaks. */
+  function trace(plot, pts, cls) {
+    var prev = null;
+    for (var i = 0; i < pts.length; i += 1) {
+      var p = pts[i];
+      var ok = p && isFinite(p[0]) && isFinite(p[1]);
+      if (ok && prev) plot.segment(prev[0], prev[1], p[0], p[1], cls || 'plot-curve');
+      prev = ok ? p : null;
+    }
+    return plot;
+  }
+
+  /* f(g(x)) for polynomials: Horner on the coefficients of f with the whole of
+     g in place of x. Exact, and it is the same operation whether the lesson
+     calls it a composition or a transformation. */
+  function Pcompose(f, g) {
+    var out = [];
+    for (var i = f.length - 1; i >= 0; i -= 1) out = Padd(Pmul(out, g), [f[i]]);
+    return Pnorm(out);
+  }
+
+  /* Numeric evaluation of an exact polynomial, for pixels only. */
+  function Pnumeval(p, xv) {
+    var acc = 0;
+    for (var i = p.length - 1; i >= 0; i -= 1) acc = acc * xv + Rnum(p[i]);
+    return acc;
+  }
+
+  /* ---- an expression as one polynomial over another ----
+     This is what makes a HOLE findable exactly. (x^2 - 4)/(x - 2) is x + 2 at
+     every x except 2, and the difference between "the graph is a line" and
+     "the graph is a line with one point missing" is the whole of that lesson.
+     Deliberately NOT reduced: the un-cancelled denominator is what the domain
+     is computed from, and cancelling first is exactly the mistake the lesson
+     is about. */
+  function Erat(node, v) {
+    v = v || 'x';
+    if (!node) return null;
+    var a, b, l, r;
+    switch (node.k) {
+      case 'num': {
+        var q = Rparse(node.v);
+        return q === null ? null : { n: Rzero(q) ? [] : [q], d: [R1] };
+      }
+      case 'var': return node.v === v ? { n: [R0, R1], d: [R1] } : null;
+      case 'neg':
+        a = Erat(node.a, v);
+        return a === null ? null : { n: Pscale(a.n, R(-1n)), d: a.d };
+      case 'add': case 'sub':
+        a = Erat(node.a, v); b = Erat(node.b, v);
+        if (a === null || b === null) return null;
+        l = Pmul(a.n, b.d); r = Pmul(b.n, a.d);
+        return { n: node.k === 'add' ? Padd(l, r) : Psub(l, r), d: Pmul(a.d, b.d) };
+      case 'mul':
+        a = Erat(node.a, v); b = Erat(node.b, v);
+        if (a === null || b === null) return null;
+        return { n: Pmul(a.n, b.n), d: Pmul(a.d, b.d) };
+      case 'div':
+        a = Erat(node.a, v); b = Erat(node.b, v);
+        if (a === null || b === null || Pzero(b.n)) return null;
+        return { n: Pmul(a.n, b.d), d: Pmul(a.d, b.n) };
+      case 'pow': {
+        var base = Erat(node.a, v), ex = Epoly(node.b, v);
+        if (base === null || ex === null || Pdeg(ex) > 0) return null;
+        var e = ex.length ? ex[0] : R0;
+        if (!Rint(e) || e.n > 24n || e.n < -24n) return null;
+        var k = Number(e.n);
+        var unit = k < 0 ? { n: base.d, d: base.n } : base;
+        if (k < 0 && Pzero(base.n)) return null;
+        var out = { n: [R1], d: [R1] };
+        for (var i = 0; i < Math.abs(k); i += 1) out = { n: Pmul(out.n, unit.n), d: Pmul(out.d, unit.d) };
+        return out;
+      }
+    }
+    return null;
+  }
+  /* The cancelled form, and the factor that was cancelled -- which is exactly
+     the set of holes. */
+  function ratreduce(f) {
+    if (!f || Pzero(f.d)) return null;
+    if (Pzero(f.n)) return { n: [], d: [R1], cancelled: [] };
+    var g = Pgcd(f.n, f.d);
+    if (Pdeg(g) < 1) return { n: f.n, d: f.d, cancelled: [] };
+    return { n: Pdivmod(f.n, g).q, d: Pdivmod(f.d, g).q, cancelled: g };
+  }
+  /* A quotient written the way it should be handed in: no 1 as a
+     denominator, no minus sign left on the bottom, no brackets around a term
+     that does not need them. */
+  function ratformula(n, d, v) {
+    v = v || 'x';
+    if (Rsign(Plead(d)) < 0) { n = Pscale(n, R(-1n)); d = Pscale(d, R(-1n)); }
+    if (Pzero(n)) return '0';
+    if (Pdeg(d) === 0) {
+      if (Requ(d[0], R1)) return Ptext(n, v);
+      return Pfactortext(n, v) + '/' + Rterm(d[0]);
+    }
+    return Pfactortext(n, v) + '/' + Pfactortext(d, v);
+  }
+  function rattext(f, v) {
+    v = v || 'x';
+    if (Pdeg(f.d) < 1 && Requ(Plead(f.d), R1)) return Ptext(f.n, v);
+    return Pfactortext(f.n, v) + ' / ' + Pfactortext(f.d, v);
+  }
+
+  /* ---- what a formula forbids ----
+     Three things restrict a domain, and each is collected as a constraint on a
+     POLYNOMIAL so that its boundary is an exact root rather than the place
+     where a drawing stopped:
+        sqrt(u)      needs  u >= 0
+        anything / u needs  u != 0
+        ln(u)        needs  u > 0
+     A constraint whose argument is not a polynomial is recorded with a null
+     polynomial, and the lab then SAYS the domain was not fully derived rather
+     than printing one it guessed. */
+  function mkcon(rel, sub, v, why) {
+    var p = Epoly(sub, v);
+    if (p === null) {
+      var rr = Erat(sub, v);
+      if (rr) p = rr.n;          /* a quotient is zero where its numerator is */
+    }
+    return { rel: rel, poly: p, why: why, text: p ? Ptext(p, v) : null };
+  }
+  function constraintsOf(node, v, out) {
+    out = out || [];
+    if (!node || typeof node !== 'object') return out;
+    if (node.k === 'fn' && node.v === 'sqrt') out.push(mkcon('ge', node.a, v, 'sqrt'));
+    if (node.k === 'fn' && (node.v === 'ln' || node.v === 'log' || node.v === 'log2')) {
+      out.push(mkcon('gt', node.a, v, 'log'));
+    }
+    if (node.k === 'div') {
+      var d = node.b;
+      if (d.k === 'fn' && d.v === 'sqrt') out.push(mkcon('ne', d.a, v, 'denominator-root'));
+      else out.push(mkcon('ne', d, v, 'denominator'));
+    }
+    constraintsOf(node.a, v, out);
+    constraintsOf(node.b, v, out);
+    return out;
+  }
+
+  /* p +- q sqrt(k) as one boundary point: exact text, plus a float used only
+     for ordering and for choosing a rational test point between boundaries. */
+  function surdpoint(p, s, sign, owner) {
+    var val = Rnum(p) + sign * Rnum(s.q) * Math.sqrt(Number(s.k));
+    var mag = Requ(Rabs(s.q), R1) ? 'sqrt(' + s.k + ')' : Rterm(Rabs(s.q)) + 'sqrt(' + s.k + ')';
+    var text = Rzero(p) ? (sign < 0 ? '-' + mag : mag)
+                        : Rtext(p) + (sign < 0 ? ' - ' : ' + ') + mag;
+    return { r: null, text: text, val: val, owner: owner, irrational: true };
+  }
+
+  /* Every place a constraint can change sign. Rational roots come out of the
+     rational root search; a leftover quadratic contributes its two surds,
+     which are exact; a leftover of higher degree is reported as NOT derived
+     rather than quietly dropped. */
+  function boundariesOf(cons) {
+    var pts = [], exact = true;
+    cons.forEach(function (c, idx) {
+      if (!c.poly) { exact = false; return; }
+      if (Pdeg(c.poly) < 1) return;
+      var f = Pfactor(c.poly);
+      f.factors.forEach(function (item) {
+        pts.push({ r: item.root, text: Rtext(item.root), val: Rnum(item.root), owner: idx });
+      });
+      if (f.rest.length) {
+        if (Pdeg(f.rest) === 2) {
+          var q = quadroots(f.rest[2], f.rest[1], f.rest[0]);
+          if (q.kind === 'irrational') {
+            pts.push(surdpoint(q.p, q.s, -1, idx));
+            pts.push(surdpoint(q.p, q.s, 1, idx));
+          } else if (q.kind !== 'complex') { exact = false; }
+        } else { exact = false; }
+      }
+    });
+    pts.sort(function (a, b) { return a.val - b.val; });
+    var out = [];
+    pts.forEach(function (p) {
+      if (out.length && Math.abs(out[out.length - 1].val - p.val) < 1e-12) return;
+      out.push(p);
+    });
+    return { points: out, exact: exact };
+  }
+
+  /* Does this x satisfy every constraint? At a rational x the test is exact
+     arithmetic. At an irrational boundary the constraint that PRODUCED it is
+     zero there by construction, and any other constraint is evaluated
+     numerically -- which is recorded, so the lab can say so. */
+  function testAt(cons, pt) {
+    var ok = true, sure = true;
+    for (var i = 0; i < cons.length; i += 1) {
+      var c = cons[i], sign;
+      if (!c.poly) { sure = false; continue; }
+      if (pt.r) {
+        sign = Rsign(Peval(c.poly, pt.r));
+      } else if (pt.owner === i) {
+        sign = 0;
+      } else {
+        var val = Pnumeval(c.poly, pt.val);
+        if (Math.abs(val) < 1e-9) { sign = 0; sure = false; }
+        else { sign = val < 0 ? -1 : 1; }
+      }
+      if (c.rel === 'ge' && sign < 0) ok = false;
+      if (c.rel === 'gt' && sign <= 0) ok = false;
+      if (c.rel === 'ne' && sign === 0) ok = false;
+    }
+    return { ok: ok, sure: sure };
+  }
+
+  /* The domain as a union of intervals. Nothing about the shape of the formula
+     is assumed: one interval, two rays, a single point removed and "every real
+     number" all fall out of the same walk along the boundaries. */
+  function domainOf(cons) {
+    var b = boundariesOf(cons), pts = b.points, sure = b.exact, segs = [], i;
+
+    function between(lo, hi) {
+      if (lo === null && hi === null) return R0;
+      if (lo === null) return R(BigInt(Math.floor(hi.val) - 1));
+      if (hi === null) return R(BigInt(Math.ceil(lo.val) + 1));
+      if (lo.r && hi.r) return Rdiv(Radd(lo.r, hi.r), R(2n));
+      var t = (lo.val + hi.val) / 2, q = Rparse(t.toFixed(6));
+      return q === null ? R(BigInt(Math.round(t))) : q;
+    }
+
+    for (i = 0; i <= pts.length; i += 1) {
+      var lo = i === 0 ? null : pts[i - 1], hi = i === pts.length ? null : pts[i];
+      var probe = { r: between(lo, hi), owner: null };
+      probe.val = Rnum(probe.r);
+      var t1 = testAt(cons, probe);
+      if (!t1.sure) sure = false;
+      segs.push({ kind: 'open', lo: lo, hi: hi, inside: t1.ok });
+      if (hi) {
+        var t2 = testAt(cons, hi);
+        if (!t2.sure) sure = false;
+        segs.push({ kind: 'point', at: hi, inside: t2.ok });
+      }
+    }
+
+    var out = [], cur = null;
+    segs.forEach(function (s) {
+      if (!s.inside) { cur = null; return; }
+      if (cur === null) {
+        cur = s.kind === 'open'
+          ? { lo: s.lo, loClosed: false, hi: s.hi, hiClosed: false }
+          : { lo: s.at, loClosed: true, hi: s.at, hiClosed: true };
+        out.push(cur);
+      } else if (s.kind === 'open') {
+        cur.hi = s.hi; cur.hiClosed = false;
+      } else {
+        cur.hi = s.at; cur.hiClosed = true;
+      }
+    });
+    return { intervals: out, exact: sure, boundaries: pts };
+  }
+
+  function ivtext(iv) {
+    var lo = iv.lo === null ? '-inf' : iv.lo.text;
+    var hi = iv.hi === null ? 'inf' : iv.hi.text;
+    if (iv.lo && iv.hi && iv.loClosed && iv.hiClosed && iv.lo.val === iv.hi.val) return '{' + lo + '}';
+    return (iv.loClosed ? '[' : '(') + lo + ', ' + hi + (iv.hiClosed ? ']' : ')');
+  }
+  function domaintext(ivs) {
+    if (!ivs.length) return 'empty: no real number is allowed in';
+    if (ivs.length === 1 && ivs[0].lo === null && ivs[0].hi === null) return '(-inf, inf)';
+    return ivs.map(ivtext).join(' U ');
+  }
+  function inDomain(ivs, xv) {
+    for (var i = 0; i < ivs.length; i += 1) {
+      var iv = ivs[i];
+      var loOk = iv.lo === null || (iv.loClosed ? xv >= iv.lo.val - 1e-12 : xv > iv.lo.val + 1e-12);
+      var hiOk = iv.hi === null || (iv.hiClosed ? xv <= iv.hi.val + 1e-12 : xv < iv.hi.val - 1e-12);
+      if (loOk && hiOk) return true;
+    }
+    return false;
+  }
+
+  /* The exact cube root of a rational, when it has one. cbrt(-8) is -2 and
+     belongs on the page as -2, not as -1.9999999; cbrt(2) has no rational
+     value at all and is printed as the rounded decimal it is. */
+  function bicbrt(n) {
+    var neg = n < 0n;
+    if (neg) n = -n;
+    if (n < 2n) return neg ? -n : n;
+    var x = n, y = (2n * x + n / (x * x)) / 3n;
+    while (y < x) { x = y; y = (2n * x + n / (x * x)) / 3n; }
+    return x * x * x === n ? (neg ? -x : x) : null;
+  }
+  function Rcbrt(a) {
+    var p = bicbrt(a.n), q = bicbrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* ---- exact evaluation, where an exact value exists ----
+     Eeval returns a double because a grapher needs pixels. This returns a
+     RATIONAL, or null when the value is not a rational number. sqrt(4/9) comes
+     back as 2/3 and sqrt(2) comes back as null, so a table can print the first
+     exactly and label the second as the rounding it is. */
+  function Eexact(node, x, v) {
+    v = v || 'x';
+    if (!node) return null;
+    var a, b;
+    switch (node.k) {
+      case 'num': return Rparse(node.v);
+      case 'var': return node.v === v ? x : null;
+      case 'neg': a = Eexact(node.a, x, v); return a === null ? null : Rneg(a);
+      case 'add': case 'sub': case 'mul':
+        a = Eexact(node.a, x, v); b = Eexact(node.b, x, v);
+        if (a === null || b === null) return null;
+        return node.k === 'add' ? Radd(a, b) : (node.k === 'sub' ? Rsub(a, b) : Rmul(a, b));
+      case 'div':
+        a = Eexact(node.a, x, v); b = Eexact(node.b, x, v);
+        if (a === null || b === null || Rzero(b)) return null;
+        return Rdiv(a, b);
+      case 'pow': {
+        a = Eexact(node.a, x, v); b = Eexact(node.b, x, v);
+        if (a === null || b === null || !Rint(b) || b.n > 32n || b.n < -32n) return null;
+        if (Rzero(a) && b.n < 0n) return null;
+        return Rpow(a, Number(b.n));
+      }
+      case 'fn': {
+        a = Eexact(node.a, x, v);
+        if (a === null) return null;
+        if (node.v === 'sqrt') return Rsqrt(a);        /* null unless a perfect square */
+        if (node.v === 'cbrt') return Rcbrt(a);        /* null unless a perfect cube */
+        if (node.v === 'abs') return Rabs(a);
+        return null;
+      }
+    }
+    return null;
+  }
+  /* One value of a function, printed the way the reader should write it: the
+     exact rational when there is one, otherwise the decimal WITH the word
+     rounded next to it. */
+  function valuetext(tree, x, v) {
+    var e = Eexact(tree, x, v);
+    if (e !== null) return Rtext(e);
+    var y = evalAt(tree, Rnum(x), v);
+    if (!isFinite(y)) return 'not a real number';
+    return approx(y, 5) + ' (rounded)';
+  }
+
+  /* A y-window that a pole cannot ruin: the middle 96% of the finite samples,
+     which keeps 1/(x-2) on the page instead of scaling it to a flat line. */
+  function ywindow(fn, xmin, xmax) {
+    var vals = [], i;
+    for (i = 0; i <= 240; i += 1) {
+      var y = fn(xmin + (xmax - xmin) * i / 240);
+      if (typeof y === 'number' && isFinite(y)) vals.push(y);
+    }
+    if (!vals.length) return { lo: -6, hi: 6 };
+    vals.sort(function (a, b) { return a - b; });
+    var lo = vals[Math.floor(vals.length * 0.02)], hi = vals[Math.floor((vals.length - 1) * 0.98)];
+    lo = Math.min(lo, 0); hi = Math.max(hi, 0);
+    if (hi - lo < 4) { var c = (hi + lo) / 2; lo = c - 2; hi = c + 2; }
+    var pad = (hi - lo) * 0.12;
+    return { lo: lo - pad, hi: hi + pad };
+  }
+
+  /* A safe numeric evaluator for a parsed tree: NaN rather than an exception
+     wherever the value is not a real number, so a grapher can ask for f(-1) on
+     sqrt(x) and simply not plot a point. */
+  function evalAt(tree, xv, name) {
+    var env = {};
+    env[name || 'x'] = xv;
+    var y;
+    try { y = Eeval(tree, env); } catch (err) { return NaN; }
+    return (typeof y === 'number' && isFinite(y)) ? y : NaN;
+  }
+
+  /* A decimal that is honest about being one. */
+  function approx(v, places) {
+    if (!isFinite(v)) return 'undefined';
+    var p = places === undefined ? 4 : places;
+    var s = v.toFixed(p);
+    if (s.indexOf('.') >= 0) s = s.replace(/0+$/, '').replace(/\.$/, '');
+    return s === '-0' ? '0' : s;
+  }
+
+  var MODE = 'slope';
+  var preset = document.getElementById('lnPreset');
+  var selX1 = document.getElementById('lnX1'), selY1 = document.getElementById('lnY1');
+  var selX2 = document.getElementById('lnX2'), selY2 = document.getElementById('lnY2');
+  var work = document.getElementById('lnWork'), status = document.getElementById('lnStatus');
+  var titleOut = document.getElementById('lnTitle'), subOut = document.getElementById('lnSub');
+  var kA = document.getElementById('lnKa'), kB = document.getElementById('lnKb'), kC = document.getElementById('lnKc');
+  var svg = document.getElementById('lnPlot');
+  var inM2 = null, inB2 = null;
+
+  function ptext(p) { return '(' + Rtext(p.x) + ', ' + Rtext(p.y) + ')'; }
+
+  /* The line through two points, or the reason there is not one. Nothing here
+     is a special case bolted on afterwards: a vertical line and a repeated
+     point are answers the slope formula genuinely gives, and they are returned
+     as answers. */
+  function lineOf(p1, p2) {
+    var dx = Rsub(p2.x, p1.x), dy = Rsub(p2.y, p1.y);
+    if (Rzero(dx) && Rzero(dy)) return { kind: 'point', dx: dx, dy: dy };
+    if (Rzero(dx)) return { kind: 'vertical', x: p1.x, dx: dx, dy: dy };
+    var m = Rdiv(dy, dx);
+    return { kind: 'line', m: m, b: Rsub(p1.y, Rmul(m, p1.x)), dx: dx, dy: dy };
+  }
+
+  /* Ax + By = C with whole, coprime coefficients and A >= 0, written out. */
+  function standardOf(L) {
+    var abc = L.kind === 'vertical'
+      ? clearden([R1, R0, L.x])
+      : clearden([L.m, R(-1n), Rneg(L.b)]);
+    return { A: abc[0], B: abc[1], C: abc[2] };
+  }
+  function standardtext(s) {
+    var left = '';
+    if (!Rzero(s.A)) left += coeftext(s.A) + 'x';
+    if (!Rzero(s.B)) {
+      var neg = Rsign(s.B) < 0, mag = Rabs(s.B);
+      left += (left === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ')) + (Requ(mag, R1) ? '' : Rterm(mag)) + 'y';
+    }
+    if (left === '') left = '0';
+    return left + ' = ' + Rtext(s.C);
+  }
+  function slopeinttext(L) { return 'y = ' + Ptext([L.b, L.m]); }
+  function pointslopetext(m, p) {
+    return shifttext(p.y, 'y') + ' = ' + coeftext(m) + '(' + shifttext(p.x, 'x') + ')';
+  }
+
+  function drawline(plot, L, cls) {
+    if (L.kind === 'vertical') { plot.vline(Rnum(L.x), cls); return; }
+    if (L.kind !== 'line') return;
+    var mv = Rnum(L.m), bv = Rnum(L.b);
+    plot.curve(function (x) { return mv * x + bv; }, cls);
+  }
+
+  function redraw() {
+    var p1 = { x: readR(selX1.value), y: readR(selY1.value) };
+    var p2 = { x: readR(selX2.value), y: readR(selY2.value) };
+    if (p1.x === null || p1.y === null || p2.x === null || p2.y === null) {
+      status.innerHTML = '<strong>Both coordinates of both points are needed.</strong> '
+        + 'Choose a whole number for each of the four.';
+      work.innerHTML = '';
+      Plot(svg, { xmin: -8, xmax: 8, ymin: -8, ymax: 8 }).frame();
+      return;
+    }
+    var L = lineOf(p1, p2);
+    var std = L.kind === 'point' ? null : standardOf(L);
+
+    /* ---- the window, chosen around the reader's points ---- */
+    var x1v = Rnum(p1.x), y1v = Rnum(p1.y), x2v = Rnum(p2.x), y2v = Rnum(p2.y);
+    var xlo = Math.min(x1v, x2v) - 4, xhi = Math.max(x1v, x2v) + 4;
+    var cand = [y1v, y2v, 0];
+    if (L.kind === 'line') {
+      cand.push(Rnum(L.m) * xlo + Rnum(L.b));
+      cand.push(Rnum(L.m) * xhi + Rnum(L.b));
+    }
+    var ylo = Math.min.apply(null, cand), yhi = Math.max.apply(null, cand);
+    if (yhi - ylo > 3 * (xhi - xlo)) {
+      var cy = (y1v + y2v) / 2, half = 1.5 * (xhi - xlo);
+      ylo = cy - half; yhi = cy + half;
+    }
+    var padY = Math.max(1.5, (yhi - ylo) * 0.15);
+    var plot = Plot(svg, { xmin: xlo, xmax: xhi, ymin: ylo - padY, ymax: yhi + padY });
+    plot.frame();
+
+    var m2 = null, b2 = null, L2 = null;
+    if (MODE === 'parallel' && inM2 && inB2) {
+      m2 = readR(inM2.value); b2 = readR(inB2.value);
+      if (m2 !== null && b2 !== null) L2 = { kind: 'line', m: m2, b: b2 };
+    }
+    if (L2) drawline(plot, L2, 'plot-curve alt');
+    drawline(plot, L, 'plot-curve');
+
+    if (MODE === 'slope' && L.kind !== 'point') {
+      /* The triangle IS the definition: along by the run, up by the rise. */
+      plot.segment(x1v, y1v, x2v, y1v, 'plot-aux');
+      plot.segment(x2v, y1v, x2v, y2v, 'plot-aux');
+      plot.label((x1v + x2v) / 2, y1v - (yhi - ylo) * 0.06, 'run = ' + Rtext(L.dx));
+      plot.label(x2v + (xhi - xlo) * 0.02, (y1v + y2v) / 2, 'rise = ' + Rtext(L.dy));
+    }
+    if (L.kind === 'line') {
+      plot.point(0, Rnum(L.b), 'plot-point root', 'y-int ' + Rtext(L.b));
+      if (!Rzero(L.m)) {
+        var xint = Rdiv(Rneg(L.b), L.m);
+        plot.point(Rnum(xint), 0, 'plot-point root', 'x-int ' + Rtext(xint));
+      }
+    } else if (L.kind === 'vertical') {
+      plot.point(Rnum(L.x), 0, 'plot-point root', 'x-int ' + Rtext(L.x));
+    }
+    plot.point(x1v, y1v, 'plot-point', 'P1 ' + ptext(p1));
+    if (!(Requ(p1.x, p2.x) && Requ(p1.y, p2.y))) plot.point(x2v, y2v, 'plot-point', 'P2 ' + ptext(p2));
+
+    var headline = L.kind === 'point' ? 'no line yet'
+      : (L.kind === 'vertical' ? 'x = ' + Rtext(L.x) : slopeinttext(L));
+    titleOut.textContent = headline;
+    subOut.textContent = 'P1 ' + ptext(p1) + '   P2 ' + ptext(p2);
+    plot.describe('The line through ' + ptext(p1) + ' and ' + ptext(p2)
+      + ', drawn by evaluating it across the window, with the points and intercepts marked.');
+
+    /* ---- the numbers ---- */
+    var blocks = [], msg;
+    var slopeText = L.kind === 'line' ? Rtext(L.m)
+      : (L.kind === 'vertical' ? 'undefined' : 'not determined');
+
+    if (L.kind === 'point') {
+      kA.textContent = 'undefined'; kB.innerHTML = '&mdash;'; kC.innerHTML = '&mdash;';
+      blocks.push(table('Two points that are one point', [
+        row('P1 and P2', ptext(p1) + ' and ' + ptext(p2) + ' are the same point'),
+        row('rise', 'y2 - y1 = ' + Rtext(L.dy)),
+        row('run', 'x2 - x1 = ' + Rtext(L.dx)),
+        row('slope', '0/0, which is not a number: every line through this point fits'),
+      ]));
+      work.innerHTML = blocks.join('');
+      status.innerHTML = '<strong>One point does not determine a line.</strong> '
+        + 'The slope formula gives 0/0 here, and that is not "zero" &mdash; it is the arithmetic '
+        + 'saying the question is underdetermined. Infinitely many lines pass through '
+        + ptext(p1) + '. Move either point and exactly one of them is selected.';
+      return;
+    }
+
+    if (MODE === 'slope') {
+      kA.textContent = Rtext(L.dy); kB.textContent = Rtext(L.dx); kC.textContent = slopeText;
+    } else if (MODE === 'parallel') {
+      kA.textContent = slopeText;
+      kB.textContent = m2 === null ? 'unreadable' : Rtext(m2);
+      kC.textContent = (L.kind === 'vertical' || m2 === null) ? 'undefined' : Rtext(Rmul(L.m, m2));
+    } else if (MODE === 'pointslope') {
+      kA.textContent = slopeText;
+      kB.textContent = L.kind === 'vertical' ? 'x = ' + Rtext(L.x) : pointslopetext(L.m, p1);
+      kC.textContent = L.kind === 'vertical' ? 'x = ' + Rtext(L.x) : pointslopetext(L.m, p2);
+    } else if (MODE === 'forms') {
+      kA.textContent = slopeText;
+      kB.textContent = L.kind === 'vertical' ? 'none' : Rtext(L.b);
+      kC.textContent = standardtext(std);
+    } else {
+      kA.textContent = slopeText;
+      kB.textContent = L.kind === 'vertical' ? 'none' : Rtext(L.b);
+      kC.textContent = L.kind === 'vertical' ? Rtext(L.x)
+        : (Rzero(L.m) ? (Rzero(L.b) ? 'every x' : 'none') : Rtext(Rdiv(Rneg(L.b), L.m)));
+    }
+
+    if (MODE === 'graph') {
+      var rows = [
+        row('the two points', ptext(p1) + ' and ' + ptext(p2)),
+        row('slope', L.kind === 'vertical'
+          ? 'undefined: the run is 0, and ' + Rtext(L.dy) + '/0 is not a number'
+          : Rtext(L.dy) + ' / ' + Rtext(L.dx) + ' = ' + Rtext(L.m)),
+        row('equation', L.kind === 'vertical' ? 'x = ' + Rtext(L.x) : slopeinttext(L)),
+      ];
+      if (L.kind === 'vertical') {
+        rows.push(row('crosses the x-axis', 'at (' + Rtext(L.x) + ', 0)'));
+        rows.push(row('crosses the y-axis', Rzero(L.x) ? 'it IS the y-axis' : 'never: a vertical line misses it unless it is the axis'));
+      } else {
+        rows.push(row('crosses the y-axis', 'at (0, ' + Rtext(L.b) + '), because x = 0 gives y = ' + Rtext(L.b)));
+        rows.push(row('crosses the x-axis', Rzero(L.m)
+          ? (Rzero(L.b) ? 'everywhere: this IS the x-axis' : 'never: a horizontal line at height ' + Rtext(L.b) + ' has no zero')
+          : 'at (' + Rtext(Rdiv(Rneg(L.b), L.m)) + ', 0), from 0 = ' + Ptext([L.b, L.m])));
+        rows.push(row('direction', Rzero(L.m) ? 'horizontal: every x gives the same y'
+          : (Rsign(L.m) > 0 ? 'rising: y grows by ' + Rtext(L.m) + ' for every 1 across'
+                            : 'falling: y drops by ' + Rtext(Rabs(L.m)) + ' for every 1 across')));
+      }
+      blocks.push(table('What the picture says, computed', rows));
+      var vals = [];
+      for (var i = -2; i <= 2; i += 1) {
+        var xv = Radd(p1.x, R(BigInt(i)));
+        vals.push('<tr><td>' + Rtext(xv) + '</td><td>'
+          + (L.kind === 'vertical' ? (Requ(xv, L.x) ? 'every y' : 'no y') : Rtext(Peval([L.b, L.m], xv)))
+          + '</td></tr>');
+      }
+      blocks.push('<div class="table-wrap"><table class="tt"><caption>A table of values, evaluated one at a time'
+        + '</caption><thead><tr><th>x</th><th>y</th></tr></thead><tbody>' + vals.join('') + '</tbody></table></div>');
+      msg = L.kind === 'vertical'
+        ? '<strong>This line is vertical, so it is not a function of x.</strong> The equation is x = '
+          + Rtext(L.x) + ' &mdash; it says nothing about y, because every y is on it. There is no '
+          + 'y = mx + b for this line, which is the first sign that "line" and "linear function" '
+          + 'are not the same word.'
+        : '<strong>' + slopeinttext(L) + '.</strong> The slope ' + Rtext(L.m)
+          + ' was computed from your two points as ' + Rtext(L.dy) + '/' + Rtext(L.dx)
+          + ', and the intercept from y1 - m*x1 = ' + Rtext(p1.y) + ' - (' + Rtext(L.m) + ')('
+          + Rtext(p1.x) + ') = ' + Rtext(L.b) + '. Both marked points sit on the drawn line because '
+          + 'the drawing evaluates that same equation.';
+    }
+
+    if (MODE === 'slope') {
+      if (L.kind === 'vertical') {
+        blocks.push(table('The slope formula meets a vertical line', [
+          row('rise', 'y2 - y1 = ' + subtext(p2.y, p1.y) + ' = ' + Rtext(L.dy)),
+          row('run', 'x2 - x1 = ' + subtext(p2.x, p1.x) + ' = 0'),
+          row('m = rise/run', Rtext(L.dy) + ' / 0, which is not a number'),
+          row('so', 'this line has NO slope. That is different from slope 0, which is a horizontal line.'),
+        ]));
+        msg = '<strong>No slope is not slope zero.</strong> A horizontal line has slope 0: go across 1, '
+          + 'rise 0. This line goes up ' + Rtext(L.dy) + ' while going across 0, and dividing by 0 is '
+          + 'not an operation. Pick two points with different x values and the formula starts working again.';
+      } else {
+        var third = { x: Radd(p1.x, Rmul(R(2n), L.dx)), y: Radd(p1.y, Rmul(R(2n), L.dy)) };
+        blocks.push(table('Rise over run, on your two points', [
+          row('rise = y2 - y1', subtext(p2.y, p1.y) + ' = ' + Rtext(L.dy)),
+          row('run = x2 - x1', subtext(p2.x, p1.x) + ' = ' + Rtext(L.dx)),
+          row('m = rise / run', Rtext(L.dy) + ' / ' + Rtext(L.dx) + ' = ' + Rtext(L.m)),
+          row('the other order', '(y1 - y2)/(x1 - x2) = ' + Rtext(Rneg(L.dy)) + ' / ' + Rtext(Rneg(L.dx))
+            + ' = ' + Rtext(Rdiv(Rneg(L.dy), Rneg(L.dx)))
+            + ' &mdash; the same, because both signs flipped'),
+          row('a different pair', 'from ' + ptext(p1) + ' to ' + ptext(third) + ': '
+            + Rtext(Rsub(third.y, p1.y)) + ' / ' + Rtext(Rsub(third.x, p1.x)) + ' = '
+            + Rtext(Rdiv(Rsub(third.y, p1.y), Rsub(third.x, p1.x)))),
+        ]));
+        msg = '<strong>Slope ' + Rtext(L.m) + ': the triangle above has sides ' + Rtext(L.dy)
+          + ' and ' + Rtext(L.dx) + '.</strong> The last row picks a third point on the same line and '
+          + 'gets the same fraction, which is the fact that makes slope a property of the LINE rather '
+          + 'than of the two points you happened to pick. '
+          + (Rzero(L.m) ? 'Here the rise is 0, so the slope is 0 and the line is horizontal.'
+             : 'Reducing ' + Rtext(L.dy) + '/' + Rtext(L.dx) + ' to ' + Rtext(L.m)
+               + ' is exact fraction arithmetic, not a decimal.');
+      }
+    }
+
+    if (MODE === 'forms') {
+      if (L.kind === 'vertical') {
+        blocks.push(table('Three forms, one of which does not exist', [
+          row('slope-intercept', muted('y = mx + b needs a slope m, and this line has none')),
+          row('point-slope', muted('y - y1 = m(x - x1) needs the same m')),
+          row('standard: Ax + By = C', standardtext(std) + ', with B = 0'),
+          row('why standard survives', 'B = 0 is allowed, so standard form can write every line. '
+            + 'That is the reason it exists.'),
+        ]));
+        msg = '<strong>Standard form is the only one of the three that can write this line.</strong> '
+          + 'Ax + By = C with B = 0 gives ' + standardtext(std) + '. Slope-intercept and point-slope '
+          + 'both require a slope, and a vertical line has none &mdash; so a question that says '
+          + '"write it in y = mx + b form" has no answer here.';
+      } else {
+        var si = [L.b, L.m];
+        var check1 = Peval(si, p1.x), check2 = Peval(si, p2.x);
+        var stdL1 = Radd(Rmul(std.A, p1.x), Rmul(std.B, p1.y));
+        var stdL2 = Radd(Rmul(std.A, p2.x), Rmul(std.B, p2.y));
+        blocks.push(table('The same line, three ways, each derived on its own', [
+          row('slope-intercept', slopeinttext(L) + '   (m from the two points, b = y1 - m*x1)'),
+          row('point-slope, from P1', pointslopetext(L.m, p1)),
+          row('point-slope, from P2', pointslopetext(L.m, p2)),
+          row('standard form', standardtext(std) + '   (denominators cleared, gcd divided out, A >= 0)'),
+        ]));
+        blocks.push(table('Checked by substitution, not by assertion', [
+          row('P1 in y = mx + b', 'm(' + Rtext(p1.x) + ') + b = ' + Rtext(check1) + ', and y1 = '
+            + Rtext(p1.y) + ' ' + (Requ(check1, p1.y) ? chip('agrees', 'ok') : chip('disagrees', 'no'))),
+          row('P2 in y = mx + b', 'm(' + Rtext(p2.x) + ') + b = ' + Rtext(check2) + ', and y2 = '
+            + Rtext(p2.y) + ' ' + (Requ(check2, p2.y) ? chip('agrees', 'ok') : chip('disagrees', 'no'))),
+          row('P1 in Ax + By', Rtext(std.A) + '(' + Rtext(p1.x) + ') + ' + Rterm(std.B) + '('
+            + Rtext(p1.y) + ') = ' + Rtext(stdL1) + ', and C = ' + Rtext(std.C) + ' '
+            + (Requ(stdL1, std.C) ? chip('agrees', 'ok') : chip('disagrees', 'no'))),
+          row('P2 in Ax + By', Rtext(std.A) + '(' + Rtext(p2.x) + ') + ' + Rterm(std.B) + '('
+            + Rtext(p2.y) + ') = ' + Rtext(stdL2) + ', and C = ' + Rtext(std.C) + ' '
+            + (Requ(stdL2, std.C) ? chip('agrees', 'ok') : chip('disagrees', 'no'))),
+        ]));
+        var mult = L.m.d * L.b.d / bgcd(L.m.d, L.b.d);
+        msg = '<strong>One line, three spellings.</strong> ' + slopeinttext(L) + ' and '
+          + standardtext(std) + ' are the same set of points: '
+          + (mult === 1n
+             ? 'the slope and the intercept are already whole numbers here, so standard form only '
+               + 'needed the terms moved to one side and the gcd divided out'
+             : 'the standard form came from multiplying the slope-intercept form by ' + mult
+               + ' to clear the denominators and then dividing by the gcd of the coefficients')
+          + '. Which form you want depends on the question &mdash; '
+          + 'slope-intercept to sketch, point-slope to write a line through a known point, standard to '
+          + 'keep whole numbers and to survive the vertical case.';
+      }
+    }
+
+    if (MODE === 'pointslope') {
+      if (L.kind === 'vertical') {
+        blocks.push(table('Point-slope needs a slope', [
+          row('the two points', ptext(p1) + ' and ' + ptext(p2)),
+          row('m', 'undefined: the run is 0'),
+          row('y - y1 = m(x - x1)', muted('cannot be written: there is no m to put in it')),
+          row('the line is still a line', 'x = ' + Rtext(L.x)),
+        ]));
+        msg = '<strong>Every form that starts "y =" fails on a vertical line.</strong> '
+          + 'Point-slope is one of them. The line through your two points is x = ' + Rtext(L.x)
+          + ', and it is written that way precisely because y is not a function of x here.';
+      } else {
+        var e1 = Padd(Pmul([L.m], [Rneg(p1.x), R1]), [p1.y]);
+        var e2 = Padd(Pmul([L.m], [Rneg(p2.x), R1]), [p2.y]);
+        var same = Pzero(Psub(e1, e2));
+        blocks.push(table('The same line from either point', [
+          row('slope', Rtext(L.dy) + ' / ' + Rtext(L.dx) + ' = ' + Rtext(L.m)),
+          row('from P1 ' + ptext(p1), pointslopetext(L.m, p1)),
+          row('expand', 'y = ' + Rterm(L.m) + '(' + shifttext(p1.x, 'x') + ') + ' + Rtext(p1.y)
+            + ' = ' + Ptext(e1)),
+          row('from P2 ' + ptext(p2), pointslopetext(L.m, p2)),
+          row('expand', 'y = ' + Rterm(L.m) + '(' + shifttext(p2.x, 'x') + ') + ' + Rtext(p2.y)
+            + ' = ' + Ptext(e2)),
+          row('subtract the two', Ptext(e1) + ' - (' + Ptext(e2) + ') = ' + Ptext(Psub(e1, e2)) + ' '
+            + (same ? chip('identical', 'ok') : chip('different', 'no'))),
+        ]));
+        msg = '<strong>Two different-looking equations, one line.</strong> '
+          + pointslopetext(L.m, p1) + ' and ' + pointslopetext(L.m, p2)
+          + ' expand to the same ' + slopeinttext(L) + ', and the lab checks that by subtracting them '
+          + 'as polynomials and getting ' + Ptext(Psub(e1, e2)) + '. So "which point do I use?" has the '
+          + 'answer: either. Point-slope is the form to reach for when a question hands you a point and '
+          + 'a slope, because no rearranging is needed to write it down.';
+      }
+    }
+
+    if (MODE === 'parallel') {
+      if (m2 === null || b2 === null) {
+        blocks.push(table('The second line', [
+          row('what was typed', 'm2 = "' + (inM2 ? inM2.value : '') + '", b2 = "' + (inB2 ? inB2.value : '') + '"'),
+          row('the problem', 'each must be a whole number or a fraction such as -3/2'),
+        ]));
+        msg = '<strong>The second line could not be read.</strong> Type its slope and its y-intercept '
+          + 'as whole numbers or fractions &mdash; for example m2 = -1/2 and b2 = 4. The first line, '
+          + 'from your two points, is drawn above and is unaffected.';
+      } else if (L.kind === 'vertical') {
+        var meet = { x: L.x, y: Radd(Rmul(m2, L.x), b2) };
+        blocks.push(table('One vertical line and one with a slope', [
+          row('line 1', 'x = ' + Rtext(L.x) + ', slope undefined'),
+          row('line 2', 'y = ' + Ptext([b2, m2]) + ', slope ' + Rtext(m2)),
+          row('m1 * m2', muted('there is no m1 to multiply: the test needs both slopes to exist')),
+          row('perpendicular?', Rzero(m2)
+            ? chip('yes', 'ok') + ' a vertical line and a horizontal line meet at a right angle, and the '
+              + 'product test simply cannot see it'
+            : chip('no', 'no') + ' they meet at ' + '(' + Rtext(meet.x) + ', ' + Rtext(meet.y) + ') but not squarely'),
+          row('they meet at', '(' + Rtext(meet.x) + ', ' + Rtext(meet.y) + ')'),
+        ]));
+        plot.point(Rnum(meet.x), Rnum(meet.y), 'plot-point vertex', 'meet');
+        msg = '<strong>The rule m1*m2 = -1 has an exception, and this is it.</strong> '
+          + 'A vertical line has no slope, so there is no product to take. '
+          + (Rzero(m2)
+             ? 'These two ARE perpendicular &mdash; x = ' + Rtext(L.x) + ' and y = ' + Rtext(b2)
+               + ' meet at a right angle &mdash; and the product test still says nothing. A rule that '
+               + 'is silent on a case is not the same as a rule that is false there, but you have to '
+               + 'know which case you are in.'
+             : 'Rotate the second line to horizontal (m2 = 0) and the pair becomes perpendicular '
+               + 'without the product ever existing.');
+      } else {
+        var prod = Rmul(L.m, m2);
+        var same = Requ(L.m, m2), sameLine = same && Requ(L.b, b2);
+        var perp = Requ(prod, R(-1n));
+        var rows2 = [
+          row('line 1, from your points', slopeinttext(L) + '   (m1 = ' + Rtext(L.m) + ')'),
+          row('line 2, as typed', 'y = ' + Ptext([b2, m2]) + '   (m2 = ' + Rtext(m2) + ')'),
+          row('m1 * m2', Rterm(L.m) + ' * ' + Rterm(m2) + ' = ' + Rtext(prod)),
+          row('parallel?', sameLine
+            ? chip('same line', 'hi') + ' one line written twice, which is not what parallel means'
+            : (same ? chip('yes', 'ok') + ' equal slopes, different intercepts'
+                    : chip('no', 'no') + ' the slopes differ')),
+          row('perpendicular?', perp ? chip('yes', 'ok') + ' the product is exactly -1'
+            : chip('no', 'no') + ' the product is ' + Rtext(prod) + ', not -1'),
+        ];
+        if (sameLine) {
+          rows2.push(row('solve line1 = line2', Ptext([L.b, L.m]) + ' = ' + Ptext([b2, m2])
+            + ' holds for every x: these are the same line, and every point on it is an intersection'));
+        } else if (same) {
+          rows2.push(row('solve line1 = line2', Ptext([L.b, L.m]) + ' = ' + Ptext([b2, m2])
+            + ' gives ' + Rtext(L.b) + ' = ' + Rtext(b2) + ', which is false: no intersection at all'));
+        } else {
+          var xi = Rdiv(Rsub(b2, L.b), Rsub(L.m, m2));
+          var yi = Radd(Rmul(L.m, xi), L.b);
+          var yi2 = Radd(Rmul(m2, xi), b2);
+          rows2.push(row('solve line1 = line2', 'x = (b2 - b1)/(m1 - m2) = ' + Rtext(Rsub(b2, L.b)) + ' / '
+            + Rtext(Rsub(L.m, m2)) + ' = ' + Rtext(xi)));
+          rows2.push(row('the meeting point', '(' + Rtext(xi) + ', ' + Rtext(yi) + '), and line 2 gives y = '
+            + Rtext(yi2) + ' there ' + (Requ(yi, yi2) ? chip('agrees', 'ok') : chip('disagrees', 'no'))));
+          plot.point(Rnum(xi), Rnum(yi), 'plot-point vertex', 'meet');
+        }
+        blocks.push(table('Two lines, compared', rows2));
+        if (sameLine) {
+          msg = '<strong>These are the same line, not two parallel ones.</strong> Equal slopes AND equal '
+            + 'intercepts. "Parallel" is usually taken to mean two distinct lines that never meet; this pair '
+            + 'meets everywhere. The algebra says so too: setting them equal reduces to '
+            + Rtext(L.b) + ' = ' + Rtext(b2) + ', which is true for every x.';
+        } else if (same) {
+          msg = '<strong>Parallel: equal slopes, different intercepts.</strong> Setting the two right-hand '
+            + 'sides equal cancels the x terms and leaves ' + Rtext(L.b) + ' = ' + Rtext(b2)
+            + ', which is false &mdash; and "the algebra ends in a false statement" is exactly what '
+            + '"these lines never meet" looks like when you solve it.';
+        } else if (perp) {
+          msg = '<strong>Perpendicular: m1 * m2 = ' + Rtext(L.m) + ' * ' + Rtext(m2) + ' = -1.</strong> '
+            + 'Each slope is the negative reciprocal of the other: flip ' + Rtext(L.m) + ' to get '
+            + Rtext(Rinv(L.m)) + ', then negate. Note that this is not "the slopes are opposite" &mdash; '
+            + Rtext(Rneg(L.m)) + ' would be a reflection, not a right angle.';
+        } else {
+          msg = '<strong>Neither: the product is ' + Rtext(prod) + '.</strong> Parallel needs the slopes '
+            + 'equal and perpendicular needs the product to be exactly -1, so these two lines simply cross. '
+            + 'They cross once, because two lines with different slopes always do.';
+        }
+      }
+    }
+
+    work.innerHTML = blocks.join('');
+    status.innerHTML = msg;
+  }
+
+  preset.addEventListener('change', function () {
+    var parts = preset.value.split('|');
+    selX1.value = parts[0]; selY1.value = parts[1];
+    selX2.value = parts[2]; selY2.value = parts[3];
+    if (inM2 && inB2) { inM2.value = parts[4]; inB2.value = parts[5]; }
+    redraw();
+  });
+  [selX1, selY1, selX2, selY2].forEach(function (el) { el.addEventListener('change', redraw); });
+
+  var first = preset.value.split('|');
+  selX1.value = first[0]; selY1.value = first[1];
+  selX2.value = first[2]; selY2.value = first[3];
+  if (inM2 && inB2) { inM2.value = first[4]; inB2.value = first[5]; }
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Rules of Inference | Logic and Proof | Learn · geterdone.io</title>
-  <meta name="description" content="An argument is valid when its premises cannot all be true with its conclusion false. Modus ponens, modus tollens, syllogism, resolution &amp;mdash; and the two invalid forms that look identical until you check." />
+  <meta name="description" content="An argument is valid when its premises cannot all be true with its conclusion false. Modus ponens, modus tollens, syllogism, resolution — and the two invalid forms that look identical until you check." />
   <link rel="canonical" href="https://learn.geterdone.io/logic-and-proof/rules-of-inference/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Rules of Inference | Logic and Proof | Learn · geterdone.io" />
-  <meta property="og:description" content="An argument is valid when its premises cannot all be true with its conclusion false. Modus ponens, modus tollens, syllogism, resolution &amp;mdash; and the two invalid forms that look identical until you check." />
+  <meta property="og:description" content="An argument is valid when its premises cannot all be true with its conclusion false. Modus ponens, modus tollens, syllogism, resolution — and the two invalid forms that look identical until you check." />
   <meta property="og:url" content="https://learn.geterdone.io/logic-and-proof/rules-of-inference/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Rules of Inference | Logic and Proof | Learn · geterdone.io" />
-  <meta name="twitter:description" content="An argument is valid when its premises cannot all be true with its conclusion false. Modus ponens, modus tollens, syllogism, resolution &amp;mdash; and the two invalid forms that look identical until you check." />
+  <meta name="twitter:description" content="An argument is valid when its premises cannot all be true with its conclusion false. Modus ponens, modus tollens, syllogism, resolution — and the two invalid forms that look identical until you check." />
   <meta name="twitter:url" content="https://learn.geterdone.io/logic-and-proof/rules-of-inference/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Logic and Proof course home">
         <span class="brand-mark" aria-hidden="true">11</span>
-        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 &amp;middot; Lesson 11 of 14</span></span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 · Lesson 11 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Logic and Proof</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 11 &amp;middot; Rules of Inference</span>
+      <span class="crumb-current" aria-current="page">Lesson 11 · Rules of Inference</span>
     </nav>
 
     <noscript>

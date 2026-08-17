@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Binary Relations | Sets, Relations, and Functions | Learn · geterdone.io</title>
-  <meta name="description" content="Any subset of `A × B` is a relation. Three ways to present one &amp;mdash; as pairs, as a matrix, as a directed graph &amp;mdash; and the operations of inverse and composition." />
+  <meta name="description" content="Any subset of A × B is a relation. Three ways to present one — as pairs, as a matrix, as a directed graph — and the operations of inverse and composition." />
   <link rel="canonical" href="https://learn.geterdone.io/sets-relations-functions/binary-relations/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Binary Relations | Sets, Relations, and Functions | Learn · geterdone.io" />
-  <meta property="og:description" content="Any subset of `A × B` is a relation. Three ways to present one &amp;mdash; as pairs, as a matrix, as a directed graph &amp;mdash; and the operations of inverse and composition." />
+  <meta property="og:description" content="Any subset of A × B is a relation. Three ways to present one — as pairs, as a matrix, as a directed graph — and the operations of inverse and composition." />
   <meta property="og:url" content="https://learn.geterdone.io/sets-relations-functions/binary-relations/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Binary Relations | Sets, Relations, and Functions | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Any subset of `A × B` is a relation. Three ways to present one &amp;mdash; as pairs, as a matrix, as a directed graph &amp;mdash; and the operations of inverse and composition." />
+  <meta name="twitter:description" content="Any subset of A × B is a relation. Three ways to present one — as pairs, as a matrix, as a directed graph — and the operations of inverse and composition." />
   <meta name="twitter:url" content="https://learn.geterdone.io/sets-relations-functions/binary-relations/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Sets, Relations, and Functions course home">
         <span class="brand-mark" aria-hidden="true">06</span>
-        <span class="brand-copy"><strong>Sets, Relations, and Functions</strong><span>Course 2 &amp;middot; Lesson 06 of 14</span></span>
+        <span class="brand-copy"><strong>Sets, Relations, and Functions</strong><span>Course 2 · Lesson 06 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Sets, Relations, and Functions</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 06 &amp;middot; Binary Relations</span>
+      <span class="crumb-current" aria-current="page">Lesson 06 · Binary Relations</span>
     </nav>
 
     <noscript>
@@ -1005,7 +1036,7 @@ relation &quot;a &lt; b&quot;, which is the transitive closure of R.</div><p>The
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Composing in the wrong order</strong><span><span class="math">S ∘ R</span> applies <span class="math">R</span> first. Getting this backwards produces a different relation, usually a different size, and the error is silent.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Assuming a relation must be meaningful</strong><span>Any set of pairs qualifies. Most relations have no description shorter than their pair list, which is why properties rather than names are what matter.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Confusing `R⁻¹` with a complement</strong><span>The inverse reverses each pair; the complement takes the pairs not in <span class="math">R</span>. They are unrelated operations.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Composing in the wrong order</strong><span><span class="math">S ∘ R</span> applies <span class="math">R</span> first. Getting this backwards produces a different relation, usually a different size, and the error is silent.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Assuming a relation must be meaningful</strong><span>Any set of pairs qualifies. Most relations have no description shorter than their pair list, which is why properties rather than names are what matter.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Confusing <span class="math">R⁻¹</span> with a complement</strong><span>The inverse reverses each pair; the complement takes the pairs not in <span class="math">R</span>. They are unrelated operations.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can move between all three presentations.</strong><p>Take <span class="math">R = {(1,1),(1,2),(2,3),(3,1)}</span> on <span class="math">{1,2,3}</span>, write its matrix, sketch its digraph, and compute <span class="math">R ∘ R</span> in whichever presentation is easiest. Then check the answer in a second presentation.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Relations need not be on one set: <span class="math">R ⊆ A × B</span> with <span class="math">A ≠ B</span> is a <em>bipartite</em> relation, and lesson 10's functions are exactly the relations from <span class="math">A</span> to <span class="math">B</span> in which every element of <span class="math">A</span> appears exactly once as a first coordinate.</div></article>
       </div>
     </section>

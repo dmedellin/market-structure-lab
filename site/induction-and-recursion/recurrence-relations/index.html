@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Induction and Recursion course home">
         <span class="brand-mark" aria-hidden="true">09</span>
-        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 &amp;middot; Lesson 09 of 12</span></span>
+        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 · Lesson 09 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Induction and Recursion</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 09 &amp;middot; Recurrence Relations</span>
+      <span class="crumb-current" aria-current="page">Lesson 09 · Recurrence Relations</span>
     </nav>
 
     <noscript>
@@ -980,7 +1011,7 @@ solving = finding a formula for aₙ that does not mention earlier terms</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Setting up a recurrence</h2></div><p>Find the last decision; everything before it is a smaller instance.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Define `aₙ` precisely</h3><p>"The number of …of length <span class="math">n</span>". A vague definition produces a recurrence that counts something else.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Split by the last piece</h3><p>Classify the objects by their final element or final move. Each class should correspond to a smaller instance.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Check the split is exhaustive and non-overlapping</h3><p>Every object in exactly one class. Overlap double-counts; a gap undercounts, and neither shows up until the numbers are wrong.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Supply as many initial conditions as the order</h3><p>A second-order recurrence needs two, and computing them by hand from the definition is where off-by-one errors surface.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Define <span class="math">aₙ</span> precisely</h3><p>"The number of …of length <span class="math">n</span>". A vague definition produces a recurrence that counts something else.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Split by the last piece</h3><p>Classify the objects by their final element or final move. Each class should correspond to a smaller instance.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Check the split is exhaustive and non-overlapping</h3><p>Every object in exactly one class. Overlap double-counts; a gap undercounts, and neither shows up until the numbers are wrong.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Supply as many initial conditions as the order</h3><p>A second-order recurrence needs two, and computing them by hand from the definition is where off-by-one errors surface.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">

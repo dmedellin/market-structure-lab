@@ -1,0 +1,3179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simplifying Rational Expressions | Rational and Radical Expressions | Learn · geterdone.io</title>
+  <meta name="description" content="One rule does all the work: a factor common to the top and the bottom may be removed. A term may not. The difference between those two words is the most expensive distinction in school algebra." />
+  <link rel="canonical" href="https://learn.geterdone.io/rational-and-radical-expressions/simplifying-rational-expressions/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Simplifying Rational Expressions | Rational and Radical Expressions | Learn · geterdone.io" />
+  <meta property="og:description" content="One rule does all the work: a factor common to the top and the bottom may be removed. A term may not. The difference between those two words is the most expensive distinction in school algebra." />
+  <meta property="og:url" content="https://learn.geterdone.io/rational-and-radical-expressions/simplifying-rational-expressions/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Simplifying Rational Expressions | Rational and Radical Expressions | Learn · geterdone.io" />
+  <meta name="twitter:description" content="One rule does all the work: a factor common to the top and the bottom may be removed. A term may not. The difference between those two words is the most expensive distinction in school algebra." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/rational-and-radical-expressions/simplifying-rational-expressions/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Rational and Radical Expressions course home">
+        <span class="brand-mark" aria-hidden="true">02</span>
+        <span class="brand-copy"><strong>Rational and Radical Expressions</strong><span>Course 5 · Lesson 02 of 12</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Rational and Radical Expressions</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 02 · Simplifying Rational Expressions</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The cancelling factors is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 5 &middot; Lesson 02 &middot; Rational expressions</span>
+        <h1>Simplifying Rational Expressions</h1>
+        <p>One rule does all the work: a factor common to the top and the bottom may be removed. A term may not. The difference between those two words is the most expensive distinction in school algebra.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">(PK)/(QK)  =  P/Q        provided K ≠ 0
+(x² − 9)/(x² + x − 12)  =  (x + 3)/(x + 4),   x ≠ 3
+(3 − x)/(x − 3)  =  −1          since 3 − x = −(x − 3)
+(x + 3)/x  is ALREADY lowest terms  —  3 is a term</div>
+        <div class="float-label" style="right:16px;bottom:16px;">One legal cancellation, one illegal one</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Simplifying is a single theorem applied carefully. Nearly every error here is the same error: applying it to something that is not a factor.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Only a common factor cancels</h3><p>A <em>factor</em> is joined to the rest by multiplication; a <em>term</em> is joined by addition. <span class="math">(2x)/(2y)</span> cancels to <span class="math">x/y</span>. <span class="math">(2 + x)/(2 + y)</span> cancels to nothing at all.</p></article><article class="card concept-card"><div class="icon">2</div><h3>So factoring is not optional</h3><p>The rule is stated in terms of factors, so an expression that is not factored cannot be simplified &mdash; you cannot see the common factor in <span class="math">(x² − 9)/(x² + x − 12)</span>, and it is there.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Cancelling changes the formula, not the domain</h3><p>The simplified form is equal to the original only where the original exists. Carry the exclusions across; they are part of the answer.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Lowest terms, and the one rule that gets you there</h2></div><p>Why the rule is true, and exactly what it does not permit.</p></div>
+      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; The fundamental principle of fractions</span><p>For polynomials <span class="math">P</span>, <span class="math">Q</span>, <span class="math">K</span> with <span class="math">Q ≠ 0</span> and <span class="math">K ≠ 0</span>, <span class="math">(PK)/(QK) = P/Q</span>. It holds because <span class="math">K/K = 1</span> and multiplying by <span class="math">1</span> changes nothing &mdash; which is also why the condition <span class="math">K ≠ 0</span> cannot be dropped: <span class="math">0/0</span> is not <span class="math">1</span>.</p></div><p>Read the statement carefully. <span class="math">K</span> multiplies <span class="math">P</span>, and <span class="math">K</span> multiplies <span class="math">Q</span>. Nothing in the theorem lets you remove something that is <em>added</em> to <span class="math">P</span>, and there is no companion theorem that does.</p><div class="defbox"><span class="label">Definition &middot; Lowest terms</span><p>A rational expression is in <strong>lowest terms</strong> when its numerator and denominator have no common polynomial factor other than a constant.</p></div><p>The method follows from the theorem. Factor the numerator completely, factor the denominator completely, record the excluded values, then strike out the factors that appear in both.</p><div class="example"><span class="label">Example &middot; A cancellation that is legal</span><p><span class="math">(x² − 9)/(x² + x − 12)</span> factors as <span class="math">((x − 3)(x + 3))/((x + 4)(x − 3))</span>. The denominator is zero at <span class="math">x = 3</span> and <span class="math">x = −4</span>, so both are excluded. The factor <span class="math">x − 3</span> is common, and removing it leaves <span class="math">(x + 3)/(x + 4)</span>, valid for <span class="math">x ≠ 3</span> and <span class="math">x ≠ −4</span>.</p></div><p>Notice what happened to <span class="math">x = 3</span>. It is still excluded, because it was excluded from the expression we were given, but <span class="math">(x + 3)/(x + 4)</span> is quite happy there, taking the value <span class="math">6/7</span>. The two expressions agree everywhere except at that single point, where one exists and the other does not.</p><div class="defbox"><span class="label">Definition &middot; Opposite factors</span><p><span class="math">a − b</span> and <span class="math">b − a</span> differ by a sign: <span class="math">a − b = −(b − a)</span>. So a numerator and denominator that look like opposites do share a factor, and their quotient is <span class="math">−1</span>.</p></div><div class="example"><span class="label">Example &middot; The sign case</span><p><span class="math">(3 − x)/(x − 3)</span>. Write the top as <span class="math">−(x − 3)</span>; the expression becomes <span class="math">(−(x − 3))/(x − 3) = −1</span>, for every <span class="math">x ≠ 3</span>. Checking at <span class="math">x = 0</span> gives <span class="math">3/(−3) = −1</span>, which agrees.</p></div><p>Finally, the error the whole lesson is aimed at. In <span class="math">(x + 3)/x</span> the <span class="math">x</span> on the bottom is a factor of the denominator but only a <em>term</em> of the numerator, so nothing cancels and the expression is already in lowest terms.</p><div class="mathblock">at x = 1 :   (x + 3)/x  =  4/1  =  4        3 is not the answer
+at x = 3 :   (x + 3)/x  =  6/3  =  2        3 is not the answer</div><p>One numerical test would have caught it. That is worth remembering as a general habit: a proposed simplification is an identity, and an identity that fails at <span class="math">x = 1</span> is not an identity.</p></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Cancelling factors</h2></div><p>The common factor found by Euclid, not by pattern-matching</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="rfTitle">Rational expression</strong><span id="rfSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>exact rational arithmetic</span><span class="tone-amber"><i class="legend-swatch"></i>what the answer hides</span></div>
+      </div>
+      <div id="rfWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="rfStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Factor, then cancel</h3>
+          <p>The lab factors both parts, marks the common factors, and keeps the original exclusions beside the reduced form so you can see what the answer no longer records.</p>
+        <div class="field" id="rfFieldPreset">
+          <label for="rfPreset">Worked example</label>
+          <select id="rfPreset"><option value="(x^2 - 4)/(x - 2)||mul">(x^2 - 4)/(x - 2)          cancels completely</option><option value="(x^2 - 9)/(x^2 + 6x + 9)||mul">(x^2 - 9)/(x^2 + 6x + 9)   cancels once, and once is not enough</option><option value="(2 - x)/(x^2 - 4)||mul">(2 - x)/(x^2 - 4)          the sign that goes missing</option><option value="(x^2 + 4)/(x^2 + 2x)||mul">(x^2 + 4)/(x^2 + 2x)       nothing cancels</option><option value="(x + 3)/(x^2 + 3x)||mul">(x + 3)/(x^2 + 3x)         the answer keeps none of the evidence</option><option value="(x^3 - x)/(x^2 - 2x + 1)||mul">(x^3 - x)/(x^2 - 2x + 1)   a repeated factor on the bottom</option></select>
+        </div>
+        <div class="field" id="rfFieldA">
+          <label for="rfExprA" id="rfLabelA">Expression</label>
+          <input id="rfExprA" type="text" value="" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span id="rfK1Lab">&mdash;</span><strong id="rfK1">&mdash;</strong></div>
+          <div class="kpi"><span id="rfK2Lab">&mdash;</span><strong id="rfK2">&mdash;</strong></div>
+          <div class="kpi"><span id="rfK3Lab">&mdash;</span><strong id="rfK3">&mdash;</strong></div>
+        </div>
+        <p class="small-copy" id="rfHint" style="margin:0;">Type any rational expression in <code>x</code>: <code>2x</code>, <code>(x+1)(x-2)</code> and <code>1/x + 1/2</code> all parse. Every coefficient below is an exact fraction, and every excluded value is found from the denominators as you wrote them.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Reducing to lowest terms</h2></div><p>The order is fixed: exclusions are recorded before anything is struck out.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Factor the numerator and the denominator</h3><p>Completely, and separately. Greatest common factor first, then the patterns from course 4 &mdash; difference of squares, trinomials, grouping.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Write down the excluded values</h3><p>From the factored denominator, before you cancel. This is the only moment at which they are visible.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Cancel the common factors</h3><p>One at a time, and only whole factors. If a factor pair differs by a sign, pull <span class="math">−1</span> out of one of them first so the match is exact.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check at one convenient value</h3><p>Pick any <span class="math">x</span> in the domain, usually <span class="math">0</span> or <span class="math">1</span>, and evaluate both forms. They must agree. This catches a cancelled term in seconds.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Factor or term</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Simplify (x² − 9)/(x² + x − 12)</h3><p>Two factorisations, one shared factor, and a check that the result really is the same expression.</p><div class="mathblock">(x² − 9)/(x² + x − 12)
+
+top:      x² − 9        =  (x − 3)(x + 3)
+bottom:   x² + x − 12   =  (x + 4)(x − 3)
+
+exclusions FIRST:   x ≠ 3,   x ≠ −4
+
+=  ((x − 3)(x + 3)) / ((x + 4)(x − 3))
+=  (x + 3)/(x + 4),        x ≠ 3,  x ≠ −4
+
+check at x = 0 :   −9/−12  =  3/4      and   3/4      ✓
+check at x = 1 :   −8/−10  =  4/5      and   4/5      ✓
+at x = 3 :   original undefined,   (x + 3)/(x + 4) = 6/7</div><p>The final line is the reason the exclusion is written twice. The reduced form is defined at <span class="math">x = 3</span> and gives a perfectly reasonable number there, so nothing about <span class="math">6/7</span> announces that it should not exist. Only the condition you carried tells you.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Cancelling a term because it appears on both lines</strong><span><span class="math">(x + 3)/(x + 4)</span> does not become <span class="math">3/4</span>. The <span class="math">x</span> is added, not multiplied, and one substitution &mdash; <span class="math">x = 1</span> gives <span class="math">4/5</span> &mdash; disposes of it.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Dropping the exclusions on the way to the answer</strong><span><span class="math">(x² − 4)/(x − 2) = x + 2</span> is only true for <span class="math">x ≠ 2</span>. Without that condition the statement is false at exactly one point, and lesson 7 draws the hole it leaves.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Missing an opposite pair</strong><span><span class="math">(4 − x²)/(x − 2)</span> looks unfactorable against its denominator until you write <span class="math">4 − x² = −(x − 2)(x + 2)</span>. The answer is <span class="math">−(x + 2)</span>, not "no common factor".</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can justify each cancellation by naming the factor.</strong><p>For any expression you reduce, you should be able to point at the polynomial you removed and say that it multiplied both the numerator and the denominator. If you cannot name it, you have not cancelled &mdash; you have invented a rule that happens to work on this example.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> A numerical check is not a proof, and on this path it is never offered as one: an identity can survive a lucky value. But a single disagreement is conclusive in the other direction, and that is what makes the habit worth having &mdash; it cannot confirm your answer, and it will reliably refute a wrong one.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../rational-expressions-and-their-domains/" rel="prev"><span>Previous lesson</span><strong>01 &middot; Rational Expressions and Their Domains</strong></a>
+      <a class="lesson-link next" href="../multiplying-and-dividing-rational-expressions/" rel="next"><span>Next lesson</span><strong>03 &middot; Multiplying and Dividing Rational Expressions</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Rational and Radical Expressions.</strong> Domains, asymptotes and holes on this course are computed from the factored form in exact arithmetic, and every solution a lab reports has been substituted back into the ORIGINAL equation in front of you. An extraneous root is shown failing that check rather than quietly dropped.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "Simplify <span class=\"math\">(x\u00b2 \u2212 25)/(x\u00b2 \u2212 10x + 25)<\/span>.", "a": ["<span class=\"math\">(x + 5)/(x \u2212 5)<\/span>, with <span class=\"math\">x \u2260 5<\/span>", "<span class=\"math\">(x \u2212 5)/(x + 5)<\/span>, with <span class=\"math\">x \u2260 \u22125<\/span>", "<span class=\"math\">\u22121<\/span>", "It is already in lowest terms"], "c": 0, "why": "The top is <span class=\"math\">(x \u2212 5)(x + 5)<\/span> and the bottom is <span class=\"math\">(x \u2212 5)\u00b2<\/span>. One factor of <span class=\"math\">x \u2212 5<\/span> cancels, leaving <span class=\"math\">(x + 5)/(x \u2212 5)<\/span>. The denominator was zero only at <span class=\"math\">x = 5<\/span>, so that is the single exclusion."}, {"q": "Which of these is a legal cancellation?", "a": ["<span class=\"math\">(x + 4)/4 = x<\/span>", "<span class=\"math\">(x\u00b2 + 1)/x = x + 1<\/span>", "<span class=\"math\">(5(x \u2212 1))/(7(x \u2212 1)) = 5/7<\/span>, for <span class=\"math\">x \u2260 1<\/span>", "<span class=\"math\">(x + 6)/(x + 3) = 2<\/span>"], "c": 2, "why": "Only the third has <span class=\"math\">x \u2212 1<\/span> as a genuine factor of both parts. The others cancel across a <span class=\"math\">+<\/span>, which the fundamental principle never permits &mdash; test the last one at <span class=\"math\">x = 0<\/span>: <span class=\"math\">6/3 = 2<\/span> is true there and false at <span class=\"math\">x = 1<\/span>, where it gives <span class=\"math\">7/4<\/span>."}, {"q": "<span class=\"math\">(2 \u2212 x)/(x \u2212 2)<\/span> equals:", "a": ["<span class=\"math\">1<\/span>", "<span class=\"math\">\u22121<\/span>", "<span class=\"math\">0<\/span>", "<span class=\"math\">\u22121/(x \u2212 2)<\/span>"], "c": 1, "why": "<span class=\"math\">2 \u2212 x = \u2212(x \u2212 2)<\/span>, so the quotient is <span class=\"math\">\u22121<\/span> for every <span class=\"math\">x \u2260 2<\/span>. Numerator and denominator are opposites, not equals; the sign is the whole content of the answer. <span class=\"math\">\u22121/(x \u2212 2)<\/span> is a cancellation carried out on one line only: the <span class=\"math\">x \u2212 2<\/span> is struck out of the numerator and left standing in the denominator, and a factor removed from one line has not been cancelled."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* A polynomial is a dense array of rationals, index = power of x, with the
+     zero polynomial as []. Nothing here is a special case for "nice" numbers:
+     the same routines divide 2x^3 - 3x + 1 by x - 1/2 as divide it by x - 1. */
+  function Pnorm(p) {
+    var out = p.slice();
+    while (out.length && Rzero(out[out.length - 1])) out.pop();
+    return out;
+  }
+  function Pdeg(p) { return Pnorm(p).length - 1; }
+  function Pzero(p) { return Pnorm(p).length === 0; }
+  function Plead(p) { var q = Pnorm(p); return q.length ? q[q.length - 1] : R0; }
+  function Padd(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Radd(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Psub(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Rsub(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Pmul(a, b) {
+    if (!a.length || !b.length) return [];
+    var out = [];
+    for (var i = 0; i < a.length + b.length - 1; i += 1) out.push(R0);
+    for (var j = 0; j < a.length; j += 1) {
+      for (var k = 0; k < b.length; k += 1) out[j + k] = Radd(out[j + k], Rmul(a[j], b[k]));
+    }
+    return Pnorm(out);
+  }
+  function Pscale(p, r) { return Pnorm(p.map(function (c) { return Rmul(c, r); })); }
+  function Ppow(p, k) { var out = [R1]; for (var i = 0; i < k; i += 1) out = Pmul(out, p); return out; }
+  function Peval(p, x) {
+    var acc = R0;
+    for (var i = p.length - 1; i >= 0; i -= 1) acc = Radd(Rmul(acc, x), p[i]);
+    return acc;
+  }
+  function Pderiv(p) {
+    var out = [];
+    for (var i = 1; i < p.length; i += 1) out.push(Rmul(p[i], R(BigInt(i))));
+    return Pnorm(out);
+  }
+  /* Long division, which is lesson material in its own right -- the step list a
+     lab shows IS this loop, printed. */
+  function Pdivmod(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    if (!b.length) throw new Error('division by the zero polynomial');
+    var q = [], r = a.slice(), steps = [];
+    var db = b.length - 1, lb = b[db];
+    while (Pnorm(r).length - 1 >= db && Pnorm(r).length) {
+      r = Pnorm(r);
+      var dr = r.length - 1, coef = Rdiv(r[dr], lb), shift = dr - db;
+      var term = [];
+      for (var i = 0; i < shift; i += 1) term.push(R0);
+      term.push(coef);
+      var product = Pmul(term, b);
+      steps.push({ term: Ptext(term), product: Ptext(product), before: Ptext(r) });
+      r = Psub(r, product);
+      q = Padd(q, term);
+    }
+    return { q: Pnorm(q), r: Pnorm(r), steps: steps };
+  }
+  function Pmonic(p) { var l = Plead(p); return Rzero(l) ? p : Pscale(p, Rinv(l)); }
+  function Pgcd(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    while (b.length) { var r = Pdivmod(a, b).r; a = b; b = r; }
+    return a.length ? Pmonic(a) : a;
+  }
+
+  /* Reader-facing form. The rules here are the ones a marker applies: an
+     implicit coefficient of 1 is not written, a negative term joins with a
+     minus rather than a plus, and a fractional coefficient is bracketed so
+     3/4x^2 can never be misread as 3/(4x^2). */
+  function Ptext(p, v) {
+    v = v || 'x';
+    p = Pnorm(p);
+    if (!p.length) return '0';
+    var out = '';
+    for (var i = p.length - 1; i >= 0; i -= 1) {
+      var c = p[i];
+      if (Rzero(c)) continue;
+      var neg = Rsign(c) < 0, mag = Rabs(c);
+      out += out === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      var one = Requ(mag, R1);
+      var coef = one && i > 0 ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+      var power = i === 0 ? '' : (i === 1 ? v : v + '^' + i);
+      out += coef + power;
+    }
+    return out;
+  }
+  /* Bracketed when it is a sum, so (x + 1)(x - 2) prints correctly. */
+  function Pfactortext(p, v) {
+    var t = Ptext(p, v);
+    return (t.indexOf(' + ') >= 0 || t.indexOf(' - ') >= 0) ? '(' + t + ')' : t;
+  }
+
+  /* ---- factoring over the rationals ----
+     The rational root theorem, applied rather than quoted: clear denominators,
+     list the divisors of the constant and leading terms, and TEST each
+     candidate. A reader who runs this on x^2 + 1 sees the search come back
+     empty, which is the point of the lesson that pairs with it. */
+  function bdivisors(n) {
+    if (n < 0n) n = -n;
+    if (n === 0n) return [];
+    var out = [], i = 1n;
+    while (i * i <= n) {
+      if (n % i === 0n) { out.push(i); if (i * i !== n) out.push(n / i); }
+      i += 1n;
+      if (out.length > 512) break;   /* lesson-sized numbers only; see Pfactor */
+    }
+    out.sort(function (a, b) { return a < b ? -1 : (a > b ? 1 : 0); });
+    return out;
+  }
+  /* The same polynomial with integer, coprime coefficients and a positive
+     leading term, plus the rational that was taken out. */
+  function Pprimitive(p) {
+    p = Pnorm(p);
+    if (!p.length) return { poly: [], content: R1 };
+    var den = 1n;
+    p.forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ints = p.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ints.forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    if (ints[ints.length - 1] < 0n) g = -g;
+    return {
+      poly: ints.map(function (v) { return R(v / g); }),
+      content: R(g, den)
+    };
+  }
+  function Prationalroots(p) {
+    var prim = Pprimitive(p).poly;
+    if (prim.length < 2) return [];
+    var roots = [], seen = {};
+    var a0 = prim[0].n, an = prim[prim.length - 1].n;
+    if (a0 === 0n) { roots.push(R0); seen['0/1'] = 1; }
+    var ps = bdivisors(a0 === 0n ? an : a0), qs = bdivisors(an);
+    for (var i = 0; i < ps.length; i += 1) {
+      for (var j = 0; j < qs.length; j += 1) {
+        for (var s = 0; s < 2; s += 1) {
+          var cand = R(s ? -ps[i] : ps[i], qs[j]);
+          var key = Rtext(cand);
+          if (seen[key]) continue;
+          seen[key] = 1;
+          if (Rzero(Peval(prim, cand))) roots.push(cand);
+        }
+      }
+    }
+    roots.sort(Rcmp);
+    return roots;
+  }
+  /* Full factorisation over Q: a rational content, integer linear factors with
+     their multiplicities, and whatever is left that has no rational root.
+     `complete` is false when the leftover is not linear or quadratic -- the lab
+     says so rather than implying the factorisation finished. */
+  function Pfactor(p) {
+    p = Pnorm(p);
+    if (!p.length) return { content: R0, factors: [], rest: [], complete: true };
+    var prim = Pprimitive(p);
+    var content = prim.content, work = prim.poly, factors = [];
+    var guard = 0;
+    while (Pdeg(work) > 0 && guard < 64) {
+      guard += 1;
+      var roots = Prationalroots(work);
+      if (!roots.length) break;
+      var r = roots[0];
+      /* root p/q  ->  integer factor (qx - p), which keeps every coefficient
+         whole and is the form the reader is asked to produce. */
+      var factor = [Rneg(R(r.n)), R(r.d)];
+      var mult = 0;
+      while (Pdeg(work) > 0) {
+        var dm = Pdivmod(work, factor);
+        if (!Pzero(dm.r)) break;
+        work = dm.q; mult += 1;
+      }
+      factors.push({ poly: factor, mult: mult, root: r });
+    }
+    /* Whatever scalar the integer divisions left behind belongs to the content. */
+    if (Pdeg(work) === 0) { content = Rmul(content, work[0]); work = [R1]; }
+    var rest = Pdeg(work) > 0 ? work : [];
+    return { content: content, factors: factors, rest: rest, complete: Pdeg(work) <= 2 };
+  }
+  function Pfactortextfull(p, v) {
+    var f = Pfactor(p);
+    if (!f.factors.length && !f.rest.length) return Rtext(f.content);
+    var pieces = [];
+    f.factors.forEach(function (item) { pieces.push({ poly: item.poly, mult: item.mult }); });
+    if (f.rest.length) pieces.push({ poly: f.rest, mult: 1 });
+    /* A polynomial that does not factor is written as itself. Bracketing a
+       lone factor -- "(x^2 + 1)" -- suggests something was multiplied by
+       something, which is the opposite of what that result says. */
+    if (pieces.length === 1 && pieces[0].mult === 1 && Requ(f.content, R1)) {
+      return Ptext(pieces[0].poly, v);
+    }
+    var out = '';
+    if (!Requ(f.content, R1)) out += Requ(f.content, R(-1n)) ? '-' : Rterm(f.content);
+    pieces.forEach(function (item) {
+      out += Pfactortext(item.poly, v) + (item.mult > 1 ? '^' + item.mult : '');
+    });
+    return out || '1';
+  }
+
+  /* Exact irrational answers.
+
+     sqrt(D) for a rational D is either rational or irrational, and the second
+     case is not a failure -- it is the answer. A lesson that solves
+     x^2 - 2x - 4 = 0 wants "1 +- sqrt(5)", not "3.2360679...", so the roots of
+     every quadratic on this path are carried as  p + q*sqrt(k)  with p and q
+     exact rationals and k a squarefree integer. */
+  function bsqrtsimp(n) {
+    /* n = s^2 * k with k squarefree; returns [s, k]. */
+    var s = 1n, k = n, f = 2n;
+    while (f * f <= k) {
+      while (k % (f * f) === 0n) { k /= f * f; s *= f; }
+      f += 1n;
+      if (f > 100000n) break;   /* lesson-sized radicands */
+    }
+    return [s, k];
+  }
+  /* sqrt(a) for a rational a >= 0, as { q, k } meaning q * sqrt(k). k === 1n
+     exactly when the root is rational. */
+  function Rsurd(a) {
+    if (a.n < 0n) return null;
+    if (a.n === 0n) return { q: R0, k: 1n };
+    /* sqrt(p/d) = sqrt(p*d)/d */
+    var pair = bsqrtsimp(a.n * a.d);
+    return { q: R(pair[0], a.d), k: pair[1] };
+  }
+  function surdtext(s) {
+    if (s.k === 1n) return Rtext(s.q);
+    if (Requ(s.q, R1)) return 'sqrt(' + s.k + ')';
+    return Rterm(s.q) + 'sqrt(' + s.k + ')';
+  }
+  /* "p +- q sqrt(k)", the form a reader is expected to write down. */
+  function pmtext(p, s, imaginary) {
+    var unit = imaginary ? 'i' : '';
+    if (s.k === 1n && Rzero(s.q)) return Rtext(p);
+    var mag = surdtext(s);
+    if (s.k !== 1n && Requ(Rabs(s.q), R1)) mag = 'sqrt(' + s.k + ')';
+    else if (s.k !== 1n) mag = Rterm(Rabs(s.q)) + 'sqrt(' + s.k + ')';
+    else mag = Rtext(Rabs(s.q));
+    var right = unit ? (mag === '1' ? 'i' : mag + 'i') : mag;
+    if (Rzero(p)) return '+-' + right;
+    return Rtext(p) + ' +- ' + right;
+  }
+  /* The exact roots of ax^2 + bx + c, whatever the discriminant does.
+     Returns { disc, kind, p, s, roots } where each root is p +- s (times i when
+     the discriminant is negative), and `roots` holds the rational ones only. */
+  function quadroots(a, b, c) {
+    var disc = Rsub(Rmul(b, b), Rmul(R(4n), Rmul(a, c)));
+    var p = Rdiv(Rneg(b), Rmul(R(2n), a));
+    var sign = Rsign(disc);
+    var mag = Rsurd(sign < 0 ? Rneg(disc) : disc);
+    var s = { q: Rdiv(mag.q, Rabs(Rmul(R(2n), a))), k: mag.k };
+    var kind = sign < 0 ? 'complex' : (sign === 0 ? 'double' : (s.k === 1n ? 'rational' : 'irrational'));
+    var roots = [];
+    if (kind === 'double') roots = [p];
+    else if (kind === 'rational') roots = [Radd(p, s.q), Rsub(p, s.q)].sort(Rcmp);
+    return { disc: disc, kind: kind, p: p, s: s, roots: roots };
+  }
+
+  /* A parser for what a reader actually types.
+
+     It accepts implicit multiplication -- 2x, 3(x+1), (x+1)(x-2), 4x^2 --
+     because that is how algebra is written on paper, and a lab that rejected
+     "2x" would be teaching its own notation rather than the subject's. A
+     single letter is a variable; a name of two or more letters is a function,
+     which is what lets xy mean x times y while sqrt(x) stays one call. */
+  function Etokenize(src) {
+    var out = [], i = 0, s = String(src);
+    while (i < s.length) {
+      var c = s[i];
+      if (c === ' ' || c === '\t') { i += 1; continue; }
+      if (/[0-9.]/.test(c)) {
+        var j = i;
+        while (j < s.length && /[0-9.]/.test(s[j])) j += 1;
+        out.push({ t: 'num', v: s.slice(i, j) }); i = j; continue;
+      }
+      if (/[A-Za-z]/.test(c)) {
+        var k = i;
+        while (k < s.length && /[A-Za-z]/.test(s[k])) k += 1;
+        var word = s.slice(i, k);
+        if (word.length > 1 && FUNCS[word.toLowerCase()]) {
+          out.push({ t: 'fn', v: word.toLowerCase() }); i = k; continue;
+        }
+        /* Not a known function: every letter is its own variable, so "xy" is a
+           product and a typo like "sqrtt(x)" fails loudly instead of silently
+           becoming a product of six variables named s, q, r, t, t. */
+        if (word.length > 1 && /^[a-z]+$/.test(word) && word.length > 3) {
+          throw new Error('unknown function "' + word + '"');
+        }
+        for (var m = i; m < k; m += 1) out.push({ t: 'var', v: s[m] });
+        i = k; continue;
+      }
+      if ('+-*/^(),'.indexOf(c) >= 0) { out.push({ t: c }); i += 1; continue; }
+      throw new Error('unexpected character "' + c + '"');
+    }
+    return out;
+  }
+
+  var FUNCS = {
+    sqrt: function (v) { return Math.sqrt(v); },
+    cbrt: function (v) { return Math.cbrt(v); },
+    abs: function (v) { return Math.abs(v); },
+    ln: function (v) { return Math.log(v); },
+    log: function (v) { return Math.log(v) / Math.LN10; },
+    log2: function (v) { return Math.log(v) / Math.LN2; },
+    exp: function (v) { return Math.exp(v); }
+  };
+
+  function Eparse(src) {
+    var toks = Etokenize(src), pos = 0;
+    function peek() { return toks[pos]; }
+    function eat(t) { if (toks[pos] && toks[pos].t === t) { pos += 1; return true; } return false; }
+    function expect(t) { if (!eat(t)) throw new Error('expected "' + t + '"'); }
+
+    function primary() {
+      var tk = peek();
+      if (!tk) throw new Error('the expression ends early');
+      if (tk.t === 'num') { pos += 1; return { k: 'num', v: tk.v }; }
+      if (tk.t === 'var') { pos += 1; return { k: 'var', v: tk.v }; }
+      if (tk.t === 'fn') { pos += 1; expect('('); var a = sum(); expect(')'); return { k: 'fn', v: tk.v, a: a }; }
+      if (tk.t === '(') { pos += 1; var e = sum(); expect(')'); return e; }
+      if (tk.t === '-') { pos += 1; return { k: 'neg', a: unary() }; }
+      if (tk.t === '+') { pos += 1; return unary(); }
+      throw new Error('unexpected "' + (tk.v || tk.t) + '"');
+    }
+    /* ^ binds tighter than unary minus on the left and is right-associative,
+       so -x^2 is -(x^2) and 2^3^2 is 2^9. Both are the conventions a reader
+       is marked against. */
+    function power() {
+      var base = primary();
+      if (eat('^')) return { k: 'pow', a: base, b: unary() };
+      return base;
+    }
+    function unary() {
+      if (eat('-')) return { k: 'neg', a: unary() };
+      if (eat('+')) return unary();
+      return power();
+    }
+    function implicit(node) {
+      /* juxtaposition is multiplication: 2x, 3(x+1), (x+1)(x-2), 2sqrt(x) */
+      while (peek() && (peek().t === 'num' || peek().t === 'var' || peek().t === 'fn' || peek().t === '(')) {
+        node = { k: 'mul', a: node, b: power() };
+      }
+      return node;
+    }
+    function product() {
+      var node = implicit(unary());
+      while (peek() && (peek().t === '*' || peek().t === '/')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '*' ? 'mul' : 'div', a: node, b: implicit(unary()) };
+      }
+      return node;
+    }
+    function sum() {
+      var node = product();
+      while (peek() && (peek().t === '+' || peek().t === '-')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '+' ? 'add' : 'sub', a: node, b: product() };
+      }
+      return node;
+    }
+    var tree = sum();
+    if (pos < toks.length) throw new Error('unexpected "' + (toks[pos].v || toks[pos].t) + '"');
+    return tree;
+  }
+
+  /* Numeric evaluation, for drawing. Returns NaN outside the domain rather
+     than throwing, because a grapher must be able to ask for f(-1) on sqrt(x)
+     and simply not plot a point there. */
+  function Eeval(node, env) {
+    switch (node.k) {
+      case 'num': return parseFloat(node.v);
+      case 'var': return (env && node.v in env) ? env[node.v] : NaN;
+      case 'neg': return -Eeval(node.a, env);
+      case 'add': return Eeval(node.a, env) + Eeval(node.b, env);
+      case 'sub': return Eeval(node.a, env) - Eeval(node.b, env);
+      case 'mul': return Eeval(node.a, env) * Eeval(node.b, env);
+      case 'div': return Eeval(node.a, env) / Eeval(node.b, env);
+      case 'pow': return Math.pow(Eeval(node.a, env), Eeval(node.b, env));
+      case 'fn': return FUNCS[node.v](Eeval(node.a, env));
+    }
+    return NaN;
+  }
+
+  /* The same tree as a polynomial over Q in one variable, or null when it is
+     not one. This is what lets a reader type a polynomial and have the EXACT
+     machinery -- factoring, division, the rational root search -- run on it,
+     rather than a floating-point approximation of it. */
+  function Epoly(node, v) {
+    v = v || 'x';
+    switch (node.k) {
+      case 'num': { var r = Rparse(node.v); return r === null ? null : (Rzero(r) ? [] : [r]); }
+      case 'var': return node.v === v ? [R0, R1] : null;
+      case 'neg': { var a = Epoly(node.a, v); return a === null ? null : Pscale(a, R(-1n)); }
+      case 'add': case 'sub': case 'mul': {
+        var l = Epoly(node.a, v), r2 = Epoly(node.b, v);
+        if (l === null || r2 === null) return null;
+        return node.k === 'add' ? Padd(l, r2) : (node.k === 'sub' ? Psub(l, r2) : Pmul(l, r2));
+      }
+      case 'div': {
+        var num = Epoly(node.a, v), den = Epoly(node.b, v);
+        if (num === null || den === null || Pdeg(den) !== 0) return null;
+        return Pscale(num, Rinv(den[0]));   /* division by a constant only */
+      }
+      case 'pow': {
+        var base = Epoly(node.a, v), ex = Epoly(node.b, v);
+        if (base === null || ex === null || Pdeg(ex) > 0) return null;
+        var e = ex.length ? ex[0] : R0;
+        if (!Rint(e) || e.n < 0n || e.n > 64n) return null;
+        return Ppow(base, Number(e.n));
+      }
+    }
+    return null;
+  }
+  function Epolyof(src, v) {
+    try { return Epoly(Eparse(src), v || 'x'); } catch (e) { return null; }
+  }
+
+  /* The grapher.
+
+     Every curve on this path is SAMPLED from the function the lesson is about.
+     There is not one stored path string anywhere in these labs, which is what
+     makes a drawing evidence rather than decoration: when a lab prints a vertex
+     at (3, -4) and draws the parabola through it, the label and the picture
+     came out of the same evaluation and cannot disagree.
+
+     Coordinates are the one deliberate use of floating point here -- a pixel is
+     a pixel. Everything the reader is told in words comes from the exact side. */
+  var PLOT_W = 660, PLOT_H = 420, PAD_L = 44, PAD_R = 16, PAD_T = 16, PAD_B = 34;
+
+  function svgel(name, attrs) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  /* A grid step a reader can count on: 1, 2 or 5 times a power of ten, chosen
+     so the axis carries roughly eight divisions whatever the window is. */
+  function nicestep(span) {
+    var raw = span / 8, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+    var n = raw / mag;
+    return (n < 1.5 ? 1 : (n < 3.5 ? 2 : (n < 7.5 ? 5 : 10))) * mag;
+  }
+  function ticktext(v, step) {
+    if (Math.abs(v) < step / 1000) return '0';
+    var places = Math.max(0, -Math.floor(Math.log(step) / Math.LN10));
+    return v.toFixed(Math.min(places, 4)).replace(/\.?0+$/, function (m) {
+      return m.indexOf('.') === 0 ? '' : m;
+    });
+  }
+
+  function Plot(svg, win) {
+    var xmin = win.xmin, xmax = win.xmax, ymin = win.ymin, ymax = win.ymax;
+    var iw = PLOT_W - PAD_L - PAD_R, ih = PLOT_H - PAD_T - PAD_B;
+    svg.setAttribute('viewBox', '0 0 ' + PLOT_W + ' ' + PLOT_H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+
+    function sx(x) { return PAD_L + (x - xmin) / (xmax - xmin) * iw; }
+    function sy(y) { return PAD_T + (ymax - y) / (ymax - ymin) * ih; }
+
+    var defs = svgel('defs', {});
+    var clip = svgel('clipPath', { id: 'plotclip' });
+    clip.appendChild(svgel('rect', { x: PAD_L, y: PAD_T, width: iw, height: ih }));
+    defs.appendChild(clip);
+    svg.appendChild(defs);
+
+    var plotted = svgel('g', { 'clip-path': 'url(#plotclip)' });
+
+    var api = {
+      sx: sx, sy: sy, win: win,
+      /* Grid, axes, ticks. Drawn first so every curve sits on top of them. */
+      frame: function () {
+        var gx = nicestep(xmax - xmin), gy = nicestep(ymax - ymin);
+        var g = svgel('g', {});
+        var start = Math.ceil(xmin / gx) * gx, v;
+        for (v = start; v <= xmax + gx / 2; v += gx) {
+          if (Math.abs(v) < gx / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: sx(v), y1: PAD_T, x2: sx(v), y2: PAD_T + ih }));
+        }
+        start = Math.ceil(ymin / gy) * gy;
+        for (v = start; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: PAD_L, y1: sy(v), x2: PAD_L + iw, y2: sy(v) }));
+        }
+        /* The axes sit at zero when zero is in view and at the near edge when
+           it is not, so a window like 10 <= x <= 20 still has a labelled frame
+           rather than two axes drawn off-screen. */
+        var ay = ymin <= 0 && ymax >= 0 ? sy(0) : (ymin > 0 ? PAD_T + ih : PAD_T);
+        var ax = xmin <= 0 && xmax >= 0 ? sx(0) : (xmin > 0 ? PAD_L : PAD_L + iw);
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: PAD_L, y1: ay, x2: PAD_L + iw, y2: ay }));
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: ax, y1: PAD_T, x2: ax, y2: PAD_T + ih }));
+        for (v = Math.ceil(xmin / gx) * gx; v <= xmax + gx / 2; v += gx) {
+          var tx = svgel('text', { class: 'plot-tick', x: sx(v), y: PAD_T + ih + 15, 'text-anchor': 'middle' });
+          tx.textContent = ticktext(v, gx);
+          g.appendChild(tx);
+        }
+        for (v = Math.ceil(ymin / gy) * gy; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          var ty = svgel('text', { class: 'plot-tick', x: PAD_L - 7, y: sy(v) + 3.5, 'text-anchor': 'end' });
+          ty.textContent = ticktext(v, gy);
+          g.appendChild(ty);
+        }
+        svg.appendChild(g);
+        svg.appendChild(plotted);
+        return api;
+      },
+      /* Sample the function across the drawing width and join the samples.
+         A segment is BROKEN where the value stops being a real number and
+         where it jumps by more than three window heights between neighbouring
+         pixels -- that jump is a pole, and joining across it would draw a
+         vertical line that is not part of the graph. Readers meet exactly that
+         line in every graphing tool, and it is the reason they think 1/x is
+         connected. */
+      curve: function (fn, cls) {
+        var runs = [], run = [], prev = null, steps = 480;
+        for (var i = 0; i <= steps; i += 1) {
+          var x = xmin + (xmax - xmin) * i / steps, y = fn(x);
+          if (typeof y !== 'number' || !isFinite(y)) { if (run.length > 1) runs.push(run); run = []; prev = null; continue; }
+          if (prev !== null && Math.abs(y - prev) > 3 * (ymax - ymin)) {
+            if (run.length > 1) runs.push(run);
+            run = [];
+          }
+          run.push(sx(x) + ',' + sy(Math.max(ymin - (ymax - ymin), Math.min(ymax + (ymax - ymin), y))));
+          prev = y;
+        }
+        if (run.length > 1) runs.push(run);
+        runs.forEach(function (pts) {
+          plotted.appendChild(svgel('polyline', { class: cls || 'plot-curve', points: pts.join(' ') }));
+        });
+        return api;
+      },
+      point: function (x, y, cls, label) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: cls || 'plot-point', cx: sx(x), cy: sy(y), r: 5 }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 9, y: sy(y) - 8 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hole: function (x, y) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: 'plot-hole', cx: sx(x), cy: sy(y), r: 5 }));
+        return api;
+      },
+      vline: function (x, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: sx(x), y1: PAD_T, x2: sx(x), y2: PAD_T + ih }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 6, y: PAD_T + 14 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hline: function (y, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: PAD_L, y1: sy(y), x2: PAD_L + iw, y2: sy(y) }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: PAD_L + 6, y: sy(y) - 6 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      segment: function (x1, y1, x2, y2, cls) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-aux', x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2) }));
+        return api;
+      },
+      /* The solution set of an inequality, shaded by testing the predicate on
+         a grid of sample points rather than by reasoning about the boundary. */
+      shade: function (test, cls) {
+        var cols = 90, rows = 58;
+        for (var i = 0; i < cols; i += 1) {
+          for (var j = 0; j < rows; j += 1) {
+            var x = xmin + (xmax - xmin) * (i + 0.5) / cols;
+            var y = ymin + (ymax - ymin) * (j + 0.5) / rows;
+            if (!test(x, y)) continue;
+            plotted.appendChild(svgel('rect', {
+              class: cls || 'plot-shade', x: sx(x) - iw / cols / 2, y: sy(y) - ih / rows / 2,
+              width: iw / cols + 0.6, height: ih / rows + 0.6
+            }));
+          }
+        }
+        return api;
+      },
+      label: function (x, y, text, cls) {
+        var t = svgel('text', { class: cls || 'plot-label', x: sx(x), y: sy(y) });
+        t.textContent = text;
+        plotted.appendChild(t);
+        return api;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return api; }
+    };
+    return api;
+  }
+
+  /* A one-dimensional cousin: the number line every inequality lesson needs. */
+  function NumberLine(svg, lo, hi) {
+    var W = 660, H = 88, pad = 30, iw = W - 2 * pad;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+    function sx(x) { return pad + (x - lo) / (hi - lo) * iw; }
+    svg.appendChild(svgel('line', { class: 'plot-axis', x1: pad, y1: 44, x2: W - pad, y2: 44 }));
+    var step = nicestep(hi - lo);
+    for (var v = Math.ceil(lo / step) * step; v <= hi + step / 2; v += step) {
+      svg.appendChild(svgel('line', { class: 'plot-tickmark', x1: sx(v), y1: 38, x2: sx(v), y2: 50 }));
+      var t = svgel('text', { class: 'plot-tick', x: sx(v), y: 68, 'text-anchor': 'middle' });
+      t.textContent = ticktext(v, step);
+      svg.appendChild(t);
+    }
+    return {
+      sx: sx,
+      /* Closed ends are filled, open ends are hollow -- the distinction the
+         lesson is usually about. */
+      interval: function (a, b, closedA, closedB) {
+        var x1 = sx(Math.max(a, lo)), x2 = sx(Math.min(b, hi));
+        svg.appendChild(svgel('line', { class: 'plot-interval', x1: x1, y1: 44, x2: x2, y2: 44 }));
+        if (a >= lo) svg.appendChild(svgel('circle', { class: closedA ? 'plot-end closed' : 'plot-end open', cx: x1, cy: 44, r: 6 }));
+        if (b <= hi) svg.appendChild(svgel('circle', { class: closedB ? 'plot-end closed' : 'plot-end open', cx: x2, cy: 44, r: 6 }));
+        return this;
+      },
+      point: function (x, closed) {
+        svg.appendChild(svgel('circle', { class: closed ? 'plot-end closed' : 'plot-end open', cx: sx(x), cy: 44, r: 6 }));
+        return this;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return this; }
+    };
+  }
+
+  /* ---- rational functions over Q ----
+
+     { n: poly, d: poly } with NOTHING cancelled, ever, on construction. Two
+     rational functions that are equal as functions on their common domain can
+     have different n and d here, and that difference is exactly the subject of
+     this course: (x^2 - 4)/(x - 2) and (x + 2) are the same rule at every x
+     except one, and the one is the lesson. */
+  function RFnew(n, d) { return { n: Pnorm(n), d: Pnorm(d) }; }
+  function RFadd(a, b) { return RFnew(Padd(Pmul(a.n, b.d), Pmul(b.n, a.d)), Pmul(a.d, b.d)); }
+  function RFsub(a, b) { return RFnew(Psub(Pmul(a.n, b.d), Pmul(b.n, a.d)), Pmul(a.d, b.d)); }
+  function RFmul(a, b) { return RFnew(Pmul(a.n, b.n), Pmul(a.d, b.d)); }
+  function RFdiv(a, b) { return RFnew(Pmul(a.n, b.d), Pmul(a.d, b.n)); }
+  function RFneg(a) { return RFnew(Pscale(a.n, R(-1n)), a.d); }
+  function RFconst(r) { return RFnew(Rzero(r) ? [] : [r], [R1]); }
+
+  /* Clear the denominators of the coefficients and divide out the integer
+     content of BOTH polynomials at once, then force the leading coefficient of
+     the bottom positive. (x + 1)/(2x) rather than ((1/2)x + 1/2)/x, which is
+     the same function written in a form no reader would hand in. */
+  function RFint(n, d) {
+    n = Pnorm(n); d = Pnorm(d);
+    if (!n.length) return { n: [], d: [R1] };
+    var den = 1n;
+    n.concat(d).forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ni = n.map(function (c) { return c.n * (den / c.d); });
+    var di = d.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ni.concat(di).forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    if (di[di.length - 1] < 0n) g = -g;
+    return {
+      n: ni.map(function (v) { return R(v / g); }),
+      d: di.map(function (v) { return R(v / g); })
+    };
+  }
+  /* Reduce to lowest terms. The polynomial gcd is SEARCHED for by Euclid's
+     algorithm on polynomials, not matched against a table of patterns, so it
+     finds the common factor of (x^3 - x) and (x^2 - 2x + 1) for the same
+     reason it finds the common factor of 12 and 18. */
+  function RFreduce(rf) {
+    if (Pzero(rf.n)) return { rf: { n: [], d: [R1] }, gcd: [R1], cancelled: false };
+    var g = Pgcd(rf.n, rf.d);
+    var n = rf.n, d = rf.d, cancelled = false;
+    if (Pdeg(g) > 0) { n = Pdivmod(n, g).q; d = Pdivmod(d, g).q; cancelled = true; }
+    var out = RFint(n, d);
+    return { rf: out, gcd: g, cancelled: cancelled };
+  }
+  function RFeq(a, b) { return Pzero(Psub(Pmul(a.n, b.d), Pmul(b.n, a.d))); }
+
+  /* Is there a top-level + or - outside every bracket? That is the only case
+     where a fraction's numerator or denominator needs wrapping. */
+  function toplevelsum(t) {
+    var depth = 0;
+    for (var i = 0; i < t.length; i += 1) {
+      var c = t.charAt(i);
+      if (c === '(') depth += 1;
+      else if (c === ')') depth -= 1;
+      else if (depth === 0 && (c === '+' || c === '-') && i > 0 && t.charAt(i - 1) === ' ') return true;
+    }
+    return false;
+  }
+  function grouptext(t) { return toplevelsum(t) ? '(' + t + ')' : t; }
+  /* A denominator is bracketed unless it is a single unmistakable token. "2x"
+     written after a slash is not 2x: (x + 2)/2x reads as ((x + 2)/2)x to
+     anyone applying the precedence rules the rest of the course insists on. */
+  function denomtext(t) {
+    return (/^[0-9]+$/.test(t) || /^[A-Za-z](\^[0-9]+)?$/.test(t)) ? t : '(' + t + ')';
+  }
+  function RFtext(rf, v) {
+    if (Pzero(rf.n)) return '0';
+    if (Pdeg(rf.d) === 0 && Requ(rf.d[0], R1)) return Ptext(rf.n, v);
+    return grouptext(Ptext(rf.n, v)) + '/' + denomtext(Ptext(rf.d, v));
+  }
+  /* Factored, top and bottom. Square brackets rather than round ones because
+     the factors already carry round brackets, and [(x+2)(x-2)] / [(x+3)(x-3)]
+     is the only form of this that cannot be misread. */
+  function RFfactortext(rf, v) {
+    if (Pzero(rf.n)) return '0';
+    var top = Pfactortextfull(rf.n, v);
+    if (Pdeg(rf.d) === 0 && Requ(rf.d[0], R1)) return top;
+    return '[' + top + '] / [' + Pfactortextfull(rf.d, v) + ']';
+  }
+  /* The least common multiple, as a polynomial: ab/gcd(a, b). Keeping the
+     integer content (rather than taking the primitive part) is deliberate --
+     the LCD of 2x and 3x has to be 6x if the multipliers the lesson writes
+     down, 3 and 2, are going to be whole numbers. */
+  function Plcm(a, b) {
+    if (Pzero(a) || Pzero(b)) return [];
+    var l = Pdivmod(Pmul(a, b), Pgcd(a, b)).q;
+    if (Rsign(Plead(l)) < 0) l = Pscale(l, R(-1n));
+    return l;
+  }
+
+  /* ---- the reader's text, as a rational function ----
+
+     Two things come back, and the SECOND one is what this course is about:
+       rf    the rational function, with nothing cancelled,
+       bans  every polynomial the expression divided by, in the order it
+             divided by them.
+     `bans` cannot be recovered from `rf`. In 1/(1/x) the final denominator is
+     1, and yet x = 0 is not in the domain; the ban list is the only place that
+     survives. */
+  function ErfBuild(node, v, bans) {
+    var a, b, e, k;
+    switch (node.k) {
+      case 'num': {
+        var r = Rparse(node.v);
+        if (r === null) throw new Error('"' + node.v + '" is not a number this lab can hold exactly');
+        return RFconst(r);
+      }
+      case 'var':
+        if (node.v !== v) throw new Error('this lab works in one variable, ' + v + ', and found "' + node.v + '"');
+        return RFnew([R0, R1], [R1]);
+      case 'neg': return RFneg(ErfBuild(node.a, v, bans));
+      case 'add': return RFadd(ErfBuild(node.a, v, bans), ErfBuild(node.b, v, bans));
+      case 'sub': return RFsub(ErfBuild(node.a, v, bans), ErfBuild(node.b, v, bans));
+      case 'mul': return RFmul(ErfBuild(node.a, v, bans), ErfBuild(node.b, v, bans));
+      case 'div': {
+        a = ErfBuild(node.a, v, bans); b = ErfBuild(node.b, v, bans);
+        if (Pzero(b.n)) throw new Error('it divides by 0');
+        bans.push(b.n);
+        return RFdiv(a, b);
+      }
+      case 'pow': {
+        a = ErfBuild(node.a, v, bans);
+        b = ErfBuild(node.b, v, bans);
+        if (Pdeg(b.n) > 0 || Pdeg(b.d) > 0) throw new Error('an exponent has to be a constant whole number here');
+        e = Pzero(b.n) ? R0 : Rdiv(b.n[0], b.d.length ? b.d[0] : R1);
+        if (!Rint(e) || e.n > 24n || e.n < -24n) throw new Error('an exponent has to be a whole number between -24 and 24 here');
+        k = Number(e.n);
+        if (k < 0) {
+          if (Pzero(a.n)) throw new Error('it raises 0 to a negative power, which divides by 0');
+          bans.push(a.n);
+          return RFnew(Ppow(a.d, -k), Ppow(a.n, -k));
+        }
+        return RFnew(Ppow(a.n, k), Ppow(a.d, k));
+      }
+      case 'fn': throw new Error('"' + node.v + '(...)" is not a rational expression');
+    }
+    throw new Error('this is not a rational expression');
+  }
+
+  /* Substitution into the expression AS THE READER WROTE IT, in exact
+     rationals. null means "undefined there", which is precisely what an
+     extraneous solution does and precisely what the cleared equation can no
+     longer tell you. Every check in solve mode runs through this, on the
+     original tree, not on the tidied-up fraction. */
+  function Eexact(node, v, x) {
+    var a, b, k;
+    switch (node.k) {
+      case 'num': return Rparse(node.v);
+      case 'var': return node.v === v ? x : null;
+      case 'neg': a = Eexact(node.a, v, x); return a === null ? null : Rneg(a);
+      case 'add': a = Eexact(node.a, v, x); b = Eexact(node.b, v, x); return (a === null || b === null) ? null : Radd(a, b);
+      case 'sub': a = Eexact(node.a, v, x); b = Eexact(node.b, v, x); return (a === null || b === null) ? null : Rsub(a, b);
+      case 'mul': a = Eexact(node.a, v, x); b = Eexact(node.b, v, x); return (a === null || b === null) ? null : Rmul(a, b);
+      case 'div':
+        a = Eexact(node.a, v, x); b = Eexact(node.b, v, x);
+        return (a === null || b === null || Rzero(b)) ? null : Rdiv(a, b);
+      case 'pow':
+        a = Eexact(node.a, v, x); b = Eexact(node.b, v, x);
+        if (a === null || b === null || !Rint(b) || b.n > 24n || b.n < -24n) return null;
+        k = Number(b.n);
+        if (k < 0 && Rzero(a)) return null;
+        return Rpow(a, k);
+      case 'fn': return null;
+    }
+    return null;
+  }
+
+  /* ---- where a polynomial is zero ----
+
+     Rational zeros are named exactly, by the rational root search. A quadratic
+     left over from that search is solved exactly and gives a conjugate surd
+     pair or none at all. Anything of higher degree with no rational root is
+     REPORTED as such: a lab that listed the rational exclusions and went quiet
+     about the rest would be telling the reader a domain that is too big. */
+  function zerosOf(poly) {
+    var out = { rat: [], surd: [], unknown: null, nozero: null };
+    if (Pdeg(poly) < 1) return out;
+    var f = Pfactor(poly);
+    f.factors.forEach(function (item) { out.rat.push(item.root); });
+    if (f.rest.length) {
+      if (Pdeg(f.rest) === 2) {
+        var q = quadroots(f.rest[2], f.rest[1], f.rest[0]);
+        if (q.kind === 'complex') out.nozero = f.rest;
+        else out.surd.push({ p: q.p, s: q.s, min: Pmonic(f.rest), poly: f.rest });
+      } else {
+        out.unknown = f.rest;
+      }
+    }
+    return out;
+  }
+  /* The union over every banned polynomial, de-duplicated. */
+  function exclusionsOf(bans) {
+    var rat = [], rseen = {}, surd = [], sseen = {}, unknown = [], nozero = [];
+    bans.forEach(function (p) {
+      if (Pdeg(p) < 1) return;
+      var z = zerosOf(p);
+      z.rat.forEach(function (r) { var k = Rtext(r); if (!rseen[k]) { rseen[k] = 1; rat.push(r); } });
+      z.surd.forEach(function (s) { var k = Ptext(s.min); if (!sseen[k]) { sseen[k] = 1; surd.push(s); } });
+      if (z.unknown) unknown.push(z.unknown);
+      if (z.nozero) nozero.push(z.nozero);
+    });
+    rat.sort(Rcmp);
+    return { rat: rat, surd: surd, unknown: unknown, nozero: nozero };
+  }
+  function excount(ex) {
+    if (ex.unknown.length) return 'at least ' + (ex.rat.length + 2 * ex.surd.length);
+    return String(ex.rat.length + 2 * ex.surd.length);
+  }
+  function extext(ex) {
+    var parts = ex.rat.map(Rtext);
+    ex.surd.forEach(function (s) { parts.push(pmtext(s.p, s.s)); });
+    ex.unknown.forEach(function (p) {
+      parts.push('the real zeros of ' + Pfactortext(p) + ', which are not rational and are not named here');
+    });
+    if (!parts.length) return 'none';
+    return parts.join(', ');
+  }
+  /* Every excluded value as a floating-point coordinate, for drawing only. */
+  function exfloats(ex) {
+    var out = ex.rat.map(Rnum);
+    ex.surd.forEach(function (s) {
+      var sv = Rnum(s.s.q) * Math.sqrt(Number(s.s.k));
+      out.push(Rnum(s.p) + sv, Rnum(s.p) - sv);
+    });
+    out.sort(function (a, b) { return a - b; });
+    return out;
+  }
+  /* Numeric evaluation of a reduced rational function, for pixels. */
+  function RFnumeric(rf) {
+    var nn = rf.n.map(Rnum), dd = rf.d.map(Rnum);
+    return function (x) {
+      var num = 0, den = 0, i;
+      for (i = nn.length - 1; i >= 0; i -= 1) num = num * x + nn[i];
+      for (i = dd.length - 1; i >= 0; i -= 1) den = den * x + dd[i];
+      if (den === 0) return NaN;
+      return num / den;
+    };
+  }
+
+  var MODE = 'simplify', HASB = false, HASOP = false, HASSTAGE = false;
+  var LABEL_A = 'Expression', LABEL_B = 'Expression';
+
+  var preset = document.getElementById('rfPreset');
+  var inA = document.getElementById('rfExprA');
+  var inB = HASB ? document.getElementById('rfExprB') : null;
+  var opSel = HASOP ? document.getElementById('rfOp') : null;
+  var labelB = HASB ? document.getElementById('rfLabelB') : null;
+  var work = document.getElementById('rfWork');
+  var status = document.getElementById('rfStatus');
+  var titleOut = document.getElementById('rfTitle');
+  var subOut = document.getElementById('rfSub');
+  var svg = HASSTAGE ? document.getElementById('rfPlot') : null;
+  var kval = [document.getElementById('rfK1'), document.getElementById('rfK2'), document.getElementById('rfK3')];
+  var klab = [document.getElementById('rfK1Lab'), document.getElementById('rfK2Lab'), document.getElementById('rfK3Lab')];
+
+  function row(label, detail) {
+    return '<tr><th class="rowhead">' + label + '</th><td style="text-align:left;">' + detail + '</td></tr>';
+  }
+  function focusrow(label, detail) {
+    return '<tr class="focus"><th class="rowhead">' + label + '</th><td style="text-align:left;">' + detail + '</td></tr>';
+  }
+  function table(caption, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption
+      + '</caption><tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  function chip(kind, text) { return '<span class="chip ' + kind + '">' + text + '</span>'; }
+  function setkpi(list) {
+    for (var i = 0; i < 3; i += 1) {
+      klab[i].textContent = list[i][0];
+      kval[i].textContent = list[i][1];
+    }
+  }
+
+  /* Bad input is answered, never thrown and never left blank. Every message
+     below names the thing that went wrong and shows a form that works. */
+  function readExpr(text, label) {
+    var s = String(text === undefined || text === null ? '' : text).trim();
+    if (!s) {
+      return { ok: false, msg: '<strong>' + label + ' is empty.</strong> Type a rational expression in x '
+        + '&mdash; something like <code>(x^2 - 4)/(x - 2)</code>, <code>1/x + 1/2</code> or '
+        + '<code>3/(x - 1)</code>. Implicit multiplication is fine: <code>2x</code> and '
+        + '<code>(x+1)(x-2)</code> both parse.' };
+    }
+    var tree;
+    try { tree = Eparse(s); }
+    catch (err) {
+      return { ok: false, msg: '<strong>' + label + ' could not be read: ' + err.message + '.</strong> '
+        + 'Check the brackets match and that every operator has something on both sides. '
+        + 'The parser accepts + - * / ^ and implicit multiplication, in the single variable x.' };
+    }
+    var bans = [];
+    try {
+      var rf = ErfBuild(tree, 'x', bans);
+      return { ok: true, src: s, tree: tree, rf: rf, bans: bans };
+    } catch (err) {
+      return { ok: false, msg: '<strong>' + label + ': ' + err.message + '.</strong> '
+        + 'This lab holds every coefficient as an exact fraction, so it needs a ratio of '
+        + 'polynomials in x &mdash; no roots, logarithms or second variables.' };
+    }
+  }
+
+  function hiddenExclusions(ex, rf) {
+    var rat = [], surd = [];
+    ex.rat.forEach(function (r) { if (!Rzero(Peval(rf.d, r))) rat.push(r); });
+    ex.surd.forEach(function (s) { if (!Pzero(Pdivmod(rf.d, s.min).r)) surd.push(s); });
+    return { rat: rat, surd: surd, count: rat.length + 2 * surd.length };
+  }
+  function hiddentext(h) {
+    var parts = h.rat.map(Rtext);
+    h.surd.forEach(function (s) { parts.push(pmtext(s.p, s.s)); });
+    return parts.length ? parts.join(', ') : 'none';
+  }
+  function domaintext(ex) {
+    if (!ex.rat.length && !ex.surd.length && !ex.unknown.length) return 'every real number';
+    return 'every real x except ' + extext(ex);
+  }
+  function intervaltext(ex) {
+    if (ex.surd.length || ex.unknown.length) return '';
+    var pts = ex.rat.map(Rtext);
+    if (!pts.length) return '(-inf, inf)';
+    var out = '(-inf, ' + pts[0] + ')';
+    for (var i = 1; i < pts.length; i += 1) out += ' U (' + pts[i - 1] + ', ' + pts[i] + ')';
+    return out + ' U (' + pts[pts.length - 1] + ', inf)';
+  }
+  /* The distinct denominators that can actually be zero: a constant
+     denominator forbids nothing. */
+  function banlist(bans) {
+    var seen = {}, out = [];
+    bans.forEach(function (p) {
+      if (Pdeg(p) < 1) return;
+      var key = Ptext(p);
+      if (seen[key]) return;
+      seen[key] = 1;
+      out.push(p);
+    });
+    return out;
+  }
+  /* Every distinct denominator including the numeric ones, which forbid
+     nothing but still have to be cleared when a complex fraction is tidied. */
+  function banlistany(bans) {
+    var seen = {}, out = [];
+    bans.forEach(function (p) {
+      if (Pdeg(p) === 0 && Requ(p[0], R1)) return;
+      var key = Ptext(p);
+      if (seen[key]) return;
+      seen[key] = 1;
+      out.push(p);
+    });
+    return out;
+  }
+  function zerosentence(p) {
+    var z = zerosOf(p), found = [];
+    z.rat.forEach(function (r) { found.push('x = ' + Rtext(r)); });
+    z.surd.forEach(function (s) { found.push('x = ' + pmtext(s.p, s.s)); });
+    if (z.nozero) {
+      var q = quadroots(z.nozero[2], z.nozero[1], z.nozero[0]);
+      found.push(Pfactortext(z.nozero) + ' has discriminant ' + Rtext(q.disc)
+        + ', so it is never 0 for a real x');
+    }
+    if (z.unknown) {
+      found.push('every real zero of ' + Pfactortext(z.unknown)
+        + ', which has no rational root and so cannot be named as a fraction here');
+    }
+    return found.length ? found.join(', &nbsp;') : 'no real solution';
+  }
+
+  /* ---- the number line, for domain and solve ---- */
+  function lineWindow(points) {
+    var lo = -6, hi = 6;
+    if (points.length) {
+      var mn = Math.min.apply(null, points), mx = Math.max.apply(null, points);
+      var pad = Math.max(2, (mx - mn) * 0.6);
+      lo = Math.min(-1, mn - pad); hi = Math.max(1, mx + pad);
+    }
+    return { lo: lo, hi: hi };
+  }
+
+  /* ================================================================ domain */
+  function modeDomain(A) {
+    var ex = exclusionsOf(A.bans);
+    var red = RFreduce(A.rf);
+    var list = banlist(A.bans);
+    var blocks = [], rows = [];
+    if (!list.length) {
+      rows.push(row('denominators involving x',
+        'none &mdash; every division here is by a number, and a number that is not 0 forbids nothing'));
+    }
+    list.forEach(function (p) {
+      rows.push(row(grouptext(Ptext(p)) + ' = 0',
+        Pfactortextfull(p) + ' = 0 &nbsp;gives&nbsp; ' + zerosentence(p)));
+    });
+    blocks.push(table('Step 1 &middot; every denominator, set to zero, before anything is cancelled', rows));
+
+    var r2 = [focusrow('domain', domaintext(ex))];
+    var iv = intervaltext(ex);
+    if (iv) r2.push(row('as intervals', iv));
+    r2.push(row('how many values are lost', excount(ex)));
+    blocks.push(table('Step 2 &middot; the domain', r2));
+
+    var r3 = [row('as you wrote it', RFtext(A.rf)),
+              row('factored', RFfactortext(A.rf)),
+              row('reduced', RFtext(red.rf))];
+    if (!ex.rat.length && !ex.surd.length) {
+      r3.push(row('nothing to hide', 'no value was excluded in the first place, so the reduced form tells the whole truth here'));
+    }
+    ex.rat.forEach(function (r) {
+      if (Rzero(Peval(red.rf.d, r))) {
+        r3.push(row('x = ' + Rtext(r), chip('no', 'excluded, and visible')
+          + ' the reduced bottom ' + grouptext(Ptext(red.rf.d)) + ' is 0 here too, so the reduced form refuses this value as well'));
+      } else {
+        var val = Rdiv(Peval(red.rf.n, r), Peval(red.rf.d, r));
+        var why = (Rzero(Peval(A.rf.n, r)) && Rzero(Peval(A.rf.d, r)))
+          ? 'the expression as written is 0/0 there'
+          : 'the expression as written divides by 0 somewhere inside before it gets that far';
+        r3.push(row('x = ' + Rtext(r), chip('hi', 'excluded, and INVISIBLE')
+          + ' the reduced form returns ' + Rtext(val) + ' at x = ' + Rtext(r) + ', but ' + why
+          + '. So ' + Rtext(r) + ' stays out of the domain and the graph has a hole at ('
+          + Rtext(r) + ', ' + Rtext(val) + ')'));
+      }
+    });
+    ex.surd.forEach(function (s) {
+      if (Pzero(Pdivmod(red.rf.d, s.min).r)) {
+        r3.push(row('x = ' + pmtext(s.p, s.s), chip('no', 'excluded, and visible')
+          + ' ' + Ptext(s.min) + ' divides the reduced denominator exactly, so the reduced form '
+          + 'refuses these two values as well'));
+      } else {
+        r3.push(row('x = ' + pmtext(s.p, s.s), chip('hi', 'excluded, and INVISIBLE')
+          + ' ' + Ptext(s.min) + ' cancelled, so the reduced form returns an ordinary number at both '
+          + 'of these values while the expression as written returns nothing'));
+      }
+    });
+    blocks.push(table('Step 3 &middot; what simplifying would have destroyed', r3));
+
+    if (svg) {
+      var pts = exfloats(ex);
+      var win = lineWindow(pts);
+      var nl = NumberLine(svg, win.lo, win.hi);
+      var prev = win.lo - 1;
+      pts.forEach(function (p) { nl.interval(prev, p, false, false); prev = p; });
+      nl.interval(prev, win.hi + 1, false, false);
+      nl.describe('The real line with ' + pts.length + ' point(s) punched out: ' + domaintext(ex) + '.');
+    }
+
+    var hid = hiddenExclusions(ex, red.rf);
+    var msg;
+    if (!ex.rat.length && !ex.surd.length && !ex.unknown.length) {
+      msg = '<strong>Nothing is excluded: the domain is every real number.</strong> '
+        + (list.length
+            ? 'There is a denominator with an x in it, but ' + list.map(function (p) { return grouptext(Ptext(p)); }).join(' and ')
+              + ' has no real zero, so no real value of x can break this expression. '
+              + 'A variable in a denominator is a warning, not a verdict.'
+            : 'Every denominator here is a number, so the division was safe from the start.');
+    } else {
+      msg = '<strong>Excluded: ' + extext(ex) + '.</strong> Each one came from a denominator '
+        + 'set to zero while that denominator was still on the page. ';
+      if (hid.count) {
+        msg += 'Now look at step 3: the reduced form ' + RFtext(red.rf) + ' returns a perfectly ordinary '
+          + 'number at ' + hiddentext(hid) + '. That is the trap this whole course is built around. '
+          + 'Simplifying is not a reversible move on the DOMAIN &mdash; it only preserves the values, '
+          + 'and only where both forms are defined.';
+      } else {
+        msg += 'Here the reduced form ' + RFtext(red.rf) + ' still has all of them in its denominator, '
+          + 'so nothing was lost by simplifying. The next preset is not so kind.';
+      }
+    }
+    return {
+      title: RFtext(A.rf),
+      sub: 'domain read from ' + list.length + ' denominator(s), before simplifying',
+      blocks: blocks,
+      status: msg,
+      kpi: [['Excluded', excount(ex)], ['Denominators', String(list.length)],
+            ['Invisible after simplifying', String(hid.count)]]
+    };
+  }
+
+  /* ============================================================== simplify */
+  function modeSimplify(A) {
+    var ex = exclusionsOf(A.bans);
+    var red = RFreduce(A.rf);
+    var g = red.gcd;
+    var blocks = [];
+    blocks.push(table('Step 1 &middot; factor the top and the bottom', [
+      row('numerator', Ptext(A.rf.n) + ' &nbsp;=&nbsp; ' + Pfactortextfull(A.rf.n)),
+      row('denominator', Ptext(A.rf.d) + ' &nbsp;=&nbsp; ' + Pfactortextfull(A.rf.d))
+    ]));
+
+    var r2 = [];
+    if (Pdeg(g) > 0) {
+      r2.push(focusrow('common factor', Pfactortextfull(g)));
+      r2.push(row('numerator / common factor', Ptext(Pdivmod(A.rf.n, g).q)));
+      r2.push(row('denominator / common factor', Ptext(Pdivmod(A.rf.d, g).q)));
+      r2.push(row('tidied to whole numbers', RFtext(red.rf)));
+    } else {
+      r2.push(focusrow('common factor', '1 &mdash; there is none'));
+      r2.push(row('what that means', 'Euclid&rsquo;s algorithm on these two polynomials ends at a constant, so '
+        + 'no bracket is shared. Cancelling anything here would be cancelling a TERM, and a term is '
+        + 'part of a sum, not a factor of it.'));
+      r2.push(row('reduced', RFtext(red.rf) + ' &mdash; the same expression, tidied only'));
+    }
+    blocks.push(table('Step 2 &middot; the common factor, found by the polynomial gcd', r2));
+
+    var check = RFeq(A.rf, red.rf);
+    blocks.push(table('Step 3 &middot; the reduced form, and what it no longer says', [
+      row('reduced', RFtext(red.rf)),
+      row('factored', RFfactortext(red.rf)),
+      row('equal as fractions?', check
+        ? chip('ok', 'yes') + ' cross-multiplying gives the same polynomial both ways, so the two forms agree at every x where both are defined'
+        : chip('no', 'no') + ' something is wrong; this should never appear'),
+      row('domain of the ORIGINAL', domaintext(ex)),
+      row('domain of the REDUCED form as written', (function () {
+        var e2 = exclusionsOf([red.rf.d]);
+        return domaintext(e2);
+      })())
+    ]));
+
+    var hid = hiddenExclusions(ex, red.rf);
+    var msg;
+    if (Pdeg(g) === 0 && (Pdeg(A.rf.n) === 0 || Pdeg(A.rf.d) === 0)) {
+      msg = '<strong>Nothing cancels, and nothing could.</strong> Cancelling needs a factor on both '
+        + 'sides of the bar, and here one side is just the number '
+        + (Pdeg(A.rf.n) === 0 ? Ptext(A.rf.n) : Ptext(A.rf.d))
+        + '. A number shares no bracket with a polynomial, so the expression is already as reduced as '
+        + 'it gets &mdash; which is not the same as saying it is defined everywhere.';
+    } else if (Pdeg(g) === 0) {
+      msg = '<strong>Nothing cancels.</strong> ' + Pfactortextfull(A.rf.n) + ' and '
+        + Pfactortextfull(A.rf.d) + ' share no bracket, and the gcd search proves it rather than '
+        + 'asserting it. The most common wrong move on this expression is to strike out matching '
+        + 'SYMBOLS &mdash; an x on top and an x underneath &mdash; but x is a term in a sum here, and '
+        + 'a sum has no factors until you factor it.';
+    } else if (hid.count) {
+      msg = '<strong>' + Pfactortextfull(g) + ' cancels, and takes ' + hiddentext(hid) + ' with it.</strong> '
+        + RFtext(red.rf) + ' agrees with the original everywhere the original is defined, and it is '
+        + 'defined in more places than the original ever was. Write the excluded value beside the '
+        + 'answer: it is no longer recoverable from the answer itself.';
+    } else {
+      msg = '<strong>' + Pfactortextfull(g) + ' cancels, and no exclusion disappears.</strong> '
+        + 'The factor that cancelled appears again in what is left of the denominator, so '
+        + extext(ex) + ' is still excluded and still visible. This is the case where cancelling '
+        + 'costs you nothing &mdash; and the reason it is safe is worth seeing next to the case where it is not.';
+    }
+    return {
+      title: RFtext(A.rf) + '  =  ' + RFtext(red.rf),
+      sub: Pdeg(g) > 0 ? 'cancelled ' + Pfactortextfull(g) : 'nothing to cancel',
+      blocks: blocks,
+      status: msg,
+      kpi: [['Common factor', Pdeg(g) > 0 ? Pfactortextfull(g) : '1'],
+            ['Reduced', RFtext(red.rf)],
+            ['Exclusions hidden', String(hid.count)]]
+    };
+  }
+
+  /* ============================================== multiplying and dividing */
+  function modeMulDiv(A, B, op) {
+    if (op === 'div' && Pzero(B.rf.n)) {
+      return { fail: '<strong>The second expression is 0, and nothing may be divided by 0.</strong> '
+        + 'Inverting a fraction whose numerator is 0 asks for 1/0, so this is not a step that '
+        + 'produces a wrong answer &mdash; it is a step that produces no answer. '
+        + 'Every other preset in this list divides by something that is only SOMETIMES zero, and '
+        + 'that is where the interesting exclusions come from.' };
+    }
+    var bans = A.bans.concat(B.bans);
+    /* Dividing by B adds a condition the reader did not write down: B itself
+       must not be zero. It is the exclusion that is missed most often, because
+       it comes from a NUMERATOR. */
+    if (op === 'div') bans = bans.concat([B.rf.n]);
+    var recip = RFnew(B.rf.d, B.rf.n);
+    var prod = op === 'mul' ? RFmul(A.rf, B.rf) : RFmul(A.rf, recip);
+    var red = RFreduce(prod);
+    var ex = exclusionsOf(bans);
+    var blocks = [];
+
+    blocks.push(table('Step 1 &middot; factor everything, before anything moves', [
+      row('first', RFtext(A.rf) + ' &nbsp;=&nbsp; ' + RFfactortext(A.rf)),
+      row('second', RFtext(B.rf) + ' &nbsp;=&nbsp; ' + RFfactortext(B.rf))
+    ]));
+
+    var r2 = [];
+    if (op === 'div') {
+      r2.push(row('the division', RFtext(A.rf) + ' &divide; ' + RFtext(B.rf)));
+      r2.push(focusrow('invert and multiply', RFtext(A.rf) + ' &times; ' + RFtext(recip)));
+      r2.push(row('the condition this creates', 'the divisor may not be 0, so '
+        + grouptext(Ptext(B.rf.n)) + ' = 0 is now forbidden: ' + zerosentence(B.rf.n)));
+    } else {
+      r2.push(focusrow('the multiplication', RFtext(A.rf) + ' &times; ' + RFtext(B.rf)));
+      r2.push(row('tops times tops, bottoms times bottoms',
+        grouptext(Ptext(prod.n)) + ' over ' + grouptext(Ptext(prod.d))));
+    }
+    r2.push(row('straight across, factored', RFfactortext(prod)));
+    blocks.push(table('Step 2 &middot; the operation', r2));
+
+    blocks.push(table('Step 3 &middot; cancel, and only now', [
+      row('common factor', Pdeg(red.gcd) > 0 ? Pfactortextfull(red.gcd) : '1 &mdash; nothing cancels'),
+      focusrow('answer', RFtext(red.rf)),
+      row('answer, factored', RFfactortext(red.rf))
+    ]));
+
+    var hid = hiddenExclusions(ex, red.rf);
+    blocks.push(table('Step 4 &middot; the domain, which the answer cannot carry', [
+      row('excluded', domaintext(ex)),
+      row('still visible in the answer', (function () {
+        var vis = ex.rat.filter(function (r) { return Rzero(Peval(red.rf.d, r)); }).map(Rtext);
+        return vis.length ? vis.join(', ') : 'none';
+      })()),
+      focusrow('invisible in the answer', hiddentext(hid))
+    ]));
+
+    var msg;
+    if (op === 'div') {
+      var newban = exclusionsOf([B.rf.n]);
+      msg = '<strong>Dividing by ' + RFtext(B.rf) + ' forbids ' + extext(newban) + ' on top of everything else.</strong> '
+        + 'That exclusion comes from the divisor&rsquo;s NUMERATOR, which is why it is the one that gets lost: '
+        + 'a reader scanning for denominators will never look there. ';
+    } else {
+      msg = '<strong>' + RFtext(A.rf) + ' &times; ' + RFtext(B.rf) + ' = ' + RFtext(red.rf) + '.</strong> ';
+    }
+    if (hid.count) {
+      msg += 'The answer ' + RFtext(red.rf) + ' is defined at ' + hiddentext(hid)
+        + '; the expression you started from is not. Both statements are true, and only the second one '
+        + 'is about the question that was asked.';
+    } else {
+      msg += 'Every excluded value is still visible in the answer&rsquo;s denominator, so this one is safe '
+        + 'to hand in without a footnote &mdash; which is not true of most of the presets here.';
+    }
+    return {
+      title: RFtext(A.rf) + (op === 'div' ? ' &divide; ' : ' &times; ') + RFtext(B.rf) + '  =  ' + RFtext(red.rf),
+      sub: 'excluded: ' + extext(ex),
+      blocks: blocks,
+      status: msg,
+      kpi: [['Operation', op === 'div' ? 'divide' : 'multiply'],
+            ['Answer', RFtext(red.rf)],
+            ['Exclusions hidden', String(hid.count)]]
+    };
+  }
+
+  /* ============================================ adding and subtracting */
+  function modeAddSub(A, B, op) {
+    var d1 = A.rf.d, d2 = B.rf.d;
+    var g = Pgcd(d1, d2), L = Plcm(d1, d2);
+    var m1 = Pdivmod(L, d1).q, m2 = Pdivmod(L, d2).q;
+    var n1 = Pmul(A.rf.n, m1), n2 = Pmul(B.rf.n, m2);
+    var total = op === 'add' ? Padd(n1, n2) : Psub(n1, n2);
+    var combined = RFnew(total, L);
+    var red = RFreduce(combined);
+    /* The same sum by the other road: a/b + c/d = (ad + cb)/(bd), with no
+       thought given to a least anything. If the two disagree the lab is broken,
+       and saying so is more useful than a single unchecked answer. */
+    var direct = op === 'add' ? RFadd(A.rf, B.rf) : RFsub(A.rf, B.rf);
+    var directRed = RFreduce(direct);
+    var agree = RFeq(directRed.rf, red.rf);
+    var ex = exclusionsOf(A.bans.concat(B.bans));
+    var blocks = [];
+
+    blocks.push(table('Step 1 &middot; the two denominators, factored', [
+      row('first', RFtext(A.rf) + ', bottom = ' + Pfactortextfull(d1)),
+      row('second', RFtext(B.rf) + ', bottom = ' + Pfactortextfull(d2)),
+      row('shared factor', Pdeg(g) > 0 ? Pfactortextfull(g) : '1 &mdash; they share nothing'),
+      focusrow('least common denominator', Pfactortextfull(L) + ' &nbsp;=&nbsp; ' + Ptext(L)),
+      row('is that the product?', Pdeg(g) > 0
+        ? chip('no', 'no') + ' the product would be ' + Ptext(Pmul(d1, d2)) + ', which is '
+          + Pfactortextfull(g) + ' times too big &mdash; using it works, but you will cancel that factor back out at the end'
+        : chip('ok', 'yes') + ' the denominators share nothing, so here the least common denominator really is the product')
+    ]));
+
+    function rewriteLabel(which, m) {
+      return (Pdeg(m) === 0 && Requ(m[0], R1))
+        ? which + ' is already over the LCD'
+        : which + ' &times; ' + grouptext(Ptext(m)) + '/' + grouptext(Ptext(m));
+    }
+    blocks.push(table('Step 2 &middot; rewrite both over the LCD', [
+      row(rewriteLabel('first', m1), grouptext(Ptext(n1)) + ' over ' + grouptext(Ptext(L))),
+      row(rewriteLabel('second', m2), grouptext(Ptext(n2)) + ' over ' + grouptext(Ptext(L)))
+    ]));
+
+    var r3 = [];
+    if (op === 'sub') {
+      r3.push(focusrow('subtract the numerators', grouptext(Ptext(n1)) + ' - (' + Ptext(n2) + ')'));
+      if (Pdeg(n2) > 0) {
+        r3.push(row('distribute the minus', 'the bracket is not decoration: -(' + Ptext(n2) + ') = '
+          + Ptext(Pscale(n2, R(-1n))) + ', and every term inside changes sign. Dropping it is the '
+          + 'single most common way to get this question wrong.'));
+      }
+    } else {
+      r3.push(focusrow('add the numerators', grouptext(Ptext(n1)) + ' + ' + grouptext(Ptext(n2))));
+    }
+    r3.push(row('numerator', Ptext(total)));
+    r3.push(row('over the LCD', RFtext(combined)));
+    blocks.push(table('Step 3 &middot; combine', r3));
+
+    blocks.push(table('Step 4 &middot; simplify, and check by a second route', [
+      row('common factor', Pdeg(red.gcd) > 0 ? Pfactortextfull(red.gcd) : '1 &mdash; nothing cancels'),
+      focusrow('answer', RFtext(red.rf)),
+      row('by the LCD', RFtext(red.rf)),
+      row('by a/b ' + (op === 'add' ? '+' : '-') + ' c/d = (ad ' + (op === 'add' ? '+' : '-') + ' cb)/(bd)',
+        RFtext(directRed.rf)),
+      row('do they agree?', agree
+        ? chip('ok', 'yes') + ' the two routes were computed independently and cross-multiply to the same polynomial'
+        : chip('no', 'no') + ' this should never appear'),
+      row('domain', domaintext(ex))
+    ]));
+
+    var hid = hiddenExclusions(ex, red.rf);
+    var msg = '<strong>' + RFtext(A.rf) + (op === 'add' ? ' + ' : ' - ') + RFtext(B.rf)
+      + ' = ' + RFtext(red.rf) + '.</strong> ';
+    if (Pzero(red.rf.n)) {
+      msg += 'The answer is 0 &mdash; but only where the question exists. At ' + extext(ex)
+        + ' neither term is a number at all, so the expression is not 0 there; it is nothing there. '
+        + '&ldquo;Equal to 0&rdquo; and &ldquo;defined and equal to 0&rdquo; part company exactly here.';
+    } else if (hid.count) {
+      msg += 'The LCD did its job and then the answer cancelled, taking ' + hiddentext(hid)
+        + ' out of sight with it. Note where that value came from: it was in a denominator of one '
+        + 'of the two terms you started with, and neither the final numerator nor the final '
+        + 'denominator mentions it.';
+    } else if (Pdeg(g) > 0) {
+      msg += 'The two denominators shared ' + Pfactortextfull(g) + ', so the least common denominator was '
+        + Ptext(L) + ' rather than their product. Using the product is not wrong; it just means the '
+        + 'shared factor rides along through every line and has to be cancelled at the end.';
+    } else {
+      msg += 'The denominators shared nothing, so the LCD is the product and every step is forced. '
+        + 'The exclusions are ' + extext(ex) + ', and they are still visible in the answer.';
+    }
+    return {
+      title: RFtext(A.rf) + (op === 'add' ? '  +  ' : '  -  ') + RFtext(B.rf) + '  =  ' + RFtext(red.rf),
+      sub: 'LCD = ' + Ptext(L),
+      blocks: blocks,
+      status: msg,
+      kpi: [['LCD', Ptext(L)], ['Answer', RFtext(red.rf)], ['Excluded', extext(ex)]]
+    };
+  }
+
+  /* ====================================================== complex fractions */
+  function modeComplex(A) {
+    if (A.tree.k !== 'div') {
+      return { fail: '<strong>That is not a complex fraction.</strong> A complex fraction is one '
+        + 'fraction divided by another, so this mode needs a top and a bottom: write it as '
+        + '<code>(top)/(bottom)</code>, for instance <code>(1 + 2/x)/(1 - 4/x^2)</code>. '
+        + 'What you typed, ' + A.src + ', has no outermost division for the two methods to work on.' };
+    }
+    var topBans = [], botBans = [], top, bot;
+    try {
+      top = ErfBuild(A.tree.a, 'x', topBans);
+      bot = ErfBuild(A.tree.b, 'x', botBans);
+    } catch (err) {
+      return { fail: '<strong>' + err.message + '.</strong> Each half of a complex fraction has to be a '
+        + 'rational expression in x on its own.' };
+    }
+    if (Pzero(bot.n)) {
+      return { fail: '<strong>The bottom of this complex fraction is 0.</strong> '
+        + 'Dividing by it is not a step with a bad answer, it is a step with no answer.' };
+    }
+    var everyInner = banlistany(topBans.concat(botBans));
+    var inner = banlist(topBans.concat(botBans));
+    /* The LCD has to clear every small denominator, and 1/2 is a small
+       denominator. Taking only the ones containing x leaves a 2 underneath
+       after method B and makes the two methods look like different answers. */
+    var L = [R1], numl = 1n;
+    everyInner.forEach(function (p) {
+      if (Pdeg(p) > 0) { L = Plcm(L, p); return; }
+      var c = Rabs(p[0]);
+      if (Rint(c) && c.n > 0n) numl = numl * c.n / bgcd(numl, c.n);
+    });
+    if (numl !== 1n) L = Pscale(L, R(numl));
+
+    /* Method A: turn each half into a single fraction, then multiply by the
+       reciprocal. Method B: multiply top and bottom by the LCD of the small
+       denominators until both halves are polynomials. They are computed from
+       the same input and from nothing else, so agreement is evidence. */
+    var mA = RFreduce(RFdiv(top, bot));
+    var topL = RFreduce(RFmul(top, RFnew(L, [R1])));
+    var botL = RFreduce(RFmul(bot, RFnew(L, [R1])));
+    var mB = RFreduce(RFnew(Pmul(topL.rf.n, botL.rf.d), Pmul(topL.rf.d, botL.rf.n)));
+    var agree = RFeq(mA.rf, mB.rf);
+    var ex = exclusionsOf(topBans.concat(botBans).concat([bot.n]));
+    var blocks = [];
+
+    blocks.push(table('Step 0 &middot; the small denominators, and what they forbid', [
+      row('top', RFtext(top)),
+      row('bottom', RFtext(bot)),
+      row('denominators inside', everyInner.length
+        ? everyInner.map(function (p) { return grouptext(Ptext(p)); }).join(', ')
+        : 'none &mdash; there is no fraction inside either half'),
+      row('which of them can be 0', inner.length
+        ? inner.map(function (p) { return grouptext(Ptext(p)); }).join(', ')
+        : 'none &mdash; every small denominator here is a number, so none of them rules out a value of x'),
+      focusrow('LCD of them', Ptext(L)),
+      row('the bottom may not be 0', grouptext(Ptext(bot.n)) + ' = 0 &nbsp;gives&nbsp; ' + zerosentence(bot.n))
+    ]));
+
+    blocks.push(table('Method A &middot; combine each half, then multiply by the reciprocal', [
+      row('top as one fraction', RFtext(top)),
+      row('bottom as one fraction', RFtext(bot)),
+      row('divide', RFtext(top) + ' &divide; ' + RFtext(bot) + ' = ' + RFtext(top) + ' &times; ' + RFtext(RFnew(bot.d, bot.n))),
+      focusrow('answer', RFtext(mA.rf))
+    ]));
+
+    blocks.push(table('Method B &middot; multiply top and bottom by ' + Ptext(L), [
+      row('top &times; ' + grouptext(Ptext(L)), RFtext(topL.rf)
+        + (Pdeg(topL.rf.d) === 0 ? ' &mdash; no x left underneath: the small denominators are cleared'
+                                 : ' &mdash; still has an x underneath, so the LCD was not big enough')),
+      row('bottom &times; ' + grouptext(Ptext(L)), RFtext(botL.rf)
+        + (Pdeg(botL.rf.d) === 0 ? ' &mdash; no x left underneath either'
+                                 : ' &mdash; still has an x underneath')),
+      focusrow('answer', RFtext(mB.rf))
+    ]));
+
+    blocks.push(table('Do the two methods agree?', [
+      row('method A', RFtext(mA.rf)),
+      row('method B', RFtext(mB.rf)),
+      focusrow('cross-multiplied', agree
+        ? chip('ok', 'identical') + ' the two routes were run independently on the same input and their cross-products are the same polynomial'
+        : chip('no', 'they differ') + ' this should never appear'),
+      row('domain', domaintext(ex))
+    ]));
+
+    var hid = hiddenExclusions(ex, mA.rf);
+    var msg = '<strong>' + A.src + ' = ' + RFtext(mA.rf) + '.</strong> ';
+    if (!inner.length) {
+      msg += 'Not one of the small denominators contains an x, so nothing here can be zero and the '
+        + 'domain is the whole real line. The two methods are still two methods &mdash; multiply out '
+        + 'by ' + Ptext(L) + ' and the letters would behave exactly as these numbers do. That is the '
+        + 'point of running this preset: the algebra is not a new rule, it is the arithmetic you '
+        + 'already trust with a letter in it.';
+    } else {
+      msg += 'Method A combined each half first; method B cleared all the small denominators at once '
+        + 'by multiplying above and below by ' + Ptext(L) + '. Neither is more correct. ';
+    }
+    if (hid.count) {
+      msg += ' The answer hides ' + hiddentext(hid) + ': those values came from denominators INSIDE '
+        + 'the fraction, or from the bottom half being zero, and the tidy answer has no room left to '
+        + 'mention them.';
+    } else if (ex.rat.length || ex.surd.length) {
+      msg += ' Every exclusion here survives into the answer&rsquo;s denominator, so nothing is lost.';
+    }
+    return {
+      title: A.src + '  =  ' + RFtext(mA.rf),
+      sub: 'LCD of the inner denominators: ' + Ptext(L),
+      blocks: blocks,
+      status: msg,
+      kpi: [['Method A', RFtext(mA.rf)], ['Method B', RFtext(mB.rf)],
+            ['Agree?', agree ? 'yes' : 'NO']]
+    };
+  }
+
+  /* ================================================================= solve */
+  function modeSolve(A, B) {
+    var bans = A.bans.concat(B.bans);
+    var ex = exclusionsOf(bans);
+    /* Multiply out: nL*dR - nR*dL = 0 has exactly the solutions of the original
+       equation PLUS, possibly, some values where a denominator was zero. That
+       "plus" is the entire lesson, and it is why the check below runs on the
+       tree the reader typed rather than on this polynomial. */
+    var E = Psub(Pmul(A.rf.n, B.rf.d), Pmul(B.rf.n, A.rf.d));
+    var blocks = [];
+    blocks.push(table('Step 1 &middot; the exclusions, written down before solving', [
+      row('left side', RFtext(A.rf)),
+      row('right side', RFtext(B.rf)),
+      row('denominators', banlist(bans).length
+        ? banlist(bans).map(function (p) { return grouptext(Ptext(p)); }).join(', ') : 'none'),
+      focusrow('x may not be', extext(ex))
+    ]));
+
+    var cands = [], leftover = null, identity = false, impossible = false;
+    if (Pzero(E)) identity = true;
+    else if (Pdeg(E) === 0) impossible = true;
+    else {
+      var f = Pfactor(E);
+      f.factors.forEach(function (item) { cands.push({ kind: 'rat', r: item.root, mult: item.mult }); });
+      if (f.rest.length) {
+        if (Pdeg(f.rest) === 2) {
+          var q = quadroots(f.rest[2], f.rest[1], f.rest[0]);
+          if (q.kind === 'complex') leftover = { why: 'complex', poly: f.rest, q: q };
+          else cands.push({ kind: 'surd', p: q.p, s: q.s, min: Pmonic(f.rest), poly: f.rest });
+        } else {
+          leftover = { why: 'degree', poly: f.rest };
+        }
+      }
+    }
+    cands.sort(function (a, b) {
+      var av = a.kind === 'rat' ? Rnum(a.r) : Rnum(a.p), bv = b.kind === 'rat' ? Rnum(b.r) : Rnum(b.p);
+      return av - bv;
+    });
+
+    var r2 = [row('multiply both sides by every denominator',
+                  grouptext(Ptext(A.rf.n)) + ' &middot; ' + grouptext(Ptext(B.rf.d)) + '  =  '
+                  + grouptext(Ptext(B.rf.n)) + ' &middot; ' + grouptext(Ptext(A.rf.d))),
+              focusrow('everything on one side', Ptext(E) + ' = 0')];
+    if (identity) {
+      r2.push(row('that is 0 = 0', 'the two sides are the same rational function, so the equation is an '
+        + 'identity: every x IN THE DOMAIN is a solution, and ' + extext(ex) + ' still are not'));
+    } else if (impossible) {
+      r2.push(row('a constant that is not 0', 'clearing the denominators leaves ' + Ptext(E)
+        + ' = 0, which no value of x can arrange. There is no solution.'));
+    } else {
+      r2.push(row('factored', Pfactortextfull(E) + ' = 0'));
+      if (leftover && leftover.why === 'complex') {
+        r2.push(row('the quadratic factor', Pfactortext(leftover.poly) + ' has discriminant '
+          + Rtext(leftover.q.disc) + ', so it contributes no real candidate at all &mdash; its roots are '
+          + pmtext(leftover.q.p, leftover.q.s, true)));
+      }
+      if (leftover && leftover.why === 'degree') {
+        r2.push(row('a factor with no rational root', Pfactortext(leftover.poly)
+          + ' &mdash; degree ' + Pdeg(leftover.poly) + ', and the rational root search came back empty. '
+          + 'Any solutions it holds are not listed below, and this lab says so rather than implying there are none.'));
+      }
+    }
+    blocks.push(table('Step 2 &middot; clear the denominators and solve', r2));
+
+    var verified = [], extraneous = [];
+    var r3 = [];
+    cands.forEach(function (c) {
+      if (c.kind === 'rat') {
+        var bad = null;
+        banlist(bans).forEach(function (p) { if (bad === null && Rzero(Peval(p, c.r))) bad = p; });
+        var lv = Eexact(A.tree, 'x', c.r), rv = Eexact(B.tree, 'x', c.r);
+        if (bad !== null || lv === null || rv === null) {
+          extraneous.push(c);
+          r3.push(row('x = ' + Rtext(c.r), chip('no', 'extraneous')
+            + ' substituting into the ORIGINAL makes ' + (bad !== null ? grouptext(Ptext(bad)) : 'a denominator')
+            + ' equal to 0, so the left side is not a number there. It solves the cleared equation and '
+            + 'not the equation that was asked.'));
+        } else if (Requ(lv, rv)) {
+          verified.push(c);
+          r3.push(row('x = ' + Rtext(c.r), chip('ok', 'verified')
+            + ' left side = ' + Rtext(lv) + ', right side = ' + Rtext(rv)
+            + ' &mdash; both computed from the expressions as you typed them'));
+        } else {
+          extraneous.push(c);
+          r3.push(row('x = ' + Rtext(c.r), chip('no', 'fails')
+            + ' left side = ' + Rtext(lv) + ' but right side = ' + Rtext(rv)));
+        }
+      } else {
+        /* An irrational candidate cannot be substituted as a fraction, so the
+           check is done exactly a different way: the candidate is a root of the
+           irreducible quadratic min(x), and it makes a denominator zero exactly
+           when min divides that denominator. Polynomial division decides it. */
+        var badq = null;
+        banlist(bans).forEach(function (p) { if (badq === null && Pzero(Pdivmod(p, c.min).r)) badq = p; });
+        var sv = Rnum(c.s.q) * Math.sqrt(Number(c.s.k)), pv = Rnum(c.p);
+        var num = '';
+        try {
+          var l1 = Eeval(A.tree, { x: pv + sv }), r1 = Eeval(B.tree, { x: pv + sv });
+          num = ' A numeric re-check at x = ' + (pv + sv).toFixed(6) + ' (rounded) gives '
+            + l1.toFixed(6) + ' and ' + r1.toFixed(6) + '.';
+        } catch (err) { num = ''; }
+        if (badq !== null) {
+          extraneous.push(c);
+          r3.push(row('x = ' + pmtext(c.p, c.s), chip('no', 'extraneous')
+            + ' ' + Ptext(c.min) + ' divides the denominator ' + grouptext(Ptext(badq))
+            + ' exactly, so both of these values make it 0'));
+        } else {
+          verified.push(c);
+          r3.push(row('x = ' + pmtext(c.p, c.s), chip('ok', 'verified')
+            + ' these are the roots of ' + Ptext(c.min) + ', which divides no denominator here '
+            + '(polynomial division leaves a remainder in every case), so both are in the domain and '
+            + 'both satisfy the cleared equation.' + num));
+        }
+      }
+    });
+    if (!cands.length) {
+      r3.push(row('candidates', identity
+        ? 'every x in the domain &mdash; there is nothing to check one at a time'
+        : 'none &mdash; there was no candidate to check'));
+    }
+    blocks.push(table('Step 3 &middot; substitute every candidate into the ORIGINAL equation', r3));
+
+    var solutions = verified.map(function (c) {
+      return c.kind === 'rat' ? 'x = ' + Rtext(c.r) : 'x = ' + pmtext(c.p, c.s);
+    });
+    var lost = extraneous.map(function (c) {
+      return c.kind === 'rat' ? Rtext(c.r) : pmtext(c.p, c.s);
+    });
+
+    if (svg) {
+      var pts = exfloats(ex).slice();
+      cands.forEach(function (c) {
+        if (c.kind === 'rat') pts.push(Rnum(c.r));
+        else { var s2 = Rnum(c.s.q) * Math.sqrt(Number(c.s.k)); pts.push(Rnum(c.p) + s2, Rnum(c.p) - s2); }
+      });
+      var win = lineWindow(pts);
+      var nl = NumberLine(svg, win.lo, win.hi);
+      exfloats(ex).forEach(function (p) { nl.point(p, false); });
+      verified.forEach(function (c) {
+        if (c.kind === 'rat') nl.point(Rnum(c.r), true);
+        else { var s3 = Rnum(c.s.q) * Math.sqrt(Number(c.s.k)); nl.point(Rnum(c.p) + s3, true); nl.point(Rnum(c.p) - s3, true); }
+      });
+      extraneous.forEach(function (c) { if (c.kind === 'rat') nl.point(Rnum(c.r), false); });
+      nl.describe('The real line with the excluded values as hollow points and the '
+        + verified.length + ' verified solution(s) filled in.');
+    }
+
+    var unnamed = leftover && leftover.why === 'degree';
+    var caveat = unnamed
+      ? ' One factor, ' + Pfactortext(leftover.poly) + ', has no rational root, so the search that '
+        + 'produced the list above could not name its zeros. Any solutions hiding in it are irrational '
+        + 'and are NOT listed here &mdash; a search over the fractions has ruled out nothing about the '
+        + 'numbers that are not fractions.'
+      : '';
+    var msg;
+    if (identity) {
+      msg = '<strong>Both sides are the same rational function, so this is an identity.</strong> '
+        + 'Every x in the domain solves it &mdash; and ' + extext(ex) + ' still does not, because '
+        + 'an identity is a statement about values that exist.';
+    } else if (!solutions.length && lost.length) {
+      msg = '<strong>' + (unnamed ? 'No solution among the values this lab can name. The rational candidate'
+                                  : 'No solution. The only candidate')
+        + (lost.length > 1 ? 's were ' : ' was ') + lost.join(' and ')
+        + ', and ' + (lost.length > 1 ? 'both are ' : 'it is ') + 'extraneous.</strong> '
+        + 'Multiplying both sides by a denominator is legal only when that denominator is not zero, and '
+        + 'nothing in the cleared equation remembers the condition. That is why the check is not '
+        + 'optional bookkeeping: here it is the difference between &ldquo;x = ' + lost[0]
+        + '&rdquo; and &ldquo;there is no solution&rdquo;.';
+    } else if (!solutions.length && unnamed) {
+      msg = '<strong>No solution that can be written as a fraction.</strong> Clearing the denominators '
+        + 'gave ' + Ptext(E) + ' = 0, and every rational candidate was tested and rejected. That is a '
+        + 'much weaker statement than &ldquo;no solution&rdquo;, and this lab will not upgrade it: '
+        + Pfactortext(leftover.poly) + ' may well cross zero somewhere irrational.';
+    } else if (!solutions.length) {
+      msg = '<strong>No real solution.</strong> Clearing the denominators gave ' + Ptext(E)
+        + ' = 0' + (leftover && leftover.why === 'complex'
+          ? ', whose discriminant is ' + Rtext(leftover.q.disc) + ' &mdash; negative, so no real x satisfies it. '
+            + 'Course 6 gives those roots a home; on the real line there is nothing here.'
+          : ', which no real x satisfies.');
+    } else if (lost.length) {
+      msg = '<strong>' + solutions.join(' and ') + ', and ' + lost.join(' and ') + ' is extraneous.</strong> '
+        + 'Both came out of the same cleared equation and only one of them survives substitution into '
+        + 'the original. An extraneous root is not an arithmetic slip &mdash; it is the honest consequence '
+        + 'of a legal step, and substitution is the only thing that catches it.';
+    } else {
+      msg = '<strong>' + solutions.join(' and ') + '.</strong> Every candidate survived the check: none of '
+        + 'them lands on ' + (extext(ex) === 'none' ? 'an excluded value, because there are none' : extext(ex))
+        + '. The check still had to be done &mdash; you cannot know it was unnecessary until afterwards.';
+    }
+    msg += caveat;
+    return {
+      title: A.src + '  =  ' + B.src,
+      sub: solutions.length ? solutions.join(',  ') : 'no solution',
+      blocks: blocks,
+      status: msg,
+      kpi: [['Candidates', String(cands.length)],
+            ['Verified', solutions.length ? solutions.join(', ') : 'none'],
+            ['Extraneous', lost.length ? lost.join(', ') : 'none']]
+    };
+  }
+
+  /* ================================================================= graph */
+  function modeGraph(A) {
+    var ex = exclusionsOf(A.bans);
+    var red = RFreduce(A.rf);
+    var rf = red.rf;
+    var asym = [], asymSurd = [], holes = [], holeSurd = [];
+    ex.rat.forEach(function (r) {
+      if (Rzero(Peval(rf.d, r))) asym.push(r);
+      else holes.push({ x: r, y: Rdiv(Peval(rf.n, r), Peval(rf.d, r)) });
+    });
+    ex.surd.forEach(function (s) {
+      if (Pzero(Pdivmod(rf.d, s.min).r)) asymSurd.push(s); else holeSurd.push(s);
+    });
+    var dn = Pdeg(rf.n), dd = Pdeg(rf.d);
+    var endKind, endText, endValue = null, oblique = null;
+    if (Pzero(rf.n)) { endKind = 'zero'; endText = 'the expression is 0 wherever it is defined'; }
+    else if (dd === 0) {
+      endKind = 'poly';
+      endText = 'no asymptote at all &mdash; once the common factor cancels this IS the polynomial '
+        + Ptext(rf.n);
+    }
+    else if (dn < dd) { endKind = 'h'; endValue = R0; endText = 'y = 0'; }
+    else if (dn === dd) { endKind = 'h'; endValue = Rdiv(Plead(rf.n), Plead(rf.d)); endText = 'y = ' + Rtext(endValue); }
+    else if (dn === dd + 1) { oblique = Pdivmod(rf.n, rf.d).q; endKind = 'oblique'; endText = 'y = ' + Ptext(oblique); }
+    else { endKind = 'none'; endText = 'no horizontal or slant asymptote &mdash; the top outruns the bottom by ' + (dn - dd) + ' degrees'; }
+
+    var zn = zerosOf(rf.n);
+    var xint = zn.rat.filter(function (r) {
+      var out = true;
+      ex.rat.forEach(function (e) { if (Requ(e, r)) out = false; });
+      return out;
+    });
+    var yint = null;
+    var zeroExcluded = false;
+    ex.rat.forEach(function (e) { if (Rzero(e)) zeroExcluded = true; });
+    if (!zeroExcluded && !Rzero(Peval(rf.d, R0))) yint = Rdiv(Peval(rf.n, R0), Peval(rf.d, R0));
+
+    var blocks = [];
+    blocks.push(table('Step 1 &middot; factor, then reduce &mdash; in that order', [
+      row('as written', RFtext(A.rf)),
+      row('factored', RFfactortext(A.rf)),
+      row('reduced', RFtext(rf)),
+      row('excluded by the ORIGINAL', domaintext(ex))
+    ]));
+
+    var r2 = [];
+    if (!asym.length && !asymSurd.length) {
+      r2.push(row('vertical asymptotes', 'none'));
+    }
+    asym.forEach(function (r) {
+      r2.push(row('x = ' + Rtext(r), chip('no', 'asymptote')
+        + ' the reduced bottom ' + grouptext(Ptext(rf.d)) + ' is 0 here and the top is not, so the '
+        + 'value runs off to infinity on at least one side'));
+    });
+    asymSurd.forEach(function (s) {
+      r2.push(row('x = ' + pmtext(s.p, s.s), chip('no', 'asymptote')
+        + ' ' + Ptext(s.min) + ' divides the reduced denominator exactly'));
+    });
+    holes.forEach(function (h) {
+      r2.push(row('x = ' + Rtext(h.x), chip('hi', 'hole')
+        + ' the factor cancelled, so the reduced form gives ' + Rtext(h.y) + ' here &mdash; but the '
+        + 'expression as written is undefined, and the curve has a single missing point at ('
+        + Rtext(h.x) + ', ' + Rtext(h.y) + ')'));
+    });
+    holeSurd.forEach(function (s) {
+      r2.push(row('x = ' + pmtext(s.p, s.s), chip('hi', 'hole') + ' cancelled out of the reduced form'));
+    });
+    ex.unknown.forEach(function (q) {
+      r2.push(row('zeros of ' + Pfactortext(q), chip('no', 'not named')
+        + ' this factor has no rational root, so the search cannot say where its zeros are. They are '
+        + 'excluded all the same, and the curve breaks there whether or not a line is drawn for it.'));
+    });
+    blocks.push(table('Step 2 &middot; asymptote or hole? The reduced denominator decides', r2));
+
+    var r3 = [row('degree of the top', String(dn)), row('degree of the bottom', String(dd))];
+    if (endKind === 'h') {
+      r3.push(focusrow('horizontal asymptote', endText + (dn === dd
+        ? ' &mdash; equal degrees, so the ratio of the leading coefficients, ' + Rtext(Plead(rf.n)) + '/' + Rtext(Plead(rf.d))
+        : ' &mdash; the bottom grows faster, so the quotient is squeezed to 0')));
+    } else if (endKind === 'poly') {
+      r3.push(focusrow('end behaviour', endText + '. A curve does not approach a line it is already '
+        + 'on, so there is nothing here for an asymptote to do. The only mark this expression leaves '
+        + 'is the hole where the cancelled factor used to be.'));
+    } else if (endKind === 'oblique') {
+      r3.push(focusrow('slant asymptote', endText + ' &mdash; the top is exactly one degree bigger, and '
+        + 'polynomial division gives ' + RFtext(rf) + ' = ' + Ptext(oblique) + ' + '
+        + RFtext(RFnew(Pdivmod(rf.n, rf.d).r, rf.d)) + ', whose second piece dies away'));
+    } else {
+      r3.push(focusrow('end behaviour', endText));
+    }
+    r3.push(row('x-intercepts', xint.length
+      ? xint.map(function (r) { return '(' + Rtext(r) + ', 0)'; }).join(', ')
+      : 'none &mdash; the reduced numerator has no rational zero outside the excluded set'));
+    r3.push(row('y-intercept', yint === null
+      ? 'none &mdash; x = 0 is not in the domain'
+      : '(0, ' + Rtext(yint) + ')'));
+    blocks.push(table('Step 3 &middot; end behaviour and intercepts', r3));
+
+    /* ---- the picture. Every mark below is a float only in its pixel; the
+       number that put it there came from the exact side above. ---- */
+    if (svg) {
+      var f = RFnumeric(rf);
+      var marks = exfloats(ex).slice();
+      xint.forEach(function (r) { marks.push(Rnum(r)); });
+      if (yint !== null) marks.push(0);
+      var lo = -6, hi = 6;
+      if (marks.length) {
+        var mn = Math.min.apply(null, marks), mx = Math.max.apply(null, marks);
+        var pad = Math.max(3, (mx - mn) * 0.7);
+        lo = mn - pad; hi = mx + pad;
+      }
+      var vfloats = asym.map(Rnum);
+      asymSurd.forEach(function (s) {
+        var sv = Rnum(s.s.q) * Math.sqrt(Number(s.s.k));
+        vfloats.push(Rnum(s.p) + sv, Rnum(s.p) - sv);
+      });
+      var ys = [], i, x, y;
+      for (i = 0; i <= 400; i += 1) {
+        x = lo + (hi - lo) * i / 400;
+        var near = false;
+        vfloats.forEach(function (a) { if (Math.abs(x - a) < (hi - lo) / 45) near = true; });
+        if (near) continue;
+        y = f(x);
+        if (isFinite(y)) ys.push(y);
+      }
+      ys.sort(function (a, b) { return a - b; });
+      var ylo = -6, yhi = 6;
+      if (ys.length > 12) { ylo = ys[Math.floor(ys.length * 0.06)]; yhi = ys[Math.floor(ys.length * 0.94)]; }
+      else if (ys.length) { ylo = ys[0]; yhi = ys[ys.length - 1]; }
+      if (endKind === 'h') { ylo = Math.min(ylo, Rnum(endValue)); yhi = Math.max(yhi, Rnum(endValue)); }
+      holes.forEach(function (h) { ylo = Math.min(ylo, Rnum(h.y)); yhi = Math.max(yhi, Rnum(h.y)); });
+      if (yint !== null) { ylo = Math.min(ylo, Rnum(yint)); yhi = Math.max(yhi, Rnum(yint)); }
+      ylo = Math.min(ylo, 0); yhi = Math.max(yhi, 0);
+      if (!(yhi - ylo > 0.8)) { ylo -= 2; yhi += 2; }
+      var ypad = (yhi - ylo) * 0.16;
+      var plot = Plot(svg, { xmin: lo, xmax: hi, ymin: ylo - ypad, ymax: yhi + ypad });
+      plot.frame();
+      asym.forEach(function (r) { plot.vline(Rnum(r), 'plot-asym', 'x = ' + Rtext(r)); });
+      vfloats.forEach(function (a) {
+        var known = false;
+        asym.forEach(function (r) { if (Math.abs(Rnum(r) - a) < 1e-12) known = true; });
+        if (!known) plot.vline(a, 'plot-asym', 'x ~ ' + a.toFixed(3));
+      });
+      if (endKind === 'h') plot.hline(Rnum(endValue), 'plot-asym', 'y = ' + Rtext(endValue));
+      if (endKind === 'oblique' && oblique) {
+        var qq = oblique.map(Rnum);
+        var qat = function (t) { var acc = 0; for (var j = qq.length - 1; j >= 0; j -= 1) acc = acc * t + qq[j]; return acc; };
+        plot.segment(lo, qat(lo), hi, qat(hi), 'plot-asym');
+        plot.label(lo + (hi - lo) * 0.06, qat(lo + (hi - lo) * 0.06) + (yhi - ylo) * 0.06, 'y = ' + Ptext(oblique));
+      }
+      plot.curve(f);
+      xint.forEach(function (r) { plot.point(Rnum(r), 0, 'plot-point root', Rtext(r)); });
+      if (yint !== null) plot.point(0, Rnum(yint), 'plot-point', Rtext(yint));
+      holes.forEach(function (h) { plot.hole(Rnum(h.x), Rnum(h.y)); });
+      holeSurd.forEach(function (s) {
+        var sv2 = Rnum(s.s.q) * Math.sqrt(Number(s.s.k));
+        plot.hole(Rnum(s.p) + sv2, f(Rnum(s.p) + sv2));
+        plot.hole(Rnum(s.p) - sv2, f(Rnum(s.p) - sv2));
+      });
+      plot.describe(RFtext(A.rf) + ' sampled at 480 points from its reduced form, with '
+        + (asym.length + asymSurd.length) + ' vertical asymptote(s), ' + (holes.length + holeSurd.length)
+        + ' hole(s), and end behaviour ' + endText + '.');
+    }
+
+    var nvert = asym.length + 2 * asymSurd.length, nhole = holes.length + 2 * holeSurd.length;
+    var asymNames = asym.map(function (r) { return 'x = ' + Rtext(r); });
+    asymSurd.forEach(function (sd) { asymNames.push('x = ' + pmtext(sd.p, sd.s)); });
+    function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
+    var msg;
+    if (nhole) {
+      msg = '<strong>' + plural(nhole, 'hole') + ', ' + plural(nvert, 'vertical asymptote') + '.</strong> '
+        + 'Both come from a denominator that is zero, and telling them apart is not a matter of looking '
+        + 'at the picture: the factor that cancels leaves a hole, the factor that survives into the '
+        + 'reduced denominator leaves an asymptote. '
+        + (Pdeg(red.gcd) > 0
+            ? 'Here ' + Pfactortextfull(red.gcd) + ' cancelled, so x = '
+              + (holes.length ? Rtext(holes[0].x) : 'the excluded value')
+              + ' is a single missing point on an otherwise ordinary curve, not a wall'
+            : 'Here nothing cancelled at all: the ban came from a denominator INSIDE the expression, '
+              + 'which never reached the outermost one, so x = '
+              + (holes.length ? Rtext(holes[0].x) : 'the excluded value')
+              + ' is forbidden by a fraction you can no longer see')
+        + (endKind === 'poly'
+            ? ', and what is left, ' + Ptext(rf.n) + ', is a polynomial, so there is no wall anywhere.'
+            : '.');
+    } else if (!nvert && ex.unknown.length) {
+      msg = '<strong>There are vertical asymptotes here and this lab will not tell you where.</strong> '
+        + ex.unknown.map(function (q) { return Pfactortext(q); }).join(' and ')
+        + ' has no rational root, so the exact search that locates every other asymptote on this page '
+        + 'comes back empty. An odd-degree polynomial always crosses zero somewhere; not being able to '
+        + 'write that somewhere as a fraction is a fact about fractions, not about the curve. The '
+        + 'break in the drawing above is real even though no line is labelled on it.';
+    } else if (!nvert && Pdeg(rf.d) === 0) {
+      msg = '<strong>No asymptote, because after cancelling there is no denominator left.</strong> '
+        + 'What remains is the polynomial ' + Ptext(rf.n) + ', and a polynomial runs off to infinity '
+        + 'without ever having to avoid a value of x.';
+    } else if (!nvert) {
+      msg = '<strong>No vertical asymptote anywhere.</strong> ' + grouptext(Ptext(rf.d))
+        + ' has no real zero, so the denominator never vanishes and the curve is unbroken across the '
+        + 'whole real line. A rational function is not obliged to have an asymptote; it has one '
+        + 'exactly where its reduced denominator is 0.';
+    } else {
+      msg = '<strong>' + (nvert === 1 ? 'Vertical asymptote' : 'Vertical asymptotes') + ' at '
+        + asymNames.join(', ') + '.</strong> ';
+      if (endKind === 'oblique') {
+        msg += 'The top is one degree bigger than the bottom, so the far ends do not flatten out &mdash; '
+          + 'they follow the line ' + endText + ', which is what the polynomial part of the long division is. '
+          + 'A horizontal asymptote is the special case of that line being flat.';
+      } else if (endKind === 'h') {
+        msg += 'Far out in both directions the curve settles on ' + endText + ', decided by the degrees '
+          + 'alone: ' + (dn === dd ? 'equal degrees give the ratio of the leading coefficients'
+                                   : 'a bigger bottom gives 0') + '.';
+      } else {
+        msg += endText + '.';
+      }
+    }
+    return {
+      title: RFtext(A.rf) + (red.cancelled ? '  =  ' + RFtext(rf) + '  (with holes)' : ''),
+      sub: endText,
+      blocks: blocks,
+      status: msg,
+      kpi: [['Vertical asymptotes', String(asym.length + asymSurd.length)],
+            ['Holes', String(holes.length + holeSurd.length)],
+            ['End behaviour', endText]]
+    };
+  }
+
+  /* ================================================================ driver */
+  function fail(msg) {
+    status.innerHTML = msg;
+    work.innerHTML = table('Nothing computed yet', [
+      row('waiting for', 'a rational expression in the single variable x'),
+      row('examples that work', '<code>(x^2 - 4)/(x - 2)</code>, <code>1/x + 1/2</code>, <code>3/(x - 1)</code>')
+    ]);
+    titleOut.textContent = 'Nothing to show';
+    subOut.textContent = 'fix the expression above';
+    if (svg) svg.textContent = '';
+    setkpi([['Status', '--'], ['Status', '--'], ['Status', '--']]);
+  }
+
+  function redraw() {
+    var A = readExpr(inA.value, LABEL_A);
+    if (!A.ok) { fail(A.msg); return; }
+    var B = null;
+    if (HASB) {
+      B = readExpr(inB.value, LABEL_B);
+      if (!B.ok) { fail(B.msg); return; }
+    }
+    var op = opSel ? opSel.value : 'mul';
+    if (labelB) labelB.textContent = LABEL_B;
+
+    var out;
+    try {
+      if (MODE === 'domain') out = modeDomain(A);
+      else if (MODE === 'simplify') out = modeSimplify(A);
+      else if (MODE === 'multiply') out = modeMulDiv(A, B, op);
+      else if (MODE === 'add') out = modeAddSub(A, B, op);
+      else if (MODE === 'complex') out = modeComplex(A);
+      else if (MODE === 'solve') out = modeSolve(A, B);
+      else out = modeGraph(A);
+    } catch (err) {
+      fail('<strong>That expression is more than this lab can carry: ' + (err && err.message) + '.</strong> '
+        + 'Everything here is done in exact fractions over the rationals, and a few inputs '
+        + '&mdash; very high powers, coefficients with enormous denominators &mdash; run past what the '
+        + 'exact machinery will do quickly. Try one of the presets, then edit it a little at a time.');
+      return;
+    }
+    if (out.fail) { fail(out.fail); return; }
+    titleOut.innerHTML = out.title;
+    subOut.textContent = out.sub;
+    work.innerHTML = out.blocks.join('');
+    status.innerHTML = out.status;
+    setkpi(out.kpi);
+  }
+
+  function loadPreset() {
+    var parts = String(preset.value).split('|');
+    inA.value = parts[0];
+    if (inB) inB.value = parts[1] || '';
+    if (opSel && parts[2]) opSel.value = parts[2];
+  }
+  preset.addEventListener('change', function () { loadPreset(); redraw(); });
+  inA.addEventListener('input', redraw);
+  if (inB) inB.addEventListener('input', redraw);
+  if (opSel) opSel.addEventListener('change', redraw);
+  loadPreset();
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

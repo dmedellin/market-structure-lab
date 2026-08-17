@@ -751,7 +751,7 @@ LESSONS = [
             ("p", "The sequence must eventually repeat, since there are only `m` possible "
                   "values &mdash; pigeonhole again. The <strong>period</strong> is how long "
                   "it takes, and it is at most `m`."),
-            ("thm", ("Hull&ndash;Dobell theorem",
+            ("thm", ("Hull-Dobell theorem",
                      "An LCG has full period `m` for every seed if and only if: "
                      "`gcd(c, m) = 1`; `a − 1` is divisible by every prime dividing `m`; "
                      "and `a − 1` is divisible by 4 if `m` is.")),
@@ -791,7 +791,7 @@ LESSONS = [
             ("Expect collisions and plan for them",
              "Chaining or open addressing. By the birthday argument they begin around "
              "`√m` insertions."),
-            ("For an LCG, check the Hull&ndash;Dobell conditions",
+            ("For an LCG, check the Hull-Dobell conditions",
              "They guarantee full period. Failing them can collapse the sequence to a "
              "handful of values."),
             ("Never use an LCG where prediction matters",
@@ -857,7 +857,7 @@ LESSONS = [
              "\"Looks random\" and \"cannot be predicted\" are different properties, and "
              "only the second matters for keys."),
         ],
-        "standard": ("Finish when you can check the Hull&ndash;Dobell conditions.",
+        "standard": ("Finish when you can check the Hull-Dobell conditions.",
                      "For `m = 100`, find a multiplier and increment giving full period, "
                      "and one that fails. The three conditions are quick to verify and the "
                      "failure is dramatic."),

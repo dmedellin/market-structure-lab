@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Learn library">
         <span class="brand-mark" aria-hidden="true">01</span>
-        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 of 8 &amp;middot; Discrete Mathematics path</span></span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 of 8 · Discrete Mathematics path</span></span>
       </a>
 
       <nav class="topnav" aria-label="Primary">
@@ -940,7 +971,7 @@ p → q   ≡   ¬q → ¬p           contraposition: the basis of a proof metho
     </section>
     <section class="section" id="syllabus">
       <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 7 are propositional logic, 8 to 10 add quantifiers, and 11 to 14 turn all of it into proofs.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./propositions-and-truth-values/"><div class="num">01</div><div><strong>Propositions and Truth Values</strong><span>What counts as a proposition, and what does not.</span></div></a><a class="syllabus-item" href="./logical-connectives/"><div class="num">02</div><div><strong>Logical Connectives</strong><span>Negation, conjunction, disjunction, exclusive or.</span></div></a><a class="syllabus-item" href="./truth-tables/"><div class="num">03</div><div><strong>Truth Tables</strong><span>The complete method for evaluating any compound statement.</span></div></a><a class="syllabus-item" href="./conditional-statements/"><div class="num">04</div><div><strong>The Conditional and Its Relatives</strong><span>If-then, converse, inverse, contrapositive, and vacuous truth.</span></div></a><a class="syllabus-item" href="./logical-equivalence/"><div class="num">05</div><div><strong>Logical Equivalence</strong><span>When two formulas say the same thing, and the laws that rewrite one into the other.</span></div></a><a class="syllabus-item" href="./tautologies-and-satisfiability/"><div class="num">06</div><div><strong>Tautology, Contradiction, Satisfiability</strong><span>Always true, never true, and sometimes true.</span></div></a><a class="syllabus-item" href="./normal-forms-and-boolean-algebra/"><div class="num">07</div><div><strong>Normal Forms and Boolean Algebra</strong><span>Every formula rewritten into one of two standard shapes.</span></div></a><a class="syllabus-item" href="./predicates-and-quantifiers/"><div class="num">08</div><div><strong>Predicates and Quantifiers</strong><span>Turning open sentences into propositions.</span></div></a><a class="syllabus-item" href="./nested-quantifiers/"><div class="num">09</div><div><strong>Nested Quantifiers</strong><span>Why `∀x ∃y` and `∃y ∀x` are different claims.</span></div></a><a class="syllabus-item" href="./negating-quantified-statements/"><div class="num">10</div><div><strong>Negating Quantified Statements</strong><span>Push the negation inward; every quantifier flips.</span></div></a><a class="syllabus-item" href="./rules-of-inference/"><div class="num">11</div><div><strong>Rules of Inference</strong><span>Valid argument forms, and the two fallacies that mimic them.</span></div></a><a class="syllabus-item" href="./direct-proof/"><div class="num">12</div><div><strong>Direct Proof</strong><span>Assume the hypothesis, derive the conclusion, write it for a reader.</span></div></a><a class="syllabus-item" href="./contraposition-and-contradiction/"><div class="num">13</div><div><strong>Contraposition and Contradiction</strong><span>Two indirect techniques, and when each is the right one.</span></div></a><a class="syllabus-item" href="./proof-by-cases-and-counterexample/"><div class="num">14</div><div><strong>Cases, Counterexamples, and Writing a Proof</strong><span>Exhaustive cases, single counterexamples, and the standard a proof must meet.</span></div></a></div>
+      <div class="syllabus"><a class="syllabus-item" href="./propositions-and-truth-values/"><div class="num">01</div><div><strong>Propositions and Truth Values</strong><span>What counts as a proposition, and what does not.</span></div></a><a class="syllabus-item" href="./logical-connectives/"><div class="num">02</div><div><strong>Logical Connectives</strong><span>Negation, conjunction, disjunction, exclusive or.</span></div></a><a class="syllabus-item" href="./truth-tables/"><div class="num">03</div><div><strong>Truth Tables</strong><span>The complete method for evaluating any compound statement.</span></div></a><a class="syllabus-item" href="./conditional-statements/"><div class="num">04</div><div><strong>The Conditional and Its Relatives</strong><span>If-then, converse, inverse, contrapositive, and vacuous truth.</span></div></a><a class="syllabus-item" href="./logical-equivalence/"><div class="num">05</div><div><strong>Logical Equivalence</strong><span>When two formulas say the same thing, and the laws that rewrite one into the other.</span></div></a><a class="syllabus-item" href="./tautologies-and-satisfiability/"><div class="num">06</div><div><strong>Tautology, Contradiction, Satisfiability</strong><span>Always true, never true, and sometimes true.</span></div></a><a class="syllabus-item" href="./normal-forms-and-boolean-algebra/"><div class="num">07</div><div><strong>Normal Forms and Boolean Algebra</strong><span>Every formula rewritten into one of two standard shapes.</span></div></a><a class="syllabus-item" href="./predicates-and-quantifiers/"><div class="num">08</div><div><strong>Predicates and Quantifiers</strong><span>Turning open sentences into propositions.</span></div></a><a class="syllabus-item" href="./nested-quantifiers/"><div class="num">09</div><div><strong>Nested Quantifiers</strong><span>Why <span class="math">∀x ∃y</span> and <span class="math">∃y ∀x</span> are different claims.</span></div></a><a class="syllabus-item" href="./negating-quantified-statements/"><div class="num">10</div><div><strong>Negating Quantified Statements</strong><span>Push the negation inward; every quantifier flips.</span></div></a><a class="syllabus-item" href="./rules-of-inference/"><div class="num">11</div><div><strong>Rules of Inference</strong><span>Valid argument forms, and the two fallacies that mimic them.</span></div></a><a class="syllabus-item" href="./direct-proof/"><div class="num">12</div><div><strong>Direct Proof</strong><span>Assume the hypothesis, derive the conclusion, write it for a reader.</span></div></a><a class="syllabus-item" href="./contraposition-and-contradiction/"><div class="num">13</div><div><strong>Contraposition and Contradiction</strong><span>Two indirect techniques, and when each is the right one.</span></div></a><a class="syllabus-item" href="./proof-by-cases-and-counterexample/"><div class="num">14</div><div><strong>Cases, Counterexamples, and Writing a Proof</strong><span>Exhaustive cases, single counterexamples, and the standard a proof must meet.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">

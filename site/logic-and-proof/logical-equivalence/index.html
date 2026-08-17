@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Logical Equivalence | Logic and Proof | Learn · geterdone.io</title>
-  <meta name="description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws &amp;mdash; De Morgan, distribution, absorption &amp;mdash; and refute it with a single row." />
+  <meta name="description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws — De Morgan, distribution, absorption — and refute it with a single row." />
   <link rel="canonical" href="https://learn.geterdone.io/logic-and-proof/logical-equivalence/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Logical Equivalence | Logic and Proof | Learn · geterdone.io" />
-  <meta property="og:description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws &amp;mdash; De Morgan, distribution, absorption &amp;mdash; and refute it with a single row." />
+  <meta property="og:description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws — De Morgan, distribution, absorption — and refute it with a single row." />
   <meta property="og:url" content="https://learn.geterdone.io/logic-and-proof/logical-equivalence/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Logical Equivalence | Logic and Proof | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws &amp;mdash; De Morgan, distribution, absorption &amp;mdash; and refute it with a single row." />
+  <meta name="twitter:description" content="Two formulas are equivalent when no assignment separates them. Prove it with a table or with a chain of named laws — De Morgan, distribution, absorption — and refute it with a single row." />
   <meta name="twitter:url" content="https://learn.geterdone.io/logic-and-proof/logical-equivalence/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Logic and Proof course home">
         <span class="brand-mark" aria-hidden="true">05</span>
-        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 &amp;middot; Lesson 05 of 14</span></span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 · Lesson 05 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Logic and Proof</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 05 &amp;middot; Logical Equivalence</span>
+      <span class="crumb-current" aria-current="page">Lesson 05 · Logical Equivalence</span>
     </nav>
 
     <noscript>
@@ -999,7 +1030,7 @@ biconditional   p ↔ q ≡ (p → q) ∧ (q → p)</div><p>Two of these repay e
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>Show `(p → q) ∧ (p → r) ≡ p → (q ∧ r)`</h3><p>Three variables, so a table would be eight rows. The chain is shorter.</p><div class="mathblock">(p → q) ∧ (p → r)
+      <article class="card card-pad prose"><h3>Show <span class="math">(p → q) ∧ (p → r) ≡ p → (q ∧ r)</span></h3><p>Three variables, so a table would be eight rows. The chain is shorter.</p><div class="mathblock">(p → q) ∧ (p → r)
   ≡ (¬p ∨ q) ∧ (¬p ∨ r)      conditional law, twice
   ≡ ¬p ∨ (q ∧ r)             distribution (backwards)
   ≡ p → (q ∧ r)              conditional law</div><p>Read the result back into English: promising <span class="math">q</span> and promising <span class="math">r</span>, both on the same condition, is promising <span class="math">q ∧ r</span> on that condition. The chain proves it; the sentence is why it should have been expected.</p></article>
@@ -1007,7 +1038,7 @@ biconditional   p ↔ q ≡ (p → q) ∧ (q → p)</div><p>Two of these repay e
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Negating both sides of a connective without flipping it</strong><span><span class="math">¬(p ∧ q)</span> is not <span class="math">¬p ∧ ¬q</span>. The two differ in two of four rows, and De Morgan exists precisely to record the flip.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Treating `≡` as a connective inside a formula</strong><span><span class="math">p ≡ q</span> is a claim about two formulas; <span class="math">p ↔ q</span> is a formula. Writing <span class="math">(p ≡ q) ∧ r</span> is a category error.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Checking a few rows and concluding equivalence</strong><span>Agreement on the rows you looked at is not agreement on all of them. This is the same gap course 3 spends a whole course closing.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Negating both sides of a connective without flipping it</strong><span><span class="math">¬(p ∧ q)</span> is not <span class="math">¬p ∧ ¬q</span>. The two differ in two of four rows, and De Morgan exists precisely to record the flip.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Treating <span class="math">≡</span> as a connective inside a formula</strong><span><span class="math">p ≡ q</span> is a claim about two formulas; <span class="math">p ↔ q</span> is a formula. Writing <span class="math">(p ≡ q) ∧ r</span> is a category error.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Checking a few rows and concluding equivalence</strong><span>Agreement on the rows you looked at is not agreement on all of them. This is the same gap course 3 spends a whole course closing.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can simplify a four-connective formula by named laws and justify each step.</strong><p>Take <span class="math">¬(p ∨ (¬p ∧ q))</span> and reduce it to <span class="math">¬p ∧ ¬q</span>, naming De Morgan, distribution and negation as you use them. A step you cannot name is a step you have guessed.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Every law above has a dual, obtained by swapping <span class="math">∧</span> with <span class="math">∨</span> and <span class="math">T</span> with <span class="math">F</span>. That symmetry is not a coincidence; lesson 7 makes it a structural fact about Boolean algebra.</div></article>
       </div>
     </section>

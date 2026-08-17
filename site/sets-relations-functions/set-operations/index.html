@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Set Operations | Sets, Relations, and Functions | Learn · geterdone.io</title>
-  <meta name="description" content="Five operations, each defined by a connective from course 1. Union is `∨`, intersection is `∧`, complement is `¬` &amp;mdash; which is why the set identities are the logical equivalences wearing different symbols." />
+  <meta name="description" content="Five operations, each defined by a connective from course 1. Union is ∨, intersection is ∧, complement is ¬ — which is why the set identities are the logical equivalences wearing different symbols." />
   <link rel="canonical" href="https://learn.geterdone.io/sets-relations-functions/set-operations/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Set Operations | Sets, Relations, and Functions | Learn · geterdone.io" />
-  <meta property="og:description" content="Five operations, each defined by a connective from course 1. Union is `∨`, intersection is `∧`, complement is `¬` &amp;mdash; which is why the set identities are the logical equivalences wearing different symbols." />
+  <meta property="og:description" content="Five operations, each defined by a connective from course 1. Union is ∨, intersection is ∧, complement is ¬ — which is why the set identities are the logical equivalences wearing different symbols." />
   <meta property="og:url" content="https://learn.geterdone.io/sets-relations-functions/set-operations/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Set Operations | Sets, Relations, and Functions | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Five operations, each defined by a connective from course 1. Union is `∨`, intersection is `∧`, complement is `¬` &amp;mdash; which is why the set identities are the logical equivalences wearing different symbols." />
+  <meta name="twitter:description" content="Five operations, each defined by a connective from course 1. Union is ∨, intersection is ∧, complement is ¬ — which is why the set identities are the logical equivalences wearing different symbols." />
   <meta name="twitter:url" content="https://learn.geterdone.io/sets-relations-functions/set-operations/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Sets, Relations, and Functions course home">
         <span class="brand-mark" aria-hidden="true">03</span>
-        <span class="brand-copy"><strong>Sets, Relations, and Functions</strong><span>Course 2 &amp;middot; Lesson 03 of 14</span></span>
+        <span class="brand-copy"><strong>Sets, Relations, and Functions</strong><span>Course 2 · Lesson 03 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Sets, Relations, and Functions</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 03 &amp;middot; Set Operations</span>
+      <span class="crumb-current" aria-current="page">Lesson 03 · Set Operations</span>
     </nav>
 
     <noscript>
@@ -937,7 +968,7 @@ A ∩ B                x ∈ A  ∧  x ∈ B            ∧
 Ā                    ¬(x ∈ A)                   ¬
 A \ B                x ∈ A  ∧  ¬(x ∈ B)         ∧, ¬
 A △ B                x ∈ A  ⊕  x ∈ B            ⊕
-A ⊆ B                x ∈ A  →  x ∈ B            →</div><p>This is not an analogy. Every set identity in lesson 4 is a logical equivalence from course 1 lesson 5, applied pointwise to membership. De Morgan for sets and De Morgan for propositions are the same theorem in two notations, and knowing that halves what has to be memorised.</p><div class="thm"><span class="label">Theorem &middot; Inclusion&amp;ndash;exclusion for two sets</span><p>For finite sets, <span class="math">|A ∪ B| = |A| + |B| − |A ∩ B|</span>.</p></div><div class="proof"><p>Adding <span class="math">|A|</span> and <span class="math">|B|</span> counts every element of <span class="math">A ∩ B</span> twice &mdash; once in each term &mdash; and every other element of <span class="math">A ∪ B</span> once. Subtracting <span class="math">|A ∩ B|</span> removes exactly the surplus.</p><p><span class="qed">&#9633;</span></p></div><p>Course 4 lesson 10 generalises this to any number of sets, where the alternating signs are less obvious and the correction is larger. The two-set case is worth having by heart now.</p><div class="example"><span class="label">Example &middot; Difference is not symmetric</span><p>With <span class="math">A = {1, 2, 3}</span> and <span class="math">B = {3, 4}</span>: <span class="math">A \ B = {1, 2}</span> and <span class="math">B \ A = {4}</span>. Their union <span class="math">{1, 2, 4}</span> is <span class="math">A △ B</span>, and <span class="math">A ∩ B = {3}</span> is exactly what <span class="math">△</span> excludes.</p></div></article>
+A ⊆ B                x ∈ A  →  x ∈ B            →</div><p>This is not an analogy. Every set identity in lesson 4 is a logical equivalence from course 1 lesson 5, applied pointwise to membership. De Morgan for sets and De Morgan for propositions are the same theorem in two notations, and knowing that halves what has to be memorised.</p><div class="thm"><span class="label">Theorem &middot; Inclusion-exclusion for two sets</span><p>For finite sets, <span class="math">|A ∪ B| = |A| + |B| − |A ∩ B|</span>.</p></div><div class="proof"><p>Adding <span class="math">|A|</span> and <span class="math">|B|</span> counts every element of <span class="math">A ∩ B</span> twice &mdash; once in each term &mdash; and every other element of <span class="math">A ∪ B</span> once. Subtracting <span class="math">|A ∩ B|</span> removes exactly the surplus.</p><p><span class="qed">&#9633;</span></p></div><p>Course 4 lesson 10 generalises this to any number of sets, where the alternating signs are less obvious and the correction is larger. The two-set case is worth having by heart now.</p><div class="example"><span class="label">Example &middot; Difference is not symmetric</span><p>With <span class="math">A = {1, 2, 3}</span> and <span class="math">B = {3, 4}</span>: <span class="math">A \ B = {1, 2}</span> and <span class="math">B \ A = {4}</span>. Their union <span class="math">{1, 2, 4}</span> is <span class="math">A △ B</span>, and <span class="math">A ∩ B = {3}</span> is exactly what <span class="math">△</span> excludes.</p></div></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Set algebra</h2></div><p>Two expressions, one membership</p></div>
@@ -991,7 +1022,7 @@ A ⊆ B                x ∈ A  →  x ∈ B            →</div><p>This is not 
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>Evaluating `(A \ B) ∪ (B ∩ C)`</h3><p><span class="math">U = {1,…,8}</span>, <span class="math">A = {1,2,3,4}</span>, <span class="math">B = {3,4,5,6}</span>, <span class="math">C = {4,6,8}</span>.</p><div class="mathblock">A \ B   = {1, 2, 3, 4} minus anything in B   = {1, 2}
+      <article class="card card-pad prose"><h3>Evaluating <span class="math">(A \ B) ∪ (B ∩ C)</span></h3><p><span class="math">U = {1,…,8}</span>, <span class="math">A = {1,2,3,4}</span>, <span class="math">B = {3,4,5,6}</span>, <span class="math">C = {4,6,8}</span>.</p><div class="mathblock">A \ B   = {1, 2, 3, 4} minus anything in B   = {1, 2}
 B ∩ C   = {3,4,5,6} ∩ {4,6,8}                 = {4, 6}
 union    = {1, 2} ∪ {4, 6}                     = {1, 2, 4, 6}
 
@@ -1003,7 +1034,7 @@ Check element by element:
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Assuming `A \ B = B \ A`</strong><span>Difference is not symmetric. <span class="math">A \ B</span> keeps what is in <span class="math">A</span> only; <span class="math">B \ A</span> keeps what is in <span class="math">B</span> only, and those are different sets.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Adding cardinalities without subtracting the overlap</strong><span><span class="math">|A ∪ B| = |A| + |B|</span> holds only when <span class="math">A</span> and <span class="math">B</span> are disjoint. Otherwise the shared elements are counted twice.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Complementing without a universe</strong><span>An expression containing <span class="math">Ā</span> and no stated <span class="math">U</span> is incomplete. The lab pins <span class="math">U = {1, …, 12}</span> for exactly this reason.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Assuming <span class="math">A \ B = B \ A</span></strong><span>Difference is not symmetric. <span class="math">A \ B</span> keeps what is in <span class="math">A</span> only; <span class="math">B \ A</span> keeps what is in <span class="math">B</span> only, and those are different sets.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Adding cardinalities without subtracting the overlap</strong><span><span class="math">|A ∪ B| = |A| + |B|</span> holds only when <span class="math">A</span> and <span class="math">B</span> are disjoint. Otherwise the shared elements are counted twice.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Complementing without a universe</strong><span>An expression containing <span class="math">Ā</span> and no stated <span class="math">U</span> is incomplete. The lab pins <span class="math">U = {1, …, 12}</span> for exactly this reason.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can translate any set expression into a membership condition without hesitating.</strong><p>Take <span class="math">(A △ B) \ C</span> and write the condition for <span class="math">x</span> to belong. If you produce <span class="math">(x ∈ A ⊕ x ∈ B) ∧ x ∉ C</span>, the rest of the course's set algebra is course 1 in different symbols.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> <span class="math">A △ B</span> is associative and every element is its own inverse under it, which makes the subsets of <span class="math">U</span> a group under symmetric difference. That structure is why <span class="math">△</span> behaves like addition modulo 2, the same connection <span class="math">⊕</span> had in course 1.</div></article>
       </div>
     </section>

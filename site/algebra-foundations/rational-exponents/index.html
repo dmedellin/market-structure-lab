@@ -1,0 +1,1677 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rational Exponents | Foundations of Algebra | Learn · geterdone.io</title>
+  <meta name="description" content="Nothing so far says what x^(1/2) means. Rather than invent a meaning, ask which meaning keeps the exponent laws of lesson 5 true — and there is only one. That answer is the n-th root, and everything about rational exponents follows from it." />
+  <link rel="canonical" href="https://learn.geterdone.io/algebra-foundations/rational-exponents/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Rational Exponents | Foundations of Algebra | Learn · geterdone.io" />
+  <meta property="og:description" content="Nothing so far says what x^(1/2) means. Rather than invent a meaning, ask which meaning keeps the exponent laws of lesson 5 true — and there is only one. That answer is the n-th root, and everything about rational exponents follows from it." />
+  <meta property="og:url" content="https://learn.geterdone.io/algebra-foundations/rational-exponents/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Rational Exponents | Foundations of Algebra | Learn · geterdone.io" />
+  <meta name="twitter:description" content="Nothing so far says what x^(1/2) means. Rather than invent a meaning, ask which meaning keeps the exponent laws of lesson 5 true — and there is only one. That answer is the n-th root, and everything about rational exponents follows from it." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/algebra-foundations/rational-exponents/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Foundations of Algebra course home">
+        <span class="brand-mark" aria-hidden="true">08</span>
+        <span class="brand-copy"><strong>Foundations of Algebra</strong><span>Course 1 · Lesson 08 of 13</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Foundations of Algebra</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 08 · Rational Exponents</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The rational exponents is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 1 &middot; Lesson 08 &middot; Exponents and radicals</span>
+        <h1>Rational Exponents</h1>
+        <p>Nothing so far says what <span class="math">x^(1/2)</span> means. Rather than invent a meaning, ask which meaning keeps the exponent laws of lesson 5 true &mdash; and there is only one. That answer is the n-th root, and everything about rational exponents follows from it.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">(x^(1/n))ⁿ  =  x^(n·(1/n))  =  x¹  =  x   so x^(1/n) is an n-th root
+x^(p/q)   =  (the q-th root of x)^p       root first, numbers stay small
+          =  the q-th root of (x^p)       or power first, same answer
+x^(−p/q)  =  1 / x^(p/q)                  the minus inverts, never negates</div>
+        <div class="float-label" style="right:16px;bottom:16px;">One forced definition, and what follows</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>This lesson is an example of the commonest move in mathematics: a symbol is given a meaning not because it is natural but because every other meaning would break something already known to be true.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The laws come first, the definition second</h3><p>Lesson 5 established <span class="math">x^m · x^n = x^(m+n)</span> for whole numbers. If that sentence is to survive when <span class="math">m</span> and <span class="math">n</span> are fractions, then <span class="math">x^(1/n)</span> raised to the power <span class="math">n</span> has to be <span class="math">x</span>. There is nothing left to choose about it.</p></article><article class="card concept-card"><div class="icon">2</div><h3>A rational exponent is a root and a power, in either order</h3><p><span class="math">x^(p/q)</span> is the <span class="math">q</span>-th root of <span class="math">x</span>, raised to <span class="math">p</span> &mdash; and it is also the <span class="math">q</span>-th root of <span class="math">x^p</span>. The two routes give the same number, and one of them usually involves far smaller arithmetic.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The base has to be non-negative, and that is not fussiness</h3><p>With a negative base the two routes can give different answers, and rewriting <span class="math">2/6</span> as <span class="math">1/3</span> changes the result again. The restriction <span class="math">x ≥ 0</span> is what stops one expression having two values.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>What the exponent laws force</h2></div><p>One derivation, one definition, and the single restriction the definition needs.</p></div>
+      <article class="card card-pad prose"><p>Lesson 5 gave the exponent laws for whole-number exponents, and extended them to <span class="math">0</span> and to negatives by the same argument each time: define the new symbol so that the old law keeps working. <span class="math">x⁰ = 1</span> because <span class="math">x^n · x⁰</span> has to be <span class="math">x^n</span>; <span class="math">x^(−n) = 1/x^n</span> because <span class="math">x^n · x^(−n)</span> has to be <span class="math">x⁰ = 1</span>. <span class="math">x^(1/2)</span> is the next gap, and it is filled the same way: ask what the laws would require of it, and see whether anything is left over to decide.</p><div class="thm"><span class="label">Theorem &middot; What a unit fraction exponent has to be</span><p>Let <span class="math">n</span> be a whole number with <span class="math">n ≥ 2</span>. If the law <span class="math">x^m · x^n = x^(m+n)</span> is to hold for fractional exponents, then <span class="math">(x^(1/n))ⁿ = x</span>.</p></div><div class="proof"><p><span class="math">(x^(1/n))ⁿ</span> is <span class="math">x^(1/n)</span> multiplied by itself <span class="math">n</span> times.</p><p>By the law, multiplying powers of <span class="math">x</span> adds the exponents, so the product is <span class="math">x</span> raised to <span class="math">1/n + 1/n + ... + 1/n</span>, with <span class="math">n</span> terms.</p><p>That sum is <span class="math">n · (1/n) = 1</span>, so the product is <span class="math">x¹ = x</span>.</p><p><span class="qed">&#9633;</span></p></div><p>So <span class="math">x^(1/n)</span> is a number whose <span class="math">n</span>-th power is <span class="math">x</span>. That is exactly the definition of an <span class="math">n</span>-th root of <span class="math">x</span>, from lesson 7. The notation was not chosen to be memorable; it was forced.</p><p>One thing is still open. When <span class="math">n</span> is even and <span class="math">x</span> is positive there are <em>two</em> real numbers whose <span class="math">n</span>-th power is <span class="math">x</span> &mdash; <span class="math">2</span> and <span class="math">−2</span> both give <span class="math">16</span> when raised to the fourth. The argument above cannot distinguish them, so a convention has to. The convention is the same one the radical sign uses: <span class="math">x^(1/n)</span> denotes the non-negative root. That part <em>is</em> arbitrary, and it is the only arbitrary part.</p><div class="defbox"><span class="label">Definition &middot; Rational exponent</span><p>Let <span class="math">x ≥ 0</span>, and let <span class="math">p</span> and <span class="math">q</span> be whole numbers with <span class="math">q ≥ 2</span>. Then <span class="math">x^(p/q)</span> means <span class="math">(x^(1/q))^p</span> &mdash; the <span class="math">q</span>-th root of <span class="math">x</span>, raised to the power <span class="math">p</span>.</p><p>By the power-of-a-power law this is also <span class="math">(x^p)^(1/q)</span>, the <span class="math">q</span>-th root of <span class="math">x^p</span>. Both descriptions name the same number, so you may take whichever is easier to compute.</p><p>For a negative exponent, <span class="math">x^(−p/q) = 1 / x^(p/q)</span>, exactly as in lesson 5. The minus sign produces a reciprocal, never a negative number.</p></div><div class="mathblock">8^(2/3)      root first    cube root of 8 = 2,   then 2² = 4
+             power first   8² = 64,              then cube root of 64 = 4
+
+16^(−3/4)  =  1 / 16^(3/4)
+             4th root of 16 = 2,  then 2³ = 8,  so the answer is 1/8</div><p>Both routes are legal and they agree. Take the root first anyway. <span class="math">27^(4/3)</span> by root first is <span class="math">3⁴ = 81</span>; by power first it is the cube root of <span class="math">27⁴ = 531441</span>, which is also <span class="math">81</span> but asks you to handle a six-digit number to get there.</p><h3>Why the base has to be non-negative</h3><p>Drop the restriction <span class="math">x ≥ 0</span> and the notation stops naming one number. Take <span class="math">(−8)^(2/6)</span>:</p><div class="mathblock">(−8)^(2/6)   root first    the 6th root of −8 is not a real number
+             power first   (−8)² = 64,  and the 6th root of 64 is 2
+
+(−8)^(1/3)   the cube root of −8 is −2,  and 2/6 = 1/3</div><p>Three readings of one symbol: no value, <span class="math">2</span>, and <span class="math">−2</span>. The fraction <span class="math">2/6</span> and the fraction <span class="math">1/3</span> are the same rational number, so an expression that depends on which of them you wrote is not well defined. Restricting to <span class="math">x ≥ 0</span> removes the problem at the source, and it costs nothing: when you genuinely want the cube root of <span class="math">−8</span> you write it as a root, where it is unambiguously <span class="math">−2</span>.</p><h3>The laws, unchanged</h3><p>The payoff is that every law from lesson 5 now applies to fractional exponents with no new cases:</p><div class="mathblock">x^(1/2) · x^(1/3)  =  x^(1/2 + 1/3)  =  x^(5/6)
+(x⁶)^(1/3)         =  x^(6/3)        =  x²
+x^(3/4) / x^(1/4)  =  x^(3/4 − 1/4)  =  x^(1/2)
+(8x⁶)^(2/3)        =  8^(2/3) · x⁴   =  4x⁴</div><div class="example"><span class="label">Example &middot; Two with fractions in them</span><p><span class="math">9^(−1/2)</span>: the minus gives <span class="math">1 / 9^(1/2)</span>, and the square root of <span class="math">9</span> is <span class="math">3</span>, so the value is <span class="math">1/3</span> &mdash; positive. <span class="math">(25/4)^(3/2)</span>: the square root of <span class="math">25/4</span> is <span class="math">5/2</span>, and <span class="math">(5/2)³ = 125/8</span>.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Rational exponents</h2></div><p>Root first or power first, computed both ways</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong>Rational exponents</strong><span id="srSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>root first</span><span class="tone-purple"><i class="legend-swatch"></i>power first</span></div>
+      </div>
+      <div class="lab-stage" id="srStage"></div>
+      <div id="srWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="srStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>One power, computed both ways</h3>
+          <p>Choose a base and an exponent <span class="math">p/q</span>. The lab takes the root first and then the power, and separately the power first and then the root, and reports whether the two agree. Run <span class="math">(−8)^(2/6)</span> and then <span class="math">(−8)^(1/3)</span> to see the restriction earn its place.</p>
+        <div class="field">
+          <label for="srPreset">Example</label>
+          <select id="srPreset"><option value="8|2|3">8^(2/3)</option><option value="16|-3|4">16^(-3/4)</option><option value="-8|1|3">(-8)^(1/3)</option><option value="-8|2|6">(-8)^(2/6)</option><option value="2|1|2">2^(1/2)</option><option value="-4|1|2">(-4)^(1/2)</option></select>
+        </div>
+        <div class="field">
+          <label for="srB">Base b</label>
+          <input id="srB" type="text" value="8" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="srP">p (top of the exponent)</label>
+          <input id="srP" type="text" value="2" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="srQ">q (bottom of the exponent)</label>
+          <input id="srQ" type="text" value="3" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid"><div class="kpi"><span>Root first</span><strong id="srK1">&mdash;</strong></div><div class="kpi"><span>Power first</span><strong id="srK2">&mdash;</strong></div><div class="kpi"><span>Agree?</span><strong id="srK3">&mdash;</strong></div></div>
+        <p class="small-copy" style="margin:0;">The base may be a fraction and may be negative; p and q are whole numbers with q at least 2. Try the same exponent written two ways, such as 1/3 and 2/6.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Evaluating a rational power</h2></div><p>The negative sign and the fraction are handled separately, in this order.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Deal with the minus sign first</h3><p><span class="math">x^(−p/q)</span> is <span class="math">1 / x^(p/q)</span>. Write the reciprocal down straight away and then forget the minus; it has no further role. It does not make the answer negative.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Reduce the fraction, then check the base</h3><p>Put <span class="math">p/q</span> in lowest terms. Then confirm the base is not negative &mdash; if it is, this notation does not apply and you should be working with a root sign instead.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Take the q-th root first</h3><p>The <span class="math">q</span>-th root of the base, then raise the result to the power <span class="math">p</span>. This is the route that keeps the numbers small: <span class="math">27^(4/3)</span> is <span class="math">3⁴</span>, not the cube root of <span class="math">531441</span>.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check by raising the answer back</h3><p>If <span class="math">8^(2/3) = 4</span>, then <span class="math">4³</span> should be <span class="math">8² = 64</span>. It is. That check uses only whole-number powers, so it is independent of everything the fractional exponent did.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Roots as exponents</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Three powers, both routes</h3><p>Each one is computed twice, so the arithmetic checks itself.</p><div class="mathblock">1.  8^(2/3)
+        root first    cube root of 8 = 2,      then 2² = 4
+        power first   8² = 64,                 then cube root of 64 = 4
+        answer        4
+
+2.  16^(−3/4)
+        the minus     16^(−3/4)  =  1 / 16^(3/4)
+        root first    4th root of 16 = 2,      then 2³ = 8
+        answer        1/8
+
+3.  27^(4/3)
+        root first    cube root of 27 = 3,     then 3⁴ = 81
+        power first   27⁴ = 531441,            then cube root of it = 81
+        answer        81
+
+check 1:  4³ = 64,  and 8² = 64                agrees
+check 3:  81³ = 531441,  and 27⁴ = 531441      agrees</div><p>Line 3 is the argument for taking the root first, in one line of evidence: <span class="math">3⁴</span> is arithmetic you can do in your head, and <span class="math">27⁴</span> is not.</p><p>The two routes agreeing is a check on this particular calculation and nothing more. What guarantees they always agree, for <span class="math">x ≥ 0</span>, is the power-of-a-power law from lesson 5 &mdash; a general statement, proved there, which these three examples illustrate but do not establish.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Reading the exponent as a multiplier</strong><span><span class="math">8^(2/3)</span> is not <span class="math">8 × 2/3 = 16/3</span>. An exponent has never meant multiply by, and a fractional one does not start now: <span class="math">2/3</span> still says root and power, not scale.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Thinking a negative exponent gives a negative answer</strong><span><span class="math">9^(−1/2) = 1/3</span>. The minus sign produces a reciprocal. A power of a positive base is positive whatever the exponent is, and no rearrangement can change that.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Applying rational exponents to a negative base</strong><span><span class="math">(−8)^(2/6)</span> comes out as <span class="math">2</span> if you square first and has no real value if you take the sixth root first, while <span class="math">(−8)^(1/3)</span> is <span class="math">−2</span>. The definition requires <span class="math">x ≥ 0</span> for exactly this reason; for a genuine cube root of a negative number, use the root sign.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can say why the definition could not have been anything else.</strong><p>Evaluating <span class="math">16^(−3/4)</span> without hesitating is the easy half. The other half is being able to answer someone who asks why <span class="math">x^(1/2)</span> is a square root rather than half of <span class="math">x</span>: because the exponent law leaves no alternative, and the only free choice left is which of the two roots to take.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Every radical you meet from here on can be written as a rational power, and it is usually worth doing. Course 5 simplifies expressions like <span class="math">√(x⁵)</span> by rewriting them as <span class="math">x^(5/2)</span> and using the laws you already have, rather than by inventing separate rules for radicals.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../roots-and-radicals/" rel="prev"><span>Previous lesson</span><strong>07 &middot; Roots and Radicals</strong></a>
+      <a class="lesson-link next" href="../algebraic-expressions-and-terms/" rel="next"><span>Next lesson</span><strong>09 &middot; Algebraic Expressions and Terms</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Foundations of Algebra.</strong> Every value on this course is computed in your browser by applying the rule the lesson states, and the arithmetic is exact &mdash; a third is <span class="math">1/3</span> through every step, not <span class="math">0.3333</span>. Where a lesson is about approximation it says so and shows the rounding it did.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "Evaluate <span class=\"math\">8^(2/3)<\/span>.", "a": ["<span class=\"math\">2<\/span>", "<span class=\"math\">4<\/span>", "<span class=\"math\">16/3<\/span>", "<span class=\"math\">64<\/span>"], "c": 1, "why": "The cube root of <span class=\"math\">8<\/span> is <span class=\"math\">2<\/span>, and <span class=\"math\">2\u00b2 = 4<\/span>. <span class=\"math\">2<\/span> is the answer you get by taking the root and forgetting the power; <span class=\"math\">64<\/span> is <span class=\"math\">8\u00b2<\/span> with the root forgotten; <span class=\"math\">16/3<\/span> is <span class=\"math\">8 \u00d7 (2/3)<\/span>, which treats the exponent as a multiplier."}, {"q": "Evaluate <span class=\"math\">16^(\u22123/4)<\/span>.", "a": ["<span class=\"math\">\u22128<\/span>", "<span class=\"math\">8<\/span>", "<span class=\"math\">1/8<\/span>", "<span class=\"math\">1/64<\/span>"], "c": 2, "why": "The minus gives <span class=\"math\">1 / 16^(3/4)<\/span>; the 4th root of <span class=\"math\">16<\/span> is <span class=\"math\">2<\/span>, and <span class=\"math\">2\u00b3 = 8<\/span>, so the value is <span class=\"math\">1/8<\/span>. <span class=\"math\">\u22128<\/span> reads the negative exponent as a negative answer, <span class=\"math\">8<\/span> drops the minus altogether, and <span class=\"math\">1/64<\/span> uses the square root instead of the fourth root."}, {"q": "Which fact forces <span class=\"math\">x^(1/2)<\/span> to mean a square root of <span class=\"math\">x<\/span>?", "a": ["<span class=\"math\">x^(1/2) = x/2<\/span>, and halving is the inverse of doubling", "<span class=\"math\">(x^(1/2))\u00b2 = x^(2\u00b7(1/2)) = x\u00b9<\/span>, so <span class=\"math\">x^(1/2)<\/span> squares to <span class=\"math\">x<\/span>", "It is a definition adopted for convenience; no law requires it", "Because <span class=\"math\">x^(1/2)<\/span> and <span class=\"math\">2^x<\/span> are two notations for the same thing"], "c": 1, "why": "Keeping the exponent laws true forces <span class=\"math\">x^(1/2)<\/span> to be a number whose square is <span class=\"math\">x<\/span>. That narrows it to two candidates for <span class=\"math\">x &gt; 0<\/span>, <span class=\"math\">\u221ax<\/span> and <span class=\"math\">\u2212\u221ax<\/span>, and the non-negative one is then chosen by convention &mdash; so the law does the work and the convention only settles the sign."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* Exact irrational answers.
+
+     sqrt(D) for a rational D is either rational or irrational, and the second
+     case is not a failure -- it is the answer. A lesson that solves
+     x^2 - 2x - 4 = 0 wants "1 +- sqrt(5)", not "3.2360679...", so the roots of
+     every quadratic on this path are carried as  p + q*sqrt(k)  with p and q
+     exact rationals and k a squarefree integer. */
+  function bsqrtsimp(n) {
+    /* n = s^2 * k with k squarefree; returns [s, k]. */
+    var s = 1n, k = n, f = 2n;
+    while (f * f <= k) {
+      while (k % (f * f) === 0n) { k /= f * f; s *= f; }
+      f += 1n;
+      if (f > 100000n) break;   /* lesson-sized radicands */
+    }
+    return [s, k];
+  }
+  /* sqrt(a) for a rational a >= 0, as { q, k } meaning q * sqrt(k). k === 1n
+     exactly when the root is rational. */
+  function Rsurd(a) {
+    if (a.n < 0n) return null;
+    if (a.n === 0n) return { q: R0, k: 1n };
+    /* sqrt(p/d) = sqrt(p*d)/d */
+    var pair = bsqrtsimp(a.n * a.d);
+    return { q: R(pair[0], a.d), k: pair[1] };
+  }
+  function surdtext(s) {
+    if (s.k === 1n) return Rtext(s.q);
+    if (Requ(s.q, R1)) return 'sqrt(' + s.k + ')';
+    return Rterm(s.q) + 'sqrt(' + s.k + ')';
+  }
+  /* "p +- q sqrt(k)", the form a reader is expected to write down. */
+  function pmtext(p, s, imaginary) {
+    var unit = imaginary ? 'i' : '';
+    if (s.k === 1n && Rzero(s.q)) return Rtext(p);
+    var mag = surdtext(s);
+    if (s.k !== 1n && Requ(Rabs(s.q), R1)) mag = 'sqrt(' + s.k + ')';
+    else if (s.k !== 1n) mag = Rterm(Rabs(s.q)) + 'sqrt(' + s.k + ')';
+    else mag = Rtext(Rabs(s.q));
+    var right = unit ? (mag === '1' ? 'i' : mag + 'i') : mag;
+    if (Rzero(p)) return '+-' + right;
+    return Rtext(p) + ' +- ' + right;
+  }
+  /* The exact roots of ax^2 + bx + c, whatever the discriminant does.
+     Returns { disc, kind, p, s, roots } where each root is p +- s (times i when
+     the discriminant is negative), and `roots` holds the rational ones only. */
+  function quadroots(a, b, c) {
+    var disc = Rsub(Rmul(b, b), Rmul(R(4n), Rmul(a, c)));
+    var p = Rdiv(Rneg(b), Rmul(R(2n), a));
+    var sign = Rsign(disc);
+    var mag = Rsurd(sign < 0 ? Rneg(disc) : disc);
+    var s = { q: Rdiv(mag.q, Rabs(Rmul(R(2n), a))), k: mag.k };
+    var kind = sign < 0 ? 'complex' : (sign === 0 ? 'double' : (s.k === 1n ? 'rational' : 'irrational'));
+    var roots = [];
+    if (kind === 'double') roots = [p];
+    else if (kind === 'rational') roots = [Radd(p, s.q), Rsub(p, s.q)].sort(Rcmp);
+    return { disc: disc, kind: kind, p: p, s: s, roots: roots };
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function td(text, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + text + '</td>'; }
+  function tdl(text, cls) {
+    return '<td style="text-align:left;"' + (cls ? ' class="' + cls + '"' : '') + '>' + text + '</td>';
+  }
+  function th(text) { return '<th>' + text + '</th>'; }
+  function rowhead(text) { return '<th class="rowhead">' + text + '</th>'; }
+  function tr(cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.join('') + '</tr>'; }
+  function table(caption, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption + '</caption><tbody>'
+      + rows.join('') + '</tbody></table></div>';
+  }
+  function step(label, detail) { return tr([rowhead(label), tdl(detail)]); }
+  function chip(text, kind) { return '<span class="chip' + (kind ? ' ' + kind : '') + '">' + text + '</span>'; }
+  function tone(text, kind) { return '<span class="tone-' + kind + '">' + text + '</span>'; }
+  /* Rparse throws on a denominator of zero, and 1/0 is a thing a reader can
+     type. Every call on reader input goes through this instead, so a bad
+     fraction becomes an explanation rather than an exception. */
+  function Rread(text) {
+    try { return Rparse(String(text).trim()); } catch (err) { return null; }
+  }
+  /* A decimal that a lesson has decided to show. Never used to decide anything;
+     every comparison and every verdict on this path is made on the exact side. */
+  function approx(x, places) {
+    var v = Number(x);
+    if (!isFinite(v)) return 'not a real number';
+    return v.toFixed(places === undefined ? 6 : places);
+  }
+
+  function bpow(b, e) { var out = 1n; for (var i = 0; i < e; i += 1) out *= b; return out; }
+  function bfactorise(n) {
+    var out = [], f = 2n;
+    if (n < 0n) n = -n;
+    while (f * f <= n) {
+      var e = 0;
+      while (n % f === 0n) { n /= f; e += 1; }
+      if (e) out.push([f, e]);
+      f += 1n;
+      if (f > 300000n) break;      /* lesson-sized radicands */
+    }
+    if (n > 1n) out.push([n, 1]);
+    return out;
+  }
+  /* floor of the k-th root, by binary search on integers: exact, and it never
+     asks a float what a BigInt knows. */
+  function bnthrootFloor(n, k) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var lo = 0n, hi = 1n;
+    while (bpow(hi, k) <= n) hi *= 2n;
+    while (lo + 1n < hi) {
+      var mid = (lo + hi) / 2n;
+      if (bpow(mid, k) <= n) lo = mid; else hi = mid;
+    }
+    return lo;
+  }
+  function bnthroot(n, k) {
+    if (n < 0n) {
+      if (k % 2 === 0) return null;
+      var r = bnthroot(-n, k);
+      return r === null ? null : -r;
+    }
+    var f = bnthrootFloor(n, k);
+    return bpow(f, k) === n ? f : null;
+  }
+  function Rnthroot(r, k) {
+    var a = bnthroot(r.n, k), b = bnthroot(r.d, k);
+    return (a === null || b === null) ? null : R(a, b);
+  }
+  /* The k-th root of a positive integer n, split into what comes out and what
+     stays in, prime by prime. */
+  function rootsimp(n, k) {
+    var rows = bfactorise(n).map(function (pair) {
+      var p = pair[0], e = pair[1];
+      return { p: p, e: e, out: Math.floor(e / k), rest: e % k };
+    });
+    var outside = 1n, inside = 1n;
+    rows.forEach(function (row) { outside *= bpow(row.p, row.out); inside *= bpow(row.p, row.rest); });
+    return { outside: outside, inside: inside, rows: rows };
+  }
+  function rootText(k, radicand) {
+    if (k === 2) return 'sqrt(' + radicand + ')';
+    if (k === 3) return 'cbrt(' + radicand + ')';
+    return 'root' + k + '(' + radicand + ')';
+  }
+
+  /* ---- sums of surds ---- */
+  function SVterm(c, k) {
+    var out = {};
+    if (Rzero(c)) return out;
+    var pair = bsqrtsimp(k);                 /* sqrt(12) = 2 sqrt(3) on the way in */
+    out[String(pair[1])] = Rmul(c, R(pair[0]));
+    return out;
+  }
+  function SVfromR(r) { return SVterm(r, 1n); }
+  function SVadd(a, b) {
+    var out = {}, key;
+    for (key in a) if (a.hasOwnProperty(key)) out[key] = a[key];
+    for (key in b) if (b.hasOwnProperty(key)) {
+      out[key] = out[key] ? Radd(out[key], b[key]) : b[key];
+      if (Rzero(out[key])) delete out[key];
+    }
+    return out;
+  }
+  function SVneg(a) {
+    var out = {}, key;
+    for (key in a) if (a.hasOwnProperty(key)) out[key] = Rneg(a[key]);
+    return out;
+  }
+  function SVsub(a, b) { return SVadd(a, SVneg(b)); }
+  function SVmul(a, b) {
+    var out = {}, i, j;
+    for (i in a) if (a.hasOwnProperty(i)) {
+      for (j in b) if (b.hasOwnProperty(j)) {
+        /* sqrt(i) * sqrt(j) = sqrt(ij), and ij needs simplifying again */
+        var piece = SVterm(Rmul(a[i], b[j]), BigInt(i) * BigInt(j));
+        out = SVadd(out, piece);
+      }
+    }
+    return out;
+  }
+  function SVterms(a) {
+    var out = [], key;
+    for (key in a) if (a.hasOwnProperty(key) && !Rzero(a[key])) out.push({ c: a[key], k: BigInt(key) });
+    out.sort(function (p, q) { return p.k < q.k ? -1 : (p.k > q.k ? 1 : 0); });
+    return out;
+  }
+  function SVzero(a) { return SVterms(a).length === 0; }
+  function SVrational(a) {
+    var t = SVterms(a);
+    return t.length === 0 || (t.length === 1 && t[0].k === 1n);
+  }
+  function SVtoR(a) {
+    var t = SVterms(a);
+    if (!t.length) return R0;
+    if (t.length === 1 && t[0].k === 1n) return t[0].c;
+    return null;
+  }
+  function SVtermtext(t) {
+    if (t.k === 1n) return Rtext(t.c);
+    var mag = Rabs(t.c);
+    var head = Requ(mag, R1) ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+    return (Rsign(t.c) < 0 ? '-' : '') + head + 'sqrt(' + t.k + ')';
+  }
+  function SVtext(a) {
+    var t = SVterms(a);
+    if (!t.length) return '0';
+    var out = '';
+    t.forEach(function (item, i) {
+      var neg = Rsign(item.c) < 0, mag = Rabs(item.c);
+      out += i === 0 ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      if (item.k === 1n) out += Rtext(mag);
+      else out += (Requ(mag, R1) ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')')) + 'sqrt(' + item.k + ')';
+    });
+    return out;
+  }
+  /* The one place this lab uses floating point: a decimal beside an exact
+     answer, and the demonstration that sqrt(2) + sqrt(3) is not sqrt(5). Every
+     verdict on the page is decided on the exact side. */
+  function SVnum(a) {
+    var v = 0;
+    SVterms(a).forEach(function (t) { v += Rnum(t.c) * Math.sqrt(Number(t.k)); });
+    return v;
+  }
+  function SVsqrt(a) {
+    var r = SVtoR(a);
+    if (r === null) throw new Error('a square root of something that already contains a root is a nested radical, which this course does not do');
+    if (Rsign(r) < 0) throw new Error('sqrt(' + Rtext(r) + ') is not a real number: no real number squares to a negative');
+    var s = Rsurd(r);
+    return SVterm(s.q, s.k);
+  }
+  /* Dividing by a surd. One term is cleared by the root itself, two terms by
+     the conjugate, and three terms are not cleared by either -- which the
+     rationalising mode is built to show rather than to avoid. */
+  function SVdiv(a, b) {
+    var t = SVterms(b);
+    if (!t.length) throw new Error('this divides by zero, and nothing divided by zero has a value');
+    if (t.length === 1) {
+      var c = t[0].c, k = t[0].k;
+      if (k === 1n) return SVmul(a, SVfromR(Rinv(c)));
+      /* 1 / (c sqrt(k)) = sqrt(k) / (c k) */
+      return SVmul(a, SVterm(Rinv(Rmul(c, R(k))), k));
+    }
+    if (t.length === 2) {
+      var conj = SVadd(SVterm(t[0].c, t[0].k), SVneg(SVterm(t[1].c, t[1].k)));
+      var den = SVtoR(SVmul(b, conj));
+      if (den === null) throw new Error('the conjugate did not clear this denominator');
+      if (Rzero(den)) throw new Error('the denominator times its conjugate is zero, so the denominator was zero');
+      return SVmul(SVmul(a, conj), SVfromR(Rinv(den)));
+    }
+    throw new Error('this denominator has ' + t.length + ' terms; one conjugate clears two of them at a time and cannot clear three in one step');
+  }
+  function SVof(node) {
+    switch (node.k) {
+      case 'num': {
+        var r = Rread(node.v);
+        if (r === null) throw new Error('"' + esc(node.v) + '" is not a number I can read exactly');
+        return SVfromR(r);
+      }
+      case 'var': throw new Error('the letter ' + node.v + ' has no value in this mode');
+      case 'neg': return SVneg(SVof(node.a));
+      case 'add': return SVadd(SVof(node.a), SVof(node.b));
+      case 'sub': return SVsub(SVof(node.a), SVof(node.b));
+      case 'mul': return SVmul(SVof(node.a), SVof(node.b));
+      case 'div': return SVdiv(SVof(node.a), SVof(node.b));
+      case 'pow': {
+        var e = SVtoR(SVof(node.b));
+        if (e === null || !Rint(e) || e.n < 0n || e.n > 8n) {
+          throw new Error('the exponent has to be a whole number from 0 to 8 in this mode');
+        }
+        var out = SVfromR(R1), base = SVof(node.a);
+        for (var i = 0; i < Number(e.n); i += 1) out = SVmul(out, base);
+        return out;
+      }
+      case 'fn': {
+        if (node.v === 'sqrt') return SVsqrt(SVof(node.a));
+        throw new Error(node.v + '(...) is not part of this lesson; sqrt is');
+      }
+    }
+    throw new Error('I cannot read that expression');
+  }
+  /* The sign of p + q*sqrt(k), exactly: compare squares when the two parts
+     disagree. Used to decide whether a candidate solution is a solution. */
+  function signPQ(p, q, k) {
+    var sp = Rsign(p), sq = Rsign(q);
+    if (sq === 0) return sp;
+    if (sp === 0) return sq;
+    if (sp === sq) return sp;
+    var left = Rmul(p, p), right = Rmul(Rmul(q, q), R(k));
+    var c = Rcmp(left, right);
+    return sp > 0 ? (c > 0 ? 1 : (c === 0 ? 0 : -1)) : (c > 0 ? -1 : (c === 0 ? 0 : 1));
+  }
+
+  var HINT = "The base may be a fraction and may be negative; p and q are whole numbers with q at least 2. Try the same exponent written two ways, such as 1/3 and 2/6.";
+
+  var preset = document.getElementById('srPreset');
+  var stage = document.getElementById('srStage');
+  var work = document.getElementById('srWork');
+  var status = document.getElementById('srStatus');
+  var subOut = document.getElementById('srSub');
+  var kA = document.getElementById('srK1'), kB = document.getElementById('srK2'), kC = document.getElementById('srK3');
+  var EXTRA = [], CLEAR = null;
+  function kpis(a, b, c) { kA.textContent = a; kB.textContent = b; kC.textContent = c; }
+  function fail(lead, detail) {
+    if (CLEAR) CLEAR();
+    stage.innerHTML = table('nothing computed yet', [step('input', tone(esc(lead), 'red'))]);
+    work.innerHTML = '';
+    kpis('&mdash;', '&mdash;', '&mdash;');
+    status.innerHTML = '<strong>' + lead + '</strong> ' + detail + ' ' + HINT;
+  }
+
+  var inB = document.getElementById('srB'), inP = document.getElementById('srP'), inQ = document.getElementById('srQ');
+  var INPUTS = [inB, inP, inQ];
+  function applyPreset(parts) {
+    inB.value = (parts[0] || '').trim(); inP.value = (parts[1] || '').trim(); inQ.value = (parts[2] || '').trim();
+  }
+
+  function redraw() {
+    var b = Rread(inB.value), p = Rread(inP.value), q = Rread(inQ.value);
+    if (b === null || p === null || q === null) { fail('b, p and q all have to be numbers.', 'b may be a fraction; p and q must be whole numbers.'); return; }
+    if (!Rint(p) || !Rint(q)) { fail('p and q have to be whole numbers.', 'They are the top and bottom of the exponent, not its value.'); return; }
+    if (q.n < 2n || q.n > 12n || p.n > 12n || p.n < -12n) {
+      fail('Keep q between 2 and 12, and p between -12 and 12.',
+        'Outside that range the numbers stop being something a reader can check by hand.');
+      return;
+    }
+    var pi = Number(p.n), qi = Number(q.n);
+    var claim = Rterm(b) + '^(' + pi + '/' + qi + ')';
+    subOut.textContent = claim;
+
+    /* Route one: take the root first, then the power. Route two: the power
+       first, then the root. The exponent law says these are the same number.
+       For a negative base they are not always, and that is the lesson. */
+    var rootFirst = { value: null, why: null, detail: '' };
+    var root = Rnthroot(b, qi);
+    if (root === null) {
+      rootFirst.why = 'the ' + qi + 'th root of ' + Rtext(b) + ' is not a rational number'
+        + (Rsign(b) < 0 && qi % 2 === 0 ? ', and with an even index and a negative radicand it is not a real number at all' : '');
+      rootFirst.detail = rootText(qi, Rtext(b)) + ' is not rational, so this route stops here';
+    } else if (Rzero(root) && pi < 0) {
+      rootFirst.why = 'the root is 0 and the exponent is negative, which divides by zero';
+      rootFirst.detail = 'stops at 0^' + pi;
+    } else {
+      rootFirst.value = Rpow(root, pi);
+      rootFirst.detail = rootText(qi, Rtext(b)) + ' = ' + Rtext(root) + ', then ' + Rterm(root) + '^' + (pi < 0 ? '(' + pi + ')' : pi) + ' = ' + Rtext(rootFirst.value);
+    }
+
+    var powerFirst = { value: null, why: null, detail: '' };
+    var inner = null;
+    if (Rzero(b) && pi < 0) {
+      powerFirst.why = '0 to a negative power divides by zero';
+      powerFirst.detail = 'stops at 0^' + pi;
+    } else {
+      inner = Rpow(b, pi);
+      var outer = Rnthroot(inner, qi);
+      if (outer === null) {
+        powerFirst.why = 'the ' + qi + 'th root of ' + Rtext(inner) + ' is not a rational number'
+          + (Rsign(inner) < 0 && qi % 2 === 0 ? ', and with an even index and a negative radicand it is not a real number at all' : '');
+        powerFirst.detail = Rterm(b) + '^' + (pi < 0 ? '(' + pi + ')' : pi) + ' = ' + Rtext(inner) + ', and ' + rootText(qi, Rtext(inner)) + ' is not rational';
+      } else {
+        powerFirst.value = outer;
+        powerFirst.detail = Rterm(b) + '^' + (pi < 0 ? '(' + pi + ')' : pi) + ' = ' + Rtext(inner) + ', then ' + rootText(qi, Rtext(inner)) + ' = ' + Rtext(outer);
+      }
+    }
+
+    var both = rootFirst.value !== null && powerFirst.value !== null;
+    var agree = both && Requ(rootFirst.value, powerFirst.value);
+    var reduced = R(p.n, q.n);
+
+    var rows = [tr([th('route'), th('what it does'), th('answer')])];
+    rows.push(tr([tdl('the root first: (' + rootText(qi, 'b') + ')^p'), tdl(rootFirst.detail),
+      td(rootFirst.value === null ? tone(esc(rootFirst.why), 'red') : tone(Rtext(rootFirst.value), 'cyan'))]));
+    rows.push(tr([tdl('the power first: ' + rootText(qi, 'b^p')), tdl(powerFirst.detail),
+      td(powerFirst.value === null ? tone(esc(powerFirst.why), 'red') : tone(Rtext(powerFirst.value), 'purple'))], 'focus'));
+
+    /* When neither route is rational the answer is still exact for a square
+       root, and otherwise it is genuinely irrational and the decimal says so. */
+    var surdText = null;
+    if (!both && qi === 2 && inner !== null && Rsign(inner) >= 0) {
+      var s = Rsurd(inner);
+      surdText = surdtext(s);
+    }
+    var decimal = null;
+    if (!both) {
+      var bv = Rnum(b);
+      var dv = (bv < 0 && qi % 2 === 0) ? NaN : (bv < 0 ? -Math.pow(-bv, pi / qi) : Math.pow(bv, pi / qi));
+      decimal = isFinite(dv) ? approx(dv, 6) : 'not a real number';
+    }
+
+    var extra = [tr([th('question'), th('answer')])];
+    extra.push(tr([tdl('is the exponent in lowest terms?'), tdl(Requ(reduced, R(p.n, q.n)) && (Rabs(reduced).n !== p.n || reduced.d !== q.n)
+      ? pi + '/' + qi + ' reduces to ' + Rtext(reduced) + ', and the two forms are the same rational number'
+      : pi + '/' + qi + ' is already in lowest terms')]));
+    extra.push(tr([tdl('what the exponent law claims'), tdl('b^(p/q) means the same thing whichever way round it is taken, so long as the root exists')]));
+    if (surdText) extra.push(tr([tdl('the exact value as a surd'), tdl(surdText)]));
+    if (decimal) extra.push(tr([tdl('as a decimal, rounded to 6 places'), tdl(decimal)]));
+
+    stage.innerHTML = table('one power, two routes', [
+      step('the power', claim),
+      step('root first', rootFirst.value === null ? tone(esc(rootFirst.why), 'red') : Rtext(rootFirst.value)),
+      step('power first', powerFirst.value === null ? tone(esc(powerFirst.why), 'red') : Rtext(powerFirst.value)),
+      step('the same?', both ? (agree ? '<span class="chip ok">yes</span>' : '<span class="chip no">no</span>')
+        : '<span class="chip">one route has no answer</span>'),
+    ]);
+    work.innerHTML = table('The two routes', rows) + table('What that leaves', extra);
+    kpis(rootFirst.value === null ? 'none' : Rtext(rootFirst.value),
+      powerFirst.value === null ? 'none' : Rtext(powerFirst.value),
+      both ? (agree ? 'yes' : 'no') : 'one route fails');
+
+    var msg;
+    if (both && agree) {
+      msg = '<strong>' + claim + ' = ' + Rtext(rootFirst.value) + ', by either route.</strong> '
+        + 'Taking the root first keeps the numbers small, which is the only reason to prefer it: '
+        + qi + 'th root then power, or power then ' + qi + 'th root, is the same number here.';
+    } else if (both && !agree) {
+      msg = '<strong>The two routes disagree: ' + Rtext(rootFirst.value) + ' one way and '
+        + Rtext(powerFirst.value) + ' the other.</strong> That is what a negative base does to a '
+        + 'fractional exponent, and it is why b^(p/q) is defined only for b at least 0 once q is '
+        + 'even. Nothing here is a rounding error; both answers are exact, and the notation is what '
+        + 'is at fault.';
+    } else if (Rsign(b) < 0 && qi % 2 === 0) {
+      msg = '<strong>' + claim + ' has no real value taken as a root of a negative number.</strong> '
+        + 'The route that squares first does have an answer, because squaring destroyed the sign '
+        + 'before the root was taken. Writing the same exponent as ' + Rtext(reduced) + ' would '
+        + 'give a third story. This is the reason textbooks require a non-negative base before '
+        + 'they allow fractional exponents at all.';
+    } else if (rootFirst.value === null && powerFirst.value === null) {
+      msg = '<strong>' + claim + ' is irrational.</strong> Neither route lands on a fraction: '
+        + esc(rootFirst.why) + '. '
+        + (surdText ? 'Exactly, it is ' + surdText + '. ' : '')
+        + 'The decimal above is a rounding of it and not the number itself.';
+    } else {
+      msg = '<strong>One route works and the other does not.</strong> ' + claim + ' is '
+        + (rootFirst.value !== null ? Rtext(rootFirst.value) + ' taking the root first' : Rtext(powerFirst.value) + ' taking the power first')
+        + ', while the other route runs into: ' + esc(rootFirst.why || powerFirst.why) + '.';
+    }
+    status.innerHTML = msg;
+  }
+
+  preset.addEventListener('change', function () { applyPreset(preset.value.split('|')); redraw(); });
+  EXTRA.forEach(function (el) { el.addEventListener('change', redraw); });
+  INPUTS.forEach(function (el) { el.addEventListener('input', redraw); });
+  applyPreset(preset.value.split('|'));
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

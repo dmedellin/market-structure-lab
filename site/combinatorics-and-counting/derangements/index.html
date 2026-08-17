@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Derangements | Combinatorics and Counting | Learn · geterdone.io</title>
-  <meta name="description" content="A derangement moves every element. Inclusion and exclusion counts them, and the proportion of permutations that are derangements converges to `1/e` almost immediately &amp;mdash; it is already accurate at `n = 7`." />
+  <meta name="description" content="A derangement moves every element. Inclusion and exclusion counts them, and the proportion of permutations that are derangements converges to 1/e almost immediately — it is already accurate at n = 7." />
   <link rel="canonical" href="https://learn.geterdone.io/combinatorics-and-counting/derangements/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Derangements | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta property="og:description" content="A derangement moves every element. Inclusion and exclusion counts them, and the proportion of permutations that are derangements converges to `1/e` almost immediately &amp;mdash; it is already accurate at `n = 7`." />
+  <meta property="og:description" content="A derangement moves every element. Inclusion and exclusion counts them, and the proportion of permutations that are derangements converges to 1/e almost immediately — it is already accurate at n = 7." />
   <meta property="og:url" content="https://learn.geterdone.io/combinatorics-and-counting/derangements/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Derangements | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta name="twitter:description" content="A derangement moves every element. Inclusion and exclusion counts them, and the proportion of permutations that are derangements converges to `1/e` almost immediately &amp;mdash; it is already accurate at `n = 7`." />
+  <meta name="twitter:description" content="A derangement moves every element. Inclusion and exclusion counts them, and the proportion of permutations that are derangements converges to 1/e almost immediately — it is already accurate at n = 7." />
   <meta name="twitter:url" content="https://learn.geterdone.io/combinatorics-and-counting/derangements/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Combinatorics and Counting course home">
         <span class="brand-mark" aria-hidden="true">10</span>
-        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 &amp;middot; Lesson 10 of 14</span></span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 · Lesson 10 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Combinatorics and Counting</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 10 &amp;middot; Derangements</span>
+      <span class="crumb-current" aria-current="page">Lesson 10 · Derangements</span>
     </nav>
 
     <noscript>
@@ -976,7 +1007,7 @@ Dₙ/n!  0  .500 .333 .375 .3667 .36806 .367857 .3678792
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Using derangements</h2></div><p>Recognise the "nothing in its own place" shape.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check every element has exactly one forbidden position</h3><p>That is what makes it a derangement. More complicated forbidden patterns need the permanent of a matrix and are outside this course.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Use the formula or the recurrence</h3><p>The recurrence is faster by hand for small <span class="math">n</span>; the formula is what generalises.</p></article><article class="card concept-card"><div class="icon">3</div><h3>For a partial condition, combine with combinations</h3><p>"Exactly <span class="math">k</span> fixed points" is <span class="math">C(n,k)·D_{n−k}</span>: choose which stay, derange the rest.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check against `n!/e`</h3><p><span class="math">Dₙ</span> is the nearest integer to <span class="math">n!/e</span>. It is a one-line verification of an answer computed another way.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check every element has exactly one forbidden position</h3><p>That is what makes it a derangement. More complicated forbidden patterns need the permanent of a matrix and are outside this course.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Use the formula or the recurrence</h3><p>The recurrence is faster by hand for small <span class="math">n</span>; the formula is what generalises.</p></article><article class="card concept-card"><div class="icon">3</div><h3>For a partial condition, combine with combinations</h3><p>"Exactly <span class="math">k</span> fixed points" is <span class="math">C(n,k)·D_{n−k}</span>: choose which stay, derange the rest.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Check against <span class="math">n!/e</span></h3><p><span class="math">Dₙ</span> is the nearest integer to <span class="math">n!/e</span>. It is a one-line verification of an answer computed another way.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1002,14 +1033,14 @@ Check by summing over all k:
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Forgetting `D₀ = 1`</strong><span>The empty permutation has no fixed points, so it is a derangement. This convention is what makes <span class="math">Σ_k C(n,k)D_{n−k} = n!</span> come out exactly.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying derangements to unequal forbidden sets</strong><span>Derangements assume each element has exactly one forbidden position. General forbidden-position problems are much harder.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Expecting the proportion to vary with `n`</strong><span>It stabilises immediately. The chance nobody gets their own hat is the same for 8 people as for 8000, to four decimal places.</span></div></div></div></article>
-        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can count &quot;exactly `k` fixed points&quot; unaided.</strong><p>Compute the number of permutations of 7 elements with exactly three fixed points, then verify that summing your formula over all <span class="math">k</span> from 0 to 7 gives <span class="math">7! = 5040</span>. The check is what confirms the setup.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> <span class="math">e</span> appearing in a purely combinatorial count is not a coincidence: the alternating sum in the derangement formula is a truncation of the Taylor series for <span class="math">e⁻¹</span>, and the truncation error is smaller than the gap between consecutive integers.</div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Forgetting <span class="math">D₀ = 1</span></strong><span>The empty permutation has no fixed points, so it is a derangement. This convention is what makes <span class="math">Σ_k C(n,k)D_{n−k} = n!</span> come out exactly.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying derangements to unequal forbidden sets</strong><span>Derangements assume each element has exactly one forbidden position. General forbidden-position problems are much harder.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Expecting the proportion to vary with <span class="math">n</span></strong><span>It stabilises immediately. The chance nobody gets their own hat is the same for 8 people as for 8000, to four decimal places.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can count &quot;exactly <span class="math">k</span> fixed points&quot; unaided.</strong><p>Compute the number of permutations of 7 elements with exactly three fixed points, then verify that summing your formula over all <span class="math">k</span> from 0 to 7 gives <span class="math">7! = 5040</span>. The check is what confirms the setup.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> <span class="math">e</span> appearing in a purely combinatorial count is not a coincidence: the alternating sum in the derangement formula is a truncation of the Taylor series for <span class="math">e⁻¹</span>, and the truncation error is smaller than the gap between consecutive integers.</div></article>
       </div>
     </section>
     </main>
 
     <nav class="lesson-nav" aria-label="Lesson navigation">
-      <a class="lesson-link prev" href="../inclusion-exclusion/" rel="prev"><span>Previous lesson</span><strong>09 &middot; The Inclusion&amp;ndash;Exclusion Principle</strong></a>
+      <a class="lesson-link prev" href="../inclusion-exclusion/" rel="prev"><span>Previous lesson</span><strong>09 &middot; The Inclusion-Exclusion Principle</strong></a>
       <a class="lesson-link next" href="../generalized-pigeonhole/" rel="next"><span>Next lesson</span><strong>11 &middot; The Generalised Pigeonhole Principle</strong></a>
     </nav>
 

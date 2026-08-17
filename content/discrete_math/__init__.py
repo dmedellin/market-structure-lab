@@ -101,6 +101,13 @@ PATH = {
         "<em>some</em> means at least one, and a <em>graph</em> is not a plot. "
         "Every one of those is stated where it first matters.",
     ],
+    # The hazard of learning THIS subject from interactive examples: a widget
+    # that checks a claim for n = 1..40 has demonstrated nothing about n = 41,
+    # and course 3 is about exactly that.
+    "material": (
+        "every figure is computed in your browser from the stated definition, "
+        "and a worked example is not a proof."
+    ),
     "footer_lead": (
         "<strong>Educational course material.</strong> Every figure on this path is "
         "computed in your browser from the definition the lesson states &mdash; the "

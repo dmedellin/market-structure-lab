@@ -172,7 +172,7 @@ LESSONS = [
     # ---------------------------------------------------------------- 09
     {
         "slug": "inclusion-exclusion",
-        "title": "The Inclusion&ndash;Exclusion Principle",
+        "title": "The Inclusion-Exclusion Principle",
         "module": "Corrections",
         "one_line": "Add the sizes, subtract the pairs, add back the triples.",
         "summary": (
@@ -210,7 +210,7 @@ LESSONS = [
             ("thm", ("Two and three sets",
                      "`|A ∪ B| = |A| + |B| − |A ∩ B|` and "
                      "`|A ∪ B ∪ C| = |A| + |B| + |C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|`.")),
-            ("thm", ("Inclusion&ndash;exclusion",
+            ("thm", ("Inclusion-exclusion",
                      "For finite sets `A₁, …, A_n`, "
                      "`|A₁ ∪ ⋯ ∪ A_n| = Σ|Aᵢ| − Σ_{i&lt;j}|Aᵢ∩Aⱼ| + Σ_{i&lt;j&lt;k}|Aᵢ∩Aⱼ∩A_k| − ⋯ "
                      "+ (−1)^{n+1}|A₁∩⋯∩A_n|` &mdash; an alternating sum over all nonempty "
@@ -563,7 +563,7 @@ LESSONS = [
                          "any set of 10 integers, at least `⌈10/2⌉ = 5` share a parity. "
                          "Each is one division.")),
             ("h3", "Monotone subsequences"),
-            ("thm", ("Erdős&ndash;Szekeres",
+            ("thm", ("Erdős-Szekeres",
                      "Every sequence of `n² + 1` distinct real numbers contains a "
                      "monotone subsequence of length `n + 1` &mdash; increasing or "
                      "decreasing.")),

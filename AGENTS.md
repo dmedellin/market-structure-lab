@@ -46,32 +46,72 @@ The apex `geterdone.io` is a **separate, live GitHub Pages site that this reposi
 does not control**. Do not deploy to it, reconfigure it, or write anything that
 implies we own its records. Linking to it is fine; changing it is out of scope.
 
-## 1a. One path is authored, one is generated
+## 1a. One path is authored, two are generated
 
-The two paths are built in opposite directions and must be edited differently.
+The paths are built in opposite directions and must be edited differently.
 
 **Trading** arrived as eight hand-authored HTML packages and was normalized INTO
 the library's conventions by `scripts/intake_course.py`. Its pages are the source
 of truth. Edit them directly.
 
-**Discrete Mathematics** is generated. `content/discrete_math/` holds it as data —
-one Python module per course, with the lessons as dicts — and
-`scripts/build_discrete_math.py` renders every page from `scripts/mathpath/`
-(one stylesheet, one chrome renderer, one lab kit). **Never edit a page under a
-discrete-mathematics course slug by hand**: the next build reverts it, so the
-change appears to work and then vanishes.
+**Discrete Mathematics** and **Algebra** are generated. `content/discrete_math/`
+and `content/algebra/` hold them as data — one Python module per course, with the
+lessons as dicts — and `scripts/build_paths.py` renders every page from
+`scripts/mathpath/` (one stylesheet, one chrome renderer, one lab kit). **Never
+edit a page under one of those course slugs by hand**: the next build reverts it,
+so the change appears to work and then vanishes.
 
-    python3 scripts/build_discrete_math.py            # rebuild
-    python3 scripts/build_discrete_math.py --check     # fail if any page is stale
+    python3 scripts/build_paths.py                     # rebuild both
+    python3 scripts/build_paths.py --check             # fail if any page is stale
+    node scripts/mathcheck.js                          # check the arithmetic itself
     node scripts/labcheck.js --generated               # execute every lab
 
+The last two are different questions and CI runs both. `labcheck.js` proves each
+published lab runs, redraws, and survives every value of its own controls;
+`mathcheck.js` proves the arithmetic those labs are built on is right, by
+executing the shipped JavaScript extracted from
+`scripts/mathpath/labs/algebra_core.py`. A lab that reports confidently wrong
+roots passes the first and fails the second.
+
 `TestGeneratedPathIsCurrent` fails if a published page differs from what the
-content package renders, and if the slug tuple in the test file disagrees with
-the content package. Both are silent failures otherwise.
+content package renders, and if a slug tuple in the test file disagrees with its
+content package. Both are silent failures otherwise.
+
+Adding a path: import it in `scripts/build_paths.py` and add it to
+`GENERATED_PATHS`; that is the whole registration. It is deliberately not a scan
+of `content/` — which paths are published is a decision, and it should be
+readable in one place.
 
 Adding a lesson: add a dict to the course module, run the build, then add the URL
 to the five declarations listed in section 1 — the suite tells you which are
 missing.
+
+**Each path states its own material clause.** The licence line in the shared
+footer ends with a sentence naming the intellectual hazard of that subject:
+discrete mathematics warns that a worked example is not a proof, algebra that a
+step which gives the right answer here is not thereby a valid rule. That clause
+is a required `"material"` key on the PATH dict, not a module constant, because
+it was a module constant once and became false the moment a second subject
+rendered through the same chrome. A disclaimer that is false is worse than none.
+`TestGeneratedPathIsCurrent` asserts every generated path states one, that no two
+share it, and that it matches the pattern the page sweeps look for.
+
+### A note on page weight
+
+Self-containment means every lesson inlines the whole lab it uses, and the
+generated labs share a large exact-arithmetic core. So pages get heavier as the
+labs get richer:
+
+| path | raw | gzipped |
+| --- | --- | --- |
+| Discrete Mathematics lesson | ~57 KB | ~15 KB |
+| Algebra lesson | ~142 KB | ~38 KB |
+
+38 KB on the wire is not a problem and needs no action. It IS the number to
+check before anyone proposes "just extract the shared JavaScript into one file
+both paths load" -- that would halve the bytes and break the invariant in
+section 2, which is the one rule this repository does not trade away. If page
+weight ever does become a problem, the fix is a smaller lab, not a shared file.
 
 ## 2. The self-containment invariant (non-negotiable)
 

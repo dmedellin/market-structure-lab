@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Geometric Distribution and Waiting Times | Discrete Probability | Learn · geterdone.io</title>
-  <meta name="description" content="`P(X = k) = (1−p)^{k−1}p` for the trial of the first success. Its mean is `1/p`, its distribution is heavily skewed, and it is memoryless &amp;mdash; which is the property people find hardest to accept." />
+  <meta name="description" content="P(X = k) = (1−p)^{k−1}p for the trial of the first success. Its mean is 1/p, its distribution is heavily skewed, and it is memoryless — which is the property people find hardest to accept." />
   <link rel="canonical" href="https://learn.geterdone.io/discrete-probability/geometric-distribution/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="The Geometric Distribution and Waiting Times | Discrete Probability | Learn · geterdone.io" />
-  <meta property="og:description" content="`P(X = k) = (1−p)^{k−1}p` for the trial of the first success. Its mean is `1/p`, its distribution is heavily skewed, and it is memoryless &amp;mdash; which is the property people find hardest to accept." />
+  <meta property="og:description" content="P(X = k) = (1−p)^{k−1}p for the trial of the first success. Its mean is 1/p, its distribution is heavily skewed, and it is memoryless — which is the property people find hardest to accept." />
   <meta property="og:url" content="https://learn.geterdone.io/discrete-probability/geometric-distribution/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="The Geometric Distribution and Waiting Times | Discrete Probability | Learn · geterdone.io" />
-  <meta name="twitter:description" content="`P(X = k) = (1−p)^{k−1}p` for the trial of the first success. Its mean is `1/p`, its distribution is heavily skewed, and it is memoryless &amp;mdash; which is the property people find hardest to accept." />
+  <meta name="twitter:description" content="P(X = k) = (1−p)^{k−1}p for the trial of the first success. Its mean is 1/p, its distribution is heavily skewed, and it is memoryless — which is the property people find hardest to accept." />
   <meta name="twitter:url" content="https://learn.geterdone.io/discrete-probability/geometric-distribution/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Discrete Probability course home">
         <span class="brand-mark" aria-hidden="true">12</span>
-        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 &amp;middot; Lesson 12 of 12</span></span>
+        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 · Lesson 12 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Discrete Probability</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 12 &amp;middot; The Geometric Distribution and Waiting Times</span>
+      <span class="crumb-current" aria-current="page">Lesson 12 · The Geometric Distribution and Waiting Times</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ MEMORYLESS:  P(X &gt; m+n | X &gt; m) = P(X &gt; n)</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>The last distribution on this course, and the one whose mean is least representative of a typical outcome.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The number of trials is not fixed</h3><p>That is what separates it from the binomial. The sample space is countably infinite, which is why the axioms had to be stated in general.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The mean is `1/p`, and it is not typical</h3><p>A 1-in-6 event takes 6 attempts on average, and yet the single most likely outcome is the very first attempt.</p></article><article class="card concept-card"><div class="icon">3</div><h3>It is memoryless</h3><p>Having failed 20 times does not improve the next attempt. The distribution of the remaining wait is unchanged.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The number of trials is not fixed</h3><p>That is what separates it from the binomial. The sample space is countably infinite, which is why the axioms had to be stated in general.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The mean is <span class="math">1/p</span>, and it is not typical</h3><p>A 1-in-6 event takes 6 attempts on average, and yet the single most likely outcome is the very first attempt.</p></article><article class="card concept-card"><div class="icon">3</div><h3>It is memoryless</h3><p>Having failed 20 times does not improve the next attempt. The distribution of the remaining wait is unchanged.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Waiting times</h2></div><p>The distribution, its mean, memorylessness, and the coupon collector.</p></div>
@@ -937,7 +968,7 @@ MEMORYLESS:  P(X &gt; m+n | X &gt; m) = P(X &gt; n)</div>
    P(X ≤ 3) = 0.421
    P(X ≤ 6) = 0.665        so 2/3 of the time you finish by the mean
    P(X &gt; 12) = 0.112       and 1 in 9 waits more than twice as long
-   P(X &gt; 20) = 0.026</div><p>The distribution is strictly decreasing: the most likely single outcome is always <span class="math">k = 1</span>, whatever <span class="math">p</span> is. "On average 6" describes a long right tail balanced against a mode at 1, and quoting the mean alone hides both facts.</p><h3>The coupon collector</h3><div class="thm"><span class="label">Theorem &middot; Collecting all `n` coupons</span><p>With <span class="math">n</span> equally likely coupons, the expected number of purchases to collect all of them is <span class="math">n(1 + 1/2 + ⋯ + 1/n) ≈ n ln n + 0.577n</span>.</p></div><div class="proof"><p>Split the process into stages: stage <span class="math">i</span> runs while you hold exactly <span class="math">i − 1</span> distinct coupons. The chance a purchase is new during that stage is <span class="math">(n − i + 1)/n</span>, so the wait is geometric with that <span class="math">p</span> and mean <span class="math">n/(n − i + 1)</span>.</p><p>By linearity of expectation the total is <span class="math">Σ_{i=1}^{n} n/(n−i+1) = n Σ_{j=1}^{n} 1/j</span>.</p><p><span class="qed">&#9633;</span></p></div><p>For <span class="math">n = 50</span> that is about 225 purchases, and the last coupon alone accounts for 50 of them on average. The final stages dominate, which is the structural reason collecting the last few of anything takes so long.</p></article>
+   P(X &gt; 20) = 0.026</div><p>The distribution is strictly decreasing: the most likely single outcome is always <span class="math">k = 1</span>, whatever <span class="math">p</span> is. "On average 6" describes a long right tail balanced against a mode at 1, and quoting the mean alone hides both facts.</p><h3>The coupon collector</h3><div class="thm"><span class="label">Theorem &middot; Collecting all <span class="math">n</span> coupons</span><p>With <span class="math">n</span> equally likely coupons, the expected number of purchases to collect all of them is <span class="math">n(1 + 1/2 + ⋯ + 1/n) ≈ n ln n + 0.577n</span>.</p></div><div class="proof"><p>Split the process into stages: stage <span class="math">i</span> runs while you hold exactly <span class="math">i − 1</span> distinct coupons. The chance a purchase is new during that stage is <span class="math">(n − i + 1)/n</span>, so the wait is geometric with that <span class="math">p</span> and mean <span class="math">n/(n − i + 1)</span>.</p><p>By linearity of expectation the total is <span class="math">Σ_{i=1}^{n} n/(n−i+1) = n Σ_{j=1}^{n} 1/j</span>.</p><p><span class="qed">&#9633;</span></p></div><p>For <span class="math">n = 50</span> that is about 225 purchases, and the last coupon alone accounts for 50 of them on average. The final stages dominate, which is the structural reason collecting the last few of anything takes so long.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Distribution, expectation, variance</h2></div><p>Definition first, formula second</p></div>
@@ -981,7 +1012,7 @@ MEMORYLESS:  P(X &gt; m+n | X &gt; m) = P(X &gt; n)</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Working with waiting times</h2></div><p>Identify what is fixed: the trials, or the successes.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check whether `n` is fixed</h3><p>Fixed trials, count successes: binomial. Fixed target, count trials: geometric.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Use `E[X] = 1/p`</h3><p>And derive it by conditioning on the first trial if you want to check it. The series is unnecessary.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Report the spread as well as the mean</h3><p>The distribution is skewed enough that the mean alone misinforms. <span class="math">P(X &gt; k) = (1−p)^k</span> is the clean way to describe the tail.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Decompose staged waits by linearity</h3><p>The coupon collector is a sum of geometric waits, and linearity handles it without any joint distribution.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check whether <span class="math">n</span> is fixed</h3><p>Fixed trials, count successes: binomial. Fixed target, count trials: geometric.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Use <span class="math">E[X] = 1/p</span></h3><p>And derive it by conditioning on the first trial if you want to check it. The series is unnecessary.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Report the spread as well as the mean</h3><p>The distribution is skewed enough that the mean alone misinforms. <span class="math">P(X &gt; k) = (1−p)^k</span> is the clean way to describe the tail.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Decompose staged waits by linearity</h3><p>The coupon collector is a sum of geometric waits, and linearity handles it without any joint distribution.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1007,7 +1038,7 @@ which is a distribution nobody should summarise with one number.</div><p>Two thi
     <section class="section">
       <div class="grid-2">
         <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Confusing it with the binomial</strong><span>Fixed trials counting successes is binomial; fixed target counting trials is geometric. The question decides, not the setting.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Believing a long run of failures improves the odds</strong><span>Memorylessness says otherwise, and it is a theorem about the model rather than a claim about luck.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reporting only the mean</strong><span>With <span class="math">σ</span> nearly equal to the mean, a single number conceals both the mode at 1 and the long tail.</span></div></div></div></article>
-        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can derive `E[X] = 1/p` by conditioning.</strong><p>Write the one-line argument: with probability <span class="math">p</span> you finish immediately, otherwise you have used one trial and face the same problem. That technique solves waiting-time problems where no series is available.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> This course ends where several others begin. The geometric distribution is the discrete analogue of the exponential, memorylessness characterises both, and the coupon collector is the first example most people meet of a process whose expected time is dominated by its final stages.</div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can derive <span class="math">E[X] = 1/p</span> by conditioning.</strong><p>Write the one-line argument: with probability <span class="math">p</span> you finish immediately, otherwise you have used one trial and face the same problem. That technique solves waiting-time problems where no series is available.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> This course ends where several others begin. The geometric distribution is the discrete analogue of the exponential, memorylessness characterises both, and the coupon collector is the first example most people meet of a process whose expected time is dominated by its final stages.</div></article>
       </div>
     </section>
     </main>

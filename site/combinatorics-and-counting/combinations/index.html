@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Combinations | Combinatorics and Counting | Learn · geterdone.io</title>
-  <meta name="description" content="`C(n, r) = n!/(r!(n−r)!)` counts subsets of size `r`. It is `P(n, r)` divided by `r!`, because each subset was counted once for every order of its elements." />
+  <meta name="description" content="C(n, r) = n!/(r!(n−r)!) counts subsets of size r. It is P(n, r) divided by r!, because each subset was counted once for every order of its elements." />
   <link rel="canonical" href="https://learn.geterdone.io/combinatorics-and-counting/combinations/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Combinations | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta property="og:description" content="`C(n, r) = n!/(r!(n−r)!)` counts subsets of size `r`. It is `P(n, r)` divided by `r!`, because each subset was counted once for every order of its elements." />
+  <meta property="og:description" content="C(n, r) = n!/(r!(n−r)!) counts subsets of size r. It is P(n, r) divided by r!, because each subset was counted once for every order of its elements." />
   <meta property="og:url" content="https://learn.geterdone.io/combinatorics-and-counting/combinations/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Combinations | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta name="twitter:description" content="`C(n, r) = n!/(r!(n−r)!)` counts subsets of size `r`. It is `P(n, r)` divided by `r!`, because each subset was counted once for every order of its elements." />
+  <meta name="twitter:description" content="C(n, r) = n!/(r!(n−r)!) counts subsets of size r. It is P(n, r) divided by r!, because each subset was counted once for every order of its elements." />
   <meta name="twitter:url" content="https://learn.geterdone.io/combinatorics-and-counting/combinations/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Combinatorics and Counting course home">
         <span class="brand-mark" aria-hidden="true">04</span>
-        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 &amp;middot; Lesson 04 of 14</span></span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 · Lesson 04 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Combinatorics and Counting</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 04 &amp;middot; Combinations</span>
+      <span class="crumb-current" aria-current="page">Lesson 04 · Combinations</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ C(n, 0) = C(n, n) = 1
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>One formula, derived from permutations by dividing out the orderings that do not matter.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Divide by `r!` to forget the order</h3><p>Each <span class="math">r</span>-subset arises from exactly <span class="math">r!</span> ordered selections, so <span class="math">C(n,r) = P(n,r)/r!</span>.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Symmetry is obvious once seen</h3><p>Choosing which <span class="math">r</span> to include is the same as choosing which <span class="math">n−r</span> to leave out, so <span class="math">C(n,r) = C(n,n−r)</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The subsets sum to `2ⁿ`</h3><p>Every subset has exactly one size, so summing <span class="math">C(n,r)</span> over all <span class="math">r</span> counts every subset once &mdash; and course 2 lesson 2 already knew the total.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Divide by <span class="math">r!</span> to forget the order</h3><p>Each <span class="math">r</span>-subset arises from exactly <span class="math">r!</span> ordered selections, so <span class="math">C(n,r) = P(n,r)/r!</span>.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Symmetry is obvious once seen</h3><p>Choosing which <span class="math">r</span> to include is the same as choosing which <span class="math">n−r</span> to leave out, so <span class="math">C(n,r) = C(n,n−r)</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The subsets sum to <span class="math">2ⁿ</span></h3><p>Every subset has exactly one size, so summing <span class="math">C(n,r)</span> over all <span class="math">r</span> counts every subset once &mdash; and course 2 lesson 2 already knew the total.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Choosing without order</h2></div><p>The derivation, the identities, and the standard applications.</p></div>
@@ -997,7 +1028,7 @@ and 1316 &lt; 2002.   ✓</div><p>Within each case the product rule applies beca
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Using `C` where order matters</strong><span>A three-digit code is not a three-element subset. Ask what makes two outcomes different before choosing a formula.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Adding when the choices are simultaneous</strong><span>"3 mathematicians AND 2 physicists" is a product within a case. The sum rule combines the cases, not the parts of one case.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Computing the large side of a symmetric coefficient</strong><span><span class="math">C(30,28)</span> is <span class="math">C(30,2) = 435</span>, which is two multiplications rather than twenty-eight.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Using <span class="math">C</span> where order matters</strong><span>A three-digit code is not a three-element subset. Ask what makes two outcomes different before choosing a formula.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Adding when the choices are simultaneous</strong><span>"3 mathematicians AND 2 physicists" is a product within a case. The sum rule combines the cases, not the parts of one case.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Computing the large side of a symmetric coefficient</strong><span><span class="math">C(30,28)</span> is <span class="math">C(30,2) = 435</span>, which is two multiplications rather than twenty-eight.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can state, for any counting problem, whether order and repetition matter.</strong><p>Take five problems from anywhere in this lesson and classify each before computing. The classification is the part that transfers; the arithmetic is not.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> <span class="math">C(n, r)</span> is also written <span class="math">binom(n, r)</span> and called a binomial coefficient, because lesson 6 shows it is the coefficient of <span class="math">x^r y^{n−r}</span> in <span class="math">(x + y)ⁿ</span>. The two facts &mdash; counting subsets and expanding a power &mdash; are the same fact.</div></article>
       </div>
     </section>

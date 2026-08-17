@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Planar Graphs and Euler&#x27;s Formula | Graphs and Trees | Learn · geterdone.io</title>
-  <meta name="description" content="A planar graph can be drawn with no edges crossing. Euler&#x27;s formula `V − E + F = 2` bounds how many edges such a graph can have, and Kuratowski&#x27;s theorem says exactly which graphs fail." />
+  <meta name="description" content="A planar graph can be drawn with no edges crossing. Euler&#x27;s formula V − E + F = 2 bounds how many edges such a graph can have, and Kuratowski&#x27;s theorem says exactly which graphs fail." />
   <link rel="canonical" href="https://learn.geterdone.io/graphs-and-trees/planar-graphs/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Planar Graphs and Euler&#x27;s Formula | Graphs and Trees | Learn · geterdone.io" />
-  <meta property="og:description" content="A planar graph can be drawn with no edges crossing. Euler&#x27;s formula `V − E + F = 2` bounds how many edges such a graph can have, and Kuratowski&#x27;s theorem says exactly which graphs fail." />
+  <meta property="og:description" content="A planar graph can be drawn with no edges crossing. Euler&#x27;s formula V − E + F = 2 bounds how many edges such a graph can have, and Kuratowski&#x27;s theorem says exactly which graphs fail." />
   <meta property="og:url" content="https://learn.geterdone.io/graphs-and-trees/planar-graphs/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Planar Graphs and Euler&#x27;s Formula | Graphs and Trees | Learn · geterdone.io" />
-  <meta name="twitter:description" content="A planar graph can be drawn with no edges crossing. Euler&#x27;s formula `V − E + F = 2` bounds how many edges such a graph can have, and Kuratowski&#x27;s theorem says exactly which graphs fail." />
+  <meta name="twitter:description" content="A planar graph can be drawn with no edges crossing. Euler&#x27;s formula V − E + F = 2 bounds how many edges such a graph can have, and Kuratowski&#x27;s theorem says exactly which graphs fail." />
   <meta name="twitter:url" content="https://learn.geterdone.io/graphs-and-trees/planar-graphs/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Graphs and Trees course home">
         <span class="brand-mark" aria-hidden="true">14</span>
-        <span class="brand-copy"><strong>Graphs and Trees</strong><span>Course 7 &amp;middot; Lesson 14 of 14</span></span>
+        <span class="brand-copy"><strong>Graphs and Trees</strong><span>Course 7 · Lesson 14 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Graphs and Trees</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 14 &amp;middot; Planar Graphs and Euler&#x27;s Formula</span>
+      <span class="crumb-current" aria-current="page">Lesson 14 · Planar Graphs and Euler&#x27;s Formula</span>
     </nav>
 
     <noscript>
@@ -931,7 +962,7 @@ K₅ and K_{3,3} are the obstructions        (Kuratowski)</div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Planarity</h2></div><p>Euler's formula, the edge bounds it gives, and the two forbidden graphs.</p></div>
-      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Planar graph, face</span><p>A graph is <strong>planar</strong> if it can be drawn in the plane with no two edges crossing. Such a drawing divides the plane into <strong>faces</strong>, including one unbounded outer face.</p></div><div class="thm"><span class="label">Theorem &middot; Euler&#x27;s formula</span><p>For a connected planar graph drawn without crossings, <span class="math">V − E + F = 2</span>, where <span class="math">F</span> counts the faces including the outer one.</p></div><div class="proof"><p>By induction on the number of edges. A connected graph with no cycle is a tree: <span class="math">E = V − 1</span> and <span class="math">F = 1</span>, so <span class="math">V − (V−1) + 1 = 2</span>.</p><p>If the graph has a cycle, remove one of its edges. The graph stays connected, and the two faces on either side of that edge merge into one, so <span class="math">E</span> and <span class="math">F</span> each drop by 1 and <span class="math">V − E + F</span> is unchanged. Repeating reaches a tree.</p><p><span class="qed">&#9633;</span></p></div><div class="example"><span class="label">Example &middot; A cube</span><p>The graph of a cube has <span class="math">V = 8</span>, <span class="math">E = 12</span>, <span class="math">F = 6</span>, and <span class="math">8 − 12 + 6 = 2</span>. The same holds for every convex polyhedron &mdash; which is where Euler first stated it, in 1758.</p></div><div class="thm"><span class="label">Theorem &middot; The edge bound</span><p>A simple connected planar graph with <span class="math">V ≥ 3</span> has <span class="math">E ≤ 3V − 6</span>. If it is also triangle-free, <span class="math">E ≤ 2V − 4</span>.</p></div><div class="proof"><p>Every face is bounded by at least 3 edges, and every edge borders at most 2 faces. Counting edge&ndash;face incidences two ways gives <span class="math">3F ≤ 2E</span>.</p><p>Substituting <span class="math">F = 2 − V + E</span> into <span class="math">3F ≤ 2E</span> gives <span class="math">3(2 − V + E) ≤ 2E</span>, hence <span class="math">E ≤ 3V − 6</span>.</p><p>If there are no triangles, every face has at least 4 edges, so <span class="math">4F ≤ 2E</span> and the same substitution gives <span class="math">E ≤ 2V − 4</span>.</p><p><span class="qed">&#9633;</span></p></div><p>The double count is the handshake theorem's argument applied to faces instead of vertices, which is worth noticing: the same technique keeps returning.</p><div class="thm"><span class="label">Theorem &middot; `K₅` and `K_{3,3}` are not planar</span><p>Neither can be drawn without crossings.</p></div><div class="proof"><p><span class="math">K₅</span> has <span class="math">V = 5</span> and <span class="math">E = 10</span>. The bound gives <span class="math">E ≤ 3(5) − 6 = 9 &lt; 10</span>, so it is not planar.</p><p><span class="math">K_{3,3}</span> has <span class="math">V = 6</span> and <span class="math">E = 9</span>, and satisfies <span class="math">E ≤ 3V − 6 = 12</span>. But it is bipartite hence triangle-free, so the sharper bound applies: <span class="math">E ≤ 2(6) − 4 = 8 &lt; 9</span>. Not planar.</p><p><span class="qed">&#9633;</span></p></div><p>Two graphs, two bounds, and the second needed the triangle-free version &mdash; which is why both were derived. <span class="math">K_{3,3}</span> is the classic "three utilities to three houses" puzzle, and it has no solution.</p><div class="thm"><span class="label">Theorem &middot; Kuratowski&#x27;s theorem</span><p>A graph is planar if and only if it contains no subgraph that is a subdivision of <span class="math">K₅</span> or of <span class="math">K_{3,3}</span>. A <strong>subdivision</strong> replaces edges by paths through new degree-2 vertices.</p></div><p>This is a complete characterisation by two forbidden structures, which is remarkable: infinitely many graphs are non-planar and all of them fail for one of two reasons. Planarity can also be tested in linear time, though the algorithms are intricate.</p><div class="thm"><span class="label">Theorem &middot; Consequences for colouring</span><p>Every planar graph has a vertex of degree at most 5, since otherwise <span class="math">2E = Σ deg(v) ≥ 6V</span>, contradicting <span class="math">E ≤ 3V − 6</span>. That fact is the base of the induction proving the five-colour theorem, and the starting point of the four-colour proof.</p></div><p>So this course ends where it began: with the handshake theorem. Counting degrees gave Euler's criterion in lesson 7, the tree edge count in lesson 10, and now the degree bound that makes planar graphs colourable.</p></article>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Planar graph, face</span><p>A graph is <strong>planar</strong> if it can be drawn in the plane with no two edges crossing. Such a drawing divides the plane into <strong>faces</strong>, including one unbounded outer face.</p></div><div class="thm"><span class="label">Theorem &middot; Euler&#x27;s formula</span><p>For a connected planar graph drawn without crossings, <span class="math">V − E + F = 2</span>, where <span class="math">F</span> counts the faces including the outer one.</p></div><div class="proof"><p>By induction on the number of edges. A connected graph with no cycle is a tree: <span class="math">E = V − 1</span> and <span class="math">F = 1</span>, so <span class="math">V − (V−1) + 1 = 2</span>.</p><p>If the graph has a cycle, remove one of its edges. The graph stays connected, and the two faces on either side of that edge merge into one, so <span class="math">E</span> and <span class="math">F</span> each drop by 1 and <span class="math">V − E + F</span> is unchanged. Repeating reaches a tree.</p><p><span class="qed">&#9633;</span></p></div><div class="example"><span class="label">Example &middot; A cube</span><p>The graph of a cube has <span class="math">V = 8</span>, <span class="math">E = 12</span>, <span class="math">F = 6</span>, and <span class="math">8 − 12 + 6 = 2</span>. The same holds for every convex polyhedron &mdash; which is where Euler first stated it, in 1758.</p></div><div class="thm"><span class="label">Theorem &middot; The edge bound</span><p>A simple connected planar graph with <span class="math">V ≥ 3</span> has <span class="math">E ≤ 3V − 6</span>. If it is also triangle-free, <span class="math">E ≤ 2V − 4</span>.</p></div><div class="proof"><p>Every face is bounded by at least 3 edges, and every edge borders at most 2 faces. Counting edge&ndash;face incidences two ways gives <span class="math">3F ≤ 2E</span>.</p><p>Substituting <span class="math">F = 2 − V + E</span> into <span class="math">3F ≤ 2E</span> gives <span class="math">3(2 − V + E) ≤ 2E</span>, hence <span class="math">E ≤ 3V − 6</span>.</p><p>If there are no triangles, every face has at least 4 edges, so <span class="math">4F ≤ 2E</span> and the same substitution gives <span class="math">E ≤ 2V − 4</span>.</p><p><span class="qed">&#9633;</span></p></div><p>The double count is the handshake theorem's argument applied to faces instead of vertices, which is worth noticing: the same technique keeps returning.</p><div class="thm"><span class="label">Theorem &middot; <span class="math">K₅</span> and <span class="math">K_{3,3}</span> are not planar</span><p>Neither can be drawn without crossings.</p></div><div class="proof"><p><span class="math">K₅</span> has <span class="math">V = 5</span> and <span class="math">E = 10</span>. The bound gives <span class="math">E ≤ 3(5) − 6 = 9 &lt; 10</span>, so it is not planar.</p><p><span class="math">K_{3,3}</span> has <span class="math">V = 6</span> and <span class="math">E = 9</span>, and satisfies <span class="math">E ≤ 3V − 6 = 12</span>. But it is bipartite hence triangle-free, so the sharper bound applies: <span class="math">E ≤ 2(6) − 4 = 8 &lt; 9</span>. Not planar.</p><p><span class="qed">&#9633;</span></p></div><p>Two graphs, two bounds, and the second needed the triangle-free version &mdash; which is why both were derived. <span class="math">K_{3,3}</span> is the classic "three utilities to three houses" puzzle, and it has no solution.</p><div class="thm"><span class="label">Theorem &middot; Kuratowski&#x27;s theorem</span><p>A graph is planar if and only if it contains no subgraph that is a subdivision of <span class="math">K₅</span> or of <span class="math">K_{3,3}</span>. A <strong>subdivision</strong> replaces edges by paths through new degree-2 vertices.</p></div><p>This is a complete characterisation by two forbidden structures, which is remarkable: infinitely many graphs are non-planar and all of them fail for one of two reasons. Planarity can also be tested in linear time, though the algorithms are intricate.</p><div class="thm"><span class="label">Theorem &middot; Consequences for colouring</span><p>Every planar graph has a vertex of degree at most 5, since otherwise <span class="math">2E = Σ deg(v) ≥ 6V</span>, contradicting <span class="math">E ≤ 3V − 6</span>. That fact is the base of the induction proving the five-colour theorem, and the starting point of the four-colour proof.</p></div><p>So this course ends where it began: with the handshake theorem. Counting degrees gave Euler's criterion in lesson 7, the tree edge count in lesson 10, and now the degree bound that makes planar graphs colourable.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Graph workbench</h2></div><p>Your graph, the course&#x27;s algorithms</p></div>
@@ -999,7 +1030,7 @@ K₅ and K_{3,3} are the obstructions        (Kuratowski)</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Testing planarity</h2></div><p>Count first; the bound settles many cases.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check `E ≤ 3V − 6`</h3><p>If it fails, the graph is not planar and you are finished. Cheap and conclusive when it fires.</p></article><article class="card concept-card"><div class="icon">2</div><h3>If triangle-free, check `E ≤ 2V − 4`</h3><p>The sharper bound, and the one that rules out <span class="math">K_{3,3}</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Look for `K₅` or `K_{3,3}` subdivisions</h3><p>By Kuratowski these are the only obstructions. Finding one is a complete proof of non-planarity.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Otherwise try to draw it</h3><p>The bounds are necessary and not sufficient, so passing them does not establish planarity. A crossing-free drawing does.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check <span class="math">E ≤ 3V − 6</span></h3><p>If it fails, the graph is not planar and you are finished. Cheap and conclusive when it fires.</p></article><article class="card concept-card"><div class="icon">2</div><h3>If triangle-free, check <span class="math">E ≤ 2V − 4</span></h3><p>The sharper bound, and the one that rules out <span class="math">K_{3,3}</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Look for <span class="math">K₅</span> or <span class="math">K_{3,3}</span> subdivisions</h3><p>By Kuratowski these are the only obstructions. Finding one is a complete proof of non-planarity.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Otherwise try to draw it</h3><p>The bounds are necessary and not sufficient, so passing them does not establish planarity. A crossing-free drawing does.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">

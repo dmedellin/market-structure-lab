@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Searching and Sorting | Algorithms and Complexity | Learn · geterdone.io</title>
-  <meta name="description" content="Linear and binary search, three quadratic sorts and merge sort &amp;mdash; and the proof that no comparison sort can do better than `n log n`, which is a statement about the problem rather than about any algorithm." />
+  <meta name="description" content="Linear and binary search, three quadratic sorts and merge sort — and the proof that no comparison sort can do better than n log n, which is a statement about the problem rather than about any algorithm." />
   <link rel="canonical" href="https://learn.geterdone.io/algorithms-and-complexity/searching-and-sorting/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Searching and Sorting | Algorithms and Complexity | Learn · geterdone.io" />
-  <meta property="og:description" content="Linear and binary search, three quadratic sorts and merge sort &amp;mdash; and the proof that no comparison sort can do better than `n log n`, which is a statement about the problem rather than about any algorithm." />
+  <meta property="og:description" content="Linear and binary search, three quadratic sorts and merge sort — and the proof that no comparison sort can do better than n log n, which is a statement about the problem rather than about any algorithm." />
   <meta property="og:url" content="https://learn.geterdone.io/algorithms-and-complexity/searching-and-sorting/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Searching and Sorting | Algorithms and Complexity | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Linear and binary search, three quadratic sorts and merge sort &amp;mdash; and the proof that no comparison sort can do better than `n log n`, which is a statement about the problem rather than about any algorithm." />
+  <meta name="twitter:description" content="Linear and binary search, three quadratic sorts and merge sort — and the proof that no comparison sort can do better than n log n, which is a statement about the problem rather than about any algorithm." />
   <meta name="twitter:url" content="https://learn.geterdone.io/algorithms-and-complexity/searching-and-sorting/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Algorithms and Complexity course home">
         <span class="brand-mark" aria-hidden="true">06</span>
-        <span class="brand-copy"><strong>Algorithms and Complexity</strong><span>Course 8 &amp;middot; Lesson 06 of 12</span></span>
+        <span class="brand-copy"><strong>Algorithms and Complexity</strong><span>Course 8 · Lesson 06 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Algorithms and Complexity</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 06 &amp;middot; Searching and Sorting</span>
+      <span class="crumb-current" aria-current="page">Lesson 06 · Searching and Sorting</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ LOWER BOUND: every comparison sort needs Ω(n log n) comparisons</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Six algorithms, and then a theorem about every possible algorithm of a certain kind.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Binary search needs sorted input</h3><p>That is what licenses discarding half the array. On unsorted data it terminates and returns wrong answers.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The quadratic sorts differ in their constants and their adaptivity</h3><p>Insertion sort is <span class="math">Θ(n)</span> on nearly sorted data; bubble and selection sort do the same work regardless.</p></article><article class="card concept-card"><div class="icon">3</div><h3>`n log n` is a lower bound, not a target</h3><p>A decision-tree argument shows no comparison sort can beat it. It is a statement about the problem.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Binary search needs sorted input</h3><p>That is what licenses discarding half the array. On unsorted data it terminates and returns wrong answers.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The quadratic sorts differ in their constants and their adaptivity</h3><p>Insertion sort is <span class="math">Θ(n)</span> on nearly sorted data; bubble and selection sort do the same work regardless.</p></article><article class="card concept-card"><div class="icon">3</div><h3><span class="math">n log n</span> is a lower bound, not a target</h3><p>A decision-tree argument shows no comparison sort can beat it. It is a statement about the problem.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>The standard algorithms</h2></div><p>Searching, sorting, and the information-theoretic limit.</p></div>
@@ -935,7 +966,7 @@ LOWER BOUND: every comparison sort needs Ω(n log n) comparisons</div>
 binary search   halve the range each step  Θ(log n)        SORTED array</div><div class="thm"><span class="label">Theorem &middot; Binary search cost</span><p>On a sorted array of <span class="math">n</span> elements, binary search performs at most <span class="math">⌊log₂ n⌋ + 1</span> comparisons.</p></div><div class="proof"><p>Each comparison at least halves the range: from <span class="math">m</span> candidates it leaves at most <span class="math">⌊m/2⌋</span>. Starting at <span class="math">n</span>, after <span class="math">t</span> comparisons at most <span class="math">⌊n/2^t⌋</span> remain, and the search ends when that reaches 0.</p><p>So <span class="math">t ≤ log₂ n + 1</span>.</p><p><span class="qed">&#9633;</span></p></div><p>Sorting first costs <span class="math">Θ(n log n)</span>, so binary search pays for itself only across many searches on the same data &mdash; roughly, once the number of searches exceeds <span class="math">log n</span>.</p><h3>Sorting</h3><div class="mathblock">bubble      compare adjacent, swap, repeat        Θ(n²)  always
 selection   find the minimum, place it, repeat    Θ(n²)  always
 insertion   insert each into the sorted prefix    Θ(n²) worst, Θ(n) best
-merge       split, sort each half, merge          Θ(n log n) always</div><p>Insertion sort is the interesting quadratic one: its inner loop stops as soon as it finds a smaller element, so on nearly sorted data it does almost no work. That adaptivity is why real implementations use it below a size threshold.</p><p>Merge sort satisfies <span class="math">T(n) = 2T(n/2) + n</span>, which lesson 7's master theorem solves as <span class="math">Θ(n log n)</span>. Its cost does not depend on the data at all, and it needs <span class="math">Θ(n)</span> extra space, which is its one drawback.</p><h3>The lower bound</h3><div class="thm"><span class="label">Theorem &middot; Comparison sorting requires `Ω(n log n)`</span><p>Any sorting algorithm that gets information about the input only by comparing pairs of elements must perform <span class="math">Ω(n log n)</span> comparisons in the worst case.</p></div><div class="proof"><p>Model the algorithm as a decision tree: each internal node is a comparison with two outcomes, and each leaf is one possible output ordering. To sort correctly the tree must have at least <span class="math">n!</span> leaves, one per permutation of the input.</p><p>A binary tree with <span class="math">L</span> leaves has height at least <span class="math">log₂ L</span> (course 7 lesson 10). So the height is at least <span class="math">log₂(n!)</span>.</p><p>By Stirling's approximation <span class="math">log₂(n!) = Θ(n log n)</span>, and the height is the worst-case number of comparisons.</p><p><span class="qed">&#9633;</span></p></div><p>This is a genuine impossibility result and it is worth distinguishing from a failure of ingenuity: no comparison sort will ever beat <span class="math">n log n</span>, and merge sort therefore achieves the optimum. Course 4's count of permutations and course 7's tree height bound are both doing work in the proof.</p><p>Sorts that beat the bound exist and they do not compare. Counting sort and radix sort use the values themselves as indices and run in <span class="math">Θ(n)</span> under assumptions about the key range. They do not contradict the theorem; they fall outside its hypothesis.</p></article>
+merge       split, sort each half, merge          Θ(n log n) always</div><p>Insertion sort is the interesting quadratic one: its inner loop stops as soon as it finds a smaller element, so on nearly sorted data it does almost no work. That adaptivity is why real implementations use it below a size threshold.</p><p>Merge sort satisfies <span class="math">T(n) = 2T(n/2) + n</span>, which lesson 7's master theorem solves as <span class="math">Θ(n log n)</span>. Its cost does not depend on the data at all, and it needs <span class="math">Θ(n)</span> extra space, which is its one drawback.</p><h3>The lower bound</h3><div class="thm"><span class="label">Theorem &middot; Comparison sorting requires <span class="math">Ω(n log n)</span></span><p>Any sorting algorithm that gets information about the input only by comparing pairs of elements must perform <span class="math">Ω(n log n)</span> comparisons in the worst case.</p></div><div class="proof"><p>Model the algorithm as a decision tree: each internal node is a comparison with two outcomes, and each leaf is one possible output ordering. To sort correctly the tree must have at least <span class="math">n!</span> leaves, one per permutation of the input.</p><p>A binary tree with <span class="math">L</span> leaves has height at least <span class="math">log₂ L</span> (course 7 lesson 10). So the height is at least <span class="math">log₂(n!)</span>.</p><p>By Stirling's approximation <span class="math">log₂(n!) = Θ(n log n)</span>, and the height is the worst-case number of comparisons.</p><p><span class="qed">&#9633;</span></p></div><p>This is a genuine impossibility result and it is worth distinguishing from a failure of ingenuity: no comparison sort will ever beat <span class="math">n log n</span>, and merge sort therefore achieves the optimum. Course 4's count of permutations and course 7's tree height bound are both doing work in the proof.</p><p>Sorts that beat the bound exist and they do not compare. Counting sort and radix sort use the values themselves as indices and run in <span class="math">Θ(n)</span> under assumptions about the key range. They do not contradict the theorem; they fall outside its hypothesis.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Algorithms and growth</h2></div><p>Counts from running, not from quoting</p></div>
@@ -995,7 +1026,7 @@ merge       split, sort each half, merge          Θ(n log n) always</div><p>Ins
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>Comparison counts at `n = 16`</h3><p>Measured by running each algorithm on the same shuffled array.</p><div class="mathblock">bubble      120        = n(n−1)/2, exactly — data-independent
+      <article class="card card-pad prose"><h3>Comparison counts at <span class="math">n = 16</span></h3><p>Measured by running each algorithm on the same shuffled array.</p><div class="mathblock">bubble      120        = n(n−1)/2, exactly — data-independent
 insertion    62        data-dependent; 15 on sorted input
 merge        48        below n log₂ n = 64, as the analysis allows
 

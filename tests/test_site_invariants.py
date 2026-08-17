@@ -308,7 +308,7 @@ COURSES = (
 # ---------------------------------------------------------------------------
 # Eight courses, 106 lessons, published at /paths/discrete-math/ and at eight
 # further top-level course homes. It is GENERATED: content/discrete_math/ holds
-# the lessons as data and scripts/build_discrete_math.py renders the pages, so
+# the lessons as data and scripts/build_paths.py renders the pages, so
 # the slugs below are a copy of a declaration that lives in the content package.
 # TestGeneratedPathIsCurrent asserts the two agree, which is what stops this
 # list drifting from the pages it claims to describe.
@@ -407,7 +407,128 @@ MATH_COURSES = (
 
 # Every course on the site, in path order, path by path. Any invariant that is
 # about A COURSE rather than about a particular subject iterates this.
-ALL_COURSES = COURSES + MATH_COURSES
+
+# ---------------------------------------------------------------------------
+# The third path: ALGEBRA
+# ---------------------------------------------------------------------------
+# Eight courses, 105 lessons, published at /paths/algebra/ and at eight further
+# top-level course homes. GENERATED, like the mathematics path:
+# content/algebra/ holds the lessons as data and scripts/build_paths.py renders
+# the pages, so the slugs below are a copy of a declaration that lives in the
+# content package. TestGeneratedPathIsCurrent asserts the two agree.
+#
+# No algebra course home may collide with a trading or discrete mathematics
+# one, share a prefix with one, or take the /paths/ segment. That is asserted
+# rather than assumed, in
+# test_declared_url_space_is_the_index_the_path_pages_and_the_course_trees.
+ALGEBRA_PATH_PAGE = "/paths/algebra/"
+
+ALGEBRA_COURSE_1_HOME = "/algebra-foundations/"
+ALGEBRA_COURSE_1_LESSONS = (
+    "real-numbers-and-the-number-line", "properties-of-the-real-numbers",
+    "order-of-operations", "absolute-value", "integer-exponents",
+    "scientific-notation", "roots-and-radicals", "rational-exponents",
+    "algebraic-expressions-and-terms", "the-distributive-law",
+    "combining-like-terms", "evaluating-expressions",
+    "translating-words-into-algebra",
+)
+
+ALGEBRA_COURSE_2_HOME = "/linear-equations-and-inequalities/"
+ALGEBRA_COURSE_2_LESSONS = (
+    "what-it-means-to-solve-an-equation", "one-and-two-step-equations",
+    "variables-on-both-sides", "equations-with-fractions",
+    "literal-equations-and-formulas", "identities-and-contradictions",
+    "ratio-proportion-and-percent", "modelling-with-linear-equations",
+    "linear-inequalities", "compound-inequalities",
+    "absolute-value-equations", "absolute-value-inequalities",
+    "interval-and-set-builder-notation",
+)
+
+ALGEBRA_COURSE_3_HOME = "/lines-functions-and-graphs/"
+ALGEBRA_COURSE_3_LESSONS = (
+    "the-coordinate-plane", "graphing-a-linear-equation", "slope",
+    "slope-intercept-form", "point-slope-and-standard-form",
+    "parallel-and-perpendicular-lines", "what-a-function-is",
+    "function-notation", "domain-and-range", "piecewise-functions",
+    "transformations-of-graphs", "composition-of-functions",
+    "inverse-functions", "linear-inequalities-in-two-variables",
+)
+
+ALGEBRA_COURSE_4_HOME = "/polynomials-and-factoring/"
+ALGEBRA_COURSE_4_LESSONS = (
+    "polynomials-degree-and-standard-form",
+    "adding-and-subtracting-polynomials", "multiplying-polynomials",
+    "special-products", "factoring-out-the-greatest-common-factor",
+    "factoring-by-grouping", "factoring-simple-trinomials", "the-ac-method",
+    "factoring-special-forms", "polynomial-long-division",
+    "synthetic-division-and-the-remainder-theorem",
+    "the-factor-theorem-and-rational-roots",
+    "graphs-of-polynomial-functions",
+)
+
+ALGEBRA_COURSE_5_HOME = "/rational-and-radical-expressions/"
+ALGEBRA_COURSE_5_LESSONS = (
+    "rational-expressions-and-their-domains",
+    "simplifying-rational-expressions",
+    "multiplying-and-dividing-rational-expressions",
+    "adding-and-subtracting-rational-expressions", "complex-fractions",
+    "solving-rational-equations", "graphs-and-asymptotes",
+    "simplifying-radical-expressions", "operations-with-radicals",
+    "rationalizing-denominators", "solving-radical-equations",
+    "radical-functions-and-their-graphs",
+)
+
+ALGEBRA_COURSE_6_HOME = "/quadratics-and-complex-numbers/"
+ALGEBRA_COURSE_6_LESSONS = (
+    "quadratic-equations-and-the-zero-product-property",
+    "solving-by-factoring", "the-square-root-property",
+    "completing-the-square", "the-quadratic-formula", "the-discriminant",
+    "complex-numbers", "operations-with-complex-numbers",
+    "complex-roots-of-quadratics", "graphs-of-quadratic-functions",
+    "vertex-form-and-the-axis-of-symmetry", "maximum-and-minimum-problems",
+    "quadratic-inequalities", "equations-reducible-to-quadratic-form",
+)
+
+ALGEBRA_COURSE_7_HOME = "/exponential-and-logarithmic-functions/"
+ALGEBRA_COURSE_7_LESSONS = (
+    "exponential-functions", "growth-and-decay", "the-number-e",
+    "what-a-logarithm-is", "logarithmic-functions-and-their-graphs",
+    "the-laws-of-logarithms", "common-and-natural-logarithms",
+    "change-of-base", "solving-exponential-equations",
+    "solving-logarithmic-equations",
+    "compound-interest-and-continuous-growth", "logarithmic-scales",
+)
+
+ALGEBRA_COURSE_8_HOME = "/systems-matrices-and-sequences/"
+ALGEBRA_COURSE_8_LESSONS = (
+    "systems-of-two-linear-equations", "solving-by-substitution",
+    "solving-by-elimination", "systems-in-three-variables",
+    "matrices-and-row-operations", "gaussian-elimination",
+    "matrix-arithmetic", "determinants-and-cramers-rule",
+    "inverse-matrices", "systems-of-inequalities-and-linear-programming",
+    "sequences-and-recursion", "arithmetic-sequences-and-series",
+    "geometric-sequences-and-series", "the-binomial-theorem",
+)
+
+ALGEBRA_COURSES = (
+    ("Foundations of Algebra", ALGEBRA_COURSE_1_HOME, ALGEBRA_COURSE_1_LESSONS),
+    ("Linear Equations and Inequalities", ALGEBRA_COURSE_2_HOME, ALGEBRA_COURSE_2_LESSONS),
+    ("Lines, Functions and Graphs", ALGEBRA_COURSE_3_HOME, ALGEBRA_COURSE_3_LESSONS),
+    ("Polynomials and Factoring", ALGEBRA_COURSE_4_HOME, ALGEBRA_COURSE_4_LESSONS),
+    ("Rational and Radical Expressions", ALGEBRA_COURSE_5_HOME, ALGEBRA_COURSE_5_LESSONS),
+    ("Quadratics and Complex Numbers", ALGEBRA_COURSE_6_HOME, ALGEBRA_COURSE_6_LESSONS),
+    ("Exponential and Logarithmic Functions", ALGEBRA_COURSE_7_HOME, ALGEBRA_COURSE_7_LESSONS),
+    ("Systems, Matrices and Sequences", ALGEBRA_COURSE_8_HOME, ALGEBRA_COURSE_8_LESSONS),
+)
+
+# The algebra path is complete too: eight courses, all published, nothing
+# announced. Declared separately from the other two so that a future path
+# arriving part-written cannot be smuggled in under a finished path's
+# completeness.
+ALGEBRA_PATH_COURSE_COUNT = 8
+ALGEBRA_UPCOMING_COURSES = ()
+
+ALL_COURSES = COURSES + MATH_COURSES + ALGEBRA_COURSES
 
 # The trading path is EIGHT courses long and all eight are published. This tuple
 # is EMPTY, and that is the finished state rather than an oversight: an entry
@@ -496,7 +617,7 @@ def source_of(url):
 # a mathematics path or a computer-science path without being rewritten. They
 # are published pages like any other, so every whole-tree invariant applies to
 # them -- but the per-course invariants do not, because neither is a course.
-SHARED_CHROME_PAGES = (SITE_INDEX, PATH_PAGE, MATH_PATH_PAGE)
+SHARED_CHROME_PAGES = (SITE_INDEX, PATH_PAGE, MATH_PATH_PAGE, ALGEBRA_PATH_PAGE)
 
 # Every path, as one row: the subject name, its page, its courses and the
 # length it claims. Each per-path invariant below iterates THIS, so a third
@@ -505,6 +626,8 @@ PATHS = (
     ("Trading", PATH_PAGE, COURSES, PATH_COURSE_COUNT, UPCOMING_COURSES),
     ("Discrete Mathematics", MATH_PATH_PAGE, MATH_COURSES, MATH_PATH_COURSE_COUNT,
      MATH_UPCOMING_COURSES),
+    ("Algebra", ALGEBRA_PATH_PAGE, ALGEBRA_COURSES, ALGEBRA_PATH_COURSE_COUNT,
+     ALGEBRA_UPCOMING_COURSES),
 )
 
 PATH_PAGES = tuple(page for _t, page, _c, _n, _u in PATHS)
@@ -661,6 +784,8 @@ SYNTHETIC_DISCLAIMER_RE = re.compile(
 # Only the second half is pinned here, because it is the half that makes a
 # claim about what the material does NOT establish.
 MATH_DISCLAIMER_RE = re.compile(r"(?i)a worked example is not a proof")
+ALGEBRA_DISCLAIMER_RE = re.compile(
+    r"(?i)a step that gives the right answer here is not thereby a valid rule")
 
 # Which sentence each path's course pages must carry. A path is a KEY here, so
 # adding one without deciding what it promises its reader fails immediately
@@ -668,6 +793,7 @@ MATH_DISCLAIMER_RE = re.compile(r"(?i)a worked example is not a proof")
 PATH_MATERIAL_DISCLAIMER = {
     PATH_PAGE: ("the synthetic-examples disclaimer", SYNTHETIC_DISCLAIMER_RE),
     MATH_PATH_PAGE: ("the worked-example-is-not-a-proof disclaimer", MATH_DISCLAIMER_RE),
+    ALGEBRA_PATH_PAGE: ("the a-step-is-not-a-rule disclaimer", ALGEBRA_DISCLAIMER_RE),
 }
 
 # The notice a REAL-DATA page carries instead. Each phrase is asserted
@@ -934,12 +1060,13 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         """Site index, path page, a home per course and that course's lessons,
         then the capstone.
 
-        The COURSE TREE is 128 URLs exactly: /, /paths/trading/, eight course
-        homes, and 7 + 15 + 16 * 6 lessons beneath them. The flat /<lesson>/ URLs
-        and the old /market-structure-lab/ course prefix were retired without
-        redirects, so a two-segment lesson path under a declared course home is
-        the only shape a lesson may have; re-adding either would declare a page
-        that no longer exists on disk.
+        The COURSE TREE is 357 URLs exactly: the site index, three path pages,
+        24 course homes, and the lessons beneath them -- 118 trading, 106
+        discrete mathematics, 105 algebra. The flat /<lesson>/ URLs and the old
+        /market-structure-lab/ course prefix were retired without redirects, so
+        a two-segment lesson path under a declared course home is the only shape
+        a lesson may have; re-adding either would declare a page that no longer
+        exists on disk.
 
         The capstone adds two more pages BESIDE that tree, under the path page.
         They are counted separately here on purpose: the number that must never
@@ -956,7 +1083,12 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             + len(MATH_COURSES)
             + sum(len(slugs) for _t, _h, slugs in MATH_COURSES)
         )
-        course_tree = 1 + trading_tree + math_tree  # 1 for the site index
+        algebra_tree = (
+            1  # the algebra path page
+            + len(ALGEBRA_COURSES)
+            + sum(len(slugs) for _t, _h, slugs in ALGEBRA_COURSES)
+        )
+        course_tree = 1 + trading_tree + math_tree + algebra_tree  # 1 for the index
         self.assertEqual(
             127,
             trading_tree,
@@ -970,9 +1102,15 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             "+ 14 + 12 = 115 pages, got %d" % math_tree,
         )
         self.assertEqual(
-            243,
+            114,
+            algebra_tree,
+            "the algebra path is 1 + 8 + 13 + 13 + 14 + 13 + 12 + 14 + 12 + 14 = 114 "
+            "pages, got %d" % algebra_tree,
+        )
+        self.assertEqual(
+            357,
             course_tree,
-            "the site index plus both path trees is 243 pages, got %d" % course_tree,
+            "the site index plus all three path trees is 357 pages, got %d" % course_tree,
         )
         self.assertEqual(
             2,
@@ -981,9 +1119,9 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         )
         expected = course_tree + len(REAL_DATA_PAGES)
         self.assertEqual(
-            245,
+            359,
             expected,
-            "243 course-tree pages plus the 2 capstone pages is 245, got %d" % expected,
+            "357 course-tree pages plus the 2 capstone pages is 359, got %d" % expected,
         )
         self.assertEqual(
             expected,
@@ -1004,6 +1142,19 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             106,
             sum(len(slugs) for _t, _h, slugs in MATH_COURSES),
             "the discrete mathematics path is 106 lessons",
+        )
+        self.assertEqual(
+            8, len(ALGEBRA_COURSES), "the algebra path publishes eight courses",
+        )
+        self.assertEqual(
+            [13, 13, 14, 13, 12, 14, 12, 14],
+            [len(slugs) for _t, _h, slugs in ALGEBRA_COURSES],
+            "the algebra course lengths, in path order",
+        )
+        self.assertEqual(
+            105,
+            sum(len(slugs) for _t, _h, slugs in ALGEBRA_COURSES),
+            "the algebra path is 105 lessons",
         )
         self.assertEqual(7, len(COURSE_1_LESSONS), "course 1 is seven lessons")
         self.assertEqual(15, len(COURSE_2_LESSONS), "course 2 is fifteen lessons")
@@ -1526,11 +1677,11 @@ class TestContent(SiteFixture):
         ]
         self.assertTrue(course_pages, "no course page found under %s" % SITE_ROOT)
         self.assertEqual(
-            240,
+            353,
             len(course_pages),
-            "sixteen course homes and 224 lessons carry a material disclaimer; "
-            "found %d pages, so a page has been added or removed without being "
-            "declared" % len(course_pages),
+            "twenty-four course homes and 329 lessons carry a material "
+            "disclaimer; found %d pages, so a page has been added or removed "
+            "without being declared" % len(course_pages),
         )
         for url, doc in course_pages:
             page = str(doc.path.relative_to(REPO_ROOT))
@@ -2848,52 +2999,98 @@ class TestPathIsComplete(SiteFixture):
 
 
 class TestGeneratedPathIsCurrent(unittest.TestCase):
-    """The discrete mathematics pages are DERIVED. Nothing may edit them by hand.
+    """The GENERATED pages are DERIVED. Nothing may edit them by hand.
 
-    content/discrete_math/ holds that path as data and
-    scripts/build_discrete_math.py renders it. Two things can therefore drift and
-    both are silent:
+    Two of the three paths are generated: content/discrete_math/ and
+    content/algebra/ hold them as data and scripts/build_paths.py renders them.
+    Two things can therefore drift and both are silent:
 
       * a page edited directly on disk, which the next build reverts without
         telling anyone;
-      * this file's MATH_COURSES, which is a copy of a declaration living in the
-        content package, and which nothing else compares against it.
+      * this file's MATH_COURSES and ALGEBRA_COURSES, each a copy of a
+        declaration living in a content package, which nothing else compares
+        against it.
 
-    Both are checked here. The build script's --check mode re-renders every page
-    in memory and reports any that differ, so a hand edit fails the suite rather
-    than surviving until someone rebuilds.
+    Both are checked here, for every generated path rather than for a named one,
+    so a fourth path is covered the moment it is added to GENERATED. The build
+    script's --check mode re-renders every page in memory and reports any that
+    differ, so a hand edit fails the suite rather than surviving until someone
+    rebuilds.
     """
 
     @classmethod
     def setUpClass(cls):
         sys.path.insert(0, str(REPO_ROOT / "content"))
         try:
-            from discrete_math import PATH
+            from algebra import PATH as ALGEBRA
+            from discrete_math import PATH as DISCRETE
         except ImportError as exc:  # pragma: no cover - a missing package is a failure
-            raise unittest.SkipTest("cannot import the content package: %s" % exc)
-        cls.path = PATH
+            raise unittest.SkipTest("cannot import a content package: %s" % exc)
+        # (declared courses, declared path page, the content package's PATH)
+        cls.generated = (
+            ("discrete mathematics", MATH_COURSES, MATH_PATH_PAGE, DISCRETE),
+            ("algebra", ALGEBRA_COURSES, ALGEBRA_PATH_PAGE, ALGEBRA),
+        )
 
     def test_declared_slugs_match_the_content_package(self):
-        """The tuple above and the content package must name the same courses."""
-        from_content = tuple(
-            (course["title"], "/%s/" % course["slug"],
-             tuple(lesson["slug"] for lesson in course["lessons"]))
-            for course in self.path["courses"]
-        )
-        self.assertEqual(
-            MATH_COURSES,
-            from_content,
-            "MATH_COURSES in this file disagrees with content/discrete_math/. "
-            "This file declares the URL space and the content package builds it; "
-            "when they differ, one of them describes pages that do not exist.",
-        )
+        """The tuples above and the content packages must name the same courses."""
+        for subject, declared, _page, path in self.generated:
+            with self.subTest(path=subject):
+                from_content = tuple(
+                    (course["title"], "/%s/" % course["slug"],
+                     tuple(lesson["slug"] for lesson in course["lessons"]))
+                    for course in path["courses"]
+                )
+                self.assertEqual(
+                    declared,
+                    from_content,
+                    "the %s course tuple in this file disagrees with its content "
+                    "package. This file declares the URL space and the content "
+                    "package builds it; when they differ, one of them describes "
+                    "pages that do not exist." % subject,
+                )
 
     def test_the_path_page_slug_matches(self):
-        self.assertEqual(
-            MATH_PATH_PAGE,
-            "/paths/%s/" % self.path["slug"],
-            "the declared path page and the content package's slug disagree",
-        )
+        for subject, _declared, page, path in self.generated:
+            with self.subTest(path=subject):
+                self.assertEqual(
+                    page,
+                    "/paths/%s/" % path["slug"],
+                    "the declared %s path page and its content package's slug "
+                    "disagree" % subject,
+                )
+
+    def test_every_generated_path_states_its_own_material_clause(self):
+        """A path may not ship another subject's disclaimer.
+
+        The licence line in the shared footer ends with a clause naming the
+        intellectual hazard of the subject. That clause was a module constant
+        while one path was generated, which made it FALSE the moment a second
+        subject rendered through the same chrome. It is now required per path,
+        and required to be distinct: two paths sharing a clause means one of
+        them is telling its reader about the other one's hazard.
+        """
+        clauses = {}
+        for subject, _declared, page, path in self.generated:
+            with self.subTest(path=subject):
+                clause = path.get("material")
+                self.assertTrue(
+                    clause,
+                    "the %s path states no material clause, so its footer would "
+                    "carry no hazard notice at all" % subject,
+                )
+                self.assertNotIn(
+                    clause, clauses,
+                    "the %s path repeats the material clause already used by the "
+                    "%s path" % (subject, clauses.get(clause)),
+                )
+                clauses[clause] = subject
+                label, pattern = PATH_MATERIAL_DISCLAIMER[page]
+                self.assertRegex(
+                    clause, pattern,
+                    "the %s path's material clause is not the one this file "
+                    "sweeps its pages for (%s)" % (subject, label),
+                )
 
     def test_no_generated_page_has_been_edited_by_hand(self):
         """Re-render every page and compare with what is published.
@@ -2904,7 +3101,7 @@ class TestGeneratedPathIsCurrent(unittest.TestCase):
         """
         sys.path.insert(0, str(REPO_ROOT / "scripts"))
         try:
-            from build_discrete_math import pages
+            from build_paths import pages
         except ImportError as exc:  # pragma: no cover
             raise unittest.SkipTest("cannot import the build script: %s" % exc)
 
@@ -2921,8 +3118,291 @@ class TestGeneratedPathIsCurrent(unittest.TestCase):
             "%d published page(s) differ from what the content package renders. "
             "Either the content changed and the site was not rebuilt, or a "
             "generated page was edited by hand and the next build will revert it. "
-            "Run: python3 scripts/build_discrete_math.py" % len(stale),
+            "Run: python3 scripts/build_paths.py" % len(stale),
         )
+
+
+class TestLessonDataMatchesTheRenderer(unittest.TestCase):
+    """The lesson dicts must have the shape the renderer draws.
+
+    render.py lays concepts into a `grid-3` and the method steps into a
+    `grid-4`. Those counts are in the CSS, not in the data, so a lesson that
+    supplies two concepts or five steps still renders -- lopsidedly, with a hole
+    in the row, on one page out of hundreds. Nothing else in this file would
+    notice, because the markup is valid either way.
+
+    Missing keys fail loudly at build time and need no test. These are the
+    failures that are quiet.
+    """
+
+    # These were all EXACT once, on the reasoning that "the CSS draws a fixed
+    # number of cards". That reasoning was wrong: .grid-3 and .grid-4 are
+    # repeat(auto-fit, minmax(...)), so they take whatever they are given -- five
+    # step cards sit in one row at 1280px and 3+2 at 820px, and FOUR cards
+    # already leave a 3+1 orphan at 820px, so five is not a new failure mode.
+    #
+    # What is pinned is therefore the SHAPE a reader learns -- three ideas, four
+    # method steps, three mistakes -- with a little room where a lesson earned
+    # it. The quiz shows one question at a time behind a Next button, so a fourth
+    # question costs nothing at all and is simply more practice.
+    #
+    # `key` is a range because it is a <div> with white-space: pre: it grows, and
+    # a few lessons legitimately want six lines (the five special products, with
+    # a blank line separating the squares from the cubes). The upper bounds guard
+    # against a hero block long enough to push the opening paragraph off screen.
+    EXACT = {"concepts": 3, "mistakes": 3}
+    RANGES = {"steps": (4, 5), "quiz": (3, 4), "key": (3, 8), "body": (7, 18)}
+
+    @classmethod
+    def setUpClass(cls):
+        sys.path.insert(0, str(REPO_ROOT / "content"))
+        try:
+            from algebra import PATH as ALGEBRA
+            from discrete_math import PATH as DISCRETE
+        except ImportError as exc:  # pragma: no cover
+            raise unittest.SkipTest("cannot import a content package: %s" % exc)
+        cls.lessons = []
+        for path in (DISCRETE, ALGEBRA):
+            for course in path["courses"]:
+                for lesson in course["lessons"]:
+                    cls.lessons.append(("%s/%s" % (course["slug"], lesson["slug"]), lesson))
+
+    def test_counts_the_layout_depends_on(self):
+        for where, lesson in self.lessons:
+            for field, want in self.EXACT.items():
+                with self.subTest(lesson=where, field=field):
+                    self.assertEqual(
+                        want, len(lesson[field]),
+                        "%s has %d %s; the layout draws exactly %d"
+                        % (where, len(lesson[field]), field, want),
+                    )
+            for field, (lo, hi) in self.RANGES.items():
+                with self.subTest(lesson=where, field=field):
+                    self.assertTrue(
+                        lo <= len(lesson[field]) <= hi,
+                        "%s has %d %s, outside %d-%d"
+                        % (where, len(lesson[field]), field, lo, hi),
+                    )
+
+    def test_every_quiz_question_is_answerable(self):
+        """Four choices, and a correct index that points at one of them."""
+        for where, lesson in self.lessons:
+            for i, q in enumerate(lesson["quiz"]):
+                with self.subTest(lesson=where, question=i):
+                    self.assertEqual(4, len(q["a"]), "%s quiz %d: not four choices" % (where, i))
+                    self.assertTrue(
+                        0 <= q["c"] < len(q["a"]),
+                        "%s quiz %d: correct index %r is out of range" % (where, i, q["c"]),
+                    )
+                    self.assertTrue(
+                        q["why"].strip(),
+                        "%s quiz %d: no explanation. An unexplained answer teaches "
+                        "the reader to guess again." % (where, i),
+                    )
+                    self.assertEqual(
+                        len(set(q["a"])), len(q["a"]),
+                        "%s quiz %d: two choices are identical" % (where, i),
+                    )
+
+    def test_fields_that_reach_metadata_stay_plain(self):
+        """A lesson title becomes <title> and og:title.
+
+        Those are not markup: a `x` math run there is six visible characters in
+        a browser tab and in every link preview. Headings inside the page may
+        use the shorthand -- render.esc_inline escapes first and then applies it
+        -- but a title that also leaves the page may not.
+        """
+        for where, lesson in self.lessons:
+            for field in ("title", "module"):
+                with self.subTest(lesson=where, field=field):
+                    self.assertNotIn(
+                        "`", lesson[field],
+                        "%s %s contains the math shorthand, but this field "
+                        "reaches <title> and og:title as plain text"
+                        % (where, field),
+                    )
+
+    def test_escaped_fields_carry_no_html(self):
+        """Fields the renderer escapes must not contain entities or markup.
+
+        `esc()` turns `&mdash;` into the six visible characters `&mdash;`. This
+        is the single most likely authoring mistake on this path, because every
+        neighbouring field wants the entity.
+        """
+        import re
+        suspicious = re.compile(r"&[a-z]+;|&#\d+;|<[a-z/][^>]*>")
+        for where, lesson in self.lessons:
+            fields = [("title", lesson["title"]), ("module", lesson["module"]),
+                      ("one_line", lesson["one_line"]), ("key_label", lesson["key_label"]),
+                      ("read_title", lesson["read_title"]),
+                      ("steps_title", lesson["steps_title"]),
+                      ("quiz_title", lesson["quiz_title"]),
+                      ("worked.title", lesson["worked"]["title"]),
+                      ("standard[0]", lesson["standard"][0])]
+            fields += [("key[%d]" % i, k) for i, k in enumerate(lesson["key"])]
+            fields += [("worked.lines[%d]" % i, k) for i, k in enumerate(lesson["worked"]["lines"])]
+            fields += [("concepts[%d].title" % i, t) for i, (t, _b) in enumerate(lesson["concepts"])]
+            fields += [("steps[%d].title" % i, t) for i, (t, _b) in enumerate(lesson["steps"])]
+            fields += [("mistakes[%d].title" % i, t) for i, (t, _b) in enumerate(lesson["mistakes"])]
+            for kind, payload in lesson["body"]:
+                if kind == "h3":
+                    fields.append(("body h3", payload))
+                elif kind == "math":
+                    fields += [("body math", line) for line in payload]
+            for name, value in fields:
+                with self.subTest(lesson=where, field=name):
+                    hit = suspicious.search(value)
+                    self.assertIsNone(
+                        hit,
+                        "%s %s contains %r, which this field shows literally "
+                        "because the renderer escapes it" % (where, name, hit.group(0) if hit else ""),
+                    )
+
+
+class TestEveryLabBuilds(unittest.TestCase):
+    """Every (lab, mode) a lesson asks for must actually produce a lab.
+
+    A lesson names its widget by key and mode. Two things can go wrong quietly:
+    a key that no longer exists, and a mode a lab does not handle and silently
+    treats as its default. The first fails the build loudly; the second does
+    not -- it ships a lesson on completing the square whose lab is showing the
+    quadratic formula, and no markup assertion anywhere would notice.
+
+    So each pair is built here, and each is required to differ from the lab's
+    fallback. That is a weaker claim than "the mode is correct", which no test
+    can make, but it is exactly the claim that catches a mode being ignored.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        sys.path.insert(0, str(REPO_ROOT / "content"))
+        sys.path.insert(0, str(REPO_ROOT / "scripts"))
+        try:
+            from mathpath import labs
+            from algebra import PATH as ALGEBRA
+            from discrete_math import PATH as DISCRETE
+        except ImportError as exc:  # pragma: no cover
+            raise unittest.SkipTest("cannot import the lab kit: %s" % exc)
+        cls.labs = labs
+        cls.used = []
+        for path in (DISCRETE, ALGEBRA):
+            for course in path["courses"]:
+                for lesson in course["lessons"]:
+                    key, cfg = lesson["lab"]
+                    cls.used.append((path["slug"], course["slug"], lesson["slug"], key, cfg))
+
+    def test_every_lesson_names_a_lab_that_exists(self):
+        unknown = sorted({key for _p, _c, _l, key, _cfg in self.used
+                          if key not in self.labs.REGISTRY})
+        self.assertEqual(
+            [], unknown,
+            "lesson(s) name a lab that is not in the registry: %s. Known labs: %s"
+            % (", ".join(unknown), ", ".join(sorted(self.labs.REGISTRY))),
+        )
+
+    def test_every_lab_builds_and_assigns_redraw(self):
+        for slug, course, lesson, key, cfg in self.used:
+            with self.subTest(lesson="%s/%s" % (course, lesson)):
+                lab = self.labs.build(key, cfg)
+                self.assertTrue(lab.markup.strip(), "%s produced no markup" % key)
+                self.assertTrue(lab.script.strip(), "%s produced no script" % key)
+                self.assertIn(
+                    "window.redrawLab", lab.script,
+                    "%s never assigns window.redrawLab, so scripts/labcheck.js "
+                    "cannot redraw it and a broken control would go unnoticed" % key,
+                )
+
+    def test_no_lab_reaches_through_parent_element(self):
+        """A lab must find an element by its own id, not by walking the tree.
+
+        This is the specific defect that shipped once: a lab hid a control with
+        `input.parentElement.hidden = true`, the markup later gained a wrapper,
+        and the lesson rendered a dead panel that every markup assertion passed.
+        Giving the wrapper an id costs one attribute and cannot break that way.
+
+        There WAS a broader test here -- every id a lab reads must appear in its
+        own markup -- and it was removed because it could not tell a bug from the
+        normal shape of these labs. One lab function serves up to ten modes and
+        looks its elements up conditionally:
+
+            var inA1 = (MODE === 'binomial') ? null : document.getElementById('sqA1');
+
+        A static scan sees a read of `sqA1` and markup that, in binomial mode,
+        does not declare it, and reports 28 lessons broken. Every one was a false
+        positive. The real question -- does this lab ever dereference null? -- is
+        a question about EXECUTION, and scripts/labcheck.js answers it properly by
+        running all 229 generated pages in a DOM and failing on the throw. A
+        static approximation of a dynamic property was worse than no test,
+        because it would have been silenced rather than believed.
+        """
+        import re
+        walk = re.compile(r"\.parentElement\b|\.parentNode\b")
+        for slug, course, lesson, key, cfg in self.used:
+            with self.subTest(lesson="%s/%s" % (course, lesson)):
+                lab = self.labs.build(key, cfg)
+                hit = walk.search(lab.script)
+                self.assertIsNone(
+                    hit,
+                    "lab %r walks the DOM with %s instead of reading an id it "
+                    "declares; give the element an id" % (key, hit.group(0) if hit else ""),
+                )
+
+    def test_labs_use_only_classes_the_stylesheet_defines(self):
+        """A lab styled by a class that does not exist renders unstyled.
+
+        Nothing else here would notice: the markup is valid, the page builds,
+        the lab runs and paints. The reader gets a control panel with no panel.
+        There is exactly one stylesheet on this path and it is generated, so
+        "does this class exist" is a question with a definite answer.
+        """
+        import re
+        sys.path.insert(0, str(REPO_ROOT / "scripts"))
+        try:
+            from mathpath import theme
+        except ImportError as exc:  # pragma: no cover
+            raise unittest.SkipTest("cannot import the stylesheet: %s" % exc)
+        defined = set(re.findall(r"\.([a-zA-Z][\w-]*)", theme.stylesheet()))
+        # Classes the RENDERER wraps a lab in, rather than the lab itself.
+        frame = {"card", "lab-main", "side-panel", "practice", "choice-grid",
+                 "feedback", "score", "practice-head", "small-copy", "math", "mathblock"}
+        seen = set()
+        for _slug, _course, _lesson, key, cfg in self.used:
+            if (key, cfg.get("mode")) in seen:
+                continue
+            seen.add((key, cfg.get("mode")))
+            lab = self.labs.build(key, cfg)
+            used = set()
+            for chunk in (lab.markup, lab.controls):
+                for value in re.findall(r'class="([^"]+)"', chunk):
+                    used |= set(value.split())
+            unknown = sorted(c for c in used if c not in defined and c not in frame)
+            with self.subTest(lab=key, mode=cfg.get("mode")):
+                self.assertEqual(
+                    [], unknown,
+                    "lab %r uses CSS class(es) %s that scripts/mathpath/theme.py "
+                    "does not define, so that element ships unstyled"
+                    % (key, ", ".join(unknown)),
+                )
+
+    def test_a_mode_is_not_silently_ignored(self):
+        """Distinct modes of one lab must produce distinct labs."""
+        by_key = {}
+        for _s, _c, _l, key, cfg in self.used:
+            by_key.setdefault(key, {})[cfg.get("mode")] = cfg
+        for key, modes in sorted(by_key.items()):
+            if len(modes) < 2:
+                continue
+            built = {}
+            for mode, cfg in modes.items():
+                lab = self.labs.build(key, cfg)
+                built.setdefault(lab.markup + lab.controls + lab.script, []).append(mode)
+            collisions = [ms for ms in built.values() if len(ms) > 1]
+            self.assertEqual(
+                [], collisions,
+                "lab %r renders identically for modes %s, so at least one of "
+                "those lessons is showing a widget for a different lesson"
+                % (key, collisions),
+            )
 
 
 # ---------------------------------------------------------------------------

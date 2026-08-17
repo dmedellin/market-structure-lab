@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Divisibility and the Division Algorithm | Number Theory and Cryptography | Learn · geterdone.io</title>
-  <meta name="description" content="`a = qb + r` with `0 ≤ r &lt; b`, and both `q` and `r` are unique. That single theorem is the foundation of everything else in this course." />
+  <meta name="description" content="a = qb + r with 0 ≤ r &lt; b, and both q and r are unique. That single theorem is the foundation of everything else in this course." />
   <link rel="canonical" href="https://learn.geterdone.io/number-theory-and-cryptography/divisibility-and-the-division-algorithm/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Divisibility and the Division Algorithm | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta property="og:description" content="`a = qb + r` with `0 ≤ r &lt; b`, and both `q` and `r` are unique. That single theorem is the foundation of everything else in this course." />
+  <meta property="og:description" content="a = qb + r with 0 ≤ r &lt; b, and both q and r are unique. That single theorem is the foundation of everything else in this course." />
   <meta property="og:url" content="https://learn.geterdone.io/number-theory-and-cryptography/divisibility-and-the-division-algorithm/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Divisibility and the Division Algorithm | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta name="twitter:description" content="`a = qb + r` with `0 ≤ r &lt; b`, and both `q` and `r` are unique. That single theorem is the foundation of everything else in this course." />
+  <meta name="twitter:description" content="a = qb + r with 0 ≤ r &lt; b, and both q and r are unique. That single theorem is the foundation of everything else in this course." />
   <meta name="twitter:url" content="https://learn.geterdone.io/number-theory-and-cryptography/divisibility-and-the-division-algorithm/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Number Theory and Cryptography course home">
         <span class="brand-mark" aria-hidden="true">01</span>
-        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 &amp;middot; Lesson 01 of 14</span></span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 · Lesson 01 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Number Theory and Cryptography</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 01 &amp;middot; Divisibility and the Division Algorithm</span>
+      <span class="crumb-current" aria-current="page">Lesson 01 · Divisibility and the Division Algorithm</span>
     </nav>
 
     <noscript>
@@ -931,7 +962,7 @@ the remainder is never negative
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Divisibility and division</h2></div><p>The definition, the theorem, and the properties everything else rests on.</p></div>
-      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Divisibility</span><p>For integers <span class="math">a</span> and <span class="math">b</span> with <span class="math">b ≠ 0</span>, <span class="math">b | a</span> ("<span class="math">b</span> divides <span class="math">a</span>") means there is an integer <span class="math">k</span> with <span class="math">a = bk</span>. Then <span class="math">b</span> is a <strong>divisor</strong> or <strong>factor</strong> of <span class="math">a</span>.</p></div><div class="thm"><span class="label">Theorem &middot; Basic properties</span><p>For integers <span class="math">a, b, c, d</span>: if <span class="math">d | a</span> and <span class="math">d | b</span> then <span class="math">d | (ax + by)</span> for all integers <span class="math">x, y</span>; if <span class="math">a | b</span> and <span class="math">b | c</span> then <span class="math">a | c</span>; and <span class="math">d | a</span> with <span class="math">a ≠ 0</span> implies <span class="math">|d| ≤ |a|</span>.</p></div><div class="proof"><p>For the first: <span class="math">a = dm</span> and <span class="math">b = dn</span>, so <span class="math">ax + by = d(mx + ny)</span>, and <span class="math">mx + ny</span> is an integer.</p><p>For the second: <span class="math">b = am</span> and <span class="math">c = bn</span>, so <span class="math">c = a(mn)</span>.</p><p>For the third: <span class="math">a = dk</span> with <span class="math">a ≠ 0</span> forces <span class="math">k ≠ 0</span>, so <span class="math">|k| ≥ 1</span> and <span class="math">|a| = |d||k| ≥ |d|</span>.</p><p><span class="qed">&#9633;</span></p></div><p>The first property is the workhorse. It is what lets the Euclidean algorithm work, what proves Euclid's theorem on primes, and what makes Bézout's identity useful &mdash; and it is one line.</p><div class="thm"><span class="label">Theorem &middot; Division algorithm</span><p>For any integer <span class="math">a</span> and any positive integer <span class="math">b</span>, there are unique integers <span class="math">q</span> and <span class="math">r</span> with <span class="math">a = qb + r</span> and <span class="math">0 ≤ r &lt; b</span>.</p></div><div class="proof"><p><strong>Existence.</strong> Let <span class="math">S = {a − qb : q ∈ ℤ, a − qb ≥ 0}</span>. It is nonempty (take <span class="math">q</span> very negative) and consists of non-negative integers, so by well-ordering it has a least element <span class="math">r = a − qb</span>.</p><p>If <span class="math">r ≥ b</span> then <span class="math">r − b = a − (q+1)b</span> is in <span class="math">S</span> and smaller than <span class="math">r</span>, contradicting minimality. So <span class="math">0 ≤ r &lt; b</span>.</p><p><strong>Uniqueness.</strong> If <span class="math">a = qb + r = q'b + r'</span> with both remainders in <span class="math">[0, b)</span>, then <span class="math">b(q − q') = r' − r</span>. The right side has absolute value less than <span class="math">b</span>, and the left is a multiple of <span class="math">b</span>, so both are 0. Hence <span class="math">r = r'</span> and <span class="math">q = q'</span>.</p><p><span class="qed">&#9633;</span></p></div><p>Uniqueness is what makes the notation legitimate: <span class="math">a div b</span> and <span class="math">a mod b</span> name specific integers rather than one of several possibilities.</p><h3>Negative dividends</h3><div class="example"><span class="label">Example &middot; `−7` divided by 3</span><p><span class="math">−7 = (−3)(3) + 2</span>, so <span class="math">q = −3</span> and <span class="math">r = 2</span>. Not <span class="math">(−2)(3) + (−1)</span>, because the theorem requires <span class="math">0 ≤ r &lt; b</span>. The quotient rounds toward negative infinity, not toward zero.</p></div><p>Many programming languages disagree with the theorem here: C-style <span class="math">%</span> returns <span class="math">−1</span> for <span class="math">−7 % 3</span>, while Python returns 2. The mathematical convention is Python's, and it is the one that makes modular arithmetic work &mdash; classes should not depend on the sign of a representative.</p><div class="defbox"><span class="label">Definition &middot; The mod operator</span><p><span class="math">a mod b</span> denotes the unique remainder <span class="math">r</span> from the division algorithm, so <span class="math">0 ≤ a mod b &lt; b</span> always.</p></div></article>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Divisibility</span><p>For integers <span class="math">a</span> and <span class="math">b</span> with <span class="math">b ≠ 0</span>, <span class="math">b | a</span> ("<span class="math">b</span> divides <span class="math">a</span>") means there is an integer <span class="math">k</span> with <span class="math">a = bk</span>. Then <span class="math">b</span> is a <strong>divisor</strong> or <strong>factor</strong> of <span class="math">a</span>.</p></div><div class="thm"><span class="label">Theorem &middot; Basic properties</span><p>For integers <span class="math">a, b, c, d</span>: if <span class="math">d | a</span> and <span class="math">d | b</span> then <span class="math">d | (ax + by)</span> for all integers <span class="math">x, y</span>; if <span class="math">a | b</span> and <span class="math">b | c</span> then <span class="math">a | c</span>; and <span class="math">d | a</span> with <span class="math">a ≠ 0</span> implies <span class="math">|d| ≤ |a|</span>.</p></div><div class="proof"><p>For the first: <span class="math">a = dm</span> and <span class="math">b = dn</span>, so <span class="math">ax + by = d(mx + ny)</span>, and <span class="math">mx + ny</span> is an integer.</p><p>For the second: <span class="math">b = am</span> and <span class="math">c = bn</span>, so <span class="math">c = a(mn)</span>.</p><p>For the third: <span class="math">a = dk</span> with <span class="math">a ≠ 0</span> forces <span class="math">k ≠ 0</span>, so <span class="math">|k| ≥ 1</span> and <span class="math">|a| = |d||k| ≥ |d|</span>.</p><p><span class="qed">&#9633;</span></p></div><p>The first property is the workhorse. It is what lets the Euclidean algorithm work, what proves Euclid's theorem on primes, and what makes Bézout's identity useful &mdash; and it is one line.</p><div class="thm"><span class="label">Theorem &middot; Division algorithm</span><p>For any integer <span class="math">a</span> and any positive integer <span class="math">b</span>, there are unique integers <span class="math">q</span> and <span class="math">r</span> with <span class="math">a = qb + r</span> and <span class="math">0 ≤ r &lt; b</span>.</p></div><div class="proof"><p><strong>Existence.</strong> Let <span class="math">S = {a − qb : q ∈ ℤ, a − qb ≥ 0}</span>. It is nonempty (take <span class="math">q</span> very negative) and consists of non-negative integers, so by well-ordering it has a least element <span class="math">r = a − qb</span>.</p><p>If <span class="math">r ≥ b</span> then <span class="math">r − b = a − (q+1)b</span> is in <span class="math">S</span> and smaller than <span class="math">r</span>, contradicting minimality. So <span class="math">0 ≤ r &lt; b</span>.</p><p><strong>Uniqueness.</strong> If <span class="math">a = qb + r = q'b + r'</span> with both remainders in <span class="math">[0, b)</span>, then <span class="math">b(q − q') = r' − r</span>. The right side has absolute value less than <span class="math">b</span>, and the left is a multiple of <span class="math">b</span>, so both are 0. Hence <span class="math">r = r'</span> and <span class="math">q = q'</span>.</p><p><span class="qed">&#9633;</span></p></div><p>Uniqueness is what makes the notation legitimate: <span class="math">a div b</span> and <span class="math">a mod b</span> name specific integers rather than one of several possibilities.</p><h3>Negative dividends</h3><div class="example"><span class="label">Example &middot; <span class="math">−7</span> divided by 3</span><p><span class="math">−7 = (−3)(3) + 2</span>, so <span class="math">q = −3</span> and <span class="math">r = 2</span>. Not <span class="math">(−2)(3) + (−1)</span>, because the theorem requires <span class="math">0 ≤ r &lt; b</span>. The quotient rounds toward negative infinity, not toward zero.</p></div><p>Many programming languages disagree with the theorem here: C-style <span class="math">%</span> returns <span class="math">−1</span> for <span class="math">−7 % 3</span>, while Python returns 2. The mathematical convention is Python's, and it is the one that makes modular arithmetic work &mdash; classes should not depend on the sign of a representative.</p><div class="defbox"><span class="label">Definition &middot; The mod operator</span><p><span class="math">a mod b</span> denotes the unique remainder <span class="math">r</span> from the division algorithm, so <span class="math">0 ≤ a mod b &lt; b</span> always.</p></div></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Number theory workbench</h2></div><p>Algorithms with their traces</p></div>
@@ -983,7 +1014,7 @@ the remainder is never negative
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Working with divisibility</h2></div><p>Replace the statement by the equation it abbreviates.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Translate `b | a` into `a = bk`</h3><p>Divisibility claims are unusable until unfolded. Almost every proof in this course starts here.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Use the linear-combination property</h3><p><span class="math">d | a</span> and <span class="math">d | b</span> give <span class="math">d | (ax + by)</span>. This is the step that appears in nearly every argument.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Apply the division algorithm when a remainder is needed</h3><p><span class="math">a = qb + r</span> with <span class="math">0 ≤ r &lt; b</span>, and both are unique.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Watch the sign</h3><p>The remainder is never negative. If a computation produces one, add <span class="math">b</span>.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Translate <span class="math">b | a</span> into <span class="math">a = bk</span></h3><p>Divisibility claims are unusable until unfolded. Almost every proof in this course starts here.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Use the linear-combination property</h3><p><span class="math">d | a</span> and <span class="math">d | b</span> give <span class="math">d | (ax + by)</span>. This is the step that appears in nearly every argument.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Apply the division algorithm when a remainder is needed</h3><p><span class="math">a = qb + r</span> with <span class="math">0 ≤ r &lt; b</span>, and both are unique.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Watch the sign</h3><p>The remainder is never negative. If a computation produces one, add <span class="math">b</span>.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1009,7 +1040,7 @@ Check:    4728 = 3 × 1576                        ✓</div><p>The same argument 
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Allowing a negative remainder</strong><span><span class="math">−7 mod 3 = 2</span>. Some programming languages disagree with the mathematical convention, and mixing the two silently breaks modular arithmetic.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Confusing `b | a` with `b/a`</strong><span>The first is a statement (true or false); the second is a number. <span class="math">3 | 12</span> is true and <span class="math">3/12</span> is a quarter.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Forgetting `b ≠ 0`</strong><span>Divisibility by zero is undefined, and the division algorithm requires <span class="math">b &gt; 0</span> as stated.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Allowing a negative remainder</strong><span><span class="math">−7 mod 3 = 2</span>. Some programming languages disagree with the mathematical convention, and mixing the two silently breaks modular arithmetic.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Confusing <span class="math">b | a</span> with <span class="math">b/a</span></strong><span>The first is a statement (true or false); the second is a number. <span class="math">3 | 12</span> is true and <span class="math">3/12</span> is a quarter.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Forgetting <span class="math">b ≠ 0</span></strong><span>Divisibility by zero is undefined, and the division algorithm requires <span class="math">b &gt; 0</span> as stated.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when the linear-combination property is automatic.</strong><p>Prove that if <span class="math">d | (a + b)</span> and <span class="math">d | a</span> then <span class="math">d | b</span>. It is one application of the property, and it is the shape of argument the next five lessons repeat.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Everything in this course is a consequence of the division algorithm. The Euclidean algorithm is it applied repeatedly, modular arithmetic is its remainder, and RSA is modular arithmetic with large primes.</div></article>
       </div>
     </section>

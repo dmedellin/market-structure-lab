@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Trees | Graphs and Trees | Learn · geterdone.io</title>
-  <meta name="description" content="A tree is a connected acyclic graph, and that single condition forces `|E| = |V| − 1`, unique paths between vertices, and every edge being a bridge. The characterisations are all equivalent." />
+  <meta name="description" content="A tree is a connected acyclic graph, and that single condition forces |E| = |V| − 1, unique paths between vertices, and every edge being a bridge. The characterisations are all equivalent." />
   <link rel="canonical" href="https://learn.geterdone.io/graphs-and-trees/trees/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Trees | Graphs and Trees | Learn · geterdone.io" />
-  <meta property="og:description" content="A tree is a connected acyclic graph, and that single condition forces `|E| = |V| − 1`, unique paths between vertices, and every edge being a bridge. The characterisations are all equivalent." />
+  <meta property="og:description" content="A tree is a connected acyclic graph, and that single condition forces |E| = |V| − 1, unique paths between vertices, and every edge being a bridge. The characterisations are all equivalent." />
   <meta property="og:url" content="https://learn.geterdone.io/graphs-and-trees/trees/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Trees | Graphs and Trees | Learn · geterdone.io" />
-  <meta name="twitter:description" content="A tree is a connected acyclic graph, and that single condition forces `|E| = |V| − 1`, unique paths between vertices, and every edge being a bridge. The characterisations are all equivalent." />
+  <meta name="twitter:description" content="A tree is a connected acyclic graph, and that single condition forces |E| = |V| − 1, unique paths between vertices, and every edge being a bridge. The characterisations are all equivalent." />
   <meta name="twitter:url" content="https://learn.geterdone.io/graphs-and-trees/trees/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Graphs and Trees course home">
         <span class="brand-mark" aria-hidden="true">10</span>
-        <span class="brand-copy"><strong>Graphs and Trees</strong><span>Course 7 &amp;middot; Lesson 10 of 14</span></span>
+        <span class="brand-copy"><strong>Graphs and Trees</strong><span>Course 7 · Lesson 10 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Graphs and Trees</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 10 &amp;middot; Trees</span>
+      <span class="crumb-current" aria-current="page">Lesson 10 · Trees</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ every tree with ≥ 2 vertices has at least 2 leaves</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Trees are the minimally connected graphs: connected, with nothing to spare.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>`n − 1` edges is exactly enough</h3><p>Fewer disconnects, more creates a cycle. Trees sit exactly at the boundary lesson 4's edge bound identified.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Paths are unique</h3><p>Two distinct paths between the same pair would form a cycle. Uniqueness is equivalent to acyclicity given connectivity.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Every edge is a bridge</h3><p>No edge lies on a cycle, so removing any one disconnects the tree. Trees have no redundancy at all.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3><span class="math">n − 1</span> edges is exactly enough</h3><p>Fewer disconnects, more creates a cycle. Trees sit exactly at the boundary lesson 4's edge bound identified.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Paths are unique</h3><p>Two distinct paths between the same pair would form a cycle. Uniqueness is equivalent to acyclicity given connectivity.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Every edge is a bridge</h3><p>No edge lies on a cycle, so removing any one disconnects the tree. Trees have no redundancy at all.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Trees</h2></div><p>The definition, the equivalences, and the leaf lemma.</p></div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Predicates and Quantifiers | Logic and Proof | Learn · geterdone.io</title>
-  <meta name="description" content="A predicate is a sentence with a free variable. `∀` and `∃` bind that variable and produce something with a truth value &amp;mdash; and both depend entirely on the domain, which is why an unstated domain is an unstated claim." />
+  <meta name="description" content="A predicate is a sentence with a free variable. ∀ and ∃ bind that variable and produce something with a truth value — and both depend entirely on the domain, which is why an unstated domain is an unstated claim." />
   <link rel="canonical" href="https://learn.geterdone.io/logic-and-proof/predicates-and-quantifiers/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Predicates and Quantifiers | Logic and Proof | Learn · geterdone.io" />
-  <meta property="og:description" content="A predicate is a sentence with a free variable. `∀` and `∃` bind that variable and produce something with a truth value &amp;mdash; and both depend entirely on the domain, which is why an unstated domain is an unstated claim." />
+  <meta property="og:description" content="A predicate is a sentence with a free variable. ∀ and ∃ bind that variable and produce something with a truth value — and both depend entirely on the domain, which is why an unstated domain is an unstated claim." />
   <meta property="og:url" content="https://learn.geterdone.io/logic-and-proof/predicates-and-quantifiers/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Predicates and Quantifiers | Logic and Proof | Learn · geterdone.io" />
-  <meta name="twitter:description" content="A predicate is a sentence with a free variable. `∀` and `∃` bind that variable and produce something with a truth value &amp;mdash; and both depend entirely on the domain, which is why an unstated domain is an unstated claim." />
+  <meta name="twitter:description" content="A predicate is a sentence with a free variable. ∀ and ∃ bind that variable and produce something with a truth value — and both depend entirely on the domain, which is why an unstated domain is an unstated claim." />
   <meta name="twitter:url" content="https://learn.geterdone.io/logic-and-proof/predicates-and-quantifiers/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Logic and Proof course home">
         <span class="brand-mark" aria-hidden="true">08</span>
-        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 &amp;middot; Lesson 08 of 14</span></span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 · Lesson 08 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Logic and Proof</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 08 &amp;middot; Predicates and Quantifiers</span>
+      <span class="crumb-current" aria-current="page">Lesson 08 · Predicates and Quantifiers</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ The domain is part of the statement, not context.</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Propositional logic cannot express "every integer has a successor". Predicates and quantifiers are what it takes.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>A predicate becomes a proposition when its variables are bound</h3><p><span class="math">P(x)</span> has no truth value; <span class="math">P(5)</span> and <span class="math">∀x P(x)</span> both do. Binding happens by substitution or by a quantifier.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The domain changes the answer</h3><p><span class="math">∃x (x² = 2)</span> is false over the rationals and true over the reals. Stating the domain is not pedantry &mdash; without it there is no claim.</p></article><article class="card concept-card"><div class="icon">3</div><h3>`∀` over an empty domain is true</h3><p>Vacuous truth again: with nothing to check, nothing fails. Symmetrically, <span class="math">∃</span> over an empty domain is false.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>A predicate becomes a proposition when its variables are bound</h3><p><span class="math">P(x)</span> has no truth value; <span class="math">P(5)</span> and <span class="math">∀x P(x)</span> both do. Binding happens by substitution or by a quantifier.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The domain changes the answer</h3><p><span class="math">∃x (x² = 2)</span> is false over the rationals and true over the reals. Stating the domain is not pedantry &mdash; without it there is no claim.</p></article><article class="card concept-card"><div class="icon">3</div><h3><span class="math">∀</span> over an empty domain is true</h3><p>Vacuous truth again: with nothing to check, nothing fails. Symmetrically, <span class="math">∃</span> over an empty domain is false.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Predicates, domains and the two quantifiers</h2></div><p>What each quantifier asserts, and what it takes to establish or refute it.</p></div>
@@ -993,7 +1024,7 @@ The domain is part of the statement, not context.</div>
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Leaving the domain implicit</strong><span><span class="math">∃x (x² = 2)</span> is false over <span class="math">ℚ</span> and true over <span class="math">ℝ</span>. A quantified statement without a stated domain has no truth value to argue about.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Using `∧` under `∀` for a restriction</strong><span><span class="math">∀x (P(x) ∧ Q(x))</span> says every element of the domain has both properties, which is far stronger than "every <span class="math">P</span> is a <span class="math">Q</span>".</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Using `→` under `∃`</strong><span><span class="math">∃x (P(x) → Q(x))</span> is satisfied by any <span class="math">x</span> failing <span class="math">P</span>, so it is nearly always vacuously true and almost never what was meant.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Leaving the domain implicit</strong><span><span class="math">∃x (x² = 2)</span> is false over <span class="math">ℚ</span> and true over <span class="math">ℝ</span>. A quantified statement without a stated domain has no truth value to argue about.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Using <span class="math">∧</span> under <span class="math">∀</span> for a restriction</strong><span><span class="math">∀x (P(x) ∧ Q(x))</span> says every element of the domain has both properties, which is far stronger than "every <span class="math">P</span> is a <span class="math">Q</span>".</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Using <span class="math">→</span> under <span class="math">∃</span></strong><span><span class="math">∃x (P(x) → Q(x))</span> is satisfied by any <span class="math">x</span> failing <span class="math">P</span>, so it is nearly always vacuously true and almost never what was meant.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when the two restriction patterns are automatic.</strong><p>Translate "every positive even integer greater than 2 is composite" and "some composite number is odd" into symbols, and say for each why the connective inside had to be what it is.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The lab uses a four-element domain so that both quantifiers can be checked exhaustively. That is a luxury of finiteness: over <span class="math">ℕ</span> no amount of checking settles a <span class="math">∀</span>, which is the whole motivation for course 3.</div></article>
       </div>
     </section>

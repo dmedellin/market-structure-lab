@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Learn library">
         <span class="brand-mark" aria-hidden="true">04</span>
-        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 of 8 &amp;middot; Discrete Mathematics path</span></span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 of 8 · Discrete Mathematics path</span></span>
       </a>
 
       <nav class="topnav" aria-label="Primary">
@@ -940,7 +971,7 @@ C(n+r−1, r)                    unordered, with repetition
     </section>
     <section class="section" id="syllabus">
       <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 4 are the basic rules, 5 to 8 the binomial coefficients and repetition, 9 to 11 corrections and bounds, and 12 to 14 the techniques that generalise them.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./sum-and-product-rules/"><div class="num">01</div><div><strong>The Sum and Product Rules</strong><span>Add for alternatives, multiply for stages.</span></div></a><a class="syllabus-item" href="./counting-with-restrictions/"><div class="num">02</div><div><strong>Counting with Restrictions</strong><span>Cases, complements, and the order in which constraints are applied.</span></div></a><a class="syllabus-item" href="./permutations/"><div class="num">03</div><div><strong>Permutations</strong><span>Ordered selections without repetition.</span></div></a><a class="syllabus-item" href="./combinations/"><div class="num">04</div><div><strong>Combinations</strong><span>Unordered selections without repetition.</span></div></a><a class="syllabus-item" href="./binomial-coefficients/"><div class="num">05</div><div><strong>Binomial Coefficients and Pascal&#x27;s Triangle</strong><span>The numbers `C(n, r)`, arranged so their identities become visible.</span></div></a><a class="syllabus-item" href="./the-binomial-theorem/"><div class="num">06</div><div><strong>The Binomial Theorem</strong><span>Why the same numbers count subsets and expand powers.</span></div></a><a class="syllabus-item" href="./permutations-with-repetition/"><div class="num">07</div><div><strong>Permutations with Repetition</strong><span>Arrangements when objects may repeat, or are indistinguishable.</span></div></a><a class="syllabus-item" href="./combinations-with-repetition/"><div class="num">08</div><div><strong>Combinations with Repetition</strong><span>Stars and bars: `C(n + r − 1, r)`.</span></div></a><a class="syllabus-item" href="./inclusion-exclusion/"><div class="num">09</div><div><strong>The Inclusion&amp;ndash;Exclusion Principle</strong><span>Add the sizes, subtract the pairs, add back the triples.</span></div></a><a class="syllabus-item" href="./derangements/"><div class="num">10</div><div><strong>Derangements</strong><span>Permutations with no fixed point, and the surprising limit.</span></div></a><a class="syllabus-item" href="./generalized-pigeonhole/"><div class="num">11</div><div><strong>The Generalised Pigeonhole Principle</strong><span>`⌈n/k⌉` in a box, and what that proves.</span></div></a><a class="syllabus-item" href="./generating-functions/"><div class="num">12</div><div><strong>Generating Functions</strong><span>Encode a sequence as coefficients and let algebra do the counting.</span></div></a><a class="syllabus-item" href="./combinatorial-proof/"><div class="num">13</div><div><strong>Combinatorial Proof</strong><span>Count one set two ways, or biject two sets.</span></div></a><a class="syllabus-item" href="./choosing-a-counting-method/"><div class="num">14</div><div><strong>Choosing a Counting Method</strong><span>The decision procedure, and how to check the answer.</span></div></a></div>
+      <div class="syllabus"><a class="syllabus-item" href="./sum-and-product-rules/"><div class="num">01</div><div><strong>The Sum and Product Rules</strong><span>Add for alternatives, multiply for stages.</span></div></a><a class="syllabus-item" href="./counting-with-restrictions/"><div class="num">02</div><div><strong>Counting with Restrictions</strong><span>Cases, complements, and the order in which constraints are applied.</span></div></a><a class="syllabus-item" href="./permutations/"><div class="num">03</div><div><strong>Permutations</strong><span>Ordered selections without repetition.</span></div></a><a class="syllabus-item" href="./combinations/"><div class="num">04</div><div><strong>Combinations</strong><span>Unordered selections without repetition.</span></div></a><a class="syllabus-item" href="./binomial-coefficients/"><div class="num">05</div><div><strong>Binomial Coefficients and Pascal&#x27;s Triangle</strong><span>The numbers <span class="math">C(n, r)</span>, arranged so their identities become visible.</span></div></a><a class="syllabus-item" href="./the-binomial-theorem/"><div class="num">06</div><div><strong>The Binomial Theorem</strong><span>Why the same numbers count subsets and expand powers.</span></div></a><a class="syllabus-item" href="./permutations-with-repetition/"><div class="num">07</div><div><strong>Permutations with Repetition</strong><span>Arrangements when objects may repeat, or are indistinguishable.</span></div></a><a class="syllabus-item" href="./combinations-with-repetition/"><div class="num">08</div><div><strong>Combinations with Repetition</strong><span>Stars and bars: <span class="math">C(n + r − 1, r)</span>.</span></div></a><a class="syllabus-item" href="./inclusion-exclusion/"><div class="num">09</div><div><strong>The Inclusion-Exclusion Principle</strong><span>Add the sizes, subtract the pairs, add back the triples.</span></div></a><a class="syllabus-item" href="./derangements/"><div class="num">10</div><div><strong>Derangements</strong><span>Permutations with no fixed point, and the surprising limit.</span></div></a><a class="syllabus-item" href="./generalized-pigeonhole/"><div class="num">11</div><div><strong>The Generalised Pigeonhole Principle</strong><span><span class="math">⌈n/k⌉</span> in a box, and what that proves.</span></div></a><a class="syllabus-item" href="./generating-functions/"><div class="num">12</div><div><strong>Generating Functions</strong><span>Encode a sequence as coefficients and let algebra do the counting.</span></div></a><a class="syllabus-item" href="./combinatorial-proof/"><div class="num">13</div><div><strong>Combinatorial Proof</strong><span>Count one set two ways, or biject two sets.</span></div></a><a class="syllabus-item" href="./choosing-a-counting-method/"><div class="num">14</div><div><strong>Choosing a Counting Method</strong><span>The decision procedure, and how to check the answer.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">

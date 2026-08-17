@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Big-O, Big-Omega and Big-Theta | Algorithms and Complexity | Learn · geterdone.io</title>
-  <meta name="description" content="`f(n) = O(g(n))` asserts the existence of a constant `C` and a threshold `k` with `f(n) ≤ Cg(n)` beyond `k`. Proving it means producing them; that is the entire content of the definition." />
+  <meta name="description" content="f(n) = O(g(n)) asserts the existence of a constant C and a threshold k with f(n) ≤ Cg(n) beyond k. Proving it means producing them; that is the entire content of the definition." />
   <link rel="canonical" href="https://learn.geterdone.io/algorithms-and-complexity/big-o-notation/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Big-O, Big-Omega and Big-Theta | Algorithms and Complexity | Learn · geterdone.io" />
-  <meta property="og:description" content="`f(n) = O(g(n))` asserts the existence of a constant `C` and a threshold `k` with `f(n) ≤ Cg(n)` beyond `k`. Proving it means producing them; that is the entire content of the definition." />
+  <meta property="og:description" content="f(n) = O(g(n)) asserts the existence of a constant C and a threshold k with f(n) ≤ Cg(n) beyond k. Proving it means producing them; that is the entire content of the definition." />
   <meta property="og:url" content="https://learn.geterdone.io/algorithms-and-complexity/big-o-notation/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Big-O, Big-Omega and Big-Theta | Algorithms and Complexity | Learn · geterdone.io" />
-  <meta name="twitter:description" content="`f(n) = O(g(n))` asserts the existence of a constant `C` and a threshold `k` with `f(n) ≤ Cg(n)` beyond `k`. Proving it means producing them; that is the entire content of the definition." />
+  <meta name="twitter:description" content="f(n) = O(g(n)) asserts the existence of a constant C and a threshold k with f(n) ≤ Cg(n) beyond k. Proving it means producing them; that is the entire content of the definition." />
   <meta name="twitter:url" content="https://learn.geterdone.io/algorithms-and-complexity/big-o-notation/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Algorithms and Complexity course home">
         <span class="brand-mark" aria-hidden="true">04</span>
-        <span class="brand-copy"><strong>Algorithms and Complexity</strong><span>Course 8 &amp;middot; Lesson 04 of 12</span></span>
+        <span class="brand-copy"><strong>Algorithms and Complexity</strong><span>Course 8 · Lesson 04 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Algorithms and Complexity</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 04 &amp;middot; Big-O, Big-Omega and Big-Theta</span>
+      <span class="crumb-current" aria-current="page">Lesson 04 · Big-O, Big-Omega and Big-Theta</span>
     </nav>
 
     <noscript>
@@ -927,11 +958,11 @@ the proof IS the pair (C, k)</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Each of the three is an existence claim, and each is proved by exhibiting the witnesses.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Big-O is an upper bound and may be loose</h3><p><span class="math">n = O(n²)</span> is true and uninformative. "Is <span class="math">O(n²)</span>" does not mean "grows like <span class="math">n²</span>".</p></article><article class="card concept-card"><div class="icon">2</div><h3>`Θ` is the tight statement</h3><p>Both bounds. It is what should be claimed when the growth is actually known, and the one people usually mean when they say <span class="math">O</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The witnesses are the proof</h3><p>A <span class="math">C</span> and a <span class="math">k</span> that work. Anything else is a restatement of the claim.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Big-O is an upper bound and may be loose</h3><p><span class="math">n = O(n²)</span> is true and uninformative. "Is <span class="math">O(n²)</span>" does not mean "grows like <span class="math">n²</span>".</p></article><article class="card concept-card"><div class="icon">2</div><h3><span class="math">Θ</span> is the tight statement</h3><p>Both bounds. It is what should be claimed when the growth is actually known, and the one people usually mean when they say <span class="math">O</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The witnesses are the proof</h3><p>A <span class="math">C</span> and a <span class="math">k</span> that work. Anything else is a restatement of the claim.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>The three notations</h2></div><p>Definitions, worked proofs, and the properties that shorten later work.</p></div>
-      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Big-O</span><p><span class="math">f(n) = O(g(n))</span> means there are constants <span class="math">C &gt; 0</span> and <span class="math">k</span> such that <span class="math">|f(n)| ≤ C|g(n)|</span> for every <span class="math">n ≥ k</span>. The pair <span class="math">(C, k)</span> is a <strong>witness</strong>.</p></div><div class="defbox"><span class="label">Definition &middot; Big-Omega and Big-Theta</span><p><span class="math">f(n) = Ω(g(n))</span> means <span class="math">|f(n)| ≥ C|g(n)|</span> for some <span class="math">C &gt; 0</span> and all <span class="math">n ≥ k</span>. <span class="math">f(n) = Θ(g(n))</span> means both, so <span class="math">f</span> and <span class="math">g</span> grow at the same rate.</p></div><p>The <span class="math">=</span> is traditional and misleading: these are set memberships, and <span class="math">O(g)</span> is the class of functions bounded above by a multiple of <span class="math">g</span>. <span class="math">f(n) = O(g(n))</span> should be read "<span class="math">f</span> is in <span class="math">O(g)</span>", and it is not symmetric.</p><h3>Proving a bound</h3><div class="example"><span class="label">Example &middot; `3n² + 5n + 100 = O(n²)`</span><p>For <span class="math">n ≥ 1</span> we have <span class="math">n ≤ n²</span> and <span class="math">1 ≤ n²</span>, so <span class="math">3n² + 5n + 100 ≤ 3n² + 5n² + 100n² = 108n²</span>. The witnesses are <span class="math">C = 108</span> and <span class="math">k = 1</span>. Sharper choices exist &mdash; at <span class="math">n ≥ 10</span>, <span class="math">C = 5</span> works &mdash; and any valid pair proves the claim.</p></div><div class="example"><span class="label">Example &middot; `n² ≠ O(n)`</span><p>Suppose <span class="math">n² ≤ Cn</span> for all <span class="math">n ≥ k</span>. Dividing by <span class="math">n</span> gives <span class="math">n ≤ C</span> for all <span class="math">n ≥ k</span>, which is false for <span class="math">n &gt; max(C, k)</span>. No pair of witnesses exists.</p></div><p>That is the shape of a disproof: assume witnesses and derive a contradiction. It is a direct proof of a negation, and course 1 lesson 13 is the technique.</p><h3>Useful properties</h3><div class="mathblock">transitive       f = O(g),  g = O(h)   ⟹   f = O(h)
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Big-O</span><p><span class="math">f(n) = O(g(n))</span> means there are constants <span class="math">C &gt; 0</span> and <span class="math">k</span> such that <span class="math">|f(n)| ≤ C|g(n)|</span> for every <span class="math">n ≥ k</span>. The pair <span class="math">(C, k)</span> is a <strong>witness</strong>.</p></div><div class="defbox"><span class="label">Definition &middot; Big-Omega and Big-Theta</span><p><span class="math">f(n) = Ω(g(n))</span> means <span class="math">|f(n)| ≥ C|g(n)|</span> for some <span class="math">C &gt; 0</span> and all <span class="math">n ≥ k</span>. <span class="math">f(n) = Θ(g(n))</span> means both, so <span class="math">f</span> and <span class="math">g</span> grow at the same rate.</p></div><p>The <span class="math">=</span> is traditional and misleading: these are set memberships, and <span class="math">O(g)</span> is the class of functions bounded above by a multiple of <span class="math">g</span>. <span class="math">f(n) = O(g(n))</span> should be read "<span class="math">f</span> is in <span class="math">O(g)</span>", and it is not symmetric.</p><h3>Proving a bound</h3><div class="example"><span class="label">Example &middot; <span class="math">3n² + 5n + 100 = O(n²)</span></span><p>For <span class="math">n ≥ 1</span> we have <span class="math">n ≤ n²</span> and <span class="math">1 ≤ n²</span>, so <span class="math">3n² + 5n + 100 ≤ 3n² + 5n² + 100n² = 108n²</span>. The witnesses are <span class="math">C = 108</span> and <span class="math">k = 1</span>. Sharper choices exist &mdash; at <span class="math">n ≥ 10</span>, <span class="math">C = 5</span> works &mdash; and any valid pair proves the claim.</p></div><div class="example"><span class="label">Example &middot; <span class="math">n² ≠ O(n)</span></span><p>Suppose <span class="math">n² ≤ Cn</span> for all <span class="math">n ≥ k</span>. Dividing by <span class="math">n</span> gives <span class="math">n ≤ C</span> for all <span class="math">n ≥ k</span>, which is false for <span class="math">n &gt; max(C, k)</span>. No pair of witnesses exists.</p></div><p>That is the shape of a disproof: assume witnesses and derive a contradiction. It is a direct proof of a negation, and course 1 lesson 13 is the technique.</p><h3>Useful properties</h3><div class="mathblock">transitive       f = O(g),  g = O(h)   ⟹   f = O(h)
 sum              f₁ = O(g₁), f₂ = O(g₂) ⟹ f₁+f₂ = O(max(g₁,g₂))
 product          f₁ = O(g₁), f₂ = O(g₂) ⟹ f₁·f₂ = O(g₁·g₂)
 constants        c·f = O(f)   for any constant c &gt; 0
@@ -985,7 +1016,7 @@ logs             log_a n = Θ(log_b n)   — the base is a constant factor</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Proving a big-O claim</h2></div><p>Bound each term, then collect.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Bound every term by a multiple of `g(n)`</h3><p>For <span class="math">n ≥ 1</span>, lower powers are bounded by higher ones. That is usually the whole argument.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Add the coefficients to get `C`</h3><p>Any valid <span class="math">C</span> proves the claim. Optimising it is not required and rarely worth the effort.</p></article><article class="card concept-card"><div class="icon">3</div><h3>State the threshold `k`</h3><p>The bound need only hold beyond it, which is what lets small-<span class="math">n</span> behaviour be ignored.</p></article><article class="card concept-card"><div class="icon">4</div><h3>To disprove, assume witnesses and derive a contradiction</h3><p>Divide through by <span class="math">g(n)</span> and show the resulting bound on <span class="math">n</span> is impossible.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Bound every term by a multiple of <span class="math">g(n)</span></h3><p>For <span class="math">n ≥ 1</span>, lower powers are bounded by higher ones. That is usually the whole argument.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Add the coefficients to get <span class="math">C</span></h3><p>Any valid <span class="math">C</span> proves the claim. Optimising it is not required and rarely worth the effort.</p></article><article class="card concept-card"><div class="icon">3</div><h3>State the threshold <span class="math">k</span></h3><p>The bound need only hold beyond it, which is what lets small-<span class="math">n</span> behaviour be ignored.</p></article><article class="card concept-card"><div class="icon">4</div><h3>To disprove, assume witnesses and derive a contradiction</h3><p>Divide through by <span class="math">g(n)</span> and show the resulting bound on <span class="math">n</span> is impossible.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1013,7 +1044,7 @@ CLAIM   2ⁿ ≠ O(n¹⁰⁰)
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Claiming `O` where `Θ` is meant</strong><span><span class="math">n = O(n²)</span> is true and says almost nothing. If the growth is known, say <span class="math">Θ</span>.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Omitting which case is being bounded</strong><span>Worst, average and best case are different functions. "Quicksort is <span class="math">O(n log n)</span>" is false; "its average case is" is true.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Writing &quot;at least `O(n)`&quot;</strong><span><span class="math">O</span> is already an upper bound. The intended word is <span class="math">Ω</span>.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Claiming <span class="math">O</span> where <span class="math">Θ</span> is meant</strong><span><span class="math">n = O(n²)</span> is true and says almost nothing. If the growth is known, say <span class="math">Θ</span>.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Omitting which case is being bounded</strong><span>Worst, average and best case are different functions. "Quicksort is <span class="math">O(n log n)</span>" is false; "its average case is" is true.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Writing &quot;at least <span class="math">O(n)</span>&quot;</strong><span><span class="math">O</span> is already an upper bound. The intended word is <span class="math">Ω</span>.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you produce witnesses without being asked.</strong><p>Prove <span class="math">5n³ + 2n² + n = O(n³)</span> by exhibiting a <span class="math">C</span> and a <span class="math">k</span>, and then prove <span class="math">n³ ≠ O(n²)</span> by contradiction. The two shapes cover almost every claim you will meet.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The notation is due to Bachmann and Landau, from analytic number theory, and Knuth introduced it to algorithm analysis. The abuse of <span class="math">=</span> is his too, and it is now unfixable.</div></article>
       </div>
     </section>

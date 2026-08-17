@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mathematical Induction | Induction and Recursion | Learn · geterdone.io</title>
-  <meta name="description" content="The technique in full: what each part does, how to write it, and the three ways an induction proof is wrong &amp;mdash; no base case, an unused hypothesis, and a step proved only for a particular `k`." />
+  <meta name="description" content="The technique in full: what each part does, how to write it, and the three ways an induction proof is wrong — no base case, an unused hypothesis, and a step proved only for a particular k." />
   <link rel="canonical" href="https://learn.geterdone.io/induction-and-recursion/mathematical-induction/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Mathematical Induction | Induction and Recursion | Learn · geterdone.io" />
-  <meta property="og:description" content="The technique in full: what each part does, how to write it, and the three ways an induction proof is wrong &amp;mdash; no base case, an unused hypothesis, and a step proved only for a particular `k`." />
+  <meta property="og:description" content="The technique in full: what each part does, how to write it, and the three ways an induction proof is wrong — no base case, an unused hypothesis, and a step proved only for a particular k." />
   <meta property="og:url" content="https://learn.geterdone.io/induction-and-recursion/mathematical-induction/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Mathematical Induction | Induction and Recursion | Learn · geterdone.io" />
-  <meta name="twitter:description" content="The technique in full: what each part does, how to write it, and the three ways an induction proof is wrong &amp;mdash; no base case, an unused hypothesis, and a step proved only for a particular `k`." />
+  <meta name="twitter:description" content="The technique in full: what each part does, how to write it, and the three ways an induction proof is wrong — no base case, an unused hypothesis, and a step proved only for a particular k." />
   <meta name="twitter:url" content="https://learn.geterdone.io/induction-and-recursion/mathematical-induction/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Induction and Recursion course home">
         <span class="brand-mark" aria-hidden="true">02</span>
-        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 &amp;middot; Lesson 02 of 12</span></span>
+        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 · Lesson 02 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Induction and Recursion</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 02 &amp;middot; Mathematical Induction</span>
+      <span class="crumb-current" aria-current="page">Lesson 02 · Mathematical Induction</span>
     </nav>
 
     <noscript>
@@ -927,11 +958,11 @@ The step must USE P(k). A step that does not is not induction.</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Induction proves infinitely many statements by proving two: one specific case, and one implication that holds generally.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The step is a conditional, proved for arbitrary `k`</h3><p>You are not assuming <span class="math">P(k)</span> is true for all <span class="math">k</span>. You are proving the implication <span class="math">P(k) → P(k+1)</span>, which is a direct proof of a conditional.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The base case anchors the chain</h3><p>Without it the implications form a chain with nothing at the start. <span class="math">n = k+1</span> provable from <span class="math">n = k</span> proves nothing on its own.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The hypothesis must actually be used</h3><p>If the step never invokes <span class="math">P(k)</span>, you have proved <span class="math">P(k+1)</span> outright and written induction around a direct proof. That is usually a sign the statement was easier than it looked &mdash; or that the proof is wrong.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The step is a conditional, proved for arbitrary <span class="math">k</span></h3><p>You are not assuming <span class="math">P(k)</span> is true for all <span class="math">k</span>. You are proving the implication <span class="math">P(k) → P(k+1)</span>, which is a direct proof of a conditional.</p></article><article class="card concept-card"><div class="icon">2</div><h3>The base case anchors the chain</h3><p>Without it the implications form a chain with nothing at the start. <span class="math">n = k+1</span> provable from <span class="math">n = k</span> proves nothing on its own.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The hypothesis must actually be used</h3><p>If the step never invokes <span class="math">P(k)</span>, you have proved <span class="math">P(k+1)</span> outright and written induction around a direct proof. That is usually a sign the statement was easier than it looked &mdash; or that the proof is wrong.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>The technique</h2></div><p>The three parts, the standard example, and the three failure modes.</p></div>
-      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Principle of mathematical induction</span><p>Let <span class="math">P(n)</span> be a statement about integers <span class="math">n ≥ n₀</span>. If <span class="math">P(n₀)</span> holds, and <span class="math">P(k) → P(k+1)</span> for every <span class="math">k ≥ n₀</span>, then <span class="math">P(n)</span> holds for every <span class="math">n ≥ n₀</span>.</p></div><p>The domino picture is standard and slightly misleading. It is right that the base case tips the first domino and the step is the guarantee that each knocks over the next. It is misleading in suggesting a process that takes time: the conclusion is not that every <span class="math">P(n)</span> will eventually be proved, but that every <span class="math">P(n)</span> is true.</p><div class="thm"><span class="label">Theorem &middot; Sum of the first `n` positive integers</span><p>For every <span class="math">n ≥ 1</span>, <span class="math">1 + 2 + ⋯ + n = n(n+1)/2</span>.</p></div><div class="proof"><p><strong>Base case.</strong> For <span class="math">n = 1</span> the left side is 1 and the right is <span class="math">1 · 2 / 2 = 1</span>. They agree.</p><p><strong>Inductive step.</strong> Let <span class="math">k ≥ 1</span> be arbitrary and assume <span class="math">1 + 2 + ⋯ + k = k(k+1)/2</span> &mdash; the inductive hypothesis. Then</p><p><span class="math">1 + 2 + ⋯ + k + (k+1) = k(k+1)/2 + (k+1)</span> &mdash; here the hypothesis was used to replace the first <span class="math">k</span> terms &mdash; <span class="math">= (k+1)(k+2)/2</span>, which is the claim at <span class="math">k+1</span>.</p><p><strong>Conclusion.</strong> By induction the formula holds for every <span class="math">n ≥ 1</span>.</p><p><span class="qed">&#9633;</span></p></div><p>The sentence "here the hypothesis was used" is not padding. It is the sentence a reader checks for, and a proof that cannot point to it is not an induction proof.</p><h3>Three ways to get it wrong</h3><ul><li><strong>No base case.</strong> Consider <span class="math">P(n)</span>: "<span class="math">n = n + 1</span>". The step is fine &mdash; if <span class="math">k = k+1</span> then adding 1 gives <span class="math">k+1 = k+2</span> &mdash; and the statement is false for every <span class="math">n</span>. The base case is what fails.</li><li><strong>The hypothesis is never used.</strong> If the step proves <span class="math">P(k+1)</span> from scratch, the proof is a direct proof with an induction wrapper. Not wrong, but not induction &mdash; and often it means the step was misread.</li><li><strong>The step is proved for one <span class="math">k</span>.</strong> Verifying <span class="math">P(3) → P(4)</span> is not the inductive step. <span class="math">k</span> must be arbitrary, exactly as in any universally quantified proof.</li></ul><div class="example"><span class="label">Example &middot; The classic bogus proof</span><p>"All horses are the same colour." Base: one horse, trivially. Step: given <span class="math">k+1</span> horses, the first <span class="math">k</span> are the same colour by hypothesis, and the last <span class="math">k</span> are too, so all <span class="math">k+1</span> agree. The flaw is at <span class="math">k = 1</span>: the two groups of one horse do not overlap, so nothing links them. The step fails for exactly one value of <span class="math">k</span>, and one failure breaks the chain.</p></div><p>That example is worth more than its joke. It shows that an inductive step can be correct for every <span class="math">k</span> but one, and that the whole proof collapses at that point. Checking the step at the smallest values is a cheap and effective habit.</p></article>
+      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Principle of mathematical induction</span><p>Let <span class="math">P(n)</span> be a statement about integers <span class="math">n ≥ n₀</span>. If <span class="math">P(n₀)</span> holds, and <span class="math">P(k) → P(k+1)</span> for every <span class="math">k ≥ n₀</span>, then <span class="math">P(n)</span> holds for every <span class="math">n ≥ n₀</span>.</p></div><p>The domino picture is standard and slightly misleading. It is right that the base case tips the first domino and the step is the guarantee that each knocks over the next. It is misleading in suggesting a process that takes time: the conclusion is not that every <span class="math">P(n)</span> will eventually be proved, but that every <span class="math">P(n)</span> is true.</p><div class="thm"><span class="label">Theorem &middot; Sum of the first <span class="math">n</span> positive integers</span><p>For every <span class="math">n ≥ 1</span>, <span class="math">1 + 2 + ⋯ + n = n(n+1)/2</span>.</p></div><div class="proof"><p><strong>Base case.</strong> For <span class="math">n = 1</span> the left side is 1 and the right is <span class="math">1 · 2 / 2 = 1</span>. They agree.</p><p><strong>Inductive step.</strong> Let <span class="math">k ≥ 1</span> be arbitrary and assume <span class="math">1 + 2 + ⋯ + k = k(k+1)/2</span> &mdash; the inductive hypothesis. Then</p><p><span class="math">1 + 2 + ⋯ + k + (k+1) = k(k+1)/2 + (k+1)</span> &mdash; here the hypothesis was used to replace the first <span class="math">k</span> terms &mdash; <span class="math">= (k+1)(k+2)/2</span>, which is the claim at <span class="math">k+1</span>.</p><p><strong>Conclusion.</strong> By induction the formula holds for every <span class="math">n ≥ 1</span>.</p><p><span class="qed">&#9633;</span></p></div><p>The sentence "here the hypothesis was used" is not padding. It is the sentence a reader checks for, and a proof that cannot point to it is not an induction proof.</p><h3>Three ways to get it wrong</h3><ul><li><strong>No base case.</strong> Consider <span class="math">P(n)</span>: "<span class="math">n = n + 1</span>". The step is fine &mdash; if <span class="math">k = k+1</span> then adding 1 gives <span class="math">k+1 = k+2</span> &mdash; and the statement is false for every <span class="math">n</span>. The base case is what fails.</li><li><strong>The hypothesis is never used.</strong> If the step proves <span class="math">P(k+1)</span> from scratch, the proof is a direct proof with an induction wrapper. Not wrong, but not induction &mdash; and often it means the step was misread.</li><li><strong>The step is proved for one <span class="math">k</span>.</strong> Verifying <span class="math">P(3) → P(4)</span> is not the inductive step. <span class="math">k</span> must be arbitrary, exactly as in any universally quantified proof.</li></ul><div class="example"><span class="label">Example &middot; The classic bogus proof</span><p>"All horses are the same colour." Base: one horse, trivially. Step: given <span class="math">k+1</span> horses, the first <span class="math">k</span> are the same colour by hypothesis, and the last <span class="math">k</span> are too, so all <span class="math">k+1</span> agree. The flaw is at <span class="math">k = 1</span>: the two groups of one horse do not overlap, so nothing links them. The step fails for exactly one value of <span class="math">k</span>, and one failure breaks the chain.</p></div><p>That example is worth more than its joke. It shows that an inductive step can be correct for every <span class="math">k</span> but one, and that the whole proof collapses at that point. Checking the step at the smallest values is a cheap and effective habit.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Check P(n), then notice checking is not proving</h2></div><p>Two of these statements are false</p></div>
@@ -966,7 +997,7 @@ The step must USE P(k). A step that does not is not induction.</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Writing an induction proof</h2></div><p>Four sentences, in this order, every time.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>State `P(n)` precisely</h3><p>Write the statement being proved as a formula in <span class="math">n</span>. Vague statements produce proofs that cannot be checked.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Prove the base case</h3><p>Evaluate both sides at <span class="math">n₀</span> and show they agree. Say which <span class="math">n₀</span> you are using, especially when it is not 1.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Assume `P(k)` for arbitrary `k ≥ n₀`, and say so</h3><p>Write the hypothesis out in full. A hypothesis you did not write is one you will not notice failing to use.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Derive `P(k+1)`, pointing at where the hypothesis entered</h3><p>The algebra usually splits off the <span class="math">(k+1)</span> term and replaces the rest using the hypothesis. Name that substitution.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>State <span class="math">P(n)</span> precisely</h3><p>Write the statement being proved as a formula in <span class="math">n</span>. Vague statements produce proofs that cannot be checked.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Prove the base case</h3><p>Evaluate both sides at <span class="math">n₀</span> and show they agree. Say which <span class="math">n₀</span> you are using, especially when it is not 1.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Assume <span class="math">P(k)</span> for arbitrary <span class="math">k ≥ n₀</span>, and say so</h3><p>Write the hypothesis out in full. A hypothesis you did not write is one you will not notice failing to use.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Derive <span class="math">P(k+1)</span>, pointing at where the hypothesis entered</h3><p>The algebra usually splits off the <span class="math">(k+1)</span> term and replaces the rest using the hypothesis. Name that substitution.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -977,7 +1008,7 @@ The step must USE P(k). A step that does not is not induction.</div>
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>Prove `1 + 3 + 5 + ⋯ + (2n − 1) = n²`</h3><p>The sum of the first <span class="math">n</span> odd numbers.</p><div class="mathblock">BASE   n = 1:   left = 1,   right = 1² = 1.     ✓
+      <article class="card card-pad prose"><h3>Prove <span class="math">1 + 3 + 5 + ⋯ + (2n − 1) = n²</span></h3><p>The sum of the first <span class="math">n</span> odd numbers.</p><div class="mathblock">BASE   n = 1:   left = 1,   right = 1² = 1.     ✓
 
 STEP   Let k ≥ 1 and assume  1 + 3 + … + (2k−1) = k².
 

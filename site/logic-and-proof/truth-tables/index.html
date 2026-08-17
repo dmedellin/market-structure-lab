@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Truth Tables | Logic and Proof | Learn · geterdone.io</title>
-  <meta name="description" content="A truth table lists every assignment of truth values to the variables and evaluates the formula at each. It is finite, mechanical and complete &amp;mdash; and it is the only tool in this course that can never be wrong." />
+  <meta name="description" content="A truth table lists every assignment of truth values to the variables and evaluates the formula at each. It is finite, mechanical and complete — and it is the only tool in this course that can never be wrong." />
   <link rel="canonical" href="https://learn.geterdone.io/logic-and-proof/truth-tables/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Truth Tables | Logic and Proof | Learn · geterdone.io" />
-  <meta property="og:description" content="A truth table lists every assignment of truth values to the variables and evaluates the formula at each. It is finite, mechanical and complete &amp;mdash; and it is the only tool in this course that can never be wrong." />
+  <meta property="og:description" content="A truth table lists every assignment of truth values to the variables and evaluates the formula at each. It is finite, mechanical and complete — and it is the only tool in this course that can never be wrong." />
   <meta property="og:url" content="https://learn.geterdone.io/logic-and-proof/truth-tables/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Truth Tables | Logic and Proof | Learn · geterdone.io" />
-  <meta name="twitter:description" content="A truth table lists every assignment of truth values to the variables and evaluates the formula at each. It is finite, mechanical and complete &amp;mdash; and it is the only tool in this course that can never be wrong." />
+  <meta name="twitter:description" content="A truth table lists every assignment of truth values to the variables and evaluates the formula at each. It is finite, mechanical and complete — and it is the only tool in this course that can never be wrong." />
   <meta name="twitter:url" content="https://learn.geterdone.io/logic-and-proof/truth-tables/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Logic and Proof course home">
         <span class="brand-mark" aria-hidden="true">03</span>
-        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 &amp;middot; Lesson 03 of 14</span></span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 · Lesson 03 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Logic and Proof</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 03 &amp;middot; Truth Tables</span>
+      <span class="crumb-current" aria-current="page">Lesson 03 · Truth Tables</span>
     </nav>
 
     <noscript>
@@ -926,11 +957,11 @@ The table is COMPLETE: it checks every possible case.</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Truth tables are the ground truth of propositional logic. Every later shortcut is justified by the fact that a table would agree.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The number of rows is `2ⁿ`</h3><p>Each variable doubles the cases. Three variables give 8 rows, five give 32. This growth is why lesson 5's equivalence laws are worth having.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Columns go inside out</h3><p>Evaluate the innermost subexpressions first and build outward, exactly as you would evaluate an arithmetic expression.</p></article><article class="card concept-card"><div class="icon">3</div><h3>A table settles the question completely</h3><p>If two formulas agree in every row they are equivalent, full stop. There is nothing further to check, because the rows are all the cases there are.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The number of rows is <span class="math">2ⁿ</span></h3><p>Each variable doubles the cases. Three variables give 8 rows, five give 32. This growth is why lesson 5's equivalence laws are worth having.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Columns go inside out</h3><p>Evaluate the innermost subexpressions first and build outward, exactly as you would evaluate an arithmetic expression.</p></article><article class="card concept-card"><div class="icon">3</div><h3>A table settles the question completely</h3><p>If two formulas agree in every row they are equivalent, full stop. There is nothing further to check, because the rows are all the cases there are.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Building a truth table</h2></div><p>Rows first, then columns, then read the answer off the last one.</p></div>
-      <article class="card card-pad prose"><p>A truth table for a formula with variables <span class="math">p₁ … pₙ</span> has one row per assignment of truth values to those variables. Since each variable takes two values independently, there are <span class="math">2ⁿ</span> rows &mdash; a fact that is really the product rule of counting, which course 4 makes explicit.</p><p>The conventional row order lists <span class="math">T</span> before <span class="math">F</span> and varies the rightmost variable fastest, so with two variables the rows read <span class="math">TT</span>, <span class="math">TF</span>, <span class="math">FT</span>, <span class="math">FF</span>. Any order works; a consistent one lets two tables be compared line by line.</p><div class="defbox"><span class="label">Definition &middot; Truth table</span><p>A table with one row per assignment of truth values to the variables of a formula, and one column per subexpression, ending with the value of the whole formula in that assignment.</p></div><p>The intermediate columns are not decoration. They are where a mistake is caught: if the final column looks wrong, the subexpression columns tell you exactly which step produced it.</p><div class="example"><span class="label">Example &middot; Building `¬(p ∧ q)` step by step</span><p>First a column for <span class="math">p ∧ q</span> (true in one row of four), then negate it (true in three). Compare with the column for <span class="math">¬p ∨ ¬q</span>: same four values. That agreement is De Morgan's law, and the table is its proof.</p></div><div class="thm"><span class="label">Theorem &middot; Truth tables are complete for propositional logic</span><p>Any question about a formula built from <span class="math">¬ ∧ ∨ → ↔ ⊕</span> &mdash; is it always true, is it ever true, is it equivalent to this other one &mdash; is answered by its truth table. There is no propositional question a table leaves open.</p></div><p>The catch is size, not correctness. Ten variables give 1024 rows and twenty give over a million; deciding whether a large formula is satisfiable is the canonical hard problem of computer science, and course 8 returns to it by name.</p></article>
+      <article class="card card-pad prose"><p>A truth table for a formula with variables <span class="math">p₁ … pₙ</span> has one row per assignment of truth values to those variables. Since each variable takes two values independently, there are <span class="math">2ⁿ</span> rows &mdash; a fact that is really the product rule of counting, which course 4 makes explicit.</p><p>The conventional row order lists <span class="math">T</span> before <span class="math">F</span> and varies the rightmost variable fastest, so with two variables the rows read <span class="math">TT</span>, <span class="math">TF</span>, <span class="math">FT</span>, <span class="math">FF</span>. Any order works; a consistent one lets two tables be compared line by line.</p><div class="defbox"><span class="label">Definition &middot; Truth table</span><p>A table with one row per assignment of truth values to the variables of a formula, and one column per subexpression, ending with the value of the whole formula in that assignment.</p></div><p>The intermediate columns are not decoration. They are where a mistake is caught: if the final column looks wrong, the subexpression columns tell you exactly which step produced it.</p><div class="example"><span class="label">Example &middot; Building <span class="math">¬(p ∧ q)</span> step by step</span><p>First a column for <span class="math">p ∧ q</span> (true in one row of four), then negate it (true in three). Compare with the column for <span class="math">¬p ∨ ¬q</span>: same four values. That agreement is De Morgan's law, and the table is its proof.</p></div><div class="thm"><span class="label">Theorem &middot; Truth tables are complete for propositional logic</span><p>Any question about a formula built from <span class="math">¬ ∧ ∨ → ↔ ⊕</span> &mdash; is it always true, is it ever true, is it equivalent to this other one &mdash; is answered by its truth table. There is no propositional question a table leaves open.</p></div><p>The catch is size, not correctness. Ten variables give 1024 rows and twenty give over a million; deciding whether a large formula is satisfiable is the canonical hard problem of computer science, and course 8 returns to it by name.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Truth table</h2></div><p>Every assignment, evaluated</p></div>
@@ -975,7 +1006,7 @@ The table is COMPLETE: it checks every possible case.</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Constructing a table by hand</h2></div><p>Five minutes of setup saves the errors that come from improvising.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Count the variables and write `2ⁿ` rows</h3><p>Three variables means eight rows. Getting this wrong at the start guarantees a wrong answer at the end.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Fill the variable columns systematically</h3><p>Rightmost alternates every row, next every two rows, next every four. The pattern makes a missing row visible.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Add one column per subexpression</h3><p>Innermost first. Each new column should depend only on columns already written.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Read the last column</h3><p>All <span class="math">T</span> is a tautology, all <span class="math">F</span> a contradiction, a mixture is contingent &mdash; the vocabulary of lesson 6.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Count the variables and write <span class="math">2ⁿ</span> rows</h3><p>Three variables means eight rows. Getting this wrong at the start guarantees a wrong answer at the end.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Fill the variable columns systematically</h3><p>Rightmost alternates every row, next every two rows, next every four. The pattern makes a missing row visible.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Add one column per subexpression</h3><p>Innermost first. Each new column should depend only on columns already written.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Read the last column</h3><p>All <span class="math">T</span> is a tautology, all <span class="math">F</span> a contradiction, a mixture is contingent &mdash; the vocabulary of lesson 6.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -986,7 +1017,7 @@ The table is COMPLETE: it checks every possible case.</div>
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>`p → (q ∨ r)`, in full</h3><p>Three variables, so eight rows, and two subexpression columns.</p><div class="mathblock">p  q  r  |  q∨r  |  p → (q∨r)
+      <article class="card card-pad prose"><h3><span class="math">p → (q ∨ r)</span>, in full</h3><p>Three variables, so eight rows, and two subexpression columns.</p><div class="mathblock">p  q  r  |  q∨r  |  p → (q∨r)
 -------------------------------
 T  T  T  |   T   |     T
 T  T  F  |   T   |     T
@@ -1000,7 +1031,7 @@ F  F  F  |   F   |     T   ← false hypothesis, true conditional</div><p>Two ro
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Writing fewer than `2ⁿ` rows</strong><span>A missing row is a case you have not checked, and it is exactly the case that a counterexample tends to live in.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Evaluating outside in</strong><span><span class="math">¬(p ∧ q)</span> is not <span class="math">¬p ∧ ¬q</span>. Building the inner column first makes that impossible to get wrong; jumping to the outer connective does not.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reusing a row order inconsistently between two tables</strong><span>If you are comparing two formulas, the rows must be in the same order or the comparison is meaningless. The lab pins the order for this reason.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Writing fewer than <span class="math">2ⁿ</span> rows</strong><span>A missing row is a case you have not checked, and it is exactly the case that a counterexample tends to live in.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Evaluating outside in</strong><span><span class="math">¬(p ∧ q)</span> is not <span class="math">¬p ∧ ¬q</span>. Building the inner column first makes that impossible to get wrong; jumping to the outer connective does not.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reusing a row order inconsistently between two tables</strong><span>If you are comparing two formulas, the rows must be in the same order or the comparison is meaningless. The lab pins the order for this reason.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can build a three-variable table without hesitating over the row pattern.</strong><p>Take <span class="math">(p → q) ∧ (q → r)</span> and produce all eight rows with the two conditionals as separate columns. If the row pattern is automatic, the rest of this course is bookkeeping.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The lab's subexpression columns are generated from the parsed formula, so they appear in evaluation order rather than in an order someone chose. That is also why an ill-formed formula is rejected rather than guessed at.</div></article>
       </div>
     </section>

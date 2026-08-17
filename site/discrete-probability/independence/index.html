@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Independence | Discrete Probability | Learn · geterdone.io</title>
-  <meta name="description" content="Independence is an equation, not a story about causation. Two events are independent when conditioning on one does not change the other &amp;mdash; and checking that means checking the equation." />
+  <meta name="description" content="Independence is an equation, not a story about causation. Two events are independent when conditioning on one does not change the other — and checking that means checking the equation." />
   <link rel="canonical" href="https://learn.geterdone.io/discrete-probability/independence/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Independence | Discrete Probability | Learn · geterdone.io" />
-  <meta property="og:description" content="Independence is an equation, not a story about causation. Two events are independent when conditioning on one does not change the other &amp;mdash; and checking that means checking the equation." />
+  <meta property="og:description" content="Independence is an equation, not a story about causation. Two events are independent when conditioning on one does not change the other — and checking that means checking the equation." />
   <meta property="og:url" content="https://learn.geterdone.io/discrete-probability/independence/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Independence | Discrete Probability | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Independence is an equation, not a story about causation. Two events are independent when conditioning on one does not change the other &amp;mdash; and checking that means checking the equation." />
+  <meta name="twitter:description" content="Independence is an equation, not a story about causation. Two events are independent when conditioning on one does not change the other — and checking that means checking the equation." />
   <meta name="twitter:url" content="https://learn.geterdone.io/discrete-probability/independence/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Discrete Probability course home">
         <span class="brand-mark" aria-hidden="true">05</span>
-        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 &amp;middot; Lesson 05 of 12</span></span>
+        <span class="brand-copy"><strong>Discrete Probability</strong><span>Course 5 · Lesson 05 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Discrete Probability</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 05 &amp;middot; Independence</span>
+      <span class="crumb-current" aria-current="page">Lesson 05 · Independence</span>
     </nav>
 
     <noscript>
@@ -975,7 +1006,7 @@ pairwise independent ⇏ mutually independent</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Checking independence</h2></div><p>Compute three numbers and compare two of them.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Compute `P(A)`, `P(B)` and `P(A ∩ B)`</h3><p>All three, exactly. Estimating any of them defeats the check.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compare `P(A ∩ B)` with `P(A)P(B)`</h3><p>Equal means independent. This is the definition and there is no other test.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Do not reason from the story</h3><p>Physical separation does not imply independence and shared causes do not preclude it. The example with the sum of two dice settles that.</p></article><article class="card concept-card"><div class="icon">4</div><h3>For several events, check every subset</h3><p>Pairwise independence does not give mutual independence. All <span class="math">2ⁿ − n − 1</span> conditions are required.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Compute <span class="math">P(A)</span>, <span class="math">P(B)</span> and <span class="math">P(A ∩ B)</span></h3><p>All three, exactly. Estimating any of them defeats the check.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compare <span class="math">P(A ∩ B)</span> with <span class="math">P(A)P(B)</span></h3><p>Equal means independent. This is the definition and there is no other test.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Do not reason from the story</h3><p>Physical separation does not imply independence and shared causes do not preclude it. The example with the sum of two dice settles that.</p></article><article class="card concept-card"><div class="icon">4</div><h3>For several events, check every subset</h3><p>Pairwise independence does not give mutual independence. All <span class="math">2ⁿ − n − 1</span> conditions are required.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">

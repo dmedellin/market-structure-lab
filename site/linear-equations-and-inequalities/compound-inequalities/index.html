@@ -1,0 +1,3161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compound Inequalities | Linear Equations and Inequalities | Learn · geterdone.io</title>
+  <meta name="description" content="Two inequalities joined by a word. And keeps the numbers satisfying both, which is the intersection of the two solution sets; or keeps the numbers satisfying at least one, which is the union. Everything else is lesson 9 done twice." />
+  <link rel="canonical" href="https://learn.geterdone.io/linear-equations-and-inequalities/compound-inequalities/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Compound Inequalities | Linear Equations and Inequalities | Learn · geterdone.io" />
+  <meta property="og:description" content="Two inequalities joined by a word. And keeps the numbers satisfying both, which is the intersection of the two solution sets; or keeps the numbers satisfying at least one, which is the union. Everything else is lesson 9 done twice." />
+  <meta property="og:url" content="https://learn.geterdone.io/linear-equations-and-inequalities/compound-inequalities/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Compound Inequalities | Linear Equations and Inequalities | Learn · geterdone.io" />
+  <meta name="twitter:description" content="Two inequalities joined by a word. And keeps the numbers satisfying both, which is the intersection of the two solution sets; or keeps the numbers satisfying at least one, which is the union. Everything else is lesson 9 done twice." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/linear-equations-and-inequalities/compound-inequalities/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Linear Equations and Inequalities course home">
+        <span class="brand-mark" aria-hidden="true">10</span>
+        <span class="brand-copy"><strong>Linear Equations and Inequalities</strong><span>Course 2 · Lesson 10 of 13</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Linear Equations and Inequalities</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 10 · Compound Inequalities</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The and, or, and the line is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 2 &middot; Lesson 10 &middot; Inequalities</span>
+        <h1>Compound Inequalities</h1>
+        <p>Two inequalities joined by a word. <em>And</em> keeps the numbers satisfying both, which is the intersection of the two solution sets; <em>or</em> keeps the numbers satisfying at least one, which is the union. Everything else is lesson 9 done twice.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">A and B      both true         intersection    ∩
+A or  B      at least one      union           ∪
+a &lt; x &lt; b    means  a &lt; x  AND  x &lt; b          never an or
+x &lt; 4 or x &gt; 1   is every real number</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Two connectors, two set operations</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>The solving is lesson 9. The lesson is what the connecting word does to two answers once you have them.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>And is intersection</h3><p><span class="math">x ≥ 2 and x &lt; 4</span> is true at exactly the numbers lying in both solution sets. Solve the two statements separately, then keep the overlap. That overlap can be an interval, one of the two sets entire, a single number, or nothing at all.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Or is inclusive</h3><p><span class="math">A or B</span> is true when <span class="math">A</span> holds, when <span class="math">B</span> holds, and when both hold. Mathematical <em>or</em> is never exclusive, and that is why <span class="math">x &lt; 4 or x &gt; 1</span> is every real number rather than the numbers outside the overlap.</p></article><article class="card concept-card"><div class="icon">3</div><h3>The three-part form always means and</h3><p><span class="math">3 &lt; 2x + 1 ≤ 9</span> is a compact way of writing two statements that hold together. There is no corresponding compact form for <em>or</em>, and inventing one produces a statement describing nothing at all.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Both, or at least one</h2></div><p>Solving two inequalities at once, combining the two answers, and the shapes the combination can take.</p></div>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Compound inequality</span><p>A <strong>compound inequality</strong> is two inequalities joined by <em>and</em> or by <em>or</em>. Its solution set is the <strong>intersection</strong> of the two solution sets when the connector is <em>and</em>, and their <strong>union</strong> when the connector is <em>or</em>.</p><p><span class="math">∩</span> denotes intersection, the numbers lying in both sets. <span class="math">∪</span> denotes union, the numbers lying in at least one.</p></div><p>The method is the definition. Solve each inequality on its own by lesson 9, draw both solution sets against the same number line, and read off the overlap or the combination. Almost every error in this lesson is an error made before the drawing or instead of it.</p><h3>The three-part form</h3><p>When both statements trap the variable between two numbers they are usually written as one. <span class="math">3 &lt; 2x + 1 ≤ 9</span> means <span class="math">3 &lt; 2x + 1</span> and <span class="math">2x + 1 ≤ 9</span>. It is solved by operating on all three parts at once.</p><div class="mathblock">3  &lt;  2x + 1  ≤  9
+
+subtract 1      2  &lt;  2x  ≤  8
+divide by 2     1  &lt;   x  ≤  4
+
+check   x = 2    2(2) + 1 = 5      3 &lt; 5 ≤ 9     ✓
+        x = 1    2(1) + 1 = 3      3 &lt; 3         false  ✓
+        x = 4    2(4) + 1 = 9          9 ≤ 9     ✓</div><p>Every operation applies to all three parts, because each of the two statements the compact form stands for needs it. Operating on two parts and forgetting the third breaks the equivalence, and there is nothing on the page to warn you.</p><p>The compact form is usable only when the connector is <em>and</em> and the variable sits alone in the middle. <span class="math">x &lt; −2 or x ≥ 3</span> cannot be compressed: writing <span class="math">3 ≤ x &lt; −2</span> asks for a number that is at once at least 3 and below −2, and there is none. The compact form for that solution set is <span class="math">(−∞, −2) ∪ [3, ∞)</span>, and lesson 13 is about it.</p><h3>The four shapes an intersection can take</h3><ul><li><strong>An interval.</strong> <span class="math">x ≥ 2 and x &lt; 4</span> gives the numbers from 2 up to but not including 4.</li><li><strong>One of the two, entire.</strong> <span class="math">x &gt; 1 and x &gt; 5</span> gives <span class="math">x &gt; 5</span>. The stronger condition already implies the weaker one, so the weaker one adds nothing.</li><li><strong>A single number.</strong> <span class="math">x ≥ 3 and x ≤ 3</span> is true only at <span class="math">x = 3</span>.</li><li><strong>Nothing.</strong> <span class="math">x &gt; 5 and x &lt; 2</span> has no solutions. The empty set is a legitimate answer and is written <span class="math">∅</span>.</li></ul><h3>The three shapes a union can take</h3><ul><li><strong>Two separated pieces.</strong> <span class="math">x &lt; −2 or x ≥ 3</span>. Most absolute-value inequalities land here, which is what lesson 12 is about.</li><li><strong>One piece.</strong> <span class="math">x &lt; 4 or x &lt; 1</span> is <span class="math">x &lt; 4</span>, because everything in the second set is already in the first.</li><li><strong>Every real number.</strong> <span class="math">x &lt; 4 or x &gt; 1</span>. Take any number: if it is below 4 the first statement holds, and if it is not below 4 then it is at least 4, so it is above 1 and the second holds. Nothing is left out.</li></ul><div class="example"><span class="label">Example &middot; Two statements, both connectors</span><p><span class="math">2x + 1 ≥ 5</span> solves to <span class="math">x ≥ 2</span>, and <span class="math">x − 4 &lt; 0</span> solves to <span class="math">x &lt; 4</span>. Joined by <em>and</em> the answer is <span class="math">2 ≤ x &lt; 4</span>. Joined by <em>or</em> the answer is every real number, because a number below 2 satisfies the second and a number at or above 2 satisfies the first. Same two statements; the connector alone decides.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>And, or, and the line</h2></div><p>Two statements at once: overlap or gather</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="iqTitle">a statement to solve</strong><span id="iqSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>the solution set</span><span class="tone-green"><i class="legend-swatch"></i>satisfies the statement</span><span class="tone-red"><i class="legend-swatch"></i>fails it</span></div>
+      </div>
+      <p class="small-copy" style="margin:10px 0 4px;">the first statement</p>
+      <div class="lab-stage"><svg id="iqLineA"></svg></div>
+      <p class="small-copy" style="margin:10px 0 4px;">the second statement</p>
+      <div class="lab-stage"><svg id="iqLineB"></svg></div>
+      <p class="small-copy" style="margin:10px 0 4px;">the two of them together</p>
+      <div class="lab-stage"><svg id="iqLine"></svg></div>
+      <div id="iqWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="iqStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Two statements, three number lines</h3>
+          <p>The lab draws each solution set and then the combination, so the overlap is something you see rather than something you are told. Solve one pair with <span class="math">and</span>, then switch the connector to <span class="math">or</span> and change nothing else.</p>
+        <div class="field">
+          <label for="iqPreset">Statement</label>
+          <select id="iqPreset"><option value="3|lt|2x + 1|and|2x + 1|le|9">3 < 2x + 1  and  2x + 1 <= 9</option><option value="2x + 1|ge|5|and|x - 4|lt|0">2x + 1 >= 5  and  x - 4 < 0</option><option value="x|gt|5|and|x|lt|2">x > 5  and  x < 2</option><option value="x|ge|3|and|x|le|3">x >= 3  and  x <= 3</option><option value="x|lt|-2|or|x|ge|3">x < -2  or  x >= 3</option><option value="x|lt|4|or|x|gt|1">x < 4  or  x > 1</option></select>
+        </div>
+        <div class="field">
+          <label for="iqLhs">First: left side</label>
+          <input id="iqLhs" type="text" value="3" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="iqOp">First: relation</label>
+          <select id="iqOp"><option value="lt" selected>&lt;</option><option value="le">&le;</option><option value="gt">&gt;</option><option value="ge">&ge;</option></select>
+        </div>
+        <div class="field">
+          <label for="iqRhs">First: right side</label>
+          <input id="iqRhs" type="text" value="2x + 1" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="iqConn">Joined by</label>
+          <select id="iqConn"><option value="and" selected>and</option><option value="or">or</option></select>
+        </div>
+        <div class="field">
+          <label for="iqLhs2">Second: left side</label>
+          <input id="iqLhs2" type="text" value="2x + 1" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="iqOp2">Second: relation</label>
+          <select id="iqOp2"><option value="lt">&lt;</option><option value="le" selected>&le;</option><option value="gt">&gt;</option><option value="ge">&ge;</option></select>
+        </div>
+        <div class="field">
+          <label for="iqRhs2">Second: right side</label>
+          <input id="iqRhs2" type="text" value="9" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid"><div class="kpi"><span>first</span><strong id="iqKA">&mdash;</strong></div><div class="kpi"><span>second</span><strong id="iqKB">&mdash;</strong></div><div class="kpi"><span>combined</span><strong id="iqKC">&mdash;</strong></div></div>
+        <p class="small-copy" style="margin:0;"><code>and</code> keeps the numbers in both sets, <code>or</code> keeps the numbers in either. Two of the presets show what that does when the sets miss each other entirely.</p>
+
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Solving a compound inequality</h2></div><p>The two halves are solved independently. The connector is applied once, at the end, to the two answers.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Write down which two statements you have</h3><p>A three-part statement <span class="math">a &lt; f(x) &lt; b</span> is two statements. You may keep it compact and operate on all three parts at once, but you must know which two statements those parts stand for.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Solve each one on its own, by lesson 9</h3><p>Each half gets its own reversal check. A negative coefficient in one half says nothing whatever about the other, and the two halves may well need different treatment.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Draw both solution sets against one number line</h3><p>Two marked regions above the same axis. Filled endpoints for <span class="math">≤</span> and <span class="math">≥</span>, hollow for <span class="math">&lt;</span> and <span class="math">&gt;</span>. This is the step that turns the combination into something you read off instead of something you reason about.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Take the overlap for and, everything covered for or, then check the endpoints</h3><p>For an <em>and</em>, an endpoint belongs only if the statement that produced it includes it. For an <em>or</em>, test it against both statements, because the other one may cover it even when its own does not. Then test a number from each region against the original pair.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>And, or, and what is left</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>The same pair, joined two ways</h3><p><span class="math">2x + 1 ≥ 5</span> and <span class="math">x − 4 &lt; 0</span>, then the identical two statements joined by <em>or</em>.</p><div class="mathblock">first      2x + 1  ≥  5           second      x - 4  &lt;  0
+           2x      ≥  4                       x      &lt;  4
+            x      ≥  2
+
+sets       A = { x : x ≥ 2 }      B = { x : x &lt; 4 }
+
+A and B    the numbers in both            2 ≤ x &lt; 4
+A or  B    the numbers in at least one    every real number
+
+check the and answer
+   x = 2     2(2) + 1 = 5 ≥ 5  true     2 - 4 = -2 &lt; 0  true      in
+   x = 4     2(4) + 1 = 9 ≥ 5  true     4 - 4 =  0 &lt; 0  FALSE     out
+   x = 1     2(1) + 1 = 3 ≥ 5  FALSE    1 - 4 = -3 &lt; 0  true      out
+
+check the or answer
+   x = 0     first FALSE                second true               in
+   x = 9     first true                 second FALSE              in</div><p>In the <em>and</em> answer the two endpoints behave differently, and each is settled by the statement it came from. <span class="math">2</span> came from <span class="math">x ≥ 2</span>, which includes it, so <span class="math">2</span> is in. <span class="math">4</span> came from <span class="math">x &lt; 4</span>, which excludes it, so <span class="math">4</span> is out. In the <em>or</em> answer <span class="math">4</span> is back in, because <span class="math">4 ≥ 2</span> makes the first statement true there: an endpoint is settled by the statement that produced it only when it is an endpoint of the combined set.</p><p>The <em>or</em> answer is worth dwelling on. Every real number is either less than 2 or at least 2. If it is less than 2 it is certainly less than 4, so the second statement holds; if it is at least 2, the first holds. Nothing is left out, and the union is the whole line even though neither statement is true everywhere on its own.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Writing an or as a three-part statement</strong><span><span class="math">x &lt; −2 or x ≥ 3</span> is not <span class="math">3 ≤ x &lt; −2</span>. The three-part form always means <em>and</em>, so that line asks for numbers at once at least 3 and below −2. A solution set with two infinite pieces has been written down as the empty set.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Operating on two of the three parts</strong><span>In <span class="math">3 &lt; 2x + 1 ≤ 9</span>, subtracting 1 gives <span class="math">2 &lt; 2x ≤ 8</span> &mdash; every part changes. The compact form stands for two statements, and both of them need the subtraction if the result is to be equivalent.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reading or as exclusive</strong><span>In <span class="math">x &lt; 4 or x &gt; 1</span> the numbers between 1 and 4 satisfy both statements, and mathematical <em>or</em> keeps them. The solution set is every real number, not the numbers outside the overlap and not the overlap itself.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can predict the shape of the answer before you combine.</strong><p>Given two solved inequalities you should be able to say from the picture whether an <em>and</em> will give an interval, a single point or nothing, and whether an <em>or</em> will give two pieces, one piece or the whole line &mdash; and then settle each endpoint by testing it against both statements.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The connector decides everything here, and the next two lessons supply it automatically: <span class="math">|X| &lt; k</span> produces an <em>and</em> and <span class="math">|X| &gt; k</span> produces an <em>or</em>. That is the reason absolute value is treated after this lesson rather than before it.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../linear-inequalities/" rel="prev"><span>Previous lesson</span><strong>09 &middot; Linear Inequalities</strong></a>
+      <a class="lesson-link next" href="../absolute-value-equations/" rel="next"><span>Next lesson</span><strong>11 &middot; Absolute Value Equations</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Linear Equations and Inequalities.</strong> Every solution on this course is found by the same steps shown on screen, in exact fractions, and then substituted back into the original statement by the lab itself. A check that passes is evidence the step list is right; the step list is what the lesson is teaching.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "Solve <span class=\"math\">\u22121 \u2264 3x + 2 &lt; 11<\/span>.", "a": ["<span class=\"math\">\u22121 \u2264 x &lt; 3<\/span>", "<span class=\"math\">\u22123 \u2264 x &lt; 9<\/span>", "<span class=\"math\">\u22121 &lt; x \u2264 3<\/span>", "<span class=\"math\">x \u2265 \u22121<\/span>"], "c": 0, "why": "Subtract 2 from all three parts to get <span class=\"math\">\u22123 \u2264 3x &lt; 9<\/span>, then divide all three by 3. The second option stops after the subtraction, the third moves the strictness to the wrong end, and the fourth keeps only the left half of the statement."}, {"q": "Which numbers satisfy <span class=\"math\">x &lt; 4 or x &gt; 1<\/span>?", "a": ["Every real number", "Only the numbers strictly between 1 and 4", "No numbers at all", "Every number except those between 1 and 4"], "c": 0, "why": "Any number below 4 satisfies the first statement, and any number not below 4 is at least 4 and so satisfies the second. The numbers between 1 and 4 satisfy both, and <em>or<\/em> keeps them &mdash; which is what the fourth option gets backwards."}, {"q": "What is the solution set of <span class=\"math\">x \u2265 3 and x \u2264 3<\/span>?", "a": ["Every real number", "No numbers at all", "Exactly one number, <span class=\"math\">x = 3<\/span>", "Every number except <span class=\"math\">3<\/span>"], "c": 2, "why": "The two sets overlap at the single point 3, and both relations include their endpoint. Change either <span class=\"math\">\u2264<\/span> or <span class=\"math\">\u2265<\/span> to a strict relation and the intersection becomes empty, which is the sharpest demonstration of what the strictness does."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* A polynomial is a dense array of rationals, index = power of x, with the
+     zero polynomial as []. Nothing here is a special case for "nice" numbers:
+     the same routines divide 2x^3 - 3x + 1 by x - 1/2 as divide it by x - 1. */
+  function Pnorm(p) {
+    var out = p.slice();
+    while (out.length && Rzero(out[out.length - 1])) out.pop();
+    return out;
+  }
+  function Pdeg(p) { return Pnorm(p).length - 1; }
+  function Pzero(p) { return Pnorm(p).length === 0; }
+  function Plead(p) { var q = Pnorm(p); return q.length ? q[q.length - 1] : R0; }
+  function Padd(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Radd(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Psub(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Rsub(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Pmul(a, b) {
+    if (!a.length || !b.length) return [];
+    var out = [];
+    for (var i = 0; i < a.length + b.length - 1; i += 1) out.push(R0);
+    for (var j = 0; j < a.length; j += 1) {
+      for (var k = 0; k < b.length; k += 1) out[j + k] = Radd(out[j + k], Rmul(a[j], b[k]));
+    }
+    return Pnorm(out);
+  }
+  function Pscale(p, r) { return Pnorm(p.map(function (c) { return Rmul(c, r); })); }
+  function Ppow(p, k) { var out = [R1]; for (var i = 0; i < k; i += 1) out = Pmul(out, p); return out; }
+  function Peval(p, x) {
+    var acc = R0;
+    for (var i = p.length - 1; i >= 0; i -= 1) acc = Radd(Rmul(acc, x), p[i]);
+    return acc;
+  }
+  function Pderiv(p) {
+    var out = [];
+    for (var i = 1; i < p.length; i += 1) out.push(Rmul(p[i], R(BigInt(i))));
+    return Pnorm(out);
+  }
+  /* Long division, which is lesson material in its own right -- the step list a
+     lab shows IS this loop, printed. */
+  function Pdivmod(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    if (!b.length) throw new Error('division by the zero polynomial');
+    var q = [], r = a.slice(), steps = [];
+    var db = b.length - 1, lb = b[db];
+    while (Pnorm(r).length - 1 >= db && Pnorm(r).length) {
+      r = Pnorm(r);
+      var dr = r.length - 1, coef = Rdiv(r[dr], lb), shift = dr - db;
+      var term = [];
+      for (var i = 0; i < shift; i += 1) term.push(R0);
+      term.push(coef);
+      var product = Pmul(term, b);
+      steps.push({ term: Ptext(term), product: Ptext(product), before: Ptext(r) });
+      r = Psub(r, product);
+      q = Padd(q, term);
+    }
+    return { q: Pnorm(q), r: Pnorm(r), steps: steps };
+  }
+  function Pmonic(p) { var l = Plead(p); return Rzero(l) ? p : Pscale(p, Rinv(l)); }
+  function Pgcd(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    while (b.length) { var r = Pdivmod(a, b).r; a = b; b = r; }
+    return a.length ? Pmonic(a) : a;
+  }
+
+  /* Reader-facing form. The rules here are the ones a marker applies: an
+     implicit coefficient of 1 is not written, a negative term joins with a
+     minus rather than a plus, and a fractional coefficient is bracketed so
+     3/4x^2 can never be misread as 3/(4x^2). */
+  function Ptext(p, v) {
+    v = v || 'x';
+    p = Pnorm(p);
+    if (!p.length) return '0';
+    var out = '';
+    for (var i = p.length - 1; i >= 0; i -= 1) {
+      var c = p[i];
+      if (Rzero(c)) continue;
+      var neg = Rsign(c) < 0, mag = Rabs(c);
+      out += out === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      var one = Requ(mag, R1);
+      var coef = one && i > 0 ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+      var power = i === 0 ? '' : (i === 1 ? v : v + '^' + i);
+      out += coef + power;
+    }
+    return out;
+  }
+  /* Bracketed when it is a sum, so (x + 1)(x - 2) prints correctly. */
+  function Pfactortext(p, v) {
+    var t = Ptext(p, v);
+    return (t.indexOf(' + ') >= 0 || t.indexOf(' - ') >= 0) ? '(' + t + ')' : t;
+  }
+
+  /* ---- factoring over the rationals ----
+     The rational root theorem, applied rather than quoted: clear denominators,
+     list the divisors of the constant and leading terms, and TEST each
+     candidate. A reader who runs this on x^2 + 1 sees the search come back
+     empty, which is the point of the lesson that pairs with it. */
+  function bdivisors(n) {
+    if (n < 0n) n = -n;
+    if (n === 0n) return [];
+    var out = [], i = 1n;
+    while (i * i <= n) {
+      if (n % i === 0n) { out.push(i); if (i * i !== n) out.push(n / i); }
+      i += 1n;
+      if (out.length > 512) break;   /* lesson-sized numbers only; see Pfactor */
+    }
+    out.sort(function (a, b) { return a < b ? -1 : (a > b ? 1 : 0); });
+    return out;
+  }
+  /* The same polynomial with integer, coprime coefficients and a positive
+     leading term, plus the rational that was taken out. */
+  function Pprimitive(p) {
+    p = Pnorm(p);
+    if (!p.length) return { poly: [], content: R1 };
+    var den = 1n;
+    p.forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ints = p.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ints.forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    if (ints[ints.length - 1] < 0n) g = -g;
+    return {
+      poly: ints.map(function (v) { return R(v / g); }),
+      content: R(g, den)
+    };
+  }
+  function Prationalroots(p) {
+    var prim = Pprimitive(p).poly;
+    if (prim.length < 2) return [];
+    var roots = [], seen = {};
+    var a0 = prim[0].n, an = prim[prim.length - 1].n;
+    if (a0 === 0n) { roots.push(R0); seen['0/1'] = 1; }
+    var ps = bdivisors(a0 === 0n ? an : a0), qs = bdivisors(an);
+    for (var i = 0; i < ps.length; i += 1) {
+      for (var j = 0; j < qs.length; j += 1) {
+        for (var s = 0; s < 2; s += 1) {
+          var cand = R(s ? -ps[i] : ps[i], qs[j]);
+          var key = Rtext(cand);
+          if (seen[key]) continue;
+          seen[key] = 1;
+          if (Rzero(Peval(prim, cand))) roots.push(cand);
+        }
+      }
+    }
+    roots.sort(Rcmp);
+    return roots;
+  }
+  /* Full factorisation over Q: a rational content, integer linear factors with
+     their multiplicities, and whatever is left that has no rational root.
+     `complete` is false when the leftover is not linear or quadratic -- the lab
+     says so rather than implying the factorisation finished. */
+  function Pfactor(p) {
+    p = Pnorm(p);
+    if (!p.length) return { content: R0, factors: [], rest: [], complete: true };
+    var prim = Pprimitive(p);
+    var content = prim.content, work = prim.poly, factors = [];
+    var guard = 0;
+    while (Pdeg(work) > 0 && guard < 64) {
+      guard += 1;
+      var roots = Prationalroots(work);
+      if (!roots.length) break;
+      var r = roots[0];
+      /* root p/q  ->  integer factor (qx - p), which keeps every coefficient
+         whole and is the form the reader is asked to produce. */
+      var factor = [Rneg(R(r.n)), R(r.d)];
+      var mult = 0;
+      while (Pdeg(work) > 0) {
+        var dm = Pdivmod(work, factor);
+        if (!Pzero(dm.r)) break;
+        work = dm.q; mult += 1;
+      }
+      factors.push({ poly: factor, mult: mult, root: r });
+    }
+    /* Whatever scalar the integer divisions left behind belongs to the content. */
+    if (Pdeg(work) === 0) { content = Rmul(content, work[0]); work = [R1]; }
+    var rest = Pdeg(work) > 0 ? work : [];
+    return { content: content, factors: factors, rest: rest, complete: Pdeg(work) <= 2 };
+  }
+  function Pfactortextfull(p, v) {
+    var f = Pfactor(p);
+    if (!f.factors.length && !f.rest.length) return Rtext(f.content);
+    var pieces = [];
+    f.factors.forEach(function (item) { pieces.push({ poly: item.poly, mult: item.mult }); });
+    if (f.rest.length) pieces.push({ poly: f.rest, mult: 1 });
+    /* A polynomial that does not factor is written as itself. Bracketing a
+       lone factor -- "(x^2 + 1)" -- suggests something was multiplied by
+       something, which is the opposite of what that result says. */
+    if (pieces.length === 1 && pieces[0].mult === 1 && Requ(f.content, R1)) {
+      return Ptext(pieces[0].poly, v);
+    }
+    var out = '';
+    if (!Requ(f.content, R1)) out += Requ(f.content, R(-1n)) ? '-' : Rterm(f.content);
+    pieces.forEach(function (item) {
+      out += Pfactortext(item.poly, v) + (item.mult > 1 ? '^' + item.mult : '');
+    });
+    return out || '1';
+  }
+
+  /* A parser for what a reader actually types.
+
+     It accepts implicit multiplication -- 2x, 3(x+1), (x+1)(x-2), 4x^2 --
+     because that is how algebra is written on paper, and a lab that rejected
+     "2x" would be teaching its own notation rather than the subject's. A
+     single letter is a variable; a name of two or more letters is a function,
+     which is what lets xy mean x times y while sqrt(x) stays one call. */
+  function Etokenize(src) {
+    var out = [], i = 0, s = String(src);
+    while (i < s.length) {
+      var c = s[i];
+      if (c === ' ' || c === '\t') { i += 1; continue; }
+      if (/[0-9.]/.test(c)) {
+        var j = i;
+        while (j < s.length && /[0-9.]/.test(s[j])) j += 1;
+        out.push({ t: 'num', v: s.slice(i, j) }); i = j; continue;
+      }
+      if (/[A-Za-z]/.test(c)) {
+        var k = i;
+        while (k < s.length && /[A-Za-z]/.test(s[k])) k += 1;
+        var word = s.slice(i, k);
+        if (word.length > 1 && FUNCS[word.toLowerCase()]) {
+          out.push({ t: 'fn', v: word.toLowerCase() }); i = k; continue;
+        }
+        /* Not a known function: every letter is its own variable, so "xy" is a
+           product and a typo like "sqrtt(x)" fails loudly instead of silently
+           becoming a product of six variables named s, q, r, t, t. */
+        if (word.length > 1 && /^[a-z]+$/.test(word) && word.length > 3) {
+          throw new Error('unknown function "' + word + '"');
+        }
+        for (var m = i; m < k; m += 1) out.push({ t: 'var', v: s[m] });
+        i = k; continue;
+      }
+      if ('+-*/^(),'.indexOf(c) >= 0) { out.push({ t: c }); i += 1; continue; }
+      throw new Error('unexpected character "' + c + '"');
+    }
+    return out;
+  }
+
+  var FUNCS = {
+    sqrt: function (v) { return Math.sqrt(v); },
+    cbrt: function (v) { return Math.cbrt(v); },
+    abs: function (v) { return Math.abs(v); },
+    ln: function (v) { return Math.log(v); },
+    log: function (v) { return Math.log(v) / Math.LN10; },
+    log2: function (v) { return Math.log(v) / Math.LN2; },
+    exp: function (v) { return Math.exp(v); }
+  };
+
+  function Eparse(src) {
+    var toks = Etokenize(src), pos = 0;
+    function peek() { return toks[pos]; }
+    function eat(t) { if (toks[pos] && toks[pos].t === t) { pos += 1; return true; } return false; }
+    function expect(t) { if (!eat(t)) throw new Error('expected "' + t + '"'); }
+
+    function primary() {
+      var tk = peek();
+      if (!tk) throw new Error('the expression ends early');
+      if (tk.t === 'num') { pos += 1; return { k: 'num', v: tk.v }; }
+      if (tk.t === 'var') { pos += 1; return { k: 'var', v: tk.v }; }
+      if (tk.t === 'fn') { pos += 1; expect('('); var a = sum(); expect(')'); return { k: 'fn', v: tk.v, a: a }; }
+      if (tk.t === '(') { pos += 1; var e = sum(); expect(')'); return e; }
+      if (tk.t === '-') { pos += 1; return { k: 'neg', a: unary() }; }
+      if (tk.t === '+') { pos += 1; return unary(); }
+      throw new Error('unexpected "' + (tk.v || tk.t) + '"');
+    }
+    /* ^ binds tighter than unary minus on the left and is right-associative,
+       so -x^2 is -(x^2) and 2^3^2 is 2^9. Both are the conventions a reader
+       is marked against. */
+    function power() {
+      var base = primary();
+      if (eat('^')) return { k: 'pow', a: base, b: unary() };
+      return base;
+    }
+    function unary() {
+      if (eat('-')) return { k: 'neg', a: unary() };
+      if (eat('+')) return unary();
+      return power();
+    }
+    function implicit(node) {
+      /* juxtaposition is multiplication: 2x, 3(x+1), (x+1)(x-2), 2sqrt(x) */
+      while (peek() && (peek().t === 'num' || peek().t === 'var' || peek().t === 'fn' || peek().t === '(')) {
+        node = { k: 'mul', a: node, b: power() };
+      }
+      return node;
+    }
+    function product() {
+      var node = implicit(unary());
+      while (peek() && (peek().t === '*' || peek().t === '/')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '*' ? 'mul' : 'div', a: node, b: implicit(unary()) };
+      }
+      return node;
+    }
+    function sum() {
+      var node = product();
+      while (peek() && (peek().t === '+' || peek().t === '-')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '+' ? 'add' : 'sub', a: node, b: product() };
+      }
+      return node;
+    }
+    var tree = sum();
+    if (pos < toks.length) throw new Error('unexpected "' + (toks[pos].v || toks[pos].t) + '"');
+    return tree;
+  }
+
+  /* Numeric evaluation, for drawing. Returns NaN outside the domain rather
+     than throwing, because a grapher must be able to ask for f(-1) on sqrt(x)
+     and simply not plot a point there. */
+  function Eeval(node, env) {
+    switch (node.k) {
+      case 'num': return parseFloat(node.v);
+      case 'var': return (env && node.v in env) ? env[node.v] : NaN;
+      case 'neg': return -Eeval(node.a, env);
+      case 'add': return Eeval(node.a, env) + Eeval(node.b, env);
+      case 'sub': return Eeval(node.a, env) - Eeval(node.b, env);
+      case 'mul': return Eeval(node.a, env) * Eeval(node.b, env);
+      case 'div': return Eeval(node.a, env) / Eeval(node.b, env);
+      case 'pow': return Math.pow(Eeval(node.a, env), Eeval(node.b, env));
+      case 'fn': return FUNCS[node.v](Eeval(node.a, env));
+    }
+    return NaN;
+  }
+
+  /* The same tree as a polynomial over Q in one variable, or null when it is
+     not one. This is what lets a reader type a polynomial and have the EXACT
+     machinery -- factoring, division, the rational root search -- run on it,
+     rather than a floating-point approximation of it. */
+  function Epoly(node, v) {
+    v = v || 'x';
+    switch (node.k) {
+      case 'num': { var r = Rparse(node.v); return r === null ? null : (Rzero(r) ? [] : [r]); }
+      case 'var': return node.v === v ? [R0, R1] : null;
+      case 'neg': { var a = Epoly(node.a, v); return a === null ? null : Pscale(a, R(-1n)); }
+      case 'add': case 'sub': case 'mul': {
+        var l = Epoly(node.a, v), r2 = Epoly(node.b, v);
+        if (l === null || r2 === null) return null;
+        return node.k === 'add' ? Padd(l, r2) : (node.k === 'sub' ? Psub(l, r2) : Pmul(l, r2));
+      }
+      case 'div': {
+        var num = Epoly(node.a, v), den = Epoly(node.b, v);
+        if (num === null || den === null || Pdeg(den) !== 0) return null;
+        return Pscale(num, Rinv(den[0]));   /* division by a constant only */
+      }
+      case 'pow': {
+        var base = Epoly(node.a, v), ex = Epoly(node.b, v);
+        if (base === null || ex === null || Pdeg(ex) > 0) return null;
+        var e = ex.length ? ex[0] : R0;
+        if (!Rint(e) || e.n < 0n || e.n > 64n) return null;
+        return Ppow(base, Number(e.n));
+      }
+    }
+    return null;
+  }
+  function Epolyof(src, v) {
+    try { return Epoly(Eparse(src), v || 'x'); } catch (e) { return null; }
+  }
+
+  /* Exact irrational answers.
+
+     sqrt(D) for a rational D is either rational or irrational, and the second
+     case is not a failure -- it is the answer. A lesson that solves
+     x^2 - 2x - 4 = 0 wants "1 +- sqrt(5)", not "3.2360679...", so the roots of
+     every quadratic on this path are carried as  p + q*sqrt(k)  with p and q
+     exact rationals and k a squarefree integer. */
+  function bsqrtsimp(n) {
+    /* n = s^2 * k with k squarefree; returns [s, k]. */
+    var s = 1n, k = n, f = 2n;
+    while (f * f <= k) {
+      while (k % (f * f) === 0n) { k /= f * f; s *= f; }
+      f += 1n;
+      if (f > 100000n) break;   /* lesson-sized radicands */
+    }
+    return [s, k];
+  }
+  /* sqrt(a) for a rational a >= 0, as { q, k } meaning q * sqrt(k). k === 1n
+     exactly when the root is rational. */
+  function Rsurd(a) {
+    if (a.n < 0n) return null;
+    if (a.n === 0n) return { q: R0, k: 1n };
+    /* sqrt(p/d) = sqrt(p*d)/d */
+    var pair = bsqrtsimp(a.n * a.d);
+    return { q: R(pair[0], a.d), k: pair[1] };
+  }
+  function surdtext(s) {
+    if (s.k === 1n) return Rtext(s.q);
+    if (Requ(s.q, R1)) return 'sqrt(' + s.k + ')';
+    return Rterm(s.q) + 'sqrt(' + s.k + ')';
+  }
+  /* "p +- q sqrt(k)", the form a reader is expected to write down. */
+  function pmtext(p, s, imaginary) {
+    var unit = imaginary ? 'i' : '';
+    if (s.k === 1n && Rzero(s.q)) return Rtext(p);
+    var mag = surdtext(s);
+    if (s.k !== 1n && Requ(Rabs(s.q), R1)) mag = 'sqrt(' + s.k + ')';
+    else if (s.k !== 1n) mag = Rterm(Rabs(s.q)) + 'sqrt(' + s.k + ')';
+    else mag = Rtext(Rabs(s.q));
+    var right = unit ? (mag === '1' ? 'i' : mag + 'i') : mag;
+    if (Rzero(p)) return '+-' + right;
+    return Rtext(p) + ' +- ' + right;
+  }
+  /* The exact roots of ax^2 + bx + c, whatever the discriminant does.
+     Returns { disc, kind, p, s, roots } where each root is p +- s (times i when
+     the discriminant is negative), and `roots` holds the rational ones only. */
+  function quadroots(a, b, c) {
+    var disc = Rsub(Rmul(b, b), Rmul(R(4n), Rmul(a, c)));
+    var p = Rdiv(Rneg(b), Rmul(R(2n), a));
+    var sign = Rsign(disc);
+    var mag = Rsurd(sign < 0 ? Rneg(disc) : disc);
+    var s = { q: Rdiv(mag.q, Rabs(Rmul(R(2n), a))), k: mag.k };
+    var kind = sign < 0 ? 'complex' : (sign === 0 ? 'double' : (s.k === 1n ? 'rational' : 'irrational'));
+    var roots = [];
+    if (kind === 'double') roots = [p];
+    else if (kind === 'rational') roots = [Radd(p, s.q), Rsub(p, s.q)].sort(Rcmp);
+    return { disc: disc, kind: kind, p: p, s: s, roots: roots };
+  }
+
+  /* The grapher.
+
+     Every curve on this path is SAMPLED from the function the lesson is about.
+     There is not one stored path string anywhere in these labs, which is what
+     makes a drawing evidence rather than decoration: when a lab prints a vertex
+     at (3, -4) and draws the parabola through it, the label and the picture
+     came out of the same evaluation and cannot disagree.
+
+     Coordinates are the one deliberate use of floating point here -- a pixel is
+     a pixel. Everything the reader is told in words comes from the exact side. */
+  var PLOT_W = 660, PLOT_H = 420, PAD_L = 44, PAD_R = 16, PAD_T = 16, PAD_B = 34;
+
+  function svgel(name, attrs) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  /* A grid step a reader can count on: 1, 2 or 5 times a power of ten, chosen
+     so the axis carries roughly eight divisions whatever the window is. */
+  function nicestep(span) {
+    var raw = span / 8, mag = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+    var n = raw / mag;
+    return (n < 1.5 ? 1 : (n < 3.5 ? 2 : (n < 7.5 ? 5 : 10))) * mag;
+  }
+  function ticktext(v, step) {
+    if (Math.abs(v) < step / 1000) return '0';
+    var places = Math.max(0, -Math.floor(Math.log(step) / Math.LN10));
+    return v.toFixed(Math.min(places, 4)).replace(/\.?0+$/, function (m) {
+      return m.indexOf('.') === 0 ? '' : m;
+    });
+  }
+
+  function Plot(svg, win) {
+    var xmin = win.xmin, xmax = win.xmax, ymin = win.ymin, ymax = win.ymax;
+    var iw = PLOT_W - PAD_L - PAD_R, ih = PLOT_H - PAD_T - PAD_B;
+    svg.setAttribute('viewBox', '0 0 ' + PLOT_W + ' ' + PLOT_H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+
+    function sx(x) { return PAD_L + (x - xmin) / (xmax - xmin) * iw; }
+    function sy(y) { return PAD_T + (ymax - y) / (ymax - ymin) * ih; }
+
+    var defs = svgel('defs', {});
+    var clip = svgel('clipPath', { id: 'plotclip' });
+    clip.appendChild(svgel('rect', { x: PAD_L, y: PAD_T, width: iw, height: ih }));
+    defs.appendChild(clip);
+    svg.appendChild(defs);
+
+    var plotted = svgel('g', { 'clip-path': 'url(#plotclip)' });
+
+    var api = {
+      sx: sx, sy: sy, win: win,
+      /* Grid, axes, ticks. Drawn first so every curve sits on top of them. */
+      frame: function () {
+        var gx = nicestep(xmax - xmin), gy = nicestep(ymax - ymin);
+        var g = svgel('g', {});
+        var start = Math.ceil(xmin / gx) * gx, v;
+        for (v = start; v <= xmax + gx / 2; v += gx) {
+          if (Math.abs(v) < gx / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: sx(v), y1: PAD_T, x2: sx(v), y2: PAD_T + ih }));
+        }
+        start = Math.ceil(ymin / gy) * gy;
+        for (v = start; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          g.appendChild(svgel('line', { class: 'plot-grid', x1: PAD_L, y1: sy(v), x2: PAD_L + iw, y2: sy(v) }));
+        }
+        /* The axes sit at zero when zero is in view and at the near edge when
+           it is not, so a window like 10 <= x <= 20 still has a labelled frame
+           rather than two axes drawn off-screen. */
+        var ay = ymin <= 0 && ymax >= 0 ? sy(0) : (ymin > 0 ? PAD_T + ih : PAD_T);
+        var ax = xmin <= 0 && xmax >= 0 ? sx(0) : (xmin > 0 ? PAD_L : PAD_L + iw);
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: PAD_L, y1: ay, x2: PAD_L + iw, y2: ay }));
+        g.appendChild(svgel('line', { class: 'plot-axis', x1: ax, y1: PAD_T, x2: ax, y2: PAD_T + ih }));
+        for (v = Math.ceil(xmin / gx) * gx; v <= xmax + gx / 2; v += gx) {
+          var tx = svgel('text', { class: 'plot-tick', x: sx(v), y: PAD_T + ih + 15, 'text-anchor': 'middle' });
+          tx.textContent = ticktext(v, gx);
+          g.appendChild(tx);
+        }
+        for (v = Math.ceil(ymin / gy) * gy; v <= ymax + gy / 2; v += gy) {
+          if (Math.abs(v) < gy / 1000) continue;
+          var ty = svgel('text', { class: 'plot-tick', x: PAD_L - 7, y: sy(v) + 3.5, 'text-anchor': 'end' });
+          ty.textContent = ticktext(v, gy);
+          g.appendChild(ty);
+        }
+        svg.appendChild(g);
+        svg.appendChild(plotted);
+        return api;
+      },
+      /* Sample the function across the drawing width and join the samples.
+         A segment is BROKEN where the value stops being a real number and
+         where it jumps by more than three window heights between neighbouring
+         pixels -- that jump is a pole, and joining across it would draw a
+         vertical line that is not part of the graph. Readers meet exactly that
+         line in every graphing tool, and it is the reason they think 1/x is
+         connected. */
+      curve: function (fn, cls) {
+        var runs = [], run = [], prev = null, steps = 480;
+        for (var i = 0; i <= steps; i += 1) {
+          var x = xmin + (xmax - xmin) * i / steps, y = fn(x);
+          if (typeof y !== 'number' || !isFinite(y)) { if (run.length > 1) runs.push(run); run = []; prev = null; continue; }
+          if (prev !== null && Math.abs(y - prev) > 3 * (ymax - ymin)) {
+            if (run.length > 1) runs.push(run);
+            run = [];
+          }
+          run.push(sx(x) + ',' + sy(Math.max(ymin - (ymax - ymin), Math.min(ymax + (ymax - ymin), y))));
+          prev = y;
+        }
+        if (run.length > 1) runs.push(run);
+        runs.forEach(function (pts) {
+          plotted.appendChild(svgel('polyline', { class: cls || 'plot-curve', points: pts.join(' ') }));
+        });
+        return api;
+      },
+      point: function (x, y, cls, label) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: cls || 'plot-point', cx: sx(x), cy: sy(y), r: 5 }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 9, y: sy(y) - 8 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hole: function (x, y) {
+        if (!isFinite(x) || !isFinite(y)) return api;
+        plotted.appendChild(svgel('circle', { class: 'plot-hole', cx: sx(x), cy: sy(y), r: 5 }));
+        return api;
+      },
+      vline: function (x, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: sx(x), y1: PAD_T, x2: sx(x), y2: PAD_T + ih }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: sx(x) + 6, y: PAD_T + 14 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      hline: function (y, cls, label) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-asym', x1: PAD_L, y1: sy(y), x2: PAD_L + iw, y2: sy(y) }));
+        if (label) {
+          var t = svgel('text', { class: 'plot-label', x: PAD_L + 6, y: sy(y) - 6 });
+          t.textContent = label;
+          plotted.appendChild(t);
+        }
+        return api;
+      },
+      segment: function (x1, y1, x2, y2, cls) {
+        plotted.appendChild(svgel('line', { class: cls || 'plot-aux', x1: sx(x1), y1: sy(y1), x2: sx(x2), y2: sy(y2) }));
+        return api;
+      },
+      /* The solution set of an inequality, shaded by testing the predicate on
+         a grid of sample points rather than by reasoning about the boundary. */
+      shade: function (test, cls) {
+        var cols = 90, rows = 58;
+        for (var i = 0; i < cols; i += 1) {
+          for (var j = 0; j < rows; j += 1) {
+            var x = xmin + (xmax - xmin) * (i + 0.5) / cols;
+            var y = ymin + (ymax - ymin) * (j + 0.5) / rows;
+            if (!test(x, y)) continue;
+            plotted.appendChild(svgel('rect', {
+              class: cls || 'plot-shade', x: sx(x) - iw / cols / 2, y: sy(y) - ih / rows / 2,
+              width: iw / cols + 0.6, height: ih / rows + 0.6
+            }));
+          }
+        }
+        return api;
+      },
+      label: function (x, y, text, cls) {
+        var t = svgel('text', { class: cls || 'plot-label', x: sx(x), y: sy(y) });
+        t.textContent = text;
+        plotted.appendChild(t);
+        return api;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return api; }
+    };
+    return api;
+  }
+
+  /* A one-dimensional cousin: the number line every inequality lesson needs. */
+  function NumberLine(svg, lo, hi) {
+    var W = 660, H = 88, pad = 30, iw = W - 2 * pad;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.textContent = '';
+    function sx(x) { return pad + (x - lo) / (hi - lo) * iw; }
+    svg.appendChild(svgel('line', { class: 'plot-axis', x1: pad, y1: 44, x2: W - pad, y2: 44 }));
+    var step = nicestep(hi - lo);
+    for (var v = Math.ceil(lo / step) * step; v <= hi + step / 2; v += step) {
+      svg.appendChild(svgel('line', { class: 'plot-tickmark', x1: sx(v), y1: 38, x2: sx(v), y2: 50 }));
+      var t = svgel('text', { class: 'plot-tick', x: sx(v), y: 68, 'text-anchor': 'middle' });
+      t.textContent = ticktext(v, step);
+      svg.appendChild(t);
+    }
+    return {
+      sx: sx,
+      /* Closed ends are filled, open ends are hollow -- the distinction the
+         lesson is usually about. */
+      interval: function (a, b, closedA, closedB) {
+        var x1 = sx(Math.max(a, lo)), x2 = sx(Math.min(b, hi));
+        svg.appendChild(svgel('line', { class: 'plot-interval', x1: x1, y1: 44, x2: x2, y2: 44 }));
+        if (a >= lo) svg.appendChild(svgel('circle', { class: closedA ? 'plot-end closed' : 'plot-end open', cx: x1, cy: 44, r: 6 }));
+        if (b <= hi) svg.appendChild(svgel('circle', { class: closedB ? 'plot-end closed' : 'plot-end open', cx: x2, cy: 44, r: 6 }));
+        return this;
+      },
+      point: function (x, closed) {
+        svg.appendChild(svgel('circle', { class: closed ? 'plot-end closed' : 'plot-end open', cx: sx(x), cy: 44, r: 6 }));
+        return this;
+      },
+      describe: function (text) { svg.setAttribute('aria-label', text); return this; }
+    };
+  }
+
+  /* ---------------------------------------------------------- presentation */
+  function trow(label, detail, cls) {
+    return '<tr' + (cls ? ' class="' + cls + '"' : '') + '><th class="rowhead">' + label
+      + '</th><td style="text-align:left;">' + detail + '</td></tr>';
+  }
+  function ttable(caption, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption
+      + '</caption><tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  function chip(text, kind) { return '<span class="chip ' + kind + '">' + text + '</span>'; }
+  /* Wider tables -- a sign row, a set of test values -- need real columns. */
+  function tcells(items, cls) {
+    return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>'
+      + items.map(function (t) { return '<td style="text-align:left;">' + t + '</td>'; }).join('') + '</tr>';
+  }
+  function tgrid(caption, head, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption + '</caption><thead><tr>'
+      + head.map(function (t) { return '<th>' + t + '</th>'; }).join('')
+      + '</tr></thead><tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  var YES = chip('true', 'ok'), NO = chip('false', 'no');
+
+  /* Rparse throws on a zero denominator, and "1/0" is four keystrokes. Every
+     reader-facing parse goes through this instead. */
+  function parseR(text) {
+    try { return Rparse(text); } catch (err) { return null; }
+  }
+
+  /* ------------------------------------------------- what the reader typed */
+  /* A side is kept BOTH ways: as a polynomial, which is what gets solved, and
+     as the tree it was typed as, which is what a substitution has to be shown
+     in. Normalising first and substituting into the normalised form would show
+     the reader a check on an equation they did not write. */
+  function sideOf(text, v, what) {
+    var s = String(text === null || text === undefined ? '' : text).trim();
+    if (!s) {
+      return { ok: false, msg: 'the ' + what + ' is empty. Type an expression such as <code>2x + 1</code>.' };
+    }
+    var node;
+    try { node = Eparse(s); } catch (err) {
+      return { ok: false, msg: 'the ' + what + ', <code>' + s + '</code>, could not be read: ' + err.message + '.' };
+    }
+    var poly;
+    try { poly = Epoly(node, v); } catch (err) {
+      return { ok: false, msg: 'the ' + what + ', <code>' + s + '</code>, divides by zero somewhere.' };
+    }
+    if (poly === null) {
+      return { ok: false, msg: 'the ' + what + ', <code>' + s + '</code>, is not a polynomial in ' + v
+        + '. It may use another letter, or put ' + v + ' under a root or in a denominator, and this lab '
+        + 'solves for one letter at a time.' };
+    }
+    return { ok: true, node: node, poly: poly, src: s };
+  }
+
+  /* ------------------------------------------- exact value of a typed tree */
+  /* Rational wherever the value is rational, and null wherever it is not --
+     an irrational root, a logarithm, a zero denominator. Every caller says so
+     rather than printing a number it does not actually have. This is what
+     turns "substitute and check" into a proof. */
+  function Reval(node, env) {
+    var a, b;
+    switch (node.k) {
+      case 'num': return Rparse(node.v);
+      case 'var': return (env && Object.prototype.hasOwnProperty.call(env, node.v)) ? env[node.v] : null;
+      case 'neg': a = Reval(node.a, env); return a === null ? null : Rneg(a);
+      case 'add': case 'sub': case 'mul':
+        a = Reval(node.a, env); b = Reval(node.b, env);
+        if (a === null || b === null) return null;
+        return node.k === 'add' ? Radd(a, b) : (node.k === 'sub' ? Rsub(a, b) : Rmul(a, b));
+      case 'div':
+        a = Reval(node.a, env); b = Reval(node.b, env);
+        if (a === null || b === null || Rzero(b)) return null;
+        return Rdiv(a, b);
+      case 'pow':
+        a = Reval(node.a, env); b = Reval(node.b, env);
+        if (a === null || b === null || !Rint(b)) return null;
+        if (b.n > 40n || b.n < -40n) return null;
+        if (Rzero(a) && b.n <= 0n) return null;
+        return Rpow(a, Number(b.n));
+      case 'fn':
+        a = Reval(node.a, env);
+        if (a === null) return null;
+        if (node.v === 'abs') return Rabs(a);
+        if (node.v === 'sqrt') return Rsqrt(a);   /* null unless it comes out exact */
+        return null;
+    }
+    return null;
+  }
+  function varsOf(node, out) {
+    out = out || {};
+    if (node.k === 'var') out[node.v] = 1;
+    if (node.a) varsOf(node.a, out);
+    if (node.b) varsOf(node.b, out);
+    return out;
+  }
+
+  /* ------------------------------------------------- printing a tree back */
+  /* `env` may map a letter to the text that stands in for it, which is how a
+     substitution is SHOWN before it is worked out: 3(5/2) - 4 is the line a
+     reader would write, and it is produced from the tree rather than by string
+     surgery on the source, so a variable named t cannot corrupt sqrt(). */
+  function atomtext(s) { return /^[A-Za-z0-9.]+$/.test(s) || /^\([^()]*\)$/.test(s); }
+  function etext(n, env, need) {
+    var s, lvl = 4;
+    switch (n.k) {
+      case 'num': s = n.v; lvl = atomtext(s) ? 4 : 1; break;
+      case 'var': s = (env[n.v] !== undefined) ? env[n.v] : n.v; lvl = atomtext(s) ? 4 : 1; break;
+      case 'neg': s = '-' + etext(n.a, env, 2); lvl = 1; break;
+      case 'add': s = etext(n.a, env, 1) + ' + ' + etext(n.b, env, 1); lvl = 1; break;
+      case 'sub': s = etext(n.a, env, 1) + ' - ' + etext(n.b, env, 2); lvl = 1; break;
+      case 'mul': {
+        /* a quotient inside a product is always bracketed: 3/4(1) can be read
+           as (3/4)*1 or as 3/(4*1), and only one of them is what was typed */
+        var l = etext(n.a, env, n.a.k === 'div' ? 3 : 2),
+            r = etext(n.b, env, n.b.k === 'div' ? 3 : 2);
+        /* juxtaposition where it reads as a product, an explicit * where
+           2 followed by 3 would read as twenty-three */
+        s = l + (/^[0-9.]/.test(r) ? '*' : '') + r; lvl = 2; break;
+      }
+      case 'div': s = etext(n.a, env, 2) + '/' + etext(n.b, env, 3); lvl = 2; break;
+      case 'pow': s = etext(n.a, env, 3) + '^' + etext(n.b, env, 4); lvl = 3; break;
+      case 'fn': s = n.v + '(' + etext(n.a, env, 0) + ')'; lvl = 4; break;
+      default: s = '?';
+    }
+    return lvl < need ? '(' + s + ')' : s;
+  }
+  function Etext(node, env) { return etext(node, env || {}, 0); }
+  /* The tree with one letter replaced by a value, bracketed so -3/2 cannot
+     glue onto whatever precedes it. */
+  function Esub(node, v, value) {
+    var env = {};
+    env[v] = '(' + Rtext(value) + ')';
+    return etext(node, env, 0);
+  }
+
+  /* --------------------------------------- one operation, applied to both */
+  var RELTEXT = { '=': '=', '<': '&lt;', '<=': '&le;', '>': '&gt;', '>=': '&ge;' };
+  function relText(rel) { return RELTEXT[rel] || rel; }
+  /* Reading a statement from the other end. 6 &lt; x and x &gt; 6 are the same
+     statement; this is NOT the reversal that multiplying by a negative causes,
+     and the trace says which is which wherever it uses this. */
+  function relSwap(rel) {
+    return rel === '<' ? '>' : (rel === '<=' ? '>=' : (rel === '>' ? '<' : (rel === '>=' ? '<=' : '=')));
+  }
+  function relHolds(a, b, rel) {
+    var c = Rcmp(a, b);
+    if (rel === '=') return c === 0;
+    if (rel === '<') return c < 0;
+    if (rel === '<=') return c <= 0;
+    if (rel === '>') return c > 0;
+    if (rel === '>=') return c >= 0;
+    return false;
+  }
+  function relName(rel) {
+    if (rel === '=') return 'equation';
+    return 'inequality';
+  }
+  function lcmden(poly) {
+    var d = 1n;
+    Pnorm(poly).forEach(function (c) { d = d * c.d / bgcd(d, c.d); });
+    return d;
+  }
+  function lcdOf(a, b) {
+    var x = lcmden(a), y = lcmden(b);
+    return x * y / bgcd(x, y);
+  }
+
+  /* The trace. Each entry is one operation applied to BOTH sides, named, with
+     the statement as it stands afterwards. The reversal in the divide step is
+     the only line that differs between an equation and an inequality, and it
+     carries its own reason so it cannot be read as a typing slip.
+
+     `collectLeft` decides which side the variable is gathered on. It is a
+     parameter rather than a convention because the choice is itself a lesson:
+     both work, and one of them avoids a negative coefficient. */
+  function traceLinear(L0, R0p, v, rel, collectLeft) {
+    var L = Pnorm(L0), Rr = Pnorm(R0p), steps = [], rl = rel;
+    function push(op, note) {
+      steps.push({
+        op: op, note: note || '',
+        text: Ptext(L, v) + ' ' + relText(rl) + ' ' + Ptext(Rr, v)
+      });
+    }
+    push('expand and collect each side');
+
+    var den = lcdOf(L, Rr);
+    if (den > 1n) {
+      L = Pscale(L, R(den)); Rr = Pscale(Rr, R(den));
+      push('multiply both sides by ' + den,
+           'the least common denominator of every coefficient, which clears all of them at once');
+    }
+
+    var from = collectLeft ? Rr : L;
+    var k = from.length > 1 ? from[1] : R0;
+    if (!Rzero(k)) {
+      var term = [R0, k];
+      L = Psub(L, term); Rr = Psub(Rr, term);
+      push(Rsign(k) > 0
+        ? 'subtract ' + Ptext(term, v) + ' from both sides'
+        : 'add ' + Ptext(Pscale(term, R(-1n)), v) + ' to both sides');
+    }
+
+    var keepOn = collectLeft ? L : Rr;
+    var c0 = keepOn.length ? keepOn[0] : R0;
+    if (!Rzero(c0)) {
+      var cterm = [c0];
+      L = Psub(L, cterm); Rr = Psub(Rr, cterm);
+      push(Rsign(c0) > 0
+        ? 'subtract ' + Rtext(c0) + ' from both sides'
+        : 'add ' + Rtext(Rneg(c0)) + ' to both sides');
+    }
+
+    var side = collectLeft ? L : Rr, other = collectLeft ? Rr : L;
+    var a = side.length > 1 ? side[1] : R0;
+    if (Rzero(a)) {
+      /* Every v cancelled. What is left is a statement about two numbers, and
+         it is either true for every v or for none -- never "v = 0". */
+      var lc = L.length ? L[0] : R0, rc = Rr.length ? Rr[0] : R0;
+      var holds = relHolds(lc, rc, rl);
+      return {
+        steps: steps, kind: holds ? 'all' : 'none', rel: rl,
+        constText: Rtext(lc) + ' ' + relText(rl) + ' ' + Rtext(rc)
+      };
+    }
+
+    var value = Rdiv(other.length ? other[0] : R0, a);
+    var flipped = Rsign(a) < 0 && rel !== '=';
+    var before = rl;
+    if (flipped) rl = relSwap(rl);
+    var wasOne = Requ(a, R1);
+    if (collectLeft) { L = [R0, R1]; Rr = [value]; } else { L = [value]; Rr = [R0, R1]; }
+    /* Dividing by 1 is not a step. Printing it as one teaches a reader to
+       write a line down whether or not anything happened on it. */
+    if (!wasOne) push('divide both sides by ' + Rtext(a),
+      (flipped ? '<strong>' + Rtext(a) + ' is negative, so the statement reverses: '
+                 + relText(before) + ' becomes ' + relText(rl) + '.</strong> '
+               : '')
+      + (Rint(a) ? '' : 'the same move as multiplying both sides by ' + Rtext(Rinv(a)) + '.'));
+
+    if (!collectLeft) {
+      var readAs = relSwap(rl);
+      rl = readAs;
+      L = [R0, R1]; Rr = [value];
+      push('read it from the other end',
+           'the same statement written the usual way round, with ' + v + ' on the left. '
+           + 'Nothing was multiplied here, so this is not the reversal rule.');
+    }
+    return { steps: steps, kind: 'unique', value: value, rel: rl, coef: a, flipped: flipped };
+  }
+
+  /* `typed` is the statement as the reader wrote it. When the first step
+     produces exactly that, no expanding or collecting happened and the row is
+     dropped rather than shown as a step that did nothing. */
+  function traceRows(trace, typed) {
+    var steps = trace.steps;
+    if (typed && steps.length && steps[0].text === typed) steps = steps.slice(1);
+    return steps.map(function (s) {
+      return trow(s.op, '<code>' + s.text + '</code>' + (s.note ? '<br><span class="small-copy">' + s.note + '</span>' : ''));
+    });
+  }
+
+  /* A polynomial as a function of a float, for drawing only. */
+  function polyFn(p) {
+    var cs = Pnorm(p).map(Rnum);
+    return function (x) {
+      var acc = 0;
+      for (var i = cs.length - 1; i >= 0; i -= 1) acc = acc * x + cs[i];
+      return acc;
+    };
+  }
+  function niceWindow(xs, minSpan) {
+    var pts = xs.filter(function (x) { return isFinite(x); });
+    var lo = pts.length ? Math.min.apply(null, pts) : 0;
+    var hi = pts.length ? Math.max.apply(null, pts) : 0;
+    var c = (lo + hi) / 2, span = Math.max(minSpan || 8, (hi - lo) * 2.4);
+    return { xmin: c - span / 2, xmax: c + span / 2 };
+  }
+
+  /* An interval. A null endpoint is unbounded on that side, and the two flags
+     say whether the ends belong to it -- the distinction the whole notation
+     lesson turns on. */
+  function iv(lo, loC, hi, hiC) { return { lo: lo, loC: !!loC, hi: hi, hiC: !!hiC }; }
+  var ALLR = [iv(null, false, null, false)];
+
+  function ivEmpty(i) {
+    if (i.lo === null || i.hi === null) return false;
+    var c = Rcmp(i.lo, i.hi);
+    return c > 0 || (c === 0 && !(i.loC && i.hiC));
+  }
+  function ivPoint(i) {
+    return i.lo !== null && i.hi !== null && Rcmp(i.lo, i.hi) === 0 && i.loC && i.hiC;
+  }
+  function ivHas(i, x) {
+    if (i.lo !== null) { var c = Rcmp(x, i.lo); if (c < 0 || (c === 0 && !i.loC)) return false; }
+    if (i.hi !== null) { var d = Rcmp(x, i.hi); if (d > 0 || (d === 0 && !i.hiC)) return false; }
+    return true;
+  }
+  function setHas(s, x) {
+    for (var i = 0; i < s.length; i += 1) if (ivHas(s[i], x)) return true;
+    return false;
+  }
+  /* Order by lower endpoint, -inf first, and a closed end before an open one at
+     the same number so that [1,2] and (1,3) merge in the right direction. */
+  function loCmp(a, b) {
+    if (a.lo === null && b.lo === null) return 0;
+    if (a.lo === null) return -1;
+    if (b.lo === null) return 1;
+    var c = Rcmp(a.lo, b.lo);
+    if (c !== 0) return c;
+    return (a.loC === b.loC) ? 0 : (a.loC ? -1 : 1);
+  }
+  /* Sorted, non-empty, non-overlapping. Two pieces that touch at a point are
+     merged only when at least one of them CONTAINS that point: [1,2) and (2,3)
+     leave a hole at 2 and stay apart, which is exactly the answer a quadratic
+     with a repeated root produces. */
+  function setNorm(list) {
+    var xs = list.filter(function (i) { return !ivEmpty(i); }).sort(loCmp), out = [];
+    xs.forEach(function (i) {
+      var last = out[out.length - 1];
+      if (!last) { out.push(iv(i.lo, i.loC, i.hi, i.hiC)); return; }
+      var joins;
+      if (last.hi === null) joins = true;
+      else if (i.lo === null) joins = true;
+      else {
+        var c = Rcmp(i.lo, last.hi);
+        joins = c < 0 || (c === 0 && (last.hiC || i.loC));
+      }
+      if (!joins) { out.push(iv(i.lo, i.loC, i.hi, i.hiC)); return; }
+      if (last.hi === null) return;
+      if (i.hi === null) { last.hi = null; last.hiC = false; return; }
+      var d = Rcmp(i.hi, last.hi);
+      if (d > 0) { last.hi = i.hi; last.hiC = i.hiC; }
+      else if (d === 0) { last.hiC = last.hiC || i.hiC; }
+    });
+    return out;
+  }
+  function setUnion(a, b) { return setNorm(a.concat(b)); }
+  function ivMeet(x, y) {
+    var lo, loC, hi, hiC, c;
+    if (x.lo === null) { lo = y.lo; loC = y.loC; }
+    else if (y.lo === null) { lo = x.lo; loC = x.loC; }
+    else {
+      c = Rcmp(x.lo, y.lo);
+      lo = c >= 0 ? x.lo : y.lo;
+      loC = c > 0 ? x.loC : (c < 0 ? y.loC : (x.loC && y.loC));
+    }
+    if (x.hi === null) { hi = y.hi; hiC = y.hiC; }
+    else if (y.hi === null) { hi = x.hi; hiC = x.hiC; }
+    else {
+      c = Rcmp(x.hi, y.hi);
+      hi = c <= 0 ? x.hi : y.hi;
+      hiC = c < 0 ? x.hiC : (c > 0 ? y.hiC : (x.hiC && y.hiC));
+    }
+    return iv(lo, loC, hi, hiC);
+  }
+  function setMeet(a, b) {
+    var out = [];
+    a.forEach(function (x) {
+      b.forEach(function (y) {
+        var m = ivMeet(x, y);
+        if (!ivEmpty(m)) out.push(m);
+      });
+    });
+    return setNorm(out);
+  }
+
+  /* ---- the same set, said four ways ---- */
+  function ivText(i) {
+    return (i.loC ? '[' : '(') + (i.lo === null ? '-inf' : Rtext(i.lo)) + ', '
+      + (i.hi === null ? 'inf' : Rtext(i.hi)) + (i.hiC ? ']' : ')');
+  }
+  function setText(s) {
+    if (!s.length) return '{ }';
+    if (s.length === 1 && s[0].lo === null && s[0].hi === null) return '(-inf, inf)';
+    return s.map(ivText).join(' U ');
+  }
+  function ivIneq(i, v) {
+    if (i.lo === null && i.hi === null) return 'every real ' + v;
+    if (ivPoint(i)) return v + ' = ' + Rtext(i.lo);
+    if (i.lo === null) return v + ' ' + relText(i.hiC ? '<=' : '<') + ' ' + Rtext(i.hi);
+    if (i.hi === null) return v + ' ' + relText(i.loC ? '>=' : '>') + ' ' + Rtext(i.lo);
+    return Rtext(i.lo) + ' ' + relText(i.loC ? '<=' : '<') + ' ' + v + ' '
+      + relText(i.hiC ? '<=' : '<') + ' ' + Rtext(i.hi);
+  }
+  function setIneq(s, v) {
+    if (!s.length) return 'no ' + v + ' at all';
+    return s.map(function (i) { return ivIneq(i, v); }).join('  or  ');
+  }
+  function setBuilder(s, v) {
+    if (!s.length) return '{ }';
+    if (s.length === 1 && s[0].lo === null && s[0].hi === null) return '{ ' + v + ' in R }';
+    return '{ ' + v + ' in R : ' + setIneq(s, v) + ' }';
+  }
+  function setWords(s, v) {
+    if (!s.length) return 'no number satisfies it';
+    if (s.length === 1 && s[0].lo === null && s[0].hi === null) return 'every real number satisfies it';
+    if (s.length === 1 && ivPoint(s[0])) return 'exactly one number satisfies it';
+    return s.length === 1 ? 'one stretch of the line' : s.length + ' separate stretches of the line';
+  }
+
+  /* A window wide enough to show every endpoint with room around it. */
+  function lineWindow(set, extra) {
+    var xs = (extra || []).slice();
+    set.forEach(function (i) {
+      if (i.lo !== null) xs.push(Rnum(i.lo));
+      if (i.hi !== null) xs.push(Rnum(i.hi));
+    });
+    xs = xs.filter(function (x) { return isFinite(x); });
+    if (!xs.length) return { lo: -5, hi: 5 };
+    var lo = Math.min.apply(null, xs), hi = Math.max.apply(null, xs);
+    var pad = Math.max(2, (hi - lo) * 0.6);
+    return { lo: lo - pad, hi: hi + pad };
+  }
+  /* The set on a number line, drawn from the same endpoints that were printed.
+     Filled ends are the ones that belong to the set. */
+  function drawSet(svg, set, win, note) {
+    if (!svg) return;
+    var line = NumberLine(svg, win.lo, win.hi), span = win.hi - win.lo;
+    set.forEach(function (i) {
+      if (ivPoint(i)) { line.point(Rnum(i.lo), true); return; }
+      var a = i.lo === null ? win.lo - span : Rnum(i.lo);
+      var b = i.hi === null ? win.hi + span : Rnum(i.hi);
+      line.interval(a, b, i.loC, i.hiC);
+    });
+    line.describe(note);
+  }
+
+  var OWN = {'iqConn': 1, 'iqKA': 1, 'iqKB': 1, 'iqKC': 1, 'iqLhs': 1, 'iqLhs2': 1, 'iqLine': 1, 'iqLineA': 1, 'iqLineB': 1, 'iqOp': 1, 'iqOp2': 1, 'iqPreset': 1, 'iqRhs': 1, 'iqRhs2': 1, 'iqStatus': 1, 'iqSub': 1, 'iqTitle': 1, 'iqWork': 1};
+
+  var MODE = 'compound';
+  var FIELDS = ['iqLhs', 'iqOp', 'iqRhs', 'iqConn', 'iqLhs2', 'iqOp2', 'iqRhs2'];
+
+  /* --------------------------------------------------------- the controls */
+  /* As in the equation lab: five modes share this script and do not share
+     their controls, so an id is asked for only when this mode declared it. */
+  function el(id) { return OWN[id] ? document.getElementById(id) : null; }
+  function val(id) { var e = el(id); return e ? String(e.value) : ''; }
+  function kpi(id, text) { var e = el(id); if (e) e.innerHTML = text; }
+  var titleEl = el('iqTitle'), subEl = el('iqSub'),
+      workEl = el('iqWork'), statusEl = el('iqStatus');
+  function say(html) { statusEl.innerHTML = html; }
+  var V = 'x';
+  var OPS = { lt: '<', le: '<=', gt: '>', ge: '>=' };
+  function readOp(id) { return OPS[val(id)] || '<'; }
+
+  function trouble(msg) {
+    workEl.innerHTML = '';
+    ['iqLine', 'iqLineA', 'iqLineB', 'iqPlot'].forEach(function (id) {
+      var svg = el(id);
+      if (svg) svg.textContent = '';
+    });
+    kpi('iqKA', '--'); kpi('iqKB', '--'); kpi('iqKC', '--');
+    if (titleEl) titleEl.textContent = 'waiting for a statement';
+    if (subEl) subEl.textContent = '';
+    say('<strong>Nothing to work with yet.</strong> ' + msg);
+  }
+
+  /* One linear inequality, solved, with its answer as a SET. Everything that
+     follows -- the drawing, both notations, the tests -- is generated from
+     that one structure, so they cannot contradict each other. */
+  function solveIneq(L, Rr, v, rel) {
+    var tr = traceLinear(L, Rr, v, rel, true);
+    if (tr.kind === 'all') return { tr: tr, set: ALLR };
+    if (tr.kind === 'none') return { tr: tr, set: [] };
+    var x = tr.value, r = tr.rel;
+    if (r === '<') return { tr: tr, set: [iv(null, false, x, false)] };
+    if (r === '<=') return { tr: tr, set: [iv(null, false, x, true)] };
+    if (r === '>') return { tr: tr, set: [iv(x, false, null, false)] };
+    return { tr: tr, set: [iv(x, true, null, false)] };
+  }
+
+  function notationRows(set, v) {
+    return [
+      trow('as an inequality', '<code>' + setIneq(set, v) + '</code>'),
+      trow('in interval notation', '<code>' + setText(set) + '</code>'),
+      trow('in set-builder notation', '<code>' + setBuilder(set, v) + '</code>'),
+      trow('in words', setWords(set, v))
+    ];
+  }
+
+  /* The test that catches a reversed sign. Each value is put into the statement
+     the reader typed AND looked up in the computed set; the two columns have to
+     agree, and the lab says so loudly if they ever do not. */
+  function agreeGrid(caption, xs, holdsFn, set, v) {
+    var mismatch = false;
+    var rows = xs.map(function (x) {
+      var holds = holdsFn(x), inSet = setHas(set, x);
+      if (holds !== inSet) mismatch = true;
+      return tcells([
+        '<code>' + v + ' = ' + Rtext(x) + '</code>',
+        holds ? YES : NO,
+        inSet ? 'in it' : 'not in it',
+        holds === inSet ? chip('agree', 'ok') : chip('DISAGREE', 'no')
+      ], holds ? 'focus' : '');
+    });
+    return {
+      html: tgrid(caption, [v, 'the statement you typed', 'the answer set', ''], rows),
+      mismatch: mismatch
+    };
+  }
+  /* Values worth testing: on each boundary and one step either side of it. */
+  function probesAround(points) {
+    var out = [], seen = {};
+    function add(r) {
+      var k = Rtext(r);
+      if (!seen[k]) { seen[k] = 1; out.push(r); }
+    }
+    add(R0);
+    points.forEach(function (p) { add(Rsub(p, R1)); add(p); add(Radd(p, R1)); });
+    out.sort(Rcmp);
+    return out.slice(0, 9);
+  }
+  function boundsOf(set) {
+    var out = [];
+    set.forEach(function (i) {
+      if (i.lo !== null) out.push(i.lo);
+      if (i.hi !== null) out.push(i.hi);
+    });
+    return out;
+  }
+  function degTrouble(a, b) {
+    return 'the highest power here is ' + V + '^' + Math.max(Pdeg(a), Pdeg(b))
+      + '. Adding to and dividing both sides only solves LINEAR inequalities; a squared term '
+      + 'changes sign twice and needs the sign analysis in the quadratic mode of this lab.';
+  }
+
+  var MODES = {};
+
+  /* ============================================================= linear ==
+     One operation at a time, exactly as in the equation lab, with one
+     difference: multiplying or dividing by a negative reverses the statement.
+     That step is bold in the trace because it is the only rule in this course
+     that a reader will otherwise apply from memory and get backwards. */
+  MODES.linear = function () {
+    var L = sideOf(val('iqLhs'), V, 'left side'), Rs = sideOf(val('iqRhs'), V, 'right side');
+    if (!L.ok) return trouble(L.msg);
+    if (!Rs.ok) return trouble(Rs.msg);
+    if (Pdeg(L.poly) > 1 || Pdeg(Rs.poly) > 1) return trouble(degTrouble(L.poly, Rs.poly));
+    var op = readOp('iqOp');
+    var typed = L.src + ' ' + relText(op) + ' ' + Rs.src;
+    titleEl.innerHTML = typed;
+
+    var res = solveIneq(L.poly, Rs.poly, V, op);
+    var set = res.set, tr = res.tr;
+    var holds = function (x) { return relHolds(Peval(L.poly, x), Peval(Rs.poly, x), op); };
+    var probes = probesAround(tr.kind === 'unique' ? [tr.value] : [R0, R1]);
+    var test = agreeGrid('Testing values against the statement you typed', probes, holds, set, V);
+
+    workEl.innerHTML = [
+      ttable('Each step, and what it did to both sides',
+        [trow('as typed', '<code>' + typed + '</code>')].concat(traceRows(tr, typed))),
+      ttable('The answer, written four ways', notationRows(set, V)),
+      test.html
+    ].join('');
+    kpi('iqKA', tr.kind === 'unique' ? V + ' ' + relText(tr.rel) + ' ' + Rtext(tr.value)
+      : (tr.kind === 'all' ? 'every ' + V : 'no ' + V));
+    kpi('iqKB', setText(set));
+    kpi('iqKC', tr.flipped ? 'yes' : 'no');
+    subEl.innerHTML = setText(set);
+
+    var win = lineWindow(set, [0]);
+    drawSet(el('iqLine'), set, win, 'the solution set on the number line: ' + setText(set));
+
+    var msg;
+    if (tr.kind === 'all') {
+      msg = '<strong>Every real number works.</strong> The ' + V + ' terms cancelled and left '
+        + tr.constText + ', which is true whatever ' + V + ' is. The solution set is the whole line, '
+        + 'written (-inf, inf).';
+    } else if (tr.kind === 'none') {
+      msg = '<strong>No number works.</strong> The ' + V + ' terms cancelled and left ' + tr.constText
+        + ', which is false whatever ' + V + ' is. The solution set is empty, and an empty set is an '
+        + 'answer rather than a failure to find one.';
+    } else if (tr.flipped) {
+      msg = '<strong>' + V + ' ' + relText(tr.rel) + ' ' + Rtext(tr.value)
+        + ', and the statement reversed on the way.</strong> Dividing by ' + Rtext(tr.coef)
+        + ' turned ' + relText(op) + ' into ' + relText(tr.rel) + '. The reason is not a convention: '
+        + 'multiplying by a negative number reverses the order of every pair of numbers on the line, so '
+        + 'a statement about which of two things is bigger has to turn round with it. The test table '
+        + 'above is the check &mdash; a reader who forgets the rule gets a set whose every row disagrees '
+        + 'with the original statement.';
+    } else {
+      msg = '<strong>' + V + ' ' + relText(tr.rel) + ' ' + Rtext(tr.value) + '.</strong> '
+        + 'Nothing reversed here: every step added to or subtracted from both sides'
+        + (Requ(tr.coef, R1)
+          ? ', and the coefficient of ' + V + ' was already 1, so there was no division to do.'
+          : ', or divided by ' + Rtext(tr.coef) + ', which is positive.')
+        + ' Adding a number to both sides slides the whole line and does not reorder it, and neither '
+        + 'does multiplying by a positive one.';
+    }
+    if (test.mismatch) {
+      msg += ' <strong>Warning: a test value disagrees with the computed set.</strong> That is a fault '
+        + 'in this lab, not in the arithmetic above, and it should be reported.';
+    }
+    say(msg);
+  };
+
+  /* =========================================================== compound ==
+     Two statements and one line. `and` is the overlap, `or` is everything
+     either one covers, and both are computed as set operations on intervals
+     rather than reasoned about in words. */
+  MODES.compound = function () {
+    var L1 = sideOf(val('iqLhs'), V, 'first left side'), R1s = sideOf(val('iqRhs'), V, 'first right side'),
+        L2 = sideOf(val('iqLhs2'), V, 'second left side'), R2s = sideOf(val('iqRhs2'), V, 'second right side');
+    var bad = [L1, R1s, L2, R2s].filter(function (x) { return !x.ok; });
+    if (bad.length) return trouble(bad[0].msg);
+    if (Pdeg(L1.poly) > 1 || Pdeg(R1s.poly) > 1) return trouble(degTrouble(L1.poly, R1s.poly));
+    if (Pdeg(L2.poly) > 1 || Pdeg(R2s.poly) > 1) return trouble(degTrouble(L2.poly, R2s.poly));
+
+    var op1 = readOp('iqOp'), op2 = readOp('iqOp2');
+    var conn = val('iqConn') === 'or' ? 'or' : 'and';
+    var t1 = L1.src + ' ' + relText(op1) + ' ' + R1s.src;
+    var t2 = L2.src + ' ' + relText(op2) + ' ' + R2s.src;
+    titleEl.innerHTML = t1 + '  <strong>' + conn + '</strong>  ' + t2;
+
+    var a = solveIneq(L1.poly, R1s.poly, V, op1), b = solveIneq(L2.poly, R2s.poly, V, op2);
+    var result = conn === 'and' ? setMeet(a.set, b.set) : setUnion(a.set, b.set);
+
+    var holds = function (x) {
+      var h1 = relHolds(Peval(L1.poly, x), Peval(R1s.poly, x), op1);
+      var h2 = relHolds(Peval(L2.poly, x), Peval(R2s.poly, x), op2);
+      return conn === 'and' ? (h1 && h2) : (h1 || h2);
+    };
+    var probes = probesAround(boundsOf(a.set).concat(boundsOf(b.set)));
+    var test = agreeGrid('Testing values against both statements', probes, holds, result, V);
+
+    workEl.innerHTML = [
+      ttable('The first statement, solved',
+        [trow('as typed', '<code>' + t1 + '</code>')].concat(traceRows(a.tr, t1))),
+      ttable('The second statement, solved',
+        [trow('as typed', '<code>' + t2 + '</code>')].concat(traceRows(b.tr, t2))),
+      ttable('Putting them together', [
+        trow('the first set', '<code>' + setText(a.set) + '</code>'),
+        trow('the second set', '<code>' + setText(b.set) + '</code>'),
+        trow(conn === 'and' ? 'and: the numbers in BOTH' : 'or: the numbers in EITHER',
+          '<code>' + setText(result) + '</code>'),
+        trow('in set-builder notation', '<code>' + setBuilder(result, V) + '</code>')
+      ]),
+      test.html
+    ].join('');
+    kpi('iqKA', setText(a.set));
+    kpi('iqKB', setText(b.set));
+    kpi('iqKC', setText(result));
+    subEl.innerHTML = setText(result);
+
+    var win = lineWindow(setUnion(a.set, b.set), [0]);
+    drawSet(el('iqLineA'), a.set, win, 'the first statement: ' + setText(a.set));
+    drawSet(el('iqLineB'), b.set, win, 'the second statement: ' + setText(b.set));
+    drawSet(el('iqLine'), result, win, 'the combined set: ' + setText(result));
+
+    var msg;
+    if (!result.length) {
+      msg = '<strong>Nothing satisfies both.</strong> The two sets do not overlap anywhere, so the '
+        + 'intersection is empty and the third line above is blank. The tempting move is to write the '
+        + 'pair as one chain &mdash; and a chain such as <code>5 &lt; ' + V + ' &lt; 2</code> claims a '
+        + 'number is above 5 and below 2 at the same time. Writing it down does not make such a number '
+        + 'exist; it only hides that the answer is the empty set.';
+    } else if (result.length === 1 && result[0].lo === null && result[0].hi === null) {
+      msg = '<strong>Every real number satisfies it.</strong> The two sets between them cover the whole '
+        + 'line, and with <code>or</code> a number only has to be in one of them. This is the case that '
+        + 'looks wrong on the page and is obvious on the three lines above.';
+    } else if (result.length === 1 && ivPoint(result[0])) {
+      msg = '<strong>Exactly one number satisfies both:</strong> ' + V + ' = ' + Rtext(result[0].lo)
+        + '. Each statement allows a half-line, and the two half-lines meet at a single point. '
+        + '"' + V + ' &ge; 3 and ' + V + ' &le; 3" is how ' + V + ' = 3 is written when it arrives as '
+        + 'two inequalities.';
+    } else {
+      msg = '<strong>' + setText(result) + '</strong> is the answer, and the three number lines above '
+        + 'show how it was built: the first statement, the second, and '
+        + (conn === 'and' ? 'the part they have in common.' : 'everything either one covers.')
+        + ' With <code>' + conn + '</code>, a number belongs to the answer when it is in '
+        + (conn === 'and' ? 'both' : 'at least one') + ' of the first two.';
+    }
+    if (test.mismatch) {
+      msg += ' <strong>Warning: a test value disagrees with the computed set.</strong>';
+    }
+    say(msg);
+  };
+
+  /* =========================================================== absolute ==
+     |A| < c is ONE band and |A| > c is TWO rays, and the reason is the same
+     sentence in both cases: |A| is the distance from A to zero. Both cases are
+     solved by the linear trace and then combined as sets -- an intersection
+     for less-than, a union for greater-than. */
+  MODES.absolute = function () {
+    var ins = sideOf(val('iqIns'), V, 'expression inside the bars'),
+        rhs = sideOf(val('iqRhs'), V, 'right side');
+    if (!ins.ok) return trouble(ins.msg);
+    if (!rhs.ok) return trouble(rhs.msg);
+    if (Pdeg(ins.poly) > 1 || Pdeg(rhs.poly) > 1) return trouble(degTrouble(ins.poly, rhs.poly));
+    var op = readOp('iqOp');
+    var less = op === '<' || op === '<=';
+    var typed = '|' + ins.src + '| ' + relText(op) + ' ' + rhs.src;
+    titleEl.innerHTML = typed;
+
+    var negRhs = Pscale(rhs.poly, R(-1n));
+    var a = solveIneq(ins.poly, rhs.poly, V, op);              /* A  op  B   */
+    var b = solveIneq(ins.poly, negRhs, V, relSwap(op));       /* A  op' -B  */
+    var set = less ? setMeet(a.set, b.set) : setUnion(a.set, b.set);
+
+    var holds = function (x) {
+      return relHolds(Rabs(Peval(ins.poly, x)), Peval(rhs.poly, x), op);
+    };
+    var probes = probesAround(boundsOf(a.set).concat(boundsOf(b.set)));
+    var test = agreeGrid('Testing values against |' + ins.src + '| ' + relText(op) + ' ' + rhs.src,
+      probes, holds, set, V);
+
+    var meaning = less
+      ? '|' + ins.src + '| ' + relText(op) + ' ' + rhs.src + ' says the distance from '
+        + ins.src + ' to 0 is ' + (op === '<' ? 'less than ' : 'at most ') + rhs.src
+        + ', which pins ' + ins.src + ' between -(' + rhs.src + ') and ' + rhs.src + ' &mdash; BOTH at once.'
+      : '|' + ins.src + '| ' + relText(op) + ' ' + rhs.src + ' says the distance from '
+        + ins.src + ' to 0 is ' + (op === '>' ? 'more than ' : 'at least ') + rhs.src
+        + ', which happens when ' + ins.src + ' is far out on EITHER side.';
+
+    workEl.innerHTML = [
+      ttable('What the bars say', [
+        trow('the statement', '<code>' + typed + '</code>'),
+        trow('what it means', meaning),
+        trow('so it becomes', less
+          ? '<code>' + Ptext(negRhs, V) + ' ' + relText(op) + ' ' + Ptext(ins.poly, V) + ' '
+            + relText(op) + ' ' + Ptext(rhs.poly, V) + '</code> &mdash; a chain, because both halves '
+            + 'have to hold at once'
+          : '<code>' + Ptext(ins.poly, V) + ' ' + relText(op) + ' ' + Ptext(rhs.poly, V)
+            + '</code> or <code>' + Ptext(ins.poly, V) + ' ' + relText(relSwap(op)) + ' '
+            + Ptext(negRhs, V) + '</code>')
+      ]),
+      ttable('Case 1: ' + Ptext(ins.poly, V) + ' ' + relText(op) + ' ' + Ptext(rhs.poly, V),
+        traceRows(a.tr).concat([trow('as a set', '<code>' + setText(a.set) + '</code>')])),
+      ttable('Case 2: ' + Ptext(ins.poly, V) + ' ' + relText(relSwap(op)) + ' ' + Ptext(negRhs, V),
+        traceRows(b.tr).concat([trow('as a set', '<code>' + setText(b.set) + '</code>')])),
+      ttable(less ? 'The two cases, intersected' : 'The two cases, unioned',
+        [trow(less ? 'both at once' : 'either one', '<code>' + setText(set) + '</code>')]
+          .concat(notationRows(set, V))),
+      test.html
+    ].join('');
+    kpi('iqKA', setText(a.set));
+    kpi('iqKB', setText(b.set));
+    kpi('iqKC', setText(set));
+    subEl.innerHTML = setText(set);
+
+    var win = lineWindow(set.length ? set : setUnion(a.set, b.set), [0]);
+    drawSet(el('iqLine'), set, win, 'the solution set: ' + setText(set));
+
+    /* The V and the level it is compared with, drawn from the same polynomials. */
+    var svg = el('iqPlot');
+    if (svg) {
+      var fIns = polyFn(ins.poly), fRhs = polyFn(rhs.poly);
+      var fAbs = function (x) { return Math.abs(fIns(x)); };
+      var lo = Infinity, hi = -Infinity, i, x;
+      for (i = 0; i <= 80; i += 1) {
+        x = win.lo + (win.hi - win.lo) * i / 80;
+        [fAbs(x), fRhs(x)].forEach(function (y) {
+          if (isFinite(y)) { lo = Math.min(lo, y); hi = Math.max(hi, y); }
+        });
+      }
+      if (!isFinite(lo) || !isFinite(hi)) { lo = -2; hi = 5; }
+      if (hi - lo < 1e-9) { lo -= 3; hi += 3; }
+      var pad = Math.max(1, (hi - lo) * 0.2);
+      var plot = Plot(svg, { xmin: win.lo, xmax: win.hi, ymin: lo - pad, ymax: hi + pad });
+      plot.frame();
+      plot.curve(fAbs, 'plot-curve');
+      plot.curve(fRhs, 'plot-curve alt');
+      boundsOf(set).forEach(function (r) { plot.point(Rnum(r), Rnum(Peval(rhs.poly, r)), 'plot-point root'); });
+      plot.describe('the V-shaped graph of |' + ins.src + '| against ' + rhs.src
+        + '; the solution set is where the V is '
+        + (less ? 'below' : 'above') + ' the other graph');
+    }
+
+    var rhsConst = Pdeg(rhs.poly) <= 0;
+    var c = rhsConst ? (rhs.poly.length ? rhs.poly[0] : R0) : null;
+    var msg;
+    if (rhsConst && Rsign(c) < 0 && less) {
+      msg = '<strong>Nothing satisfies it, and no algebra is needed to see why.</strong> The left side is '
+        + 'a distance, so it is never negative, and it cannot be below ' + Rtext(c) + '. The two cases '
+        + 'were still solved above, and their overlap came out empty &mdash; which is what an impossible '
+        + 'statement looks like from inside the method.';
+    } else if (rhsConst && Rsign(c) < 0 && !less) {
+      msg = '<strong>Every real number satisfies it.</strong> A distance is never negative, so it is '
+        + 'always above ' + Rtext(c) + '. The two rays above overlap and cover the whole line.';
+    } else if (!set.length) {
+      msg = '<strong>The solution set is empty.</strong> The two cases have no number in common.';
+    } else if (set.length === 1 && ivPoint(set[0])) {
+      msg = '<strong>Exactly one number: ' + V + ' = ' + Rtext(set[0].lo) + '.</strong> '
+        + 'Only zero is at distance zero from zero, so a statement of the form |A| &le; 0 collapses to '
+        + 'A = 0. The band has closed up to a point.';
+    } else if (less) {
+      msg = '<strong>' + setText(set) + ': one band.</strong> Less-than gives a single interval because '
+        + 'the two conditions have to hold together, and the answer is their overlap. The common mistake '
+        + 'is to write it as two separate pieces joined by "or", which would claim every number outside '
+        + 'the band as well.';
+    } else {
+      var chain = (set.length === 2 && set[0].hi !== null && set[1].lo !== null)
+        ? Rtext(set[1].lo) + ' &lt; ' + V + ' &lt; ' + Rtext(set[0].hi) : null;
+      msg = '<strong>' + setText(set) + ': two rays.</strong> Greater-than gives two pieces because a '
+        + 'number can be far from zero in either direction, and it only has to manage one of them. '
+        + (chain
+          ? 'Squeezing the answer into a chain would give <code>' + chain + '</code>, which no number '
+            + 'satisfies &mdash; the two pieces point away from each other and cannot be joined. '
+          : '')
+        + 'The answer has to stay two pieces joined by "or".';
+    }
+    if (test.mismatch) msg += ' <strong>Warning: a test value disagrees with the computed set.</strong>';
+    say(msg);
+  };
+
+  /* =========================================================== notation ==
+     Four ways of writing one set, generated from one structure so they cannot
+     drift apart, plus the two errors that the notation itself invites: closing
+     a bracket on infinity, and writing the endpoints the wrong way round. */
+  function readEndpoint(text) {
+    var s = String(text).trim().toLowerCase();
+    if (s === 'inf' || s === '+inf' || s === 'infinity' || s === '+infinity') return { inf: 1 };
+    if (s === '-inf' || s === '-infinity') return { inf: -1 };
+    var r = parseR(text);
+    return r === null ? null : { r: r };
+  }
+
+  MODES.notation = function () {
+    var lo = readEndpoint(val('iqLo')), hi = readEndpoint(val('iqHi'));
+    if (lo === null) return trouble('the left endpoint must be a number or <code>-inf</code>.');
+    if (hi === null) return trouble('the right endpoint must be a number or <code>inf</code>.');
+    if (lo.inf === 1) return trouble('the left endpoint cannot be +infinity: an interval runs upward.');
+    if (hi.inf === -1) return trouble('the right endpoint cannot be -infinity: an interval runs upward.');
+
+    var loClosed = val('iqLoB') === 'c', hiClosed = val('iqHiB') === 'c';
+    var notes = [];
+    if (lo.inf && loClosed) {
+      loClosed = false;
+      notes.push('Infinity is not a number, so it is never in the set and the bracket beside it is '
+        + 'always round. The left bracket has been corrected to <code>(</code>.');
+    }
+    if (hi.inf && hiClosed) {
+      hiClosed = false;
+      notes.push('Same on the right: <code>inf]</code> would claim that infinity is one of the numbers '
+        + 'in the set. The right bracket has been corrected to <code>)</code>.');
+    }
+    var interval = iv(lo.inf ? null : lo.r, loClosed, hi.inf ? null : hi.r, hiClosed);
+    var empty = ivEmpty(interval);
+    var set = empty ? [] : [interval];
+    var written = (loClosed ? '[' : '(') + (lo.inf ? '-inf' : Rtext(lo.r)) + ', '
+      + (hi.inf ? 'inf' : Rtext(hi.r)) + (hiClosed ? ']' : ')');
+    titleEl.textContent = written;
+
+    var kind;
+    if (empty) {
+      kind = (interval.lo !== null && interval.hi !== null && Rcmp(interval.lo, interval.hi) > 0)
+        ? 'endpoints the wrong way round' : 'empty';
+    } else if (interval.lo === null && interval.hi === null) kind = 'the whole line';
+    else if (ivPoint(interval)) kind = 'a single point';
+    else if (interval.lo === null || interval.hi === null) kind = 'a half-line';
+    else kind = 'a bounded interval';
+
+    var testR = parseR(val('iqTest'));
+    var rows = notationRows(set, V);
+    rows.push(trow('is it bounded?', interval.lo !== null && interval.hi !== null && !empty
+      ? 'yes, at both ends' : (empty ? 'there is nothing to bound' : 'no &mdash; it runs for ever in at least one direction')));
+    if (testR !== null) {
+      rows.push(trow('is ' + Rtext(testR) + ' in it?', setHas(set, testR)
+        ? chip('yes', 'ok') + ' every condition in the set-builder form holds at ' + Rtext(testR)
+        : chip('no', 'no') + ' at least one condition fails at ' + Rtext(testR)));
+    } else {
+      rows.push(trow('the test value', 'not a number &mdash; type a whole number, a fraction such as '
+        + '<code>7/2</code>, or a decimal'));
+    }
+
+    workEl.innerHTML = [
+      ttable('What you wrote, said four ways', rows),
+      ttable('The two things the notation invites you to get wrong', [
+        trow('a square bracket on infinity',
+          'always wrong. <code>[3, inf]</code> claims infinity is a number in the set; it is not a number '
+          + 'at all. The correct form is <code>[3, inf)</code>.'),
+        trow('endpoints the wrong way round',
+          'an interval is written low end first. <code>[5, 2]</code> describes the numbers that are at '
+          + 'once at least 5 and at most 2, of which there are none.'),
+        trow('a round bracket and a square one', 'perfectly normal. <code>[2, 5)</code> contains 2 and '
+          + 'not 5, and that is exactly what "at least 2 and less than 5" says.')
+      ])
+    ].join('');
+    kpi('iqKA', setText(set));
+    kpi('iqKB', kind);
+    kpi('iqKC', testR === null ? '--' : (setHas(set, testR) ? 'in' : 'out'));
+    subEl.textContent = kind;
+
+    var win = lineWindow(set, set.length ? [] : [interval.lo === null ? 0 : Rnum(interval.lo),
+                                                interval.hi === null ? 0 : Rnum(interval.hi)]);
+    drawSet(el('iqLine'), set, win, 'the set ' + setText(set) + ' on the number line');
+
+    var msg;
+    if (kind === 'endpoints the wrong way round') {
+      msg = '<strong>' + written + ' contains no numbers.</strong> Read it as a sentence: "at least '
+        + Rtext(interval.lo) + ' and at most ' + Rtext(interval.hi) + '". Nothing is both. Interval '
+        + 'notation always names the smaller end first, and swapping them does not describe the numbers '
+        + 'in between &mdash; it describes nothing.';
+    } else if (empty) {
+      msg = '<strong>' + written + ' is the empty set.</strong> The two ends are the same number and at '
+        + 'least one of them is excluded, so there is no room left. Compare it with <code>['
+        + Rtext(interval.lo) + ', ' + Rtext(interval.lo) + ']</code>, which contains exactly one number.';
+    } else if (kind === 'a single point') {
+      msg = '<strong>' + written + ' contains exactly one number.</strong> Both ends are closed and they '
+        + 'are the same, so the set is { ' + Rtext(interval.lo) + ' }. Open either bracket and it becomes '
+        + 'empty, which is the sharpest illustration of what those brackets do.';
+    } else {
+      msg = '<strong>' + written + ' is ' + kind + '.</strong> The same set is written <code>'
+        + setIneq(set, V) + '</code> as an inequality and <code>' + setBuilder(set, V) + '</code> in '
+        + 'set-builder notation. The filled and hollow ends on the line are the brackets: a filled end is '
+        + 'a square bracket, a hollow one is round.';
+    }
+    if (notes.length) msg += ' ' + notes.join(' ');
+    say(msg);
+  };
+
+  /* ========================================================== quadratic ==
+     A quadratic changes sign only where it is zero, so its roots cut the line
+     into pieces and the whole expression keeps one sign on each piece. The lab
+     therefore FINDS a sign for each piece by evaluating at a point inside it,
+     rather than quoting a rule about parabolas.
+
+     The roots may be irrational. An endpoint is carried as its exact text plus
+     an exact comparison, so a rational test point can be PROVED to lie inside
+     its interval; the float beside it decides where to look and where to draw,
+     and never what the answer is. */
+  function cmpToSurd(t, p, q, k) {
+    /* compare the rational t with p + q*sqrt(k), exactly */
+    if (k === 1n) return Rcmp(t, Radd(p, q));
+    var L = Rsub(t, p), sL = Rsign(L), sq = Rsign(q);
+    if (sq === 0) return sL;
+    if (sq > 0) {
+      if (sL <= 0) return -1;                     /* q*sqrt(k) > 0 >= L */
+      return Rcmp(Rmul(L, L), Rmul(Rmul(q, q), R(k)));
+    }
+    if (sL >= 0) return 1;                        /* q*sqrt(k) < 0 <= L */
+    return -Rcmp(Rmul(L, L), Rmul(Rmul(q, q), R(k)));
+  }
+  function critRational(r) {
+    return {
+      text: Rtext(r), num: Rnum(r), rational: r,
+      cmp: function (t) { return Rcmp(t, r); }
+    };
+  }
+  function surdText(p, q, k) {
+    if (k === 1n) return Rtext(Radd(p, q));
+    var mag = Requ(Rabs(q), R1) ? 'sqrt(' + k + ')' : Rterm(Rabs(q)) + 'sqrt(' + k + ')';
+    if (Rzero(p)) return (Rsign(q) < 0 ? '-' : '') + mag;
+    return Rtext(p) + (Rsign(q) < 0 ? ' - ' : ' + ') + mag;
+  }
+  function critSurd(p, q, k) {
+    return {
+      text: surdText(p, q, k), num: Rnum(p) + Rnum(q) * Math.sqrt(Number(k)), rational: null,
+      cmp: function (t) { return cmpToSurd(t, p, q, k); }
+    };
+  }
+  /* A rational strictly inside (lo, hi). The float midpoint says where to look;
+     the candidate is then CHECKED against both endpoints exactly, and only a
+     candidate that passes is used. */
+  function testPointIn(lo, hi) {
+    var cands = [], i;
+    if (!lo && !hi) cands.push(R0);
+    else if (!lo) cands.push(R(BigInt(Math.floor(hi.num) - 1)));
+    else if (!hi) cands.push(R(BigInt(Math.ceil(lo.num) + 1)));
+    else {
+      var m = (lo.num + hi.num) / 2;
+      [1n, 2n, 4n, 12n, 120n, 12000n].forEach(function (den) {
+        cands.push(R(BigInt(Math.round(m * Number(den))), den));
+      });
+    }
+    for (i = 0; i < cands.length; i += 1) {
+      var t = cands[i];
+      if ((!lo || lo.cmp(t) > 0) && (!hi || hi.cmp(t) < 0)) return t;
+    }
+    return null;
+  }
+
+  MODES.quadratic = function () {
+    var L = sideOf(val('iqLhs'), V, 'left side'), Rs = sideOf(val('iqRhs'), V, 'right side');
+    if (!L.ok) return trouble(L.msg);
+    if (!Rs.ok) return trouble(Rs.msg);
+    var op = readOp('iqOp');
+    var typed = L.src + ' ' + relText(op) + ' ' + Rs.src;
+    titleEl.innerHTML = typed;
+    var D = Psub(L.poly, Rs.poly);
+    if (Pdeg(D) > 2) {
+      return trouble('after moving everything to one side this is degree ' + Pdeg(D)
+        + '. The sign analysis below works at any degree, but finding the roots of a cubic needs the '
+        + 'rational root theorem from course 4, so this mode stops at the quadratic.');
+    }
+
+    var svgLine = el('iqLine'), svgPlot = el('iqPlot');
+
+    /* Not actually quadratic: say so and finish the job anyway. */
+    if (Pdeg(D) <= 1) {
+      var res = solveIneq(L.poly, Rs.poly, V, op);
+      var holdsL = function (x) { return relHolds(Peval(L.poly, x), Peval(Rs.poly, x), op); };
+      var probesL = probesAround(res.tr.kind === 'unique' ? [res.tr.value] : [R0]);
+      var testL = agreeGrid('Testing values against the statement you typed', probesL, holdsL, res.set, V);
+      workEl.innerHTML = [
+        ttable('There is no ' + V + '^2 term here', [
+          trow('moving everything to one side', '<code>' + Ptext(D, V) + ' ' + relText(op) + ' 0</code>'),
+          trow('what that leaves', Pdeg(D) === 1
+            ? 'a linear inequality, which has one boundary rather than two and cannot change sign twice'
+            : 'a statement about numbers with no ' + V + ' in it at all')
+        ]),
+        ttable('Solved as a linear inequality',
+          [trow('as typed', '<code>' + typed + '</code>')].concat(traceRows(res.tr, typed))),
+        ttable('The answer', notationRows(res.set, V)),
+        testL.html
+      ].join('');
+      kpi('iqKA', Ptext(D, V));
+      kpi('iqKB', 'none &mdash; not quadratic');
+      kpi('iqKC', setText(res.set));
+      subEl.innerHTML = setText(res.set);
+      drawSet(svgLine, res.set, lineWindow(res.set, [0]), 'the solution set: ' + setText(res.set));
+      if (svgPlot) svgPlot.textContent = '';
+      return say('<strong>This one is linear.</strong> The ' + V + '^2 terms cancelled when the sides '
+        + 'were subtracted, so there is a single boundary and no sign table to build. The answer is '
+        + setText(res.set) + '.');
+    }
+
+    var q = quadroots(D[2], D.length > 1 ? D[1] : R0, D.length > 0 ? D[0] : R0);
+    var crits = [];
+    if (q.kind === 'double') crits = [critRational(q.p)];
+    else if (q.kind === 'rational') crits = q.roots.map(critRational);
+    else if (q.kind === 'irrational') {
+      crits = [critSurd(q.p, Rneg(q.s.q), q.s.k), critSurd(q.p, q.s.q, q.s.k)];
+    }
+
+    /* the pieces of the line: interval, root, interval, root, interval */
+    var pieces = [], i;
+    if (!crits.length) pieces.push({ kind: 'iv', lo: null, hi: null });
+    else {
+      pieces.push({ kind: 'iv', lo: null, hi: crits[0] });
+      for (i = 0; i < crits.length; i += 1) {
+        pieces.push({ kind: 'pt', crit: crits[i] });
+        pieces.push({ kind: 'iv', lo: crits[i], hi: crits[i + 1] || null });
+      }
+    }
+    pieces.forEach(function (pc) {
+      if (pc.kind === 'iv') pc.t = testPointIn(pc.lo, pc.hi);
+    });
+
+    function signAt(poly, pc) {
+      if (pc.kind === 'pt') {
+        return pc.crit.rational !== null ? Rsign(Peval(poly, pc.crit.rational)) : 0;
+      }
+      return pc.t === null ? 0 : Rsign(Peval(poly, pc.t));
+    }
+    pieces.forEach(function (pc) {
+      pc.sign = signAt(D, pc);
+      pc.selected = relHolds(R(BigInt(pc.sign)), R0, op);
+    });
+
+    /* the factored form, searched for rather than looked up */
+    var fac = Pfactor(D);
+    var factorRows = [];
+    fac.factors.forEach(function (item) {
+      for (var m = 0; m < item.mult; m += 1) factorRows.push({ label: Pfactortext(item.poly, V), poly: item.poly });
+    });
+    if (fac.rest.length && fac.factors.length) {
+      factorRows.push({ label: Pfactortext(fac.rest, V), poly: fac.rest });
+    }
+    if (!Requ(fac.content, R1) && factorRows.length) {
+      factorRows.push({ label: 'the constant ' + Rtext(fac.content), poly: [fac.content] });
+    }
+
+    function headCell(pc) {
+      return pc.kind === 'pt' ? V + ' = ' + pc.crit.text
+        : '(' + (pc.lo ? pc.lo.text : '-inf') + ', ' + (pc.hi ? pc.hi.text : 'inf') + ')';
+    }
+    function signRow(label, values) {
+      return '<tr><th class="rowhead">' + label + '</th>' + values.map(function (s) {
+        return '<td class="' + (s > 0 ? 't' : (s < 0 ? 'f' : '')) + '">'
+          + (s > 0 ? '+' : (s < 0 ? '-' : '0')) + '</td>';
+      }).join('') + '</tr>';
+    }
+    function plainRow(label, values) {
+      return '<tr><th class="rowhead">' + label + '</th>'
+        + values.map(function (t) { return '<td style="text-align:left;">' + t + '</td>'; }).join('') + '</tr>';
+    }
+
+    var signRows = [
+      plainRow('value tested there', pieces.map(function (pc) {
+        return pc.kind === 'pt' ? 'the root itself'
+          : (pc.t === null ? 'no rational point found' : '<code>' + V + ' = ' + Rtext(pc.t) + '</code>');
+      }))
+    ];
+    factorRows.forEach(function (fr) {
+      signRows.push(signRow(fr.label, pieces.map(function (pc) { return signAt(fr.poly, pc); })));
+    });
+    signRows.push(signRow('<strong>' + Ptext(D, V) + '</strong>', pieces.map(function (pc) { return pc.sign; })));
+    signRows.push(plainRow('is it ' + relText(op) + ' 0?', pieces.map(function (pc) {
+      return pc.selected ? YES : NO;
+    })));
+
+    /* merge the selected pieces back into intervals */
+    var merged = [], cur = null;
+    pieces.forEach(function (pc) {
+      if (!pc.selected) { if (cur) { merged.push(cur); cur = null; } return; }
+      if (!cur) {
+        cur = pc.kind === 'pt'
+          ? { lo: pc.crit, loC: true, hi: pc.crit, hiC: true }
+          : { lo: pc.lo, loC: false, hi: pc.hi, hiC: false };
+      } else if (pc.kind === 'pt') { cur.hi = pc.crit; cur.hiC = true; }
+      else { cur.hi = pc.hi; cur.hiC = false; }
+    });
+    if (cur) merged.push(cur);
+
+    function pieceText(i2) {
+      if (i2.lo && i2.hi && i2.lo === i2.hi) return '{' + i2.lo.text + '}';
+      return (i2.loC ? '[' : '(') + (i2.lo ? i2.lo.text : '-inf') + ', '
+        + (i2.hi ? i2.hi.text : 'inf') + (i2.hiC ? ']' : ')');
+    }
+    function solutionText() {
+      if (!merged.length) return '{ }';
+      if (merged.length === 1 && !merged[0].lo && !merged[0].hi) return '(-inf, inf)';
+      return merged.map(pieceText).join(' U ');
+    }
+    function solutionIneq() {
+      if (!merged.length) return 'no ' + V + ' at all';
+      return merged.map(function (i2) {
+        if (i2.lo && i2.hi && i2.lo === i2.hi) return V + ' = ' + i2.lo.text;
+        if (!i2.lo && !i2.hi) return 'every real ' + V;
+        if (!i2.lo) return V + ' ' + relText(i2.hiC ? '<=' : '<') + ' ' + i2.hi.text;
+        if (!i2.hi) return V + ' ' + relText(i2.loC ? '>=' : '>') + ' ' + i2.lo.text;
+        return i2.lo.text + ' ' + relText(i2.loC ? '<=' : '<') + ' ' + V + ' '
+          + relText(i2.hiC ? '<=' : '<') + ' ' + i2.hi.text;
+      }).join('  or  ');
+    }
+
+    /* An independent check: every test point, put back into the statement as
+       typed, must agree with the piece it sits in. */
+    var checkRows = [];
+    var disagree = false;
+    pieces.forEach(function (pc) {
+      if (pc.kind !== 'iv' || pc.t === null) return;
+      var holdsHere = relHolds(Peval(L.poly, pc.t), Peval(Rs.poly, pc.t), op);
+      if (holdsHere !== pc.selected) disagree = true;
+      checkRows.push(tcells([
+        '<code>' + V + ' = ' + Rtext(pc.t) + '</code>',
+        Rtext(Peval(L.poly, pc.t)),
+        Rtext(Peval(Rs.poly, pc.t)),
+        holdsHere ? YES : NO,
+        holdsHere === pc.selected ? chip('agree', 'ok') : chip('DISAGREE', 'no')
+      ], holdsHere ? 'focus' : ''));
+    });
+
+    workEl.innerHTML = [
+      ttable('Getting it into the form (expression) ' + relText(op) + ' 0', [
+        trow('as typed', '<code>' + typed + '</code>'),
+        trow('subtract the right side from both', '<code>' + Ptext(D, V) + ' ' + relText(op) + ' 0</code>'),
+        trow('factored over the rationals', '<code>' + Pfactortextfull(D, V) + '</code>'
+          + (fac.factors.length ? '' : '<br><span class="small-copy">the rational root search came back '
+            + 'empty, so the roots are irrational and the sign table uses the quadratic itself</span>')),
+        trow('where it is zero', crits.length
+          ? crits.map(function (c) { return '<code>' + V + ' = ' + c.text + '</code>'; }).join(' and ')
+          : 'nowhere: the discriminant is ' + Rtext(q.disc) + ', which is negative')
+      ]),
+      tgrid('The sign on each piece of the line', [''].concat(pieces.map(headCell)), signRows),
+      ttable('The answer', [
+        trow('as an inequality', '<code>' + solutionIneq() + '</code>'),
+        trow('in interval notation', '<code>' + solutionText() + '</code>'),
+        trow('how many pieces', merged.length === 0 ? 'none' : String(merged.length))
+      ]),
+      checkRows.length
+        ? tgrid('Each test value, put back into the statement you typed',
+            [V, 'left side', 'right side', 'holds?', ''], checkRows)
+        : ''
+    ].join('');
+
+    kpi('iqKA', Pfactortextfull(D, V));
+    kpi('iqKB', crits.length ? crits.map(function (c) { return c.text; }).join(', ') : 'none');
+    kpi('iqKC', solutionText());
+    subEl.innerHTML = solutionText();
+
+    var nums = crits.map(function (c) { return c.num; });
+    var lo = nums.length ? Math.min.apply(null, nums) : -3, hi = nums.length ? Math.max.apply(null, nums) : 3;
+    var pad = Math.max(2, (hi - lo) * 0.8);
+    var win = { lo: lo - pad, hi: hi + pad }, span = win.hi - win.lo;
+    if (svgLine) {
+      var line = NumberLine(svgLine, win.lo, win.hi);
+      merged.forEach(function (i2) {
+        if (i2.lo && i2.hi && i2.lo === i2.hi) { line.point(i2.lo.num, true); return; }
+        line.interval(i2.lo ? i2.lo.num : win.lo - span, i2.hi ? i2.hi.num : win.hi + span, i2.loC, i2.hiC);
+      });
+      line.describe('the solution set ' + solutionText() + ' on the number line');
+    }
+    if (svgPlot) {
+      var fD = polyFn(D), ylo = Infinity, yhi = -Infinity, j, xx;
+      for (j = 0; j <= 80; j += 1) {
+        xx = win.lo + span * j / 80;
+        var yy = fD(xx);
+        if (isFinite(yy)) { ylo = Math.min(ylo, yy); yhi = Math.max(yhi, yy); }
+      }
+      if (!isFinite(ylo)) { ylo = -5; yhi = 5; }
+      var ypad = Math.max(1, (yhi - ylo) * 0.15);
+      var plot = Plot(svgPlot, { xmin: win.lo, xmax: win.hi, ymin: ylo - ypad, ymax: yhi + ypad });
+      plot.frame();
+      plot.curve(fD, 'plot-curve');
+      merged.forEach(function (i2) {
+        plot.segment(i2.lo ? i2.lo.num : win.lo - span, 0,
+                     i2.hi ? i2.hi.num : win.hi + span, 0, 'plot-interval');
+      });
+      crits.forEach(function (c) { plot.point(c.num, 0, 'plot-point root', c.text); });
+      plot.describe('the graph of ' + Ptext(D, V) + ', with the solution set marked along the x-axis');
+    }
+
+    var above = op === '>' || op === '>=';
+    var msg;
+    if (!crits.length) {
+      msg = '<strong>' + (merged.length ? 'Every real number satisfies it.' : 'No number satisfies it.')
+        + '</strong> The discriminant is ' + Rtext(q.disc) + ', so ' + Ptext(D, V) + ' is never zero and '
+        + 'never changes sign: it is ' + (Rsign(D[2]) > 0 ? 'positive' : 'negative') + ' everywhere, as '
+        + 'the graph shows. A quadratic that misses the axis makes an inequality that is either always '
+        + 'true or always false, and there is nothing in between to find.';
+    } else if (q.kind === 'double') {
+      msg = '<strong>' + solutionText() + '.</strong> There is one root, ' + crits[0].text
+        + ', where the parabola touches the axis without crossing, so the expression has the SAME sign on '
+        + 'both sides of it. That is what makes this case catch people: '
+        + (merged.length === 2
+          ? 'the answer is the whole line with a single point cut out of it, and it has to be written as '
+            + 'two pieces even though the graph looks like one.'
+          : (merged.length === 1 && ivPointLike(merged[0])
+            ? 'the only value that qualifies is the root itself.'
+            : 'the sign never changes, so the answer is everything or nothing except at the root.'));
+    } else {
+      msg = '<strong>' + solutionText() + '.</strong> The two roots cut the line into three pieces and '
+        + 'the sign table above was filled in by evaluating at one exact value inside each. '
+        + (above
+          ? 'Greater-than picks out the two OUTER pieces, and they have to be joined with "or" &mdash; '
+            + 'they are not one interval and cannot be written as a chain.'
+          : 'Less-than picks out the single piece BETWEEN the roots, which is why this case is one '
+            + 'interval and can be written as a chain.')
+        + (q.kind === 'irrational'
+          ? ' The roots here are irrational: ' + crits[0].text + ' and ' + crits[1].text
+            + ' are the exact endpoints, and ' + crits[0].num.toFixed(4) + ' and ' + crits[1].num.toFixed(4)
+            + ' are roundings of them used only to place the marks on the picture.'
+          : '');
+    }
+    if (crits.length === 2 && above) {
+      msg += ' This is the shape the usual shortcut gets wrong: taking a square root and keeping one '
+        + 'sign turns ' + V + '^2 &gt; 4 into ' + V + ' &gt; 2 and quietly loses half the answer, and '
+        + 'dividing both sides by ' + V + ' is worse, because ' + V + ' may be negative and the division '
+        + 'would then have to reverse the statement. The sign table needs neither move.';
+    }
+    if (disagree) {
+      msg += ' <strong>Warning: a test value disagrees with the sign table.</strong>';
+    }
+    say(msg);
+  };
+  function ivPointLike(i2) { return i2.lo && i2.hi && i2.lo === i2.hi; }
+
+  /* ----------------------------------------------------------- wiring up */
+  function redraw() {
+    var fn = MODES[MODE];
+    if (!fn) return trouble('this lab has no mode named ' + MODE + '.');
+    try {
+      fn();
+    } catch (err) {
+      trouble('that combination could not be worked out (' + (err && err.message ? err.message : err)
+        + '). Try one of the presets and change it a little at a time.');
+    }
+  }
+  var presetEl = el('iqPreset');
+  function applyPreset() {
+    if (!presetEl) return;
+    var parts = String(presetEl.value).split('|');
+    FIELDS.forEach(function (id, i) {
+      var e = el(id);
+      if (e && parts[i] !== undefined) e.value = parts[i];
+    });
+  }
+  if (presetEl) presetEl.addEventListener('change', function () { applyPreset(); redraw(); });
+  FIELDS.forEach(function (id) {
+    var e = el(id);
+    if (!e) return;
+    e.addEventListener('input', redraw);
+    e.addEventListener('change', redraw);
+  });
+  applyPreset();
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

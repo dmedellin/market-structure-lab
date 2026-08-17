@@ -31,11 +31,21 @@ CANONICAL_ORIGIN = "https://learn.geterdone.io"
 #     of learning discrete mathematics from interactive examples: a widget that
 #     checks a claim for n = 1..40 has demonstrated nothing about n = 41, and
 #     the whole point of course 3 is why.
-FOOTER_LICENCE = (
+# The clause after the licence names the INTELLECTUAL HAZARD of the subject,
+# and every subject has its own. Hard-coding discrete mathematics' hazard here
+# was correct while it was the only generated path; the moment a second one
+# arrived, that sentence became false on its pages -- and a disclaimer that is
+# false is worse than none, because it is the sentence a reader trusts. So each
+# path states its own, and the site invariants assert that a path never carries
+# another path's.
+LICENCE_HEAD = (
     "&copy; 2026 dmedellin &middot; Released under the MIT License &middot; "
-    "Educational use only &mdash; every figure is computed in your browser from "
-    "the stated definition, and a worked example is not a proof."
+    "Educational use only &mdash; "
 )
+
+
+def licence(material):
+    return LICENCE_HEAD + material
 
 # The theme toggle, verbatim from the library's pinned form. The label is
 # STATIC and direction-neutral so it is accurate in both states.
@@ -273,12 +283,16 @@ def pager(*, prev=None, next=None):
     )
 
 
-def footer(lead_html):
+def footer(lead_html, material):
     """The footer. Every page names this library at its own host.
 
     geterdone.io is a separate live site this project does not control, so a
     footer link there would walk the reader off the library from every page at
     once; the only host any footer names is learn.geterdone.io.
+
+    `material` is the owning path's hazard clause; it is required rather than
+    defaulted, so a new path cannot inherit another subject's disclaimer by
+    forgetting to state its own.
     """
     return """
     <footer class="footer">
@@ -287,7 +301,7 @@ def footer(lead_html):
       <p><a href="{origin}">learn.geterdone.io</a></p>
     </footer>
   </div>
-""".format(lead=lead_html, licence=FOOTER_LICENCE, origin=CANONICAL_ORIGIN)
+""".format(lead=lead_html, licence=licence(material), origin=CANONICAL_ORIGIN)
 
 
 def close(scripts):

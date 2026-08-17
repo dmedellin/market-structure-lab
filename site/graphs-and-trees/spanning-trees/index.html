@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spanning Trees and Minimum Spanning Trees | Graphs and Trees | Learn · geterdone.io</title>
-  <meta name="description" content="A spanning tree reaches every vertex with `n − 1` edges. When the edges are weighted, Kruskal&#x27;s greedy algorithm finds the cheapest one, and its optimality is genuinely surprising." />
+  <meta name="description" content="A spanning tree reaches every vertex with n − 1 edges. When the edges are weighted, Kruskal&#x27;s greedy algorithm finds the cheapest one, and its optimality is genuinely surprising." />
   <link rel="canonical" href="https://learn.geterdone.io/graphs-and-trees/spanning-trees/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Spanning Trees and Minimum Spanning Trees | Graphs and Trees | Learn · geterdone.io" />
-  <meta property="og:description" content="A spanning tree reaches every vertex with `n − 1` edges. When the edges are weighted, Kruskal&#x27;s greedy algorithm finds the cheapest one, and its optimality is genuinely surprising." />
+  <meta property="og:description" content="A spanning tree reaches every vertex with n − 1 edges. When the edges are weighted, Kruskal&#x27;s greedy algorithm finds the cheapest one, and its optimality is genuinely surprising." />
   <meta property="og:url" content="https://learn.geterdone.io/graphs-and-trees/spanning-trees/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Spanning Trees and Minimum Spanning Trees | Graphs and Trees | Learn · geterdone.io" />
-  <meta name="twitter:description" content="A spanning tree reaches every vertex with `n − 1` edges. When the edges are weighted, Kruskal&#x27;s greedy algorithm finds the cheapest one, and its optimality is genuinely surprising." />
+  <meta name="twitter:description" content="A spanning tree reaches every vertex with n − 1 edges. When the edges are weighted, Kruskal&#x27;s greedy algorithm finds the cheapest one, and its optimality is genuinely surprising." />
   <meta name="twitter:url" content="https://learn.geterdone.io/graphs-and-trees/spanning-trees/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Graphs and Trees course home">
         <span class="brand-mark" aria-hidden="true">12</span>
-        <span class="brand-copy"><strong>Graphs and Trees</strong><span>Course 7 &amp;middot; Lesson 12 of 14</span></span>
+        <span class="brand-copy"><strong>Graphs and Trees</strong><span>Course 7 · Lesson 12 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Graphs and Trees</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 12 &amp;middot; Spanning Trees and Minimum Spanning Trees</span>
+      <span class="crumb-current" aria-current="page">Lesson 12 · Spanning Trees and Minimum Spanning Trees</span>
     </nav>
 
     <noscript>
@@ -1004,7 +1035,7 @@ greedy is OPTIMAL here — unusually</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Building a minimum spanning tree</h2></div><p>Sort, then add whatever does not close a cycle.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Sort the edges by weight</h3><p>This is the dominant cost and the only global step in the algorithm.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Take each edge in order if it joins two components</h3><p>Skip it if both ends are already connected &mdash; that would close a cycle.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Stop at `n − 1` edges</h3><p>Or when the list is exhausted. Fewer than <span class="math">n − 1</span> means the graph was disconnected and you have a minimum spanning forest.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Verify the count and the connectivity</h3><p><span class="math">n − 1</span> edges reaching every vertex. Both are cheap checks and either failing means the input was disconnected.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Sort the edges by weight</h3><p>This is the dominant cost and the only global step in the algorithm.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Take each edge in order if it joins two components</h3><p>Skip it if both ends are already connected &mdash; that would close a cycle.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Stop at <span class="math">n − 1</span> edges</h3><p>Or when the list is exhausted. Fewer than <span class="math">n − 1</span> means the graph was disconnected and you have a minimum spanning forest.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Verify the count and the connectivity</h3><p><span class="math">n − 1</span> edges reaching every vertex. Both are cheap checks and either failing means the input was disconnected.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1032,7 +1063,7 @@ Note the algorithm never reconsidered a choice.</div><p>Every edge was decided o
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Assuming greedy works generally</strong><span>It works here because of the cut property. Course 8 lesson 9 shows greedy failing on a problem that looks no harder.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Stopping before `n − 1` edges</strong><span>Unless the graph is disconnected, in which case you have a minimum spanning forest and should say so.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming the minimum spanning tree is unique</strong><span>It is unique when all edge weights are distinct. With ties there may be several, all of the same total weight.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Assuming greedy works generally</strong><span>It works here because of the cut property. Course 8 lesson 9 shows greedy failing on a problem that looks no harder.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Stopping before <span class="math">n − 1</span> edges</strong><span>Unless the graph is disconnected, in which case you have a minimum spanning forest and should say so.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming the minimum spanning tree is unique</strong><span>It is unique when all edge weights are distinct. With ties there may be several, all of the same total weight.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can run Kruskal and justify each rejection.</strong><p>Take a weighted graph on six vertices and run the algorithm, saying for each rejected edge which two vertices were already connected. That justification is the correctness argument in miniature.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Minimum spanning trees are used for network design, clustering (cut the heaviest edges of the tree and the components are the clusters), and as a subroutine in approximation algorithms &mdash; including a 2-approximation for the travelling salesman problem.</div></article>
       </div>
     </section>

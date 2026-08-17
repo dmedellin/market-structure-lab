@@ -850,7 +850,7 @@ LESSONS = [
             ("Stopping at the wrong point",
              "The gcd is the last NONZERO remainder, which is `a` when `b` becomes 0. "
              "Returning 0 is the classic off-by-one."),
-            ("Requiring `a &gt; b` to start",
+            ("Requiring `a > b` to start",
              "One extra step fixes it automatically: if `a &lt; b` the first division swaps "
              "them."),
             ("Assuming big numbers mean many steps",

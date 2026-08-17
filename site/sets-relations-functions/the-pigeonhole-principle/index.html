@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>The Pigeonhole Principle | Sets, Relations, and Functions | Learn · geterdone.io</title>
-  <meta name="description" content="If `n` objects go into `k` boxes with `n &gt; k`, some box holds at least two. It is obvious, it is a one-line consequence of lesson 11, and it proves things that are not obvious at all." />
+  <meta name="description" content="If n objects go into k boxes with n &gt; k, some box holds at least two. It is obvious, it is a one-line consequence of lesson 11, and it proves things that are not obvious at all." />
   <link rel="canonical" href="https://learn.geterdone.io/sets-relations-functions/the-pigeonhole-principle/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="The Pigeonhole Principle | Sets, Relations, and Functions | Learn · geterdone.io" />
-  <meta property="og:description" content="If `n` objects go into `k` boxes with `n &gt; k`, some box holds at least two. It is obvious, it is a one-line consequence of lesson 11, and it proves things that are not obvious at all." />
+  <meta property="og:description" content="If n objects go into k boxes with n &gt; k, some box holds at least two. It is obvious, it is a one-line consequence of lesson 11, and it proves things that are not obvious at all." />
   <meta property="og:url" content="https://learn.geterdone.io/sets-relations-functions/the-pigeonhole-principle/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="The Pigeonhole Principle | Sets, Relations, and Functions | Learn · geterdone.io" />
-  <meta name="twitter:description" content="If `n` objects go into `k` boxes with `n &gt; k`, some box holds at least two. It is obvious, it is a one-line consequence of lesson 11, and it proves things that are not obvious at all." />
+  <meta name="twitter:description" content="If n objects go into k boxes with n &gt; k, some box holds at least two. It is obvious, it is a one-line consequence of lesson 11, and it proves things that are not obvious at all." />
   <meta name="twitter:url" content="https://learn.geterdone.io/sets-relations-functions/the-pigeonhole-principle/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Sets, Relations, and Functions course home">
         <span class="brand-mark" aria-hidden="true">14</span>
-        <span class="brand-copy"><strong>Sets, Relations, and Functions</strong><span>Course 2 &amp;middot; Lesson 14 of 14</span></span>
+        <span class="brand-copy"><strong>Sets, Relations, and Functions</strong><span>Course 2 · Lesson 14 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Sets, Relations, and Functions</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 14 &amp;middot; The Pigeonhole Principle</span>
+      <span class="crumb-current" aria-current="page">Lesson 14 · The Pigeonhole Principle</span>
     </nav>
 
     <noscript>
@@ -931,7 +962,7 @@ The art is choosing the boxes.</div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>The principle and its applications</h2></div><p>Statement, proof, and four uses of increasing subtlety.</p></div>
-      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Pigeonhole principle</span><p>If <span class="math">n</span> objects are placed into <span class="math">k</span> boxes and <span class="math">n &gt; k</span>, then some box contains at least two objects.</p></div><div class="proof"><p>Suppose every box contained at most one object. Then the total number of objects would be at most <span class="math">k</span>, contradicting <span class="math">n &gt; k</span>.</p><p><span class="qed">&#9633;</span></p></div><div class="thm"><span class="label">Theorem &middot; Generalised pigeonhole principle</span><p>If <span class="math">n</span> objects are placed into <span class="math">k</span> boxes, some box contains at least <span class="math">⌈n/k⌉</span> objects.</p></div><div class="proof"><p>Suppose every box held at most <span class="math">⌈n/k⌉ − 1</span> objects. The total would then be at most <span class="math">k(⌈n/k⌉ − 1)</span>. Since <span class="math">⌈n/k⌉ &lt; n/k + 1</span>, this is less than <span class="math">k(n/k + 1 − 1) = n</span>, contradicting that all <span class="math">n</span> objects were placed.</p><p><span class="qed">&#9633;</span></p></div><h3>Four applications</h3><div class="example"><span class="label">Example &middot; Shared birthdays</span><p>Among 367 people, two share a birthday. Boxes are the 366 possible dates; objects are the people. No assumption about distribution is needed &mdash; this is certainty, not probability, and is a different claim from the birthday problem of course 5.</p></div><div class="example"><span class="label">Example &middot; A repeated remainder</span><p>Among any <span class="math">n + 1</span> integers, two leave the same remainder on division by <span class="math">n</span>. The boxes are the <span class="math">n</span> possible remainders <span class="math">0, …, n−1</span>. Consequently their difference is divisible by <span class="math">n</span>, which is a fact about divisibility obtained by counting.</p></div><div class="example"><span class="label">Example &middot; Two people with the same number of friends</span><p>In any group of <span class="math">n ≥ 2</span> people, two have the same number of acquaintances within the group. Degrees range over <span class="math">0, …, n−1</span> &mdash; <span class="math">n</span> boxes for <span class="math">n</span> people, which is not enough on its own. But 0 and <span class="math">n−1</span> cannot both occur: if someone knows nobody, nobody can know everybody. So only <span class="math">n−1</span> boxes are actually available, and the principle applies.</p></div><p>That third example is the one worth studying. A naive count gives exactly as many boxes as objects, and the principle does not apply; the argument that two boxes are mutually exclusive is what creates the surplus. Applications usually turn on an observation of that kind.</p><div class="example"><span class="label">Example &middot; A subset summing to a multiple of `n`</span><p>Given any <span class="math">n</span> integers <span class="math">a₁, …, aₙ</span>, some consecutive block <span class="math">aᵢ₊₁ + ⋯ + aⱼ</span> is divisible by <span class="math">n</span>. Consider the <span class="math">n</span> partial sums <span class="math">s₁, …, sₙ</span> and their remainders mod <span class="math">n</span>. If some <span class="math">sⱼ ≡ 0</span> we are done; otherwise the <span class="math">n</span> remainders lie in the <span class="math">n−1</span> boxes <span class="math">1, …, n−1</span>, so two partial sums share a remainder, and their difference &mdash; a consecutive block &mdash; is divisible by <span class="math">n</span>.</p></div><p>None of these is a statement about counting on its face, and every one is proved by counting. That is the pattern: the principle converts a size comparison into an existence claim, and the existence claim is what you actually wanted.</p></article>
+      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Pigeonhole principle</span><p>If <span class="math">n</span> objects are placed into <span class="math">k</span> boxes and <span class="math">n &gt; k</span>, then some box contains at least two objects.</p></div><div class="proof"><p>Suppose every box contained at most one object. Then the total number of objects would be at most <span class="math">k</span>, contradicting <span class="math">n &gt; k</span>.</p><p><span class="qed">&#9633;</span></p></div><div class="thm"><span class="label">Theorem &middot; Generalised pigeonhole principle</span><p>If <span class="math">n</span> objects are placed into <span class="math">k</span> boxes, some box contains at least <span class="math">⌈n/k⌉</span> objects.</p></div><div class="proof"><p>Suppose every box held at most <span class="math">⌈n/k⌉ − 1</span> objects. The total would then be at most <span class="math">k(⌈n/k⌉ − 1)</span>. Since <span class="math">⌈n/k⌉ &lt; n/k + 1</span>, this is less than <span class="math">k(n/k + 1 − 1) = n</span>, contradicting that all <span class="math">n</span> objects were placed.</p><p><span class="qed">&#9633;</span></p></div><h3>Four applications</h3><div class="example"><span class="label">Example &middot; Shared birthdays</span><p>Among 367 people, two share a birthday. Boxes are the 366 possible dates; objects are the people. No assumption about distribution is needed &mdash; this is certainty, not probability, and is a different claim from the birthday problem of course 5.</p></div><div class="example"><span class="label">Example &middot; A repeated remainder</span><p>Among any <span class="math">n + 1</span> integers, two leave the same remainder on division by <span class="math">n</span>. The boxes are the <span class="math">n</span> possible remainders <span class="math">0, …, n−1</span>. Consequently their difference is divisible by <span class="math">n</span>, which is a fact about divisibility obtained by counting.</p></div><div class="example"><span class="label">Example &middot; Two people with the same number of friends</span><p>In any group of <span class="math">n ≥ 2</span> people, two have the same number of acquaintances within the group. Degrees range over <span class="math">0, …, n−1</span> &mdash; <span class="math">n</span> boxes for <span class="math">n</span> people, which is not enough on its own. But 0 and <span class="math">n−1</span> cannot both occur: if someone knows nobody, nobody can know everybody. So only <span class="math">n−1</span> boxes are actually available, and the principle applies.</p></div><p>That third example is the one worth studying. A naive count gives exactly as many boxes as objects, and the principle does not apply; the argument that two boxes are mutually exclusive is what creates the surplus. Applications usually turn on an observation of that kind.</p><div class="example"><span class="label">Example &middot; A subset summing to a multiple of <span class="math">n</span></span><p>Given any <span class="math">n</span> integers <span class="math">a₁, …, aₙ</span>, some consecutive block <span class="math">aᵢ₊₁ + ⋯ + aⱼ</span> is divisible by <span class="math">n</span>. Consider the <span class="math">n</span> partial sums <span class="math">s₁, …, sₙ</span> and their remainders mod <span class="math">n</span>. If some <span class="math">sⱼ ≡ 0</span> we are done; otherwise the <span class="math">n</span> remainders lie in the <span class="math">n−1</span> boxes <span class="math">1, …, n−1</span>, so two partial sums share a remainder, and their difference &mdash; a consecutive block &mdash; is divisible by <span class="math">n</span>.</p></div><p>None of these is a statement about counting on its face, and every one is proved by counting. That is the pattern: the principle converts a size comparison into an existence claim, and the existence claim is what you actually wanted.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Injective, surjective, bijective</h2></div><p>Built by hand, classified by counting</p></div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nested Quantifiers | Logic and Proof | Learn · geterdone.io</title>
-  <meta name="description" content="When quantifiers stack, order decides meaning. `∀x ∃y` lets `y` depend on `x`; `∃y ∀x` demands one `y` that works for all of them. One implies the other, in one direction only." />
+  <meta name="description" content="When quantifiers stack, order decides meaning. ∀x ∃y lets y depend on x; ∃y ∀x demands one y that works for all of them. One implies the other, in one direction only." />
   <link rel="canonical" href="https://learn.geterdone.io/logic-and-proof/nested-quantifiers/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Nested Quantifiers | Logic and Proof | Learn · geterdone.io" />
-  <meta property="og:description" content="When quantifiers stack, order decides meaning. `∀x ∃y` lets `y` depend on `x`; `∃y ∀x` demands one `y` that works for all of them. One implies the other, in one direction only." />
+  <meta property="og:description" content="When quantifiers stack, order decides meaning. ∀x ∃y lets y depend on x; ∃y ∀x demands one y that works for all of them. One implies the other, in one direction only." />
   <meta property="og:url" content="https://learn.geterdone.io/logic-and-proof/nested-quantifiers/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Nested Quantifiers | Logic and Proof | Learn · geterdone.io" />
-  <meta name="twitter:description" content="When quantifiers stack, order decides meaning. `∀x ∃y` lets `y` depend on `x`; `∃y ∀x` demands one `y` that works for all of them. One implies the other, in one direction only." />
+  <meta name="twitter:description" content="When quantifiers stack, order decides meaning. ∀x ∃y lets y depend on x; ∃y ∀x demands one y that works for all of them. One implies the other, in one direction only." />
   <meta name="twitter:url" content="https://learn.geterdone.io/logic-and-proof/nested-quantifiers/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Logic and Proof course home">
         <span class="brand-mark" aria-hidden="true">09</span>
-        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 &amp;middot; Lesson 09 of 14</span></span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 · Lesson 09 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Logic and Proof</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 09 &amp;middot; Nested Quantifiers</span>
+      <span class="crumb-current" aria-current="page">Lesson 09 · Nested Quantifiers</span>
     </nav>
 
     <noscript>
@@ -927,7 +958,7 @@ Same-kind quantifiers commute: ∀x∀y ≡ ∀y∀x,  ∃x∃y ≡ ∃y∃x</di
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>Nested quantifiers are where careful readers and careless ones separate. The difference is a single swap and a change of meaning.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Inner variables may depend on outer ones</h3><p>In <span class="math">∀x ∃y P(x, y)</span> the <span class="math">y</span> is chosen after <span class="math">x</span> is known, so it may be a different <span class="math">y</span> for each <span class="math">x</span>. That dependence is the whole content.</p></article><article class="card concept-card"><div class="icon">2</div><h3>`∃∀` is strictly stronger than `∀∃`</h3><p>One <span class="math">y</span> serving every <span class="math">x</span> implies each <span class="math">x</span> has some <span class="math">y</span>. The converse fails &mdash; and the lab lets you build the case where it fails.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Like quantifiers commute; unlike ones do not</h3><p><span class="math">∀x ∀y</span> may be swapped freely, and so may <span class="math">∃x ∃y</span>. Swapping <span class="math">∀</span> past <span class="math">∃</span> changes the claim.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Inner variables may depend on outer ones</h3><p>In <span class="math">∀x ∃y P(x, y)</span> the <span class="math">y</span> is chosen after <span class="math">x</span> is known, so it may be a different <span class="math">y</span> for each <span class="math">x</span>. That dependence is the whole content.</p></article><article class="card concept-card"><div class="icon">2</div><h3><span class="math">∃∀</span> is strictly stronger than <span class="math">∀∃</span></h3><p>One <span class="math">y</span> serving every <span class="math">x</span> implies each <span class="math">x</span> has some <span class="math">y</span>. The converse fails &mdash; and the lab lets you build the case where it fails.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Like quantifiers commute; unlike ones do not</h3><p><span class="math">∀x ∀y</span> may be swapped freely, and so may <span class="math">∃x ∃y</span>. Swapping <span class="math">∀</span> past <span class="math">∃</span> changes the claim.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Stacked quantifiers</h2></div><p>The four two-variable forms, and the implication that holds between two of them.</p></div>
@@ -970,7 +1001,7 @@ Same-kind quantifiers commute: ∀x∀y ≡ ∀y∀x,  ∃x∃y ≡ ∃y∃x</di
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Reading a nested statement</h2></div><p>Left to right, and never rearrange.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Read the quantifiers in written order</h3><p><span class="math">∀x ∃y</span> is "for each <span class="math">x</span>… there is a <span class="math">y</span>". Reading it as "there is a <span class="math">y</span> for each <span class="math">x</span>" in the sense of one shared <span class="math">y</span> is the error itself.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Ask what each variable may depend on</h3><p>A variable may depend on everything bound to its left. If your witness for <span class="math">y</span> mentions <span class="math">x</span>, you are proving <span class="math">∀x ∃y</span>, not <span class="math">∃y ∀x</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>To prove `∃∀`, produce the single witness</h3><p>Name one value and show it works for every <span class="math">x</span>. If you cannot name it without knowing <span class="math">x</span>, the statement is probably false.</p></article><article class="card concept-card"><div class="icon">4</div><h3>To refute `∃∀`, argue against every candidate</h3><p>For each candidate <span class="math">y</span>, exhibit an <span class="math">x</span> that defeats it. The <span class="math">x</span> may depend on <span class="math">y</span>, which is exactly what the negation permits.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Read the quantifiers in written order</h3><p><span class="math">∀x ∃y</span> is "for each <span class="math">x</span>… there is a <span class="math">y</span>". Reading it as "there is a <span class="math">y</span> for each <span class="math">x</span>" in the sense of one shared <span class="math">y</span> is the error itself.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Ask what each variable may depend on</h3><p>A variable may depend on everything bound to its left. If your witness for <span class="math">y</span> mentions <span class="math">x</span>, you are proving <span class="math">∀x ∃y</span>, not <span class="math">∃y ∀x</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>To prove <span class="math">∃∀</span>, produce the single witness</h3><p>Name one value and show it works for every <span class="math">x</span>. If you cannot name it without knowing <span class="math">x</span>, the statement is probably false.</p></article><article class="card concept-card"><div class="icon">4</div><h3>To refute <span class="math">∃∀</span>, argue against every candidate</h3><p>For each candidate <span class="math">y</span>, exhibit an <span class="math">x</span> that defeats it. The <span class="math">x</span> may depend on <span class="math">y</span>, which is exactly what the negation permits.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -994,8 +1025,8 @@ Same-kind quantifiers commute: ∀x∀y ≡ ∀y∀x,  ∃x∃y ≡ ∃y∃x</di
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Swapping `∀` and `∃` while &quot;simplifying&quot;</strong><span>This changes the statement into a strictly stronger or weaker one. It is not a simplification and it is not valid.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Producing an `x`-dependent witness for an `∃∀` claim</strong><span>If the witness mentions the universally quantified variable, you have proved the <span class="math">∀∃</span> version instead. This is the most common invalid proof in the whole course.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming English word order settles it</strong><span>"There is a key for every door" is genuinely ambiguous in English. The symbols are not, which is why the translation must be done deliberately.</span></div></div></div></article>
-        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can build a predicate separating `∀∃` from `∃∀`.</strong><p>Using the lab's grid, construct a relation where <span class="math">∀x ∃y</span> holds and <span class="math">∃x ∀y</span> fails, and one where both hold. Being able to build the separating case is stronger evidence of understanding than recognising it.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The <span class="math">∀ε ∃δ</span> versus <span class="math">∃δ ∀ε</span> distinction is the single place this lesson pays off outside discrete mathematics: pointwise and uniform continuity differ by precisely this swap, and so do pointwise and uniform convergence.</div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Swapping <span class="math">∀</span> and <span class="math">∃</span> while &quot;simplifying&quot;</strong><span>This changes the statement into a strictly stronger or weaker one. It is not a simplification and it is not valid.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Producing an <span class="math">x</span>-dependent witness for an <span class="math">∃∀</span> claim</strong><span>If the witness mentions the universally quantified variable, you have proved the <span class="math">∀∃</span> version instead. This is the most common invalid proof in the whole course.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming English word order settles it</strong><span>"There is a key for every door" is genuinely ambiguous in English. The symbols are not, which is why the translation must be done deliberately.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can build a predicate separating <span class="math">∀∃</span> from <span class="math">∃∀</span>.</strong><p>Using the lab's grid, construct a relation where <span class="math">∀x ∃y</span> holds and <span class="math">∃x ∀y</span> fails, and one where both hold. Being able to build the separating case is stronger evidence of understanding than recognising it.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The <span class="math">∀ε ∃δ</span> versus <span class="math">∃δ ∀ε</span> distinction is the single place this lesson pays off outside discrete mathematics: pointwise and uniform continuity differ by precisely this swap, and so do pointwise and uniform convergence.</div></article>
       </div>
     </section>
     </main>

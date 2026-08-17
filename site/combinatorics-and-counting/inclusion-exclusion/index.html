@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The Inclusion&amp;ndash;Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io</title>
+  <title>The Inclusion-Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io</title>
   <meta name="description" content="When sets overlap the sum rule over-counts. Inclusion and exclusion corrects it exactly, with alternating signs, and it is the tool behind derangements, surjection counts and Euler&#x27;s totient function." />
   <link rel="canonical" href="https://learn.geterdone.io/combinatorics-and-counting/inclusion-exclusion/" />
   <meta name="author" content="dmedellin" />
@@ -18,12 +18,12 @@
        image URL and this page is self-contained. -->
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
-  <meta property="og:title" content="The Inclusion&amp;ndash;Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io" />
+  <meta property="og:title" content="The Inclusion-Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io" />
   <meta property="og:description" content="When sets overlap the sum rule over-counts. Inclusion and exclusion corrects it exactly, with alternating signs, and it is the tool behind derangements, surjection counts and Euler&#x27;s totient function." />
   <meta property="og:url" content="https://learn.geterdone.io/combinatorics-and-counting/inclusion-exclusion/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="The Inclusion&amp;ndash;Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io" />
+  <meta name="twitter:title" content="The Inclusion-Exclusion Principle | Combinatorics and Counting | Learn · geterdone.io" />
   <meta name="twitter:description" content="When sets overlap the sum rule over-counts. Inclusion and exclusion corrects it exactly, with alternating signs, and it is the tool behind derangements, surjection counts and Euler&#x27;s totient function." />
   <meta name="twitter:url" content="https://learn.geterdone.io/combinatorics-and-counting/inclusion-exclusion/" />
 
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Combinatorics and Counting course home">
         <span class="brand-mark" aria-hidden="true">09</span>
-        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 &amp;middot; Lesson 09 of 14</span></span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 · Lesson 09 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Combinatorics and Counting</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 09 &amp;middot; The Inclusion&amp;ndash;Exclusion Principle</span>
+      <span class="crumb-current" aria-current="page">Lesson 09 · The Inclusion-Exclusion Principle</span>
     </nav>
 
     <noscript>
@@ -913,7 +944,7 @@
     <section class="hero">
       <div>
         <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 4 &middot; Lesson 09 &middot; Corrections</span>
-        <h1>The Inclusion&amp;ndash;Exclusion Principle</h1>
+        <h1>The Inclusion-Exclusion Principle</h1>
         <p>When sets overlap the sum rule over-counts. Inclusion and exclusion corrects it exactly, with alternating signs, and it is the tool behind derangements, surjection counts and Euler's totient function.</p>
         <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
       </div>
@@ -931,7 +962,7 @@ usually applied to the COMPLEMENT: none of the properties</div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>The principle</h2></div><p>The two-set and three-set cases, the general statement, and why it is exact.</p></div>
-      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Two and three sets</span><p><span class="math">|A ∪ B| = |A| + |B| − |A ∩ B|</span> and <span class="math">|A ∪ B ∪ C| = |A| + |B| + |C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|</span>.</p></div><div class="thm"><span class="label">Theorem &middot; Inclusion&amp;ndash;exclusion</span><p>For finite sets <span class="math">A₁, …, A_n</span>, <span class="math">|A₁ ∪ ⋯ ∪ A_n| = Σ|Aᵢ| − Σ_{i&lt;j}|Aᵢ∩Aⱼ| + Σ_{i&lt;j&lt;k}|Aᵢ∩Aⱼ∩A_k| − ⋯ + (−1)^{n+1}|A₁∩⋯∩A_n|</span> &mdash; an alternating sum over all nonempty subsets of the indices.</p></div><div class="proof"><p>Take an element lying in exactly <span class="math">m</span> of the sets, <span class="math">m ≥ 1</span>. It is counted <span class="math">C(m,1)</span> times in the first sum, <span class="math">C(m,2)</span> times in the second, and so on, so its net contribution is <span class="math">C(m,1) − C(m,2) + C(m,3) − ⋯ = 1 − [C(m,0) − C(m,1) + C(m,2) − ⋯]</span>.</p><p>The bracket is the alternating row sum, which is 0 for <span class="math">m ≥ 1</span> (lesson 5). So the contribution is exactly 1.</p><p>An element in none of the sets contributes 0 to every term. Hence each element of the union is counted once and nothing else is counted.</p><p><span class="qed">&#9633;</span></p></div><p>That proof explains the signs rather than asserting them: they are exactly what is needed to make every element's contribution collapse to 1, and the collapse is the alternating-sum identity from Pascal's triangle.</p><h3>The complement form</h3><div class="thm"><span class="label">Theorem &middot; Counting elements with none of the properties</span><p>If <span class="math">Aᵢ</span> is the set of objects with property <span class="math">i</span>, then the number with none of them is <span class="math">|U| − Σ|Aᵢ| + Σ|Aᵢ∩Aⱼ| − ⋯</span>, the same alternating sum with the signs shifted.</p></div><div class="example"><span class="label">Example &middot; Divisibility</span><p>How many of <span class="math">1, …, 1000</span> are divisible by none of 2, 3, 5? <span class="math">1000 − (500 + 333 + 200) + (166 + 100 + 66) − 33 = 266</span>. Each term is a floor division: <span class="math">⌊1000/6⌋ = 166</span> counts the multiples of both 2 and 3.</p></div><div class="thm"><span class="label">Theorem &middot; Euler&#x27;s totient</span><p>The count of integers in <span class="math">1, …, n</span> coprime to <span class="math">n</span> is <span class="math">φ(n) = n·Π(1 − 1/p)</span> over the distinct primes <span class="math">p</span> dividing <span class="math">n</span>. That product is inclusion and exclusion over the prime divisors, multiplied out. Course 6 uses <span class="math">φ</span> throughout.</p></div><div class="thm"><span class="label">Theorem &middot; Counting surjections</span><p>The number of surjections from an <span class="math">m</span>-set onto an <span class="math">n</span>-set is <span class="math">Σ_{k=0}^{n} (−1)^k C(n,k)(n−k)^m</span> &mdash; total functions minus those missing at least one target, corrected.</p></div><p>The pattern in all three: the direct count is hard and the count of "violates condition <span class="math">i</span>" is easy, so count the violations and alternate. Recognising that shape is what this lesson is for.</p></article>
+      <article class="card card-pad prose"><div class="thm"><span class="label">Theorem &middot; Two and three sets</span><p><span class="math">|A ∪ B| = |A| + |B| − |A ∩ B|</span> and <span class="math">|A ∪ B ∪ C| = |A| + |B| + |C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|</span>.</p></div><div class="thm"><span class="label">Theorem &middot; Inclusion-exclusion</span><p>For finite sets <span class="math">A₁, …, A_n</span>, <span class="math">|A₁ ∪ ⋯ ∪ A_n| = Σ|Aᵢ| − Σ_{i&lt;j}|Aᵢ∩Aⱼ| + Σ_{i&lt;j&lt;k}|Aᵢ∩Aⱼ∩A_k| − ⋯ + (−1)^{n+1}|A₁∩⋯∩A_n|</span> &mdash; an alternating sum over all nonempty subsets of the indices.</p></div><div class="proof"><p>Take an element lying in exactly <span class="math">m</span> of the sets, <span class="math">m ≥ 1</span>. It is counted <span class="math">C(m,1)</span> times in the first sum, <span class="math">C(m,2)</span> times in the second, and so on, so its net contribution is <span class="math">C(m,1) − C(m,2) + C(m,3) − ⋯ = 1 − [C(m,0) − C(m,1) + C(m,2) − ⋯]</span>.</p><p>The bracket is the alternating row sum, which is 0 for <span class="math">m ≥ 1</span> (lesson 5). So the contribution is exactly 1.</p><p>An element in none of the sets contributes 0 to every term. Hence each element of the union is counted once and nothing else is counted.</p><p><span class="qed">&#9633;</span></p></div><p>That proof explains the signs rather than asserting them: they are exactly what is needed to make every element's contribution collapse to 1, and the collapse is the alternating-sum identity from Pascal's triangle.</p><h3>The complement form</h3><div class="thm"><span class="label">Theorem &middot; Counting elements with none of the properties</span><p>If <span class="math">Aᵢ</span> is the set of objects with property <span class="math">i</span>, then the number with none of them is <span class="math">|U| − Σ|Aᵢ| + Σ|Aᵢ∩Aⱼ| − ⋯</span>, the same alternating sum with the signs shifted.</p></div><div class="example"><span class="label">Example &middot; Divisibility</span><p>How many of <span class="math">1, …, 1000</span> are divisible by none of 2, 3, 5? <span class="math">1000 − (500 + 333 + 200) + (166 + 100 + 66) − 33 = 266</span>. Each term is a floor division: <span class="math">⌊1000/6⌋ = 166</span> counts the multiples of both 2 and 3.</p></div><div class="thm"><span class="label">Theorem &middot; Euler&#x27;s totient</span><p>The count of integers in <span class="math">1, …, n</span> coprime to <span class="math">n</span> is <span class="math">φ(n) = n·Π(1 − 1/p)</span> over the distinct primes <span class="math">p</span> dividing <span class="math">n</span>. That product is inclusion and exclusion over the prime divisors, multiplied out. Course 6 uses <span class="math">φ</span> throughout.</p></div><div class="thm"><span class="label">Theorem &middot; Counting surjections</span><p>The number of surjections from an <span class="math">m</span>-set onto an <span class="math">n</span>-set is <span class="math">Σ_{k=0}^{n} (−1)^k C(n,k)(n−k)^m</span> &mdash; total functions minus those missing at least one target, corrected.</p></div><p>The pattern in all three: the direct count is hard and the count of "violates condition <span class="math">i</span>" is easy, so count the violations and alternate. Recognising that shape is what this lesson is for.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Inclusion and exclusion</h2></div><p>Formula and brute force, side by side</p></div>
@@ -972,7 +1003,7 @@ usually applied to the COMPLEMENT: none of the properties</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Applying inclusion and exclusion</h2></div><p>Define the sets so the intersections are easy.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Define `Aᵢ` as &quot;has property `i`&quot;</h3><p>Usually the bad property. Counting <span class="math">Aᵢ</span> and its intersections must be easier than counting the objects you want.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compute every intersection size</h3><p>Pairs, triples, and so on. Symmetry often makes many of them equal, which is what keeps the sum manageable.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Alternate the signs</h3><p>Add the singles, subtract the pairs, add the triples. Off by one in the sign pattern gives an answer that is wrong by twice the correction.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Sanity check the magnitude</h3><p>The answer must lie between 0 and the total. A negative result means a sign error; a result above the total means a missed subtraction.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Define <span class="math">Aᵢ</span> as &quot;has property <span class="math">i</span>&quot;</h3><p>Usually the bad property. Counting <span class="math">Aᵢ</span> and its intersections must be easier than counting the objects you want.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compute every intersection size</h3><p>Pairs, triples, and so on. Symmetry often makes many of them equal, which is what keeps the sum manageable.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Alternate the signs</h3><p>Add the singles, subtract the pairs, add the triples. Off by one in the sign pattern gives an answer that is wrong by twice the correction.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Sanity check the magnitude</h3><p>The answer must lie between 0 and the total. A negative result means a sign error; a result above the total means a missed subtraction.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">

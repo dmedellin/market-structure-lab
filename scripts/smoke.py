@@ -195,6 +195,12 @@ CAPSTONE_AS_OF_MARKER = "August 16, 2026"
 MATH_PATH_PAGE_PATH = "/paths/discrete-math/"
 MATH_MATERIAL_MARKER = "a worked example is not a proof"
 
+ALGEBRA_PATH_PAGE_PATH = "/paths/algebra/"
+ALGEBRA_MATERIAL_MARKER = (
+    "a step that gives the right answer here is not thereby a valid rule"
+)
+
+
 MATH_COURSES = (
     ("logic-and-proof", "Logic and Proof", (
         "propositions-and-truth-values", "logical-connectives", "truth-tables",
@@ -288,19 +294,22 @@ def page_markers(path, *extra):
     return (canonical_marker(path),) + tuple(extra) + (DISCLAIMER_MARKER,)
 
 
-def math_page_markers(path, *extra):
-    """Identity, then what a DISCRETE MATHEMATICS course page owes its reader.
+def generated_page_markers(path, material, *extra):
+    """Identity, then what a GENERATED course page owes its reader.
 
     Deliberately not page_markers(): the trading path's promise is that its
-    charts are synthetic, and on a mathematics page that sentence would be
-    meaningless. What is asserted instead is the promise those pages actually
-    make -- that every figure is computed from the stated definition, and that a
-    worked example is not a proof. Both paths keep the educational-use line.
+    charts are synthetic, and on a mathematics or algebra page that sentence
+    would be meaningless. What is asserted instead is the promise those pages
+    actually make. The promise is a PARAMETER rather than a constant, because it
+    differs per subject -- discrete mathematics warns that a worked example is
+    not a proof, algebra that a step which happens to work is not a rule -- and
+    asserting the wrong one would pass while checking nothing. Every path keeps
+    the educational-use line.
     """
     return (
         (canonical_marker(path),)
         + tuple(extra)
-        + (DISCLAIMER_MARKER, MATH_MATERIAL_MARKER)
+        + (DISCLAIMER_MARKER, material)
     )
 
 
@@ -703,7 +712,7 @@ MATH_COURSE_HOMES = tuple(
     (
         "math-course%d-home" % number,
         "/%s/" % slug,
-        math_page_markers("/%s/" % slug, title),
+        generated_page_markers("/%s/" % slug, MATH_MATERIAL_MARKER, title),
     )
     for number, (slug, title, _lessons) in enumerate(MATH_COURSES, start=1)
 )
@@ -712,9 +721,117 @@ MATH_COURSE_LESSONS = tuple(
     (
         "math-course%d-lesson-%s" % (number, lesson),
         "/%s/%s/" % (slug, lesson),
-        math_page_markers("/%s/%s/" % (slug, lesson), title),
+        generated_page_markers("/%s/%s/" % (slug, lesson), MATH_MATERIAL_MARKER, title),
     )
     for number, (slug, title, lessons) in enumerate(MATH_COURSES, start=1)
+    for lesson in lessons
+)
+
+# ---------------------------------------------------------------------------
+# The third path: ALGEBRA. Same shape, its own material promise.
+# ---------------------------------------------------------------------------
+ALGEBRA_COURSES = (
+    ("algebra-foundations", "Foundations of Algebra", (
+        "real-numbers-and-the-number-line",
+        "properties-of-the-real-numbers", "order-of-operations",
+        "absolute-value", "integer-exponents", "scientific-notation",
+        "roots-and-radicals", "rational-exponents",
+        "algebraic-expressions-and-terms", "the-distributive-law",
+        "combining-like-terms", "evaluating-expressions",
+        "translating-words-into-algebra",
+    )),
+    ("linear-equations-and-inequalities", "Linear Equations and Inequalities", (
+        "what-it-means-to-solve-an-equation", "one-and-two-step-equations",
+        "variables-on-both-sides", "equations-with-fractions",
+        "literal-equations-and-formulas", "identities-and-contradictions",
+        "ratio-proportion-and-percent", "modelling-with-linear-equations",
+        "linear-inequalities", "compound-inequalities",
+        "absolute-value-equations", "absolute-value-inequalities",
+        "interval-and-set-builder-notation",
+    )),
+    ("lines-functions-and-graphs", "Lines, Functions and Graphs", (
+        "the-coordinate-plane", "graphing-a-linear-equation", "slope",
+        "slope-intercept-form", "point-slope-and-standard-form",
+        "parallel-and-perpendicular-lines", "what-a-function-is",
+        "function-notation", "domain-and-range", "piecewise-functions",
+        "transformations-of-graphs", "composition-of-functions",
+        "inverse-functions", "linear-inequalities-in-two-variables",
+    )),
+    ("polynomials-and-factoring", "Polynomials and Factoring", (
+        "polynomials-degree-and-standard-form",
+        "adding-and-subtracting-polynomials", "multiplying-polynomials",
+        "special-products", "factoring-out-the-greatest-common-factor",
+        "factoring-by-grouping", "factoring-simple-trinomials",
+        "the-ac-method", "factoring-special-forms",
+        "polynomial-long-division",
+        "synthetic-division-and-the-remainder-theorem",
+        "the-factor-theorem-and-rational-roots",
+        "graphs-of-polynomial-functions",
+    )),
+    ("rational-and-radical-expressions", "Rational and Radical Expressions", (
+        "rational-expressions-and-their-domains",
+        "simplifying-rational-expressions",
+        "multiplying-and-dividing-rational-expressions",
+        "adding-and-subtracting-rational-expressions", "complex-fractions",
+        "solving-rational-equations", "graphs-and-asymptotes",
+        "simplifying-radical-expressions", "operations-with-radicals",
+        "rationalizing-denominators", "solving-radical-equations",
+        "radical-functions-and-their-graphs",
+    )),
+    ("quadratics-and-complex-numbers", "Quadratics and Complex Numbers", (
+        "quadratic-equations-and-the-zero-product-property",
+        "solving-by-factoring", "the-square-root-property",
+        "completing-the-square", "the-quadratic-formula",
+        "the-discriminant", "complex-numbers",
+        "operations-with-complex-numbers", "complex-roots-of-quadratics",
+        "graphs-of-quadratic-functions",
+        "vertex-form-and-the-axis-of-symmetry",
+        "maximum-and-minimum-problems", "quadratic-inequalities",
+        "equations-reducible-to-quadratic-form",
+    )),
+    ("exponential-and-logarithmic-functions", "Exponential and Logarithmic Functions", (
+        "exponential-functions", "growth-and-decay", "the-number-e",
+        "what-a-logarithm-is", "logarithmic-functions-and-their-graphs",
+        "the-laws-of-logarithms", "common-and-natural-logarithms",
+        "change-of-base", "solving-exponential-equations",
+        "solving-logarithmic-equations",
+        "compound-interest-and-continuous-growth", "logarithmic-scales",
+    )),
+    ("systems-matrices-and-sequences", "Systems, Matrices and Sequences", (
+        "systems-of-two-linear-equations", "solving-by-substitution",
+        "solving-by-elimination", "systems-in-three-variables",
+        "matrices-and-row-operations", "gaussian-elimination",
+        "matrix-arithmetic", "determinants-and-cramers-rule",
+        "inverse-matrices",
+        "systems-of-inequalities-and-linear-programming",
+        "sequences-and-recursion", "arithmetic-sequences-and-series",
+        "geometric-sequences-and-series", "the-binomial-theorem",
+    )),
+)
+
+ALGEBRA_PATH_PAGE_MARKERS = (
+    canonical_marker(ALGEBRA_PATH_PAGE_PATH),
+    ALGEBRA_COURSES[0][1],
+    ALGEBRA_COURSES[-1][1],
+    'href="../../%s/"' % ALGEBRA_COURSES[-1][0],
+)
+
+ALGEBRA_COURSE_HOMES = tuple(
+    (
+        "algebra-course%d-home" % number,
+        "/%s/" % slug,
+        generated_page_markers("/%s/" % slug, ALGEBRA_MATERIAL_MARKER, title),
+    )
+    for number, (slug, title, _lessons) in enumerate(ALGEBRA_COURSES, start=1)
+)
+
+ALGEBRA_COURSE_LESSONS = tuple(
+    (
+        "algebra-course%d-lesson-%s" % (number, lesson),
+        "/%s/%s/" % (slug, lesson),
+        generated_page_markers("/%s/%s/" % (slug, lesson), ALGEBRA_MATERIAL_MARKER, title),
+    )
+    for number, (slug, title, lessons) in enumerate(ALGEBRA_COURSES, start=1)
     for lesson in lessons
 )
 
@@ -778,6 +895,7 @@ def path_page_targets(args):
     return [
         ("trading-path", PATH_PAGE_PATH, tuple(args.path_marker)),
         ("discrete-math-path", MATH_PATH_PAGE_PATH, MATH_PATH_PAGE_MARKERS),
+        ("algebra-path", ALGEBRA_PATH_PAGE_PATH, ALGEBRA_PATH_PAGE_MARKERS),
     ]
 
 
@@ -796,7 +914,7 @@ def course_home_targets(args):
     """(check id, path, markers) for every course home, course 1 first."""
     targets = [("course-home", args.course_path, tuple(args.course_marker))]
     seen = {args.course_path}
-    for check_id, path, markers in COURSE_HOMES + MATH_COURSE_HOMES:
+    for check_id, path, markers in COURSE_HOMES + MATH_COURSE_HOMES + ALGEBRA_COURSE_HOMES:
         if path in seen:
             continue
         seen.add(path)
@@ -828,6 +946,7 @@ def lesson_targets(args):
         + COURSE_7_LESSONS
         + COURSE_8_LESSONS
         + MATH_COURSE_LESSONS
+        + ALGEBRA_COURSE_LESSONS
     ):
         if path in seen:
             # --lesson-path was pointed at a lesson that is already in the map;

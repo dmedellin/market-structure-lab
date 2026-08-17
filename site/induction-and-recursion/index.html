@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Learn library">
         <span class="brand-mark" aria-hidden="true">03</span>
-        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 of 8 &amp;middot; Discrete Mathematics path</span></span>
+        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 of 8 · Discrete Mathematics path</span></span>
       </a>
 
       <nav class="topnav" aria-label="Primary">
@@ -940,7 +971,7 @@ T(n) = aT(n/b) + nᵈ    ⟹  compare log_b a with d</div>
     </section>
     <section class="section" id="syllabus">
       <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2></div><p>Lessons 1 to 5 are induction, 6 to 8 recursion, 9 to 11 recurrences, and 12 applies all three to program correctness.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./the-well-ordering-principle/"><div class="num">01</div><div><strong>The Well-Ordering Principle</strong><span>Every nonempty set of naturals has a least element — and why that is enough.</span></div></a><a class="syllabus-item" href="./mathematical-induction/"><div class="num">02</div><div><strong>Mathematical Induction</strong><span>Base case, inductive step, conclusion — and the step must use the hypothesis.</span></div></a><a class="syllabus-item" href="./induction-with-sums-and-products/"><div class="num">03</div><div><strong>Induction with Sums and Products</strong><span>The standard family of identities, and the pattern they share.</span></div></a><a class="syllabus-item" href="./induction-with-inequalities-and-divisibility/"><div class="num">04</div><div><strong>Induction with Inequalities and Divisibility</strong><span>Two families where the base case is often not `n = 1`.</span></div></a><a class="syllabus-item" href="./strong-induction/"><div class="num">05</div><div><strong>Strong Induction</strong><span>Assume every earlier case, not only the previous one.</span></div></a><a class="syllabus-item" href="./recursive-definitions/"><div class="num">06</div><div><strong>Recursive Definitions</strong><span>Defining an object in terms of smaller instances of itself.</span></div></a><a class="syllabus-item" href="./structural-induction/"><div class="num">07</div><div><strong>Structural Induction</strong><span>Induction over how an object was built, not over a number.</span></div></a><a class="syllabus-item" href="./recursive-algorithms/"><div class="num">08</div><div><strong>Recursive Algorithms and Correctness</strong><span>An algorithm that calls itself, and the induction that proves it right.</span></div></a><a class="syllabus-item" href="./recurrence-relations/"><div class="num">09</div><div><strong>Recurrence Relations</strong><span>Sequences defined by their own earlier terms.</span></div></a><a class="syllabus-item" href="./solving-linear-recurrences/"><div class="num">10</div><div><strong>Solving Linear Recurrences</strong><span>Characteristic roots, repeated roots, and particular solutions.</span></div></a><a class="syllabus-item" href="./divide-and-conquer-recurrences/"><div class="num">11</div><div><strong>Divide-and-Conquer Recurrences</strong><span>`T(n) = aT(n/b) + f(n)`, and the one comparison that solves it.</span></div></a><a class="syllabus-item" href="./loop-invariants-and-correctness/"><div class="num">12</div><div><strong>Loop Invariants and Program Correctness</strong><span>Induction, applied to a loop instead of to a number.</span></div></a></div>
+      <div class="syllabus"><a class="syllabus-item" href="./the-well-ordering-principle/"><div class="num">01</div><div><strong>The Well-Ordering Principle</strong><span>Every nonempty set of naturals has a least element — and why that is enough.</span></div></a><a class="syllabus-item" href="./mathematical-induction/"><div class="num">02</div><div><strong>Mathematical Induction</strong><span>Base case, inductive step, conclusion — and the step must use the hypothesis.</span></div></a><a class="syllabus-item" href="./induction-with-sums-and-products/"><div class="num">03</div><div><strong>Induction with Sums and Products</strong><span>The standard family of identities, and the pattern they share.</span></div></a><a class="syllabus-item" href="./induction-with-inequalities-and-divisibility/"><div class="num">04</div><div><strong>Induction with Inequalities and Divisibility</strong><span>Two families where the base case is often not <span class="math">n = 1</span>.</span></div></a><a class="syllabus-item" href="./strong-induction/"><div class="num">05</div><div><strong>Strong Induction</strong><span>Assume every earlier case, not only the previous one.</span></div></a><a class="syllabus-item" href="./recursive-definitions/"><div class="num">06</div><div><strong>Recursive Definitions</strong><span>Defining an object in terms of smaller instances of itself.</span></div></a><a class="syllabus-item" href="./structural-induction/"><div class="num">07</div><div><strong>Structural Induction</strong><span>Induction over how an object was built, not over a number.</span></div></a><a class="syllabus-item" href="./recursive-algorithms/"><div class="num">08</div><div><strong>Recursive Algorithms and Correctness</strong><span>An algorithm that calls itself, and the induction that proves it right.</span></div></a><a class="syllabus-item" href="./recurrence-relations/"><div class="num">09</div><div><strong>Recurrence Relations</strong><span>Sequences defined by their own earlier terms.</span></div></a><a class="syllabus-item" href="./solving-linear-recurrences/"><div class="num">10</div><div><strong>Solving Linear Recurrences</strong><span>Characteristic roots, repeated roots, and particular solutions.</span></div></a><a class="syllabus-item" href="./divide-and-conquer-recurrences/"><div class="num">11</div><div><strong>Divide-and-Conquer Recurrences</strong><span><span class="math">T(n) = aT(n/b) + f(n)</span>, and the one comparison that solves it.</span></div></a><a class="syllabus-item" href="./loop-invariants-and-correctness/"><div class="num">12</div><div><strong>Loop Invariants and Program Correctness</strong><span>Induction, applied to a loop instead of to a number.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">

@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Render the Discrete Mathematics path into site/.
+"""Render every generated path into site/.
 
-    python3 scripts/build_discrete_math.py            # write the pages
-    python3 scripts/build_discrete_math.py --check    # fail if any page would change
+    python3 scripts/build_paths.py            # write the pages
+    python3 scripts/build_paths.py --check    # fail if any page would change
 
 --check is what CI runs. The content is the source and the pages are derived, so
 a page edited by hand is a page that will be silently reverted the next time
 anyone builds; failing loudly is the only honest alternative.
+
+A new generated path is one import and one entry in GENERATED_PATHS below. It is
+deliberately not a discovery scan of content/: the set of published paths is a
+decision, and it should be readable in one place rather than inferred from which
+directories happen to exist.
 """
 
 import argparse
@@ -18,29 +23,32 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "content"))
 sys.dont_write_bytecode = True
 
-from discrete_math import PATH  # noqa: E402
+from algebra import PATH as ALGEBRA_PATH  # noqa: E402
+from discrete_math import PATH as DISCRETE_MATH_PATH  # noqa: E402
 from mathpath import render  # noqa: E402
+
+GENERATED_PATHS = (DISCRETE_MATH_PATH, ALGEBRA_PATH)
 
 SITE = REPO_ROOT / "site"
 # The list of pages this build produces, consumed by scripts/labcheck.js.
 MANIFEST = REPO_ROOT / "scripts" / "generated-pages.txt"
 
 
-def pages():
-    """[(relative path under site/, markup)] for the whole path."""
-    out = [("paths/%s/index.html" % PATH["slug"], render.path_page(PATH))]
-    courses = PATH["courses"]
+def path_pages(path):
+    """[(relative path under site/, markup)] for one path."""
+    out = [("paths/%s/index.html" % path["slug"], render.path_page(path))]
+    courses = path["courses"]
     for index, course in enumerate(courses):
         out.append((
             "%s/index.html" % course["slug"],
-            render.course_home(course=course, index=index, courses=courses, path=PATH),
+            render.course_home(course=course, index=index, courses=courses, path=path),
         ))
         lessons = course["lessons"]
         for position, lesson in enumerate(lessons):
             out.append((
                 "%s/%s/index.html" % (course["slug"], lesson["slug"]),
                 render.lesson_page(
-                    path=PATH,
+                    path=path,
                     course=course,
                     lesson=lesson,
                     index=position,
@@ -48,6 +56,14 @@ def pages():
                     next_lesson=lessons[position + 1] if position + 1 < len(lessons) else None,
                 ),
             ))
+    return out
+
+
+def pages():
+    """[(relative path under site/, markup)] for every generated path."""
+    out = []
+    for path in GENERATED_PATHS:
+        out.extend(path_pages(path))
     return out
 
 
@@ -69,13 +85,13 @@ def main(argv=None):
     manifest = MANIFEST
     manifest_body = "\n".join("site/" + relative for relative, _m in built) + "\n"
 
-    changed, written = [], 0
+    changed, written, manifest_written = [], 0, 0
     current_manifest = manifest.read_text(encoding="utf-8") if manifest.is_file() else None
     if current_manifest != manifest_body:
         changed.append(str(manifest.relative_to(REPO_ROOT)))
         if not args.check:
             manifest.write_text(manifest_body, encoding="utf-8")
-            written += 1
+            manifest_written = 1
     for relative, markup in built:
         target = SITE / relative
         current = target.read_text(encoding="utf-8") if target.is_file() else None
@@ -87,20 +103,26 @@ def main(argv=None):
             target.write_text(markup, encoding="utf-8")
             written += 1
 
-    total_lessons = sum(len(c["lessons"]) for c in PATH["courses"])
-    print("%s: %d courses, %d lessons, %d pages"
-          % (PATH["title"], len(PATH["courses"]), total_lessons, len(built)))
+    for path in GENERATED_PATHS:
+        total_lessons = sum(len(c["lessons"]) for c in path["courses"])
+        print("%s: %d courses, %d lessons"
+              % (path["title"], len(path["courses"]), total_lessons))
+    print("%d generated pages in total" % len(built))
     if args.check:
         if changed:
-            print("OUT OF DATE (%d page(s)); run scripts/build_discrete_math.py:" % len(changed))
+            print("OUT OF DATE (%d page(s)); run scripts/build_paths.py:" % len(changed))
             for relative in changed[:20]:
                 print("  %s" % relative)
             if len(changed) > 20:
                 print("  ... and %d more" % (len(changed) - 20))
             return 1
-        print("every published page matches the content in content/discrete_math/")
+        print("every published page matches the content in content/")
         return 0
-    print("wrote %d page(s); %d already current" % (written, len(built) - written))
+    # The manifest is counted apart from the pages: folding it in made this line
+    # report "-1 already current" on a full rebuild.
+    print("wrote %d page(s), %d already current%s"
+          % (written, len(built) - written,
+             "; manifest updated" if manifest_written else ""))
     return 0
 
 

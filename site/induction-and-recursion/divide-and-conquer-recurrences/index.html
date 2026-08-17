@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Divide-and-Conquer Recurrences | Induction and Recursion | Learn · geterdone.io</title>
-  <meta name="description" content="Algorithms that split a problem into `a` pieces of size `n/b` produce recurrences of one shape. The master theorem settles them by comparing `log_b a` with the exponent in `f(n)`." />
+  <meta name="description" content="Algorithms that split a problem into a pieces of size n/b produce recurrences of one shape. The master theorem settles them by comparing log_b a with the exponent in f(n)." />
   <link rel="canonical" href="https://learn.geterdone.io/induction-and-recursion/divide-and-conquer-recurrences/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Divide-and-Conquer Recurrences | Induction and Recursion | Learn · geterdone.io" />
-  <meta property="og:description" content="Algorithms that split a problem into `a` pieces of size `n/b` produce recurrences of one shape. The master theorem settles them by comparing `log_b a` with the exponent in `f(n)`." />
+  <meta property="og:description" content="Algorithms that split a problem into a pieces of size n/b produce recurrences of one shape. The master theorem settles them by comparing log_b a with the exponent in f(n)." />
   <meta property="og:url" content="https://learn.geterdone.io/induction-and-recursion/divide-and-conquer-recurrences/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Divide-and-Conquer Recurrences | Induction and Recursion | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Algorithms that split a problem into `a` pieces of size `n/b` produce recurrences of one shape. The master theorem settles them by comparing `log_b a` with the exponent in `f(n)`." />
+  <meta name="twitter:description" content="Algorithms that split a problem into a pieces of size n/b produce recurrences of one shape. The master theorem settles them by comparing log_b a with the exponent in f(n)." />
   <meta name="twitter:url" content="https://learn.geterdone.io/induction-and-recursion/divide-and-conquer-recurrences/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Induction and Recursion course home">
         <span class="brand-mark" aria-hidden="true">11</span>
-        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 &amp;middot; Lesson 11 of 12</span></span>
+        <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 · Lesson 11 of 12</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Induction and Recursion</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 11 &amp;middot; Divide-and-Conquer Recurrences</span>
+      <span class="crumb-current" aria-current="page">Lesson 11 · Divide-and-Conquer Recurrences</span>
     </nav>
 
     <noscript>
@@ -987,7 +1018,7 @@ with L = log_b n levels, so a^L = a^{log_b n} = n^{log_b a}.</div><p>With <span 
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Applying the master theorem</h2></div><p>Read off <span class="math">a</span>, <span class="math">b</span>, <span class="math">d</span>, then compare.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Identify `a`, `b` and `d`</h3><p><span class="math">a</span> is the number of subproblems, <span class="math">b</span> the shrink factor, <span class="math">d</span> the exponent of the combining work. Reading <span class="math">a</span> off as the shrink factor is the standard slip.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compute `log_b a`</h3><p><span class="math">log₂ 2 = 1</span>, <span class="math">log₂ 3 ≈ 1.585</span>, <span class="math">log₂ 4 = 2</span>, <span class="math">log₂ 8 = 3</span>. These four cover most examples.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Compare with `d` and read the case</h3><p>Less, equal, greater &mdash; root dominates, level, leaves dominate.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Sanity check with the tree</h3><p>Does the work per level grow, stay constant or shrink? The answer should match the case you selected.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Identify <span class="math">a</span>, <span class="math">b</span> and <span class="math">d</span></h3><p><span class="math">a</span> is the number of subproblems, <span class="math">b</span> the shrink factor, <span class="math">d</span> the exponent of the combining work. Reading <span class="math">a</span> off as the shrink factor is the standard slip.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compute <span class="math">log_b a</span></h3><p><span class="math">log₂ 2 = 1</span>, <span class="math">log₂ 3 ≈ 1.585</span>, <span class="math">log₂ 4 = 2</span>, <span class="math">log₂ 8 = 3</span>. These four cover most examples.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Compare with <span class="math">d</span> and read the case</h3><p>Less, equal, greater &mdash; root dominates, level, leaves dominate.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Sanity check with the tree</h3><p>Does the work per level grow, stay constant or shrink? The answer should match the case you selected.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -1013,7 +1044,7 @@ Strassen improves case 2 above by using 7 multiplications, not 8:
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Mixing up `a` and `b`</strong><span><span class="math">a</span> counts subproblems, <span class="math">b</span> is the shrink factor. <span class="math">T(n) = 2T(n/3) + n</span> has <span class="math">a = 2</span>, <span class="math">b = 3</span>, and swapping them gives the wrong case.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying the polynomial form to a non-polynomial `f`</strong><span><span class="math">f(n) = n log n</span> falls between cases 2 and 3 and needs the general statement. Forcing it into the version here gives a wrong answer.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reading `Θ` as a statement about real running time</strong><span>It describes asymptotic growth. An algorithm with a better exponent and a worse constant can be slower on every input you will ever run.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Mixing up <span class="math">a</span> and <span class="math">b</span></strong><span><span class="math">a</span> counts subproblems, <span class="math">b</span> is the shrink factor. <span class="math">T(n) = 2T(n/3) + n</span> has <span class="math">a = 2</span>, <span class="math">b = 3</span>, and swapping them gives the wrong case.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying the polynomial form to a non-polynomial <span class="math">f</span></strong><span><span class="math">f(n) = n log n</span> falls between cases 2 and 3 and needs the general statement. Forcing it into the version here gives a wrong answer.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reading <span class="math">Θ</span> as a statement about real running time</strong><span>It describes asymptotic growth. An algorithm with a better exponent and a worse constant can be slower on every input you will ever run.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can decide the case from the tree, not from the formula.</strong><p>For <span class="math">T(n) = 3T(n/4) + n</span>, compute the work at levels 0, 1 and 2 and say whether it is growing or shrinking. Then check that the master theorem gives the case your tree predicted.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> The master theorem does not cover every divide-and-conquer recurrence: unequal splits like <span class="math">T(n) = T(n/3) + T(2n/3) + n</span> need the tree argument directly, and that one turns out to be <span class="math">Θ(n log n)</span> &mdash; the same as an even split, which is why quicksort survives an imperfect pivot.</div></article>
       </div>
     </section>

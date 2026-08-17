@@ -1,0 +1,1631 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simplifying Radical Expressions | Rational and Radical Expressions | Learn · geterdone.io</title>
+  <meta name="description" content="The second half of the course opens the way the first did: with the values that are not allowed. An even root demands a non-negative radicand, the principal root is a single number rather than two, and both facts show up in the identity √(x²) = |x|." />
+  <link rel="canonical" href="https://learn.geterdone.io/rational-and-radical-expressions/simplifying-radical-expressions/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Simplifying Radical Expressions | Rational and Radical Expressions | Learn · geterdone.io" />
+  <meta property="og:description" content="The second half of the course opens the way the first did: with the values that are not allowed. An even root demands a non-negative radicand, the principal root is a single number rather than two, and both facts show up in the identity √(x²) = |x|." />
+  <meta property="og:url" content="https://learn.geterdone.io/rational-and-radical-expressions/simplifying-radical-expressions/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Simplifying Radical Expressions | Rational and Radical Expressions | Learn · geterdone.io" />
+  <meta name="twitter:description" content="The second half of the course opens the way the first did: with the values that are not allowed. An even root demands a non-negative radicand, the principal root is a single number rather than two, and both facts show up in the identity √(x²) = |x|." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/rational-and-radical-expressions/simplifying-radical-expressions/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Rational and Radical Expressions course home">
+        <span class="brand-mark" aria-hidden="true">08</span>
+        <span class="brand-copy"><strong>Rational and Radical Expressions</strong><span>Course 5 · Lesson 08 of 12</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Rational and Radical Expressions</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 08 · Simplifying Radical Expressions</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The reducing the index is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 5 &middot; Lesson 08 &middot; Radicals</span>
+        <h1>Simplifying Radical Expressions</h1>
+        <p>The second half of the course opens the way the first did: with the values that are not allowed. An even root demands a non-negative radicand, the principal root is a single number rather than two, and both facts show up in the identity <span class="math">√(x²) = |x|</span>.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">√(a²) = |a|            not a
+ⁿ√a · ⁿ√b = ⁿ√(ab)     n even requires a ≥ 0 and b ≥ 0
+√200 = √(100 · 2) = 10√2
+n even → radicand ≥ 0;   n odd → any real</div>
+        <div class="float-label" style="right:16px;bottom:16px;">Four facts about roots</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>A radical sign is not an instruction to find every number that works. It names one specific number, and which one depends on whether the index is even or odd.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The radical sign names the principal root</h3><p><span class="math">√9</span> is <span class="math">3</span>, not <span class="math">±3</span>. Both <span class="math">3</span> and <span class="math">−3</span> square to <span class="math">9</span>, but the symbol denotes the non-negative one so that <span class="math">√</span> is a function. The <span class="math">±</span> in the quadratic formula is written explicitly because the symbol does not supply it.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Even and odd indices behave differently</h3><p>An even power is never negative, so <span class="math">√(−4)</span> names nothing real and <span class="math">−4</span> is outside the domain. An odd power keeps its sign, so <span class="math">∛(−8)</span> is <span class="math">−2</span> with no difficulty at all.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Simplifying means extracting perfect powers</h3><p><span class="math">√200</span> is not made simpler by a decimal. It is made simpler by writing <span class="math">200 = 100 · 2</span> and taking the perfect square out, leaving <span class="math">10√2</span> &mdash; an exact value in a form that can be compared and combined.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>Roots, principal values and the product rule</h2></div><p>The definitions first, then the two rules that do the simplifying and the condition attached to them.</p></div>
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; nth root</span><p>For an integer <span class="math">n ≥ 2</span>, <span class="math">b</span> is an <strong>nth root</strong> of <span class="math">a</span> if <span class="math">bⁿ = a</span>. In <span class="math">ⁿ√a</span> the number <span class="math">n</span> is the <strong>index</strong> and <span class="math">a</span> is the <strong>radicand</strong>. With no index written, the index is <span class="math">2</span>.</p></div><div class="defbox"><span class="label">Definition &middot; Principal root</span><p>When <span class="math">n</span> is even and <span class="math">a ≥ 0</span>, <span class="math">ⁿ√a</span> denotes the <strong>non-negative</strong> root. When <span class="math">n</span> is odd, <span class="math">ⁿ√a</span> denotes the unique real root, which has the same sign as <span class="math">a</span>. When <span class="math">n</span> is even and <span class="math">a &lt; 0</span>, <span class="math">ⁿ√a</span> is not a real number.</p></div><p>That last clause is the radical half's version of "the denominator is not zero". It is a restriction on the domain, it is decided before any algebra happens, and no manipulation later can be allowed to lose it. <span class="math">√(−4)</span> is treated here as undefined; course 6 introduces <span class="math">i</span> and gives it a value.</p><div class="thm"><span class="label">Theorem &middot; The identity that catches everyone</span><p>For every real <span class="math">x</span>, <span class="math">√(x²) = |x|</span>.</p><p>The left side is non-negative by definition of the principal root, so the right side must be too. Writing <span class="math">√(x²) = x</span> asserts something false for every negative <span class="math">x</span>: at <span class="math">x = −5</span> the left side is <span class="math">5</span> and the right side is <span class="math">−5</span>.</p></div><p>More generally <span class="math">ⁿ√(xⁿ)</span> is <span class="math">|x|</span> when <span class="math">n</span> is even and <span class="math">x</span> when <span class="math">n</span> is odd. The absolute value is not decoration. It is the price of an even power destroying sign information that the root then cannot restore.</p><div class="thm"><span class="label">Theorem &middot; Product and quotient rules</span><p><span class="math">ⁿ√a · ⁿ√b = ⁿ√(ab)</span> and <span class="math">ⁿ√a / ⁿ√b = ⁿ√(a/b)</span>, provided every radical named is defined &mdash; for even <span class="math">n</span> that means <span class="math">a ≥ 0</span> and <span class="math">b ≥ 0</span>, and <span class="math">b ≠ 0</span> in the quotient.</p><p>The condition is not fine print. Without it one could write <span class="math">√(−4) · √(−9) = √36 = 6</span>, and the left side is not a real number at all.</p></div><p>Notice what is absent: there is no rule for <span class="math">ⁿ√(a + b)</span>. Roots distribute over multiplication and division and over nothing else. <span class="math">√(9 + 16)</span> is <span class="math">√25 = 5</span>, while <span class="math">√9 + √16</span> is <span class="math">7</span>. This is the same shape of error as cancelling a term rather than a factor in lesson 2.</p><h3>Simplified form</h3><ul><li><strong>No perfect nth power left under the radical.</strong> <span class="math">√72</span> becomes <span class="math">6√2</span> because <span class="math">72 = 36 · 2</span>.</li><li><strong>No fraction under the radical</strong> and no radical in a denominator &mdash; lesson 10 handles the second half of that.</li><li><strong>The index as small as it will go.</strong> <span class="math">⁴√(9)</span> is <span class="math">√3</span>, since <span class="math">9 = 3²</span>.</li></ul><div class="example"><span class="label">Example &middot; Variables under an even root</span><p><span class="math">√(50x³)</span> simplifies to <span class="math">5x√(2x)</span>. No absolute value is needed: for the expression to be defined at all, <span class="math">50x³ ≥ 0</span> forces <span class="math">x ≥ 0</span>, and a non-negative <span class="math">x</span> is its own absolute value. The domain did the work that <span class="math">| |</span> would otherwise have to do.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>Reducing the index</h2></div><p>A common factor in the index and the exponents</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong>Reducing the index</strong><span id="srSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>before</span><span class="tone-green"><i class="legend-swatch"></i>after</span></div>
+      </div>
+      <div class="lab-stage" id="srStage"></div>
+      <div id="srWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="srStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Pulling out perfect powers</h3>
+          <p>The factorisation of the radicand is shown as it is found, so you can see which factor came out and which one had to stay. The decimal is printed only as a check on the exact form.</p>
+        <div class="field">
+          <label for="srPreset">Example</label>
+          <select id="srPreset"><option value="9|4">the 4th root of 9</option><option value="8|6">the 6th root of 8</option><option value="64|12">the 12th root of 64</option><option value="16|4">the 4th root of 16</option><option value="25|6">the 6th root of 25</option><option value="-8|6">the 6th root of -8</option></select>
+        </div>
+        <div class="field">
+          <label for="srN">Radicand</label>
+          <input id="srN" type="text" value="9" inputmode="text" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="srIdx">Index</label>
+          <select id="srIdx"><option value="2">square root</option><option value="3">cube root</option><option value="4">4th root</option><option value="5">5th root</option><option value="6">6th root</option><option value="12">12th root</option></select>
+        </div>
+        <div class="kpi-grid"><div class="kpi"><span>As given</span><strong id="srK1">&mdash;</strong></div><div class="kpi"><span>Reduced</span><strong id="srK2">&mdash;</strong></div><div class="kpi"><span>Index divided by</span><strong id="srK3">&mdash;</strong></div></div>
+        <p class="small-copy" style="margin:0;">A whole number radicand and an index from 2 to 12.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Simplifying a radical</h2></div><p>Four steps. The first decides whether there is anything to do at all.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check the index and the sign of the radicand</h3><p>Even index with a negative radicand: stop, it is undefined here. Odd index: any real number is fine, and a negative sign may be brought out front.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Factor the radicand into perfect nth powers times the rest</h3><p>For a square root look for the largest perfect square that divides it; <span class="math">200 = 100 · 2</span> in one step beats <span class="math">200 = 4 · 50</span> in three.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Take each perfect power out, one factor at a time</h3><p><span class="math">ⁿ√(cⁿ · d) = c · ⁿ√d</span> by the product rule. For an even index with a variable base, this is where <span class="math">|x|</span> appears unless the domain already forces the base non-negative.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Confirm nothing extractable is left</h3><p>Look at what remains under the radical: if any factor is still a perfect nth power, or the index and every exponent share a common factor, there is another step to take.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Roots and their conditions</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Three radicals, three different obstacles</h3><p>One numeric square root, one odd index with a negative radicand, and one with variables.</p><div class="mathblock">(a)  √200
+     200 = 100 · 2,  and 100 = 10²
+     √200 = √100 · √2 = 10√2                 check: 10 × 1.41421… = 14.1421…
+
+(b)  ∛(−108)
+     index 3 is odd, so a negative radicand is fine
+     −108 = (−27) · 4,  and −27 = (−3)³
+     ∛(−108) = ∛(−27) · ∛4 = −3∛4            check: −3 × 1.5874… = −4.7622…
+
+(c)  √(48x⁵y⁴)          defined only where 48x⁵y⁴ ≥ 0, so x ≥ 0
+     48x⁵y⁴ = (16x⁴y⁴) · (3x)
+     √(48x⁵y⁴) = 4x²y²√(3x)
+
+     no absolute values needed:  x², y² ≥ 0 always;  x ≥ 0 only keeps √(3x) defined</div><p>In (b) the sign came out with the root because the index is odd. Had the index been even, there would have been nothing to do &mdash; the expression would not name a real number and the work would stop at the first line.</p><p>In (c) the domain restriction was written down before the simplifying, exactly as in lesson 1, and it is what makes <span class="math">√(3x)</span> defined at all. It is not what removes the absolute value bars: <span class="math">√(x⁴) = x²</span> and <span class="math">√(y⁴) = y²</span> hold for every real <span class="math">x</span> and <span class="math">y</span>, because an even power is already non-negative. The bars are genuinely at stake in the earlier <span class="math">√(50x³) = 5x√(2x)</span>, where the extracted factor is <span class="math">x</span> to the first power and <span class="math">√(x²) = |x|</span> needs <span class="math">x ≥ 0</span> before it can be dropped.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Writing <span class="math">√(x²) = x</span></strong><span>True only for <span class="math">x ≥ 0</span>. It is the same class of error as cancelling without recording the domain: a step that gives the right answer on the examples you tried is not thereby a valid rule.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Distributing a root over a sum</strong><span><span class="math">√(a + b)</span> is not <span class="math">√a + √b</span>. Test it once with <span class="math">9</span> and <span class="math">16</span> and the habit dies: <span class="math">5</span> against <span class="math">7</span>.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Reading <span class="math">√9</span> as <span class="math">±3</span></strong><span>The symbol names one number. The two solutions of <span class="math">x² = 9</span> come from the square root property, which supplies the <span class="math">±</span> explicitly &mdash; the radical sign never does.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can state the condition alongside every rule you use.</strong><p>Given any radical you should be able to say whether it is defined, simplify it exactly, and justify each extraction by the product or quotient rule with its hypothesis checked. Knowing that <span class="math">√200 = 10√2</span> matters less than knowing why <span class="math">√(−4) · √(−9)</span> is not <span class="math">6</span>.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Everything in the next four lessons rests on this one. Adding radicals needs simplified form to see which are alike, rationalizing needs the product rule, and radical equations need the domain restriction that the even index imposes here.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../graphs-and-asymptotes/" rel="prev"><span>Previous lesson</span><strong>07 &middot; Graphs and Asymptotes</strong></a>
+      <a class="lesson-link next" href="../operations-with-radicals/" rel="next"><span>Next lesson</span><strong>09 &middot; Adding, Subtracting and Multiplying Radicals</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Rational and Radical Expressions.</strong> Domains, asymptotes and holes on this course are computed from the factored form in exact arithmetic, and every solution a lab reports has been substituted back into the ORIGINAL equation in front of you. An extraneous root is shown failing that check rather than quietly dropped.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "What is <span class=\"math\">\u221a(x\u00b2)<\/span> for every real <span class=\"math\">x<\/span>?", "a": ["<span class=\"math\">x<\/span>", "<span class=\"math\">\u00b1x<\/span>", "<span class=\"math\">|x|<\/span>", "<span class=\"math\">x\u00b2<\/span>"], "c": 2, "why": "The principal square root is never negative, so at <span class=\"math\">x = \u22125<\/span> the value is <span class=\"math\">5<\/span>. Only <span class=\"math\">|x|<\/span> is correct for every real <span class=\"math\">x<\/span>."}, {"q": "Which of these is not a real number?", "a": ["<span class=\"math\">\u221b(\u22128)<\/span>", "<span class=\"math\">\u221a(\u221216)<\/span>", "<span class=\"math\">\u2212\u221a16<\/span>", "<span class=\"math\">\u221b(\u22121)<\/span>"], "c": 1, "why": "An even index needs a non-negative radicand. <span class=\"math\">\u2212\u221a16<\/span> is fine &mdash; it is <span class=\"math\">\u22124<\/span>, the negative of a perfectly good root &mdash; and odd indices accept negatives."}, {"q": "<span class=\"math\">\u221a72<\/span> in simplified form is:", "a": ["<span class=\"math\">8\u221a1<\/span>", "<span class=\"math\">2\u221a18<\/span>", "<span class=\"math\">6\u221a2<\/span>", "<span class=\"math\">36\u221a2<\/span>"], "c": 2, "why": "<span class=\"math\">72 = 36 \u00b7 2<\/span> with <span class=\"math\">36<\/span> a perfect square, giving <span class=\"math\">6\u221a2<\/span>. <span class=\"math\">2\u221a18<\/span> is equal in value but not simplified: <span class=\"math\">18<\/span> still contains the perfect square <span class=\"math\">9<\/span>."}, {"q": "Why does the product rule <span class=\"math\">\u221aa \u00b7 \u221ab = \u221a(ab)<\/span> carry the condition <span class=\"math\">a, b \u2265 0<\/span>?", "a": ["Because otherwise the product is irrational", "Because for negative radicands the left side is not a real number", "Because the rule only holds for square roots", "Because <span class=\"math\">ab<\/span> might not be a perfect square"], "c": 1, "why": "With <span class=\"math\">a = \u22124<\/span> and <span class=\"math\">b = \u22129<\/span> the right side is <span class=\"math\">\u221a36 = 6<\/span> while the left side names nothing real. The condition keeps both sides defined before it claims they are equal."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* Exact irrational answers.
+
+     sqrt(D) for a rational D is either rational or irrational, and the second
+     case is not a failure -- it is the answer. A lesson that solves
+     x^2 - 2x - 4 = 0 wants "1 +- sqrt(5)", not "3.2360679...", so the roots of
+     every quadratic on this path are carried as  p + q*sqrt(k)  with p and q
+     exact rationals and k a squarefree integer. */
+  function bsqrtsimp(n) {
+    /* n = s^2 * k with k squarefree; returns [s, k]. */
+    var s = 1n, k = n, f = 2n;
+    while (f * f <= k) {
+      while (k % (f * f) === 0n) { k /= f * f; s *= f; }
+      f += 1n;
+      if (f > 100000n) break;   /* lesson-sized radicands */
+    }
+    return [s, k];
+  }
+  /* sqrt(a) for a rational a >= 0, as { q, k } meaning q * sqrt(k). k === 1n
+     exactly when the root is rational. */
+  function Rsurd(a) {
+    if (a.n < 0n) return null;
+    if (a.n === 0n) return { q: R0, k: 1n };
+    /* sqrt(p/d) = sqrt(p*d)/d */
+    var pair = bsqrtsimp(a.n * a.d);
+    return { q: R(pair[0], a.d), k: pair[1] };
+  }
+  function surdtext(s) {
+    if (s.k === 1n) return Rtext(s.q);
+    if (Requ(s.q, R1)) return 'sqrt(' + s.k + ')';
+    return Rterm(s.q) + 'sqrt(' + s.k + ')';
+  }
+  /* "p +- q sqrt(k)", the form a reader is expected to write down. */
+  function pmtext(p, s, imaginary) {
+    var unit = imaginary ? 'i' : '';
+    if (s.k === 1n && Rzero(s.q)) return Rtext(p);
+    var mag = surdtext(s);
+    if (s.k !== 1n && Requ(Rabs(s.q), R1)) mag = 'sqrt(' + s.k + ')';
+    else if (s.k !== 1n) mag = Rterm(Rabs(s.q)) + 'sqrt(' + s.k + ')';
+    else mag = Rtext(Rabs(s.q));
+    var right = unit ? (mag === '1' ? 'i' : mag + 'i') : mag;
+    if (Rzero(p)) return '+-' + right;
+    return Rtext(p) + ' +- ' + right;
+  }
+  /* The exact roots of ax^2 + bx + c, whatever the discriminant does.
+     Returns { disc, kind, p, s, roots } where each root is p +- s (times i when
+     the discriminant is negative), and `roots` holds the rational ones only. */
+  function quadroots(a, b, c) {
+    var disc = Rsub(Rmul(b, b), Rmul(R(4n), Rmul(a, c)));
+    var p = Rdiv(Rneg(b), Rmul(R(2n), a));
+    var sign = Rsign(disc);
+    var mag = Rsurd(sign < 0 ? Rneg(disc) : disc);
+    var s = { q: Rdiv(mag.q, Rabs(Rmul(R(2n), a))), k: mag.k };
+    var kind = sign < 0 ? 'complex' : (sign === 0 ? 'double' : (s.k === 1n ? 'rational' : 'irrational'));
+    var roots = [];
+    if (kind === 'double') roots = [p];
+    else if (kind === 'rational') roots = [Radd(p, s.q), Rsub(p, s.q)].sort(Rcmp);
+    return { disc: disc, kind: kind, p: p, s: s, roots: roots };
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function td(text, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + text + '</td>'; }
+  function tdl(text, cls) {
+    return '<td style="text-align:left;"' + (cls ? ' class="' + cls + '"' : '') + '>' + text + '</td>';
+  }
+  function th(text) { return '<th>' + text + '</th>'; }
+  function rowhead(text) { return '<th class="rowhead">' + text + '</th>'; }
+  function tr(cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.join('') + '</tr>'; }
+  function table(caption, rows) {
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption + '</caption><tbody>'
+      + rows.join('') + '</tbody></table></div>';
+  }
+  function step(label, detail) { return tr([rowhead(label), tdl(detail)]); }
+  function chip(text, kind) { return '<span class="chip' + (kind ? ' ' + kind : '') + '">' + text + '</span>'; }
+  function tone(text, kind) { return '<span class="tone-' + kind + '">' + text + '</span>'; }
+  /* Rparse throws on a denominator of zero, and 1/0 is a thing a reader can
+     type. Every call on reader input goes through this instead, so a bad
+     fraction becomes an explanation rather than an exception. */
+  function Rread(text) {
+    try { return Rparse(String(text).trim()); } catch (err) { return null; }
+  }
+  /* A decimal that a lesson has decided to show. Never used to decide anything;
+     every comparison and every verdict on this path is made on the exact side. */
+  function approx(x, places) {
+    var v = Number(x);
+    if (!isFinite(v)) return 'not a real number';
+    return v.toFixed(places === undefined ? 6 : places);
+  }
+
+  function bpow(b, e) { var out = 1n; for (var i = 0; i < e; i += 1) out *= b; return out; }
+  function bfactorise(n) {
+    var out = [], f = 2n;
+    if (n < 0n) n = -n;
+    while (f * f <= n) {
+      var e = 0;
+      while (n % f === 0n) { n /= f; e += 1; }
+      if (e) out.push([f, e]);
+      f += 1n;
+      if (f > 300000n) break;      /* lesson-sized radicands */
+    }
+    if (n > 1n) out.push([n, 1]);
+    return out;
+  }
+  /* floor of the k-th root, by binary search on integers: exact, and it never
+     asks a float what a BigInt knows. */
+  function bnthrootFloor(n, k) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var lo = 0n, hi = 1n;
+    while (bpow(hi, k) <= n) hi *= 2n;
+    while (lo + 1n < hi) {
+      var mid = (lo + hi) / 2n;
+      if (bpow(mid, k) <= n) lo = mid; else hi = mid;
+    }
+    return lo;
+  }
+  function bnthroot(n, k) {
+    if (n < 0n) {
+      if (k % 2 === 0) return null;
+      var r = bnthroot(-n, k);
+      return r === null ? null : -r;
+    }
+    var f = bnthrootFloor(n, k);
+    return bpow(f, k) === n ? f : null;
+  }
+  function Rnthroot(r, k) {
+    var a = bnthroot(r.n, k), b = bnthroot(r.d, k);
+    return (a === null || b === null) ? null : R(a, b);
+  }
+  /* The k-th root of a positive integer n, split into what comes out and what
+     stays in, prime by prime. */
+  function rootsimp(n, k) {
+    var rows = bfactorise(n).map(function (pair) {
+      var p = pair[0], e = pair[1];
+      return { p: p, e: e, out: Math.floor(e / k), rest: e % k };
+    });
+    var outside = 1n, inside = 1n;
+    rows.forEach(function (row) { outside *= bpow(row.p, row.out); inside *= bpow(row.p, row.rest); });
+    return { outside: outside, inside: inside, rows: rows };
+  }
+  function rootText(k, radicand) {
+    if (k === 2) return 'sqrt(' + radicand + ')';
+    if (k === 3) return 'cbrt(' + radicand + ')';
+    return 'root' + k + '(' + radicand + ')';
+  }
+
+  /* ---- sums of surds ---- */
+  function SVterm(c, k) {
+    var out = {};
+    if (Rzero(c)) return out;
+    var pair = bsqrtsimp(k);                 /* sqrt(12) = 2 sqrt(3) on the way in */
+    out[String(pair[1])] = Rmul(c, R(pair[0]));
+    return out;
+  }
+  function SVfromR(r) { return SVterm(r, 1n); }
+  function SVadd(a, b) {
+    var out = {}, key;
+    for (key in a) if (a.hasOwnProperty(key)) out[key] = a[key];
+    for (key in b) if (b.hasOwnProperty(key)) {
+      out[key] = out[key] ? Radd(out[key], b[key]) : b[key];
+      if (Rzero(out[key])) delete out[key];
+    }
+    return out;
+  }
+  function SVneg(a) {
+    var out = {}, key;
+    for (key in a) if (a.hasOwnProperty(key)) out[key] = Rneg(a[key]);
+    return out;
+  }
+  function SVsub(a, b) { return SVadd(a, SVneg(b)); }
+  function SVmul(a, b) {
+    var out = {}, i, j;
+    for (i in a) if (a.hasOwnProperty(i)) {
+      for (j in b) if (b.hasOwnProperty(j)) {
+        /* sqrt(i) * sqrt(j) = sqrt(ij), and ij needs simplifying again */
+        var piece = SVterm(Rmul(a[i], b[j]), BigInt(i) * BigInt(j));
+        out = SVadd(out, piece);
+      }
+    }
+    return out;
+  }
+  function SVterms(a) {
+    var out = [], key;
+    for (key in a) if (a.hasOwnProperty(key) && !Rzero(a[key])) out.push({ c: a[key], k: BigInt(key) });
+    out.sort(function (p, q) { return p.k < q.k ? -1 : (p.k > q.k ? 1 : 0); });
+    return out;
+  }
+  function SVzero(a) { return SVterms(a).length === 0; }
+  function SVrational(a) {
+    var t = SVterms(a);
+    return t.length === 0 || (t.length === 1 && t[0].k === 1n);
+  }
+  function SVtoR(a) {
+    var t = SVterms(a);
+    if (!t.length) return R0;
+    if (t.length === 1 && t[0].k === 1n) return t[0].c;
+    return null;
+  }
+  function SVtermtext(t) {
+    if (t.k === 1n) return Rtext(t.c);
+    var mag = Rabs(t.c);
+    var head = Requ(mag, R1) ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+    return (Rsign(t.c) < 0 ? '-' : '') + head + 'sqrt(' + t.k + ')';
+  }
+  function SVtext(a) {
+    var t = SVterms(a);
+    if (!t.length) return '0';
+    var out = '';
+    t.forEach(function (item, i) {
+      var neg = Rsign(item.c) < 0, mag = Rabs(item.c);
+      out += i === 0 ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      if (item.k === 1n) out += Rtext(mag);
+      else out += (Requ(mag, R1) ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')')) + 'sqrt(' + item.k + ')';
+    });
+    return out;
+  }
+  /* The one place this lab uses floating point: a decimal beside an exact
+     answer, and the demonstration that sqrt(2) + sqrt(3) is not sqrt(5). Every
+     verdict on the page is decided on the exact side. */
+  function SVnum(a) {
+    var v = 0;
+    SVterms(a).forEach(function (t) { v += Rnum(t.c) * Math.sqrt(Number(t.k)); });
+    return v;
+  }
+  function SVsqrt(a) {
+    var r = SVtoR(a);
+    if (r === null) throw new Error('a square root of something that already contains a root is a nested radical, which this course does not do');
+    if (Rsign(r) < 0) throw new Error('sqrt(' + Rtext(r) + ') is not a real number: no real number squares to a negative');
+    var s = Rsurd(r);
+    return SVterm(s.q, s.k);
+  }
+  /* Dividing by a surd. One term is cleared by the root itself, two terms by
+     the conjugate, and three terms are not cleared by either -- which the
+     rationalising mode is built to show rather than to avoid. */
+  function SVdiv(a, b) {
+    var t = SVterms(b);
+    if (!t.length) throw new Error('this divides by zero, and nothing divided by zero has a value');
+    if (t.length === 1) {
+      var c = t[0].c, k = t[0].k;
+      if (k === 1n) return SVmul(a, SVfromR(Rinv(c)));
+      /* 1 / (c sqrt(k)) = sqrt(k) / (c k) */
+      return SVmul(a, SVterm(Rinv(Rmul(c, R(k))), k));
+    }
+    if (t.length === 2) {
+      var conj = SVadd(SVterm(t[0].c, t[0].k), SVneg(SVterm(t[1].c, t[1].k)));
+      var den = SVtoR(SVmul(b, conj));
+      if (den === null) throw new Error('the conjugate did not clear this denominator');
+      if (Rzero(den)) throw new Error('the denominator times its conjugate is zero, so the denominator was zero');
+      return SVmul(SVmul(a, conj), SVfromR(Rinv(den)));
+    }
+    throw new Error('this denominator has ' + t.length + ' terms; one conjugate clears two of them at a time and cannot clear three in one step');
+  }
+  function SVof(node) {
+    switch (node.k) {
+      case 'num': {
+        var r = Rread(node.v);
+        if (r === null) throw new Error('"' + esc(node.v) + '" is not a number I can read exactly');
+        return SVfromR(r);
+      }
+      case 'var': throw new Error('the letter ' + node.v + ' has no value in this mode');
+      case 'neg': return SVneg(SVof(node.a));
+      case 'add': return SVadd(SVof(node.a), SVof(node.b));
+      case 'sub': return SVsub(SVof(node.a), SVof(node.b));
+      case 'mul': return SVmul(SVof(node.a), SVof(node.b));
+      case 'div': return SVdiv(SVof(node.a), SVof(node.b));
+      case 'pow': {
+        var e = SVtoR(SVof(node.b));
+        if (e === null || !Rint(e) || e.n < 0n || e.n > 8n) {
+          throw new Error('the exponent has to be a whole number from 0 to 8 in this mode');
+        }
+        var out = SVfromR(R1), base = SVof(node.a);
+        for (var i = 0; i < Number(e.n); i += 1) out = SVmul(out, base);
+        return out;
+      }
+      case 'fn': {
+        if (node.v === 'sqrt') return SVsqrt(SVof(node.a));
+        throw new Error(node.v + '(...) is not part of this lesson; sqrt is');
+      }
+    }
+    throw new Error('I cannot read that expression');
+  }
+  /* The sign of p + q*sqrt(k), exactly: compare squares when the two parts
+     disagree. Used to decide whether a candidate solution is a solution. */
+  function signPQ(p, q, k) {
+    var sp = Rsign(p), sq = Rsign(q);
+    if (sq === 0) return sp;
+    if (sp === 0) return sq;
+    if (sp === sq) return sp;
+    var left = Rmul(p, p), right = Rmul(Rmul(q, q), R(k));
+    var c = Rcmp(left, right);
+    return sp > 0 ? (c > 0 ? 1 : (c === 0 ? 0 : -1)) : (c > 0 ? -1 : (c === 0 ? 0 : 1));
+  }
+
+  var HINT = "A whole number radicand and an index from 2 to 12.";
+
+  var preset = document.getElementById('srPreset');
+  var stage = document.getElementById('srStage');
+  var work = document.getElementById('srWork');
+  var status = document.getElementById('srStatus');
+  var subOut = document.getElementById('srSub');
+  var kA = document.getElementById('srK1'), kB = document.getElementById('srK2'), kC = document.getElementById('srK3');
+  var EXTRA = [], CLEAR = null;
+  function kpis(a, b, c) { kA.textContent = a; kB.textContent = b; kC.textContent = c; }
+  function fail(lead, detail) {
+    if (CLEAR) CLEAR();
+    stage.innerHTML = table('nothing computed yet', [step('input', tone(esc(lead), 'red'))]);
+    work.innerHTML = '';
+    kpis('&mdash;', '&mdash;', '&mdash;');
+    status.innerHTML = '<strong>' + lead + '</strong> ' + detail + ' ' + HINT;
+  }
+
+  var inN = document.getElementById('srN'), idx = document.getElementById('srIdx');
+  var INPUTS = [inN];
+  EXTRA = [idx];
+  function applyPreset(parts) { inN.value = (parts[0] || '').trim(); idx.value = (parts[1] || '2').trim(); }
+  function gcdInt(a, b) { while (b) { var t = a % b; a = b; b = t; } return a; }
+
+  function redraw() {
+    var r = Rread(inN.value), k = parseInt(idx.value, 10);
+    if (r === null || !Rint(r)) { fail('The radicand has to be a whole number here.', 'Index reduction is about the exponents in its factorisation.'); return; }
+    if (!(k >= 2 && k <= 12)) { fail('Choose an index from the list.', 'The index is the small number on the root sign.'); return; }
+    var name = rootText(k, Rtext(r));
+    subOut.textContent = name;
+
+    if (Rsign(r) < 0 && k % 2 === 0) {
+      stage.innerHTML = table('nothing to reduce', [
+        step('the radical', name),
+        step('why not', 'an even index and a negative radicand: there is no real number here'),
+      ]);
+      work.innerHTML = table('Why the reduction cannot even start', [
+        step('the value does not exist', name + ' is not a real number, because an even power is never negative'),
+        step('and the reduction would hide that', 'if the index and the exponents shared a factor, cancelling it would produce an odd index, which DOES have a value: ' + rootText(3, Rtext(r)) + ' = ' + (bnthroot(r.n, 3) === null ? 'irrational' : String(bnthroot(r.n, 3)))),
+        step('so the rule needs its condition', 'index reduction is stated for a non-negative radicand, and this is the case that shows why'),
+      ]);
+      kpis(name, 'no real value', '&mdash;');
+      status.innerHTML = '<strong>' + name + ' is not a real number, so there is nothing to reduce.</strong> '
+        + 'This preset is here because the cancelling looks so harmless: the index ' + k + ' and the '
+        + 'exponents in ' + Rtext(Rabs(r)) + ' do share a factor, and cancelling it would leave a root '
+        + 'that has a perfectly good value. The two are not equal, because the first one does not '
+        + 'exist. The rule that lets an index be reduced is stated for radicands that are not '
+        + 'negative, and this is what that condition is protecting.';
+      return;
+    }
+
+    var mag = Rabs(r);
+    var factors = bfactorise(mag.n);
+    var g = k;
+    factors.forEach(function (pair) { g = gcdInt(g, pair[1]); });
+    if (!factors.length) g = k;
+    var newIndex = k / g;
+    var newRadicand = 1n;
+    factors.forEach(function (pair) { newRadicand *= bpow(pair[0], pair[1] / g); });
+
+    var rows = [tr([th('prime'), th('exponent'), th('exponent divided by ' + g), th('in the reduced radicand')])];
+    factors.forEach(function (pair) {
+      rows.push(tr([td(String(pair[0])), td(String(pair[1])), td(String(pair[1] / g)),
+        td(String(pair[0]) + '^' + (pair[1] / g))], g > 1 ? 'focus' : ''));
+    });
+    if (!factors.length) rows.push(tr([tdl('1 has no prime factors'), tdl('&mdash;'), tdl('&mdash;'), tdl('&mdash;')]));
+
+    var before = name, after = newIndex === 1 ? Rtext(R(newRadicand)) : rootText(newIndex, newRadicand);
+    /* The check: raise the reduced radical back to the reduced index, and
+       raise the whole thing to the original index. Both have to land on the
+       radicand, and both are integer arithmetic. */
+    var backOne = bpow(newRadicand, g);
+    var checkRows = [tr([th('check'), th('what it gives'), th('the radicand'), th('same?')])];
+    checkRows.push(tr([tdl('raise the reduced radicand to the power ' + g),
+      td(String(newRadicand) + '^' + g + ' = ' + String(backOne)), td(String(mag.n)),
+      td(backOne === mag.n ? 'yes' : 'no', backOne === mag.n ? 't' : 'f')]));
+    var perfect = bnthroot(mag.n, k);
+    if (perfect !== null && k % 2 === 0) {
+      var negBack = bpow(-perfect, k);
+      checkRows.push(tr([tdl('the other number whose ' + k + 'th power is ' + mag.n),
+        td('(-' + perfect + ')^' + k + ' = ' + String(negBack)), td(String(mag.n)),
+        td(negBack === mag.n ? 'yes' : 'no', negBack === mag.n ? 't' : 'f')]));
+    }
+
+    stage.innerHTML = table('the same number, with a smaller index', [
+      step('as given', before),
+      step('the common factor', g === 1 ? 'the index and the exponents share nothing: 1' : String(g)),
+      step('reduced', after),
+      step('as a decimal, rounded to 6 places', approx(Math.pow(Number(mag.n), 1 / k) * (Rsign(r) < 0 ? -1 : 1), 6)),
+    ]);
+    work.innerHTML = table('The factorisation, and what the common factor does to it', rows)
+      + table('Checks', checkRows);
+    kpis(before, after, String(g));
+
+    var msg;
+    if (g === 1) {
+      msg = '<strong>' + before + ' cannot have its index reduced.</strong> The index ' + k
+        + ' and the exponents in the factorisation of ' + mag.n + ' have no common factor bigger '
+        + 'than 1, so there is nothing to cancel. An index comes down only when every exponent '
+        + 'inside can be divided by the same number as the index.';
+    } else {
+      msg = '<strong>' + before + ' = ' + after + '.</strong> The index and every exponent inside '
+        + 'shared the factor ' + g + ', and dividing both by it leaves the same number written '
+        + 'with a smaller root. In rational-exponent form that is the whole argument: '
+        + mag.n + '^(1/' + k + ') is ' + newRadicand + '^(' + g + '/' + k + ') = '
+        + newRadicand + '^(1/' + newIndex + '), and the fraction in the exponent was simply not in '
+        + 'lowest terms.';
+    }
+    if (perfect !== null && k % 2 === 0) {
+      msg += ' Notice the second check: (-' + perfect + ')^' + k + ' is also ' + mag.n + ', and '
+        + name + ' is still ' + perfect + ' and not -' + perfect + '. An even root is defined to be '
+        + 'the non-negative one, which is why the general rule for an even index carries an '
+        + 'absolute value.';
+    }
+    status.innerHTML = msg;
+  }
+
+  preset.addEventListener('change', function () { applyPreset(preset.value.split('|')); redraw(); });
+  EXTRA.forEach(function (el) { el.addEventListener('change', redraw); });
+  INPUTS.forEach(function (el) { el.addEventListener('input', redraw); });
+  applyPreset(preset.value.split('|'));
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>

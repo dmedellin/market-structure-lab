@@ -5,6 +5,7 @@ chrome.py or theme.py, so a page produced here cannot ship a variant of the
 pager, the palette or the theme toggle even if a lesson wanted one.
 """
 
+import html
 import re
 
 from . import chrome, labs
@@ -24,6 +25,41 @@ def inline(text):
     return _MATH_RE.sub(lambda m: '<span class="math">%s</span>' % m.group(1), text)
 
 
+_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def plain(text):
+    """Authored prose as PLAIN TEXT, for metadata.
+
+    A <meta description> is not markup: whatever goes in is shown verbatim by a
+    search engine or a link preview. The prose fields are written for the page,
+    so they carry `x` math runs and HTML entities, and handing them straight to
+    an attribute that is then escaped shipped descriptions reading
+    "which is inclusive &mdash; and the one English does not have a word for",
+    backticks and all. Tags come out, entities are resolved to the characters
+    they name, and the shorthand marks are dropped.
+    """
+    return html.unescape(_TAG_RE.sub("", text)).replace("`", "")
+
+
+def esc_inline(text):
+    """Escape the text, THEN apply the backtick shorthand.
+
+    Headings are not prose: they must not carry arbitrary HTML, so they are
+    escaped. But an author writing a heading about a symbol reaches for the same
+    `x` shorthand they use everywhere else, and escaping alone printed the
+    backticks -- "Reading `or` as exclusive" shipped with the marks visible on
+    roughly a hundred and ninety headings across the mathematics path.
+
+    Escaping first is what makes this safe rather than a hole: `a > b` becomes
+    `a &gt; b` and only then is wrapped in the math span, so a heading still
+    cannot introduce a tag. Fields that also feed metadata -- a lesson's title
+    reaches <title> and og:title -- keep plain esc(), because a span in a
+    <title> element is not markup, it is six visible characters.
+    """
+    return inline(esc(text))
+
+
 def _mathblock(lines):
     return '<div class="mathblock">%s</div>' % "\n".join(esc(line) for line in lines)
 
@@ -37,7 +73,7 @@ def _block(kind, payload):
     if kind == "p":
         return "<p>%s</p>" % inline(payload)
     if kind == "h3":
-        return "<h3>%s</h3>" % esc(payload)
+        return "<h3>%s</h3>" % esc_inline(payload)
     if kind == "math":
         return _mathblock(payload)
     if kind == "ul":
@@ -50,7 +86,7 @@ def _block(kind, payload):
         title, paragraphs = payload[0], payload[1:]
         body = "".join("<p>%s</p>" % inline(p) for p in paragraphs)
         return '<div class="%s"><span class="label">%s &middot; %s</span>%s</div>' % (
-            css, label, esc(title), body,
+            css, label, esc_inline(title), body,
         )
     if kind == "proof":
         body = "".join("<p>%s</p>" % inline(p) for p in payload)
@@ -63,14 +99,13 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
     number = "%02d" % (index + 1)
     total = len(course["lessons"])
     url = "/%s/%s/" % (course["slug"], lesson["slug"])
-    title = "%s &middot; %s" % (number, lesson["title"])
 
     lab = labs.build(lesson["lab"][0], lesson["lab"][1])
 
     parts = [
         chrome.head(
             title="%s | %s | Learn · geterdone.io" % (lesson["title"], course["title"]),
-            description=lesson["summary"],
+            description=plain(lesson["summary"]),
             canonical_path=url,
             favicon=chrome.FAVICON_LESSON,
         ),
@@ -79,12 +114,12 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
             home_label="Back to the %s course home" % course["title"],
             mark=number,
             strong=course["title"],
-            sub="Course %d &middot; Lesson %s of %d" % (course["number"], number, total),
+            sub="Course %d · Lesson %s of %d" % (course["number"], number, total),
         ),
         chrome.crumbs([
             ("Learn library", "../../"),
             (course["title"], "../"),
-            ("Lesson %s &middot; %s" % (number, lesson["title"]), None),
+            ("Lesson %s · %s" % (number, lesson["title"]), None),
         ]),
         chrome.noscript(
             "<strong>JavaScript is required for the interactive lesson.</strong> "
@@ -117,14 +152,14 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
             course["number"], number, esc(lesson["module"]),
             esc(lesson["title"]), inline(lesson["summary"]),
             _mathblock(lesson["key"]),
-            esc(lesson.get("key_label", "The statement in symbols")),
+            esc_inline(lesson.get("key_label", "The statement in symbols")),
         )
     )
 
     # -- concepts -----------------------------------------------------------
     cards = "".join(
         '<article class="card concept-card"><div class="icon">%d</div><h3>%s</h3><p>%s</p></article>'
-        % (i + 1, esc(t), inline(body))
+        % (i + 1, esc_inline(t), inline(body))
         for i, (t, body) in enumerate(lesson["concepts"])
     )
     parts.append(
@@ -144,7 +179,7 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
         '      <article class="card card-pad prose">%s</article>\n'
         "    </section>\n"
         % (
-            esc(lesson.get("read_title", lesson["title"])),
+            esc_inline(lesson.get("read_title", lesson["title"])),
             inline(lesson.get("read_intro", "Definitions first, then what follows from them.")),
             body_markup,
         )
@@ -166,7 +201,7 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
             esc(lab.title),
             esc(lab.subtitle),
             lab.markup,
-            esc(lab.panel_title),
+            esc_inline(lab.panel_title),
             inline(lab.panel_intro),
             lab.controls,
         )
@@ -175,7 +210,7 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
     # -- how to use it ------------------------------------------------------
     steps = "".join(
         '<article class="card concept-card"><div class="icon">%d</div><h3>%s</h3><p>%s</p></article>'
-        % (i + 1, esc(t), inline(body))
+        % (i + 1, esc_inline(t), inline(body))
         for i, (t, body) in enumerate(lesson["steps"])
     )
     parts.append(
@@ -185,7 +220,7 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
         '      <div class="grid-4">%s</div>\n'
         "    </section>\n"
         % (
-            esc(lesson.get("steps_title", "How to work with this")),
+            esc_inline(lesson.get("steps_title", "How to work with this")),
             inline(lesson.get("steps_intro", "The order matters more than the speed.")),
             steps,
         )
@@ -200,8 +235,8 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
         "      </div>\n"
         "    </section>\n"
         % (
-            labs.QUIZ_MARKUP.format(title=esc(lesson.get("quiz_title", "Check yourself"))),
-            esc(worked["title"]),
+            labs.QUIZ_MARKUP.format(title=esc_inline(lesson.get("quiz_title", "Check yourself"))),
+            esc_inline(worked["title"]),
             "".join("<p>%s</p>" % inline(p) for p in worked.get("intro", [])),
             _mathblock(worked["lines"])
             + "".join("<p>%s</p>" % inline(p) for p in worked.get("after", [])),
@@ -211,7 +246,7 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
     # -- mistakes + completion ---------------------------------------------
     mistakes = "".join(
         '<div class="lesson-row"><div class="num">%d</div><div><strong>%s</strong><span>%s</span></div></div>'
-        % (i + 1, esc(t), inline(body))
+        % (i + 1, esc_inline(t), inline(body))
         for i, (t, body) in enumerate(lesson["mistakes"])
     )
     standard_head, standard_body = lesson["standard"]
@@ -225,7 +260,7 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
         '<div class="note" style="margin-top:12px;"><strong>Note:</strong> %s</div></article>\n'
         "      </div>\n"
         "    </section>\n"
-        % (mistakes, esc(standard_head), inline(standard_body), inline(lesson["note"]))
+        % (mistakes, esc_inline(standard_head), inline(standard_body), inline(lesson["note"]))
     )
 
     parts.append("    </main>\n")
@@ -250,7 +285,8 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
     parts.append(
         chrome.footer(
             "<strong>%s.</strong> %s"
-            % (esc(course["title"]), inline(course["footer_lead"]))
+            % (esc(course["title"]), inline(course["footer_lead"])),
+            path["material"],
         )
     )
     quiz = [
@@ -277,12 +313,12 @@ def course_home(*, course, index, courses, path):
     syllabus = "".join(
         '<a class="syllabus-item" href="./%s/"><div class="num">%02d</div>'
         "<div><strong>%s</strong><span>%s</span></div></a>"
-        % (lesson["slug"], i + 1, esc(lesson["title"]), esc(lesson["one_line"]))
+        % (lesson["slug"], i + 1, esc(lesson["title"]), esc_inline(lesson["one_line"]))
         for i, lesson in enumerate(lessons)
     )
     outcomes = "".join(
         '<article class="card concept-card"><div class="icon">%d</div><h3>%s</h3><p>%s</p></article>'
-        % (i + 1, esc(t), inline(body))
+        % (i + 1, esc_inline(t), inline(body))
         for i, (t, body) in enumerate(course["outcomes"])
     )
 
@@ -311,7 +347,7 @@ def course_home(*, course, index, courses, path):
     parts = [
         chrome.head(
             title="%s | Learn · geterdone.io" % course["title"],
-            description=course["summary"],
+            description=plain(course["summary"]),
             canonical_path=url,
             favicon=chrome.FAVICON_COURSE,
         ),
@@ -320,7 +356,7 @@ def course_home(*, course, index, courses, path):
             home_label="Back to the Learn library",
             mark="%02d" % course["number"],
             strong=course["title"],
-            sub="Course %d of %d &middot; %s path" % (course["number"], total_courses, path["title"]),
+            sub="Course %d of %d · %s path" % (course["number"], total_courses, path["title"]),
             nav=[
                 ("Syllabus", "#syllabus", False),
                 ("The path", "../paths/%s/" % path["slug"], False),
@@ -387,7 +423,8 @@ def course_home(*, course, index, courses, path):
         "    </main>\n",
         '\n    <nav class="path-nav" aria-label="Course navigation">\n%s\n      </nav>\n' % "\n".join(nav),
         chrome.footer(
-            "<strong>%s.</strong> %s" % (esc(course["title"]), inline(course["footer_lead"]))
+            "<strong>%s.</strong> %s" % (esc(course["title"]), inline(course["footer_lead"])),
+            path["material"],
         ),
         chrome.close(""),
     ]
@@ -415,7 +452,7 @@ def path_page(path):
     parts = [
         chrome.head(
             title="%s Path · Learn · geterdone.io" % path["title"],
-            description=path["description"],
+            description=plain(path["description"]),
             canonical_path=url,
             favicon=chrome.FAVICON_PATH,
         ),
@@ -479,7 +516,7 @@ def path_page(path):
             "".join("<p>%s</p>" % inline(p) for p in path["prerequisites"]),
         ),
         "    </main>\n",
-        chrome.footer(inline(path["footer_lead"])),
+        chrome.footer(inline(path["footer_lead"]), path["material"]),
         chrome.close(""),
     ]
     return "".join(parts)

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem | Number Theory and Cryptography | Learn · geterdone.io</title>
-  <meta name="description" content="`a^{φ(m)} ≡ 1 (mod m)` when `gcd(a,m) = 1`, with Fermat&#x27;s `a^{p−1} ≡ 1` the prime case. It collapses enormous exponents and it is the theorem that makes RSA decryption work." />
+  <meta name="description" content="a^{φ(m)} ≡ 1 (mod m) when gcd(a,m) = 1, with Fermat&#x27;s a^{p−1} ≡ 1 the prime case. It collapses enormous exponents and it is the theorem that makes RSA decryption work." />
   <link rel="canonical" href="https://learn.geterdone.io/number-theory-and-cryptography/fermat-and-euler/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta property="og:description" content="`a^{φ(m)} ≡ 1 (mod m)` when `gcd(a,m) = 1`, with Fermat&#x27;s `a^{p−1} ≡ 1` the prime case. It collapses enormous exponents and it is the theorem that makes RSA decryption work." />
+  <meta property="og:description" content="a^{φ(m)} ≡ 1 (mod m) when gcd(a,m) = 1, with Fermat&#x27;s a^{p−1} ≡ 1 the prime case. It collapses enormous exponents and it is the theorem that makes RSA decryption work." />
   <meta property="og:url" content="https://learn.geterdone.io/number-theory-and-cryptography/fermat-and-euler/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem | Number Theory and Cryptography | Learn · geterdone.io" />
-  <meta name="twitter:description" content="`a^{φ(m)} ≡ 1 (mod m)` when `gcd(a,m) = 1`, with Fermat&#x27;s `a^{p−1} ≡ 1` the prime case. It collapses enormous exponents and it is the theorem that makes RSA decryption work." />
+  <meta name="twitter:description" content="a^{φ(m)} ≡ 1 (mod m) when gcd(a,m) = 1, with Fermat&#x27;s a^{p−1} ≡ 1 the prime case. It collapses enormous exponents and it is the theorem that makes RSA decryption work." />
   <meta name="twitter:url" content="https://learn.geterdone.io/number-theory-and-cryptography/fermat-and-euler/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Number Theory and Cryptography course home">
         <span class="brand-mark" aria-hidden="true">11</span>
-        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 &amp;middot; Lesson 11 of 14</span></span>
+        <span class="brand-copy"><strong>Number Theory and Cryptography</strong><span>Course 6 · Lesson 11 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Number Theory and Cryptography</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 11 &amp;middot; Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem</span>
+      <span class="crumb-current" aria-current="page">Lesson 11 · Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem</span>
     </nav>
 
     <noscript>
@@ -927,11 +958,11 @@ so a^k ≡ a^{k mod φ(m)}  (mod m)</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>One theorem, two names, and the single most useful computational fact in the course.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>`φ(m)` counts the units</h3><p>The integers in <span class="math">1, …, m</span> coprime to <span class="math">m</span>. They are exactly the invertible elements of <span class="math">ℤ_m</span>, by lesson 6.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Exponents reduce modulo `φ(m)`</h3><p>Not modulo <span class="math">m</span>. <span class="math">7^100 mod 10</span> becomes <span class="math">7^{100 mod 4} = 7^0 = 1</span>, because <span class="math">φ(10) = 4</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Coprimality is required</h3><p><span class="math">2^{φ(4)} = 2² = 4 ≡ 0 (mod 4)</span>, not 1. The theorem says nothing about bases sharing a factor with the modulus.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3><span class="math">φ(m)</span> counts the units</h3><p>The integers in <span class="math">1, …, m</span> coprime to <span class="math">m</span>. They are exactly the invertible elements of <span class="math">ℤ_m</span>, by lesson 6.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Exponents reduce modulo <span class="math">φ(m)</span></h3><p>Not modulo <span class="math">m</span>. <span class="math">7^100 mod 10</span> becomes <span class="math">7^{100 mod 4} = 7^0 = 1</span>, because <span class="math">φ(10) = 4</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Coprimality is required</h3><p><span class="math">2^{φ(4)} = 2² = 4 ≡ 0 (mod 4)</span>, not 1. The theorem says nothing about bases sharing a factor with the modulus.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Fermat and Euler</h2></div><p>The totient, both theorems, the proof, and the consequences.</p></div>
-      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Euler&#x27;s totient</span><p><span class="math">φ(m)</span> is the number of integers in <span class="math">{1, …, m}</span> coprime to <span class="math">m</span>. <span class="math">φ(1) = 1</span>.</p></div><div class="thm"><span class="label">Theorem &middot; Computing `φ`</span><p><span class="math">φ(p) = p − 1</span> for prime <span class="math">p</span>; <span class="math">φ(p^k) = p^k − p^{k−1}</span>; and <span class="math">φ</span> is multiplicative on coprime arguments, so <span class="math">φ(mn) = φ(m)φ(n)</span> when <span class="math">gcd(m,n) = 1</span>. In general <span class="math">φ(n) = n Π_{p | n} (1 − 1/p)</span>.</p></div><p>The multiplicativity is the Chinese remainder theorem in disguise: <span class="math">ℤ_{mn} ≅ ℤ_m × ℤ_n</span> for coprime moduli, and an element is invertible in the product exactly when both components are. The product formula is inclusion and exclusion over the prime divisors, from course 4 lesson 9.</p><div class="mathblock">φ(7)  = 6              prime
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Euler&#x27;s totient</span><p><span class="math">φ(m)</span> is the number of integers in <span class="math">{1, …, m}</span> coprime to <span class="math">m</span>. <span class="math">φ(1) = 1</span>.</p></div><div class="thm"><span class="label">Theorem &middot; Computing <span class="math">φ</span></span><p><span class="math">φ(p) = p − 1</span> for prime <span class="math">p</span>; <span class="math">φ(p^k) = p^k − p^{k−1}</span>; and <span class="math">φ</span> is multiplicative on coprime arguments, so <span class="math">φ(mn) = φ(m)φ(n)</span> when <span class="math">gcd(m,n) = 1</span>. In general <span class="math">φ(n) = n Π_{p | n} (1 − 1/p)</span>.</p></div><p>The multiplicativity is the Chinese remainder theorem in disguise: <span class="math">ℤ_{mn} ≅ ℤ_m × ℤ_n</span> for coprime moduli, and an element is invertible in the product exactly when both components are. The product formula is inclusion and exclusion over the prime divisors, from course 4 lesson 9.</p><div class="mathblock">φ(7)  = 6              prime
 φ(9)  = 9 − 3 = 6      = 3² − 3
 φ(12) = 12(1−½)(1−⅓) = 4        {1, 5, 7, 11}
 φ(35) = φ(5)φ(7) = 4 · 6 = 24
@@ -987,7 +1018,7 @@ so a^k ≡ a^{k mod φ(m)}  (mod m)</div>
     </section>
     <section class="section" id="process">
       <div class="section-head"><div><p class="kicker">Method</p><h2>Using the theorems</h2></div><p>Check coprimality, compute <span class="math">φ</span>, reduce the exponent.</p></div>
-      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check `gcd(a, m) = 1`</h3><p>Without it neither theorem applies. The powers of a non-coprime base never return to 1.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compute `φ(m)`</h3><p>From the factorisation of <span class="math">m</span>, using multiplicativity and <span class="math">φ(p^k) = p^k − p^{k−1}</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Reduce the exponent modulo `φ(m)`</h3><p><span class="math">a^k ≡ a^{k mod φ(m)}</span>. This is the step that turns an impossible computation into a small one.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Compute the small power</h3><p>By square and multiply if it is still large. Usually it is trivial.</p></article></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Check <span class="math">gcd(a, m) = 1</span></h3><p>Without it neither theorem applies. The powers of a non-coprime base never return to 1.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Compute <span class="math">φ(m)</span></h3><p>From the factorisation of <span class="math">m</span>, using multiplicativity and <span class="math">φ(p^k) = p^k − p^{k−1}</span>.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Reduce the exponent modulo <span class="math">φ(m)</span></h3><p><span class="math">a^k ≡ a^{k mod φ(m)}</span>. This is the step that turns an impossible computation into a small one.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Compute the small power</h3><p>By square and multiply if it is still large. Usually it is trivial.</p></article></div>
     </section>
     <section class="section" id="practice">
       <div class="grid-2">
@@ -998,7 +1029,7 @@ so a^k ≡ a^{k mod φ(m)}  (mod m)</div>
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>`3^{1234567} mod 100`</h3><p>An exponent with seven digits, reduced to one.</p><div class="mathblock">gcd(3, 100) = 1                                    ✓ theorem applies
+      <article class="card card-pad prose"><h3><span class="math">3^{1234567} mod 100</span></h3><p>An exponent with seven digits, reduced to one.</p><div class="mathblock">gcd(3, 100) = 1                                    ✓ theorem applies
 
 φ(100) = φ(2²)·φ(5²) = (4−2)·(25−5) = 2 · 20 = 40
 
@@ -1014,7 +1045,7 @@ That number has over half a million digits.</div><p>Two facts made this possible
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Reducing the exponent modulo `m`</strong><span>It reduces modulo <span class="math">φ(m)</span>. For <span class="math">m = 100</span> those are 100 and 40, and the answers differ.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying the theorem to a non-coprime base</strong><span><span class="math">2^{φ(4)} = 4 ≡ 0 (mod 4)</span>. Coprimality is a hypothesis, not a formality.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming passing Fermat&#x27;s test proves primality</strong><span>Carmichael numbers pass for every coprime base. The test proves compositeness when it fails and proves nothing when it passes.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Reducing the exponent modulo <span class="math">m</span></strong><span>It reduces modulo <span class="math">φ(m)</span>. For <span class="math">m = 100</span> those are 100 and 40, and the answers differ.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying the theorem to a non-coprime base</strong><span><span class="math">2^{φ(4)} = 4 ≡ 0 (mod 4)</span>. Coprimality is a hypothesis, not a formality.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming passing Fermat&#x27;s test proves primality</strong><span>Carmichael numbers pass for every coprime base. The test proves compositeness when it fails and proves nothing when it passes.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you reduce the exponent before anything else.</strong><p>Compute <span class="math">2^{1000000} mod 77</span>. <span class="math">φ(77) = 60</span>, so the exponent becomes <span class="math">1000000 mod 60 = 40</span>, and <span class="math">2^40 mod 77</span> is a short square-and-multiply.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Euler's theorem is exactly what makes RSA work: choosing <span class="math">d</span> with <span class="math">ed ≡ 1 (mod φ(n))</span> means <span class="math">m^{ed} = m^{1 + kφ(n)} ≡ m</span> for <span class="math">m</span> coprime to <span class="math">n</span>. Lesson 14 puts it to use.</div></article>
       </div>
     </section>

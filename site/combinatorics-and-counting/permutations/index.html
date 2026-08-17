@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Permutations | Combinatorics and Counting | Learn · geterdone.io</title>
-  <meta name="description" content="`P(n, r) = n!/(n−r)!` counts the ways to arrange `r` of `n` distinct objects in order. Factorials grow explosively, and that growth is a fact about the problem rather than about the notation." />
+  <meta name="description" content="P(n, r) = n!/(n−r)! counts the ways to arrange r of n distinct objects in order. Factorials grow explosively, and that growth is a fact about the problem rather than about the notation." />
   <link rel="canonical" href="https://learn.geterdone.io/combinatorics-and-counting/permutations/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Permutations | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta property="og:description" content="`P(n, r) = n!/(n−r)!` counts the ways to arrange `r` of `n` distinct objects in order. Factorials grow explosively, and that growth is a fact about the problem rather than about the notation." />
+  <meta property="og:description" content="P(n, r) = n!/(n−r)! counts the ways to arrange r of n distinct objects in order. Factorials grow explosively, and that growth is a fact about the problem rather than about the notation." />
   <meta property="og:url" content="https://learn.geterdone.io/combinatorics-and-counting/permutations/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Permutations | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta name="twitter:description" content="`P(n, r) = n!/(n−r)!` counts the ways to arrange `r` of `n` distinct objects in order. Factorials grow explosively, and that growth is a fact about the problem rather than about the notation." />
+  <meta name="twitter:description" content="P(n, r) = n!/(n−r)! counts the ways to arrange r of n distinct objects in order. Factorials grow explosively, and that growth is a fact about the problem rather than about the notation." />
   <meta name="twitter:url" content="https://learn.geterdone.io/combinatorics-and-counting/permutations/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Combinatorics and Counting course home">
         <span class="brand-mark" aria-hidden="true">03</span>
-        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 &amp;middot; Lesson 03 of 14</span></span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 · Lesson 03 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Combinatorics and Counting</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 03 &amp;middot; Permutations</span>
+      <span class="crumb-current" aria-current="page">Lesson 03 · Permutations</span>
     </nav>
 
     <noscript>
@@ -927,11 +958,11 @@ circular arrangements of n:   (n−1)!</div>
     </section>
     <section class="section">
       <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>The product rule with a shrinking pool of choices. Everything else is notation.</p></div>
-      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Each choice removes one option</h3><p><span class="math">n</span> ways for the first position, <span class="math">n−1</span> for the second, and so on for <span class="math">r</span> positions. That product is <span class="math">P(n, r)</span>.</p></article><article class="card concept-card"><div class="icon">2</div><h3>`0! = 1` is a convention that works</h3><p>It makes <span class="math">P(n, n) = n!/0! = n!</span> come out right and keeps every formula in this course free of special cases.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Factorial growth is genuinely enormous</h3><p><span class="math">52!</span> is about <span class="math">8 × 10⁶⁷</span>. Every shuffle of a deck that has ever been performed was almost certainly unique.</p></article></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>Each choice removes one option</h3><p><span class="math">n</span> ways for the first position, <span class="math">n−1</span> for the second, and so on for <span class="math">r</span> positions. That product is <span class="math">P(n, r)</span>.</p></article><article class="card concept-card"><div class="icon">2</div><h3><span class="math">0! = 1</span> is a convention that works</h3><p>It makes <span class="math">P(n, n) = n!/0! = n!</span> come out right and keeps every formula in this course free of special cases.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Factorial growth is genuinely enormous</h3><p><span class="math">52!</span> is about <span class="math">8 × 10⁶⁷</span>. Every shuffle of a deck that has ever been performed was almost certainly unique.</p></article></div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Arrangements</h2></div><p>The formula, its derivation, and two variants worth knowing.</p></div>
-      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Permutation</span><p>A <strong>permutation</strong> of a set is an ordered arrangement of its elements. An <strong><span class="math">r</span>-permutation</strong> is an ordered arrangement of <span class="math">r</span> of them.</p></div><div class="thm"><span class="label">Theorem &middot; Counting `r`-permutations</span><p>For <span class="math">0 ≤ r ≤ n</span>, <span class="math">P(n, r) = n(n−1)(n−2)⋯(n−r+1) = n!/(n−r)!</span>.</p></div><div class="proof"><p>Fill the <span class="math">r</span> positions in order. The first has <span class="math">n</span> candidates. Whatever was chosen, the second has <span class="math">n−1</span> remaining, the third <span class="math">n−2</span>, and the <span class="math">r</span>th has <span class="math">n−r+1</span>. The number of options at each stage does not depend on which particular objects were chosen earlier, so the product rule applies.</p><p><span class="qed">&#9633;</span></p></div><p>Note the count of factors: <span class="math">r</span> of them, running from <span class="math">n</span> down to <span class="math">n−r+1</span>. Writing <span class="math">n</span> down to <span class="math">n−r</span> is the standard off-by-one, and it gives <span class="math">P(n, r+1)</span>.</p><div class="example"><span class="label">Example &middot; Podium finishes</span><p>Ten runners, how many ways to fill gold, silver and bronze? <span class="math">P(10,3) = 10 · 9 · 8 = 720</span>. Order matters here &mdash; the same three runners in a different order is a different outcome &mdash; which is exactly what makes it a permutation rather than a combination.</p></div><h3>Circular arrangements</h3><div class="thm"><span class="label">Theorem &middot; Arrangements around a circle</span><p><span class="math">n</span> distinct objects can be arranged in a circle in <span class="math">(n−1)!</span> ways, when rotations are considered identical.</p></div><div class="proof"><p>There are <span class="math">n!</span> linear arrangements. Each circular arrangement corresponds to exactly <span class="math">n</span> of them, one for each choice of which object is written first. So the circular count is <span class="math">n!/n = (n−1)!</span>.</p><p>Equivalently: fix one object's position to break the rotational symmetry, and arrange the remaining <span class="math">n−1</span> freely.</p><p><span class="qed">&#9633;</span></p></div><p>The division-by-symmetry argument is the pattern to remember: when several arrangements are considered the same, count them all and divide by the size of the equivalence class. That is course 2's equivalence relation doing combinatorial work, and lesson 7 uses it again.</p><h3>The size of factorials</h3><div class="mathblock">  5! =                        120
+      <article class="card card-pad prose"><div class="defbox"><span class="label">Definition &middot; Permutation</span><p>A <strong>permutation</strong> of a set is an ordered arrangement of its elements. An <strong><span class="math">r</span>-permutation</strong> is an ordered arrangement of <span class="math">r</span> of them.</p></div><div class="thm"><span class="label">Theorem &middot; Counting <span class="math">r</span>-permutations</span><p>For <span class="math">0 ≤ r ≤ n</span>, <span class="math">P(n, r) = n(n−1)(n−2)⋯(n−r+1) = n!/(n−r)!</span>.</p></div><div class="proof"><p>Fill the <span class="math">r</span> positions in order. The first has <span class="math">n</span> candidates. Whatever was chosen, the second has <span class="math">n−1</span> remaining, the third <span class="math">n−2</span>, and the <span class="math">r</span>th has <span class="math">n−r+1</span>. The number of options at each stage does not depend on which particular objects were chosen earlier, so the product rule applies.</p><p><span class="qed">&#9633;</span></p></div><p>Note the count of factors: <span class="math">r</span> of them, running from <span class="math">n</span> down to <span class="math">n−r+1</span>. Writing <span class="math">n</span> down to <span class="math">n−r</span> is the standard off-by-one, and it gives <span class="math">P(n, r+1)</span>.</p><div class="example"><span class="label">Example &middot; Podium finishes</span><p>Ten runners, how many ways to fill gold, silver and bronze? <span class="math">P(10,3) = 10 · 9 · 8 = 720</span>. Order matters here &mdash; the same three runners in a different order is a different outcome &mdash; which is exactly what makes it a permutation rather than a combination.</p></div><h3>Circular arrangements</h3><div class="thm"><span class="label">Theorem &middot; Arrangements around a circle</span><p><span class="math">n</span> distinct objects can be arranged in a circle in <span class="math">(n−1)!</span> ways, when rotations are considered identical.</p></div><div class="proof"><p>There are <span class="math">n!</span> linear arrangements. Each circular arrangement corresponds to exactly <span class="math">n</span> of them, one for each choice of which object is written first. So the circular count is <span class="math">n!/n = (n−1)!</span>.</p><p>Equivalently: fix one object's position to break the rotational symmetry, and arrange the remaining <span class="math">n−1</span> freely.</p><p><span class="qed">&#9633;</span></p></div><p>The division-by-symmetry argument is the pattern to remember: when several arrangements are considered the same, count them all and divide by the size of the equivalence class. That is course 2's equivalence relation doing combinatorial work, and lesson 7 uses it again.</p><h3>The size of factorials</h3><div class="mathblock">  5! =                        120
  10! =                  3 628 800
  20! =  2 432 902 008 176 640 000
  52! ≈ 8.07 × 10⁶⁷</div><p><span class="math">52!</span> exceeds the number of atoms in the Milky Way. Any algorithm that examines all permutations of a modest input is not slow &mdash; it is impossible, and course 8 lesson 11 gives that observation a name.</p></article>
@@ -1001,7 +1032,7 @@ to a fixed person, 2 of them are next to that person.</div><p>The block trick &m
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Using `P` when order does not matter</strong><span>A committee of three is not an ordered triple. <span class="math">P(n,r)</span> counts each committee <span class="math">r!</span> times, which is exactly the relationship lesson 4 exploits.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Miscounting the factors</strong><span><span class="math">P(n, r)</span> runs from <span class="math">n</span> down to <span class="math">n − r + 1</span>, which is <span class="math">r</span> factors. Ending at <span class="math">n − r</span> gives one too many.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Forgetting to divide out a symmetry</strong><span>Circular arrangements, necklaces and identical items all require dividing by the size of the symmetry class. Naming the symmetry first prevents dividing by the wrong number.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Using <span class="math">P</span> when order does not matter</strong><span>A committee of three is not an ordered triple. <span class="math">P(n,r)</span> counts each committee <span class="math">r!</span> times, which is exactly the relationship lesson 4 exploits.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Miscounting the factors</strong><span><span class="math">P(n, r)</span> runs from <span class="math">n</span> down to <span class="math">n − r + 1</span>, which is <span class="math">r</span> factors. Ending at <span class="math">n − r</span> gives one too many.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Forgetting to divide out a symmetry</strong><span>Circular arrangements, necklaces and identical items all require dividing by the size of the symmetry class. Naming the symmetry first prevents dividing by the wrong number.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can justify the divisor in a symmetry argument.</strong><p>Count the ways to seat 6 people around a round table with two specific people not adjacent. Do it by complement, and state exactly why the circular count is <span class="math">5!</span> rather than <span class="math">6!</span>.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> A permutation is also a bijection from a set to itself, which is course 2 lesson 12's remark. There are <span class="math">n!</span> of them, and under composition they form the symmetric group &mdash; the object most of finite group theory is about.</div></article>
       </div>
     </section>

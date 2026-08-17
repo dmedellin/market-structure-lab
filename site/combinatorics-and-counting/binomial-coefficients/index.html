@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Binomial Coefficients and Pascal&#x27;s Triangle | Combinatorics and Counting | Learn · geterdone.io</title>
-  <meta name="description" content="Pascal&#x27;s rule builds each entry from the two above it, and the resulting triangle displays symmetry, the row sums, the hockey stick and several other identities &amp;mdash; each with a counting proof." />
+  <meta name="description" content="Pascal&#x27;s rule builds each entry from the two above it, and the resulting triangle displays symmetry, the row sums, the hockey stick and several other identities — each with a counting proof." />
   <link rel="canonical" href="https://learn.geterdone.io/combinatorics-and-counting/binomial-coefficients/" />
   <meta name="author" content="dmedellin" />
 
@@ -19,12 +19,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Learn &middot; geterdone.io" />
   <meta property="og:title" content="Binomial Coefficients and Pascal&#x27;s Triangle | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta property="og:description" content="Pascal&#x27;s rule builds each entry from the two above it, and the resulting triangle displays symmetry, the row sums, the hockey stick and several other identities &amp;mdash; each with a counting proof." />
+  <meta property="og:description" content="Pascal&#x27;s rule builds each entry from the two above it, and the resulting triangle displays symmetry, the row sums, the hockey stick and several other identities — each with a counting proof." />
   <meta property="og:url" content="https://learn.geterdone.io/combinatorics-and-counting/binomial-coefficients/" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Binomial Coefficients and Pascal&#x27;s Triangle | Combinatorics and Counting | Learn · geterdone.io" />
-  <meta name="twitter:description" content="Pascal&#x27;s rule builds each entry from the two above it, and the resulting triangle displays symmetry, the row sums, the hockey stick and several other identities &amp;mdash; each with a counting proof." />
+  <meta name="twitter:description" content="Pascal&#x27;s rule builds each entry from the two above it, and the resulting triangle displays symmetry, the row sums, the hockey stick and several other identities — each with a counting proof." />
   <meta name="twitter:url" content="https://learn.geterdone.io/combinatorics-and-counting/binomial-coefficients/" />
 
   <style>
@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Combinatorics and Counting course home">
         <span class="brand-mark" aria-hidden="true">05</span>
-        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 &amp;middot; Lesson 05 of 14</span></span>
+        <span class="brand-copy"><strong>Combinatorics and Counting</strong><span>Course 4 · Lesson 05 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Combinatorics and Counting</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 05 &amp;middot; Binomial Coefficients and Pascal&#x27;s Triangle</span>
+      <span class="crumb-current" aria-current="page">Lesson 05 · Binomial Coefficients and Pascal&#x27;s Triangle</span>
     </nav>
 
     <noscript>
@@ -995,7 +1026,7 @@ n=6         1   6  15  20  15   6   1</div><div class="thm"><span class="label">
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>Prove `Σ_k k·C(n,k) = n·2ⁿ⁻¹`</h3><p>Count committees with a designated chair, two ways.</p><div class="mathblock">Objects: pairs (committee, chair) where the chair is a committee member,
+      <article class="card card-pad prose"><h3>Prove <span class="math">Σ_k k·C(n,k) = n·2ⁿ⁻¹</span></h3><p>Count committees with a designated chair, two ways.</p><div class="mathblock">Objects: pairs (committee, chair) where the chair is a committee member,
          from a pool of n people.  Committees may be any size ≥ 1.
 
 COUNT 1 — choose the committee first:
@@ -1011,7 +1042,7 @@ Same set, two counts  ⟹  Σ_k k·C(n,k) = n·2ⁿ⁻¹.        ∎</div><p>The
     </section>
     <section class="section">
       <div class="grid-2">
-        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Proving identities algebraically by default</strong><span>The counting proof is usually shorter and always more informative. Algebra confirms; counting explains.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying Pascal&#x27;s rule at the edges</strong><span><span class="math">C(n,0)</span> and <span class="math">C(n,n)</span> have only one parent, and the rule as stated needs <span class="math">1 ≤ k ≤ n−1</span>. The edge entries are 1 by definition.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Forgetting the `n = 0` exception in the alternating sum</strong><span>The bijection needs an element to add or remove. With none, the sum is 1.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Proving identities algebraically by default</strong><span>The counting proof is usually shorter and always more informative. Algebra confirms; counting explains.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Applying Pascal&#x27;s rule at the edges</strong><span><span class="math">C(n,0)</span> and <span class="math">C(n,n)</span> have only one parent, and the rule as stated needs <span class="math">1 ≤ k ≤ n−1</span>. The edge entries are 1 by definition.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Forgetting the <span class="math">n = 0</span> exception in the alternating sum</strong><span>The bijection needs an element to add or remove. With none, the sum is 1.</span></div></div></div></article>
         <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when you can prove an identity by counting one set twice.</strong><p>Prove <span class="math">C(n,k)·C(k,j) = C(n,j)·C(n−j,k−j)</span> by counting the ways to choose a <span class="math">k</span>-subset and then a <span class="math">j</span>-subset of it. Both sides count the same pairs, in different orders.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Pascal's triangle mod 2 reproduces the Sierpiński triangle, because <span class="math">C(n,k)</span> is odd exactly when the binary digits of <span class="math">k</span> are a subset of those of <span class="math">n</span> &mdash; Kummer's theorem. Course 6's modular arithmetic is what makes that statement precise.</div></article>
       </div>
     </section>

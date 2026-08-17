@@ -538,6 +538,37 @@
     }
     .lab-stage svg { display: block; width: 100%; height: auto; }
 
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
     .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
     .side-panel h3 { margin: 0; font-size: 1rem; }
     .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
@@ -893,7 +924,7 @@
     <header class="topbar">
       <a class="brand" href="../" aria-label="Back to the Logic and Proof course home">
         <span class="brand-mark" aria-hidden="true">14</span>
-        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 &amp;middot; Lesson 14 of 14</span></span>
+        <span class="brand-copy"><strong>Logic and Proof</strong><span>Course 1 · Lesson 14 of 14</span></span>
       </a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
@@ -902,7 +933,7 @@
       <span class="crumb-sep" aria-hidden="true">/</span>
       <a href="../">Logic and Proof</a>
       <span class="crumb-sep" aria-hidden="true">/</span>
-      <span class="crumb-current" aria-current="page">Lesson 14 &amp;middot; Cases, Counterexamples, and Writing a Proof</span>
+      <span class="crumb-current" aria-current="page">Lesson 14 · Cases, Counterexamples, and Writing a Proof</span>
     </nav>
 
     <noscript>
@@ -931,7 +962,7 @@ checking n = 1..40 proves nothing about n = 41</div>
     </section>
     <section class="section" id="read">
       <div class="section-head"><div><p class="kicker">The material</p><h2>Cases, counterexamples, and the standard</h2></div><p>Two techniques, then what separates a proof from a persuasive argument.</p></div>
-      <article class="card card-pad prose"><h3>Proof by cases</h3><div class="defbox"><span class="label">Definition &middot; Proof by cases</span><p>To prove <span class="math">s</span>, find statements <span class="math">c₁, …, cₙ</span> with <span class="math">c₁ ∨ … ∨ cₙ</span> guaranteed true, and prove <span class="math">s</span> under each <span class="math">cᵢ</span> separately. The cases must be <strong>exhaustive</strong>; they need not be mutually exclusive.</p></div><div class="thm"><span class="label">Theorem &middot; `n² + n` is even for every integer `n`</span><p>For all integers <span class="math">n</span>, the number <span class="math">n² + n</span> is even.</p></div><div class="proof"><p>Every integer is even or odd, so these two cases are exhaustive.</p><p><strong>Case 1: <span class="math">n</span> is even.</strong> Then <span class="math">n = 2k</span>, so <span class="math">n² + n = 4k² + 2k = 2(2k² + k)</span>, which is even.</p><p><strong>Case 2: <span class="math">n</span> is odd.</strong> Then <span class="math">n = 2k + 1</span>, so <span class="math">n² + n = (4k² + 4k + 1) + (2k + 1) = 4k² + 6k + 2 = 2(2k² + 3k + 1)</span>, which is even.</p><p>In both cases <span class="math">n² + n</span> is even, and the cases cover every integer.</p><p><span class="qed">&#9633;</span></p></div><p>A cleaner argument exists &mdash; <span class="math">n² + n = n(n + 1)</span>, a product of consecutive integers, one of which is even &mdash; and finding it is better mathematics. But the case proof is correct, and correctness comes first.</p><p><strong>Without loss of generality</strong> is a legitimate abbreviation for a case argument, and only when a genuine symmetry makes the remaining cases identical. If proving one case and the other requires different arguments, WLOG is being used to hide a gap.</p><h3>Disproof by counterexample</h3><div class="defbox"><span class="label">Definition &middot; Counterexample</span><p>A <strong>counterexample</strong> to <span class="math">∀x P(x)</span> is an element <span class="math">c</span> of the domain with <span class="math">¬P(c)</span>. Exhibiting one disproves the statement completely.</p></div><p>This follows directly from lesson 10: <span class="math">¬∀x P(x) ≡ ∃x ¬P(x)</span>, and an existential is proved by producing a witness. It is why negating a claim before attacking it is worth the two minutes &mdash; the negation describes exactly what you are hunting for.</p><div class="example"><span class="label">Example &middot; Refuting a plausible claim</span><p>"Every positive integer is the sum of at most three squares" is false: 7 requires four (<span class="math">4 + 1 + 1 + 1</span>). One number settles it. The corrected statement &mdash; every positive integer is the sum of at most four squares &mdash; is Lagrange's theorem, and needs a real proof.</p></div><h3>Why checking is not proving</h3><p>This is the point the whole course has been building toward, and course 3 exists because of it.</p><div class="thm"><span class="label">Theorem &middot; Two statements that survive dozens of checks and are false</span><p><span class="math">n² + n + 41</span> is prime for every <span class="math">n</span> from 0 to 39, and composite at <span class="math">n = 40</span>, where it equals <span class="math">1681 = 41²</span>. And <span class="math">n</span> points on a circle with all chords drawn divide it into <span class="math">1, 2, 4, 8, 16</span> regions for <span class="math">n = 1</span> to 5 &mdash; and 31, not 32, at <span class="math">n = 6</span>.</p></div><p>Both are in the lab on this page. Meeting them is more useful than being told about them: the second in particular gives five consecutive powers of two, which is exactly the kind of evidence that feels conclusive and is not.</p><h3>What a proof owes its reader</h3><ul><li><strong>A precise statement.</strong> Quantifiers, domain, hypotheses. An imprecise claim cannot be proved or refuted.</li><li><strong>A declared method.</strong> "We prove the contrapositive", "suppose for contradiction", "there are two cases". The reader should know the shape before the details.</li><li><strong>Justified steps.</strong> Every line follows from a definition, a hypothesis, or a result already established.</li><li><strong>No gaps disguised as brevity.</strong> "Clearly" and "it is obvious that" are where errors hide. If it is clear, the reason is short &mdash; write it.</li><li><strong>An explicit ending.</strong> State what has been proved.</li></ul><p>A proof is a social object as much as a logical one: its purpose is to convince a careful, skeptical reader who does not already believe the claim. Everything in the last three lessons serves that purpose.</p></article>
+      <article class="card card-pad prose"><h3>Proof by cases</h3><div class="defbox"><span class="label">Definition &middot; Proof by cases</span><p>To prove <span class="math">s</span>, find statements <span class="math">c₁, …, cₙ</span> with <span class="math">c₁ ∨ … ∨ cₙ</span> guaranteed true, and prove <span class="math">s</span> under each <span class="math">cᵢ</span> separately. The cases must be <strong>exhaustive</strong>; they need not be mutually exclusive.</p></div><div class="thm"><span class="label">Theorem &middot; <span class="math">n² + n</span> is even for every integer <span class="math">n</span></span><p>For all integers <span class="math">n</span>, the number <span class="math">n² + n</span> is even.</p></div><div class="proof"><p>Every integer is even or odd, so these two cases are exhaustive.</p><p><strong>Case 1: <span class="math">n</span> is even.</strong> Then <span class="math">n = 2k</span>, so <span class="math">n² + n = 4k² + 2k = 2(2k² + k)</span>, which is even.</p><p><strong>Case 2: <span class="math">n</span> is odd.</strong> Then <span class="math">n = 2k + 1</span>, so <span class="math">n² + n = (4k² + 4k + 1) + (2k + 1) = 4k² + 6k + 2 = 2(2k² + 3k + 1)</span>, which is even.</p><p>In both cases <span class="math">n² + n</span> is even, and the cases cover every integer.</p><p><span class="qed">&#9633;</span></p></div><p>A cleaner argument exists &mdash; <span class="math">n² + n = n(n + 1)</span>, a product of consecutive integers, one of which is even &mdash; and finding it is better mathematics. But the case proof is correct, and correctness comes first.</p><p><strong>Without loss of generality</strong> is a legitimate abbreviation for a case argument, and only when a genuine symmetry makes the remaining cases identical. If proving one case and the other requires different arguments, WLOG is being used to hide a gap.</p><h3>Disproof by counterexample</h3><div class="defbox"><span class="label">Definition &middot; Counterexample</span><p>A <strong>counterexample</strong> to <span class="math">∀x P(x)</span> is an element <span class="math">c</span> of the domain with <span class="math">¬P(c)</span>. Exhibiting one disproves the statement completely.</p></div><p>This follows directly from lesson 10: <span class="math">¬∀x P(x) ≡ ∃x ¬P(x)</span>, and an existential is proved by producing a witness. It is why negating a claim before attacking it is worth the two minutes &mdash; the negation describes exactly what you are hunting for.</p><div class="example"><span class="label">Example &middot; Refuting a plausible claim</span><p>"Every positive integer is the sum of at most three squares" is false: 7 requires four (<span class="math">4 + 1 + 1 + 1</span>). One number settles it. The corrected statement &mdash; every positive integer is the sum of at most four squares &mdash; is Lagrange's theorem, and needs a real proof.</p></div><h3>Why checking is not proving</h3><p>This is the point the whole course has been building toward, and course 3 exists because of it.</p><div class="thm"><span class="label">Theorem &middot; Two statements that survive dozens of checks and are false</span><p><span class="math">n² + n + 41</span> is prime for every <span class="math">n</span> from 0 to 39, and composite at <span class="math">n = 40</span>, where it equals <span class="math">1681 = 41²</span>. And <span class="math">n</span> points on a circle with all chords drawn divide it into <span class="math">1, 2, 4, 8, 16</span> regions for <span class="math">n = 1</span> to 5 &mdash; and 31, not 32, at <span class="math">n = 6</span>.</p></div><p>Both are in the lab on this page. Meeting them is more useful than being told about them: the second in particular gives five consecutive powers of two, which is exactly the kind of evidence that feels conclusive and is not.</p><h3>What a proof owes its reader</h3><ul><li><strong>A precise statement.</strong> Quantifiers, domain, hypotheses. An imprecise claim cannot be proved or refuted.</li><li><strong>A declared method.</strong> "We prove the contrapositive", "suppose for contradiction", "there are two cases". The reader should know the shape before the details.</li><li><strong>Justified steps.</strong> Every line follows from a definition, a hypothesis, or a result already established.</li><li><strong>No gaps disguised as brevity.</strong> "Clearly" and "it is obvious that" are where errors hide. If it is clear, the reason is short &mdash; write it.</li><li><strong>An explicit ending.</strong> State what has been proved.</li></ul><p>A proof is a social object as much as a logical one: its purpose is to convince a careful, skeptical reader who does not already believe the claim. Everything in the last three lessons serves that purpose.</p></article>
     </section>
     <section class="section" id="lab">
       <div class="section-head"><div><p class="kicker">Interactive</p><h2>Check P(n), then notice checking is not proving</h2></div><p>Two of these statements are false</p></div>
@@ -977,7 +1008,7 @@ checking n = 1..40 proves nothing about n = 41</div>
         <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
         <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
       </article>
-      <article class="card card-pad prose"><h3>Prove `|x + y| ≤ |x| + |y|` for all reals</h3><p>The triangle inequality, by cases on the sign of <span class="math">x + y</span>.</p><div class="mathblock">Case 1: x + y ≥ 0.
+      <article class="card card-pad prose"><h3>Prove <span class="math">|x + y| ≤ |x| + |y|</span> for all reals</h3><p>The triangle inequality, by cases on the sign of <span class="math">x + y</span>.</p><div class="mathblock">Case 1: x + y ≥ 0.
    |x + y| = x + y ≤ |x| + |y|,
    since x ≤ |x| and y ≤ |y| always hold.
 
