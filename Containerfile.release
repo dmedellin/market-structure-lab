@@ -518,6 +518,8 @@ RUN set -eu; \
             the-general-term-of-an-expansion; do \
         test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
     done; \
+    test -f /srv/progress/index.html || { echo "FATAL: missing /srv/progress/index.html (the progress page). It is where a reader signs in to carry their completion marks between devices; every lesson links to it."; exit 1; }; \
+    test -f /srv/oauth2/spa/callback/index.html || { echo "FATAL: missing /srv/oauth2/spa/callback/index.html (the Microsoft sign-in redirect target). Its absence breaks sign-in at the redirect step, after the reader has already authenticated."; exit 1; }; \
     test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: course 1 lesson 01 is published at learn.geterdone.io/market-structure/market-structure/, never learn.geterdone.io/learn/market-structure/market-structure/. Move site/learn/* up one level."; exit 1; }; \
     test ! -e /srv/market-structure-lab || { echo "FATAL: /srv/market-structure-lab exists. Course 1 was renamed to /market-structure; the old prefix must not be re-added, or the image would publish the same course at two URLs with one canonical between them."; exit 1; }; \
     test ! -e /srv/paths/index.html || { echo "FATAL: /srv/paths/index.html exists. The paths layer publishes one page per path (/paths/<subject>/) and nothing at /paths/ itself; the list of paths is the site index at /. Remove it or move it."; exit 1; }; \
