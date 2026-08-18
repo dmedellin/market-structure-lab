@@ -986,8 +986,21 @@ jobs:
                   # The external-URL sweep still runs.
                   scan_text(self.path, self.getpos()[0], data, PROSE_RULES)
 
+          # 4. The two SIGN-IN pages. Signing in with Microsoft is a
+          #    conversation with an identity provider and cannot be had
+          #    silently, so these two -- and only these two -- are excused from
+          #    this sweep. The exclusion is a PATH list, not a loosened pattern:
+          #    a lesson that starts calling an identity provider still fails
+          #    here, and the test suite bounds WHERE these two may reach
+          #    (AUTH_ORIGINS) while the container Caddyfile bounds it again in
+          #    the CSP it serves them.
+          AUTH_PAGE_FILES = {
+              pathlib.Path("site/oauth2/spa/callback/index.html"),
+              pathlib.Path("site/progress/index.html"),
+          }
           files = [p for p in sorted(pathlib.Path("site").rglob("*"))
-                   if p.is_file() and p.suffix.lower() in TEXT_SUFFIXES]
+                   if p.is_file() and p.suffix.lower() in TEXT_SUFFIXES
+                   and p not in AUTH_PAGE_FILES]
           if not files:
               print("::error::No scannable files under site/.")
               sys.exit(1)
