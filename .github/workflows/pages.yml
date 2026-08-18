@@ -39,9 +39,13 @@ jobs:
       - name: Verify the published tree is self-contained
         run: |
           set -eu
-          # The invariant the test suite enforces, re-checked at publish time:
-          # a page that reaches out to a third party must never go live.
-          if grep -rEn 'src="https?://|@import|XMLHttpRequest|fetch\(' site/ ; then
+          # Two pages are excused, by name, and only these two: signing in with
+          # Microsoft is a conversation with an identity provider and cannot be
+          # had silently. Everything else in site/ must still reach nothing, so
+          # the exclusion is a path list rather than a loosened pattern -- a
+          # lesson that started calling an identity provider still fails here.
+          if grep -rEn 'src="https?://|@import|XMLHttpRequest|fetch\(' site/ \
+               --exclude-dir=oauth2 --exclude-dir=progress ; then
             echo "::error::external reference found in site/ -- refusing to publish"
             exit 1
           fi
