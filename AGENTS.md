@@ -102,10 +102,17 @@ Self-containment means every lesson inlines the whole lab it uses, and the
 generated labs share a large exact-arithmetic core. So pages get heavier as the
 labs get richer:
 
-| path | raw | gzipped |
+| page | raw | gzipped |
 | --- | --- | --- |
 | Discrete Mathematics lesson | ~57 KB | ~15 KB |
-| Algebra lesson | ~142 KB | ~38 KB |
+| Algebra, course 1 (5-mode lab) | ~89 KB | ~24 KB |
+| Algebra, course 9 (11-mode lab) | ~183 KB | ~50 KB |
+
+The second factor is the number of MODES a lab has. One function serves every
+mode of a lab, so a page ships all of them: a reader on the sigma-notation
+lesson downloads the annuity and Pascal code as well. Emitting only the active
+mode is a real optimisation and a real change to the lab kit; it has not been
+made, and 50 KB on the wire does not justify making it yet.
 
 38 KB on the wire is not a problem and needs no action. It IS the number to
 check before anyone proposes "just extract the shared JavaScript into one file

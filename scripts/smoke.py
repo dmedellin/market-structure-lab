@@ -797,15 +797,21 @@ ALGEBRA_COURSES = (
         "solving-logarithmic-equations",
         "compound-interest-and-continuous-growth", "logarithmic-scales",
     )),
-    ("systems-matrices-and-sequences", "Systems, Matrices and Sequences", (
+    ("systems-and-matrices", "Systems and Matrices", (
         "systems-of-two-linear-equations", "solving-by-substitution",
         "solving-by-elimination", "systems-in-three-variables",
         "matrices-and-row-operations", "gaussian-elimination",
         "matrix-arithmetic", "determinants-and-cramers-rule",
         "inverse-matrices",
         "systems-of-inequalities-and-linear-programming",
-        "sequences-and-recursion", "arithmetic-sequences-and-series",
-        "geometric-sequences-and-series", "the-binomial-theorem",
+    )),
+    ("sequences-and-series", "Sequences and Series", (
+        "sequences-and-recursion", "sigma-notation",
+        "arithmetic-sequences-and-series", "geometric-sequences-and-series",
+        "partial-sums-and-telescoping", "infinite-geometric-series",
+        "repeating-decimals-as-series",
+        "annuities-and-accumulated-payments", "pascals-triangle",
+        "the-binomial-theorem", "the-general-term-of-an-expansion",
     )),
 )
 

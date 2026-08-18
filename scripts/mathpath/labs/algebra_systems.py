@@ -43,6 +43,21 @@ The three labs and the decision behind each:
                formula divides by 1 - r and therefore has nothing to say when
                r = 1.
 
+               Sequences and series are now a course rather than a lesson, and
+               the lab carries eleven modes. Seven of them are about the SUM
+               rather than the terms, and each one keeps the same promise in
+               its own currency: sigma re-indexes the sum and gets the same
+               number out of three expressions that share no letter; partial
+               adds the terms up and collapses a telescope; infinite REFUSES a
+               limit when |r| is not below 1, and draws the partial sums
+               running away rather than printing an error and stopping;
+               repeating sums the series and then divides the resulting
+               fraction back out by long division, which never sees the digits
+               the reader typed; annuity grows every payment separately and
+               then closes the form; pascal adds pairs and checks every entry
+               against C(n, k) and every row against 2^n; genterm builds one
+               term of an expansion and then expands the rest to place it.
+
 Floating point appears in exactly one place in this file: PLOT_JS turning a
 world coordinate into a pixel. Every number the reader is told is exact, and
 the two places a decimal is printed at all say that it is a rounding.
@@ -2750,6 +2765,83 @@ SEQ_PRESETS = {
         {"label": "x^2 + x + 1 has three terms, so the binomial theorem does not apply",
          "bin": "x^2 + x + 1", "pow": "4"},
     ],
+    "sigma": [
+        {"label": "the counting numbers, 1 to 6", "fk": "k", "lo": "1", "hi": "6",
+         "sclosed": "n(n + 1)/2", "shift": "1"},
+        {"label": "the squares, against the closed form for their sum", "fk": "k^2",
+         "lo": "1", "hi": "6", "sclosed": "n(n + 1)(2n + 1)/6", "shift": "2"},
+        {"label": "a geometric summand, halving each step", "fk": "1/2^k", "lo": "1", "hi": "8",
+         "sclosed": "1 - 1/2^n", "shift": "3"},
+        {"label": "the odd numbers, whose sum is a square", "fk": "2k - 1", "lo": "1", "hi": "8",
+         "sclosed": "n^2", "shift": "1"},
+        {"label": "an empty sum: the upper limit is below the lower one", "fk": "k",
+         "lo": "5", "hi": "4", "sclosed": "", "shift": "1"},
+        {"label": "a summand with no value at k = 0", "fk": "1/k", "lo": "0", "hi": "5",
+         "sclosed": "", "shift": "1"},
+    ],
+    "partial": [
+        {"label": "1/(n(n+1)): the telescoping series", "an": "1/(n(n + 1))", "bn": "1/n", "n": "8"},
+        {"label": "1/((2n-1)(2n+1)), a telescope carrying a factor of 1/2",
+         "an": "1/((2n - 1)(2n + 1))", "bn": "1/(2(2n - 1))", "n": "8"},
+        {"label": "1/(n(n+2)): the collapse reaches two places along",
+         "an": "1/(n(n + 2))", "bn": "(1/2)(1/n + 1/(n + 1))", "n": "8"},
+        {"label": "the counting numbers: every series telescopes once you know its sum",
+         "an": "n", "bn": "-n(n - 1)/2", "n": "10"},
+        {"label": "a geometric series, telescoped", "an": "1/2^n", "bn": "2^(1 - n)", "n": "10"},
+        {"label": "a plausible split that is wrong", "an": "1/(n(n + 1))", "bn": "1/(n + 1)", "n": "8"},
+    ],
+    "infinite": [
+        {"label": "r = 1/2: the halving series, and it settles", "a1": "1", "r": "1/2",
+         "tol": "1/1000", "n": "12"},
+        {"label": "r = 2/3 with a fractional first term", "a1": "9/4", "r": "2/3",
+         "tol": "1/1000", "n": "12"},
+        {"label": "r = -1/3: alternating, and still convergent", "a1": "1", "r": "-1/3",
+         "tol": "1/10000", "n": "12"},
+        {"label": "r = 3/2: refused, and the partial sums shown running away", "a1": "1", "r": "3/2",
+         "tol": "1/1000", "n": "12"},
+        {"label": "r = -1: refused, and the partial sums shown oscillating", "a1": "5", "r": "-1",
+         "tol": "1/1000", "n": "12"},
+        {"label": "r = 1: refused, and the formula divides by zero", "a1": "2", "r": "1",
+         "tol": "1/1000", "n": "12"},
+    ],
+    "repeating": [
+        {"label": "0.4444... , the simplest one", "pre": "", "rep": "4", "n": "6"},
+        {"label": "0.135135... , a block of three digits", "pre": "", "rep": "135", "n": "5"},
+        {"label": "0.999... , which comes out as exactly 1", "pre": "", "rep": "9", "n": "6"},
+        {"label": "0.1666... , with a digit before the repeat", "pre": "1", "rep": "6", "n": "6"},
+        {"label": "0.1999... , the same number as 0.2", "pre": "1", "rep": "9", "n": "6"},
+        {"label": "0.25 exactly: nothing repeats, so there is no series", "pre": "25", "rep": "", "n": "6"},
+    ],
+    "annuity": [
+        {"label": "100 a period at 5%, for 6 periods", "pay": "100", "rate": "1/20", "n": "6"},
+        {"label": "250 a period at 10%, for 8 periods", "pay": "250", "rate": "1/10", "n": "8"},
+        {"label": "1 a period at 50%: the fractions stay small enough to read",
+         "pay": "1", "rate": "1/2", "n": "5"},
+        {"label": "a rate of 0: the closed form divides by zero", "pay": "100", "rate": "0", "n": "6"},
+        {"label": "a negative rate: the fund shrinks between payments",
+         "pay": "100", "rate": "-1/10", "n": "6"},
+        {"label": "a fractional payment and a fractional rate", "pay": "3/2", "rate": "1/4", "n": "4"},
+    ],
+    "pascal": [
+        {"label": "row 5, the entry at k = 2", "rows": "8", "row": "5", "k": "2"},
+        {"label": "row 0: the top, which no addition produced", "rows": "6", "row": "0", "k": "0"},
+        {"label": "the edge of the triangle, where one parent is missing",
+         "rows": "8", "row": "6", "k": "0"},
+        {"label": "row 10, and its row sum 1024", "rows": "10", "row": "10", "k": "5"},
+        {"label": "the symmetry C(n, k) = C(n, n-k)", "rows": "8", "row": "7", "k": "3"},
+        {"label": "a row that is not in the triangle you built", "rows": "6", "row": "9", "k": "2"},
+    ],
+    "genterm": [
+        {"label": "(x + 1)^5, the term at k = 2", "ta": "x", "tb": "1", "gn": "5", "gk": "2"},
+        {"label": "(2x - 3)^4, the term at k = 1", "ta": "2x", "tb": "-3", "gn": "4", "gk": "1"},
+        {"label": "(x - 1/2)^6, the middle term", "ta": "x", "tb": "-1/2", "gn": "6", "gk": "3"},
+        {"label": "(x^2 + 1)^5, where the powers climb in twos", "ta": "x^2", "tb": "1",
+         "gn": "5", "gk": "4"},
+        {"label": "(3 + x)^4 at k = 0: the term you get for free", "ta": "3", "tb": "x",
+         "gn": "4", "gk": "0"},
+        {"label": "(x + x)^5, where every term lands on the same power",
+         "ta": "x", "tb": "x", "gn": "5", "gk": "2"},
+    ],
 }
 
 SEQ_TITLES = {
@@ -2761,26 +2853,157 @@ SEQ_TITLES = {
                   "Partial sums against the formula, and what happens when |r| is not below 1"),
     "binomial": ("The binomial theorem",
                  "Pascal's triangle against the C(n, k) formula, against multiplying it out"),
+    "sigma": ("Sigma notation, expanded",
+              "One sum written four ways: three that are equal and one that only looks it"),
+    "partial": ("Partial sums: a series is a sequence",
+                "S1, S2, S3, ... beside the terms, and a telescope collapsing bracket by bracket"),
+    "infinite": ("The infinite geometric series",
+                 "The partial sums approaching a limit, or refused and shown running away"),
+    "repeating": ("Repeating decimals are geometric series",
+                  "Summed exactly, printed as a fraction, and divided back out as a check"),
+    "annuity": ("A stream of payments is a geometric series",
+                "Each payment grown for its own number of periods, added up and closed-formed"),
+    "pascal": ("Pascal's triangle, built and checked",
+               "Every entry by addition and by C(n, k), and every row sum against 2^n"),
+    "genterm": ("One term, without the rest",
+                "C(n, k) a^(n-k) b^k on its own, and then the expansion that places it"),
 }
 
 SEQ_COUNTS = ("4", "6", "8", "10", "12", "16", "20")
 SEQ_POWERS = ("0", "1", "2", "3", "4", "5", "6", "8", "10", "12")
+SEQ_SUMS = ("6", "8", "10", "12", "16", "20", "24")
+SEQ_PLACES = ("3", "4", "5", "6", "8", "10")
+SEQ_PERIODS = ("3", "4", "5", "6", "8", "10", "12")
+SEQ_ROWS = ("4", "6", "8", "10", "12", "14")
+SEQ_KS = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+SEQ_SHIFTS = ("-3", "-2", "-1", "0", "1", "2", "3")
+SEQ_TOLS = ("1/10", "1/100", "1/1000", "1/10000", "1/1000000")
+
+
+def _sel(fid, label, values, chosen, fmt="%s"):
+    """A select for the panel, as (id, label, [(value, text)], default).
+
+    Four items rather than two is what marks a spec a select. Every option
+    value here is also a legal value for the reader's own box where the mode
+    has one, so a preset can set either without the two disagreeing.
+    """
+    return (fid, label, [(v, fmt % v) for v in values], chosen)
+
+
+# What each mode puts in the panel, in order: ("id", "label") is a text box and
+# a four-item spec is a select. Kept as data next to the presets, so that adding
+# a mode is adding a row here rather than a branch in the builder.
+SEQ_FIELDS = {
+    "define": [
+        ("sqA1", "First term a1"),
+        ("sqRec", "Recursive rule for a(n), using p for the previous term"),
+        ("sqClosed", "Closed form for a(n), using n"),
+        _sel("sqN", "How many terms", SEQ_COUNTS, "10", "%s terms"),
+    ],
+    "arithmetic": [
+        ("sqA1", "First term a1"),
+        ("sqD", "Common difference d"),
+        _sel("sqN", "How many terms", SEQ_COUNTS, "10", "%s terms"),
+    ],
+    "geometric": [
+        ("sqA1", "First term a1"),
+        ("sqR", "Common ratio r"),
+        _sel("sqN", "How many terms", SEQ_COUNTS, "10", "%s terms"),
+    ],
+    "binomial": [
+        ("sqBin", "The binomial, in x"),
+        # No default is marked here, and that is deliberate rather than an
+        # oversight: binomial shipped without one, applyPreset sets the value
+        # before first paint anyway, and marking one now would change a live
+        # page's markup for no gain. genterm, which is new, marks its own.
+        _sel("sqPow", "Exponent n", SEQ_POWERS, None, "n = %s"),
+    ],
+    "sigma": [
+        ("sqFk", "The summand, in the index k"),
+        ("sqLo", "Lower limit"),
+        ("sqHi", "Upper limit"),
+        ("sqSigC", "Closed form for the sum, in n (optional)"),
+        _sel("sqShift", "Shift the index by", SEQ_SHIFTS, "1", "%s"),
+    ],
+    "partial": [
+        ("sqAn", "The term a(n), in n"),
+        ("sqBn", "A partner b(n) with a(n) = b(n) - b(n+1)"),
+        _sel("sqN", "How many terms", SEQ_COUNTS, "8", "%s terms"),
+    ],
+    "infinite": [
+        ("sqA1", "First term a1"),
+        ("sqR", "Common ratio r"),
+        _sel("sqTol", "Come within", SEQ_TOLS, "1/1000", "%s of the limit"),
+        _sel("sqN", "How many partial sums", SEQ_SUMS, "12", "%s partial sums"),
+    ],
+    "repeating": [
+        ("sqPre", "Digits after the point, before the repeat"),
+        ("sqRep", "The repeating block"),
+        _sel("sqN", "How many terms of the series", SEQ_PLACES, "6", "%s terms"),
+    ],
+    "annuity": [
+        ("sqPay", "The payment, made every period"),
+        ("sqRate", "The rate per period, as a fraction"),
+        _sel("sqN", "How many periods", SEQ_PERIODS, "6", "%s periods"),
+    ],
+    "pascal": [
+        _sel("sqRows", "Build the triangle to", SEQ_ROWS, "8", "row %s"),
+        ("sqRow", "Highlight row n"),
+        ("sqK", "Highlight the entry k"),
+    ],
+    "genterm": [
+        ("sqTa", "The first term a, in x"),
+        ("sqTb", "The second term b, in x"),
+        _sel("sqPow", "Exponent n", SEQ_POWERS, "5", "n = %s"),
+        _sel("sqKsel", "Which term k", SEQ_KS, "2", "k = %s"),
+    ],
+}
+
+SEQ_PLOT = ("geometric", "infinite", "annuity")
 
 
 SEQ_SCRIPT = r"""
   var MODE = '__MODE__';
   var HASPLOT = __HASPLOT__;
 
+  /* The element this mode declares, and null in every other mode -- the lookup
+     itself is skipped elsewhere, so a mode never asks the document for an id
+     its own markup did not write. Eleven modes share one function and one
+     preset box; everything else on the panel belongs to one of them. */
+  function idFor(id, modes) {
+    return modes.indexOf(MODE) >= 0 ? document.getElementById(id) : null;
+  }
+
   var preset = document.getElementById('sqPreset');
-  var inA1 = (MODE === 'binomial') ? null : document.getElementById('sqA1');
-  var inRec = (MODE === 'define') ? document.getElementById('sqRec') : null;
-  var inClosed = (MODE === 'define') ? document.getElementById('sqClosed') : null;
-  var inD = (MODE === 'arithmetic') ? document.getElementById('sqD') : null;
-  var inR = (MODE === 'geometric') ? document.getElementById('sqR') : null;
-  var inBin = (MODE === 'binomial') ? document.getElementById('sqBin') : null;
-  var selN = (MODE === 'binomial') ? null : document.getElementById('sqN');
-  var selPow = (MODE === 'binomial') ? document.getElementById('sqPow') : null;
+  var inA1 = idFor('sqA1', ['define', 'arithmetic', 'geometric', 'infinite']);
+  var inRec = idFor('sqRec', ['define']);
+  var inClosed = idFor('sqClosed', ['define']);
+  var inD = idFor('sqD', ['arithmetic']);
+  var inR = idFor('sqR', ['geometric', 'infinite']);
+  var inBin = idFor('sqBin', ['binomial']);
+  var inFk = idFor('sqFk', ['sigma']);
+  var inLo = idFor('sqLo', ['sigma']);
+  var inHi = idFor('sqHi', ['sigma']);
+  var inSigC = idFor('sqSigC', ['sigma']);
+  var inAn = idFor('sqAn', ['partial']);
+  var inBn = idFor('sqBn', ['partial']);
+  var inPre = idFor('sqPre', ['repeating']);
+  var inRep = idFor('sqRep', ['repeating']);
+  var inPay = idFor('sqPay', ['annuity']);
+  var inRate = idFor('sqRate', ['annuity']);
+  var inRow = idFor('sqRow', ['pascal']);
+  var inK = idFor('sqK', ['pascal']);
+  var inTa = idFor('sqTa', ['genterm']);
+  var inTb = idFor('sqTb', ['genterm']);
+  var selN = idFor('sqN', ['define', 'arithmetic', 'geometric', 'partial', 'infinite',
+                           'repeating', 'annuity']);
+  var selPow = idFor('sqPow', ['binomial', 'genterm']);
+  var selShift = idFor('sqShift', ['sigma']);
+  var selTol = idFor('sqTol', ['infinite']);
+  var selRows = idFor('sqRows', ['pascal']);
+  var selK = idFor('sqKsel', ['genterm']);
   var svg = HASPLOT ? document.getElementById('sqPlot') : null;
+
   var work = document.getElementById('sqWork');
   var status = document.getElementById('sqStatus');
   var titleOut = document.getElementById('sqTitle'), subOut = document.getElementById('sqSub');
@@ -3226,6 +3449,1116 @@ SEQ_SCRIPT = r"""
     return out;
   }
 
+
+  /* ================================================ shared by the series ==
+     Seven further modes sit below. Nothing here decides anything on its own:
+     these are the pieces every one of them uses to read a box, to name an
+     index, and to write an expression back out. */
+
+  /* A whole number typed into a box, or null when it is not one. Never throws:
+     the caller names the box in the status banner instead. */
+  function wholeread(text, lo, hi) {
+    var r = Rread(text);
+    if (r === null || !Rint(r)) return null;
+    if (r.n < BigInt(lo) || r.n > BigInt(hi)) return null;
+    return Number(r.n);
+  }
+  function Rwhole(i) { return R(BigInt(i)); }
+  /* One letter bound to one value, built fresh for every evaluation -- so no
+     term can see the term before it, and a closed form cannot accidentally be
+     handed the running total. */
+  function envof(letter, i) { var e = {}; e[letter] = Rwhole(i); return e; }
+  /* "j", "j - 2", "j + 3": an index with an offset, written the way it is read. */
+  function offtext(letter, off) {
+    if (off === 0) return letter;
+    return letter + (off < 0 ? ' - ' : ' + ') + Math.abs(off);
+  }
+  function bpow10(k) { var out = 1n; for (var i = 0; i < k; i += 1) out *= 10n; return out; }
+  function bpow2(k) { var out = 1n; for (var i = 0; i < k; i += 1) out *= 2n; return out; }
+
+  /* The parse tree written back out as text, with the index letter replaced by
+     whatever the re-indexed expression calls it.
+
+     Doing this from the TREE rather than by a string replace on what the reader
+     typed is what stops the page printing one expression and evaluating a
+     different one: a replace of every "k" in "k + sqrt(k)" would also have to
+     know which k's are inside a name, and this does not have to know. Every
+     compound is bracketed, which is noisier than a human would write and
+     cannot be wrong. */
+  function Xatom(node) { return node.k === 'num' || node.k === 'var'; }
+  function Xwrap(node, letter, repl) {
+    var t = Xtext(node, letter, repl);
+    return Xatom(node) ? t : '(' + t + ')';
+  }
+  function Xtext(node, letter, repl) {
+    if (!node) return '?';
+    switch (node.k) {
+      case 'num': return String(node.v);
+      case 'var': return node.v === letter ? repl : node.v;
+      case 'neg': return '-' + Xwrap(node.a, letter, repl);
+      case 'add': return Xwrap(node.a, letter, repl) + ' + ' + Xwrap(node.b, letter, repl);
+      case 'sub': return Xwrap(node.a, letter, repl) + ' - ' + Xwrap(node.b, letter, repl);
+      case 'mul': return Xwrap(node.a, letter, repl) + '*' + Xwrap(node.b, letter, repl);
+      case 'div': return Xwrap(node.a, letter, repl) + '/' + Xwrap(node.b, letter, repl);
+      case 'pow': return Xwrap(node.a, letter, repl) + '^' + Xwrap(node.b, letter, repl);
+      case 'fn': return node.v + '(' + Xtext(node.a, letter, repl) + ')';
+    }
+    return '?';
+  }
+  /* The notation itself: sigma with its index below and its limit above. */
+  function sigmahtml(idx, lo, hi, body) {
+    return '<span class="math">&Sigma;<sub>' + esc(idx) + '=' + esc(String(lo)) + '</sub><sup>'
+      + esc(String(hi)) + '</sup> ' + esc(body) + '</span>';
+  }
+
+  /* ================================================== mode: sigma ======== */
+  function paintSigma() {
+    var pf = Xparse(inFk.value);
+    if (pf.bad) {
+      fail('<strong>The summand: ' + pf.bad + '.</strong> What follows the sigma is a function of '
+        + 'the index letter <code>k</code> and of nothing else: <code>k</code>, <code>k^2</code>, '
+        + '<code>2k - 1</code>, <code>1/2^k</code>. It is evaluated once for every value the index '
+        + 'takes, in exact fractions, and the values are added in the order they were produced.');
+      return;
+    }
+    var lo = wholeread(inLo.value, -400, 400), hi = wholeread(inHi.value, -400, 400);
+    if (lo === null || hi === null) {
+      fail('<strong>The ' + (lo === null ? 'lower' : 'upper') + ' limit "'
+        + esc(String(lo === null ? inLo.value : inHi.value))
+        + '" is not a whole number between -400 and 400.</strong> The limits of a sum are whole '
+        + 'numbers: the index starts at the lower one and steps up by 1 until it passes the upper '
+        + 'one. A limit of 3/2 would name no term at all, because the index never lands on it.');
+      return;
+    }
+    var count = hi - lo + 1;
+    if (count > 40) {
+      fail('<strong>That is ' + count + ' terms, and this mode writes out at most 40.</strong> '
+        + 'Sigma notation exists so that a sum of ten thousand terms fits on one line; a page that '
+        + 'expanded that term by term would be a page of scrolling and no page of mathematics. '
+        + 'Bring the limits closer together and every term is printed.');
+      return;
+    }
+    var shift = parseInt(String(selShift ? selShift.value : '0'), 10);
+    if (!isFinite(shift)) shift = 0;
+
+    /* One sigma expression, expanded. `argof` turns the index value into the
+       value the summand is evaluated at, and that function IS the difference
+       between a shift that compensates and a shift that does not. */
+    function expand(from, to, argof) {
+      var rows = [], total = R0;
+      for (var i = from; i <= to; i += 1) {
+        var a = argof(i);
+        var got = Xeval(pf.node, envof('k', a));
+        if (got.bad) return { bad: 'the summand has no value when the index is ' + a + ': ' + got.bad };
+        rows.push({ i: i, arg: a, v: got.v });
+        total = Radd(total, got.v);
+      }
+      return { rows: rows, total: total };
+    }
+    var asis = function (i) { return i; };
+    var A = expand(lo, hi, asis);
+    if (A.bad) {
+      fail('<strong>Stuck: ' + A.bad + '.</strong> Every term the index reaches has to have a '
+        + 'value, and this one does not. <code>1/k</code> summed from k = 0 hits exactly this at '
+        + 'the very first term. Move the lower limit past it, or change the summand.');
+      return;
+    }
+    var B = expand(lo + shift, hi + shift, function (j) { return j - shift; });
+    var C = expand(lo, hi, function (m) { return lo + hi - m; });
+    var D = expand(lo + shift, hi + shift, asis);
+
+    var bodyA = Xtext(pf.node, 'k', 'k');
+    var replB = shift === 0 ? 'j' : '(' + offtext('j', -shift) + ')';
+    var bodyB = Xtext(pf.node, 'k', replB);
+    var bodyC = Xtext(pf.node, 'k', '(' + (lo + hi) + ' - m)');
+
+    /* ---- expression 1 against expression 2, term by term ---- */
+    var rowsAB = [];
+    for (var t = 0; t < A.rows.length; t += 1) {
+      var ra = A.rows[t], rb = B.rows[t];
+      var eq = Requ(ra.v, rb.v);
+      rowsAB.push(tr([rowhead('term ' + (t + 1)), td(String(ra.i)), td(Rtext(ra.v)),
+                      td(String(rb.i)), td(Rtext(rb.v)),
+                      td(eq ? chip('same', 'ok') : chip('DIFFERENT', 'no'), eq ? 't' : 'f')]));
+    }
+    rowsAB.push(tr([rowhead('total'), td(''), td(Rtext(A.total)), td(''), td(Rtext(B.total)),
+                    td(agreechip(Requ(A.total, B.total)))], 'focus'));
+
+    /* ---- the same terms, added backwards ---- */
+    var rowsC = C.rows.map(function (rc, i) {
+      return tr([rowhead('term ' + (i + 1)), td(String(rc.i)), td(String(rc.arg)), td(Rtext(rc.v)),
+                 td('term ' + (A.rows.length - i) + ' of the first list')]);
+    });
+    rowsC.push(tr([rowhead('total'), td(''), td(''), td(Rtext(C.total)),
+                   td(agreechip(Requ(A.total, C.total)))], 'focus'));
+
+    /* ---- the near miss: the limits moved, the summand left alone ---- */
+    var nearBlock;
+    if (shift === 0) {
+      nearBlock = steps('The shift, with the dial at 0', [
+        ['nothing has moved', 'a shift of 0 leaves every expression on this page identical to the '
+          + 'first one, so there is nothing here to compare. Choose a non-zero shift and the '
+          + 'compensation in the summand becomes visible.'],
+      ]);
+    } else if (D.bad) {
+      nearBlock = steps('The limits moved and the summand left alone', [
+        [sigmahtml('k', lo + shift, hi + shift, bodyA), 'has no value at all: ' + D.bad],
+        ['what that shows', 'moving the limits without changing the summand does not merely change '
+          + 'the answer here &mdash; it asks the summand for a term it does not have. The '
+          + 'compensated version never leaves the range of index values the first sum used.'],
+      ]);
+    } else {
+      var from = Math.min(lo, lo + shift), to = Math.max(hi, hi + shift);
+      var rowsD = [];
+      for (var q = from; q <= to; q += 1) {
+        var inA = q >= lo && q <= hi, inD = q >= lo + shift && q <= hi + shift;
+        var val = Xeval(pf.node, envof('k', q));
+        /* Three fates, not two: with the shift large enough the two ranges come
+           apart entirely, and an index between them belongs to neither sum. */
+        var fate = (inA && inD) ? 'in both'
+          : (inA ? 'dropped by the shift'
+             : (inD ? 'gained by the shift' : 'in neither sum &mdash; the shift stepped over it'));
+        rowsD.push(tr([rowhead('k = ' + q), td(val.bad ? 'no value' : Rtext(val.v)),
+                       td(inA ? chip('yes', 'ok') : chip('no', 'no')),
+                       td(inD ? chip('yes', 'ok') : chip('no', 'no')), tdl(fate)],
+                      (inA && inD) ? '' : 'focus'));
+      }
+      rowsD.push(tr([rowhead('total'), td(''), td(Rtext(A.total)), td(Rtext(D.total)),
+                     tdl('they differ by ' + Rtext(Rsub(D.total, A.total)))], 'focus'));
+      nearBlock = table('The limits moved by ' + shift + ' and the summand left alone',
+        ['', 'the term', 'in the first sum?', 'in the shifted one?', 'what happened to it'], rowsD);
+    }
+
+    /* ---- the reader's closed form, if there is one ---- */
+    var closedTxt = String(inSigC ? inSigC.value : '').trim();
+    var closedPair = null, closedOk = null;
+    if (closedTxt) {
+      var pc = Xparse(closedTxt);
+      if (pc.bad) {
+        closedPair = ['the closed form ' + esc(closedTxt), 'does not parse: ' + pc.bad];
+      } else {
+        var cv = Xeval(pc.node, envof('n', hi));
+        if (cv.bad) {
+          closedPair = ['the closed form ' + esc(closedTxt) + ' at n = ' + hi, cv.bad];
+        } else {
+          closedOk = Requ(cv.v, A.total);
+          closedPair = ['the closed form ' + esc(closedTxt) + ' at n = ' + hi,
+                        Rtext(cv.v) + '   ' + agreechip(closedOk)];
+        }
+      }
+    } else {
+      closedPair = ['no closed form given', 'the box is empty, so the sum above was checked only '
+        + 'against itself re-indexed. Type <code>n(n + 1)/2</code> beside the summand '
+        + '<code>k</code> and it is checked against the addition as well.'];
+    }
+
+    var pairs = [
+      ['as written', sigmahtml('k', lo, hi, bodyA) + '  =  ' + Rtext(A.total)],
+      ['the index shifted by ' + shift + ', and the summand compensated',
+       sigmahtml('j', lo + shift, hi + shift, bodyB) + '  =  ' + Rtext(B.total)],
+      ['the same terms added backwards',
+       sigmahtml('m', lo, hi, bodyC) + '  =  ' + Rtext(C.total)],
+      ['do those three agree?', agreechip(Requ(A.total, B.total) && Requ(A.total, C.total))
+        + ' three expressions that look nothing alike, one number'],
+      ['the limits moved and the summand left alone',
+       sigmahtml('k', lo + shift, hi + shift, bodyA) + '  =  '
+         + (D.bad ? 'no value at all' : Rtext(D.total))],
+      ['is that the same number?', D.bad ? chip('no value', 'no')
+        : (Requ(A.total, D.total) ? chip('here, yes', 'hi') : chip('NO', 'no'))],
+      closedPair,
+    ];
+
+    work.innerHTML =
+      steps('One sum, four sigma expressions', pairs)
+      + table('Expanded term by term, beside the same sum re-indexed',
+        ['', 'k', esc(bodyA), 'j = k ' + (shift < 0 ? '- ' + (-shift) : '+ ' + shift), esc(bodyB),
+         'same term?'], rowsAB)
+      + table('The same terms, added in the opposite order',
+        ['', 'm', 'the index it reaches', esc(bodyC), 'which term that is'], rowsC)
+      + nearBlock;
+
+    setkpi('terms', String(Math.max(0, count)), 'the sum', Rtext(A.total),
+           'the near miss', D.bad ? 'no value' : Rtext(D.total));
+
+    if (count <= 0) {
+      status.innerHTML = '<strong>The upper limit ' + hi + ' is below the lower limit ' + lo
+        + ', so this sum has no terms at all and its value is 0.</strong> That is not a gap in the '
+        + 'notation and not an error: a sum over an empty range of indices is 0, exactly as a '
+        + 'product over an empty range is 1, because 0 is what you have added nothing to. Every '
+        + 'expression above is 0 for the same reason, and the tables have no rows because there '
+        + 'are no terms to write.';
+    } else {
+      status.innerHTML = '<strong>All ' + count + ' terms add to ' + Rtext(A.total)
+        + ', and three different-looking sigma expressions produced it.</strong> '
+        + sigmahtml('k', lo, hi, bodyA) + ', ' + sigmahtml('j', lo + shift, hi + shift, bodyB)
+        + ' and ' + sigmahtml('m', lo, hi, bodyC) + ' share no index letter, no limits and no '
+        + 'summand, and they are the same sum: the index is a name for the counting, not part of '
+        + 'the answer. '
+        + (shift === 0
+           ? 'The shift dial is at 0, so the near-miss row has nothing to show yet.'
+           : (D.bad
+              ? 'Moving the limits WITHOUT compensating the summand does not just change the '
+                + 'answer here &mdash; it asks for a term that has no value.'
+              : (Requ(A.total, D.total)
+                 ? 'Moving the limits without compensating the summand happens to give '
+                   + Rtext(D.total) + ' as well, on this summand: the terms dropped from the front '
+                   + 'and the terms gained at the back came to the same thing. That is a '
+                   + 'coincidence of these numbers, not a rule &mdash; change the summand and it '
+                   + 'parts company.'
+                 : 'Moving the limits without compensating the summand gives ' + Rtext(D.total)
+                   + ' instead, a difference of ' + Rtext(Rsub(D.total, A.total)) + '. It is the '
+                   + 'expression that looks most like the original that is not equal to it.')))
+        + (closedOk === null ? '' : (closedOk
+            ? ' The closed form you gave agrees with the addition at n = ' + hi + '.'
+            : ' The closed form you gave does NOT agree with the addition at n = ' + hi
+              + ', and the addition is the definition.'));
+    }
+  }
+
+  /* ================================================ mode: partial ======== */
+  /* A series is a SEQUENCE -- the sequence of its own partial sums -- and this
+     mode's whole job is to put the two lists side by side until that stops
+     being a slogan. The second computation of the sum comes from the reader's
+     own telescoping partner b(n): if a(n) really is b(n) - b(n+1) then almost
+     everything cancels and the sum is b(1) - b(n+1), which is a closed form
+     the page can check against the addition rather than announce. */
+  function paintPartial() {
+    var pa = Xparse(inAn.value);
+    if (pa.bad) {
+      fail('<strong>The term a(n): ' + pa.bad + '.</strong> The term of the series is a function of '
+        + '<code>n</code>: <code>1/(n(n + 1))</code>, <code>1/2^n</code>, <code>n</code>. It is '
+        + 'evaluated separately for each n, in exact fractions, and never from the term before it.');
+      return;
+    }
+    var pb = Xparse(inBn.value);
+    if (pb.bad) {
+      fail('<strong>The telescoping partner b(n): ' + pb.bad + '.</strong> This box holds the '
+        + 'b(n) you claim satisfies a(n) = b(n) - b(n+1). For <code>1/(n(n + 1))</code> the partner '
+        + 'is <code>1/n</code>, because 1/n - 1/(n+1) is exactly 1/(n(n+1)). The page checks that '
+        + 'claim at every n rather than taking it.');
+      return;
+    }
+    var N = termcount();
+    var terms = [null], sums = [null], run = R0, bs = [null], bad = null;
+    for (var i = 1; i <= N && !bad; i += 1) {
+      var av = Xeval(pa.node, envof('n', i));
+      if (av.bad) { bad = 'a(' + i + '): ' + av.bad; break; }
+      terms.push(av.v);
+      run = Radd(run, av.v);
+      sums.push(run);
+    }
+    for (var j = 1; j <= N + 1 && !bad; j += 1) {
+      var bv = Xeval(pb.node, envof('n', j));
+      if (bv.bad) { bad = 'b(' + j + '): ' + bv.bad; break; }
+      bs.push(bv.v);
+    }
+    if (bad) {
+      fail('<strong>Stuck at ' + bad + '.</strong> Every one of the first ' + N + ' terms, and the '
+        + 'partner at ' + (N + 1) + ' that the collapse needs, has to have an exact value. The '
+        + 'terms computed before that point are still right; it is this one that has none.');
+      return;
+    }
+
+    /* The split, checked at every n rather than assumed at any of them. */
+    var firstBreak = -1, body = [];
+    for (var t = 1; t <= N; t += 1) {
+      var split = Rsub(bs[t], bs[t + 1]);
+      var okSplit = Requ(split, terms[t]);
+      var closed = Rsub(bs[1], bs[t + 1]);
+      var okSum = Requ(closed, sums[t]);
+      if (firstBreak < 0 && !(okSplit && okSum)) firstBreak = t;
+      body.push(tr([rowhead('n = ' + t), td(Rtext(terms[t])), td(Rtext(bs[t])), td(Rtext(split)),
+                    td(okSplit ? chip('yes', 'ok') : chip('NO', 'no'), okSplit ? 't' : 'f'),
+                    td(Rtext(sums[t])), td(Rtext(closed)),
+                    td(okSum ? chip('agree', 'ok') : chip('DISAGREE', 'no'), okSum ? 't' : 'f')],
+                   firstBreak === t ? 'focus' : ''));
+    }
+
+    /* The collapse, bracket by bracket: what cancels and what is left. */
+    var collapse = [];
+    for (var c = 1; c <= N; c += 1) {
+      var leftFate = (c === 1)
+        ? 'nothing before it &mdash; this one SURVIVES'
+        : 'cancels the -b(' + c + ') in bracket ' + (c - 1);
+      var rightFate = (c === N)
+        ? 'nothing after it &mdash; this one SURVIVES'
+        : 'cancels the +b(' + (c + 1) + ') in bracket ' + (c + 1);
+      collapse.push(tr([rowhead('bracket ' + c),
+                        td('+b(' + c + ') = ' + Rtext(bs[c]), c === 1 ? 'on' : ''),
+                        tdl(leftFate),
+                        td('-b(' + (c + 1) + ') = ' + Rtext(Rneg(bs[c + 1])), c === N ? 'on' : ''),
+                        tdl(rightFate)]));
+    }
+
+    var sumAdded = sums[N];
+    var sumClosed = Rsub(bs[1], bs[N + 1]);
+    var allSplit = firstBreak < 0;
+
+    work.innerHTML =
+      steps('The series, as given', [
+        ['the term a(n)', esc(String(inAn.value))],
+        ['the partner b(n)', esc(String(inBn.value)) + ' &mdash; claimed to satisfy '
+          + 'a(n) = b(n) - b(n+1), which is checked below at every n'],
+        ['the partial sums', 'S(n) = a(1) + a(2) + ... + a(n), so the series IS the sequence '
+          + 'S(1), S(2), S(3), ...'],
+      ])
+      + table('The terms, the running sums, and the collapse, computed independently',
+        ['', 'a(n)', 'b(n)', 'b(n) - b(n+1)', 'is that a(n)?', 'S(n), by adding',
+         'b(1) - b(n+1)', 'agree?'], body)
+      + table('What survives the collapse: every bracket of (b(n) - b(n+1))',
+        ['', 'the positive part', 'its fate', 'the negative part', 'its fate'], collapse)
+      + steps('The sum of the first ' + N + ' terms, twice', [
+        ['by adding the terms up', Rtext(sumAdded) + ' &mdash; ' + N + ' additions, done one at a time'],
+        ['by the collapse, b(1) - b(' + (N + 1) + ')', Rtext(bs[1]) + ' - ' + Rterm(bs[N + 1])
+          + ' = ' + Rtext(sumClosed)],
+        ['do they agree?', agreechip(Requ(sumAdded, sumClosed))],
+        ['as a decimal', approx(sumAdded, 8) + ' &mdash; a rounding of the exact value, and nothing '
+          + 'on this page was decided by it'],
+      ]);
+
+    setkpi('S(' + N + ')', Rtext(sumAdded), 'b(1) - b(' + (N + 1) + ')', Rtext(sumClosed),
+           'the split', allSplit ? 'holds everywhere' : 'FAILS at n = ' + firstBreak);
+
+    if (allSplit) {
+      status.innerHTML = '<strong>S(' + N + ') = ' + Rtext(sumAdded) + ', computed by adding '
+        + N + ' terms and again by b(1) - b(' + (N + 1) + ').</strong> The middle of the sum '
+        + 'cancelled: every +b(i) met a -b(i) in the neighbouring bracket, and only the first '
+        + 'positive part and the last negative part were left. That is why the closed form has two '
+        + 'terms in it however long the series is &mdash; and it is why the sequence of partial '
+        + 'sums S(1), S(2), ... is the object worth looking at, rather than the terms. '
+        + (Rcmp(Rabs(terms[N]), Rabs(terms[1])) < 0
+           ? 'The terms here are shrinking, and that on its own would tell you nothing: shrinking '
+             + 'terms are what a convergent series and a divergent one have in common. It is the '
+             + 'column of partial sums that says what is happening.'
+           : 'The terms here are not shrinking, and the partial sums climb with them &mdash; which '
+             + 'the S(n) column says plainly and the a(n) column cannot say at all.');
+    } else {
+      status.innerHTML = '<strong>The claim a(n) = b(n) - b(n+1) fails at n = ' + firstBreak
+        + '.</strong> There, b(n) - b(n+1) is '
+        + Rtext(Rsub(bs[firstBreak], bs[firstBreak + 1])) + ' and a(n) is '
+        + Rtext(terms[firstBreak]) + '. So the collapse is collapsing a different series: '
+        + 'b(1) - b(' + (N + 1) + ') = ' + Rtext(sumClosed) + ', while adding your terms up gives '
+        + Rtext(sumAdded) + '. Both numbers are above and neither is hidden. A telescoping argument '
+        + 'is only as good as the identity it starts from, and this is what it looks like when '
+        + 'that identity is nearly right.';
+    }
+  }
+
+  /* =============================================== mode: infinite ======== */
+  function paintInfinite() {
+    var a1 = Rread(inA1.value), r = Rread(inR.value);
+    if (a1 === null || r === null) {
+      fail('<strong>' + (a1 === null ? 'The first term' : 'The common ratio') + ' "'
+        + esc(String(a1 === null ? inA1.value : inR.value)) + '" is not a number I can use.</strong> '
+        + 'Both boxes take a whole number or a fraction. The ratio is the one that decides '
+        + 'everything here: <code>1/2</code> converges, <code>3/2</code> does not, and '
+        + '<code>-1</code> does neither.');
+      return;
+    }
+    var N = termcount(), tol = Rread(selTol ? selTol.value : '1/1000');
+    if (tol === null || Rsign(tol) <= 0) tol = R(1n, 1000n);
+    var terms = [null], sums = [null], run = R0;
+    for (var i = 1; i <= N; i += 1) {
+      terms.push(i === 1 ? a1 : Rmul(terms[i - 1], r));
+      run = Radd(run, terms[i]);
+      sums.push(run);
+    }
+    var one = Requ(r, R1);
+    var absLess = Rcmp(Rabs(r), R1) < 0;
+    /* a1 = 0 is the series 0 + 0 + 0 + ..., which sums to 0 for every ratio.
+       |r| < 1 is sufficient for convergence and not necessary, and refusing
+       this one would be refusing a series that plainly has a sum. */
+    var trivial = Rzero(a1) && !absLess;
+    var converges = absLess || trivial;
+    var limit = converges ? (absLess ? Rdiv(a1, Rsub(R1, r)) : R0) : null;
+
+    /* How many terms before the gap to the limit is smaller than the reader's
+       tolerance -- searched by exact comparison, so "within 1/1000000" means
+       within 1/1000000 and not "within a printed rounding of it". */
+    var reach = -1, reachCap = 250;
+    if (converges) {
+      var pw = R1, acc = R0;
+      for (var s = 1; s <= reachCap; s += 1) {
+        acc = Radd(acc, Rmul(a1, pw));
+        pw = Rmul(pw, r);
+        if (Rcmp(Rabs(Rsub(limit, acc)), tol) < 0) { reach = s; break; }
+      }
+    }
+
+    var body = [];
+    for (var t = 1; t <= N; t += 1) {
+      var byFormula = one ? Rmul(Rwhole(t), a1)
+                          : Rdiv(Rmul(a1, Rsub(R1, Rpow(r, t))), Rsub(R1, r));
+      var ok = Requ(byFormula, sums[t]);
+      var gap = converges ? Rsub(limit, sums[t]) : null;
+      body.push(tr([rowhead('n = ' + t), td(Rtext(terms[t])), td(Rtext(sums[t])), td(Rtext(byFormula)),
+                    td(ok ? chip('agree', 'ok') : chip('MISMATCH', 'no'), ok ? 't' : 'f'),
+                    td(gap === null ? Rtext(Rabs(sums[t])) : Rtext(gap)),
+                    td(gap === null ? approx(Rabs(sums[t]), 3) : approx(Rabs(gap), 8))]));
+    }
+
+    /* ---- the picture: each term as the step it adds to the running total ---- */
+    var ys = [0], k;
+    for (k = 1; k <= N; k += 1) { var v = Rnum(sums[k]); if (isFinite(v)) ys.push(v); }
+    if (converges) { var lv = Rnum(limit); if (isFinite(lv)) ys.push(lv); }
+    var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
+    if (!isFinite(lo) || !isFinite(hi) || lo === hi) { lo = lo - 1; hi = hi + 1; }
+    var pad = Math.max(0.5, (hi - lo) * 0.14);
+    var plot = Plot(svg, { xmin: 0, xmax: N + 1, ymin: lo - pad, ymax: hi + pad });
+    plot.frame();
+    if (converges) plot.hline(Rnum(limit), 'plot-asym', 'the limit ' + Rtext(limit));
+    for (k = 1; k <= N; k += 1) {
+      var prev = k === 1 ? 0 : Rnum(sums[k - 1]), here = Rnum(sums[k]);
+      if (!isFinite(prev) || !isFinite(here)) continue;
+      /* The bar IS the term: the height it adds to the running total. */
+      plot.segment(k, prev, k, here, 'plot-interval');
+      plot.point(k, here, 'plot-point');
+    }
+    plot.describe('Each term drawn as the step it adds to the running total, for the first ' + N
+      + ' partial sums' + (converges ? ', with the limit ' + Rtext(limit) + ' drawn across them.'
+        : ', with no limit line because there is no limit to draw.'));
+
+    work.innerHTML =
+      steps('The series, as given', [
+        ['first term a1', Rtext(a1)],
+        ['common ratio r', Rtext(r)],
+        ['|r| against 1', Rtext(Rabs(r)) + ' is ' + (absLess ? 'below' : (one || Requ(r, R(-1n))
+          ? 'exactly' : 'above')) + ' 1, and that comparison is the whole test'],
+        ['the test result', converges ? chip('a sum exists', 'ok') : chip('REFUSED', 'no')],
+      ])
+      + table('Every partial sum, computed twice, and how far it still is from the limit',
+        ['', 'the term', 'S(n), by adding', one ? 'S(n), by n a1' : 'S(n), by a1(1 - r^n)/(1 - r)',
+         'agree?', converges ? 'limit - S(n), exactly' : '|S(n)|, exactly',
+         converges ? 'that gap, rounded' : '|S(n)|, rounded'], body)
+      + steps('And the infinite sum', converges
+        ? [['a1/(1 - r)', Rtext(a1) + '/(1 - ' + Rterm(r) + ') = ' + Rtext(limit)],
+           ['as a decimal', approx(limit, 8) + ' &mdash; a rounding, printed so you can find the '
+             + 'line on the graph'],
+           ['terms needed to come within ' + Rtext(tol),
+             reach < 0 ? 'more than ' + reachCap
+               : String(reach) + ' ' + plural(reach, 'term', 'terms')],
+           ['S(' + N + ') against the limit', 'the gap is still ' + Rtext(Rsub(limit, sums[N]))]]
+        : [['is there a number to print?', chip('no', 'no') + ' and the page refuses to print one'],
+           ['what a1/(1 - r) would give', one ? 'nothing at all: 1 - r is 0, so the expression '
+             + 'divides by zero' : Rtext(Rdiv(a1, Rsub(R1, r)))
+             + ', a number with no meaning here &mdash; it comes from a derivation that assumed '
+             + 'r^n was heading for 0'],
+           ['what the partial sums do instead', 'S(1) = ' + Rtext(sums[1]) + ', S(2) = '
+             + Rtext(sums[2 <= N ? 2 : N]) + ', ..., S(' + N + ') = ' + Rtext(sums[N])
+             + ' &mdash; drawn above, and going nowhere near any line'],
+           ['|S(' + N + ')|', Rtext(Rabs(sums[N])) + ', about ' + approx(Rabs(sums[N]), 2)]]);
+
+    setkpi('|r|', Rtext(Rabs(r)), 'infinite sum', converges ? Rtext(limit) : 'REFUSED',
+           'terms to ' + Rtext(tol), converges ? (reach < 0 ? '> ' + reachCap : String(reach)) : 'n/a');
+
+    if (trivial) {
+      status.innerHTML = '<strong>Every term is 0, so every partial sum is 0 and the infinite sum '
+        + 'is 0.</strong> |r| = ' + Rtext(Rabs(r)) + ' is not below 1, and the test would refuse '
+        + 'this one &mdash; but the test is a SUFFICIENT condition, not a necessary one, and a1 = 0 '
+        + 'is the case that shows the difference. The bars above have no height because there is '
+        + 'nothing being added.';
+    } else if (absLess) {
+      status.innerHTML = '<strong>|r| = ' + Rtext(Rabs(r)) + ' is below 1, so the sum exists and it '
+        + 'is ' + Rtext(limit) + '.</strong> Each bar above is one term, drawn as the step it adds '
+        + 'to the running total, and the steps shrink'
+        + (Rsign(r) < 0 ? ', flipping direction each time, so the partial sums close in on the line '
+             + 'from alternate sides' : ' towards the line') + '. The exact gap is in the '
+        + 'table: after ' + N + ' terms it is ' + Rtext(Rsub(limit, sums[N])) + ', and it takes '
+        + (reach < 0 ? 'more than ' + reachCap + ' terms' : String(reach) + ' '
+           + plural(reach, 'term', 'terms')) + ' to bring it under '
+        + Rtext(tol) + '. Every partial sum was computed twice, by addition and by '
+        + 'a1(1 - r^n)/(1 - r), and the two agree exactly &mdash; which is what lets the gap be '
+        + 'printed as a fraction rather than as a decimal that has run out of digits.';
+    } else if (one) {
+      status.innerHTML = '<strong>r = 1, so this sum is REFUSED.</strong> The terms never shrink: '
+        + 'every one of them is ' + Rtext(a1) + ', and S(n) = n x ' + Rtext(a1) + ' climbs a '
+        + 'straight line for ever &mdash; that is the staircase drawn above, with every step the '
+        + 'same height. There is no number to give you. Notice that a1/(1 - r) does not merely '
+        + 'give the wrong answer here; it divides by zero, because 1 - r is 0, and the derivation '
+        + 'of that formula divided by 1 - r in its very first step.';
+    } else if (Requ(r, R(-1n))) {
+      status.innerHTML = '<strong>r = -1, so this sum is REFUSED.</strong> The partial sums are '
+        + Rtext(a1) + ', 0, ' + Rtext(a1) + ', 0, ... for ever &mdash; look at the bars above, '
+        + 'flipping back and forth and settling on nothing. They do not run away, and they still do '
+        + 'not approach anything, which is why the condition is |r| &lt; 1 and not "the terms stop '
+        + 'growing". |r| here is exactly 1, and 1 is not less than 1.';
+    } else {
+      status.innerHTML = '<strong>|r| = ' + Rtext(Rabs(r)) + ' is not below 1, so this sum is '
+        + 'REFUSED.</strong> Look at what the bars do: each step is bigger than the one before it, '
+        + 'and by n = ' + N + ' the running total is ' + Rtext(sums[N]) + '. The partial sums are '
+        + 'running away, and no number is being approached. The formula a1/(1 - r) would still hand '
+        + 'back ' + Rtext(Rdiv(a1, Rsub(R1, r))) + ' &mdash; it is an expression, and expressions '
+        + 'evaluate &mdash; and that number is meaningless: it was derived on the assumption that '
+        + 'r^n heads for 0, and here r^n is heading for the horizon. Every finite sum in the table '
+        + 'is perfectly real and every one was checked against the formula; it is only the limit '
+        + 'that does not exist.';
+    }
+  }
+
+  /* ============================================== mode: repeating ======== */
+  function zeros(n) { var s = ''; for (var i = 0; i < n; i += 1) s += '0'; return s; }
+  /* Long division, digit by digit, keeping the remainder at every step. This
+     is the SECOND computation on this page and it shares nothing with the
+     first: the series gives a fraction, and this turns that fraction back into
+     a decimal without ever looking at what the reader typed. A remainder that
+     comes round again is the whole reason a decimal repeats at all, and it is
+     the thing the table below prints. */
+  function longdiv(num, den, cap) {
+    var whole = num / den, rem = num % den;
+    var seen = {}, digits = [], rows = [], cycleStart = -1, cut = false;
+    while (true) {
+      if (rem === 0n) break;
+      var key = String(rem);
+      if (Object.prototype.hasOwnProperty.call(seen, key)) { cycleStart = seen[key]; break; }
+      if (digits.length >= cap) { cut = true; break; }
+      seen[key] = digits.length;
+      var cur = rem * 10n, dg = cur / den, nxt = cur % den;
+      rows.push({ before: rem, times10: cur, digit: dg, after: nxt, at: digits.length });
+      digits.push(String(dg));
+      rem = nxt;
+    }
+    return { whole: whole, digits: digits, rows: rows, cycleStart: cycleStart, cut: cut };
+  }
+  function longdivtext(ld) {
+    if (ld.cut) return String(ld.whole) + '.' + ld.digits.join('') + '... (cut off)';
+    if (ld.cycleStart < 0) {
+      return String(ld.whole) + (ld.digits.length ? '.' + ld.digits.join('') : '');
+    }
+    return String(ld.whole) + '.' + ld.digits.slice(0, ld.cycleStart).join('')
+      + '(' + ld.digits.slice(ld.cycleStart).join('') + ')';
+  }
+  function paintRepeating() {
+    var pre = String(inPre.value || '').trim(), rep = String(inRep.value || '').trim();
+    if (!/^[0-9]*$/.test(pre) || !/^[0-9]*$/.test(rep)) {
+      fail('<strong>"' + esc(!/^[0-9]*$/.test(pre) ? pre : rep) + '" is not a run of digits.</strong> '
+        + 'Both boxes take digits and nothing else: the first holds whatever comes after the '
+        + 'decimal point BEFORE the repeat starts, and the second holds the block that repeats. '
+        + 'For 0.1666... that is <code>1</code> and <code>6</code>; for 0.999... it is nothing and '
+        + '<code>9</code>. Leave the first box empty when the repeat starts at once.');
+      return;
+    }
+    if (pre.length > 8 || rep.length > 8) {
+      fail('<strong>That is more than eight digits in one box.</strong> The arithmetic would stay '
+        + 'exact &mdash; it is all BigInt &mdash; but the fractions would be too wide to read, and '
+        + 'nothing is learned from a denominator with sixteen digits in it that is not already '
+        + 'clear from three.');
+      return;
+    }
+    var p = pre.length, q = rep.length, N = termcount();
+    var head = p ? R(BigInt(pre), bpow10(p)) : R0;
+    var typed = '0.' + pre + (q ? '(' + rep + ')' : '');
+
+    if (q === 0) {
+      var val0 = head;
+      var ld0 = longdiv(val0.n, val0.d, 40);
+      work.innerHTML = steps('Nothing repeats, so there is no geometric series here', [
+        ['what you typed', esc(typed) + ' &mdash; digits after the point, and then it stops'],
+        ['as a fraction', pre === '' ? '0' : pre + '/' + String(bpow10(p)) + ' = ' + Rtext(val0)],
+        ['the series', 'a repeating decimal is a geometric series because the block comes round '
+          + 'again and again. With an empty block there is no ratio, no first term and nothing to '
+          + 'sum &mdash; the value is just the terminating decimal itself.'],
+        ['long division of ' + Rtext(val0), longdivtext(ld0) + ', which terminates'],
+      ]);
+      setkpi('as a fraction', Rtext(val0), 'repeating block', 'none', 'series', 'no terms');
+      status.innerHTML = '<strong>' + esc(typed) + ' terminates, so it is not a repeating decimal '
+        + 'and there is no series to build.</strong> Every terminating decimal is already a '
+        + 'fraction over a power of ten &mdash; that is what the notation means &mdash; and it '
+        + 'reduces to ' + Rtext(val0) + '. Put a digit in the repeating box and the interesting '
+        + 'case starts: infinitely many terms, and a finite answer.';
+      return;
+    }
+
+    /* The series: first term the block pushed past the non-repeating digits,
+       ratio one over ten to the power of the block length. */
+    var a = R(BigInt(rep), bpow10(p + q));
+    var r = R(1n, bpow10(q));
+    var terms = [], sums = [], run = R0, body = [];
+    for (var i = 0; i < N; i += 1) {
+      var tm = Rmul(a, Rpow(r, i));
+      terms.push(tm);
+      run = Radd(run, tm);
+      sums.push(run);
+      var byFormula = Rdiv(Rmul(a, Rsub(R1, Rpow(r, i + 1))), Rsub(R1, r));
+      var ok = Requ(byFormula, run);
+      body.push(tr([rowhead('term ' + (i + 1)), td('0.' + zeros(p + i * q) + rep),
+                    td(Rtext(tm)), td(Rtext(run)), td(Rtext(byFormula)),
+                    td(ok ? chip('agree', 'ok') : chip('MISMATCH', 'no'), ok ? 't' : 'f')]));
+    }
+    var tail = Rdiv(a, Rsub(R1, r));
+    var value = Radd(head, tail);
+
+    /* The same number a second way, straight from the digits, so the reduction
+       to lowest terms is something the reader can watch happen. */
+    var block = bpow10(q) - 1n;
+    var rawNum = BigInt(pre === '' ? '0' : pre) * block + BigInt(rep);
+    var rawDen = bpow10(p) * block;
+    var byDigits = R(rawNum, rawDen);
+    var g = bgcd(rawNum, rawDen) || 1n;
+    var ld = longdiv(value.n, value.d, 40);
+    var back = longdivtext(ld);
+    var identical = back === typed;
+
+    work.innerHTML =
+      steps('The decimal, written as a series', [
+        ['what you typed', esc(typed)],
+        ['the part before the repeat', p ? pre + '/' + String(bpow10(p)) + ' = ' + Rtext(head)
+          : '0 &mdash; the repeat starts at the decimal point'],
+        ['the first term of the series', '0.' + zeros(p) + rep + ' = ' + Rtext(a)],
+        ['the ratio', Rtext(r) + ' &mdash; each copy of the block sits ' + q + ' '
+          + plural(q, 'place', 'places') + ' further right than the last, which divides it by '
+          + String(bpow10(q))],
+        ['|r| against 1', Rtext(r) + ' is below 1, so the series converges and a/(1 - r) applies'],
+      ])
+      + table('The first ' + N + ' terms of the series, and its partial sums computed twice',
+        ['', 'as a decimal', 'as a fraction', 'partial sum, by adding',
+         'partial sum, by a(1 - r^n)/(1 - r)', 'agree?'], body)
+      + steps('The infinite sum, and the fraction it comes to', [
+        ['a/(1 - r)', Rterm(a) + '/(1 - ' + Rterm(r) + ') = ' + Rtext(tail)],
+        ['plus the part before the repeat', Rtext(head) + ' + ' + Rterm(tail) + ' = ' + Rtext(value)],
+        ['straight from the digits', '(' + (pre === '' ? '0' : pre) + ' x ' + String(block) + ' + '
+          + rep + ') / (' + String(bpow10(p)) + ' x ' + String(block) + ')  =  '
+          + String(rawNum) + '/' + String(rawDen)],
+        ['in lowest terms', String(rawNum) + '/' + String(rawDen) + ', divided top and bottom by '
+          + 'their common factor ' + String(g) + ', is ' + Rtext(byDigits)],
+        ['do the two routes agree?', agreechip(Requ(value, byDigits))],
+      ])
+      + table('Long division of ' + Rtext(value) + ', which never saw your digits',
+        ['', 'remainder', 'x 10', 'digit', 'remainder left'],
+        ld.rows.map(function (row) {
+          return tr([rowhead('place ' + (row.at + 1)), td(String(row.before)), td(String(row.times10)),
+                     td(String(row.digit)), td(String(row.after))],
+                    (ld.cycleStart >= 0 && row.at >= ld.cycleStart) ? 'focus' : '');
+        }).concat([tr([rowhead('and so'), tdl(ld.cycleStart >= 0
+          ? 'the remainder ' + String(ld.rows[ld.cycleStart].before) + ' has come round again, so '
+            + 'from here the digits repeat for ever: ' + back
+          : (ld.cut ? 'cut off after 40 places' : 'the remainder reached 0, so the decimal '
+            + 'terminates: ' + back))])]));
+
+    setkpi('as a fraction', Rtext(value), 'the repeating block', rep,
+           'divided back out', back);
+
+    if (Requ(value, R1)) {
+      status.innerHTML = '<strong>' + esc(typed) + ' = ' + Rtext(value) + ', exactly.</strong> Not '
+        + 'nearly 1, not 1 to as many places as you like &mdash; the series '
+        + Rtext(terms[0]) + ' + ' + Rtext(terms[1 < terms.length ? 1 : 0]) + ' + ... has first term '
+        + Rtext(a) + ' and ratio ' + Rtext(r) + ', so a/(1 - r) is '
+        + Rterm(a) + ' divided by ' + Rterm(Rsub(R1, r))
+        + (p ? ', and adding the ' + Rtext(head) + ' in front of it gives ' + Rtext(value)
+             : ', which is ' + Rtext(value)) + '. Every step above is exact '
+        + 'rational arithmetic, so there is no rounding anywhere for the difference to hide in. '
+        + 'The long division agrees from the other side: it turns the fraction back into '
+        + esc(back) + ', which is the same number written the way a division produces it. Two '
+        + 'decimals, one number.';
+    } else if (identical) {
+      status.innerHTML = '<strong>' + esc(typed) + ' = ' + Rtext(value) + ', in lowest terms.</strong> '
+        + 'The repeating block was summed as a geometric series with first term ' + Rtext(a)
+        + ' and ratio ' + Rtext(r) + ', and the ratio is below 1 because each copy of the block is '
+        + q + ' ' + plural(q, 'place', 'places') + ' further right than the last. Then the fraction '
+        + 'was divided out again by long division, which never saw your digits, and '
+        + esc(back) + ' came back. The remainder that came round a second time in that table is '
+        + 'exactly why the decimal repeats: there are only finitely many remainders, so one of them '
+        + 'must recur, and from that point the digits must too.';
+    } else {
+      /* The two spellings part company for more reasons than the famous one: a
+         block written out twice, or a repeat announced a place later than it
+         really starts, both come back from the division tidied up. Naming only
+         the 9s here would tell the reader something false about their own input. */
+      var nines = /^9+$/.test(rep);
+      status.innerHTML = '<strong>' + esc(typed) + ' = ' + Rtext(value) + ', and dividing that '
+        + 'fraction back out gives ' + esc(back) + ' rather than the digits you typed.</strong> '
+        + 'Two decimals, one number, and nothing has gone wrong: the fraction was built from your '
+        + 'digits by summing the series exactly, and the long division was done on the fraction '
+        + 'without ever looking at them, so both spellings are right and they are equal. '
+        + (nines
+           ? 'An endless run of 9s is the famous case: ' + esc(typed) + ' and ' + esc(back)
+             + ' are the same rational for exactly the reason 0.999... and 1 are.'
+           : 'Long division produces the shortest block it can, starting as early as it can, so a '
+             + 'block written twice over, or a repeat announced a place after it really began, '
+             + 'comes back tidied up.');
+    }
+  }
+
+  /* ================================================ mode: annuity ======== */
+  function paintAnnuity() {
+    var pay = Rread(inPay.value), rate = Rread(inRate.value);
+    if (pay === null || rate === null) {
+      fail('<strong>' + (pay === null ? 'The payment' : 'The rate') + ' "'
+        + esc(String(pay === null ? inPay.value : inRate.value)) + '" is not a number I can use.</strong> '
+        + 'The payment is the same amount every period &mdash; that is what makes this a geometric '
+        + 'series &mdash; and the rate is a fraction of itself per period: <code>1/20</code> is 5%, '
+        + '<code>1/10</code> is 10%, <code>0</code> is a box under the bed.');
+      return;
+    }
+    var N = termcount(), g = Radd(R1, rate);
+    var vals = [null], run = R0, body = [];
+    for (var k = 1; k <= N; k += 1) {
+      var grown = Rmul(pay, Rpow(g, N - k));
+      vals.push(grown);
+      run = Radd(run, grown);
+      body.push(tr([rowhead('payment ' + k), td(String(N - k)),
+                    td(Rterm(g) + '^' + (N - k) + ' = ' + Rtext(Rpow(g, N - k))),
+                    td(Rtext(grown)), td(approx(grown, 2)), td(Rtext(run))]));
+    }
+    var totalAdded = run;
+    var flat = Rzero(rate);
+    /* Two closed forms, written the two ways the course meets them: the
+       annuity formula, and the geometric sum a(1 - r^n)/(1 - r) it is. They
+       are computed separately here so that agreeing is evidence. */
+    var totalAnnuity = flat ? null : Rdiv(Rmul(pay, Rsub(Rpow(g, N), R1)), rate);
+    var totalGeom = flat ? null : Rdiv(Rmul(pay, Rsub(R1, Rpow(g, N))), Rsub(R1, g));
+    var totalFlat = Rmul(Rwhole(N), pay);
+    var allAgree = flat ? Requ(totalAdded, totalFlat)
+      : (Requ(totalAdded, totalAnnuity) && Requ(totalAdded, totalGeom));
+
+    /* ---- the picture: every payment as the height it has grown to ---- */
+    var ys = [0, Rnum(pay)], m;
+    for (m = 1; m <= N; m += 1) { var v = Rnum(vals[m]); if (isFinite(v)) ys.push(v); }
+    var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
+    if (!isFinite(lo) || !isFinite(hi) || lo === hi) { lo = lo - 1; hi = hi + 1; }
+    var pad = Math.max(0.5, (hi - lo) * 0.14);
+    var plot = Plot(svg, { xmin: 0, xmax: N + 1, ymin: Math.min(0, lo) - pad, ymax: hi + pad });
+    plot.frame();
+    if (isFinite(Rnum(pay))) plot.hline(Rnum(pay), 'plot-aux', 'the payment itself, ' + Rtext(pay));
+    for (m = 1; m <= N; m += 1) {
+      var top = Rnum(vals[m]);
+      if (!isFinite(top)) continue;
+      plot.segment(m, 0, m, top, 'plot-interval');
+      plot.point(m, top, 'plot-point');
+    }
+    plot.describe('Each of the ' + N + ' payments drawn at the period it is made, at the height it '
+      + 'has grown to by the end. The earliest payment is the tallest because it has had the most '
+      + 'periods to grow.');
+
+    work.innerHTML =
+      steps('The stream, as given', [
+        ['payment each period', Rtext(pay)],
+        ['rate per period', Rtext(rate) + ' &mdash; so each period multiplies what is there by 1 + '
+          + Rterm(rate) + ' = ' + Rtext(g)],
+        ['periods', String(N)],
+        ['why this is geometric', 'payment ' + N + ' grows for 0 periods, payment ' + (N - 1)
+          + ' for 1, and so on. Read the list from the last payment backwards and it is '
+          + Rtext(pay) + ', ' + Rtext(pay) + ' x ' + Rterm(g) + ', ' + Rtext(pay) + ' x '
+          + Rterm(g) + '^2, ... &mdash; first term ' + Rtext(pay) + ', ratio ' + Rtext(g) + '.'],
+      ])
+      + table('Every payment, grown for its own number of periods',
+        ['', 'periods of growth', 'the growth factor', 'what it is worth at the end',
+         'rounded', 'running total'], body)
+      + steps('The total, computed three ways', [
+        ['by adding the ' + N + ' grown payments up', Rtext(totalAdded)],
+        [flat ? 'by the annuity formula P((1 + i)^n - 1)/i'
+              : 'by the annuity formula P((1 + i)^n - 1)/i',
+         flat ? 'i is 0, so this divides by zero and says nothing at all'
+              : Rterm(pay) + '((' + Rtext(g) + ')^' + N + ' - 1)/' + Rterm(rate) + ' = '
+                + Rtext(totalAnnuity)],
+        ['by the geometric sum a(1 - r^n)/(1 - r), with a = ' + Rtext(pay) + ' and r = ' + Rtext(g),
+         flat ? '1 - r is 0 here too, and for the same reason: the two formulas are the same '
+                + 'formula, so they fail together' : Rtext(totalGeom)],
+        ['by n x P, the formula that takes over when r = 1',
+         flat ? String(N) + ' x ' + Rtext(pay) + ' = ' + Rtext(totalFlat)
+              : 'not this case &mdash; r is ' + Rtext(g) + ', not 1'],
+        ['do they agree?', agreechip(allAgree)],
+        ['the total, rounded', approx(totalAdded, 2) + ' &mdash; a rounding, and nothing above was '
+          + 'decided by it'],
+      ]);
+
+    setkpi('periods', String(N), 'total', Rtext(totalAdded), 'checks',
+           allAgree ? 'all passed' : 'FAILED');
+
+    if (flat) {
+      status.innerHTML = '<strong>The rate is 0, so the total is simply ' + String(N) + ' x '
+        + Rtext(pay) + ' = ' + Rtext(totalFlat) + '.</strong> Every bar above is the same height: '
+        + 'nothing grows, so each payment is worth exactly what was paid in. The closed form '
+        + 'P((1 + i)^n - 1)/i has nothing to say here, because it divides by i and i is 0 &mdash; '
+        + 'and that is not an oversight in the formula. It is the geometric sum formula with '
+        + 'r = 1 + i = 1, which was derived by dividing by 1 - r, a step that was never available. '
+        + 'The addition column carries on perfectly well beside the gap.';
+    } else {
+      status.innerHTML = '<strong>' + String(N) + ' payments of ' + Rtext(pay) + ' at '
+        + Rtext(rate) + ' a period come to ' + Rtext(totalAdded) + ', about '
+        + approx(totalAdded, 2) + '.</strong> That number was computed twice: once by growing each '
+        + 'payment for its own number of periods and adding the ' + N + ' results, and once by the '
+        + 'closed form, which is the geometric sum formula wearing a different name. The bars show '
+        + 'why it is geometric &mdash; each payment has had one period less to grow than the one '
+        + 'before it, so the heights are a constant ratio ' + Rtext(g) + ' apart. Every figure is '
+        + 'an exact fraction; the rounded column is there to be read and was used for nothing, '
+        + 'which matters in a mode about money, where a rounding repeated ' + N + ' times is how '
+        + 'the total quietly stops being the total.';
+    }
+  }
+
+  /* ================================================= mode: pascal ======== */
+  function paintPascal() {
+    var N = Math.max(0, Math.min(14, parseInt(String(selRows ? selRows.value : '8'), 10) || 0));
+    var rows = pascalrows(N);
+    /* The triangle is built from additions and knows nothing about which row
+       the reader asked for, so it is drawn whatever they typed. A complaint
+       about the row box belongs in the banner, not in place of the picture. */
+    var rowWanted = wholeread(inRow.value, -1000, 1000);
+    var kWanted = wholeread(inK.value, -1000, 1000);
+    var gripe = '';
+    if (rowWanted === null) {
+      gripe = 'The row box holds "' + esc(String(inRow.value)) + '", which is not a whole number, '
+        + 'so row ' + N + ' is highlighted instead.';
+      rowWanted = N;
+    } else if (rowWanted < 0 || rowWanted > N) {
+      gripe = 'Row ' + rowWanted + ' is not in a triangle built to row ' + N
+        + ', so row ' + N + ' is highlighted instead. Build more rows, or pick a row between 0 and '
+        + N + '.';
+      rowWanted = N;
+    }
+    if (kWanted === null) {
+      gripe += (gripe ? ' ' : '') + 'The entry box holds "' + esc(String(inK.value))
+        + '", which is not a whole number, so k = 0 is highlighted instead.';
+      kWanted = 0;
+    } else if (kWanted < 0 || kWanted > rowWanted) {
+      gripe += (gripe ? ' ' : '') + 'Row ' + rowWanted + ' has entries k = 0 to k = ' + rowWanted
+        + ', and there is no k = ' + kWanted + ' in it, so k = 0 is highlighted instead.';
+      kWanted = 0;
+    }
+
+    /* Every row twice: added up entry by entry, and 2^n. */
+    var sumBody = [], triBody = [], allSums = true;
+    for (var i = 0; i <= N; i += 1) {
+      var cells = [], added = 0n;
+      for (var j = 0; j <= N; j += 1) {
+        if (j > i) { cells.push(td('')); continue; }
+        added += rows[i][j];
+        var isPick = (i === rowWanted && j === kWanted);
+        var isParent = (i === rowWanted - 1 && (j === kWanted - 1 || j === kWanted));
+        cells.push(td(String(rows[i][j]), (isPick || isParent) ? 'on' : ''));
+      }
+      var pw = bpow2(i), same = added === pw;
+      if (!same) allSums = false;
+      cells.push(td(String(added)));
+      cells.push(td(String(pw)));
+      cells.push(td(same ? chip('same', 'ok') : chip('NO', 'no'), same ? 't' : 'f'));
+      triBody.push(tr([rowhead('row ' + i)].concat(cells), i === rowWanted ? 'focus' : ''));
+      sumBody.push(tr([rowhead('n = ' + i), td(rows[i].join(' + ')), td(String(added)),
+                       td('2^' + i + ' = ' + String(pw)),
+                       td(same ? chip('agree', 'ok') : chip('NO', 'no'), same ? 't' : 'f')],
+                      i === rowWanted ? 'focus' : ''));
+    }
+    var heads = [''];
+    for (var h = 0; h <= N; h += 1) heads.push('k=' + h);
+    heads.push('row sum, added');
+    heads.push('2^n');
+    heads.push('agree?');
+
+    /* The chosen row, entry by entry: the two above it, and C(n, k) alone. */
+    var n = rowWanted, detail = [], allEntries = true;
+    for (var k = 0; k <= n; k += 1) {
+      var left = (n > 0 && k > 0) ? rows[n - 1][k - 1] : null;
+      var right = (n > 0 && k < n) ? rows[n - 1][k] : null;
+      var added2 = (left === null ? 0n : left) + (right === null ? 0n : right);
+      var byAdd = n === 0 ? 1n : added2;
+      var byFormula = bchoose(n, k);
+      var ok = byAdd === rows[n][k] && byFormula === rows[n][k];
+      if (!ok) allEntries = false;
+      detail.push(tr([rowhead('k = ' + k),
+                      td(left === null ? 'off the edge, so 0' : String(left)),
+                      td(right === null ? 'off the edge, so 0' : String(right)),
+                      td(n === 0 ? '1, by definition: the triangle has to start' : String(byAdd)),
+                      tdl(String(bfact(n)) + ' / (' + String(bfact(k)) + ' x ' + String(bfact(n - k))
+                        + ') = ' + String(byFormula)),
+                      td(ok ? chip('agree', 'ok') : chip('NO', 'no'), ok ? 't' : 'f')],
+                     k === kWanted ? 'focus' : ''));
+    }
+
+    var pick = rows[n][kWanted];
+    var rowSum = 0n;
+    for (var s = 0; s <= n; s += 1) rowSum += rows[n][s];
+    var mirror = rows[n][n - kWanted];
+
+    work.innerHTML =
+      table("Pascal's triangle to row " + N + ", each entry the sum of the two above it",
+        heads, triBody)
+      + table('Row ' + n + ', entry by entry: the two above, and C(' + n + ', k) on its own',
+        ['', 'above left', 'above right', 'their sum', 'n! / (k! (n-k)!)', 'agree?'], detail)
+      + table('Every row sum, added up and against 2^n',
+        ['', 'the entries', 'added up', 'the power of two', 'agree?'], sumBody)
+      + steps('The entry you picked', [
+        ['C(' + n + ', ' + kWanted + ') by addition', n === 0 ? '1, the top of the triangle'
+          : String((kWanted > 0 ? rows[n - 1][kWanted - 1] : 0n)) + ' + '
+            + String((kWanted < n ? rows[n - 1][kWanted] : 0n)) + ' = ' + String(pick)],
+        ['C(' + n + ', ' + kWanted + ') by factorials', String(bfact(n)) + ' / (' + String(bfact(kWanted))
+          + ' x ' + String(bfact(n - kWanted)) + ') = ' + String(bchoose(n, kWanted))],
+        ['do they agree?', agreechip(pick === bchoose(n, kWanted))],
+        ['its mirror image C(' + n + ', ' + (n - kWanted) + ')', String(mirror)
+          + (mirror === pick ? ' &mdash; the same number, which is the symmetry of the triangle'
+             : ' &mdash; which would be a bug, not a lesson')],
+        ['the sum of row ' + n + ', by adding', String(rowSum)],
+        ['the sum of row ' + n + ', by 2^' + n, String(bpow2(n))],
+        ['do those agree?', agreechip(rowSum === bpow2(n))],
+      ]);
+
+    setkpi('C(' + n + ', ' + kWanted + ')', String(pick), 'row sum', String(rowSum),
+           '2^' + n, String(bpow2(n)));
+
+    status.innerHTML = (gripe ? '<strong>' + gripe + '</strong> ' : '')
+      + '<strong>C(' + n + ', ' + kWanted + ') = ' + String(pick) + '.</strong> '
+      + (n === 0
+         ? 'Row 0 is the single 1 at the top: there is nothing above it to add, so it is where the '
+           + 'addition rule starts rather than something the rule produces.'
+         : ((kWanted === 0 || kWanted === n)
+             ? 'It sits on the edge of the triangle, so one of its two parents is off the side and '
+               + 'counts as 0: it came from 0 + '
+               + String(kWanted === 0 ? rows[n - 1][0] : rows[n - 1][n - 1]) + ' in row ' + (n - 1)
+               + ' &mdash; highlighted above &mdash; and independently from '
+             : 'It came from ' + String(rows[n - 1][kWanted - 1]) + ' + '
+               + String(rows[n - 1][kWanted]) + ' in row ' + (n - 1)
+               + ' &mdash; both highlighted above &mdash; and independently from ')
+           + String(bfact(n)) + '/(' + String(bfact(kWanted)) + ' x ' + String(bfact(n - kWanted))
+           + '), which never touched the triangle.')
+      + ' The two agree in every cell of every row here'
+      + (allEntries && allSums ? '' : ', except where the table says otherwise')
+      + '. Row ' + n + ' adds to ' + String(rowSum) + ', which is 2^' + n
+      + ' &mdash; and that is not a coincidence to be memorised: row n lists how many subsets of an '
+      + 'n-element set have each possible size, and every element is either in a subset or out of '
+      + 'it, so the sizes must account for all 2^' + n + ' of them. Both numbers above were '
+      + 'computed separately, the row by adding its own entries and the power by doubling ' + n
+      + ' times.';
+  }
+
+  /* ================================================ mode: genterm ======== */
+  /* "(2x - 3)", not "(2x + -3)". The b box holds a term, and a term whose
+     leading coefficient is negative is subtracted rather than added -- the same
+     rule plusterm applies to the systems lab, applied to a whole polynomial. */
+  function binomtext(pa, pb) {
+    var neg = Rsign(Plead(pb)) < 0;
+    return Pfactortext(pa) + (neg ? ' - ' : ' + ')
+      + Pfactortext(neg ? Pscale(pb, R(-1n)) : pb);
+  }
+  function paintGenterm() {
+    var n = Math.max(0, Math.min(12, parseInt(String(selPow.value), 10) || 0));
+    var k = Math.max(0, Math.min(12, parseInt(String(selK.value), 10) || 0));
+    var ta = String(inTa.value || '').trim(), tb = String(inTb.value || '').trim();
+    var pa = ta ? Epolyof(ta, 'x') : null, pb = tb ? Epolyof(tb, 'x') : null;
+
+    /* The coefficient depends on n and k alone, so it is computed and printed
+       before anything is known about a and b. */
+    var coefRows = [];
+    for (var c = 0; c <= n; c += 1) {
+      coefRows.push(tr([rowhead('k = ' + c), td(String(bfact(n)) + ' / (' + String(bfact(c)) + ' x '
+        + String(bfact(n - c)) + ')'), td(String(bchoose(n, c)))], c === k ? 'focus' : ''));
+    }
+    var coefTable = table('The n + 1 coefficients of (a + b)^' + n + ', from the factorials alone',
+      ['', 'n! / (k! (n-k)!)', 'C(' + n + ', k)'], coefRows);
+
+    if (pa === null || pb === null) {
+      fail('<strong>"' + esc(pa === null ? ta : tb) + '" is not a polynomial in x that I can '
+        + 'read.</strong> Each box holds ONE term of the binomial: <code>x</code>, <code>2x</code>, '
+        + '<code>-3</code>, <code>x^2</code>, <code>-1/2</code>. The two boxes are the a and the b '
+        + 'of (a + b)^n, kept apart so that the term at position k can be built without ever '
+        + 'writing the other n terms down. The coefficients below do not depend on either box.',
+        coefTable);
+      return;
+    }
+    if (k > n) {
+      work.innerHTML = coefTable + steps('There is no term number ' + k + ' here', [
+        ['the exponent', String(n)],
+        ['how many terms (a + b)^' + n + ' has', String(n + 1) + ' '
+          + plural(n + 1, 'term', 'terms') + ', numbered k = 0 to k = ' + n],
+        ['what k = ' + k + ' would mean', 'b raised to the power ' + k + ' and a raised to the power '
+          + (n - k) + ', which is a negative power of a &mdash; not a term of this expansion at all'],
+        ['C(' + n + ', ' + k + ')', '0, and that is the honest answer: there are no ways to choose '
+          + k + ' things from ' + n],
+      ]);
+      setkpi('exponent', String(n), 'term k', String(k), 'status', 'k is past the end');
+      status.innerHTML = '<strong>(a + b)^' + n + ' has ' + (n + 1) + ' '
+        + plural(n + 1, 'term', 'terms') + ', numbered k = 0 to k = '
+        + n + ', so there is no term at k = ' + k + '.</strong> The general term C(n, k) a^(n-k) b^k '
+        + 'stops being a term of the expansion the moment k passes n: the power of a would go '
+        + 'negative, and C(' + n + ', ' + k + ') is 0 anyway, because there is no way to choose '
+        + k + ' things out of ' + n + '. Lower k, or raise the exponent.';
+      return;
+    }
+
+    /* ---- the one term, built without expanding anything ---- */
+    var coef = bchoose(n, k);
+    var aPow = Ppow(pa, n - k), bPow = Ppow(pb, k);
+    var term = Pscale(Pmul(aPow, bPow), R(coef));
+
+    /* ---- and now the whole expansion, to place it ---- */
+    var assembled = [], all = [], degs = {}, clash = false;
+    for (var j = 0; j <= n; j += 1) {
+      var tj = Pscale(Pmul(Ppow(pa, n - j), Ppow(pb, j)), R(bchoose(n, j)));
+      assembled = Padd(assembled, tj);
+      var dj = Pdeg(tj);
+      if (dj >= 0) {
+        if (Object.prototype.hasOwnProperty.call(degs, String(dj))) clash = true;
+        else degs[String(dj)] = j;
+      }
+      all.push({ j: j, poly: tj, deg: dj });
+    }
+    var expanded = Ppow(Padd(pa, pb), n);
+    var same = Pzero(Psub(assembled, expanded));
+    var deg = Pdeg(term);
+    var inExpansion = (deg >= 0 && deg < expanded.length) ? expanded[deg] : R0;
+    if (inExpansion === undefined) inExpansion = R0;
+    var placed = deg >= 0 && !clash && Requ(inExpansion, term[deg]);
+
+    var body = all.map(function (item) {
+      return tr([rowhead('k = ' + item.j), td(String(bchoose(n, item.j))),
+                 tdl('(' + Pfactortext(pa) + ')^' + (n - item.j) + ' (' + Pfactortext(pb) + ')^' + item.j),
+                 tdl(Ptext(item.poly)), td(item.deg < 0 ? 'zero' : String(item.deg))],
+                item.j === k ? 'focus' : '');
+    });
+
+    work.innerHTML =
+      steps('The term at k = ' + k + ', built on its own', [
+        ['the coefficient C(' + n + ', ' + k + ')', String(bfact(n)) + ' / (' + String(bfact(k))
+          + ' x ' + String(bfact(n - k)) + ') = ' + String(coef)],
+        ['a to the power n - k = ' + (n - k), '(' + Pfactortext(pa) + ')^' + (n - k) + ' = '
+          + Ptext(aPow)],
+        ['b to the power k = ' + k, '(' + Pfactortext(pb) + ')^' + k + ' = ' + Ptext(bPow)],
+        ['their product, times the coefficient', Ptext(term)],
+        ['what was NOT done', 'the other ' + n + ' ' + plural(n, 'term', 'terms') + ' of the '
+          + 'expansion were never needed for that line. C(n, k) a^(n-k) b^k is a formula for ONE '
+          + 'term, and it is why a question asking for the coefficient of x^7 in a twentieth power '
+          + 'is a one-line question.'],
+      ])
+      + coefTable
+      + table('And now the whole expansion, term by term, with k = ' + k + ' among them',
+        ['', 'C(' + n + ', k)', 'the two powers', 'the term', 'its degree'], body)
+      + steps('Three ways of looking at the same polynomial', [
+        ['the ' + (n + 1) + ' terms above, added together', Ptext(assembled)],
+        ['(' + binomtext(pa, pb) + ') multiplied by itself ' + n + ' '
+          + plural(n, 'time', 'times'), Ptext(expanded)],
+        ['do they agree?', same ? chip('yes', 'ok') + ' every coefficient matches'
+          : chip('no', 'no') + ' which would be a bug and not a lesson'],
+        ['the term at k = ' + k, Ptext(term) + (deg < 0 ? ' &mdash; the zero polynomial'
+          : ', which is the x^' + deg + ' part')],
+        ['is it there in the expansion?', clash
+          ? chip('cannot be read off', 'no') + ' more than one k lands on the same power of x, so '
+            + 'the terms merge when they are added and no single one of them can be picked out of '
+            + 'the finished polynomial'
+          : (deg < 0 ? chip('nothing to find', 'hi') + ' this term is 0'
+             : (placed ? chip('yes', 'ok') + ' the x^' + deg + ' coefficient of the expansion is '
+                  + Rtext(inExpansion) + ', which is exactly the term above'
+                : chip('no', 'no') + ' which would be a bug and not a lesson'))],
+      ]);
+
+    setkpi('C(' + n + ', ' + k + ')', String(coef), 'the term', Ptext(term),
+           'checks', same && (clash || deg < 0 || placed) ? 'all passed' : 'see above');
+
+    status.innerHTML = '<strong>The term at k = ' + k + ' of (' + binomtext(pa, pb) + ')^' + n
+      + ' is ' + Ptext(term) + '.</strong> It was built from three '
+      + 'things and nothing else: C(' + n + ', ' + k + ') = ' + String(coef) + ' from the '
+      + 'factorials, a^' + (n - k) + ', and b^' + k + '. The rest of the expansion was not '
+      + 'computed to get it, and that is the point of having a general term at all. '
+      + (clash
+         ? 'Then the whole thing was expanded anyway, and here the terms cannot be told apart '
+           + 'afterwards: more than one k produces the same power of x, so they add together and '
+           + 'the finished polynomial has fewer terms than the expansion had. The term at k = ' + k
+           + ' is still exactly what the formula says it is &mdash; it is the reading-off that is '
+           + 'impossible, not the term.'
+         : 'Then the whole thing was expanded by multiplying the binomial by itself ' + n + ' '
+           + plural(n, 'time', 'times') + ', and the x^' + (deg < 0 ? '?' : deg)
+           + ' part of the answer is ' + (deg < 0 ? 'zero' : Rtext(inExpansion))
+           + ' &mdash; the same term, arrived at without the formula. Two routes, no shared '
+           + 'arithmetic, one polynomial.');
+  }
+
   /* ---------------------------------------------------------- the driver */
   function redraw() {
     if (MODE === 'define') {
@@ -3240,31 +4573,90 @@ SEQ_SCRIPT = r"""
       titleOut.textContent = 'a1 = ' + String(inA1.value) + ',  r = ' + String(inR.value);
       subOut.textContent = 'the first ' + termcount() + ' terms, their sum, and the limit';
       paintGeom();
-    } else {
+    } else if (MODE === 'binomial') {
       titleOut.textContent = '(' + String(inBin.value) + ')^' + String(selPow.value);
       subOut.textContent = "expanded by Pascal's triangle and by C(n, k)";
       paintBinom();
+    } else if (MODE === 'sigma') {
+      titleOut.textContent = 'sum of ' + String(inFk.value) + ',  k = ' + String(inLo.value)
+        + ' to ' + String(inHi.value);
+      subOut.textContent = 'expanded, re-indexed by ' + String(selShift.value) + ', and reversed';
+      paintSigma();
+    } else if (MODE === 'partial') {
+      titleOut.textContent = 'a(n) = ' + String(inAn.value);
+      subOut.textContent = 'S(1) ... S(' + termcount() + '), against b(1) - b(n+1)';
+      paintPartial();
+    } else if (MODE === 'infinite') {
+      titleOut.textContent = 'a1 = ' + String(inA1.value) + ',  r = ' + String(inR.value);
+      subOut.textContent = 'the first ' + termcount() + ' partial sums, and whether they settle';
+      paintInfinite();
+    } else if (MODE === 'repeating') {
+      /* An empty repeating box is the terminating case, and 0.25() is not a
+         spelling of anything; paintRepeating writes 0.25 and the heading agrees. */
+      titleOut.textContent = '0.' + String(inPre.value)
+        + (String(inRep.value).trim() ? '(' + String(inRep.value) + ')' : '');
+      subOut.textContent = 'as a geometric series, and as a fraction';
+      paintRepeating();
+    } else if (MODE === 'annuity') {
+      titleOut.textContent = String(inPay.value) + ' a period at ' + String(inRate.value);
+      subOut.textContent = 'for ' + termcount() + ' periods, added up and closed-formed';
+      paintAnnuity();
+    } else if (MODE === 'pascal') {
+      titleOut.textContent = 'rows 0 to ' + String(selRows.value);
+      subOut.textContent = 'row ' + String(inRow.value) + ', entry k = ' + String(inK.value);
+      paintPascal();
+    } else {
+      titleOut.textContent = 'a = ' + String(inTa.value) + ',  b = ' + String(inTb.value);
+      subOut.textContent = 'the single term at k = ' + String(selK.value) + ' of (a + b)^'
+        + String(selPow.value);
+      paintGenterm();
     }
   }
 
   function applyPreset() {
     var p = PRESETS[Math.max(0, Math.min(PRESETS.length - 1, parseInt(preset.value, 10) || 0))];
     if (!p) return;
-    if (inA1) inA1.value = p.a1 || '1';
-    if (inRec) inRec.value = p.rec || '';
-    if (inClosed) inClosed.value = p.closed || '';
-    if (inD) inD.value = p.d || '1';
-    if (inR) inR.value = p.r || '1/2';
-    if (inBin) inBin.value = p.bin || 'x + 1';
-    if (selN && p.n) selN.value = p.n;
-    if (selPow && p.pow) selPow.value = p.pow;
+    /* A preset value of "0" is a real answer -- a rate of zero, row zero, k = 0
+       -- so every one of these tests for the key being ABSENT rather than for
+       it being falsy. `p.rate || '1/20'` would quietly replace the preset whose
+       whole point is that the rate is 0. */
+    function put(el, key, dflt) { if (el) el.value = (p[key] === undefined) ? dflt : String(p[key]); }
+    function pick(el, key) { if (el && p[key] !== undefined) el.value = String(p[key]); }
+    put(inA1, 'a1', '1');
+    put(inRec, 'rec', '');
+    put(inClosed, 'closed', '');
+    put(inD, 'd', '1');
+    put(inR, 'r', '1/2');
+    put(inBin, 'bin', 'x + 1');
+    put(inFk, 'fk', 'k');
+    put(inLo, 'lo', '1');
+    put(inHi, 'hi', '6');
+    put(inSigC, 'sclosed', '');
+    put(inAn, 'an', 'n');
+    put(inBn, 'bn', '-n(n - 1)/2');
+    put(inPre, 'pre', '');
+    put(inRep, 'rep', '');
+    put(inPay, 'pay', '100');
+    put(inRate, 'rate', '1/20');
+    put(inRow, 'row', '0');
+    put(inK, 'k', '0');
+    put(inTa, 'ta', 'x');
+    put(inTb, 'tb', '1');
+    pick(selN, 'n');
+    pick(selPow, MODE === 'genterm' ? 'gn' : 'pow');
+    pick(selShift, 'shift');
+    pick(selTol, 'tol');
+    pick(selRows, 'rows');
+    pick(selK, 'gk');
   }
   preset.addEventListener('change', function () { applyPreset(); redraw(); });
-  [inA1, inRec, inClosed, inD, inR, inBin].forEach(function (el) {
+  [inA1, inRec, inClosed, inD, inR, inBin, inFk, inLo, inHi, inSigC, inAn, inBn,
+   inPre, inRep, inPay, inRate, inRow, inK, inTa, inTb].forEach(function (el) {
     if (el) el.addEventListener('input', redraw);
   });
-  if (selN) selN.addEventListener('change', redraw);
-  if (selPow) selPow.addEventListener('change', redraw);
+  [selN, selPow, selShift, selTol, selRows, selK].forEach(function (el) {
+    if (el) el.addEventListener('change', redraw);
+  });
   applyPreset();
   redraw();
   window.redrawLab = redraw;
@@ -3285,13 +4677,30 @@ def sequence_lab(cfg):
     It is also what lets `geometric` demonstrate rather than warn: the sum
     formula divides by 1 - r, so at r = 1 there is nothing to print, and the
     column that added the terms up carries on quite happily beside the gap.
+
+    The seven series modes added when this became its own course each pay that
+    same price. Two of them are worth naming because the second computation is
+    not a second formula but a different kind of object: `repeating` turns the
+    digits into a fraction by summing a geometric series, and then divides that
+    fraction back out by long division -- a routine that never sees the digits,
+    so when 0.999... comes back as 1 the reader has two independent arguments
+    rather than one assertion. And `infinite` refuses: when |r| is not below 1
+    it declines to name a sum, and the picture beside the refusal is the
+    partial sums running away, which is the reason for the refusal rather than
+    a restatement of it.
+
+    Eleven modes share one function, one preset box and one panel, so every
+    element that is not the preset box is looked up through idFor -- present in
+    the modes that declare it and null everywhere else. SEQ_FIELDS is the list
+    of what each mode puts in the panel, kept as data beside the presets so a
+    twelfth mode is a row rather than a branch.
     """
     mode = cfg.get("mode", "arithmetic")
     if mode not in SEQ_PRESETS:
         mode = "arithmetic"
     presets = cfg.get("presets") or SEQ_PRESETS[mode]
     title, subtitle = SEQ_TITLES[mode]
-    has_plot = mode == "geometric"
+    has_plot = mode in SEQ_PLOT
     labels = [p.get("label", "example %d" % (i + 1)) for i, p in enumerate(presets)]
 
     def field(fid, label):
@@ -3300,35 +4709,18 @@ def sequence_lab(cfg):
                 '          <input id="%s" type="text" value="" inputmode="text" autocomplete="off">\n'
                 "        </div>\n" % (fid, fid, label, fid))
 
-    fields = ""
-    if mode == "define":
-        fields = (field("sqA1", "First term a1")
-                  + field("sqRec", "Recursive rule for a(n), using p for the previous term")
-                  + field("sqClosed", "Closed form for a(n), using n"))
-    elif mode == "arithmetic":
-        fields = field("sqA1", "First term a1") + field("sqD", "Common difference d")
-    elif mode == "geometric":
-        fields = field("sqA1", "First term a1") + field("sqR", "Common ratio r")
-    else:
-        fields = field("sqBin", "The binomial, in x")
+    def dropdown(fid, label, options, chosen):
+        return ('        <div class="field" id="%sField">\n'
+                '          <label for="%s">%s</label>\n'
+                '          <select id="%s">' % (fid, fid, label, fid)
+                + "".join('<option value="%s"%s>%s</option>'
+                          % (_esc(v), " selected" if v == chosen else "", _esc(text))
+                          for v, text in options)
+                + "</select>\n        </div>\n")
 
-    if mode == "binomial":
-        fields += (
-            '        <div class="field" id="sqPowField">\n'
-            '          <label for="sqPow">Exponent n</label>\n'
-            '          <select id="sqPow">'
-            + "".join('<option value="%s">n = %s</option>' % (v, v) for v in SEQ_POWERS)
-            + "</select>\n        </div>\n"
-        )
-    else:
-        fields += (
-            '        <div class="field" id="sqNField">\n'
-            '          <label for="sqN">How many terms</label>\n'
-            '          <select id="sqN">'
-            + "".join('<option value="%s"%s>%s terms</option>'
-                      % (v, ' selected' if v == "10" else "", v) for v in SEQ_COUNTS)
-            + "</select>\n        </div>\n"
-        )
+    fields = ""
+    for spec in SEQ_FIELDS[mode]:
+        fields += field(*spec) if len(spec) == 2 else dropdown(*spec)
 
     legend = {
         "define": '<span class="tone-cyan"><i class="legend-swatch"></i>the recursion</span>'
@@ -3341,6 +4733,27 @@ def sequence_lab(cfg):
         "binomial": "<span class=\"tone-cyan\"><i class=\"legend-swatch\"></i>Pascal's triangle</span>"
                     '<span class="tone-purple"><i class="legend-swatch"></i>the C(n, k) formula</span>'
                     '<span class="tone-green"><i class="legend-swatch"></i>multiplied out</span>',
+        "sigma": '<span class="tone-cyan"><i class="legend-swatch"></i>the sum as written</span>'
+                 '<span class="tone-purple"><i class="legend-swatch"></i>the same sum, re-indexed</span>'
+                 '<span class="tone-red"><i class="legend-swatch"></i>the shift that changes it</span>',
+        "partial": '<span class="tone-cyan"><i class="legend-swatch"></i>the terms</span>'
+                   '<span class="tone-purple"><i class="legend-swatch"></i>the partial sums</span>'
+                   '<span class="tone-green"><i class="legend-swatch"></i>what survives the collapse</span>',
+        "infinite": '<span class="tone-cyan"><i class="legend-swatch"></i>each term, as a step</span>'
+                    '<span class="tone-red"><i class="legend-swatch"></i>the limit, where there is one</span>'
+                    '<span class="tone-amber"><i class="legend-swatch"></i>the gap still to close</span>',
+        "repeating": '<span class="tone-cyan"><i class="legend-swatch"></i>the geometric series</span>'
+                     '<span class="tone-purple"><i class="legend-swatch"></i>the exact fraction</span>'
+                     '<span class="tone-green"><i class="legend-swatch"></i>long division, as the check</span>',
+        "annuity": '<span class="tone-cyan"><i class="legend-swatch"></i>each payment, grown</span>'
+                   '<span class="tone-muted"><i class="legend-swatch"></i>the payment itself</span>'
+                   '<span class="tone-purple"><i class="legend-swatch"></i>the closed form</span>',
+        "pascal": '<span class="tone-cyan"><i class="legend-swatch"></i>built by addition</span>'
+                  '<span class="tone-purple"><i class="legend-swatch"></i>C(n, k) from factorials</span>'
+                  '<span class="tone-green"><i class="legend-swatch"></i>the row sum against 2^n</span>',
+        "genterm": '<span class="tone-cyan"><i class="legend-swatch"></i>the single term</span>'
+                   '<span class="tone-purple"><i class="legend-swatch"></i>the whole expansion</span>'
+                   '<span class="tone-amber"><i class="legend-swatch"></i>where that term sits</span>',
     }[mode]
 
     stage = ('      <div class="lab-stage" id="sqStage"><svg id="sqPlot"></svg></div>\n'
@@ -3363,6 +4776,30 @@ def sequence_lab(cfg):
         "binomial": "Type a binomial in <code>x</code>: <code>x + 1</code>, <code>2x - 3</code>, "
                     "<code>x^2 - 2</code>. Every coefficient below is exact, and the factorials are "
                     "computed in BigInt so that n = 12 is as reliable as n = 3.",
+        "sigma": "The summand is a function of the index <code>k</code> alone: <code>k^2</code>, "
+                 "<code>2k - 1</code>, <code>1/2^k</code>. The limits are whole numbers. The closed "
+                 "form is optional and is read in <code>n</code>, meaning the upper limit &mdash; "
+                 "<code>n(n + 1)/2</code> beside a summand of <code>k</code>.",
+        "partial": "Both boxes are functions of <code>n</code>. The second is the b(n) you claim "
+                   "satisfies a(n) = b(n) - b(n+1): <code>1/n</code> beside <code>1/(n(n + 1))</code>. "
+                   "That claim is checked at every n, and the sum is computed both by adding the "
+                   "terms and by the collapse it licenses.",
+        "infinite": "Both boxes take whole numbers or fractions. |r| below 1 is the whole test: try "
+                    "<code>1/2</code>, then <code>3/2</code>, then <code>-1</code>, and watch the "
+                    "page give a number, refuse, and refuse differently.",
+        "repeating": "Digits only. For 0.1666... put <code>1</code> in the first box and "
+                     "<code>6</code> in the second; for 0.999... leave the first empty and put "
+                     "<code>9</code> in the second. The fraction that comes out is in lowest terms.",
+        "annuity": "The payment is the same every period, which is what makes this geometric. The "
+                   "rate is a fraction per period: <code>1/20</code> is 5%, <code>0</code> is a box "
+                   "under the bed. Every figure is exact; the rounded column decides nothing.",
+        "pascal": "The triangle is built by addition alone. The two highlight boxes take whole "
+                  "numbers: a row between 0 and the row you built to, and an entry between 0 and "
+                  "that row. Anything else is explained in the banner and the triangle is drawn "
+                  "regardless.",
+        "genterm": "The two boxes are the a and the b of (a + b)^n, kept apart so the term at "
+                   "position k can be built without the other n. Try <code>2x</code> and "
+                   "<code>-3</code>, or <code>x^2</code> and <code>1</code>.",
     }.get(
         mode,
         "Both boxes take whole numbers or fractions such as <code>3/2</code>. Every term, every "

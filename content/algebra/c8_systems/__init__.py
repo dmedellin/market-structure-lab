@@ -1,27 +1,29 @@
-"""Systems, Matrices and Sequences."""
+"""Systems and Matrices."""
+
 
 from . import part_a, part_b
 
+
 COURSE = {
-    "slug": "systems-matrices-and-sequences",
-    "title": "Systems, Matrices and Sequences",
+    "slug": "systems-and-matrices",
+    "title": "Systems and Matrices",
     "level": "Advanced",
     "summary": (
-        "Several equations at once, the array that organises them, and the ordered lists that algebra ends on: substitution and elimination, three-variable systems, row reduction, matrix arithmetic, determinants and inverses, linear programming, arithmetic and geometric sequences and series, and the binomial theorem."
+        "Several equations at once, and the array that makes solving them mechanical: substitution, elimination, three-variable systems, row operations, Gaussian elimination, matrix arithmetic, determinants, inverses, and linear programming."
     ),
     "blurb": (
-        "Solve for several unknowns together, then find the notation that makes it mechanical. Matrices are elimination with the letters removed. The course closes with sequences, series and the binomial theorem &mdash; algebra's last look back at counting."
+        "Solve for several unknowns together, then find the notation that removes the bookkeeping. A matrix is elimination with the letters deleted, which is why this course does elimination by hand first and only then writes it down as rows."
     ),
     "key": [
         "one solution, none, or infinitely many  —  and nothing else",
-        "aₙ = a₁ + (n − 1)d          aₙ = a₁r^(n−1)",
-        "Sₙ = n(a₁ + aₙ)/2           S∞ = a₁/(1 − r),  |r| < 1",
-        "(a + b)ⁿ = Σ C(n,k) aⁿ⁻ᵏ bᵏ",
+        "R2 → R2 − 3R1        an elimination step, written as a row operation",
+        "det A = 0   ⟺   A has no inverse",
+        "the optimum of a linear objective sits at a corner",
     ],
-    "assumes_short": "Courses 1–7",
+    "assumes_short": "Courses 1\u20137",
     "assumes_long": "lines, functions, and exact fraction arithmetic",
     "outcomes_intro": (
-        "By the end you can solve a system of any size by hand, and recognise the two sequence families and sum them."
+        "By the end you can solve a system of any size by hand and say, before finishing, how many solutions it has."
     ),
     "outcomes": [
         ("Solve a system three ways",
@@ -30,24 +32,24 @@ COURSE = {
          "Recognise an inconsistent system and a dependent one from the algebra, and connect each to what the lines or planes are doing."),
         ("Row reduce",
          "Write a system as an augmented matrix, carry it to reduced row echelon form, and read the solution &mdash; including when there is not exactly one."),
-        ("Sum a sequence",
-         "Identify an arithmetic or geometric sequence, find its n-th term and its sum, and know when an infinite geometric series has one."),
+        ("Use the determinant as a test",
+         "Compute it two ways, use it to decide invertibility before attempting an inverse, and apply Cramer's rule where it is the quickest route."),
     ],
     "syllabus_intro": (
-        "Lessons 1 to 4 solve systems by hand; 5 to 10 build the matrix machinery and apply it; 11 to 14 are sequences, series and the binomial theorem."
+        "Lessons 1 to 4 solve systems by hand. Lessons 5 to 9 build the matrix machinery that automates exactly that work, and lesson 10 applies it."
     ),
     "how_to": [
-        "Do the elimination by hand before using the matrix lessons. Row reduction is the same arithmetic with the `x`s deleted, and it is opaque if you have not done it with them.",
-        "Keep everything in fractions. Row reduction produces thirds and sevenths immediately, and a decimal here compounds into a visibly wrong answer three rows later.",
-        "In the series lessons, add the first several terms by hand and compare with the formula. It is the only way the infinite sum stops looking like a trick.",
+        "Do the elimination by hand before starting lesson 5. Row reduction is the same arithmetic with the `x`s deleted, and it is opaque to anyone who has not done it with them.",
+        "Keep everything in fractions. Row reduction produces thirds and sevenths immediately, and a decimal here compounds into a visibly wrong answer three rows later &mdash; which is why every lab on this course is exact.",
+        "Check an inverse by multiplying. `A⁻¹` is only the inverse if `AA⁻¹` is the identity, and the lab performs that multiplication rather than asserting it.",
     ],
     "not_covered": [
-        "Vector spaces, linear independence, rank and eigenvalues. This is the matrix algebra a school course needs, not a linear algebra course.",
-        "Convergence tests for general series. Only the geometric case is settled here, and it is settled completely.",
-        "Mathematical induction as a proof technique, which the Discrete Mathematics path covers in a course of its own.",
+        "Vector spaces, linear independence, rank as a general concept, and eigenvalues. This is the matrix algebra a school course needs, not a linear algebra course.",
+        "Systems with more equations than unknowns, least squares, and numerical conditioning.",
+        "The simplex algorithm. Linear programming here is done by evaluating the objective at every corner of a feasible region you can draw.",
     ],
     "footer_lead": (
-        "Row reduction and every system solution on this course are computed in exact fractions &mdash; the arithmetic that produces a visibly wrong answer in floating point is exactly the arithmetic these lessons are about. Sums are computed term by term as well as by formula, so the formula is checked rather than asserted."
+        "Row reduction and every system solution on this course are computed in exact fractions &mdash; the arithmetic that goes visibly wrong in floating point is exactly the arithmetic these lessons are about. Where a lab reports an inverse it multiplies the two matrices together in front of you rather than claiming the result."
     ),
     "lessons": part_a.LESSONS + part_b.LESSONS,
 }

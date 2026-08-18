@@ -1,6 +1,6 @@
 """The Algebra path, as data.
 
-Eight courses in one order. The content lives here and only here; scripts/
+Nine courses in one order. The content lives here and only here; scripts/
 turns it into pages. Nothing in this package emits markup beyond the inline
 `x` shorthand, and nothing in scripts/ decides what a lesson says.
 """
@@ -14,6 +14,7 @@ from . import (
     c6_quadratics,
     c7_exponentials,
     c8_systems,
+    c9_sequences,
 )
 
 # A course module still being authored exports COURSE = None. It is filtered
@@ -28,6 +29,7 @@ COURSES = [c for c in [
     c6_quadratics.COURSE,
     c7_exponentials.COURSE,
     c8_systems.COURSE,
+    c9_sequences.COURSE,
 ] if c is not None]
 
 for _index, _course in enumerate(COURSES, start=1):
@@ -43,14 +45,14 @@ PATH = {
         "rules for rearranging them, equations and what it means to solve one, "
         "functions and their graphs, polynomials and factoring, quadratics and the "
         "complex numbers they force into existence, exponentials and logarithms, and "
-        "systems solved several unknowns at a time. Eight courses, taken front to back."
+        "systems solved several unknowns at a time, and the sums of ordered lists. Nine courses, taken front to back."
     ),
     "description": (
-        "The Algebra path: eight courses in one deliberate order, from the real numbers "
+        "The Algebra path: nine courses in one deliberate order, from the real numbers "
         "and the properties that license every rearrangement, through linear equations "
         "and inequalities, lines and functions, polynomials and factoring, rational and "
         "radical expressions, quadratics and complex numbers, exponentials and "
-        "logarithms, to systems, matrices and sequences. All eight courses and 105 "
+        "logarithms, to systems and matrices, and sequences and series. All nine courses and 112 "
         "lessons are available. Every lesson is one self-contained page whose figures "
         "are computed in your browser."
     ),

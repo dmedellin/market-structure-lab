@@ -499,15 +499,23 @@ ALGEBRA_COURSE_7_LESSONS = (
     "compound-interest-and-continuous-growth", "logarithmic-scales",
 )
 
-ALGEBRA_COURSE_8_HOME = "/systems-matrices-and-sequences/"
+ALGEBRA_COURSE_8_HOME = "/systems-and-matrices/"
 ALGEBRA_COURSE_8_LESSONS = (
     "systems-of-two-linear-equations", "solving-by-substitution",
     "solving-by-elimination", "systems-in-three-variables",
     "matrices-and-row-operations", "gaussian-elimination",
     "matrix-arithmetic", "determinants-and-cramers-rule",
     "inverse-matrices", "systems-of-inequalities-and-linear-programming",
-    "sequences-and-recursion", "arithmetic-sequences-and-series",
-    "geometric-sequences-and-series", "the-binomial-theorem",
+)
+
+ALGEBRA_COURSE_9_HOME = "/sequences-and-series/"
+ALGEBRA_COURSE_9_LESSONS = (
+    "sequences-and-recursion", "sigma-notation",
+    "arithmetic-sequences-and-series", "geometric-sequences-and-series",
+    "partial-sums-and-telescoping", "infinite-geometric-series",
+    "repeating-decimals-as-series", "annuities-and-accumulated-payments",
+    "pascals-triangle", "the-binomial-theorem",
+    "the-general-term-of-an-expansion",
 )
 
 ALGEBRA_COURSES = (
@@ -518,14 +526,15 @@ ALGEBRA_COURSES = (
     ("Rational and Radical Expressions", ALGEBRA_COURSE_5_HOME, ALGEBRA_COURSE_5_LESSONS),
     ("Quadratics and Complex Numbers", ALGEBRA_COURSE_6_HOME, ALGEBRA_COURSE_6_LESSONS),
     ("Exponential and Logarithmic Functions", ALGEBRA_COURSE_7_HOME, ALGEBRA_COURSE_7_LESSONS),
-    ("Systems, Matrices and Sequences", ALGEBRA_COURSE_8_HOME, ALGEBRA_COURSE_8_LESSONS),
+    ("Systems and Matrices", ALGEBRA_COURSE_8_HOME, ALGEBRA_COURSE_8_LESSONS),
+    ("Sequences and Series", ALGEBRA_COURSE_9_HOME, ALGEBRA_COURSE_9_LESSONS),
 )
 
 # The algebra path is complete too: eight courses, all published, nothing
 # announced. Declared separately from the other two so that a future path
 # arriving part-written cannot be smuggled in under a finished path's
 # completeness.
-ALGEBRA_PATH_COURSE_COUNT = 8
+ALGEBRA_PATH_COURSE_COUNT = 9
 ALGEBRA_UPCOMING_COURSES = ()
 
 ALL_COURSES = COURSES + MATH_COURSES + ALGEBRA_COURSES
@@ -1060,9 +1069,9 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         """Site index, path page, a home per course and that course's lessons,
         then the capstone.
 
-        The COURSE TREE is 357 URLs exactly: the site index, three path pages,
-        24 course homes, and the lessons beneath them -- 118 trading, 106
-        discrete mathematics, 105 algebra. The flat /<lesson>/ URLs and the old
+        The COURSE TREE is 365 URLs exactly: the site index, three path pages,
+        25 course homes, and the lessons beneath them -- 118 trading, 106
+        discrete mathematics, 112 algebra. The flat /<lesson>/ URLs and the old
         /market-structure-lab/ course prefix were retired without redirects, so
         a two-segment lesson path under a declared course home is the only shape
         a lesson may have; re-adding either would declare a page that no longer
@@ -1102,15 +1111,15 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             "+ 14 + 12 = 115 pages, got %d" % math_tree,
         )
         self.assertEqual(
-            114,
+            122,
             algebra_tree,
-            "the algebra path is 1 + 8 + 13 + 13 + 14 + 13 + 12 + 14 + 12 + 14 = 114 "
+            "the algebra path is 1 + 9 + 13 + 13 + 14 + 13 + 12 + 14 + 12 + 10 + 11 = 122 "
             "pages, got %d" % algebra_tree,
         )
         self.assertEqual(
-            357,
+            365,
             course_tree,
-            "the site index plus all three path trees is 357 pages, got %d" % course_tree,
+            "the site index plus all three path trees is 365 pages, got %d" % course_tree,
         )
         self.assertEqual(
             2,
@@ -1119,9 +1128,9 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
         )
         expected = course_tree + len(REAL_DATA_PAGES)
         self.assertEqual(
-            359,
+            367,
             expected,
-            "357 course-tree pages plus the 2 capstone pages is 359, got %d" % expected,
+            "365 course-tree pages plus the 2 capstone pages is 367, got %d" % expected,
         )
         self.assertEqual(
             expected,
@@ -1144,17 +1153,20 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             "the discrete mathematics path is 106 lessons",
         )
         self.assertEqual(
-            8, len(ALGEBRA_COURSES), "the algebra path publishes eight courses",
+            9, len(ALGEBRA_COURSES), "the algebra path publishes nine courses",
         )
         self.assertEqual(
-            [13, 13, 14, 13, 12, 14, 12, 14],
+            [13, 13, 14, 13, 12, 14, 12, 10, 11],
             [len(slugs) for _t, _h, slugs in ALGEBRA_COURSES],
-            "the algebra course lengths, in path order",
+            "the algebra course lengths, in path order. Courses 8 and 9 were one "
+            "course until sequences and series were separated from systems and "
+            "matrices: they shared a course because there was a slot, not because "
+            "they share a subject.",
         )
         self.assertEqual(
-            105,
+            112,
             sum(len(slugs) for _t, _h, slugs in ALGEBRA_COURSES),
-            "the algebra path is 105 lessons",
+            "the algebra path is 112 lessons",
         )
         self.assertEqual(7, len(COURSE_1_LESSONS), "course 1 is seven lessons")
         self.assertEqual(15, len(COURSE_2_LESSONS), "course 2 is fifteen lessons")
@@ -1677,9 +1689,9 @@ class TestContent(SiteFixture):
         ]
         self.assertTrue(course_pages, "no course page found under %s" % SITE_ROOT)
         self.assertEqual(
-            353,
+            361,
             len(course_pages),
-            "twenty-four course homes and 329 lessons carry a material "
+            "twenty-five course homes and 336 lessons carry a material "
             "disclaimer; found %d pages, so a page has been added or removed "
             "without being declared" % len(course_pages),
         )

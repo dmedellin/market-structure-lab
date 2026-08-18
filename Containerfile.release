@@ -369,7 +369,7 @@ RUN set -eu; \
             decidability-and-the-halting-problem; do \
         test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
     done; \
-    test -f /srv/paths/algebra/index.html || { echo "FATAL: missing /srv/paths/algebra/index.html (the algebra path page). It is published at learn.geterdone.io/paths/algebra/ and is the only page showing all eight courses of that path in one ordered list; the site index links to it, so its absence 404s the only route into the path."; exit 1; }; \
+    test -f /srv/paths/algebra/index.html || { echo "FATAL: missing /srv/paths/algebra/index.html (the algebra path page). It is published at learn.geterdone.io/paths/algebra/ and is the only page showing all nine courses of that path in one ordered list; the site index links to it, so its absence 404s the only route into the path."; exit 1; }; \
     course=algebra-foundations; \
     test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 1 home)."; exit 1; }; \
     for lesson in real-numbers-and-the-number-line \
@@ -489,7 +489,7 @@ RUN set -eu; \
             logarithmic-scales; do \
         test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
     done; \
-    course=systems-matrices-and-sequences; \
+    course=systems-and-matrices; \
     test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 8 home)."; exit 1; }; \
     for lesson in systems-of-two-linear-equations \
             solving-by-substitution \
@@ -500,11 +500,22 @@ RUN set -eu; \
             matrix-arithmetic \
             determinants-and-cramers-rule \
             inverse-matrices \
-            systems-of-inequalities-and-linear-programming \
-            sequences-and-recursion \
+            systems-of-inequalities-and-linear-programming; do \
+        test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
+    done; \
+    course=sequences-and-series; \
+    test -f "/srv/$course/index.html" || { echo "FATAL: missing /srv/$course/index.html (algebra course 9 home)."; exit 1; }; \
+    for lesson in sequences-and-recursion \
+            sigma-notation \
             arithmetic-sequences-and-series \
             geometric-sequences-and-series \
-            the-binomial-theorem; do \
+            partial-sums-and-telescoping \
+            infinite-geometric-series \
+            repeating-decimals-as-series \
+            annuities-and-accumulated-payments \
+            pascals-triangle \
+            the-binomial-theorem \
+            the-general-term-of-an-expansion; do \
         test -f "/srv/$course/$lesson/index.html" || { echo "FATAL: missing /srv/$course/$lesson/index.html"; exit 1; }; \
     done; \
     test ! -e /srv/learn || { echo "FATAL: /srv/learn exists. 'learn' is the SUBDOMAIN, not a path segment: course 1 lesson 01 is published at learn.geterdone.io/market-structure/market-structure/, never learn.geterdone.io/learn/market-structure/market-structure/. Move site/learn/* up one level."; exit 1; }; \

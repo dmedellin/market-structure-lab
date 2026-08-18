@@ -1,0 +1,2660 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inverse Matrices | Systems and Matrices | Learn · geterdone.io</title>
+  <meta name="description" content="The inverse of A is the matrix that multiplies with it to give the identity, and it turns AX = B into X = A⁻¹B. Unlike numbers, where only zero has no reciprocal, a square matrix can fail to have an inverse without being the zero matrix — and the determinant decides which matrices do." />
+  <link rel="canonical" href="https://learn.geterdone.io/systems-and-matrices/inverse-matrices/" />
+  <meta name="author" content="dmedellin" />
+
+  <!-- Favicon: inline data-URI SVG, no external asset. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%238ff3ff'/%3E%3Cstop offset='1' stop-color='%2336d6e7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cg fill='%23041116'%3E%3Ccircle cx='32' cy='20' r='6'/%3E%3Ccircle cx='20' cy='43' r='6'/%3E%3Ccircle cx='44' cy='43' r='6'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <meta name="theme-color" content="#071019" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#edf4f8" media="(prefers-color-scheme: light)" />
+
+  <!-- og:image is deliberately OMITTED: a share card needs an absolute hosted
+       image URL and this page is self-contained. -->
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Learn &middot; geterdone.io" />
+  <meta property="og:title" content="Inverse Matrices | Systems and Matrices | Learn · geterdone.io" />
+  <meta property="og:description" content="The inverse of A is the matrix that multiplies with it to give the identity, and it turns AX = B into X = A⁻¹B. Unlike numbers, where only zero has no reciprocal, a square matrix can fail to have an inverse without being the zero matrix — and the determinant decides which matrices do." />
+  <meta property="og:url" content="https://learn.geterdone.io/systems-and-matrices/inverse-matrices/" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Inverse Matrices | Systems and Matrices | Learn · geterdone.io" />
+  <meta name="twitter:description" content="The inverse of A is the matrix that multiplies with it to give the identity, and it turns AX = B into X = A⁻¹B. Unlike numbers, where only zero has no reciprocal, a square matrix can fail to have an inverse without being the zero matrix — and the determinant decides which matrices do." />
+  <meta name="twitter:url" content="https://learn.geterdone.io/systems-and-matrices/inverse-matrices/" />
+
+  <style>
+    /* ---------------------------------------------------------------------
+       DESIGN TOKENS -- the only place a theme-dependent colour may live.
+
+       Two light paths, value-identical, both generated from one Python
+       constant (theme.LIGHT_TOKENS): the explicit toggle and the system
+       preference. Components read tokens and never name a theme.
+       --------------------------------------------------------------------- */
+    :root {
+      color-scheme: dark;
+      --bg: #071019;
+      --bg-2: #0b1622;
+      --panel: rgba(16, 31, 46, 0.91);
+      --panel-solid: #101f2e;
+      --panel-2: #142638;
+      --panel-3: #182d41;
+      --text: #edf7ff;
+      --muted: #95aabd;
+      --line: rgba(170, 202, 226, 0.16);
+      --line-strong: rgba(170, 202, 226, 0.3);
+      --cyan: #37d7e7;
+      --cyan-2: #91f4ff;
+      --green: #41e39b;
+      --red: #ff7b86;
+      --amber: #ffc857;
+      --purple: #b69cff;
+      --blue: #8fb6ff;
+      --on-accent: #041116;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* System preference, only while the reader has made NO explicit choice.
+       The :not([data-theme="dark"]) guard is what lets an explicit dark pick
+       survive on a light-mode OS. */
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        color-scheme: light;
+        --bg: #edf4f8;
+        --bg-2: #f9fbfd;
+        --panel: rgba(255, 255, 255, 0.94);
+        --panel-solid: #ffffff;
+        --panel-2: #f3f8fb;
+        --panel-3: #eaf2f7;
+        --text: #102433;
+        --muted: #586c7c;
+        --line: rgba(24, 62, 88, 0.13);
+        --line-strong: rgba(24, 62, 88, 0.24);
+        --cyan: #0e7382;
+        --cyan-2: #0b6d79;
+        --green: #10784f;
+        --red: #c22a34;
+        --amber: #8a5a06;
+        --purple: #6b46d6;
+        --blue: #1d5fd0;
+        --on-accent: #ffffff;
+        --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+      }
+    }
+
+    /* Explicit choice (localStorage key: learn-theme). Value-identical to the
+       block above -- both are generated from the same constant. */
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #edf4f8;
+      --bg-2: #f9fbfd;
+      --panel: rgba(255, 255, 255, 0.94);
+      --panel-solid: #ffffff;
+      --panel-2: #f3f8fb;
+      --panel-3: #eaf2f7;
+      --text: #102433;
+      --muted: #586c7c;
+      --line: rgba(24, 62, 88, 0.13);
+      --line-strong: rgba(24, 62, 88, 0.24);
+      --cyan: #0e7382;
+      --cyan-2: #0b6d79;
+      --green: #10784f;
+      --red: #c22a34;
+      --amber: #8a5a06;
+      --purple: #6b46d6;
+      --blue: #1d5fd0;
+      --on-accent: #ffffff;
+      --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);
+    }
+
+    [data-theme="dark"] { color-scheme: dark; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(55, 215, 231, 0.13), transparent 31rem),
+        radial-gradient(circle at 88% 13%, rgba(182, 156, 255, 0.12), transparent 29rem),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button { font: inherit; color: inherit; }
+    a { color: inherit; }
+    svg { max-width: 100%; }
+    p { overflow-wrap: anywhere; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--cyan);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -100px;
+      z-index: 60;
+      padding: 11px 15px;
+      border-radius: 12px;
+      color: var(--on-accent);
+      background: var(--cyan-2);
+      font-weight: 800;
+      font-size: 0.88rem;
+      text-decoration: none;
+      transition: top 140ms ease;
+    }
+    .skip-link:focus-visible { top: 12px; }
+
+    .shell {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 64px;
+    }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel-solid) 82%, transparent);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      color: var(--on-accent);
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .brand-copy { display: flex; flex-direction: column; min-width: 0; }
+    .brand-copy strong { font-size: 0.98rem; letter-spacing: -0.01em; }
+    .brand-copy span {
+      font-size: 0.74rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topnav { display: flex; gap: 6px; flex-wrap: wrap; }
+    .topnav a {
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.87rem;
+      font-weight: 650;
+    }
+    .topnav a:hover { color: var(--text); background: var(--panel-2); }
+    .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
+
+    .icon-btn {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      flex: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      cursor: pointer;
+      font-size: 1.05rem;
+    }
+    .icon-btn:hover { border-color: var(--line-strong); }
+
+    /* ---------- Breadcrumb ---------- */
+    .crumbs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 2px 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .crumbs a { text-decoration: none; font-weight: 650; }
+    .crumbs a:hover { color: var(--text); text-decoration: underline; }
+    .crumb-sep { opacity: 0.5; }
+    .crumb-current { color: var(--text); font-weight: 650; }
+
+    .noscript-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border: 1px solid var(--amber);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 26px;
+      align-items: center;
+      margin-top: 26px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--cyan) 22%, transparent);
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: clamp(1.85rem, 4.1vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 1.02rem; }
+    .gradient-text {
+      background: linear-gradient(120deg, var(--cyan-2), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 17px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover { border-color: var(--cyan); }
+    .btn.primary {
+      border-color: transparent;
+      background: linear-gradient(120deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+    }
+    .btn.small { padding: 8px 13px; font-size: 0.83rem; }
+
+    .hero-visual {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel-2);
+    }
+    .hero-visual svg { display: block; width: 100%; height: auto; }
+    .float-label {
+      position: absolute;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--panel-solid) 88%, transparent);
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- Sections and cards ---------- */
+    .section { margin-top: 34px; }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 820px) { .section-head { grid-template-columns: minmax(0, 1fr); } }
+    .section-head h2 {
+      margin: 4px 0 0;
+      font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+      letter-spacing: -0.02em;
+    }
+    .section-head > p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+    .kicker {
+      margin: 0;
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .card-pad { padding: 18px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+
+    .concept-card { padding: 17px; }
+    .concept-card h3 { margin: 11px 0 7px; font-size: 1.02rem; letter-spacing: -0.01em; }
+    .concept-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+    .icon {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Mathematical notation ----------
+       No web font, no MathML dependency, no external renderer: notation is
+       plain characters in a monospace run, styled so it reads as an expression
+       rather than as prose. Everything a lesson needs (set builder, quantifiers,
+       congruences, binomials) is expressible in Unicode this way, and it stays
+       selectable, searchable and screen-reader legible. */
+    .math {
+      padding: 1px 5px;
+      border-radius: 5px;
+      background: var(--panel-3);
+      font-family: var(--mono);
+      font-size: 0.92em;
+      white-space: nowrap;
+    }
+    .mathblock {
+      margin: 12px 0;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .defbox, .thm, .example {
+      margin: 14px 0;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .defbox { border-left: 3px solid var(--purple); }
+    .thm { border-left: 3px solid var(--amber); }
+    .example { border-left: 3px solid var(--green); }
+    .defbox > .label, .thm > .label, .example > .label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.71rem;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .defbox > .label { color: var(--purple); }
+    .thm > .label { color: var(--amber); }
+    .example > .label { color: var(--green); }
+    .defbox p, .thm p, .example p { margin: 0 0 8px; font-size: 0.92rem; }
+    .defbox p:last-child, .thm p:last-child, .example p:last-child { margin-bottom: 0; }
+
+    .proof { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line-strong); }
+    .proof p { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+    .proof p:last-child { margin-bottom: 0; }
+    .qed { color: var(--cyan); font-weight: 800; }
+
+    .prose p { font-size: 0.95rem; }
+    .prose p:first-child { margin-top: 0; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose ul, .prose ol { margin: 10px 0; padding-left: 22px; font-size: 0.93rem; }
+    .prose li { margin-bottom: 6px; }
+    .prose h3 { margin: 0 0 10px; font-size: 1.05rem; letter-spacing: -0.01em; }
+
+    /* ---------- The lab ---------- */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .lab-layout { grid-template-columns: minmax(0, 1fr); } }
+
+    .lab-main { padding: 16px; }
+    .lab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .lab-title { display: flex; flex-direction: column; }
+    .lab-title strong { font-size: 0.98rem; }
+    .lab-title span { color: var(--muted); font-size: 0.79rem; }
+    .inline-legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); }
+    .inline-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 3px; background: currentColor; }
+    .tone-cyan { color: var(--cyan); }
+    .tone-purple { color: var(--purple); }
+    .tone-green { color: var(--green); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-blue { color: var(--blue); }
+    .tone-muted { color: var(--muted); }
+
+    .lab-stage {
+      min-height: 210px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      overflow-x: auto;
+    }
+    .lab-stage svg { display: block; width: 100%; height: auto; }
+
+    /* ---------- Graphs ----------
+       Tokens only. A component override scoped to [data-theme="light"] would
+       light the toggle path and leave the reader whose OS is light with a dark
+       graph on a light page, which is the exact failure this library pins
+       against elsewhere. Everything below inherits from the palette instead. */
+    .plot-grid { stroke: var(--line); stroke-width: 1; }
+    .plot-axis { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-tick { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+    .plot-tickmark { stroke: var(--line-strong); stroke-width: 1.6; }
+    .plot-curve { fill: none; stroke: var(--cyan); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .plot-curve.alt { stroke: var(--purple); }
+    .plot-curve.parent { stroke: var(--muted); stroke-width: 1.8; stroke-dasharray: 5 5; }
+    .plot-curve.warn { stroke: var(--red); }
+    .plot-curve.good { stroke: var(--green); }
+    .plot-point { fill: var(--amber); stroke: var(--bg); stroke-width: 1.6; }
+    .plot-point.root { fill: var(--green); }
+    .plot-point.vertex { fill: var(--purple); }
+    /* An open circle is a point the function does NOT take -- a hole, an open
+       endpoint. Filled versus hollow is the whole content of several lessons,
+       so the two never differ by colour alone. */
+    .plot-hole { fill: var(--panel-2); stroke: var(--cyan); stroke-width: 2.2; }
+    .plot-asym { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 6 5; }
+    .plot-aux { stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .plot-label { fill: var(--text); font-family: var(--mono); font-size: 12px; }
+    .plot-shade { fill: var(--cyan); opacity: 0.16; }
+    .plot-shade.alt { fill: var(--purple); opacity: 0.16; }
+    .plot-interval { stroke: var(--cyan); stroke-width: 4; }
+    .plot-end { stroke: var(--cyan); stroke-width: 2.4; }
+    .plot-end.closed { fill: var(--cyan); }
+    .plot-end.open { fill: var(--panel-2); }
+
+    .side-panel { display: flex; flex-direction: column; gap: 13px; padding: 17px; }
+    .side-panel h3 { margin: 0; font-size: 1rem; }
+    .side-panel > p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { color: var(--muted); font-size: 0.78rem; font-weight: 700; }
+    .field select, .field input[type="text"], .field input[type="number"] {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+    }
+    .field select { font-family: inherit; }
+    .field input[type="text"], .field input[type="number"] { font-family: var(--mono); }
+
+    .range-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .range-value {
+      padding: 2px 8px;
+      border-radius: 7px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+
+    .small-copy { color: var(--muted); font-size: 0.8rem; }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
+    .kpi {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+    }
+    .kpi span { color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .kpi strong { font-family: var(--mono); font-size: 0.98rem; overflow-wrap: anywhere; }
+
+    .status-banner {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.86rem;
+    }
+
+    /* ---------- Tables: truth tables, matrices, traces ---------- */
+    .table-wrap { overflow-x: auto; }
+    table.tt {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.83rem;
+    }
+    table.tt caption {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.tt th, table.tt td {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      text-align: center;
+      white-space: nowrap;
+    }
+    table.tt th { background: var(--panel-3); color: var(--muted); font-weight: 700; }
+    table.tt td.t { color: var(--green); font-weight: 700; }
+    table.tt td.f { color: var(--red); font-weight: 700; }
+    table.tt tr.focus td { background: color-mix(in srgb, var(--cyan) 14%, transparent); }
+    table.tt td.on { background: color-mix(in srgb, var(--cyan) 18%, transparent); color: var(--text); }
+    table.tt th.rowhead { background: var(--panel-3); text-align: right; }
+
+    .chip {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      font-family: var(--mono);
+      font-size: 0.79rem;
+    }
+    .chip.ok { border-color: var(--green); color: var(--green); }
+    .chip.no { border-color: var(--red); color: var(--red); }
+    .chip.hi { border-color: var(--cyan); color: var(--cyan); }
+
+    /* ---------- Practice ---------- */
+    .practice { display: flex; flex-direction: column; gap: 11px; padding: 18px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .practice-head h3 { margin: 0; font-size: 1rem; }
+    .score {
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    .choice-grid { display: grid; gap: 8px; }
+    .choice {
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+    }
+    .choice:hover { border-color: var(--cyan); }
+    .choice.right { border-color: var(--green); color: var(--green); }
+    .choice.wrong { border-color: var(--red); color: var(--red); }
+    .feedback {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* ---------- Lists, callouts, notes ---------- */
+    .lesson-list { display: flex; flex-direction: column; gap: 10px; }
+    .lesson-row { display: flex; gap: 12px; align-items: flex-start; }
+    .lesson-row .num {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      flex: none;
+      border-radius: 8px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+    .lesson-row strong { display: block; font-size: 0.92rem; }
+    .lesson-row span { display: block; color: var(--muted); font-size: 0.85rem; }
+
+    .callout { display: flex; gap: 12px; align-items: flex-start; }
+    .callout .mark {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--green);
+      font-weight: 800;
+    }
+    .callout strong { display: block; font-size: 0.94rem; }
+    .callout p { margin: 5px 0 0; color: var(--muted); font-size: 0.88rem; }
+
+    .note {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .note strong { color: var(--text); }
+
+    .rule-output {
+      padding: 13px 15px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    /* ---------- Course home: syllabus ---------- */
+    .syllabus { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+    .syllabus-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .syllabus-item:hover { border-color: var(--cyan); }
+    .syllabus-item .num {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex: none;
+      border-radius: 9px;
+      background: var(--panel-3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .syllabus-item strong { display: block; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .syllabus-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 0.85rem; }
+
+    /* ---------- Path page: the spine ---------- */
+    .spine { display: flex; flex-direction: column; gap: 12px; }
+    .spine-item {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr);
+      gap: 15px;
+      align-items: start;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    .spine-item:hover { border-color: var(--cyan); }
+    .spine-num {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--cyan-2), var(--cyan));
+      color: var(--on-accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 800;
+    }
+    .spine-body strong { display: block; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .spine-body p { margin: 6px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .spine-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spine-meta span {
+      padding: 3px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-2);
+    }
+
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+    .stats > div {
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+    }
+    .stats dt { color: var(--muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .stats dd { margin: 5px 0 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .stats dd small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.76rem; font-weight: 600; letter-spacing: 0; }
+
+    /* ---------- The lesson pager ---------- */
+    .lesson-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .lesson-link {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .lesson-link:hover { border-color: var(--cyan); }
+    .lesson-link span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .lesson-link strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .lesson-link.next { text-align: right; }
+    .lesson-link.prev + .lesson-link.next { grid-column: auto; }
+
+    /* ---------- Course pager (path-nav) ----------
+       The course-to-course control, matching the library's existing shape:
+       nav.path-nav holding a.path-move prev / a.path-move next. Distinct from
+       the LESSON pager (.lesson-nav) on purpose -- one moves within a course,
+       the other between courses, and collapsing them would make "next" mean
+       two things. */
+    .path-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .path-move {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+      text-decoration: none;
+    }
+    .path-move:hover { border-color: var(--cyan); }
+    .path-move span { color: var(--muted); font-size: 0.74rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+    .path-move strong { font-size: 0.94rem; letter-spacing: -0.01em; }
+    .path-move.next { text-align: right; }
+    .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
+
+    /* ---------- Footer ---------- */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .footer p { margin: 0 0 7px; }
+    .footer a { font-weight: 650; }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('learn-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) { /* Storage can be unavailable (private mode, file://). */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Back to the Systems and Matrices course home">
+        <span class="brand-mark" aria-hidden="true">09</span>
+        <span class="brand-copy"><strong>Systems and Matrices</strong><span>Course 8 · Lesson 09 of 10</span></span>
+      </a>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+    </header>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../../">Learn library</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <a href="../">Systems and Matrices</a>
+      <span class="crumb-sep" aria-hidden="true">/</span>
+      <span class="crumb-current" aria-current="page">Lesson 09 · Inverse Matrices</span>
+    </nav>
+
+    <noscript>
+      <div class="noscript-note"><strong>JavaScript is required for the interactive lesson.</strong> The the inverse by row reduction is computed in your browser, so it stays blank while scripting is off. Everything written &mdash; the definitions, the worked example, the common mistakes and the completion standard &mdash; reads normally.</div>
+    </noscript>
+
+    <main id="main">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Course 8 &middot; Lesson 09 &middot; Matrices</span>
+        <h1>Inverse Matrices</h1>
+        <p>The inverse of <span class="math">A</span> is the matrix that multiplies with it to give the identity, and it turns <span class="math">AX = B</span> into <span class="math">X = A⁻¹B</span>. Unlike numbers, where only zero has no reciprocal, a square matrix can fail to have an inverse without being the zero matrix &mdash; and the determinant decides which matrices do.</p>
+        <div class="hero-actions"><a class="btn primary" href="#lab">Open the interactive lesson</a><a class="btn ghost" href="#practice">Practice</a></div>
+      </div>
+      <div class="hero-visual">
+        <div class="mathblock">A A⁻¹  =  A⁻¹ A  =  I           I  =  [ 1  0 ; 0  1 ]
+[ a  b ]⁻¹         1       [  d  -b ]
+[ c  d ]      = ------- ·  [ -c   a ]      swap a and d,
+                 ad - bc                   negate b and c</div>
+        <div class="float-label" style="right:16px;bottom:16px;">The identity, and the inverse of a 2 by 2</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="section-head"><div><p class="kicker">Core ideas</p><h2>What this lesson establishes</h2></div><p>The inverse is defined by what it does, not by the formula that finds it. The formula is a convenience for one size of matrix; the definition is the thing that transfers.</p></div>
+      <div class="grid-3"><article class="card concept-card"><div class="icon">1</div><h3>The inverse is defined by a product, not by a recipe</h3><p><span class="math">A⁻¹</span> is the matrix with <span class="math">AA⁻¹ = A⁻¹A = I</span>. Both orders are written into the definition because matrix multiplication does not commute, as lesson 7 established. For square matrices one product turns out to force the other, but that is a theorem and not something to assume.</p></article><article class="card concept-card"><div class="icon">2</div><h3>A matrix can fail to have an inverse without being zero</h3><p>Among numbers only <span class="math">0</span> lacks a reciprocal. Among matrices, every one with determinant <span class="math">0</span> lacks an inverse, and <span class="math">[ 2  3 ; 4  6 ]</span> has no zero entry anywhere. Such a matrix is called <strong>singular</strong>; the word for one that does have an inverse is <strong>nonsingular</strong>.</p></article><article class="card concept-card"><div class="icon">3</div><h3><span class="math">X = A⁻¹B</span> is a formula for the solution, not the fastest route to it</h3><p>Finding <span class="math">A⁻¹</span> costs a full row reduction, and then a multiplication. Solving one system directly costs the row reduction alone. The inverse earns its keep when the same <span class="math">A</span> is used with several different <span class="math">B</span>s.</p></article></div>
+    </section>
+    <section class="section" id="read">
+      <div class="section-head"><div><p class="kicker">The material</p><h2>The identity, the inverse, and the two ways to find one</h2></div><p>A definition, a formula that works for 2 by 2, and a method that works for any size.</p></div>
+      <article class="card card-pad prose"><p>Lesson 7 gave matrix multiplication, and with it a way to write a whole system as one equation. The system <span class="math">4x + 7y = 1</span>, <span class="math">2x + 6y = 8</span> becomes <span class="math">AX = B</span> with <span class="math">A = [ 4  7 ; 2  6 ]</span>, <span class="math">X = [ x ; y ]</span> and <span class="math">B = [ 1 ; 8 ]</span>. Written that way it looks like a single equation asking to be divided by <span class="math">A</span>.</p><p>There is no division of matrices. What replaces it is multiplication by an inverse, and the first job is to say what an inverse is.</p><div class="defbox"><span class="label">Definition &middot; Identity matrix</span><p><span class="math">Iₙ</span> is the <span class="math">n</span> by <span class="math">n</span> matrix with <span class="math">1</span> down the main diagonal and <span class="math">0</span> everywhere else. For any matrix <span class="math">A</span> of matching size, <span class="math">AI = IA = A</span>. It is the matrix that behaves the way <span class="math">1</span> behaves among numbers.</p></div><div class="defbox"><span class="label">Definition &middot; Inverse matrix</span><p>For a square matrix <span class="math">A</span>, an <strong>inverse</strong> is a matrix <span class="math">A⁻¹</span> of the same size with <span class="math">AA⁻¹ = A⁻¹A = I</span>. A matrix has at most one inverse. Non-square matrices are excluded outright: <span class="math">AA⁻¹</span> and <span class="math">A⁻¹A</span> cannot both be defined unless <span class="math">A</span> is square.</p></div><div class="thm"><span class="label">Theorem &middot; The 2 by 2 inverse</span><p>If <span class="math">A = [ a  b ; c  d ]</span> and <span class="math">ad - bc ≠ 0</span> then <span class="math">A⁻¹ = (1/(ad - bc))[ d  -b ; -c  a ]</span>. If <span class="math">ad - bc = 0</span>, <span class="math">A</span> has no inverse. Note what moves: <span class="math">a</span> and <span class="math">d</span> change places, while <span class="math">b</span> and <span class="math">c</span> stay where they are and change sign.</p></div><div class="proof"><p>Multiply the two arrays before dividing by anything: <span class="math">[ a  b ; c  d ][ d  -b ; -c  a ]</span> has top-left entry <span class="math">ad - bc</span>, top-right <span class="math">-ab + ba = 0</span>, bottom-left <span class="math">cd - dc = 0</span> and bottom-right <span class="math">-cb + da = ad - bc</span>.</p><p>So the product is <span class="math">(ad - bc)I</span>. If <span class="math">ad - bc ≠ 0</span>, dividing every entry of the second array by <span class="math">ad - bc</span> gives a product of exactly <span class="math">I</span>, and multiplying in the other order gives <span class="math">(ad - bc)I</span> as well. If <span class="math">ad - bc = 0</span> the product is the zero matrix, which is never <span class="math">I</span>, so no scaling of that array can help.</p><p>Nor can any other matrix. Suppose some <span class="math">B</span> had <span class="math">AB = BA = I</span>. Multiplying <span class="math">A[ d  -b ; -c  a ] = 0</span> on the left by <span class="math">B</span> gives <span class="math">(BA)[ d  -b ; -c  a ] = [ d  -b ; -c  a ] = 0</span>, so <span class="math">a = b = c = d = 0</span> and <span class="math">A</span> is the zero matrix &mdash; but then <span class="math">AB = 0</span>, not <span class="math">I</span>. So no <span class="math">B</span> inverts <span class="math">A</span> when <span class="math">ad - bc = 0</span>.</p><p><span class="qed">&#9633;</span></p></div><div class="example"><span class="label">Example &middot; The inverse of [ 4  7 ; 2  6 ]</span><p><span class="math">ad - bc = 24 - 14 = 10</span>. Swapping the diagonal and negating the other two entries gives <span class="math">[ 6  -7 ; -2  4 ]</span>, and dividing by <span class="math">10</span> gives <span class="math">A⁻¹ = [ 3/5  -7/10 ; -1/5  2/5 ]</span>. Checking one entry: the top-left of <span class="math">AA⁻¹</span> is <span class="math">4(3/5) + 7(-1/5) = 12/5 - 7/5 = 1</span>.</p></div><h3>Any size: augment with I and row reduce</h3><p>There is a 3 by 3 inverse formula. It is long, it is easy to misremember, and it is unnecessary, because the row reduction of lesson 6 already does the work. Write <span class="math">A</span> and the identity side by side as <span class="math">[ A | I ]</span>, reduce the left half to <span class="math">I</span>, and the right half becomes <span class="math">A⁻¹</span>.</p><p>The reason is that every row operation is itself a multiplication by some matrix, and the operations that carry <span class="math">A</span> to <span class="math">I</span> are exactly the operations that carry <span class="math">I</span> to <span class="math">A⁻¹</span>. Carrying them out on both halves at once records the whole sequence. If the left half cannot be reduced to <span class="math">I</span> &mdash; a row of zeros appears &mdash; then <span class="math">A</span> is singular, and the attempt has proved it.</p><div class="thm"><span class="label">Theorem &middot; Solving a system with an inverse</span><p>If <span class="math">A</span> is invertible, <span class="math">AX = B</span> has the unique solution <span class="math">X = A⁻¹B</span>. Multiplying both sides on the left by <span class="math">A⁻¹</span> gives <span class="math">A⁻¹AX = A⁻¹B</span>, and <span class="math">A⁻¹A = I</span>, so <span class="math">IX = X = A⁻¹B</span>. The multiplication must be on the left on both sides: <span class="math">XA⁻¹</span> is a different product and is usually not even defined.</p></div><div class="example"><span class="label">Example &middot; A singular matrix, and the two systems behind it</span><p><span class="math">A = [ 2  3 ; 4  6 ]</span> has <span class="math">ad - bc = 12 - 12 = 0</span>, so there is no <span class="math">A⁻¹</span>. Reducing <span class="math">[ A | I ]</span> produces a zero row on the left, which is the same failure. And the systems agree: <span class="math">2x + 3y = 1</span> with <span class="math">4x + 6y = 2</span> has infinitely many solutions, while <span class="math">2x + 3y = 1</span> with <span class="math">4x + 6y = 5</span> has none. No single matrix <span class="math">A⁻¹</span> could deliver both answers.</p></div><div class="thm"><span class="label">Theorem &middot; The inverse of a product reverses the order</span><p>If <span class="math">A</span> and <span class="math">B</span> are invertible and the same size, <span class="math">(AB)⁻¹ = B⁻¹A⁻¹</span>. Check it: <span class="math">(AB)(B⁻¹A⁻¹) = A(BB⁻¹)A⁻¹ = AIA⁻¹ = AA⁻¹ = I</span>. The order reverses for the same reason socks come off after shoes.</p></div></article>
+    </section>
+    <section class="section" id="lab">
+      <div class="section-head"><div><p class="kicker">Interactive</p><h2>The inverse by row reduction</h2></div><p>Reduce [A | I], then multiply A by what came out and watch I come back</p></div>
+      <div class="lab-layout">
+        <article class="card lab-main">
+      <div class="lab-toolbar">
+        <div class="lab-title"><strong id="maTitle">Matrix</strong><span id="maSub"></span></div>
+        <div class="inline-legend"><span class="tone-cyan"><i class="legend-swatch"></i>[A | I] reduced</span><span class="tone-green"><i class="legend-swatch"></i>A times the result</span></div>
+      </div>
+      <div id="maWork" style="margin-top:12px;"></div>
+      <div class="status-banner" id="maStatus" style="margin-top:12px;"></div>
+        </article>
+        <aside class="card side-panel" aria-live="polite">
+          <h3>Invert, then check the product</h3>
+          <p>Enter a matrix and the lab reduces <span class="math">[ A | I ]</span> one row operation at a time, then multiplies <span class="math">A</span> by the result to show <span class="math">I</span>. Try a matrix whose second row is a multiple of the first and watch the reduction stall.</p>
+        <div class="field" id="maFieldPreset">
+          <label for="maPreset">Worked example</label>
+          <select id="maPreset"><option value="0">a 2 by 2 whose inverse is whole</option><option value="1">a 3 by 3</option><option value="2">singular: a zero row appears and stops everything</option><option value="3">whole entries, fractional inverse</option><option value="4">diagonal: each entry inverts on its own</option><option value="5">singular 3 by 3: the rows are not independent</option></select>
+        </div>
+        <div class="field" id="maFieldA">
+          <label for="maA">Matrix A</label>
+          <input id="maA" type="text" value="" inputmode="text" autocomplete="off">
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><span id="maK1Lab">&mdash;</span><strong id="maK1">&mdash;</strong></div>
+          <div class="kpi"><span id="maK2Lab">&mdash;</span><strong id="maK2">&mdash;</strong></div>
+          <div class="kpi"><span id="maK3Lab">&mdash;</span><strong id="maK3">&mdash;</strong></div>
+        </div>
+        <p class="small-copy" id="maHint" style="margin:0;">Rows are separated by <code>;</code> and entries by spaces, so <code>2 1 -1; -3 -1 2; -2 1 2</code> is a 3 by 3. Fractions such as <code>-1/2</code> are entries like any other, and stay exact through every operation below.</p>
+        </aside>
+      </div>
+    </section>
+    <section class="section" id="process">
+      <div class="section-head"><div><p class="kicker">Method</p><h2>Inverting a 2 by 2 and using it</h2></div><p>The determinant comes first, because it decides whether the rest happens.</p></div>
+      <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Compute ad - bc</h3><p>If it is <span class="math">0</span>, stop: there is no inverse, and the system it came from does not have a unique solution either. Everything below assumes it is not zero.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Swap the diagonal, negate the other two</h3><p><span class="math">a</span> and <span class="math">d</span> trade places. <span class="math">b</span> and <span class="math">c</span> stay where they are and change sign. Only one of those two things is a swap, and mixing them up is the commonest error in the formula.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Divide every entry by the determinant</h3><p>All four entries, not just the first. Keep exact fractions: <span class="math">-7/10</span> is the entry, and <span class="math">-0.7</span> will be wrong by the time it has been multiplied twice.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Multiply back, then solve</h3><p><span class="math">AA⁻¹</span> must come out as <span class="math">[ 1  0 ; 0  1 ]</span> exactly. Then <span class="math">X = A⁻¹B</span>, with <span class="math">A⁻¹</span> written on the left of <span class="math">B</span>.</p></article></div>
+    </section>
+    <section class="section" id="practice">
+      <div class="grid-2">
+      <article class="card practice">
+        <div class="practice-head"><h3>Inverses</h3><span class="score" id="quizScore">Score 0 / 0</span></div>
+        <p id="quizPrompt" class="small-copy" style="margin:0;"></p>
+        <div class="choice-grid" id="quizChoices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite">Choose the answer you can justify.</div>
+        <button class="btn small" id="quizNext" type="button" style="margin-top:2px;">Next question</button>
+      </article>
+      <article class="card card-pad prose"><h3>Inverting [ 4  7 ; 2  6 ] by row reduction</h3><p>The formula already gave the answer for this matrix. Doing it again by reduction is the point: this is the method that still works at 3 by 3, where there is no formula worth carrying.</p><div class="mathblock">[ 4  7 | 1  0 ]        A on the left, the identity on the right
+[ 2  6 | 0  1 ]
+
+R1 → R1/4
+[ 1  7/4 | 1/4   0 ]
+[ 2  6   | 0     1 ]
+
+R2 → R2 - 2R1          6 - 2(7/4) = 6 - 7/2 = 5/2
+[ 1  7/4 | 1/4    0 ]
+[ 0  5/2 | -1/2   1 ]
+
+R2 → (2/5)R2
+[ 1  7/4 | 1/4    0  ]
+[ 0  1   | -1/5  2/5 ]
+
+R1 → R1 - (7/4)R2      1/4 + 7/20 = 3/5,   -(7/4)(2/5) = -7/10
+[ 1  0 | 3/5   -7/10 ]
+[ 0  1 | -1/5   2/5  ]
+
+         [  3/5  -7/10 ]
+A⁻¹  =   [ -1/5   2/5  ]
+
+solving  4x + 7y = 1,  2x + 6y = 8:
+x = (3/5)(1) + (-7/10)(8) = 3/5 - 28/5 = -5
+y = (-1/5)(1) + (2/5)(8)  = -1/5 + 16/5 = 3
+check   4(-5) + 7(3) = -20 + 21 = 1     ✓
+        2(-5) + 6(3) = -10 + 18 = 8     ✓</div><p>The two methods agree entry for entry, which is the only kind of agreement worth having. The reduction produced quarters at the first step and never left the fractions, and that is normal: a matrix of whole numbers has an inverse of fractions unless its determinant happens to be <span class="math">1</span> or <span class="math">-1</span>.</p><p>One <span class="math">B</span> was solved here, so the inverse was not the cheap route. Solve <span class="math">AX = B</span> for five different right-hand sides and it is.</p></article>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-2">
+        <article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Writing <span class="math">B/A</span> or <span class="math">1/A</span></strong><span>There is no matrix division and no reciprocal of a matrix. There is multiplication by <span class="math">A⁻¹</span>, and it has a side: <span class="math">A⁻¹B</span> and <span class="math">BA⁻¹</span> are different products, and for a column <span class="math">B</span> only the first is defined.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Negating the diagonal instead of the off-diagonal</strong><span>In the 2 by 2 formula, <span class="math">a</span> and <span class="math">d</span> swap places and keep their signs; <span class="math">b</span> and <span class="math">c</span> keep their places and lose theirs. Doing it the other way round gives a matrix whose product with <span class="math">A</span> is not <span class="math">I</span>, which is why the check in step 4 exists.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Forgetting to divide all four entries by the determinant</strong><span><span class="math">[ 6  -7 ; -2  4 ]</span> is not the inverse of <span class="math">[ 4  7 ; 2  6 ]</span>; it is ten times the inverse. The product comes out as <span class="math">10I</span> rather than <span class="math">I</span>, and every solution is then ten times too large.</span></div></div></div></article>
+        <article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">&#10003;</div><div><strong>Finish when the determinant is the first thing you compute, not the last.</strong><p>You should be able to invert a 2 by 2 from the formula, invert a 3 by 3 by reducing <span class="math">[ A | I ]</span>, and say in one sentence why <span class="math">[ 2  3 ; 4  6 ]</span> has no inverse. The check <span class="math">AA⁻¹ = I</span> should be automatic; it costs four multiplications and catches every sign error.</p></div></div><div class="note" style="margin-top:12px;"><strong>Note:</strong> Three conditions have now collapsed into one. <span class="math">det A ≠ 0</span>, <span class="math">A</span> has an inverse, and <span class="math">AX = B</span> has exactly one solution for every <span class="math">B</span> are the same statement about the same matrix. Lesson 10 leaves exact equations behind for inequalities, where the answer is a region rather than a point &mdash; and where finding the corners of that region is a 2 by 2 system all over again.</div></article>
+      </div>
+    </section>
+    </main>
+
+    <nav class="lesson-nav" aria-label="Lesson navigation">
+      <a class="lesson-link prev" href="../determinants-and-cramers-rule/" rel="prev"><span>Previous lesson</span><strong>08 &middot; Determinants and Cramer&#x27;s Rule</strong></a>
+      <a class="lesson-link next" href="../systems-of-inequalities-and-linear-programming/" rel="next"><span>Next lesson</span><strong>10 &middot; Systems of Inequalities and Linear Programming</strong></a>
+    </nav>
+
+    <footer class="footer">
+      <p><strong>Systems and Matrices.</strong> Row reduction and every system solution on this course are computed in exact fractions &mdash; the arithmetic that goes visibly wrong in floating point is exactly the arithmetic these lessons are about. Where a lab reports an inverse it multiplies the two matrices together in front of you rather than claiming the result.</p>
+      <p>&copy; 2026 dmedellin &middot; Released under the MIT License &middot; Educational use only &mdash; every figure is computed in your browser from the stated definition, and a step that gives the right answer here is not thereby a valid rule.</p>
+      <p><a href="https://learn.geterdone.io">learn.geterdone.io</a></p>
+    </footer>
+  </div>
+  <script>
+    /* Theme toggle. Same control, same key ('learn-theme'), same static label
+       as every other page in the library. The button's accessible name is never
+       rewritten from script: a label that describes state has to choose between
+       naming the current theme and the next one, and courses chose differently. */
+    (function () {
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      var KEY = 'learn-theme';
+      var mql = window.matchMedia('(prefers-color-scheme: light)');
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function resolved() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'light' : 'dark';
+      }
+      function paintIcon() { toggle.textContent = resolved() === 'light' ? '\u2600' : '\u263E'; }
+      toggle.addEventListener('click', function () {
+        var next = resolved() === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem(KEY, next); } catch (e) { /* Storage can be unavailable. */ }
+        paintIcon();
+      });
+      if (typeof mql.addEventListener === 'function') {
+        mql.addEventListener('change', function () { if (!stored()) paintIcon(); });
+      }
+      paintIcon();
+    })();
+  var QUIZ = [{"q": "What is the inverse of <span class=\"math\">[ 3  4 ; 1  2 ]<\/span> (rows separated by a semicolon)?", "a": ["<span class=\"math\">[ 2  -4 ; -1  3 ]<\/span>", "<span class=\"math\">[ 1  -2 ; -1/2  3/2 ]<\/span>", "<span class=\"math\">[ 3/2  -2 ; -1/2  1 ]<\/span>", "<span class=\"math\">[ 1/3  1/4 ; 1  1/2 ]<\/span>"], "c": 1, "why": "<span class=\"math\">ad - bc = 6 - 4 = 2<\/span>. Swapping the diagonal and negating the other pair gives <span class=\"math\">[ 2  -4 ; -1  3 ]<\/span>, and every entry is then divided by <span class=\"math\">2<\/span>. The first choice skips that division; the third negates correctly but never swapped <span class=\"math\">a<\/span> and <span class=\"math\">d<\/span>; the fourth inverts each entry separately, which is not an operation on matrices."}, {"q": "Which of these matrices has no inverse?", "a": ["<span class=\"math\">[ 1  2 ; 3  4 ]<\/span>", "<span class=\"math\">[ 0  1 ; 1  0 ]<\/span>", "<span class=\"math\">[ 2  3 ; 4  6 ]<\/span>", "<span class=\"math\">[ 5  0 ; 0  5 ]<\/span>"], "c": 2, "why": "Its determinant is <span class=\"math\">12 - 12 = 0<\/span>; the others are <span class=\"math\">-2<\/span>, <span class=\"math\">-1<\/span> and <span class=\"math\">25<\/span>. Nothing about the entries looks degenerate, which is the point: singularity is a fact about the determinant, not about whether zeros appear."}, {"q": "<span class=\"math\">A<\/span> and <span class=\"math\">B<\/span> are invertible matrices of the same size. What is <span class=\"math\">(AB)\u207b\u00b9<\/span>?", "a": ["<span class=\"math\">A\u207b\u00b9B\u207b\u00b9<\/span>", "<span class=\"math\">B\u207b\u00b9A\u207b\u00b9<\/span>", "<span class=\"math\">A\u207b\u00b9 + B\u207b\u00b9<\/span>", "There is no formula; multiply <span class=\"math\">AB<\/span> out and invert the result"], "c": 1, "why": "<span class=\"math\">(AB)(B\u207b\u00b9A\u207b\u00b9) = A(BB\u207b\u00b9)A\u207b\u00b9 = I<\/span>, and the middle cancellation only happens in that order. <span class=\"math\">A\u207b\u00b9B\u207b\u00b9<\/span> is what you get by forgetting that matrix multiplication does not commute; it is the inverse of <span class=\"math\">BA<\/span>."}];
+
+  (function () {
+
+  /* Exact rational arithmetic over BigInt.
+
+     Every number a lesson calls "the answer" lives in this type. BigInt rather
+     than Number because a few steps of elimination on a 3x3 system produces
+     numerators that leave the exact-integer range of a double, and a solution
+     that is silently wrong in the last digits is worse than no solution. */
+  function bgcd(a, b) {
+    if (a < 0n) a = -a;
+    if (b < 0n) b = -b;
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1n;
+    n = BigInt(n); d = BigInt(d);
+    if (d === 0n) throw new Error('division by zero');
+    if (d < 0n) { n = -n; d = -d; }
+    var g = bgcd(n, d) || 1n;
+    return { n: n / g, d: d / g };
+  }
+  var R0 = R(0n), R1 = R(1n);
+  function Radd(a, b) { return R(a.n * b.d + b.n * a.d, a.d * b.d); }
+  function Rsub(a, b) { return R(a.n * b.d - b.n * a.d, a.d * b.d); }
+  function Rmul(a, b) { return R(a.n * b.n, a.d * b.d); }
+  function Rdiv(a, b) { return R(a.n * b.d, a.d * b.n); }
+  function Rneg(a) { return R(-a.n, a.d); }
+  function Rabs(a) { return a.n < 0n ? Rneg(a) : a; }
+  function Rinv(a) { return R(a.d, a.n); }
+  function Rzero(a) { return a.n === 0n; }
+  function Rsign(a) { return a.n === 0n ? 0 : (a.n < 0n ? -1 : 1); }
+  function Requ(a, b) { return a.n === b.n && a.d === b.d; }
+  function Rcmp(a, b) { var l = a.n * b.d, r = b.n * a.d; return l < r ? -1 : (l > r ? 1 : 0); }
+  function Rint(a) { return a.d === 1n; }
+  function Rpow(a, k) {
+    var out = R1, base = a, e = k < 0 ? -k : k;
+    while (e > 0) { if (e & 1) out = Rmul(out, base); base = Rmul(base, base); e >>= 1; }
+    return k < 0 ? Rinv(out) : out;
+  }
+  /* The reader's form: "3", "-7/4". Never "3/1", never "0/5". */
+  function Rtext(a) { return a.d === 1n ? String(a.n) : a.n + '/' + a.d; }
+  /* Parenthesised when it would otherwise glue onto a neighbouring symbol. */
+  function Rterm(a) { return (a.n < 0n || a.d !== 1n) ? '(' + Rtext(a) + ')' : Rtext(a); }
+  function Rnum(a) { return Number(a.n) / Number(a.d); }
+  /* A decimal, for the one place a lesson asks for one. Exact when it can be. */
+  function Rdec(a, places) {
+    if (places === undefined) places = 6;
+    var v = Rnum(a);
+    if (Rint(a)) return String(a.n);
+    var s = v.toFixed(places);
+    return s.indexOf('.') >= 0 ? s.replace(/0+$/, '').replace(/\.$/, '') : s;
+  }
+  function Rparse(text) {
+    var s = String(text).trim();
+    var m = /^([+-]?\d+)\s*\/\s*(\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]), BigInt(m[2]));
+    m = /^([+-]?\d+)$/.exec(s);
+    if (m) return R(BigInt(m[1]));
+    m = /^([+-]?)(\d*)\.(\d+)$/.exec(s);
+    if (m) {
+      var whole = m[2] || '0', frac = m[3];
+      var num = BigInt(whole + frac), den = 10n ** BigInt(frac.length);
+      return R(m[1] === '-' ? -num : num, den);
+    }
+    return null;
+  }
+  /* Is this rational a perfect square? Needed wherever a lesson must decide
+     between an exact answer and a radical one -- sqrt(4/9) is 2/3 and belongs
+     on the page as 2/3, while sqrt(2) must stay sqrt(2). */
+  function bisqrt(n) {
+    if (n < 0n) return null;
+    if (n < 2n) return n;
+    var x = n, y = (x + 1n) / 2n;
+    while (y < x) { x = y; y = (x + n / x) / 2n; }
+    return x * x === n ? x : null;
+  }
+  function Rsqrt(a) {
+    if (a.n < 0n) return null;
+    var p = bisqrt(a.n), q = bisqrt(a.d);
+    return (p === null || q === null) ? null : R(p, q);
+  }
+
+  /* A polynomial is a dense array of rationals, index = power of x, with the
+     zero polynomial as []. Nothing here is a special case for "nice" numbers:
+     the same routines divide 2x^3 - 3x + 1 by x - 1/2 as divide it by x - 1. */
+  function Pnorm(p) {
+    var out = p.slice();
+    while (out.length && Rzero(out[out.length - 1])) out.pop();
+    return out;
+  }
+  function Pdeg(p) { return Pnorm(p).length - 1; }
+  function Pzero(p) { return Pnorm(p).length === 0; }
+  function Plead(p) { var q = Pnorm(p); return q.length ? q[q.length - 1] : R0; }
+  function Padd(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Radd(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Psub(a, b) {
+    var out = [], n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i += 1) out.push(Rsub(a[i] || R0, b[i] || R0));
+    return Pnorm(out);
+  }
+  function Pmul(a, b) {
+    if (!a.length || !b.length) return [];
+    var out = [];
+    for (var i = 0; i < a.length + b.length - 1; i += 1) out.push(R0);
+    for (var j = 0; j < a.length; j += 1) {
+      for (var k = 0; k < b.length; k += 1) out[j + k] = Radd(out[j + k], Rmul(a[j], b[k]));
+    }
+    return Pnorm(out);
+  }
+  function Pscale(p, r) { return Pnorm(p.map(function (c) { return Rmul(c, r); })); }
+  function Ppow(p, k) { var out = [R1]; for (var i = 0; i < k; i += 1) out = Pmul(out, p); return out; }
+  function Peval(p, x) {
+    var acc = R0;
+    for (var i = p.length - 1; i >= 0; i -= 1) acc = Radd(Rmul(acc, x), p[i]);
+    return acc;
+  }
+  function Pderiv(p) {
+    var out = [];
+    for (var i = 1; i < p.length; i += 1) out.push(Rmul(p[i], R(BigInt(i))));
+    return Pnorm(out);
+  }
+  /* Long division, which is lesson material in its own right -- the step list a
+     lab shows IS this loop, printed. */
+  function Pdivmod(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    if (!b.length) throw new Error('division by the zero polynomial');
+    var q = [], r = a.slice(), steps = [];
+    var db = b.length - 1, lb = b[db];
+    while (Pnorm(r).length - 1 >= db && Pnorm(r).length) {
+      r = Pnorm(r);
+      var dr = r.length - 1, coef = Rdiv(r[dr], lb), shift = dr - db;
+      var term = [];
+      for (var i = 0; i < shift; i += 1) term.push(R0);
+      term.push(coef);
+      var product = Pmul(term, b);
+      steps.push({ term: Ptext(term), product: Ptext(product), before: Ptext(r) });
+      r = Psub(r, product);
+      q = Padd(q, term);
+    }
+    return { q: Pnorm(q), r: Pnorm(r), steps: steps };
+  }
+  function Pmonic(p) { var l = Plead(p); return Rzero(l) ? p : Pscale(p, Rinv(l)); }
+  function Pgcd(a, b) {
+    a = Pnorm(a); b = Pnorm(b);
+    while (b.length) { var r = Pdivmod(a, b).r; a = b; b = r; }
+    return a.length ? Pmonic(a) : a;
+  }
+
+  /* Reader-facing form. The rules here are the ones a marker applies: an
+     implicit coefficient of 1 is not written, a negative term joins with a
+     minus rather than a plus, and a fractional coefficient is bracketed so
+     3/4x^2 can never be misread as 3/(4x^2). */
+  function Ptext(p, v) {
+    v = v || 'x';
+    p = Pnorm(p);
+    if (!p.length) return '0';
+    var out = '';
+    for (var i = p.length - 1; i >= 0; i -= 1) {
+      var c = p[i];
+      if (Rzero(c)) continue;
+      var neg = Rsign(c) < 0, mag = Rabs(c);
+      out += out === '' ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      var one = Requ(mag, R1);
+      var coef = one && i > 0 ? '' : (Rint(mag) ? Rtext(mag) : '(' + Rtext(mag) + ')');
+      var power = i === 0 ? '' : (i === 1 ? v : v + '^' + i);
+      out += coef + power;
+    }
+    return out;
+  }
+  /* Bracketed when it is a sum, so (x + 1)(x - 2) prints correctly. */
+  function Pfactortext(p, v) {
+    var t = Ptext(p, v);
+    return (t.indexOf(' + ') >= 0 || t.indexOf(' - ') >= 0) ? '(' + t + ')' : t;
+  }
+
+  /* ---- factoring over the rationals ----
+     The rational root theorem, applied rather than quoted: clear denominators,
+     list the divisors of the constant and leading terms, and TEST each
+     candidate. A reader who runs this on x^2 + 1 sees the search come back
+     empty, which is the point of the lesson that pairs with it. */
+  function bdivisors(n) {
+    if (n < 0n) n = -n;
+    if (n === 0n) return [];
+    var out = [], i = 1n;
+    while (i * i <= n) {
+      if (n % i === 0n) { out.push(i); if (i * i !== n) out.push(n / i); }
+      i += 1n;
+      if (out.length > 512) break;   /* lesson-sized numbers only; see Pfactor */
+    }
+    out.sort(function (a, b) { return a < b ? -1 : (a > b ? 1 : 0); });
+    return out;
+  }
+  /* The same polynomial with integer, coprime coefficients and a positive
+     leading term, plus the rational that was taken out. */
+  function Pprimitive(p) {
+    p = Pnorm(p);
+    if (!p.length) return { poly: [], content: R1 };
+    var den = 1n;
+    p.forEach(function (c) { den = den * c.d / bgcd(den, c.d); });
+    var ints = p.map(function (c) { return c.n * (den / c.d); });
+    var g = 0n;
+    ints.forEach(function (v) { g = bgcd(g, v); });
+    if (g === 0n) g = 1n;
+    if (ints[ints.length - 1] < 0n) g = -g;
+    return {
+      poly: ints.map(function (v) { return R(v / g); }),
+      content: R(g, den)
+    };
+  }
+  function Prationalroots(p) {
+    var prim = Pprimitive(p).poly;
+    if (prim.length < 2) return [];
+    var roots = [], seen = {};
+    var a0 = prim[0].n, an = prim[prim.length - 1].n;
+    if (a0 === 0n) { roots.push(R0); seen['0/1'] = 1; }
+    var ps = bdivisors(a0 === 0n ? an : a0), qs = bdivisors(an);
+    for (var i = 0; i < ps.length; i += 1) {
+      for (var j = 0; j < qs.length; j += 1) {
+        for (var s = 0; s < 2; s += 1) {
+          var cand = R(s ? -ps[i] : ps[i], qs[j]);
+          var key = Rtext(cand);
+          if (seen[key]) continue;
+          seen[key] = 1;
+          if (Rzero(Peval(prim, cand))) roots.push(cand);
+        }
+      }
+    }
+    roots.sort(Rcmp);
+    return roots;
+  }
+  /* Full factorisation over Q: a rational content, integer linear factors with
+     their multiplicities, and whatever is left that has no rational root.
+     `complete` is false when the leftover is not linear or quadratic -- the lab
+     says so rather than implying the factorisation finished. */
+  function Pfactor(p) {
+    p = Pnorm(p);
+    if (!p.length) return { content: R0, factors: [], rest: [], complete: true };
+    var prim = Pprimitive(p);
+    var content = prim.content, work = prim.poly, factors = [];
+    var guard = 0;
+    while (Pdeg(work) > 0 && guard < 64) {
+      guard += 1;
+      var roots = Prationalroots(work);
+      if (!roots.length) break;
+      var r = roots[0];
+      /* root p/q  ->  integer factor (qx - p), which keeps every coefficient
+         whole and is the form the reader is asked to produce. */
+      var factor = [Rneg(R(r.n)), R(r.d)];
+      var mult = 0;
+      while (Pdeg(work) > 0) {
+        var dm = Pdivmod(work, factor);
+        if (!Pzero(dm.r)) break;
+        work = dm.q; mult += 1;
+      }
+      factors.push({ poly: factor, mult: mult, root: r });
+    }
+    /* Whatever scalar the integer divisions left behind belongs to the content. */
+    if (Pdeg(work) === 0) { content = Rmul(content, work[0]); work = [R1]; }
+    var rest = Pdeg(work) > 0 ? work : [];
+    return { content: content, factors: factors, rest: rest, complete: Pdeg(work) <= 2 };
+  }
+  function Pfactortextfull(p, v) {
+    var f = Pfactor(p);
+    if (!f.factors.length && !f.rest.length) return Rtext(f.content);
+    var pieces = [];
+    f.factors.forEach(function (item) { pieces.push({ poly: item.poly, mult: item.mult }); });
+    if (f.rest.length) pieces.push({ poly: f.rest, mult: 1 });
+    /* A polynomial that does not factor is written as itself. Bracketing a
+       lone factor -- "(x^2 + 1)" -- suggests something was multiplied by
+       something, which is the opposite of what that result says. */
+    if (pieces.length === 1 && pieces[0].mult === 1 && Requ(f.content, R1)) {
+      return Ptext(pieces[0].poly, v);
+    }
+    var out = '';
+    if (!Requ(f.content, R1)) out += Requ(f.content, R(-1n)) ? '-' : Rterm(f.content);
+    pieces.forEach(function (item) {
+      out += Pfactortext(item.poly, v) + (item.mult > 1 ? '^' + item.mult : '');
+    });
+    return out || '1';
+  }
+
+  /* A parser for what a reader actually types.
+
+     It accepts implicit multiplication -- 2x, 3(x+1), (x+1)(x-2), 4x^2 --
+     because that is how algebra is written on paper, and a lab that rejected
+     "2x" would be teaching its own notation rather than the subject's. A
+     single letter is a variable; a name of two or more letters is a function,
+     which is what lets xy mean x times y while sqrt(x) stays one call. */
+  function Etokenize(src) {
+    var out = [], i = 0, s = String(src);
+    while (i < s.length) {
+      var c = s[i];
+      if (c === ' ' || c === '\t') { i += 1; continue; }
+      if (/[0-9.]/.test(c)) {
+        var j = i;
+        while (j < s.length && /[0-9.]/.test(s[j])) j += 1;
+        out.push({ t: 'num', v: s.slice(i, j) }); i = j; continue;
+      }
+      if (/[A-Za-z]/.test(c)) {
+        var k = i;
+        while (k < s.length && /[A-Za-z]/.test(s[k])) k += 1;
+        var word = s.slice(i, k);
+        if (word.length > 1 && FUNCS[word.toLowerCase()]) {
+          out.push({ t: 'fn', v: word.toLowerCase() }); i = k; continue;
+        }
+        /* Not a known function: every letter is its own variable, so "xy" is a
+           product and a typo like "sqrtt(x)" fails loudly instead of silently
+           becoming a product of six variables named s, q, r, t, t. */
+        if (word.length > 1 && /^[a-z]+$/.test(word) && word.length > 3) {
+          throw new Error('unknown function "' + word + '"');
+        }
+        for (var m = i; m < k; m += 1) out.push({ t: 'var', v: s[m] });
+        i = k; continue;
+      }
+      if ('+-*/^(),'.indexOf(c) >= 0) { out.push({ t: c }); i += 1; continue; }
+      throw new Error('unexpected character "' + c + '"');
+    }
+    return out;
+  }
+
+  var FUNCS = {
+    sqrt: function (v) { return Math.sqrt(v); },
+    cbrt: function (v) { return Math.cbrt(v); },
+    abs: function (v) { return Math.abs(v); },
+    ln: function (v) { return Math.log(v); },
+    log: function (v) { return Math.log(v) / Math.LN10; },
+    log2: function (v) { return Math.log(v) / Math.LN2; },
+    exp: function (v) { return Math.exp(v); }
+  };
+
+  function Eparse(src) {
+    var toks = Etokenize(src), pos = 0;
+    function peek() { return toks[pos]; }
+    function eat(t) { if (toks[pos] && toks[pos].t === t) { pos += 1; return true; } return false; }
+    function expect(t) { if (!eat(t)) throw new Error('expected "' + t + '"'); }
+
+    function primary() {
+      var tk = peek();
+      if (!tk) throw new Error('the expression ends early');
+      if (tk.t === 'num') { pos += 1; return { k: 'num', v: tk.v }; }
+      if (tk.t === 'var') { pos += 1; return { k: 'var', v: tk.v }; }
+      if (tk.t === 'fn') { pos += 1; expect('('); var a = sum(); expect(')'); return { k: 'fn', v: tk.v, a: a }; }
+      if (tk.t === '(') { pos += 1; var e = sum(); expect(')'); return e; }
+      if (tk.t === '-') { pos += 1; return { k: 'neg', a: unary() }; }
+      if (tk.t === '+') { pos += 1; return unary(); }
+      throw new Error('unexpected "' + (tk.v || tk.t) + '"');
+    }
+    /* ^ binds tighter than unary minus on the left and is right-associative,
+       so -x^2 is -(x^2) and 2^3^2 is 2^9. Both are the conventions a reader
+       is marked against. */
+    function power() {
+      var base = primary();
+      if (eat('^')) return { k: 'pow', a: base, b: unary() };
+      return base;
+    }
+    function unary() {
+      if (eat('-')) return { k: 'neg', a: unary() };
+      if (eat('+')) return unary();
+      return power();
+    }
+    function implicit(node) {
+      /* juxtaposition is multiplication: 2x, 3(x+1), (x+1)(x-2), 2sqrt(x) */
+      while (peek() && (peek().t === 'num' || peek().t === 'var' || peek().t === 'fn' || peek().t === '(')) {
+        node = { k: 'mul', a: node, b: power() };
+      }
+      return node;
+    }
+    function product() {
+      var node = implicit(unary());
+      while (peek() && (peek().t === '*' || peek().t === '/')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '*' ? 'mul' : 'div', a: node, b: implicit(unary()) };
+      }
+      return node;
+    }
+    function sum() {
+      var node = product();
+      while (peek() && (peek().t === '+' || peek().t === '-')) {
+        var op = peek().t; pos += 1;
+        node = { k: op === '+' ? 'add' : 'sub', a: node, b: product() };
+      }
+      return node;
+    }
+    var tree = sum();
+    if (pos < toks.length) throw new Error('unexpected "' + (toks[pos].v || toks[pos].t) + '"');
+    return tree;
+  }
+
+  /* Numeric evaluation, for drawing. Returns NaN outside the domain rather
+     than throwing, because a grapher must be able to ask for f(-1) on sqrt(x)
+     and simply not plot a point there. */
+  function Eeval(node, env) {
+    switch (node.k) {
+      case 'num': return parseFloat(node.v);
+      case 'var': return (env && node.v in env) ? env[node.v] : NaN;
+      case 'neg': return -Eeval(node.a, env);
+      case 'add': return Eeval(node.a, env) + Eeval(node.b, env);
+      case 'sub': return Eeval(node.a, env) - Eeval(node.b, env);
+      case 'mul': return Eeval(node.a, env) * Eeval(node.b, env);
+      case 'div': return Eeval(node.a, env) / Eeval(node.b, env);
+      case 'pow': return Math.pow(Eeval(node.a, env), Eeval(node.b, env));
+      case 'fn': return FUNCS[node.v](Eeval(node.a, env));
+    }
+    return NaN;
+  }
+
+  /* The same tree as a polynomial over Q in one variable, or null when it is
+     not one. This is what lets a reader type a polynomial and have the EXACT
+     machinery -- factoring, division, the rational root search -- run on it,
+     rather than a floating-point approximation of it. */
+  function Epoly(node, v) {
+    v = v || 'x';
+    switch (node.k) {
+      case 'num': { var r = Rparse(node.v); return r === null ? null : (Rzero(r) ? [] : [r]); }
+      case 'var': return node.v === v ? [R0, R1] : null;
+      case 'neg': { var a = Epoly(node.a, v); return a === null ? null : Pscale(a, R(-1n)); }
+      case 'add': case 'sub': case 'mul': {
+        var l = Epoly(node.a, v), r2 = Epoly(node.b, v);
+        if (l === null || r2 === null) return null;
+        return node.k === 'add' ? Padd(l, r2) : (node.k === 'sub' ? Psub(l, r2) : Pmul(l, r2));
+      }
+      case 'div': {
+        var num = Epoly(node.a, v), den = Epoly(node.b, v);
+        if (num === null || den === null || Pdeg(den) !== 0) return null;
+        return Pscale(num, Rinv(den[0]));   /* division by a constant only */
+      }
+      case 'pow': {
+        var base = Epoly(node.a, v), ex = Epoly(node.b, v);
+        if (base === null || ex === null || Pdeg(ex) > 0) return null;
+        var e = ex.length ? ex[0] : R0;
+        if (!Rint(e) || e.n < 0n || e.n > 64n) return null;
+        return Ppow(base, Number(e.n));
+      }
+    }
+    return null;
+  }
+  function Epolyof(src, v) {
+    try { return Epoly(Eparse(src), v || 'x'); } catch (e) { return null; }
+  }
+
+  function td(t, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + t + '</td>'; }
+  function tdl(t, cls) {
+    return '<td style="text-align:left;"' + (cls ? ' class="' + cls + '"' : '') + '>' + t + '</td>';
+  }
+  function th(t) { return '<th>' + t + '</th>'; }
+  function rowhead(t) { return '<th class="rowhead">' + t + '</th>'; }
+  function tr(cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.join('') + '</tr>'; }
+  function table(caption, heads, rows) {
+    var head = (heads && heads.length)
+      ? '<thead>' + tr(heads.map(function (h) { return th(h); })) + '</thead>' : '';
+    return '<div class="table-wrap"><table class="tt"><caption>' + caption + '</caption>'
+      + head + '<tbody>' + rows.join('') + '</tbody></table></div>';
+  }
+  /* The two-column "what was done / what it produced" table. The exemplar's
+     trace layout, kept identical so a reader moving between courses is reading
+     the same page furniture. */
+  function steps(caption, pairs) {
+    return table(caption, [], pairs.map(function (p) { return tr([rowhead(p[0]), tdl(p[1])]); }));
+  }
+  function chip(t, kind) { return '<span class="chip' + (kind ? ' ' + kind : '') + '">' + t + '</span>'; }
+  /* " + 3" or " - 7": a bare number as a continuation. Everything on this page
+     that writes "something + <number>" goes through it, because "a(n-1) + -7"
+     is not a thing a reader writes and not a thing a marker accepts. */
+  function plusnum(r) { return (Rsign(r) < 0 ? ' - ' : ' + ') + Rtext(Rabs(r)); }
+  function tone(t, kind) { return '<span class="tone-' + kind + '">' + t + '</span>'; }
+  function plural(n, one, many) { return n === 1 ? one : many; }
+  /* Reader text goes into innerHTML, and on this course the reader types < and
+     > all day. Escaped once, at the boundary, rather than trusted: "x + 2y <= 8"
+     written raw would lose everything from the < to the next > -- which is the
+     end of the cell -- and the page would quietly drop the reader's own words. */
+  function esc(t) {
+    return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  /* Rparse throws on a zero denominator, and 1/0 is a thing a reader types.
+     Every read of reader input goes through this, so a bad fraction becomes a
+     sentence in the status banner rather than an exception. */
+  function Rread(text) {
+    try { return Rparse(String(text).trim()); } catch (err) { return null; }
+  }
+  /* The one rounding this file performs, and it is never used to decide
+     anything -- only to sit beside an exact value that a reader may want to
+     place on a number line. Every caller labels it as a rounding. */
+  function approx(r, places) {
+    var v = Rnum(r);
+    if (!isFinite(v)) return 'not a real number';
+    return v.toFixed(places === undefined ? 4 : places);
+  }
+  /* The least common multiple of two rationals: lcm of the numerators over the
+     gcd of the denominators. For two integers this is the schoolbook lcm, which
+     is what the elimination mode needs; for 1/2 and 1/4 it is 1/2, which is
+     what keeps that mode from inventing multipliers with four-digit numerators
+     the moment a coefficient stops being whole. */
+  function Rlcm(a, b) {
+    if (Rzero(a) || Rzero(b)) return R0;
+    var an = a.n < 0n ? -a.n : a.n, bn = b.n < 0n ? -b.n : b.n;
+    return R(an / bgcd(an, bn) * bn, bgcd(a.d, b.d));
+  }
+
+  /* A linear form over the unknowns a mode names: the coefficient of each,
+     plus the constant. 3x - y/2 + 4 over ['x','y'] is { c: [3, -1/2], k: 4 }.
+
+     Building one from EXPR_JS's tree is where "linear" stops being a word in
+     the lesson and becomes a rule that can REFUSE. x*y multiplies two forms
+     that both carry an unknown; 1/x divides by one; sqrt(x) is a function of
+     one; x^2 raises one to a power. Each returns the reason rather than
+     dropping the term, because a lab that silently ignored the xy in
+     "xy + x = 4" would solve a different system and say nothing. */
+  /* "x and y", "x, y and z" -- a list of unknowns written the way a sentence
+     wants it, since these names appear in every refusal this file prints. */
+  function varlist(names) {
+    if (names.length < 2) return names.join('');
+    return names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+  }
+  function Lnew(nv) { var c = []; for (var i = 0; i < nv; i += 1) c.push(R0); return { c: c, k: R0 }; }
+  function Lconst(r, nv) { var f = Lnew(nv); f.k = r; return f; }
+  function Lvar(i, nv) { var f = Lnew(nv); f.c[i] = R1; return f; }
+  function Lisconst(f) {
+    for (var i = 0; i < f.c.length; i += 1) if (!Rzero(f.c[i])) return false;
+    return true;
+  }
+  function Lcomb(a, b, sub) {
+    var f = Lnew(a.c.length);
+    for (var i = 0; i < a.c.length; i += 1) f.c[i] = sub ? Rsub(a.c[i], b.c[i]) : Radd(a.c[i], b.c[i]);
+    f.k = sub ? Rsub(a.k, b.k) : Radd(a.k, b.k);
+    return f;
+  }
+  function Lscale(a, r) {
+    var f = Lnew(a.c.length);
+    for (var i = 0; i < a.c.length; i += 1) f.c[i] = Rmul(a.c[i], r);
+    f.k = Rmul(a.k, r);
+    return f;
+  }
+
+  /* { f: form } or { bad: the sentence to print. } Never an exception. */
+  function Lof(node, names) {
+    var nv = names.length;
+    if (!node) return { bad: 'there is nothing to read there' };
+    switch (node.k) {
+      case 'num': {
+        var r = Rread(node.v);
+        if (r === null) return { bad: '"' + esc(node.v) + '" is not a number I can read exactly' };
+        return { f: Lconst(r, nv) };
+      }
+      case 'var': {
+        var i = names.indexOf(node.v);
+        if (i < 0) {
+          return { bad: 'this system is in ' + varlist(names) + ', and "' + esc(node.v)
+            + '" is not one of them' };
+        }
+        return { f: Lvar(i, nv) };
+      }
+      case 'neg': {
+        var a = Lof(node.a, names);
+        return a.bad ? a : { f: Lscale(a.f, R(-1n)) };
+      }
+      case 'add': case 'sub': {
+        var l = Lof(node.a, names); if (l.bad) return l;
+        var r2 = Lof(node.b, names); if (r2.bad) return r2;
+        return { f: Lcomb(l.f, r2.f, node.k === 'sub') };
+      }
+      case 'mul': {
+        var l2 = Lof(node.a, names); if (l2.bad) return l2;
+        var r3 = Lof(node.b, names); if (r3.bad) return r3;
+        if (Lisconst(l2.f)) return { f: Lscale(r3.f, l2.f.k) };
+        if (Lisconst(r3.f)) return { f: Lscale(l2.f, r3.f.k) };
+        return { bad: 'two unknowns are multiplied together, and that is not linear' };
+      }
+      case 'div': {
+        var l3 = Lof(node.a, names); if (l3.bad) return l3;
+        var r4 = Lof(node.b, names); if (r4.bad) return r4;
+        if (!Lisconst(r4.f)) return { bad: 'an unknown appears in a denominator, and that is not linear' };
+        if (Rzero(r4.f.k)) return { bad: 'that divides by zero' };
+        return { f: Lscale(l3.f, Rinv(r4.f.k)) };
+      }
+      case 'pow': {
+        var b2 = Lof(node.a, names); if (b2.bad) return b2;
+        var e = Lof(node.b, names); if (e.bad) return e;
+        if (!Lisconst(e.f)) return { bad: 'an unknown appears in an exponent, and that is not linear' };
+        if (!Rint(e.f.k) || e.f.k.n < 0n || e.f.k.n > 12n) {
+          return { bad: 'the exponent ' + Rtext(e.f.k) + ' is not a small whole number' };
+        }
+        var p = Number(e.f.k.n);
+        if (p === 1) return { f: b2.f };
+        if (Lisconst(b2.f)) return { f: Lconst(Rpow(b2.f.k, p), nv) };
+        if (p === 0) return { f: Lconst(R1, nv) };
+        return { bad: 'an unknown is raised to the power ' + p + ', and that is not linear' };
+      }
+      case 'fn': return { bad: node.v + '(...) of an expression is not linear' };
+    }
+    return { bad: 'I could not read that' };
+  }
+
+  /* The relation is pulled out BEFORE tokenising, because EXPR_JS has no
+     opinion about < and would reject the character outright. Two-character
+     relations are tried first so "<=" is never read as "<" followed by "=". */
+  var RELS = [['<=', 'le'], ['>=', 'ge'], ['=<', 'le'], ['=>', 'ge'], ['<', 'lt'], ['>', 'gt'], ['=', 'eq']];
+  function relhtml(rel) {
+    return rel === 'le' ? '&lt;=' : (rel === 'ge' ? '&gt;=' : (rel === 'lt' ? '&lt;'
+      : (rel === 'gt' ? '&gt;' : '=')));
+  }
+  function relplain(rel) {
+    return rel === 'le' ? '<=' : (rel === 'ge' ? '>=' : (rel === 'lt' ? '<' : (rel === 'gt' ? '>' : '=')));
+  }
+  function relsplit(text) {
+    var s = String(text);
+    for (var i = 0; i < RELS.length; i += 1) {
+      var at = s.indexOf(RELS[i][0]);
+      if (at >= 0) {
+        return { lhs: s.slice(0, at), rhs: s.slice(at + RELS[i][0].length), rel: RELS[i][1] };
+      }
+    }
+    return null;
+  }
+
+  /* One typed line, as  c1 v1 + c2 v2 + ... REL b. Everything is moved to the
+     left and the constant to the right, so every later step -- rank, pivot,
+     shading, corner -- is reading one shape. */
+  function Lequation(text, names) {
+    var s = String(text).trim();
+    if (!s) return { bad: 'this line is empty' };
+    var parts = relsplit(s);
+    if (!parts) {
+      return { bad: 'there is no =, &lt;=, &gt;=, &lt; or &gt; in "' + esc(s)
+        + '", so it is an expression rather than an equation' };
+    }
+    if (!parts.lhs.trim()) return { bad: 'there is nothing to the left of the ' + relplain(parts.rel) };
+    if (!parts.rhs.trim()) return { bad: 'there is nothing to the right of the ' + relplain(parts.rel) };
+    var lt, rt;
+    try { lt = Eparse(parts.lhs); } catch (err) { return { bad: 'the left side does not parse: ' + esc(err.message) }; }
+    try { rt = Eparse(parts.rhs); } catch (err) { return { bad: 'the right side does not parse: ' + esc(err.message) }; }
+    var lf = Lof(lt, names); if (lf.bad) return lf;
+    var rf = Lof(rt, names); if (rf.bad) return rf;
+    var f = Lcomb(lf.f, rf.f, true);
+    return { c: f.c, b: Rneg(f.k), rel: parts.rel, src: s };
+  }
+
+  /* "3x - (1/2)y". Signs are folded into the term the way a reader writes them,
+     and a fraction is bracketed so (3/2)x can never be misread as 3/(2x). */
+  function Ltext(coeffs, names) {
+    var out = '';
+    for (var i = 0; i < coeffs.length; i += 1) {
+      var r = coeffs[i];
+      if (Rzero(r)) continue;
+      var neg = Rsign(r) < 0, mag = Rabs(r);
+      out += (out === '') ? (neg ? '-' : '') : (neg ? ' - ' : ' + ');
+      out += (Requ(mag, R1) ? '' : Rterm(mag)) + names[i];
+    }
+    return out === '' ? '0' : out;
+  }
+  /* "3x", "-x", "(2/3)y". The coefficient is dropped when it is 1 and folded
+     into a minus sign when it is -1, because "1x" and "-1x" are things no
+     reader writes and no marker accepts. */
+  function termtext(coef, name) {
+    if (Requ(coef, R1)) return name;
+    if (Requ(coef, R(-1n))) return '-' + name;
+    return Rterm(coef) + name;
+  }
+  /* The same term as a continuation: " + 3y", " - 3y", or nothing at all. */
+  function plusterm(coef, name) {
+    if (Rzero(coef)) return '';
+    return (Rsign(coef) < 0 ? ' - ' : ' + ') + termtext(Rabs(coef), name);
+  }
+  function Rowtext(row, names) {
+    return Ltext(row.c, names) + ' ' + relhtml(row.rel) + ' ' + Rtext(row.b);
+  }
+  function Rowvalue(row, point) {
+    var v = R0;
+    for (var i = 0; i < row.c.length; i += 1) v = Radd(v, Rmul(row.c[i], point[i]));
+    return v;
+  }
+
+  /* A matrix is an array of arrays of rationals. Nothing here rounds, and
+     nothing here caches: every routine recomputes from the entries it is given,
+     so two routines that agree agreed by arithmetic rather than by sharing a
+     variable. */
+  function Mcopy(M) { return M.map(function (r) { return r.slice(); }); }
+  function Mrows(M) { return M.length; }
+  function Mcols(M) { return M.length ? M[0].length : 0; }
+  function Msquare(M) { return M.length > 0 && M.length === Mcols(M); }
+  function Mshape(M) { return Mrows(M) + ' by ' + Mcols(M); }
+  function Mzero(r, c) {
+    var out = [];
+    for (var i = 0; i < r; i += 1) { var row = []; for (var j = 0; j < c; j += 1) row.push(R0); out.push(row); }
+    return out;
+  }
+  function Mid(n) {
+    var out = Mzero(n, n);
+    for (var i = 0; i < n; i += 1) out[i][i] = R1;
+    return out;
+  }
+  function Mmap2(A, B, fn) {
+    return A.map(function (row, i) { return row.map(function (v, j) { return fn(v, B[i][j]); }); });
+  }
+  function Madd(A, B) { return Mmap2(A, B, Radd); }
+  function Msub(A, B) { return Mmap2(A, B, Rsub); }
+  function Mscale(A, r) { return A.map(function (row) { return row.map(function (v) { return Rmul(v, r); }); }); }
+  function Mtrans(A) {
+    var out = Mzero(Mcols(A), Mrows(A));
+    for (var i = 0; i < Mrows(A); i += 1) for (var j = 0; j < Mcols(A); j += 1) out[j][i] = A[i][j];
+    return out;
+  }
+  function Msamesize(A, B) { return Mrows(A) === Mrows(B) && Mcols(A) === Mcols(B); }
+  function Mmul(A, B) {
+    if (Mcols(A) !== Mrows(B)) return null;
+    var out = Mzero(Mrows(A), Mcols(B));
+    for (var i = 0; i < Mrows(A); i += 1) {
+      for (var j = 0; j < Mcols(B); j += 1) {
+        var s = R0;
+        for (var k = 0; k < Mcols(A); k += 1) s = Radd(s, Rmul(A[i][k], B[k][j]));
+        out[i][j] = s;
+      }
+    }
+    return out;
+  }
+  /* The row-times-column sum for one entry, written out. This is the entry's
+     definition, and printing it is the only way the reader can check that the
+     number in the box came from the row and column it claims. */
+  function Mdottext(A, B, i, j) {
+    var parts = [];
+    for (var k = 0; k < Mcols(A); k += 1) {
+      parts.push('(' + Rtext(A[i][k]) + ')(' + Rtext(B[k][j]) + ')');
+    }
+    return parts.join(' + ');
+  }
+  function Mequ(A, B) {
+    if (!Msamesize(A, B)) return false;
+    for (var i = 0; i < Mrows(A); i += 1) {
+      for (var j = 0; j < Mcols(A); j += 1) if (!Requ(A[i][j], B[i][j])) return false;
+    }
+    return true;
+  }
+  function Maug(A, B) {
+    return A.map(function (row, i) { return row.concat(B[i]); });
+  }
+  function Mtake(M, from, count) {
+    return M.map(function (row) { return row.slice(from, from + count); });
+  }
+  function Mminor(M, i, j) {
+    var out = [];
+    for (var a = 0; a < M.length; a += 1) {
+      if (a === i) continue;
+      var row = [];
+      for (var b = 0; b < M[a].length; b += 1) { if (b === j) continue; row.push(M[a][b]); }
+      out.push(row);
+    }
+    return out;
+  }
+  /* Cofactor expansion along the first row, recursively. Not the fast way to
+     get a determinant, and that is the point: this is the definition the
+     lesson gives, and the row-reduction determinant beside it is the check. */
+  function Mdet(M) {
+    var n = M.length;
+    if (!Msquare(M)) return null;
+    if (n === 1) return M[0][0];
+    if (n === 2) return Rsub(Rmul(M[0][0], M[1][1]), Rmul(M[0][1], M[1][0]));
+    var total = R0;
+    for (var j = 0; j < n; j += 1) {
+      if (Rzero(M[0][j])) continue;
+      var term = Rmul(M[0][j], Mdet(Mminor(M, 0, j)));
+      total = (j % 2 === 0) ? Radd(total, term) : Rsub(total, term);
+    }
+    return total;
+  }
+
+  /* ---- the three elementary row operations, each on its own ---- */
+  function Mswap(M, i, j) {
+    var out = Mcopy(M), t = out[i]; out[i] = out[j]; out[j] = t;
+    return out;
+  }
+  function Mscalerow(M, i, s) {
+    var out = Mcopy(M);
+    out[i] = out[i].map(function (v) { return Rmul(v, s); });
+    return out;
+  }
+  function Maddrow(M, i, j, s) {
+    var out = Mcopy(M);
+    out[i] = out[i].map(function (v, c) { return Radd(v, Rmul(s, M[j][c])); });
+    return out;
+  }
+
+  /* Gaussian elimination: forward only, pivots left where they are. No row is
+     divided by its pivot, which is what keeps 3x + 2y = 24 from becoming
+     x + (2/3)y = 8 in the first line of a trace the reader is meant to follow. */
+  function Mgauss(M0, ncols) {
+    var M = Mcopy(M0), ops = [], pivots = [], row = 0;
+    var stop = ncols === undefined ? Mcols(M) : ncols;
+    for (var col = 0; col < stop && row < M.length; col += 1) {
+      var p = -1;
+      for (var i = row; i < M.length; i += 1) if (!Rzero(M[i][col])) { p = i; break; }
+      if (p < 0) continue;
+      if (p !== row) {
+        M = Mswap(M, row, p);
+        ops.push({ op: 'R' + (row + 1) + ' &lt;-&gt; R' + (p + 1),
+                   why: 'the pivot position held 0, so a row below it is brought up',
+                   after: Mcopy(M) });
+      }
+      for (var i2 = row + 1; i2 < M.length; i2 += 1) {
+        if (Rzero(M[i2][col])) continue;
+        var m = Rneg(Rdiv(M[i2][col], M[row][col]));
+        M = Maddrow(M, i2, row, m);
+        ops.push({ op: 'R' + (i2 + 1) + ' -&gt; R' + (i2 + 1) + ' + ' + Rterm(m) + 'R' + (row + 1),
+                   why: 'clears the entry below the pivot in column ' + (col + 1),
+                   after: Mcopy(M) });
+      }
+      pivots.push(col);
+      row += 1;
+    }
+    return { M: M, ops: ops, pivots: pivots, rank: pivots.length };
+  }
+
+  /* Gauss-Jordan: every pivot driven to 1 and every other entry in its column
+     driven to 0, recording each elementary operation with the matrix it
+     produced. `detf` is the factor the operations multiplied the determinant
+     by, so det(A) can be recovered from the reduced form without a second
+     implementation of anything. */
+  function Mrref(M0, opts) {
+    opts = opts || {};
+    var stop = opts.cols === undefined ? Mcols(M0) : opts.cols;
+    var M = Mcopy(M0), ops = [], pivots = [], detf = R1, row = 0;
+    for (var col = 0; col < stop && row < M.length; col += 1) {
+      var p = -1;
+      for (var i = row; i < M.length; i += 1) if (!Rzero(M[i][col])) { p = i; break; }
+      if (p < 0) continue;
+      if (p !== row) {
+        M = Mswap(M, row, p);
+        detf = Rneg(detf);
+        ops.push({ op: 'R' + (row + 1) + ' &lt;-&gt; R' + (p + 1),
+                   why: 'a swap, which multiplies the determinant by -1',
+                   after: Mcopy(M) });
+      }
+      var pv = M[row][col];
+      if (!Requ(pv, R1)) {
+        var s = Rinv(pv);
+        M = Mscalerow(M, row, s);
+        detf = Rmul(detf, s);
+        ops.push({ op: 'R' + (row + 1) + ' -&gt; ' + Rterm(s) + 'R' + (row + 1),
+                   why: 'makes the pivot 1, and multiplies the determinant by ' + Rtext(s),
+                   after: Mcopy(M) });
+      }
+      for (var i2 = 0; i2 < M.length; i2 += 1) {
+        if (i2 === row || Rzero(M[i2][col])) continue;
+        var m = Rneg(M[i2][col]);
+        M = Maddrow(M, i2, row, m);
+        ops.push({ op: 'R' + (i2 + 1) + ' -&gt; R' + (i2 + 1) + ' + ' + Rterm(m) + 'R' + (row + 1),
+                   why: 'clears column ' + (col + 1) + ', and leaves the determinant alone',
+                   after: Mcopy(M) });
+      }
+      pivots.push(col);
+      row += 1;
+    }
+    return { M: M, ops: ops, pivots: pivots, rank: pivots.length, detf: detf };
+  }
+
+  /* "2 1 -1; -3 -1 2" -- rows split on ; or a newline, entries on spaces or
+     commas. Every entry goes through Rparse, so 1/2 is an entry and 0.25
+     becomes 1/4 rather than a float that will drift three row operations later. */
+  function Mparse(text, what) {
+    var s = String(text).trim();
+    if (!s) return { bad: (what || 'the matrix') + ' box is empty' };
+    var lines = s.split(/[;\n]/).map(function (t) { return t.trim(); })
+                 .filter(function (t) { return t.length > 0; });
+    if (!lines.length) return { bad: (what || 'the matrix') + ' box has no rows in it' };
+    var out = [], width = -1;
+    for (var i = 0; i < lines.length; i += 1) {
+      var cells = lines[i].split(/[\s,]+/).filter(function (t) { return t.length > 0; });
+      var vals = [];
+      for (var j = 0; j < cells.length; j += 1) {
+        var r = Rread(cells[j]);
+        if (r === null) {
+          return { bad: (what || 'the matrix') + ', row ' + (i + 1) + ', entry ' + (j + 1) + ': "'
+            + esc(cells[j]) + '" is not a whole number or a fraction' };
+        }
+        vals.push(r);
+      }
+      if (!vals.length) return { bad: (what || 'the matrix') + ', row ' + (i + 1) + ' has no entries' };
+      if (width < 0) width = vals.length;
+      else if (vals.length !== width) {
+        return { bad: (what || 'the matrix') + ' is not rectangular: row 1 has ' + width
+          + ' entries and row ' + (i + 1) + ' has ' + vals.length };
+      }
+      out.push(vals);
+    }
+    if (out.length > 6 || width > 6) {
+      return { bad: 'this lab prints matrices up to 6 by 6, and that one is ' + out.length + ' by ' + width };
+    }
+    return { M: out };
+  }
+
+  /* A matrix as a table. `split` tints every column from that index on, which
+     is the augmented bar drawn with the one divider the stylesheet offers. */
+  function Mtable(caption, M, opts) {
+    opts = opts || {};
+    if (!M || !M.length) return table(caption, [], [tr([tdl('(no rows)')])]);
+    var rows = M.map(function (r, i) {
+      var cells = r.map(function (v, j) {
+        var cls = '';
+        if (opts.split !== undefined && j >= opts.split) cls = 'on';
+        if (opts.mark && opts.mark(i, j)) cls = 'on';
+        return td(Rtext(v), cls);
+      });
+      var head = (opts.rowlabels && opts.rowlabels[i] !== undefined) ? opts.rowlabels[i] : ('R' + (i + 1));
+      return tr([rowhead(head)].concat(cells), opts.focus === i ? 'focus' : '');
+    });
+    return table(caption, opts.heads ? [''].concat(opts.heads) : [], rows);
+  }
+  /* The trace: every operation with the matrix it produced. */
+  function Mtrace(caption, start, ops, opts) {
+    var blocks = [Mtable(caption + ' &mdash; the matrix as read', start, opts)];
+    if (!ops.length) {
+      blocks.push(steps(caption + ' &mdash; the operations', [['nothing to do', 'the matrix is already in that form']]));
+      return blocks.join('');
+    }
+    ops.forEach(function (o, i) {
+      blocks.push(Mtable('step ' + (i + 1) + ':  ' + o.op + '   (' + o.why + ')', o.after, opts));
+    });
+    return blocks.join('');
+  }
+  var PRESETS = [{"label": "a 2 by 2 whose inverse is whole", "a": "2 1; 1 1"}, {"label": "a 3 by 3", "a": "2 1 -1; -3 -1 2; -2 1 2"}, {"label": "singular: a zero row appears and stops everything", "a": "1 2; 2 4"}, {"label": "whole entries, fractional inverse", "a": "1 2; 3 4"}, {"label": "diagonal: each entry inverts on its own", "a": "2 0 0; 0 -3 0; 0 0 1/2"}, {"label": "singular 3 by 3: the rows are not independent", "a": "1 2 3; 4 5 6; 7 8 9"}];
+
+  var MODE = 'inverse';
+  var HASB = false, HASVEC = false, HASROWSEL = false, HASK = false;
+
+  var preset = document.getElementById('maPreset');
+  var inA = document.getElementById('maA');
+  var inB = HASB ? document.getElementById('maB') : null;
+  var inVec = HASVEC ? document.getElementById('maVec') : null;
+  var inK = HASK ? document.getElementById('maScalar') : null;
+  var opIn = HASB ? document.getElementById('maOp') : null;
+  var rowI = HASROWSEL ? document.getElementById('maRowI') : null;
+  var rowJ = HASROWSEL ? document.getElementById('maRowJ') : null;
+  var work = document.getElementById('maWork');
+  var status = document.getElementById('maStatus');
+  var titleOut = document.getElementById('maTitle'), subOut = document.getElementById('maSub');
+  var k1 = document.getElementById('maK1'), k2 = document.getElementById('maK2'), k3 = document.getElementById('maK3');
+  var k1L = document.getElementById('maK1Lab'), k2L = document.getElementById('maK2Lab'), k3L = document.getElementById('maK3Lab');
+
+  function setkpi(a, av, b, bv, c, cv) {
+    k1L.textContent = a; k1.textContent = av;
+    k2L.textContent = b; k2.textContent = bv;
+    k3L.textContent = c; k3.textContent = cv;
+  }
+  function colheads(n) {
+    var out = [];
+    for (var i = 0; i < n; i += 1) out.push('c' + (i + 1));
+    return out;
+  }
+  function inlinematrix(M) {
+    return M.map(function (r) {
+      return '[' + r.map(function (v) { return Rtext(v); }).join('  ') + ']';
+    }).join(' ');
+  }
+  function fail(html, extra) {
+    work.innerHTML = extra || '';
+    status.innerHTML = html;
+    setkpi('status', 'stuck', 'reason', 'see below', 'fix', 'the box named above');
+  }
+
+  /* ================================================== mode: rows ========= */
+  function paintRows(A) {
+    var n = A.length, square = Msquare(A);
+    var i = Math.max(0, Math.min(n - 1, parseInt(String(rowI.value), 10) - 1 || 0));
+    var j = Math.max(0, Math.min(n - 1, parseInt(String(rowJ.value), 10) - 1 || 0));
+    var kv = Rread(inK.value);
+    var clamped = (parseInt(String(rowI.value), 10) > n) || (parseInt(String(rowJ.value), 10) > n);
+    if (kv === null) {
+      fail('<strong>The multiplier "' + esc(inK.value) + '" is not a number I can use.</strong> '
+        + 'Row operations multiply by an exact rational, so type a whole number or a fraction such '
+        + 'as <code>-2</code> or <code>1/2</code>. A decimal works too and is converted to a '
+        + 'fraction: 0.25 becomes 1/4, and stays 1/4 however many operations follow.',
+        Mtable('The matrix, which was read without trouble', A, { heads: colheads(Mcols(A)) }));
+      return;
+    }
+    var heads = colheads(Mcols(A));
+    var detA = square ? Mdet(A) : null;
+    var blocks = [Mtable('A, as typed', A, { heads: heads })];
+
+    /* Each of the three, applied to A ITSELF rather than to the running result,
+       so the reader can see what one operation does without unpicking two. */
+    var swapped = Mswap(A, i, j);
+    var scaled = Mscalerow(A, i, kv);
+    var added = Maddrow(A, i, j, kv);
+    blocks.push(Mtable('1.  swap: R' + (i + 1) + ' &lt;-&gt; R' + (j + 1), swapped,
+      { heads: heads, focus: i }));
+    blocks.push(Mtable('2.  scale: R' + (i + 1) + ' &rarr; ' + Rterm(kv) + 'R' + (i + 1), scaled,
+      { heads: heads, focus: i }));
+    blocks.push(Mtable('3.  add a multiple: R' + (i + 1) + ' &rarr; R' + (i + 1) + ' + '
+      + Rterm(kv) + 'R' + (j + 1), added, { heads: heads, focus: i }));
+
+    /* The determinant recomputed from scratch after each one -- never adjusted
+       by the rule the table is about to state, or the table would be checking
+       itself against itself. */
+    if (square) {
+      var rows = [
+        tr([rowhead('A'), td(Rtext(detA)), td('&mdash;'),
+            tdl('the determinant of the matrix as typed')]),
+        tr([rowhead('after the swap'), td(Rtext(Mdet(swapped))),
+            td(i === j ? '1' : '-1'),
+            tdl(i === j ? 'swapping a row with itself does nothing at all'
+                        : 'a swap always multiplies the determinant by -1')]),
+        tr([rowhead('after the scaling'), td(Rtext(Mdet(scaled))), td(Rtext(kv)),
+            tdl(Rzero(kv) ? 'scaling by 0 makes the determinant 0, and there is no operation that '
+                            + 'undoes it: the row is gone'
+                          : 'scaling one row by k multiplies the determinant by k')]),
+        tr([rowhead('after the addition'), td(Rtext(Mdet(added))), td(i === j ? Rtext(Radd(R1, kv)) : '1'),
+            tdl(i === j ? 'adding a multiple of a row to ITSELF is really a scaling by 1 + k, so the '
+                          + 'determinant does change'
+                        : 'adding a multiple of ANOTHER row leaves the determinant untouched, which '
+                          + 'is why elimination can use it freely')]),
+      ];
+      blocks.push(table('What each one did to the determinant, recomputed from the entries each time',
+        ['', 'determinant', 'factor', 'the rule'], rows));
+    } else {
+      blocks.push(steps('The determinant', [['not defined here',
+        'A is ' + Mshape(A) + ', and only a square matrix has a determinant. The row operations '
+          + 'above are still perfectly legal &mdash; they never needed squareness.']]));
+    }
+
+    /* And the three composed, which is what elimination actually does. */
+    var run = Mswap(A, i, j);
+    var seq = [{ op: 'R' + (i + 1) + ' &lt;-&gt; R' + (j + 1),
+                 why: i === j ? 'a swap of a row with itself, which changes nothing'
+                              : 'the swap, applied to A as typed',
+                 after: Mcopy(run) }];
+    run = Mscalerow(run, i, kv);
+    seq.push({ op: 'R' + (i + 1) + ' &rarr; ' + Rterm(kv) + 'R' + (i + 1),
+               why: 'the scaling, applied to what the swap left',
+               after: Mcopy(run) });
+    run = Maddrow(run, i, j, kv);
+    seq.push({ op: 'R' + (i + 1) + ' &rarr; R' + (i + 1) + ' + ' + Rterm(kv) + 'R' + (j + 1),
+               why: 'the addition, applied to what the scaling left',
+               after: Mcopy(run) });
+    blocks.push(Mtrace('All three in order, each acting on the result of the last', A, seq, { heads: heads }));
+    work.innerHTML = blocks.join('');
+
+    setkpi('shape', Mshape(A), 'det A', square ? Rtext(detA) : 'not square',
+           'multiplier', Rtext(kv));
+
+    var msg = '<strong>Three operations, three effects on the determinant.</strong> ';
+    if (square) {
+      /* Two of the three rules only hold when i and j are DIFFERENT rows, and
+         the table above already computes what actually happened. This sentence
+         has to be read off the same condition, or the page would state a rule
+         while showing it being broken one line higher. */
+      msg += (i === j
+        ? 'Not the three you were promised, though: rows i and j are the same row here, so the '
+          + '"swap" swapped R' + (i + 1) + ' with itself and left the determinant exactly as it was, '
+          + 'and the third operation added a multiple of a row to ITSELF, which is a scaling by '
+          + '1 + k and multiplied the determinant by ' + Rtext(Radd(R1, kv)) + '. Only the middle '
+          + 'one behaved as advertised, multiplying by ' + Rtext(kv) + '. '
+        : 'The swap flips the sign, the scaling multiplies by ' + Rtext(kv) + ', and adding a '
+          + 'multiple of a different row changes nothing. Those three facts are what make elimination '
+          + 'safe: it is built almost entirely out of the third one. ')
+        + 'Every determinant in the table was '
+        + 'computed from the entries of that matrix by cofactor expansion, not by applying the rule '
+        + 'the row states &mdash; so the table is evidence for the rule rather than a restatement of it.';
+      if (Rzero(kv)) {
+        msg += ' You have the multiplier at 0, which is the one scaling that is not reversible: the '
+          + 'determinant collapses to 0 and no later operation brings it back.';
+      }
+    } else {
+      msg += 'A is ' + Mshape(A) + ', so there is no determinant to watch, but the operations '
+        + 'themselves are unchanged &mdash; row reduction works on any shape, and that is exactly why '
+        + 'it can solve a system with more equations than unknowns.';
+    }
+    if (clamped) {
+      msg += ' The row numbers were clamped to the ' + n + ' rows this matrix actually has.';
+    }
+    if (i === j) {
+      msg += ' That is the reason the rule about adding a multiple always says "of another row": '
+        + 'pick two different rows in the control above and all three rules come back.';
+    }
+    status.innerHTML = msg;
+  }
+
+  /* ================================================== mode: rref ========= */
+  function paintRref(A) {
+    var heads = colheads(Mcols(A));
+    var red = Mrref(A);
+    var ech = Mgauss(A);
+    /* Two algorithms, one number. Mgauss never normalises a pivot and never
+       clears upward; Mrref does both. If they disagreed about the rank, one of
+       them would be wrong, and the reader would be able to see it here. */
+    var nonzero = 0;
+    ech.M.forEach(function (r) {
+      var z = true;
+      r.forEach(function (v) { if (!Rzero(v)) z = false; });
+      if (!z) nonzero += 1;
+    });
+    var free = [];
+    for (var c = 0; c < Mcols(A); c += 1) if (red.pivots.indexOf(c) < 0) free.push('c' + (c + 1));
+    var twice = Mrref(red.M);
+
+    var blocks = [Mtrace('Gauss-Jordan on A', A, red.ops, { heads: heads })];
+    blocks.push(table('What the reduced form says',
+      ['quantity', 'value', 'meaning'], [
+        tr([rowhead('operations used'), td(String(red.ops.length)),
+            tdl('every one of them is printed above, in order')]),
+        tr([rowhead('pivot columns'), tdl(red.pivots.length
+              ? red.pivots.map(function (c) { return 'c' + (c + 1); }).join(', ') : 'none'),
+            tdl('the columns that carry a leading 1 in the reduced form')]),
+        tr([rowhead('free columns'), tdl(free.length ? free.join(', ') : 'none'),
+            tdl('columns with no pivot; read as a system, these are the free unknowns')]),
+        tr([rowhead('rank, by Gauss-Jordan'), td(String(red.rank)),
+            tdl('the number of pivots the reduction found')]),
+        tr([rowhead('rank, by forward elimination'), td(String(nonzero)),
+            tdl('the number of non-zero rows a different algorithm left behind')]),
+        tr([rowhead('do they agree?'), tdl(red.rank === nonzero
+              ? chip('yes', 'ok') + ' two algorithms that share no code returned ' + red.rank
+              : chip('no', 'no') + ' one of them is wrong, and that is a bug rather than a lesson')]),
+        tr([rowhead('reducing twice'), tdl(Mequ(twice.M, red.M)
+              ? chip('no change', 'ok') + ' the reduced form is already reduced, as it must be'
+              : chip('changed', 'no') + ' which would mean the first reduction had not finished')]),
+      ]));
+    blocks.push(Mtable('For comparison: forward elimination alone, which stops halfway', ech.M,
+      { heads: heads }));
+    work.innerHTML = blocks.join('');
+
+    setkpi('shape', Mshape(A), 'rank', String(red.rank), 'operations', String(red.ops.length));
+    status.innerHTML = '<strong>Rank ' + red.rank + ', reached in ' + red.ops.length + ' row '
+      + plural(red.ops.length, 'operation', 'operations') + '.</strong> '
+      + (red.ops.length === 0
+         ? 'This matrix was already in reduced row echelon form, so the trace above is empty. That is '
+           + 'a real answer and not a missing one. '
+         : 'Each step above shows the operation and the matrix it produced, so the trace can be '
+           + 'checked by hand a line at a time. ')
+      + 'The reduced form is unique &mdash; a different order of operations gets there by a different '
+      + 'route and lands on the same matrix &mdash; which is what makes rank a property of A rather '
+      + 'than a property of how you reduced it. Every entry is an exact fraction, which is what lets '
+      + 'the two rank counts above be compared at all: in floating point a pivot of 1/2 becomes an '
+      + 'entry that is nearly zero three steps later, and "nearly zero" is not a rank.';
+  }
+
+  /* ================================================== mode: arith ======== */
+  function paintArith(A, B) {
+    var op = String((opIn && opIn.value) || 'mul');
+    var kv = Rread(inK.value);
+    var heads = colheads(Mcols(A));
+    var blocks = [Mtable('A  (' + Mshape(A) + ')', A, { heads: heads }),
+                  Mtable('B  (' + Mshape(B) + ')', B, { heads: colheads(Mcols(B)) })];
+    var result = null, why = '', label = '';
+
+    if (op === 'add' || op === 'sub') {
+      label = op === 'add' ? 'A + B' : 'A - B';
+      if (!Msamesize(A, B)) {
+        why = 'A is ' + Mshape(A) + ' and B is ' + Mshape(B) + '. Adding matrices adds them entry '
+          + 'by entry, and there is no entry of B sitting where some entries of A are, so the sum '
+          + 'is not defined. This is not a rule to memorise &mdash; there is simply nothing to add.';
+      } else {
+        result = op === 'add' ? Madd(A, B) : Msub(A, B);
+      }
+    } else if (op === 'scale') {
+      label = 'k A';
+      if (kv === null) {
+        why = '"' + esc(inK.value) + '" is not a number I can multiply by. Try 2, -1 or 1/2.';
+      } else {
+        result = Mscale(A, kv);
+      }
+    } else {
+      var L = op === 'mul' ? A : B, Rm = op === 'mul' ? B : A;
+      label = op === 'mul' ? 'A x B' : 'B x A';
+      if (Mcols(L) !== Mrows(Rm)) {
+        why = 'the left matrix is ' + Mshape(L) + ' and the right one is ' + Mshape(Rm)
+          + '. Each entry of a product is a row of the left times a column of the right, so the rows '
+          + 'of the left must be exactly as long as the columns of the right are tall: '
+          + Mcols(L) + ' against ' + Mrows(Rm) + '.';
+      } else {
+        result = Mmul(L, Rm);
+        var derive = [];
+        for (var i = 0; i < Mrows(L); i += 1) {
+          for (var j = 0; j < Mcols(Rm); j += 1) {
+            derive.push(tr([rowhead('entry (' + (i + 1) + ', ' + (j + 1) + ')'),
+                            tdl('row ' + (i + 1) + ' of the left, times column ' + (j + 1) + ' of the right'),
+                            tdl(Mdottext(L, Rm, i, j) + ' = ' + Rtext(result[i][j]))]));
+          }
+        }
+        blocks.push(table('Every entry of ' + label + ', from the row and column it came from',
+          ['', 'which row, which column', 'the sum'], derive));
+      }
+    }
+
+    if (result) blocks.push(Mtable(label, result, { heads: colheads(Mcols(result)) }));
+    else blocks.push(steps(label, [['not defined', why]]));
+
+    /* The comparison the lesson is really about, computed whether or not the
+       operation the reader picked was a product. */
+    var AB = Mmul(A, B), BA = Mmul(B, A);
+    var cmp;
+    if (!AB && !BA) cmp = 'neither product is defined for these two shapes';
+    else if (!AB) cmp = 'A x B is not defined, though B x A is &mdash; order matters before the '
+      + 'arithmetic even starts';
+    else if (!BA) cmp = 'B x A is not defined, though A x B is &mdash; order matters before the '
+      + 'arithmetic even starts';
+    else if (!Msamesize(AB, BA)) cmp = 'both are defined but they are not even the same shape: A x B '
+      + 'is ' + Mshape(AB) + ' and B x A is ' + Mshape(BA);
+    else cmp = Mequ(AB, BA)
+      ? chip('equal here', 'ok') + ' A x B = B x A for this particular pair, which is a coincidence '
+        + 'about these two matrices and not a rule'
+      : chip('different', 'no') + ' A x B = ' + inlinematrix(AB) + ' and B x A = ' + inlinematrix(BA);
+    blocks.push(steps('Does order matter?', [['A x B against B x A', cmp]]));
+    work.innerHTML = blocks.join('');
+
+    setkpi('A', Mshape(A), 'B', Mshape(B),
+           label, result ? Mshape(result) : 'not defined');
+
+    /* "AB = 0 does not mean one of them is 0" is worth an example, and the
+       example is on the page whenever the reader has typed one. Read off the
+       product actually computed rather than cross-referenced to a preset by
+       position, which stops being true the moment the preset list changes. */
+    var isproduct = op === 'mul' || op === 'mulr';
+    var zeronote = '';
+    if (isproduct && result && Mequ(result, Mzero(Mrows(result), Mcols(result)))
+        && !Mequ(A, Mzero(Mrows(A), Mcols(A))) && !Mequ(B, Mzero(Mrows(B), Mcols(B)))) {
+      zeronote = ' And look at what came out: ' + label + ' is the zero matrix while neither A nor '
+        + 'B is zero. With numbers that cannot happen; with matrices it happens whenever the columns '
+        + 'of the right one point along directions the left one flattens.';
+    }
+
+    if (!result) {
+      status.innerHTML = '<strong>' + label + ' is not defined.</strong> ' + why.charAt(0).toUpperCase()
+        + why.slice(1) + ' Everything else on the page is still computed, because the shapes that do '
+        + 'work are the interesting part of this lesson.';
+    } else if (AB && BA && Msamesize(AB, BA) && !Mequ(AB, BA)) {
+      status.innerHTML = '<strong>' + label + ' = ' + inlinematrix(result) + '.</strong> '
+        + 'A x B and B x A are both defined here and they are different matrices. Multiplication of '
+        + 'numbers does not behave like this, and almost every mistake with matrices comes from '
+        + 'assuming it does &mdash; there is no cancelling and no reordering.' + zeronote;
+    } else {
+      var note;
+      if (AB && BA && Msamesize(AB, BA)) {
+        note = 'A x B and B x A happen to be equal for this particular pair, which is a fact about '
+          + 'these two matrices and not a rule &mdash; change one entry and it stops being true.';
+      } else if (AB && BA) {
+        note = 'A x B and B x A are both defined here and are not even the same shape, so whether '
+          + 'order matters is settled before any arithmetic happens.';
+      } else if (AB || BA) {
+        note = 'Only one of the two products is defined at all: with these shapes, writing them the '
+          + 'other way round does not give a different answer, it gives no expression.';
+      } else {
+        note = 'Neither product is defined for these two shapes.';
+      }
+      status.innerHTML = '<strong>' + label + ' = ' + inlinematrix(result) + '.</strong> '
+        + (isproduct
+           ? 'Every entry above was derived from the row and the column it came from, so the result '
+             + 'can be checked one entry at a time rather than trusted whole. '
+           : (op === 'scale'
+              ? 'Every entry above is one entry of A multiplied by k, in exact fractions, so the '
+                + 'result can be checked one entry at a time rather than trusted whole. '
+              : 'Every entry above is one entry of A paired with the entry of B sitting in the same '
+                + 'place, in exact fractions, so the result can be checked one entry at a time '
+                + 'rather than trusted whole. '))
+        + note + zeronote;
+    }
+  }
+
+  /* ==================================================== mode: det ======== */
+  function cofactorblock(A) {
+    var n = A.length;
+    if (n === 1) return steps('The determinant of a 1 by 1 matrix', [['it is the entry itself', Rtext(A[0][0])]]);
+    if (n === 2) {
+      return steps('The determinant of a 2 by 2 matrix', [['ad - bc',
+        '(' + Rtext(A[0][0]) + ')(' + Rtext(A[1][1]) + ') - (' + Rtext(A[0][1]) + ')(' + Rtext(A[1][0])
+          + ') = ' + Rtext(Mdet(A))]]);
+    }
+    var body = [], total = R0;
+    for (var j = 0; j < n; j += 1) {
+      var minor = Mminor(A, 0, j), md = Mdet(minor);
+      var term = Rmul(j % 2 === 0 ? R1 : R(-1n), Rmul(A[0][j], md));
+      total = Radd(total, term);
+      body.push(tr([rowhead('column ' + (j + 1)), td(j % 2 === 0 ? '+' : '-'), td(Rtext(A[0][j])),
+                    tdl(inlinematrix(minor)), td(Rtext(md)), td(Rtext(term))]));
+    }
+    body.push(tr([rowhead('total'), td(''), td(''), tdl('the terms added up'), td(''), td(Rtext(total))], 'focus'));
+    return table('Cofactor expansion along row 1, with every minor shown',
+      ['', 'sign', 'entry', 'the minor', 'its determinant', 'the term'], body);
+  }
+  function paintDet(A, bvec) {
+    var n = A.length, heads = colheads(n);
+    var detCof = Mdet(A);
+    var red = Mrref(A);
+    /* The second determinant: row reduction tracked the factor it multiplied
+       the determinant by, and the reduced form of a non-singular matrix is I,
+       whose determinant is 1. So det(A) = 1 / factor -- computed without ever
+       expanding a cofactor. */
+    var detRow = red.rank === n ? Rinv(red.detf) : R0;
+
+    var blocks = [Mtable('A', A, { heads: heads }), cofactorblock(A)];
+    blocks.push(steps('The same determinant by row reduction, which shares no code with the above', [
+      ['the reduced form', red.rank === n ? 'the identity, so its determinant is 1'
+        : 'rank ' + red.rank + ' out of ' + n + ', so a row of zeros appeared and the reduced form '
+          + 'has determinant 0'],
+      ['the factor the operations introduced', Rtext(red.detf)
+        + ' &mdash; swaps contributed -1 each, and each pivot divided by contributed its reciprocal'],
+      ['so det A is', red.rank === n ? '1 / ' + Rterm(red.detf) + ' = ' + Rtext(detRow) : '0'],
+      ['do the two agree?', Requ(detCof, detRow)
+        ? chip('yes', 'ok') + ' both routes give ' + Rtext(detCof)
+        : chip('no', 'no') + ' cofactor says ' + Rtext(detCof) + ' and row reduction says '
+          + Rtext(detRow) + ', which is a bug'],
+    ]));
+
+    var singular = Rzero(detCof);
+    if (!bvec) {
+      blocks.push(steps("Cramer's rule", [['no constants given',
+        'type ' + n + ' numbers in the constants box &mdash; for example <code>'
+          + heads.map(function () { return '1'; }).join(' ') + '</code> &mdash; and each unknown is '
+          + 'computed as a ratio of two determinants.']]));
+    } else if (bvec.length !== n) {
+      blocks.push(steps("Cramer's rule", [['the wrong number of constants',
+        'A has ' + n + ' rows and the constants box holds ' + bvec.length + ' '
+          + plural(bvec.length, 'number', 'numbers') + '. There has to be one constant per equation.']]));
+    } else if (singular) {
+      blocks.push(steps("Cramer's rule", [['nothing to divide by',
+        'every unknown in Cramer\'s rule is a determinant divided by det A, and det A is 0 here. '
+          + 'That is not the method failing &mdash; a singular system has either no solution or '
+          + 'infinitely many, and no single ratio could name either of those.']]));
+    } else {
+      var body = [], xs = [];
+      for (var c = 0; c < n; c += 1) {
+        var Ac = Mcopy(A);
+        for (var r = 0; r < n; r += 1) Ac[r][c] = bvec[r];
+        var dc = Mdet(Ac), xv = Rdiv(dc, detCof);
+        xs.push(xv);
+        body.push(tr([rowhead('x' + (c + 1)), tdl(inlinematrix(Ac)), td(Rtext(dc)),
+                      tdl(Rtext(dc) + ' / ' + Rterm(detCof) + ' = ' + Rtext(xv))]));
+      }
+      blocks.push(table("Cramer's rule: replace one column with the constants, then divide",
+        ['', 'A with that column replaced', 'its determinant', 'the unknown'], body));
+      var aug = A.map(function (row, i) { return row.concat([bvec[i]]); });
+      var solved = Mrref(aug, { cols: n });
+      var rrefX = [];
+      for (var v = 0; v < n; v += 1) rrefX.push(solved.M[solved.pivots.indexOf(v)][n]);
+      var same = true;
+      for (var q = 0; q < n; q += 1) if (!Requ(xs[q], rrefX[q])) same = false;
+      blocks.push(Mtable('And the same system row-reduced, which used none of the determinants above',
+        solved.M, { split: n, heads: heads.concat(['=']) }));
+      blocks.push(steps('The two answers', [
+        ["Cramer's rule", xs.map(function (v) { return Rtext(v); }).join(',   ')],
+        ['row reduction', rrefX.map(function (v) { return Rtext(v); }).join(',   ')],
+        ['agree?', same ? chip('yes', 'ok') + ' two methods, one answer'
+                        : chip('no', 'no') + ' which is a bug and not a lesson'],
+      ]));
+    }
+    work.innerHTML = blocks.join('');
+    setkpi('shape', Mshape(A), 'det A', Rtext(detCof),
+           'invertible', singular ? 'no' : 'yes');
+
+    if (singular) {
+      status.innerHTML = '<strong>det A = 0: this matrix is singular.</strong> Cofactor expansion '
+        + 'and row reduction both say so, and they were computed separately. A zero determinant means '
+        + 'the rows are not independent &mdash; row reduction found rank ' + red.rank + ' out of ' + n
+        + ' &mdash; so A squashes space flat and cannot be undone. Cramer\'s rule divides by det A, '
+        + 'which is why it has nothing to say here, and why "no unique solution" is the honest '
+        + 'answer rather than a number.';
+    } else {
+      status.innerHTML = '<strong>det A = ' + Rtext(detCof) + ', by two routes that share no code.</strong> '
+        + (n > 2 ? 'Cofactor expansion walked the ' + n + ' minors of row 1, recursively, and row '
+           : (n === 2 ? 'Cofactor expansion took ad - bc, and row '
+                      : 'The expansion had a single entry to read and no minors to recurse into, '
+                        + 'and row '))
+        + 'reduction never expanded anything &mdash; it multiplied together the factors its '
+        + 'own operations introduced. Agreement between them is the evidence; either one alone would '
+        + 'just be a number in a box. Everything is exact, so a determinant of ' + Rtext(detCof)
+        + ' is that value and not a float that rounds to it.';
+    }
+  }
+
+  /* ================================================= mode: inverse ====== */
+  function paintInverse(A) {
+    var n = A.length, heads = colheads(n);
+    var I = Mid(n);
+    var aug = Maug(A, I);
+    var red = Mrref(aug, { cols: n });
+    var left = Mtake(red.M, 0, n), right = Mtake(red.M, n, n);
+    var augHeads = heads.concat(heads.map(function (h) { return 'i' + h.slice(1); }));
+
+    var blocks = [Mtable('A', A, { heads: heads })];
+    blocks.push(Mtrace('Row reducing [A | I] &mdash; the identity half is tinted', aug, red.ops,
+      { split: n, heads: augHeads }));
+
+    if (!Mequ(left, I)) {
+      var zero = -1;
+      for (var i = 0; i < n; i += 1) {
+        var z = true;
+        for (var j = 0; j < n; j += 1) if (!Rzero(left[i][j])) { z = false; break; }
+        if (z) { zero = i; break; }
+      }
+      blocks.push(steps('There is no inverse', [
+        ['the left half did not become I', 'reduction reached rank ' + red.rank + ' out of ' + n
+          + ', so the left half of the reduced matrix is not the identity and never can be'],
+        ['the row that gives it away', zero >= 0
+          ? 'row ' + (zero + 1) + ' of the left half is entirely zeros. Whatever sits beside it in '
+            + 'the right half, no matrix multiplied by A could produce a 1 there.'
+          : 'the pivots ran out before every column had one'],
+        ['det A, computed independently', Rtext(Mdet(A))
+          + ' &mdash; cofactor expansion agrees that this matrix is singular'],
+      ]));
+      work.innerHTML = blocks.join('');
+      setkpi('shape', Mshape(A), 'rank', String(red.rank), 'inverse', 'does not exist');
+      status.innerHTML = '<strong>A is singular: it has no inverse.</strong> The row reduction did '
+        + 'not fail or crash &mdash; it finished, and what it finished with was a left half that is '
+        + 'not the identity, with rank ' + red.rank + ' where ' + n + ' was needed. The determinant, '
+        + 'computed by cofactor expansion without looking at any of this, is ' + Rtext(Mdet(A))
+        + '. Two independent routes to the same verdict. A matrix like this collapses at least one '
+        + 'direction to nothing, and no matrix can un-collapse it.';
+      return;
+    }
+
+    var inv = right;
+    var prod1 = Mmul(A, inv), prod2 = Mmul(inv, A);
+    blocks.push(Mtable('The right half is A inverse', inv, { heads: heads }));
+    blocks.push(Mtable('A x A inverse, multiplied out entry by entry', prod1, { heads: heads }));
+    blocks.push(Mtable('A inverse x A, which had no reason to be the same', prod2, { heads: heads }));
+    blocks.push(steps('Is it really the inverse?', [
+      ['A x A inverse = I ?', Mequ(prod1, I) ? chip('yes', 'ok') + ' the identity came back'
+                                             : chip('no', 'no') + ' which is a bug'],
+      ['A inverse x A = I ?', Mequ(prod2, I) ? chip('yes', 'ok') + ' and from the other side too'
+                                             : chip('no', 'no') + ' which is a bug'],
+      ['det A x det A inverse', Rtext(Mdet(A)) + ' x ' + Rtext(Mdet(inv)) + ' = '
+        + Rtext(Rmul(Mdet(A), Mdet(inv))) + ', which must be 1 and is'],
+    ]));
+    work.innerHTML = blocks.join('');
+    setkpi('shape', Mshape(A), 'det A', Rtext(Mdet(A)), 'A x A inv', Mequ(prod1, I) ? 'I' : 'not I');
+    status.innerHTML = '<strong>A inverse = ' + inlinematrix(inv) + '.</strong> The row reduction '
+      + 'produced it, and then it was MULTIPLIED back against A &mdash; both ways round &mdash; and '
+      + 'the identity came out. That multiplication is the proof; without it the page would be '
+      + 'asking you to take the reduction on trust. Notice how often the inverse has fractions in it '
+      + 'when A does not: the entries of an inverse are cofactors over the determinant, and there is '
+      + 'no reason for that division to come out whole. In floating point those fractions would be '
+      + 'the first thing to drift, and A times A inverse would come back as an identity with 0.9999 '
+      + 'on the diagonal.';
+  }
+
+  /* ---------------------------------------------------------- the driver */
+  function redraw() {
+    var pa = Mparse(inA.value, 'A');
+    subOut.textContent = MODE === 'arith' ? 'two matrices, exact entries' : 'exact rational entries';
+    if (pa.bad) {
+      titleOut.textContent = 'A cannot be read';
+      fail('<strong>' + pa.bad.charAt(0).toUpperCase() + pa.bad.slice(1) + '.</strong> '
+        + 'Type a matrix as rows separated by semicolons and entries separated by spaces: '
+        + '<code>2 1 -1; -3 -1 2; -2 1 2</code> is a 3 by 3. Entries may be whole numbers or '
+        + 'fractions such as <code>-1/2</code>, and every one of them is kept exactly.');
+      return;
+    }
+    var A = pa.M;
+    titleOut.textContent = 'A is ' + Mshape(A);
+
+    if (MODE === 'rows') { paintRows(A); return; }
+    if (MODE === 'rref') { paintRref(A); return; }
+    if (MODE === 'arith') {
+      var pb = Mparse(inB.value, 'B');
+      if (pb.bad) {
+        titleOut.textContent = 'B cannot be read';
+        fail('<strong>' + pb.bad.charAt(0).toUpperCase() + pb.bad.slice(1) + '.</strong> '
+          + 'A was read without trouble; it is the second box that is the problem. Rows go in '
+          + 'separated by semicolons, entries by spaces: <code>0 1; 1 0</code>.',
+          Mtable('A, which was read without trouble', A, { heads: colheads(Mcols(A)) }));
+        return;
+      }
+      paintArith(A, pb.M);
+      return;
+    }
+    if (!Msquare(A)) {
+      fail('<strong>A is ' + Mshape(A) + ', and this mode needs a square matrix.</strong> '
+        + (MODE === 'det'
+           ? 'A determinant is defined only when the matrix has as many rows as columns &mdash; the '
+             + 'cofactor expansion below would have nothing to recurse into otherwise. '
+           : 'Only a square matrix can have an inverse: A inverse has to work from both sides, and '
+             + 'for a non-square A the two products would not even have the same shape. ')
+        + 'Add or remove a column so that the shape is n by n.',
+        Mtable('A, as typed', A, { heads: colheads(Mcols(A)) }));
+      return;
+    }
+    if (MODE === 'det') {
+      var bvec = null;
+      var pv = Mparse(inVec.value, 'the constants');
+      if (!pv.bad) {
+        /* One row of numbers, or one column -- a reader writes both. */
+        bvec = pv.M.length === 1 ? pv.M[0] : pv.M.map(function (r) { return r[0]; });
+      }
+      paintDet(A, bvec);
+      if (pv.bad && String(inVec.value).trim()) {
+        status.innerHTML = '<strong>The constants box: ' + pv.bad + '.</strong> The determinant '
+          + 'above is unaffected &mdash; it never needed the constants. Cramer\'s rule does: type '
+          + 'one number per equation, such as <code>8 -11 -3</code>.';
+      }
+      return;
+    }
+    paintInverse(A);
+  }
+
+  function applyPreset() {
+    var p = PRESETS[Math.max(0, Math.min(PRESETS.length - 1, parseInt(preset.value, 10) || 0))];
+    if (!p) return;
+    inA.value = p.a || '';
+    if (inB) inB.value = p.b || '';
+    if (inVec) inVec.value = p.vec || '';
+    if (inK) inK.value = p.k || '2';
+    if (opIn && p.op) opIn.value = p.op;
+    if (rowI) rowI.value = p.i || '1';
+    if (rowJ) rowJ.value = p.j || '2';
+  }
+  preset.addEventListener('change', function () { applyPreset(); redraw(); });
+  inA.addEventListener('input', redraw);
+  if (inB) inB.addEventListener('input', redraw);
+  if (inVec) inVec.addEventListener('input', redraw);
+  if (inK) inK.addEventListener('input', redraw);
+  if (opIn) opIn.addEventListener('change', redraw);
+  if (rowI) rowI.addEventListener('change', redraw);
+  if (rowJ) rowJ.addEventListener('change', redraw);
+  applyPreset();
+  redraw();
+  window.redrawLab = redraw;
+  })();
+
+    /* Practice. The questions are lesson data; this only presents and scores
+       them. Every wrong answer gets the reason it is wrong, not just a cross:
+       an unexplained "incorrect" teaches the reader to guess again. */
+    (function () {
+      var prompt = document.getElementById('quizPrompt');
+      if (!prompt) return;
+      var choices = document.getElementById('quizChoices');
+      var feedback = document.getElementById('quizFeedback');
+      var scoreOut = document.getElementById('quizScore');
+      var nextBtn = document.getElementById('quizNext');
+      var index = 0, asked = 0, right = 0, answered = false;
+
+      function paintScore() { scoreOut.textContent = 'Score ' + right + ' / ' + asked; }
+
+      function render() {
+        var q = QUIZ[index % QUIZ.length];
+        answered = false;
+        prompt.innerHTML = q.q;
+        choices.textContent = '';
+        feedback.innerHTML = 'Choose the answer you can justify.';
+        q.a.forEach(function (text, i) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'choice';
+          b.innerHTML = text;
+          b.addEventListener('click', function () { pick(q, i, b); });
+          choices.appendChild(b);
+        });
+      }
+
+      function pick(q, i, button) {
+        if (answered) return;
+        answered = true;
+        asked += 1;
+        var correct = i === q.c;
+        if (correct) right += 1;
+        button.classList.add(correct ? 'right' : 'wrong');
+        if (!correct) {
+          choices.children[q.c].classList.add('right');
+        }
+        feedback.innerHTML = (correct ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + q.why;
+        paintScore();
+      }
+
+      nextBtn.addEventListener('click', function () { index += 1; render(); });
+      paintScore();
+      render();
+    })();
+  </script>
+</body>
+</html>
