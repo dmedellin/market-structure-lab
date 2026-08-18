@@ -69,7 +69,7 @@
 # Bind on all interfaces INSIDE the container namespace. Binding 127.0.0.1 here
 # would break Podman port publishing; host-side loopback-only exposure is done by
 # compose (`ports: 127.0.0.1:__LOOPBACK_PORT__:__LOOPBACK_PORT__`).
-:8082 {
+:__LOOPBACK_PORT__ {
 	log {
 		output stdout
 	}
