@@ -4038,3 +4038,107 @@ class TestDataAssetsCannotBecomeLoads(unittest.TestCase):
             "allowed to contain absolute URLs as data precisely because nothing "
             "can request them; that stops being true here." % offenders,
         )
+
+
+# The sign-in feature shipped once with no way in.
+#
+# /progress/ and its Microsoft sign-in were built, published, tested and served
+# 200 -- and were unreachable in practice. The only link into them was one
+# sentence of body copy under a lesson's completion button reading "Carry it to
+# another device", which names a benefit rather than an action; the site index
+# did not mention them at all. Every invariant in this file passed, because
+# every invariant asked whether the pages EXISTED and none asked whether a
+# reader could FIND them. A published page nobody can reach is not a feature.
+#
+# So the rule is tied to the capability, not to a hand-kept list of URLs: if a
+# page can RECORD a completion mark, it must offer a way to the page that SYNCS
+# them. Add a path, and its lessons inherit this the day they are generated.
+#
+# The site index is named separately for the reason the bug was reported: it is
+# where a reader looks first, and it is not a lesson.
+SIGNIN_HREF = "/progress/"
+SIGNIN_LINK_ID = "signinLink"
+PROGRESS_TOGGLE_ID = "progressToggle"
+
+
+class TestTheWayIntoSignIn(SiteFixture):
+    """Whatever can record a mark must be able to reach what syncs it."""
+
+    def pages_that_must_offer_it(self):
+        """The site index, plus every page carrying a completion toggle."""
+        for document in self.documents:
+            url = served_path(document.path)
+            if url == SITE_INDEX or PROGRESS_TOGGLE_ID in document.ids:
+                yield url, document
+
+    def test_the_pages_that_must_offer_sign_in_exist(self):
+        """Guard the guard: an empty sweep must not read as a pass."""
+        found = [url for url, _doc in self.pages_that_must_offer_it()]
+        self.assertIn(SITE_INDEX, found, "the site index was not swept")
+        self.assertGreater(
+            len(found), 100,
+            "only %d page(s) claim a completion toggle; this sweep is meant to "
+            "cover the whole generated library, so either the toggle's id "
+            "changed or the pages stopped carrying it" % len(found),
+        )
+
+    def test_every_such_page_links_to_progress(self):
+        missing = []
+        for url, document in self.pages_that_must_offer_it():
+            targets = {
+                urllib.parse.urljoin(url, value)
+                for tag, attr, value, _line in document.urls
+                if tag == "a" and attr == "href"
+            }
+            if SIGNIN_HREF not in targets:
+                missing.append(url)
+        self.assertEqual(
+            [], sorted(missing),
+            "these pages can record a completion mark but offer no link to %s, "
+            "so the marks they take can never leave the browser that took "
+            "them: %s" % (SIGNIN_HREF, sorted(missing)),
+        )
+
+    def test_the_link_is_in_the_masthead_and_not_only_in_body_copy(self):
+        """A sentence inside an article is not a way in; the masthead is.
+
+        This is the exact defect that shipped: a real link to /progress/
+        existed on every lesson, so the test above would have passed while the
+        feature stayed invisible. What makes it findable is that it sits in
+        the persistent chrome, in the same place on every page.
+        """
+        missing = []
+        for url, document in self.pages_that_must_offer_it():
+            if SIGNIN_LINK_ID not in document.ids:
+                missing.append(url)
+        self.assertEqual(
+            [], sorted(missing),
+            'these pages have no masthead sign-in control (id="%s"). A link '
+            "buried in body copy is why this feature shipped unreachable: %s"
+            % (SIGNIN_LINK_ID, sorted(missing)),
+        )
+
+    def test_the_masthead_control_resolves_to_progress_from_every_depth(self):
+        """The href is relative, so its depth is wrong page-type by page-type.
+
+        A lesson sits two levels down and a course home one; the same string
+        cannot serve both. Nothing else here would notice -- a wrong relative
+        href is valid markup that 404s only when clicked.
+        """
+        wrong = []
+        for url, document in self.pages_that_must_offer_it():
+            match = re.search(
+                r'<a[^>]*id="%s"[^>]*href="([^"]*)"' % SIGNIN_LINK_ID, document.text
+            ) or re.search(
+                r'<a[^>]*href="([^"]*)"[^>]*id="%s"' % SIGNIN_LINK_ID, document.text
+            )
+            if match is None:
+                continue  # absence is the previous test's failure, not this one's
+            resolved = urllib.parse.urljoin(url, match.group(1))
+            if resolved != SIGNIN_HREF:
+                wrong.append("%s -> %s (resolves to %s)" % (url, match.group(1), resolved))
+        self.assertEqual(
+            [], sorted(wrong),
+            "the masthead sign-in href does not resolve to %s from these "
+            "pages, so clicking it 404s: %s" % (SIGNIN_HREF, sorted(wrong)),
+        )

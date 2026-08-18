@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">09</span>
         <span class="brand-copy"><strong>Exponential and Logarithmic Functions</strong><span>Course 7 · Lesson 09 of 12</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1171,6 +1205,30 @@ x = ln 4 / (2 · ln 3 − ln 4)
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Solve <span class=\"math\">3^(x \u2212 1) = 27^x<\/span>.", "a": ["<span class=\"math\">x = \u22121/2<\/span>", "<span class=\"math\">x = 1/4<\/span>", "<span class=\"math\">x = 1/2<\/span>", "No solution &mdash; the <span class=\"math\">x<\/span> terms cancel"], "c": 0, "why": "<span class=\"math\">27 = 3^3<\/span>, so <span class=\"math\">27^x = 3^(3x)<\/span> and matching exponents gives <span class=\"math\">x \u2212 1 = 3x<\/span>, hence <span class=\"math\">2x = \u22121<\/span> and <span class=\"math\">x = \u22121/2<\/span>. Check: <span class=\"math\">3^(\u22123/2) = 27^(\u22121/2) \u2248 0.19245<\/span>. <span class=\"math\">1/4<\/span> comes from moving <span class=\"math\">3x<\/span> to the left with the wrong sign; <span class=\"math\">1/2<\/span> from a sign slip in the final division; the last option comes from reading <span class=\"math\">27^x<\/span> as <span class=\"math\">3^(3 + x)<\/span>, adding exponents where the power-of-a-power law multiplies them."}, {"q": "<span class=\"math\">2^x = 20<\/span>. Which expression is <span class=\"math\">x<\/span>?", "a": ["<span class=\"math\">ln 20 / ln 2<\/span>", "<span class=\"math\">ln 2 / ln 20<\/span>", "<span class=\"math\">ln 20 \u2212 ln 2<\/span>", "<span class=\"math\">10<\/span>"], "c": 0, "why": "<span class=\"math\">x \u00b7 ln 2 = ln 20<\/span>, so <span class=\"math\">x = ln 20 / ln 2 \u2248 4.3219<\/span>. The reciprocal <span class=\"math\">\u2248 0.2314<\/span> is <span class=\"math\">log_20(2)<\/span>; <span class=\"math\">ln 20 \u2212 ln 2 = ln 10 \u2248 2.3026<\/span> replaces a quotient of logarithms with the logarithm of a quotient; <span class=\"math\">10<\/span> divides <span class=\"math\">20<\/span> by the base, which does nothing to an exponent. The bracket <span class=\"math\">2^4 = 16 &lt; 20 &lt; 32 = 2^5<\/span> identifies the right one."}, {"q": "Why does <span class=\"math\">2^x = \u22128<\/span> have no real solution?", "a": ["Because <span class=\"math\">\u22128<\/span> is not a power of <span class=\"math\">2<\/span>", "Because <span class=\"math\">2^x<\/span> is positive for every real <span class=\"math\">x<\/span>", "Because <span class=\"math\">x = \u22123<\/span> gives <span class=\"math\">1/8<\/span> rather than <span class=\"math\">\u22128<\/span>", "Because the logarithm of a negative number is negative"], "c": 1, "why": "The range of <span class=\"math\">2^x<\/span> is <span class=\"math\">(0, \u221e)<\/span>, so no real <span class=\"math\">x<\/span> produces a negative value. The first option is true but is not a reason: <span class=\"math\">20<\/span> is not a power of <span class=\"math\">2<\/span> either, and <span class=\"math\">2^x = 20<\/span> does have a solution. The last option is false &mdash; <span class=\"math\">log(\u22128)<\/span> is not defined at all, negative or otherwise."}];
 
   (function () {

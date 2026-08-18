@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">05</span>
         <span class="brand-copy"><strong>Linear Equations and Inequalities</strong><span>Course 2 · Lesson 05 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1163,6 +1197,30 @@ B.  A = P(1 + rt)       solve for r
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Solve <span class=\"math\">A = (1/2)bh<\/span> for <span class=\"math\">h<\/span>.", "a": ["<span class=\"math\">h = 2A/b<\/span>", "<span class=\"math\">h = A/(2b)<\/span>", "<span class=\"math\">h = 2A \u2212 b<\/span>", "<span class=\"math\">h = b/(2A)<\/span>"], "c": 0, "why": "Multiply both sides by 2, then divide by <span class=\"math\">b<\/span>. <span class=\"math\">A/(2b)<\/span> comes from dividing by 2 instead of multiplying; <span class=\"math\">2A \u2212 b<\/span> from subtracting <span class=\"math\">b<\/span> when it is a factor, not a term; <span class=\"math\">b/(2A)<\/span> from inverting the last division."}, {"q": "Solve <span class=\"math\">S = C + rC<\/span> for <span class=\"math\">C<\/span>.", "a": ["<span class=\"math\">C = S/(1 + r)<\/span>", "<span class=\"math\">C = S \u2212 rC<\/span>", "<span class=\"math\">C = S \u2212 r<\/span>", "<span class=\"math\">C = S(1 + r)<\/span>"], "c": 0, "why": "Factoring gives <span class=\"math\">S = C(1 + r)<\/span>, and dividing isolates <span class=\"math\">C<\/span>. <span class=\"math\">S \u2212 rC<\/span> still contains <span class=\"math\">C<\/span>, so nothing has been solved; <span class=\"math\">S \u2212 r<\/span> comes from cancelling one <span class=\"math\">C<\/span> out of <span class=\"math\">C + rC<\/span>, which is not a legal cancellation in a sum; <span class=\"math\">S(1 + r)<\/span> multiplies where it should divide."}, {"q": "<span class=\"math\">ax + b = c<\/span> rearranges to <span class=\"math\">x = (c \u2212 b)/a<\/span>. When is that answer valid?", "a": ["For every <span class=\"math\">a<\/span>, <span class=\"math\">b<\/span> and <span class=\"math\">c<\/span>", "Exactly when <span class=\"math\">a \u2260 0<\/span>", "Exactly when <span class=\"math\">c \u2260 b<\/span>", "Exactly when <span class=\"math\">a<\/span>, <span class=\"math\">b<\/span> and <span class=\"math\">c<\/span> are whole numbers"], "c": 1, "why": "The last step divided by <span class=\"math\">a<\/span>, which requires <span class=\"math\">a \u2260 0<\/span>. If <span class=\"math\">a = 0<\/span> the equation is <span class=\"math\">b = c<\/span>, which contains no <span class=\"math\">x<\/span> and is either true for every number or for none &mdash; the two outcomes of lesson 6. <span class=\"math\">c = b<\/span> merely makes the answer <span class=\"math\">0<\/span>, which is a perfectly good value."}];
 
   (function () {

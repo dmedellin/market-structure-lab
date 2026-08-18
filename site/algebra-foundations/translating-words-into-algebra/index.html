@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">13</span>
         <span class="brand-copy"><strong>Foundations of Algebra</strong><span>Course 1 · Lesson 13 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1163,6 +1197,30 @@ test at n = 5:   the square is 25, three less is 22    5² − 3 = 22
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Which expression is \"five less than a number <span class=\"math\">n<\/span>\"?", "a": ["<span class=\"math\">5 \u2212 n<\/span>", "<span class=\"math\">n \u2212 5<\/span>", "<span class=\"math\">5n<\/span>", "<span class=\"math\">n/5<\/span>"], "c": 1, "why": "\"Less than\" names the amount subtracted first and the thing subtracted from second. At <span class=\"math\">n = 8<\/span> the phrase means <span class=\"math\">3<\/span>, and only <span class=\"math\">n \u2212 5<\/span> gives it; <span class=\"math\">5 \u2212 n<\/span> gives <span class=\"math\">\u22123<\/span>. The other two translate \"times\" and \"divided by\"."}, {"q": "Which expression is \"twice the sum of <span class=\"math\">n<\/span> and 3\"?", "a": ["<span class=\"math\">2n + 3<\/span>", "<span class=\"math\">2(n + 3)<\/span>", "<span class=\"math\">n + 6<\/span>", "<span class=\"math\">2 + n + 3<\/span>"], "c": 1, "why": "\"The sum of <span class=\"math\">n<\/span> and 3\" is one quantity, so it takes a bracket, and \"twice\" applies to all of it. At <span class=\"math\">n = 5<\/span> the phrase means <span class=\"math\">16<\/span>; <span class=\"math\">2n + 3<\/span> gives <span class=\"math\">13<\/span>, <span class=\"math\">n + 6<\/span> doubles only the <span class=\"math\">3<\/span>, and <span class=\"math\">2 + n + 3<\/span> reads \"twice\" as \"add two\"."}, {"q": "A rectangle is 3 cm longer than it is wide. Its width is <span class=\"math\">w<\/span> cm. Which expression is its perimeter, in centimetres?", "a": ["<span class=\"math\">4w + 6<\/span>", "<span class=\"math\">4w + 3<\/span>", "<span class=\"math\">2w + 3<\/span>", "<span class=\"math\">w(w + 3)<\/span>"], "c": 0, "why": "The length is <span class=\"math\">w + 3<\/span>, so the perimeter is <span class=\"math\">2w + 2(w + 3) = 4w + 6<\/span>. <span class=\"math\">4w + 3<\/span> adds the <span class=\"math\">3<\/span> once instead of twice, <span class=\"math\">2w + 3<\/span> adds one width and one length only, and <span class=\"math\">w(w + 3)<\/span> is the area &mdash; a different quantity, measured in square centimetres."}];
 
   (function () {

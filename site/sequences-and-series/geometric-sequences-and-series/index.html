@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">04</span>
         <span class="brand-copy"><strong>Sequences and Series</strong><span>Course 9 · Lesson 04 of 11</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1150,6 +1184,30 @@ the formula anyway  a₁/(1 - r) = 3/(1 - 2) = -3</div><p>That last line is the 
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "For the sequence <span class=\"math\">5, -10, 20, -40, \u2026<\/span> , what is <span class=\"math\">a\u2087<\/span>?", "a": ["<span class=\"math\">320<\/span>", "<span class=\"math\">-320<\/span>", "<span class=\"math\">-640<\/span>", "<span class=\"math\">640<\/span>"], "c": 0, "why": "<span class=\"math\">r = -2<\/span>, so <span class=\"math\">a\u2087 = 5(-2)\u2076 = 5(64) = 320<\/span>. <span class=\"math\">-320<\/span> treats an even power of a negative as negative; <span class=\"math\">-640<\/span> uses the exponent <span class=\"math\">7<\/span> instead of <span class=\"math\">6<\/span>, and it is <span class=\"math\">a\u2088<\/span>; <span class=\"math\">640<\/span> makes both errors at once."}, {"q": "What is the sum of the infinite series <span class=\"math\">6 + 4 + 8/3 + 16/9 + \u2026<\/span> ?", "a": ["<span class=\"math\">3<\/span>", "<span class=\"math\">9<\/span>", "<span class=\"math\">18<\/span>", "It has no sum"], "c": 2, "why": "<span class=\"math\">r = 4/6 = 2/3<\/span> and <span class=\"math\">|r| &lt; 1<\/span>, so <span class=\"math\">S\u221e = 6/(1 - 2/3) = 6/(1/3) = 18<\/span>. <span class=\"math\">3<\/span> is <span class=\"math\">1/(1 - r)<\/span> with <span class=\"math\">a\u2081<\/span> left out; <span class=\"math\">9<\/span> is <span class=\"math\">a\u2081/r<\/span>."}, {"q": "Does <span class=\"math\">2 + 6 + 18 + 54 + \u2026<\/span> have a sum?", "a": ["Yes: <span class=\"math\">a\u2081/(1 - r) = 2/(1 - 3) = -1<\/span>", "Yes: <span class=\"math\">2/(3 - 1) = 1<\/span>", "No: <span class=\"math\">|r| = 3 \u2265 1<\/span>, and the partial sums grow without bound", "No: a series of infinitely many positive terms cannot total a finite number"], "c": 2, "why": "The first two apply the formula where it does not hold, and the second also flips the denominator to avoid the negative answer the first produced. The fourth is contradicted by <span class=\"math\">4 + 2 + 1 + \u2026 = 8<\/span>, where infinitely many positive terms do have a finite total."}];
 
   (function () {

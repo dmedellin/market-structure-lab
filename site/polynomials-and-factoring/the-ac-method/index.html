@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">08</span>
         <span class="brand-copy"><strong>Polynomials and Factoring</strong><span>Course 4 · Lesson 08 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1138,6 +1172,30 @@ check  (4x - 3)(3x - 2) = 12x² - 8x - 9x + 6 = 12x² - 17x + 6</div><p>The seco
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "For <span class=\"math\">10x\u00b2 + 11x - 6<\/span>, which product must the pair of integers have?", "a": ["<span class=\"math\">11<\/span>", "<span class=\"math\">-6<\/span>", "<span class=\"math\">-60<\/span>", "<span class=\"math\">10<\/span>"], "c": 2, "why": "The pair multiplies to <span class=\"math\">ac = 10 \u00b7 (-6) = -60<\/span> and adds to <span class=\"math\">b = 11<\/span>. The pair is <span class=\"math\">15<\/span> and <span class=\"math\">-4<\/span>."}, {"q": "Why may <span class=\"math\">bx<\/span> be replaced by <span class=\"math\">mx + nx<\/span>?", "a": ["Because both sides of the equation are changed equally", "Because <span class=\"math\">m + n = b<\/span>, so the two expressions are equal for every <span class=\"math\">x<\/span>", "Because factoring allows any regrouping of terms", "Because <span class=\"math\">mn = ac<\/span> guarantees it"], "c": 1, "why": "The licence is the identity <span class=\"math\">mx + nx = (m + n)x = bx<\/span>. The condition <span class=\"math\">mn = ac<\/span> is what makes the grouping succeed afterwards, but it is not what makes the split legal."}, {"q": "No integer factor pair of <span class=\"math\">ac<\/span> sums to <span class=\"math\">b<\/span>. What follows?", "a": ["A different method will factor it", "The trinomial factors, but only with fractions", "The trinomial does not factor into binomials with integer coefficients", "The arithmetic must be wrong"], "c": 2, "why": "The pair search is complete, so an empty result is a proof. Equivalently <span class=\"math\">b\u00b2 - 4ac<\/span> is not a perfect square."}];
 
   (function () {

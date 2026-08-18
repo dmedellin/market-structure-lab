@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">08</span>
         <span class="brand-copy"><strong>Sequences and Series</strong><span>Course 9 · Lesson 08 of 11</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1170,6 +1204,30 @@ size check   5 payments of 1000 is 5000, and 6105.10 &gt; 5000
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "<span class=\"math\">100<\/span> is paid at the end of each year for 3 years into an account earning <span class=\"math\">10%<\/span> a year. What is in the account immediately after the third payment?", "a": ["<span class=\"math\">300<\/span>", "<span class=\"math\">331<\/span>", "<span class=\"math\">364.10<\/span>", "<span class=\"math\">133.10<\/span>"], "c": 1, "why": "The three payments are worth <span class=\"math\">121<\/span>, <span class=\"math\">110<\/span> and <span class=\"math\">100<\/span> at that moment, totalling <span class=\"math\">331<\/span>, and <span class=\"math\">100[(11/10)\u00b3 - 1]/(1/10) = 331<\/span> agrees. <span class=\"math\">300<\/span> ignores the interest. <span class=\"math\">364.10<\/span> is <span class=\"math\">331\u00b7(11/10)<\/span>, the annuity-due answer, which gives every payment one extra year. <span class=\"math\">133.10<\/span> is <span class=\"math\">100(11/10)\u00b3<\/span>, one payment compounded for three years instead of three payments."}, {"q": "A perpetuity pays <span class=\"math\">600<\/span> at the end of every year for ever, and the rate is <span class=\"math\">4%<\/span> a year. What is it worth today?", "a": ["<span class=\"math\">24<\/span>", "<span class=\"math\">625<\/span>", "<span class=\"math\">15000<\/span>", "<span class=\"math\">15600<\/span>"], "c": 2, "why": "<span class=\"math\">r = 1/(1 + 1/25)<\/span>, so <span class=\"math\">|r| &lt; 1<\/span> and the value is <span class=\"math\">P/i = 600/(1/25) = 15000<\/span>. <span class=\"math\">24<\/span> multiplies by the rate instead of dividing by it. <span class=\"math\">625<\/span> divides by <span class=\"math\">1 - i<\/span> rather than by <span class=\"math\">i<\/span>. <span class=\"math\">15600<\/span> is <span class=\"math\">15000(1 + 1/25)<\/span>, the value if the first payment arrived today rather than in a year."}, {"q": "The accumulated value of an annuity is a geometric series with <span class=\"math\">r = 1 + i<\/span>, which is greater than <span class=\"math\">1<\/span>. Why is that not a violation of the <span class=\"math\">|r| &lt; 1<\/span> condition?", "a": ["It is a violation, so the formula is only an approximation when <span class=\"math\">i &gt; 0<\/span>.", "<span class=\"math\">|r| &lt; 1<\/span> is needed only for a sum of infinitely many terms; a sum of <span class=\"math\">n<\/span> terms needs only <span class=\"math\">r \u2260 1<\/span>.", "The condition applies to the rate <span class=\"math\">i<\/span>, and <span class=\"math\">i &lt; 1<\/span> for any realistic rate.", "Rates are small, so <span class=\"math\">r<\/span> is close enough to <span class=\"math\">1<\/span> for the condition to hold."], "c": 1, "why": "<span class=\"math\">S\u2099 = a\u2081(1 - r\u207f)/(1 - r)<\/span> was derived by cancellation and needs nothing but <span class=\"math\">r \u2260 1<\/span>; <span class=\"math\">|r| &lt; 1<\/span> entered only when <span class=\"math\">r\u207f<\/span> had to be driven to zero. The first choice invents an inaccuracy that is not there. The third moves the condition onto the wrong quantity. The fourth confuses being close to <span class=\"math\">1<\/span> with being less than <span class=\"math\">1<\/span> in size, and <span class=\"math\">1.04<\/span> fails the condition as thoroughly as <span class=\"math\">2<\/span> does."}];
 
   (function () {

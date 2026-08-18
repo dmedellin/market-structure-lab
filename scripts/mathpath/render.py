@@ -116,6 +116,7 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
             mark=number,
             strong=course["title"],
             sub="Course %d · Lesson %s of %d" % (course["number"], number, total),
+            signin_href="../../progress/",
         ),
         chrome.crumbs([
             ("Learn library", "../../"),
@@ -369,6 +370,7 @@ def course_home(*, course, index, courses, path):
                 ("Syllabus", "#syllabus", False),
                 ("The path", "../paths/%s/" % path["slug"], False),
             ],
+            signin_href="../progress/",
         ),
         chrome.crumbs([
             ("Learn library", "../"),
@@ -480,6 +482,7 @@ def path_page(path):
             strong="Learn",
             sub="geterdone.io",
             nav=[("Library", "../../", False), ("Courses", "#courses", False)],
+            signin_href="../../progress/",
         ),
         chrome.crumbs([("Learn library", "../../"), ("%s path" % path["title"], None)]),
         '\n    <main id="main">\n',

@@ -54,6 +54,68 @@ THEME_TOGGLE = (
     'aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>'
 )
 
+# The sign-in control, in the masthead of every page.
+#
+# It exists because the only door into /progress/ used to be one sentence of
+# body copy under a lesson's completion button, reading "Carry it to another
+# device" -- which names a benefit, not an action, and does not read as a
+# sign-in to anyone looking for one. A reader who wants to sign in has to be
+# able to SEE that they can, from anywhere, without already knowing the feature
+# is there.
+#
+# The label is "Sign in" with no script and stays "Sign in" until a session is
+# actually found, so the no-JS rendering is the honest one rather than a
+# degraded one. The title is not decoration: this library locks nothing, and a
+# masthead sign-in on a site that grants no access is a promise that has to be
+# corrected the moment it is made.
+SIGNIN_TITLE = (
+    "Optional. Signing in carries your completion ticks to your other "
+    "devices; it unlocks nothing, because nothing here is locked."
+)
+
+
+def signin_control(href, *, current=False):
+    if href is None:
+        return ""
+    return (
+        '<a class="signin-btn" id="signinLink" href="%s" title="%s"%s>'
+        '<span class="signin-mark" aria-hidden="true">&#9679;</span>'
+        '<span class="signin-label" id="signinLabel">Sign in</span></a>\n      '
+        % (esc(href), esc(SIGNIN_TITLE), ' aria-current="page"' if current else "")
+    )
+
+
+# Reads the session the two auth pages write and, if one is there, puts the
+# account's own name in the masthead. Same-origin sessionStorage only -- this
+# sends nothing and asks nothing, so it holds on every page in the library
+# without touching the self-containment rule. Failure is silent and leaves the
+# static "Sign in" in place: a masthead is not worth a thrown exception.
+SIGNIN_SCRIPT = """
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
+"""
+
 # The pre-paint read. Same key as every other page in the library, and it runs
 # in <head> so the chosen theme is applied before the first paint rather than
 # flashing the other one. The allowlist matters: a corrupt stored value written
@@ -193,7 +255,8 @@ def head(*, title, description, canonical_path, favicon, og_description=None):
     )
 
 
-def topbar(*, home_href, home_label, mark, strong, sub, nav=None):
+def topbar(*, home_href, home_label, mark, strong, sub, nav=None,
+           signin_href=None, signin_current=False):
     """The masthead: brand link home, optional in-page nav, theme toggle."""
     if mark.startswith("<"):
         mark_markup = mark
@@ -215,7 +278,7 @@ def topbar(*, home_href, home_label, mark, strong, sub, nav=None):
         <span class="brand-mark" aria-hidden="true">{mark}</span>
         <span class="brand-copy"><strong>{strong}</strong><span>{sub}</span></span>
       </a>
-{nav}      {toggle}
+{nav}      {signin}{toggle}
     </header>
 """.format(
         home_href=esc(home_href),
@@ -224,6 +287,7 @@ def topbar(*, home_href, home_label, mark, strong, sub, nav=None):
         strong=esc(strong),
         sub=esc(sub),
         nav=nav_markup,
+        signin=signin_control(signin_href, current=signin_current),
         toggle=THEME_TOGGLE,
     )
 
@@ -305,4 +369,5 @@ def footer(lead_html, material):
 
 
 def close(scripts):
-    return "  <script>%s%s  </script>\n</body>\n</html>\n" % (THEME_SCRIPT, scripts)
+    return "  <script>%s%s%s  </script>\n</body>\n</html>\n" % (
+        THEME_SCRIPT, SIGNIN_SCRIPT, scripts)

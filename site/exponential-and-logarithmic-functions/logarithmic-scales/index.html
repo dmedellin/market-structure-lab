@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">12</span>
         <span class="brand-copy"><strong>Exponential and Logarithmic Functions</strong><span>Course 7 · Lesson 12 of 12</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1158,6 +1192,30 @@ magnitude, k = 1
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "A sound rises from <span class=\"math\">60<\/span> dB to <span class=\"math\">90<\/span> dB. The intensity has been multiplied by:", "a": ["<span class=\"math\">30<\/span>", "<span class=\"math\">1000<\/span>", "<span class=\"math\">10^30<\/span>", "<span class=\"math\">1.5<\/span>"], "c": 1, "why": "<span class=\"math\">10^((90 \u2212 60)/10) = 10^3 = 1000<\/span>. <span class=\"math\">30<\/span> reports the difference as though the scale were linear; <span class=\"math\">10^30<\/span> forgets to divide by the <span class=\"math\">10<\/span> in front of the logarithm; <span class=\"math\">1.5<\/span> divides one reading by the other, which is an operation on exponents and means nothing here."}, {"q": "Which is more acidic, pH 4 or pH 7, and by how much?", "a": ["pH 7, by a factor of <span class=\"math\">3<\/span>", "pH 4, by a factor of <span class=\"math\">3<\/span>", "pH 4, by a factor of <span class=\"math\">1000<\/span>", "pH 7, by a factor of <span class=\"math\">1000<\/span>"], "c": 2, "why": "<span class=\"math\">pH = \u2212log[H+]<\/span>, so the concentrations are <span class=\"math\">10^\u22124<\/span> and <span class=\"math\">10^\u22127<\/span>: the lower reading is the higher concentration, by a factor of <span class=\"math\">1000<\/span>. The minus sign in the definition is what reverses the direction, and a difference of <span class=\"math\">3<\/span> on the scale is never a factor of <span class=\"math\">3<\/span>."}, {"q": "Two identical machines, each measured at <span class=\"math\">70<\/span> dB, run together. The level is about:", "a": ["<span class=\"math\">140<\/span> dB", "<span class=\"math\">73<\/span> dB", "<span class=\"math\">70<\/span> dB", "<span class=\"math\">80<\/span> dB"], "c": 1, "why": "Intensities add, so the total is <span class=\"math\">2I<\/span> and the level rises by <span class=\"math\">10 \u00b7 log 2 \u2248 3.01<\/span> dB. <span class=\"math\">140<\/span> adds the two readings, which corresponds to multiplying the intensities; <span class=\"math\">80<\/span> would need ten machines, since <span class=\"math\">10 \u00b7 log 10 = 10<\/span> exactly."}];
 
   (function () {

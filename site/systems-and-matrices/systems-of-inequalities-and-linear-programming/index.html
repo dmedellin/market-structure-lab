@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">10</span>
         <span class="brand-copy"><strong>Systems and Matrices</strong><span>Course 8 · Lesson 10 of 10</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1177,6 +1211,30 @@ at the two rejected crossings   P = 40 at (8, 0) and at (0, 10)</div><p>The last
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Which points satisfy <span class=\"math\">2x - 3y \u2265 6<\/span>?", "a": ["The line <span class=\"math\">2x - 3y = 6<\/span> and nothing else", "The side of that line containing the origin, boundary included", "The side of that line not containing the origin, boundary included", "The side not containing the origin, boundary excluded"], "c": 2, "why": "Test <span class=\"math\">(0, 0)<\/span>: <span class=\"math\">2(0) - 3(0) = 0<\/span>, and <span class=\"math\">0 \u2265 6<\/span> is false, so the origin is on the wrong side. The sign is <span class=\"math\">\u2265<\/span>, so the boundary line is part of the solution and is drawn solid."}, {"q": "On the region with corners <span class=\"math\">(0, 0)<\/span>, <span class=\"math\">(5, 0)<\/span>, <span class=\"math\">(2, 6)<\/span>, <span class=\"math\">(0, 8)<\/span>, where is <span class=\"math\">P = 3x + 4y<\/span> largest?", "a": ["At <span class=\"math\">(2, 6)<\/span>, where <span class=\"math\">P = 30<\/span>", "At <span class=\"math\">(0, 8)<\/span>, where <span class=\"math\">P = 32<\/span>", "At <span class=\"math\">(5, 0)<\/span>, where <span class=\"math\">P = 15<\/span>", "In the middle of the region, where all constraints have room"], "c": 1, "why": "The four values are <span class=\"math\">0<\/span>, <span class=\"math\">15<\/span>, <span class=\"math\">30<\/span> and <span class=\"math\">32<\/span>. Changing the objective changed the winning corner &mdash; <span class=\"math\">5x + 4y<\/span> was largest at <span class=\"math\">(2, 6)<\/span> &mdash; while the list of corners stayed exactly the same. The corners come from the constraints alone."}, {"q": "The region <span class=\"math\">x \u2265 0<\/span>, <span class=\"math\">y \u2265 0<\/span>, <span class=\"math\">x + y \u2265 4<\/span> is unbounded. What can be said about <span class=\"math\">C = 2x + 3y<\/span> on it?", "a": ["It has a maximum and a minimum, both at corners", "It has a minimum of <span class=\"math\">8<\/span> at <span class=\"math\">(4, 0)<\/span> and no maximum", "It has neither a maximum nor a minimum", "It has a maximum of <span class=\"math\">12<\/span> at <span class=\"math\">(0, 4)<\/span>"], "c": 1, "why": "The corners are <span class=\"math\">(4, 0)<\/span> and <span class=\"math\">(0, 4)<\/span>, giving <span class=\"math\">8<\/span> and <span class=\"math\">12<\/span>. Travelling out along the region makes <span class=\"math\">2x + 3y<\/span> as large as you like, so no maximum exists; the minimum survives and, as the theorem promises, sits at a corner."}];
 
   (function () {

@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">10</span>
         <span class="brand-copy"><strong>Polynomials and Factoring</strong><span>Course 4 · Lesson 10 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1145,6 +1179,30 @@ x² - x + 2  │ 2x⁴ - 3x³ + 0x² + 5x - 1
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Dividing a degree-5 polynomial by a degree-2 polynomial, what is the largest possible degree of the remainder?", "a": ["<span class=\"math\">5<\/span>", "<span class=\"math\">3<\/span>", "<span class=\"math\">2<\/span>", "<span class=\"math\">1<\/span>"], "c": 3, "why": "The remainder's degree must be strictly less than the divisor's, so at most <span class=\"math\">1<\/span>. The quotient has degree <span class=\"math\">3<\/span>."}, {"q": "<span class=\"math\">f(x) = d(x)q(x) + r(x)<\/span> with <span class=\"math\">r(x) = 0<\/span>. What does that tell you?", "a": ["<span class=\"math\">d<\/span> is a factor of <span class=\"math\">f<\/span>", "<span class=\"math\">f<\/span> has no real roots", "<span class=\"math\">d<\/span> and <span class=\"math\">f<\/span> have the same degree", "The division was done incorrectly"], "c": 0, "why": "A zero remainder means <span class=\"math\">f = dq<\/span> exactly, so <span class=\"math\">d<\/span> divides <span class=\"math\">f<\/span>. This is the observation lesson 12 turns into the factor theorem."}, {"q": "Why write <span class=\"math\">+ 0x\u00b2<\/span> in the dividend?", "a": ["It changes the value of the polynomial", "It keeps the columns aligned so each subtraction uses like terms", "The algorithm requires all coefficients to be non-zero", "It increases the degree of the dividend"], "c": 1, "why": "<span class=\"math\">0x\u00b2<\/span> adds nothing to the polynomial. It reserves the column, so the terms being subtracted line up with the terms they belong to."}];
 
   (function () {

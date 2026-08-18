@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">10</span>
         <span class="brand-copy"><strong>Exponential and Logarithmic Functions</strong><span>Course 7 · Lesson 10 of 12</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1163,6 +1197,30 @@ solution set:  { 4 }</div><p>The rejected candidate is not a mistake in the alge
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Solve <span class=\"math\">log_3(x) + log_3(x \u2212 2) = 1<\/span>.", "a": ["<span class=\"math\">x = 3<\/span> only", "<span class=\"math\">x = 3<\/span> and <span class=\"math\">x = \u22121<\/span>", "<span class=\"math\">x = \u22121<\/span> only", "No solution"], "c": 0, "why": "Condensing gives <span class=\"math\">log_3(x(x \u2212 2)) = 1<\/span>, so <span class=\"math\">x\u00b2 \u2212 2x = 3<\/span> and <span class=\"math\">(x \u2212 3)(x + 1) = 0<\/span>. The domain is <span class=\"math\">x &gt; 2<\/span>, so <span class=\"math\">x = \u22121<\/span> is rejected: it makes both arguments negative. The survivor checks out, <span class=\"math\">log_3(3) + log_3(1) = 1 + 0 = 1<\/span>. Keeping both candidates is the commonest wrong answer here."}, {"q": "Why can condensing produce a value that is not a solution?", "a": ["Because the laws of logarithms are approximations", "Because <span class=\"math\">log M + log N = log(MN)<\/span> is defined in more places than its left side", "Because squaring both sides introduces extra roots", "Because the base changes during the condensing"], "c": 1, "why": "The left side needs <span class=\"math\">M &gt; 0<\/span> and <span class=\"math\">N &gt; 0<\/span>; the right side needs only <span class=\"math\">MN &gt; 0<\/span>, which two negatives also satisfy. The condensed equation is therefore a slightly different question, and its extra answers have to be discarded. The laws themselves are exact wherever both sides are defined, and no squaring occurred."}, {"q": "<span class=\"math\">log_3(x + 6) \u2212 log_3(x + 2) = 2<\/span> produces the candidate <span class=\"math\">x = \u22123/2<\/span>. What should you do with it?", "a": ["Reject it: a logarithmic equation cannot have a negative solution", "Keep it: the arguments are <span class=\"math\">9/2<\/span> and <span class=\"math\">1/2<\/span>, both positive", "Reject it: the quotient law does not apply to a difference", "Keep it only if the base is greater than <span class=\"math\">1<\/span>"], "c": 1, "why": "The domain condition is on the arguments, not on <span class=\"math\">x<\/span>. At <span class=\"math\">x = \u22123/2<\/span> they are <span class=\"math\">9/2<\/span> and <span class=\"math\">1/2<\/span>, so both logarithms exist, and <span class=\"math\">log_3(9/2) \u2212 log_3(1/2) = log_3(9) = 2<\/span>. The quotient law is exactly the law for a difference of logarithms, and the base plays no part in the domain."}];
 
   (function () {

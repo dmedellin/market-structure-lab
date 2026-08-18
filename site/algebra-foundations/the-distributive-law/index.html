@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">10</span>
         <span class="brand-copy"><strong>Foundations of Algebra</strong><span>Course 1 · Lesson 10 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1147,6 +1181,30 @@ check line 3 at x = 1:
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Expand <span class=\"math\">\u22122(x \u2212 5)<\/span>.", "a": ["<span class=\"math\">\u22122x + 10<\/span>", "<span class=\"math\">\u22122x \u2212 10<\/span>", "<span class=\"math\">\u22122x \u2212 5<\/span>", "<span class=\"math\">2x \u2212 10<\/span>"], "c": 0, "why": "<span class=\"math\">(\u22122)(x) = \u22122x<\/span> and <span class=\"math\">(\u22122)(\u22125) = +10<\/span>. <span class=\"math\">\u22122x \u2212 10<\/span> keeps the sign of the <span class=\"math\">\u22125<\/span> instead of multiplying it; <span class=\"math\">\u22122x \u2212 5<\/span> distributes to the first term only; <span class=\"math\">2x \u2212 10<\/span> loses the minus on the outside factor."}, {"q": "Simplify <span class=\"math\">\u2212(x \u2212 7)<\/span>.", "a": ["<span class=\"math\">\u2212x \u2212 7<\/span>", "<span class=\"math\">x \u2212 7<\/span>", "<span class=\"math\">\u2212x + 7<\/span>", "<span class=\"math\">x + 7<\/span>"], "c": 2, "why": "The factor outside is <span class=\"math\">\u22121<\/span>, and it multiplies both terms: <span class=\"math\">(\u22121)(x)<\/span> and <span class=\"math\">(\u22121)(\u22127)<\/span>. At <span class=\"math\">x = 1<\/span> the original is <span class=\"math\">\u2212(\u22126) = 6<\/span>, and only <span class=\"math\">\u2212x + 7<\/span> gives <span class=\"math\">6<\/span>. Every other option fails that one test."}, {"q": "Which of these is NOT a correct rearrangement?", "a": ["<span class=\"math\">(x + 6)/2 = x/2 + 3<\/span>", "<span class=\"math\">12/(x + 6) = 12/x + 2<\/span>", "<span class=\"math\">\u22123(x \u2212 2) = \u22123x + 6<\/span>", "<span class=\"math\">(1/2)(4x \u2212 6) = 2x \u2212 3<\/span>"], "c": 1, "why": "A sum being divided splits, because dividing by <span class=\"math\">2<\/span> is multiplying by <span class=\"math\">1/2<\/span> and the law applies. A sum in the denominator does not: at <span class=\"math\">x = 6<\/span> the left side is <span class=\"math\">12/12 = 1<\/span> and the right side is <span class=\"math\">2 + 2 = 4<\/span>. The other three are the law used correctly."}];
 
   (function () {

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Paths · Learn · geterdone.io</title>
-  <meta name="description" content="A free library of interactive learning paths. A path is an ordered sequence of courses on one subject: open a path to take its courses front to back, or search the library by title or topic to find a single course. Every lesson is one self-contained page — no accounts, no tracking, and it keeps working offline once loaded." />
+  <meta name="description" content="A free library of interactive learning paths. A path is an ordered sequence of courses on one subject: open a path to take its courses front to back, or search the library by title or topic to find a single course. Every lesson is one self-contained page — no account required, no tracking, and it keeps working offline once loaded." />
   <link rel="canonical" href="https://learn.geterdone.io/" />
   <meta name="author" content="dmedellin" />
 
@@ -251,6 +251,42 @@
       transition: transform 150ms ease, border-color 150ms ease;
     }
     .icon-btn:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
+
+    /* The masthead sign-in. Sized to the toggle beside it, not louder: nothing
+       in this library is locked, so this has to be findable without reading as
+       the price of entry. It sits OUTSIDE .topnav on purpose -- .topnav is
+       display:none under 720px, and the way in must not vanish on a phone. */
+    .signin-btn {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2, var(--panel2, rgba(127, 155, 178, 0.08)));
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+      transition: transform 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .signin-btn:hover {
+      color: var(--text);
+      border-color: var(--line-strong, var(--line2, var(--line)));
+      transform: translateY(-1px);
+    }
+    .signin-mark { font-size: 0.6rem; line-height: 1; color: var(--line-strong, var(--line)); }
+    .signin-btn.is-in .signin-mark { color: var(--cyan); }
+
+    /* Narrow: the word goes, the dot stays. The label stays in the DOM so the
+       control keeps "Sign in" as its accessible name. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 38px; justify-content: center; }
+    }
 
     /* ---------- Hero ---------- */
     .hero {
@@ -1029,6 +1065,7 @@
         <a href="#find">Find a course</a>
       </nav>
 
+      <a class="signin-btn" id="signinLink" href="./progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">●</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
     </header>
 
@@ -1047,7 +1084,7 @@
         <div>
           <span class="eyebrow"><i class="pulse" aria-hidden="true"></i> Free · interactive · self-guided</span>
           <h1 id="hero-title">Pick a subject. Take its courses <span class="gradient-text">in order.</span></h1>
-          <p>This is a library of learning paths. A path is an ordered sequence of courses on one subject: open one and work forward from course 1, or search for a single course and take it on its own. Every lesson is one self-contained page — no accounts, no tracking, nothing to install, and it keeps working offline once loaded.</p>
+          <p>This is a library of learning paths. A path is an ordered sequence of courses on one subject: open one and work forward from course 1, or search for a single course and take it on its own. Every lesson is one self-contained page — no account required, no tracking, nothing to install, and it keeps working offline once loaded. Signing in is optional and only carries your completion ticks between your own devices.</p>
           <div class="hero-actions">
             <a class="btn primary" href="#paths">Browse paths</a>
             <a class="btn ghost" href="#find">Find a course</a>
@@ -1970,6 +2007,34 @@
       // an empty result list under a filled field.
       render();
     })();
+
+    // If the two sign-in pages have put a session in this tab, say whose it is.
+    // Same-origin sessionStorage only: this sends nothing and asks nothing, so
+    // it costs the page none of its self-containment. Failure is silent and
+    // leaves the static "Sign in" standing, which is the honest fallback.
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   </script>
 </body>
 </html>

@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">13</span>
         <span class="brand-copy"><strong>Linear Equations and Inequalities</strong><span>Course 2 · Lesson 13 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1161,6 +1195,30 @@ degenerate        no solutions        ∅
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Which interval is the set of <span class=\"math\">x<\/span> with <span class=\"math\">\u22123 &lt; x \u2264 4<\/span>?", "a": ["<span class=\"math\">(\u22123, 4]<\/span>", "<span class=\"math\">[\u22123, 4)<\/span>", "<span class=\"math\">(\u22123, 4)<\/span>", "<span class=\"math\">[\u22123, 4]<\/span>"], "c": 0, "why": "The strict <span class=\"math\">&lt;<\/span> at the left end gives a round bracket and the <span class=\"math\">\u2264<\/span> at the right end gives a square one. The second option puts both brackets on the wrong ends, and the last two make the two ends match when the statement does not."}, {"q": "What is wrong with <span class=\"math\">[2, \u221e]<\/span>?", "a": ["Nothing; it is a correct way of writing <span class=\"math\">x \u2265 2<\/span>", "The two endpoints are in the wrong order", "The square bracket on <span class=\"math\">\u221e<\/span> claims infinity is a number in the set, and it is not a number at all; the correct form is <span class=\"math\">[2, \u221e)<\/span>", "The bracket at <span class=\"math\">2<\/span> should be round, because an interval running to infinity cannot include its left endpoint"], "c": 2, "why": "Infinity marks an end that never arrives, so there is nothing there to include and its bracket is always round. The bracket at <span class=\"math\">2<\/span> is decided by the relation <span class=\"math\">\u2265<\/span>, which includes 2; the far end has no say in it."}, {"q": "What set is <span class=\"math\">(4, 4)<\/span>?", "a": ["The empty set", "The single number <span class=\"math\">4<\/span>", "Every number except <span class=\"math\">4<\/span>", "It is not valid interval notation"], "c": 0, "why": "Both ends are excluded and they are the same number, so no number lies strictly between them. <span class=\"math\">[4, 4]<\/span> is the set <span class=\"math\">{ 4 }<\/span>, and opening either bracket empties it. The notation is valid; the set it names has nothing in it."}];
 
   (function () {

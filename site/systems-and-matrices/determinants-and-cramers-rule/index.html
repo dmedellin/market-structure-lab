@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">08</span>
         <span class="brand-copy"><strong>Systems and Matrices</strong><span>Course 8 · Lesson 08 of 10</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1164,6 +1198,30 @@ check   2(16/17) + 3(29/17) = (32 + 87)/17 = 119/17 = 7    ✓
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "What is the determinant of <span class=\"math\">[ 3  -2 ; 4  5 ]<\/span> (rows separated by a semicolon)?", "a": ["<span class=\"math\">7<\/span>", "<span class=\"math\">23<\/span>", "<span class=\"math\">-23<\/span>", "<span class=\"math\">-7<\/span>"], "c": 1, "why": "<span class=\"math\">ad - bc = (3)(5) - (-2)(4) = 15 - (-8) = 23<\/span>. Getting <span class=\"math\">7<\/span> means the minus sign on <span class=\"math\">-2<\/span> was dropped and <span class=\"math\">15 - 8<\/span> computed; <span class=\"math\">-23<\/span> is <span class=\"math\">bc - ad<\/span>, the two products in the wrong order; <span class=\"math\">-7<\/span> is both slips at once."}, {"q": "A system of two equations in two unknowns has <span class=\"math\">D = 0<\/span>. What follows?", "a": ["It has infinitely many solutions", "It has no solution", "It has exactly one solution, and <span class=\"math\">x = 0<\/span>", "It has either no solution or infinitely many, and <span class=\"math\">D<\/span> cannot say which"], "c": 3, "why": "<span class=\"math\">D = 0<\/span> rules out uniqueness and nothing more. <span class=\"math\">x + y = 1<\/span> with <span class=\"math\">2x + 2y = 5<\/span> and <span class=\"math\">x + y = 1<\/span> with <span class=\"math\">2x + 2y = 2<\/span> both have <span class=\"math\">D = 0<\/span>, and one is inconsistent while the other is dependent."}, {"q": "In Cramer's rule, <span class=\"math\">Dy<\/span> is the determinant of the coefficient matrix with:", "a": ["the second row replaced by the constants", "the second column replaced by the constants", "both columns replaced by the constants", "the first column replaced by the constants"], "c": 1, "why": "Each unknown owns a column, and its determinant replaces that column. Replacing the row instead is the usual slip: in the worked example it would give the determinant of <span class=\"math\">[ 2  3 ; 7  3 ]<\/span>, which is <span class=\"math\">-15<\/span> and not <span class=\"math\">-29<\/span>."}];
 
   (function () {

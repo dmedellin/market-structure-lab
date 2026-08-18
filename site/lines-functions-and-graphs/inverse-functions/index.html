@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">13</span>
         <span class="brand-copy"><strong>Lines, Functions and Graphs</strong><span>Course 3 · Lesson 13 of 14</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1188,6 +1222,30 @@ check   f(4) = 9/1 = 9          f⁻¹(9) = 28/7 = 4
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Why does <span class=\"math\">f(x) = x\u00b2<\/span> on all real numbers have no inverse?", "a": ["Because <span class=\"math\">x\u00b2<\/span> is never negative", "Because <span class=\"math\">4<\/span> comes from both <span class=\"math\">2<\/span> and <span class=\"math\">\u22122<\/span>, so an inverse would have to send <span class=\"math\">4<\/span> to two places", "Because <span class=\"math\">f(0) = 0<\/span>", "Because <span class=\"math\">x\u00b2<\/span> is not a linear function"], "c": 1, "why": "One-to-one fails: two inputs share an output, so running the assignment backwards produces two outputs for the input <span class=\"math\">4<\/span>, which lesson 7 forbids. The first choice describes the range and is true but irrelevant &mdash; <span class=\"math\">x\u00b3<\/span> has range every real number and <span class=\"math\">\u221ax<\/span> has range <span class=\"math\">[0, \u221e)<\/span>, and both are invertible. The third is a single value. The fourth is false as a criterion: <span class=\"math\">x\u00b3<\/span> is not linear and does have an inverse."}, {"q": "For <span class=\"math\">f(x) = (2x + 1)/(x \u2212 3)<\/span>, what is <span class=\"math\">f\u207b\u00b9(x)<\/span>?", "a": ["<span class=\"math\">(3x + 1)/(x \u2212 2)<\/span>", "<span class=\"math\">(x \u2212 3)/(2x + 1)<\/span>", "<span class=\"math\">(3x \u2212 1)/(x + 2)<\/span>", "<span class=\"math\">(x + 3)/(2x \u2212 1)<\/span>"], "c": 0, "why": "Swapping and solving gives <span class=\"math\">y(x \u2212 2) = 3x + 1<\/span>. Test it: <span class=\"math\">f(4) = 9<\/span> and <span class=\"math\">(3\u00b79 + 1)/(9 \u2212 2) = 28/7 = 4<\/span>. The second choice is <span class=\"math\">1/f(x)<\/span>, the reciprocal rather than the inverse; at <span class=\"math\">x = 9<\/span> it gives <span class=\"math\">6/19<\/span>. The third and fourth flip individual signs during the rearrangement and give <span class=\"math\">26/11<\/span> and <span class=\"math\">12/17<\/span> at <span class=\"math\">x = 9<\/span> instead of <span class=\"math\">4<\/span>."}, {"q": "<span class=\"math\">f(x) = (x \u2212 2)\u00b2 + 1<\/span> is restricted to <span class=\"math\">x \u2265 2<\/span>. What is <span class=\"math\">f\u207b\u00b9<\/span>?", "a": ["<span class=\"math\">f\u207b\u00b9(x) = 2 + \u221a(x \u2212 1)<\/span>", "<span class=\"math\">f\u207b\u00b9(x) = 2 \u2212 \u221a(x \u2212 1)<\/span>", "<span class=\"math\">f\u207b\u00b9(x) = \u221a(x \u2212 1) \u2212 2<\/span>", "<span class=\"math\">f\u207b\u00b9(x) = \u221a(x + 1) \u2212 2<\/span>"], "c": 0, "why": "<span class=\"math\">(y \u2212 2)\u00b2 = x \u2212 1<\/span> gives <span class=\"math\">y = 2 \u00b1 \u221a(x \u2212 1)<\/span>, and <span class=\"math\">y \u2265 2<\/span> selects the plus sign. Check with <span class=\"math\">f(5) = 10<\/span>: <span class=\"math\">2 + \u221a9 = 5<\/span>. The second choice is the inverse of the other restriction, <span class=\"math\">x \u2264 2<\/span>, where <span class=\"math\">f(\u22121) = 10<\/span> and <span class=\"math\">2 \u2212 \u221a9 = \u22121<\/span>. The third subtracts the <span class=\"math\">2<\/span> instead of adding it, giving <span class=\"math\">1<\/span> at <span class=\"math\">x = 10<\/span>. The fourth also shifts the wrong constant inside the root."}];
 
   (function () {

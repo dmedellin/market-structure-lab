@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">02</span>
         <span class="brand-copy"><strong>Exponential and Logarithmic Functions</strong><span>Course 7 · Lesson 02 of 12</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1157,6 +1191,30 @@ half-life:   (4/5)³ = 64/125  = 0.512     still above half
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "A town grows 5% a year. Its population after <span class=\"math\">t<\/span> years is <span class=\"math\">P\u00b7b^t<\/span>. What is <span class=\"math\">b<\/span>?", "a": ["<span class=\"math\">5<\/span>", "<span class=\"math\">1/20<\/span>", "<span class=\"math\">21/20<\/span>", "<span class=\"math\">6/5<\/span>"], "c": 2, "why": "<span class=\"math\">b = 1 + 5/100 = 21/20<\/span>. <span class=\"math\">1/20<\/span> is the rate on its own, and using it as the base would shrink the town to a twentieth of itself every year; <span class=\"math\">6/5<\/span> is a rise of 20%; <span class=\"math\">5<\/span> is a rise of 400% a year."}, {"q": "<span class=\"math\">100 g<\/span> of a substance falls by 10% a year. How much is left after 3 years?", "a": ["<span class=\"math\">70 g<\/span>", "<span class=\"math\">72.9 g<\/span>", "<span class=\"math\">81 g<\/span>", "<span class=\"math\">27.1 g<\/span>"], "c": 1, "why": "<span class=\"math\">100\u00b7(9/10)\u00b3 = 100\u00b7729/1000 = 72.9 g<\/span> exactly: the 10% is taken of <span class=\"math\">100<\/span>, then of <span class=\"math\">90<\/span>, then of <span class=\"math\">81<\/span>. <span class=\"math\">70 g<\/span> removes 10% of the original <span class=\"math\">100<\/span> three times, which is a linear model; <span class=\"math\">81 g<\/span> stops a year early; <span class=\"math\">27.1 g<\/span> is the amount lost rather than the amount left."}, {"q": "Which base gives decay?", "a": ["<span class=\"math\">b = 1.03<\/span>", "<span class=\"math\">b = 0.97<\/span>", "<span class=\"math\">b = \u22120.97<\/span>", "<span class=\"math\">b = 3<\/span>"], "c": 1, "why": "Decay is <span class=\"math\">0 &lt; b &lt; 1<\/span>, and <span class=\"math\">0.97<\/span> is a fall of 3% a step. <span class=\"math\">1.03<\/span> and <span class=\"math\">3<\/span> both exceed <span class=\"math\">1<\/span> and grow. A negative base is not allowed at all: <span class=\"math\">(\u22120.97)^(1/2)<\/span> is not a real number, so there is no function to call decaying."}];
 
   (function () {

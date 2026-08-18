@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">04</span>
         <span class="brand-copy"><strong>Systems and Matrices</strong><span>Course 8 · Lesson 04 of 10</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1153,6 +1187,30 @@ solution   (1, 2, 3)</div><p>Both eliminations removed <span class="math">x</spa
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "You eliminate <span class=\"math\">x<\/span> from <span class=\"math\">E1<\/span> and <span class=\"math\">E2<\/span>, then <span class=\"math\">y<\/span> from <span class=\"math\">E1<\/span> and <span class=\"math\">E3<\/span>. What do you have?", "a": ["A two-variable system ready to solve", "Two equations involving three unknowns between them, which is no reduction", "A contradiction", "The solution, up to back-substitution"], "c": 1, "why": "Reduction happens only when the same variable leaves both new equations. One equation in <span class=\"math\">y<\/span> and <span class=\"math\">z<\/span> beside another in <span class=\"math\">x<\/span> and <span class=\"math\">z<\/span> needs a third equation to go further, and all three have already been used."}, {"q": "In the worked example, <span class=\"math\">A<\/span> is <span class=\"math\">\u22123y + z = \u22123<\/span> and <span class=\"math\">z = 3<\/span>. Then <span class=\"math\">y<\/span> is:", "a": ["<span class=\"math\">\u22122<\/span>", "<span class=\"math\">2<\/span>", "<span class=\"math\">0<\/span>", "<span class=\"math\">\u22126<\/span>"], "c": 1, "why": "<span class=\"math\">\u22123y + 3 = \u22123<\/span> gives <span class=\"math\">\u22123y = \u22126<\/span>, so <span class=\"math\">y = 2<\/span>. <span class=\"math\">\u22122<\/span> comes from dividing <span class=\"math\">\u22126<\/span> by <span class=\"math\">3<\/span> rather than by <span class=\"math\">\u22123<\/span>, <span class=\"math\">\u22126<\/span> from not dividing at all, and <span class=\"math\">0<\/span> from adding the <span class=\"math\">3<\/span> to the right-hand side instead of subtracting it."}, {"q": "A three-variable system reduces to <span class=\"math\">0 = 0<\/span> at the last step, with no false statement anywhere. The solution set is:", "a": ["empty", "a single triple", "a line of triples, one variable free", "the whole of space"], "c": 2, "why": "A true statement with no variables left removes a restriction rather than adding one: one variable may be chosen freely and the other two follow from it. The whole of space would require every equation to have been <span class=\"math\">0 = 0<\/span> from the start."}];
 
   (function () {

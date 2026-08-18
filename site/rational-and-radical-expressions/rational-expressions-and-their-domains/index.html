@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">01</span>
         <span class="brand-copy"><strong>Rational and Radical Expressions</strong><span>Course 5 · Lesson 01 of 12</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1140,6 +1174,30 @@ check   x = −1 :   1 + 1 − 6  =  −4   defined, value 0</div><p>The last li
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "What is the domain of <span class=\"math\">(x \u2212 5)/(x\u00b2 \u2212 16)<\/span>?", "a": ["All real x with x \u2260 5", "All real x with x \u2260 4 and x \u2260 \u22124", "All real x with x \u2260 16", "All real x"], "c": 1, "why": "<span class=\"math\">x\u00b2 \u2212 16 = (x \u2212 4)(x + 4)<\/span>, which is zero at <span class=\"math\">4<\/span> and at <span class=\"math\">\u22124<\/span>. The numerator's zero at <span class=\"math\">x = 5<\/span> excludes nothing &mdash; the expression is defined there and equals <span class=\"math\">0<\/span>."}, {"q": "<span class=\"math\">(x\u00b2 \u2212 4)/(x \u2212 2)<\/span> at <span class=\"math\">x = 2<\/span> is:", "a": ["4", "0", "Undefined", "Equal to 1, since the numerator and denominator both vanish"], "c": 2, "why": "Substituting gives <span class=\"math\">0/0<\/span>, which names no number. The expression equals <span class=\"math\">x + 2<\/span> at every other value, and <span class=\"math\">x + 2<\/span> equals <span class=\"math\">4<\/span> at <span class=\"math\">x = 2<\/span> &mdash; but that is a different expression with a larger domain."}, {"q": "Which denominator excludes exactly one value?", "a": ["<span class=\"math\">(x + 3)\u00b2<\/span>", "<span class=\"math\">x\u00b2 \u2212 9<\/span>", "<span class=\"math\">x\u00b2 + 9<\/span>", "<span class=\"math\">x(x \u2212 3)<\/span>"], "c": 0, "why": "<span class=\"math\">(x + 3)\u00b2<\/span> is zero only at <span class=\"math\">x = \u22123<\/span>; repeating a factor does not repeat the exclusion. <span class=\"math\">x\u00b2 \u2212 9<\/span> excludes two values, <span class=\"math\">x(x \u2212 3)<\/span> excludes two, and <span class=\"math\">x\u00b2 + 9<\/span> is never zero for real <span class=\"math\">x<\/span>, so it excludes none."}];
 
   (function () {

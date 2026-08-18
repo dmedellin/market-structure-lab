@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">01</span>
         <span class="brand-copy"><strong>Foundations of Algebra</strong><span>Course 1 · Lesson 01 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1141,6 +1175,30 @@ order     −5/4 &lt; −1.2 &lt; 0.6 &lt; 2/3 &lt; 1.41 &lt; √2</div><p>Only 
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Which of these is irrational?", "a": ["<span class=\"math\">0.375<\/span>", "<span class=\"math\">\u221a9<\/span>", "<span class=\"math\">\u221a10<\/span>", "<span class=\"math\">22/7<\/span>"], "c": 2, "why": "<span class=\"math\">10<\/span> is not a perfect square, so <span class=\"math\">\u221a10<\/span> has no fractional form. <span class=\"math\">\u221a9<\/span> is <span class=\"math\">3<\/span> &mdash; a radical sign does not make a number irrational. <span class=\"math\">0.375<\/span> is <span class=\"math\">3/8<\/span>, and <span class=\"math\">22/7<\/span> is a fraction of integers, so both are rational; <span class=\"math\">22/7<\/span> is an approximation to <span class=\"math\">\u03c0<\/span>, not <span class=\"math\">\u03c0<\/span>."}, {"q": "Which statement about <span class=\"math\">1.414<\/span> and <span class=\"math\">\u221a2<\/span> is true?", "a": ["They are equal", "<span class=\"math\">1.414 &gt; \u221a2<\/span>", "<span class=\"math\">1.414 &lt; \u221a2<\/span>", "A decimal cannot be compared with a square root"], "c": 2, "why": "Both are positive, so square them: <span class=\"math\">1.414\u00b2 = 1.999396<\/span>, which is less than <span class=\"math\">2<\/span>. They agree to three decimal places and are different numbers, which is exactly why the comparison is made exactly rather than by eye."}, {"q": "How many real numbers lie strictly between <span class=\"math\">1/3<\/span> and <span class=\"math\">1/2<\/span>?", "a": ["None", "One", "Finitely many", "Infinitely many"], "c": 3, "why": "The average <span class=\"math\">5/12<\/span> lies between them, and the same argument applies again to <span class=\"math\">1/3<\/span> and <span class=\"math\">5/12<\/span>, without end. Between any two distinct reals there is another, which is why no real number has a next one."}];
 
   (function () {

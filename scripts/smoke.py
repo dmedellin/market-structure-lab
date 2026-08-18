@@ -1650,6 +1650,52 @@ class Smoke:
         if xfo is not None and xfo.strip().lower() not in ("deny", "sameorigin"):
             check.fail("X-Frame-Options must be DENY or SAMEORIGIN, got %r" % xfo)
 
+    def check_signin_is_reachable(self):
+        """The sign-in feature must be FINDABLE on the served site, not merely
+        present.
+
+        It shipped once fully working and effectively invisible: /progress/ was
+        200, the OAuth flow was correct, and the only way in was a sentence of
+        body copy under a lesson's completion button. Everything the release
+        gate asked was true and a reader still could not find it. So this asks
+        the question that was missing -- can you SEE the way in -- from every
+        page shape a reader actually lands on.
+
+        The expected href is pinned per shape rather than merely looked for,
+        because it is RELATIVE and so differs by page depth. A control present
+        with the wrong number of `../` is valid markup that reads as working
+        and 404s only when somebody clicks it.
+        """
+        # The generated library, NOT the trading pages: the trading courses
+        # carry no completion toggle, so there is nothing there to sync and
+        # nothing to advertise. Sampling one of each shape is enough -- the
+        # markup comes from one shared renderer, so a break is never local to
+        # a single lesson.
+        targets = (
+            ("signin-on-index", SITE_INDEX_PATH, "./progress/"),
+            ("signin-on-path-page", MATH_PATH_PAGE_PATH, "../../progress/"),
+            ("signin-on-course-home", MATH_COURSE_HOMES[0][1], "../progress/"),
+            ("signin-on-lesson", MATH_COURSE_LESSONS[0][1], "../../progress/"),
+            ("signin-on-progress-page", "/progress/", "../progress/"),
+        )
+        for check_id, path, expected_href in targets:
+            check = self.new_check(
+                check_id, "masthead offers the way in to /progress/", path
+            )
+            try:
+                response = self.get(path, max_redirects=self.args.max_redirects)
+            except FetchError as exc:
+                check.fail(str(exc))
+                continue
+            if not self.assert_status(check, response, 200):
+                continue
+            self.assert_contains(
+                check,
+                response,
+                'id="signinLink" href="%s"' % expected_href,
+                "masthead sign-in control",
+            )
+
     def check_unknown_path_404(self):
         path = self.args.unknown_path or "/release-smoke-unknown-%s" % uuid.uuid4().hex[:12]
         check = self.new_check("unknown-path-404", "unknown path is a real 404", path)
@@ -1677,6 +1723,7 @@ class Smoke:
         self.check_published_assets()
         self.check_self_containment()
         self.check_security_headers()
+        self.check_signin_is_reachable()
         self.check_unknown_path_404()
         return self.checks
 

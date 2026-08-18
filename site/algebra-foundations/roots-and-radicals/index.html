@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">07</span>
         <span class="brand-copy"><strong>Foundations of Algebra</strong><span>Course 1 · Lesson 07 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1154,6 +1188,30 @@ the 3rd root of 54  =  the 3rd root of (3³ · 2)  =  3 · (3rd root of 2)</div>
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "What is <span class=\"math\">\u221a16<\/span>?", "a": ["<span class=\"math\">4<\/span>", "<span class=\"math\">\u00b14<\/span>", "<span class=\"math\">\u22124<\/span>", "<span class=\"math\">8<\/span>"], "c": 0, "why": "The radical denotes one number, the non-negative one. <span class=\"math\">\u00b14<\/span> answers a different question &mdash; the solutions of <span class=\"math\">x\u00b2 = 16<\/span> &mdash; and <span class=\"math\">\u22124<\/span> is a square root of <span class=\"math\">16<\/span> that the symbol does not name. <span class=\"math\">8<\/span> is <span class=\"math\">16<\/span> halved, not a root of it."}, {"q": "Simplify <span class=\"math\">\u221a75<\/span>.", "a": ["<span class=\"math\">5\u221a3<\/span>", "<span class=\"math\">3\u221a5<\/span>", "<span class=\"math\">25\u221a3<\/span>", "It is already in simplest form"], "c": 0, "why": "<span class=\"math\">75 = 5\u00b2 \u00b7 3<\/span>, so the pair of fives sends one <span class=\"math\">5<\/span> outside and the <span class=\"math\">3<\/span> stays in. <span class=\"math\">3\u221a5<\/span> swaps the two, and is <span class=\"math\">\u221a45<\/span>. <span class=\"math\">25\u221a3<\/span> takes out the whole square instead of its root. And <span class=\"math\">75<\/span> has a repeated prime factor, so it is not in simplest form."}, {"q": "Which of these has no real value?", "a": ["the 3rd root of <span class=\"math\">\u221227<\/span>", "<span class=\"math\">\u2212\u221a25<\/span>", "the 4th root of <span class=\"math\">\u221216<\/span>", "<span class=\"math\">\u221a(4/9)<\/span>"], "c": 2, "why": "No real number has a negative fourth power, so nothing real is a fourth root of <span class=\"math\">\u221216<\/span>. The 3rd root of <span class=\"math\">\u221227<\/span> is <span class=\"math\">\u22123<\/span>, since <span class=\"math\">(\u22123)\u00b3 = \u221227<\/span>; <span class=\"math\">\u2212\u221a25<\/span> is <span class=\"math\">\u22125<\/span>, with the minus outside the radical and applied afterwards; and <span class=\"math\">\u221a(4/9)<\/span> is <span class=\"math\">2/3<\/span>."}];
 
   (function () {

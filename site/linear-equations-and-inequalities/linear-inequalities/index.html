@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">09</span>
         <span class="brand-copy"><strong>Linear Equations and Inequalities</strong><span>Course 2 · Lesson 09 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1160,6 +1194,30 @@ test  x =   0    (1/2)(0) + 1 = 1       (1/3)(0) = 0        1 ≤ 0    false  �
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Solve <span class=\"math\">\u22123x \u2265 12<\/span>.", "a": ["<span class=\"math\">x \u2264 \u22124<\/span>", "<span class=\"math\">x \u2265 \u22124<\/span>", "<span class=\"math\">x \u2264 4<\/span>", "<span class=\"math\">x \u2265 4<\/span>"], "c": 0, "why": "Dividing by <span class=\"math\">\u22123<\/span> reverses <span class=\"math\">\u2265<\/span> to <span class=\"math\">\u2264<\/span>, giving <span class=\"math\">x \u2264 \u22124<\/span>. The second option is what you get by not reversing; the last two divide by <span class=\"math\">3<\/span> and lose the minus sign. At <span class=\"math\">x = \u22125<\/span>, <span class=\"math\">\u22123(\u22125) = 15 \u2265 12<\/span>, and at <span class=\"math\">x = 0<\/span> the statement is false."}, {"q": "Solve <span class=\"math\">4 \u2212 x &lt; 9<\/span>.", "a": ["<span class=\"math\">x &gt; \u22125<\/span>", "<span class=\"math\">x &lt; \u22125<\/span>", "<span class=\"math\">x &lt; 5<\/span>", "<span class=\"math\">x &gt; 5<\/span>"], "c": 0, "why": "Subtract 4 to get <span class=\"math\">\u2212x &lt; 5<\/span>, then multiply by <span class=\"math\">\u22121<\/span> and reverse: <span class=\"math\">x &gt; \u22125<\/span>. The second option forgets the reversal; the last two lose the minus sign on the <span class=\"math\">5<\/span> as well, one of them reversing and one not. At <span class=\"math\">x = 0<\/span> the original reads <span class=\"math\">4 &lt; 9<\/span>, true, and <span class=\"math\">0 &gt; \u22125<\/span>; at <span class=\"math\">x = \u22126<\/span> it reads <span class=\"math\">10 &lt; 9<\/span>, false."}, {"q": "Which one of these operations forces the relation to reverse?", "a": ["Subtracting <span class=\"math\">7<\/span> from both sides", "Multiplying both sides by <span class=\"math\">\u22121/3<\/span>", "Multiplying both sides by <span class=\"math\">6<\/span>", "Adding <span class=\"math\">2x<\/span> to both sides"], "c": 1, "why": "Only multiplication or division by a negative number reverses, and <span class=\"math\">\u22121/3<\/span> is negative. Adding or subtracting never does, whether the thing added is a number or an expression in <span class=\"math\">x<\/span>, and multiplying by the positive number <span class=\"math\">6<\/span> does not either."}];
 
   (function () {

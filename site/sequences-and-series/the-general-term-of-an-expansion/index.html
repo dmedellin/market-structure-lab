@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">11</span>
         <span class="brand-copy"><strong>Sequences and Series</strong><span>Course 9 · Lesson 11 of 11</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1174,6 +1208,30 @@ exponent check   (2x²)³ = 8x⁶   and   (-3/x)⁶ = 729/x⁶
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "What is the coefficient of <span class=\"math\">x\u2077<\/span> in the expansion of <span class=\"math\">(x + 3)\u00b9\u2070<\/span>?", "a": ["<span class=\"math\">120<\/span>", "<span class=\"math\">1080<\/span>", "<span class=\"math\">3240<\/span>", "<span class=\"math\">9720<\/span>"], "c": 2, "why": "<span class=\"math\">a = x<\/span>, so <span class=\"math\">x\u2077<\/span> needs <span class=\"math\">10 - k = 7<\/span> and <span class=\"math\">k = 3<\/span>; the term is <span class=\"math\">C(10,3)x\u20773\u00b3 = 120\u00b727\u00b7x\u2077 = 3240x\u2077<\/span>. <span class=\"math\">120<\/span> is <span class=\"math\">C(10,3)<\/span> with the <span class=\"math\">3\u00b3<\/span> dropped. <span class=\"math\">1080<\/span> uses <span class=\"math\">3\u00b2<\/span> and <span class=\"math\">9720<\/span> uses <span class=\"math\">3\u2074<\/span>, off by one in each direction &mdash; the exponent on the <span class=\"math\">3<\/span> has to equal <span class=\"math\">k<\/span>."}, {"q": "In the expansion of <span class=\"math\">(a + b)\u00b9\u00b2<\/span>, written in descending powers of <span class=\"math\">a<\/span>, the term containing <span class=\"math\">b\u2075<\/span> is which term?", "a": ["the 5th", "the 6th", "the 8th", "the 13th"], "c": 1, "why": "<span class=\"math\">k = 5<\/span>, and the term number is <span class=\"math\">k + 1 = 6<\/span>, because <span class=\"math\">k<\/span> starts at <span class=\"math\">0<\/span> and the terms are counted from <span class=\"math\">1<\/span>. \"The 5th\" reads <span class=\"math\">k<\/span> itself as the term number. The 8th term is the one containing <span class=\"math\">a\u2075<\/span>, counted from the other end. <span class=\"math\">13<\/span> is the number of terms in the expansion, <span class=\"math\">n + 1<\/span>."}, {"q": "What is the constant term in the expansion of <span class=\"math\">(x\u00b2 + 1/x)\u2078<\/span>?", "a": ["<span class=\"math\">28<\/span>", "<span class=\"math\">56<\/span>", "<span class=\"math\">70<\/span>", "There is no constant term."], "c": 3, "why": "The general term is <span class=\"math\">C(8,k)x\u00b9\u2076\u207b\u00b3\u1d4f<\/span>, and <span class=\"math\">16 - 3k = 0<\/span> gives <span class=\"math\">k = 16/3<\/span>, which is not a whole number; the powers of <span class=\"math\">x<\/span> run <span class=\"math\">16, 13, 10, 7, 4, 1, -2, -5, -8<\/span> and skip <span class=\"math\">0<\/span>. <span class=\"math\">56<\/span> is <span class=\"math\">C(8,5)<\/span> and <span class=\"math\">28<\/span> is <span class=\"math\">C(8,6)<\/span>, the two entries reached by rounding <span class=\"math\">k = 16/3<\/span> down and up; <span class=\"math\">28<\/span> is also the constant term of <span class=\"math\">(x\u00b3 + 1/x)\u2078<\/span>, where <span class=\"math\">24 - 4k = 0<\/span> does have a whole-number solution. <span class=\"math\">70<\/span> is <span class=\"math\">C(8,4)<\/span>, the coefficient of the middle term <span class=\"math\">70x\u2074<\/span>, which answers a different question."}];
 
   (function () {

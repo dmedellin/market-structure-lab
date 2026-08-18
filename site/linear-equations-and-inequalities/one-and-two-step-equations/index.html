@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">02</span>
         <span class="brand-copy"><strong>Linear Equations and Inequalities</strong><span>Course 2 · Lesson 02 of 13</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1155,6 +1189,30 @@ C.  x/4 + 3 = 1
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Solve <span class=\"math\">4x + 9 = 1<\/span>.", "a": ["<span class=\"math\">x = \u22122<\/span>", "<span class=\"math\">x = 5/2<\/span>", "<span class=\"math\">x = 2<\/span>", "<span class=\"math\">x = \u221235/4<\/span>"], "c": 0, "why": "Subtract 9: <span class=\"math\">4x = \u22128<\/span>; divide by 4: <span class=\"math\">x = \u22122<\/span>. <span class=\"math\">5/2<\/span> comes from adding 9 instead of subtracting it; <span class=\"math\">2<\/span> from losing the sign in the division; <span class=\"math\">\u221235/4<\/span> from dividing by 4 first but leaving the <span class=\"math\">9<\/span> undivided."}, {"q": "Solve <span class=\"math\">7 \u2212 2x = 19<\/span>.", "a": ["<span class=\"math\">x = \u22126<\/span>", "<span class=\"math\">x = 6<\/span>", "<span class=\"math\">x = \u221213<\/span>", "<span class=\"math\">x = 13<\/span>"], "c": 0, "why": "Subtracting 7 gives <span class=\"math\">\u22122x = 12<\/span>, and dividing by <span class=\"math\">\u22122<\/span> gives <span class=\"math\">\u22126<\/span>. Dividing by <span class=\"math\">2<\/span> gives <span class=\"math\">6<\/span> and loses the coefficient's sign. Writing <span class=\"math\">\u22122x = 19 + 7<\/span> in place of <span class=\"math\">19 \u2212 7<\/span> gives <span class=\"math\">\u22122x = 26<\/span>, and then <span class=\"math\">\u221213<\/span> or <span class=\"math\">13<\/span> according to whether the sign survives the division."}, {"q": "Which of these first lines of working on <span class=\"math\">2(x + 3) = 14<\/span> is wrong?", "a": ["Divide both sides by 2, giving <span class=\"math\">x + 3 = 7<\/span>", "Multiply out the bracket, giving <span class=\"math\">2x + 6 = 14<\/span>", "Subtract 3 from both sides, giving <span class=\"math\">2x = 11<\/span>", "Subtract 14 from both sides, giving <span class=\"math\">2(x + 3) \u2212 14 = 0<\/span>"], "c": 2, "why": "Subtracting 3 from both sides is a legal move, but it does not give <span class=\"math\">2x = 11<\/span>. The <span class=\"math\">3<\/span> sits inside a product, so it is not a term of the left side: subtracting 3 from <span class=\"math\">2(x + 3)<\/span> leaves <span class=\"math\">2x + 6 \u2212 3<\/span>, that is <span class=\"math\">2x + 3<\/span>, so the line should read <span class=\"math\">2x + 3 = 11<\/span>. The other three lines are correct &mdash; the first reaches <span class=\"math\">x = 4<\/span> in one more step and the second in two more, and subtracting 14 is valid but gets no closer to an answer."}];
 
   (function () {

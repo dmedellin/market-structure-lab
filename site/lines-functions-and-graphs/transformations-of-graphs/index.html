@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">11</span>
         <span class="brand-copy"><strong>Lines, Functions and Graphs</strong><span>Course 3 · Lesson 11 of 14</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1185,6 +1219,30 @@ the starting point (0, 0) moves to (-3, 0)</div><p>Two of those four orders reac
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "The graph of <span class=\"math\">y = f(x \u2212 4)<\/span> is the graph of <span class=\"math\">y = f(x)<\/span> moved which way?", "a": ["Right <span class=\"math\">4<\/span>", "Left <span class=\"math\">4<\/span>", "Up <span class=\"math\">4<\/span>", "Down <span class=\"math\">4<\/span>"], "c": 0, "why": "The point <span class=\"math\">(t, f(t))<\/span> reappears where <span class=\"math\">x \u2212 4 = t<\/span>, that is at <span class=\"math\">x = t + 4<\/span>, so every point moves four to the right. The minus sign suggests left, which is why this is the most missed fact in the lesson. Up and down are changes made outside the function, and <span class=\"math\">\u22124<\/span> is inside it."}, {"q": "What is the <span class=\"math\">y<\/span>-intercept of <span class=\"math\">y = \u22122(x \u2212 3)\u00b2 + 5<\/span>?", "a": ["<span class=\"math\">\u221213<\/span>", "<span class=\"math\">23<\/span>", "<span class=\"math\">41<\/span>", "<span class=\"math\">5<\/span>"], "c": 0, "why": "At <span class=\"math\">x = 0<\/span>, <span class=\"math\">(0 \u2212 3)\u00b2 = 9<\/span>, so <span class=\"math\">\u22122(9) + 5 = \u221213<\/span>. <span class=\"math\">23<\/span> comes from squaring term by term, <span class=\"math\">0\u00b2 \u2212 3\u00b2 = \u22129<\/span>, then <span class=\"math\">\u22122(\u22129) + 5<\/span>. <span class=\"math\">41<\/span> comes from multiplying the <span class=\"math\">\u22122<\/span> in before squaring, giving <span class=\"math\">(6)\u00b2 + 5<\/span>. <span class=\"math\">5<\/span> is the output at the vertex, <span class=\"math\">x = 3<\/span>, not at <span class=\"math\">x = 0<\/span>."}, {"q": "Starting from <span class=\"math\">y = \u221ax<\/span>, which description reaches <span class=\"math\">y = \u221a(2x + 6)<\/span>?", "a": ["Squash horizontally by a factor of <span class=\"math\">1/2<\/span>, then shift left <span class=\"math\">3<\/span>", "Shift left <span class=\"math\">3<\/span>, then squash horizontally by a factor of <span class=\"math\">1/2<\/span>", "Squash horizontally by a factor of <span class=\"math\">1/2<\/span>, then shift left <span class=\"math\">6<\/span>", "Stretch horizontally by a factor of <span class=\"math\">2<\/span>, then shift left <span class=\"math\">3<\/span>"], "c": 0, "why": "<span class=\"math\">\u221a(2x + 6) = \u221a(2(x + 3))<\/span>, so once the <span class=\"math\">2<\/span> is factored out the shift is <span class=\"math\">3<\/span>. Shifting first gives <span class=\"math\">\u221a(x + 3)<\/span> and then <span class=\"math\">\u221a(2x + 3)<\/span>. Squashing first and shifting <span class=\"math\">6<\/span> gives <span class=\"math\">\u221a(2(x + 6)) = \u221a(2x + 12)<\/span>. Stretching instead of squashing gives <span class=\"math\">\u221a((x + 3)/2)<\/span>. Shifting left <span class=\"math\">6<\/span> <em>first<\/em> and squashing second also lands on <span class=\"math\">\u221a(2x + 6)<\/span>, which is why the order and the number have to be quoted together."}];
 
   (function () {

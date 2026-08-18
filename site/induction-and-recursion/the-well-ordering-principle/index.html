@@ -243,6 +243,39 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead sign-in. Sized to sit beside the theme toggle rather than
+       compete with it: this library locks nothing, so the control has to be
+       findable without reading like the price of entry. The dot goes solid
+       green only once a session is actually found. */
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-btn[aria-current="page"] { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; color: var(--line-strong); line-height: 1; }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+
+    /* Narrow masthead: the word goes, the dot stays. The label is hidden
+       visually but stays in the DOM, so the control keeps "Sign in" as its
+       accessible name rather than becoming an unlabelled target. */
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 40px; justify-content: center; }
+    }
+
     .icon-btn {
       display: grid;
       place-items: center;
@@ -986,6 +1019,7 @@
         <span class="brand-mark" aria-hidden="true">01</span>
         <span class="brand-copy"><strong>Induction and Recursion</strong><span>Course 3 · Lesson 01 of 12</span></span>
       </a>
+      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
       <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1136,6 +1170,30 @@ So 0 ≤ r &lt; d and a = dq + r.        ∎</div><p>Course 6 opens with this th
       }
       paintIcon();
     })();
+
+    (function () {
+      var a = document.getElementById('signinLink');
+      if (!a) return;
+      var s = null;
+      try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+      catch (e) { return; }
+      if (!s || !s.access_token) return;
+      var label = document.getElementById('signinLabel');
+      var name = null;
+      /* Same read the progress page does: the ID token names the account, for
+         display only. Nothing here trusts it for authorisation, because there
+         is nothing to authorise. */
+      try {
+        if (s.id_token) {
+          var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+          name = c.name || c.preferred_username || null;
+        }
+      } catch (e) { name = null; }
+      if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+      a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+        + '. Your completion ticks can follow you to another device.');
+      a.classList.add('is-in');
+    }());
   var QUIZ = [{"q": "Which set has no least element?", "a": ["<span class=\"math\">{n \u2208 \u2115 : n &gt; 5}<\/span>", "the positive rationals", "<span class=\"math\">{2, 4, 6, 8}<\/span>", "<span class=\"math\">{n \u2208 \u2115 : n is prime}<\/span>"], "c": 1, "why": "For any positive rational <span class=\"math\">q<\/span>, <span class=\"math\">q/2<\/span> is smaller and still positive. Every nonempty subset of <span class=\"math\">\u2115<\/span> does have one."}, {"q": "Well-ordering and mathematical induction are:", "a": ["unrelated", "equivalent \u2014 each can be derived from the other", "induction is stronger", "well-ordering is stronger"], "c": 1, "why": "The lesson derives induction from well-ordering; the reverse derivation is equally short. Which is called the axiom is a choice."}, {"q": "In a minimal-counterexample proof, the contradiction usually comes from:", "a": ["the base case being false", "producing a smaller counterexample, or showing the claim holds at <span class=\"math\">m<\/span>", "the set being infinite", "assuming the claim is true"], "c": 1, "why": "Minimality is the lever: anything smaller than <span class=\"math\">m<\/span> satisfies the claim, and using that to establish it at <span class=\"math\">m<\/span> is the contradiction."}];
 
   (function () {
