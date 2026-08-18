@@ -252,6 +252,11 @@
     }
     .icon-btn:hover { border-color: var(--line-strong, var(--line2, var(--line))); transform: translateY(-1px); }
 
+    /* The masthead is space-between, so the right-hand controls have to be
+       ONE child or they get spread apart with the sign-in stranded in the
+       middle of the bar. */
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+
     /* The masthead sign-in. Sized to the toggle beside it, not louder: nothing
        in this library is locked, so this has to be findable without reading as
        the price of entry. It sits OUTSIDE .topnav on purpose -- .topnav is
@@ -1065,8 +1070,10 @@
         <a href="#find">Find a course</a>
       </nav>
 
-      <a class="signin-btn" id="signinLink" href="./progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">●</span><span class="signin-label" id="signinLabel">Sign in</span></a>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+      <div class="topbar-actions">
+        <a class="signin-btn" id="signinLink" href="./progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">●</span><span class="signin-label" id="signinLabel">Sign in</span></a>
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+      </div>
     </header>
 
     <noscript>

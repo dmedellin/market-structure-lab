@@ -80,7 +80,7 @@ def signin_control(href, *, current=False):
     return (
         '<a class="signin-btn" id="signinLink" href="%s" title="%s"%s>'
         '<span class="signin-mark" aria-hidden="true">&#9679;</span>'
-        '<span class="signin-label" id="signinLabel">Sign in</span></a>\n      '
+        '<span class="signin-label" id="signinLabel">Sign in</span></a>'
         % (esc(href), esc(SIGNIN_TITLE), ' aria-current="page"' if current else "")
     )
 
@@ -278,7 +278,7 @@ def topbar(*, home_href, home_label, mark, strong, sub, nav=None,
         <span class="brand-mark" aria-hidden="true">{mark}</span>
         <span class="brand-copy"><strong>{strong}</strong><span>{sub}</span></span>
       </a>
-{nav}      {signin}{toggle}
+{nav}      <div class="topbar-actions">{signin}{toggle}</div>
     </header>
 """.format(
         home_href=esc(home_href),

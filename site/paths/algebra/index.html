@@ -243,6 +243,11 @@
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead is space-between, so the right-hand controls have to be
+       ONE child or they get spread apart with the sign-in stranded in the
+       middle of the bar. */
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+
     /* The masthead sign-in. Sized to sit beside the theme toggle rather than
        compete with it: this library locks nothing, so the control has to be
        findable without reading like the price of entry. The dot goes solid
@@ -1024,8 +1029,7 @@
         <a href="../../">Library</a>
         <a href="#courses">Courses</a>
       </nav>
-      <a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button>
+      <div class="topbar-actions"><a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">&#9790;</button></div>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../../">Learn library</a>

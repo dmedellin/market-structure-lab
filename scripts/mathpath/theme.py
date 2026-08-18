@@ -221,6 +221,11 @@ __TOGGLE_LIGHT__
     .topnav a:hover { color: var(--text); background: var(--panel-2); }
     .topnav a[aria-current="page"] { color: var(--text); background: var(--panel-2); }
 
+    /* The masthead is space-between, so the right-hand controls have to be
+       ONE child or they get spread apart with the sign-in stranded in the
+       middle of the bar. */
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+
     /* The masthead sign-in. Sized to sit beside the theme toggle rather than
        compete with it: this library locks nothing, so the control has to be
        findable without reading like the price of entry. The dot goes solid

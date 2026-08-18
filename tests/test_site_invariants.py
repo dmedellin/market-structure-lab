@@ -4142,3 +4142,32 @@ class TestTheWayIntoSignIn(SiteFixture):
             "the masthead sign-in href does not resolve to %s from these "
             "pages, so clicking it 404s: %s" % (SIGNIN_HREF, sorted(wrong)),
         )
+
+    def test_the_control_shares_its_group_with_the_theme_toggle(self):
+        """The masthead is `justify-content: space-between`.
+
+        That layout spreads its CHILDREN, so adding the sign-in as a fourth
+        bare child does not put it beside the toggle -- it strands it in the
+        middle of the bar, and on a lesson page (which has no nav) it lands
+        dead centre. The two right-hand controls must therefore be one child.
+
+        No other invariant here can see this: the markup is valid, the link
+        resolves, and the page looks broken only to a person.
+        """
+        stranded = []
+        for url, document in self.pages_that_must_offer_it():
+            group = re.search(
+                r'<div class="topbar-actions">(.*?)</div>', document.text, re.S
+            )
+            if group is None:
+                stranded.append("%s (no .topbar-actions group)" % url)
+                continue
+            inner = group.group(1)
+            if 'id="%s"' % SIGNIN_LINK_ID not in inner or 'id="themeToggle"' not in inner:
+                stranded.append("%s (group does not hold both controls)" % url)
+        self.assertEqual(
+            [], sorted(stranded),
+            "the sign-in control and the theme toggle must sit in one "
+            ".topbar-actions child, or space-between spreads them apart: %s"
+            % sorted(stranded),
+        )
