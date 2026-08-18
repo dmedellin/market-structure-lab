@@ -896,6 +896,15 @@ PUBLISHED_ASSETS = (
 # JavaScript reaches an identity provider, which is a property of the page, not
 # of the response this client checks. They carry no material disclaimer because
 # they teach nothing.
+# Signing in is a conversation with an identity provider and cannot be had
+# silently, so these two pages -- and only these two -- may reach these two
+# origins. Everything else served from this host must still reach nothing. The
+# allowance is per PAGE and per ORIGIN: a lesson that started calling an
+# identity provider still fails the sweep below, and so would a sign-in page
+# reaching anywhere else.
+AUTH_SELF_CONTAINMENT_EXEMPT = ("/oauth2/spa/callback/", "/progress/")
+AUTH_ALLOWED_ORIGINS = ("login.microsoftonline.com", "graph.microsoft.com")
+
 AUTH_PAGE_TARGETS = (
     ("signin-callback", "/oauth2/spa/callback/",
      (canonical_marker("/oauth2/spa/callback/"), "Signing you in", DISCLAIMER_MARKER)),
@@ -1601,9 +1610,20 @@ class Smoke:
                     "%s: expected HTTP 200 before scanning, got HTTP %d" % (path, response.status)
                 )
                 continue
+            is_auth = path in AUTH_SELF_CONTAINMENT_EXEMPT
+            hosts = set(allowed_hosts)
+            if is_auth:
+                hosts.update(AUTH_ALLOWED_ORIGINS)
             violations = scan_self_containment(
-                response.text(), allowed_hosts, strict_links=self.args.strict_links
+                response.text(), hosts, strict_links=self.args.strict_links
             )
+            if is_auth:
+                # The scanner reports a runtime call by PRIMITIVE as well as by
+                # origin, and a sign-in page necessarily makes one. The origin
+                # allowance above is what bounds WHERE it may go; this drops only
+                # the primitive report, so any other violation on these two pages
+                # still fails.
+                violations = [v for v in violations if "runtime network call" not in v]
             for violation in violations:
                 check.fail("%s: %s" % (path, violation))
 
