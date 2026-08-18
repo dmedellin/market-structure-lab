@@ -1186,81 +1186,89 @@ jobs:
           sys.exit(1 if errors else 0)
           PY
 
-      - name: Unallocated resources stay unallocated
+      - name: Deployment resources are allocated consistently
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import ipaddress, pathlib, re, sys
+          import ipaddress, json, pathlib, re, sys
 
-          # Loopback-port and subnet allocation is an explicit human decision
-          # proven against live host state (docs/EDGE_ROUTING_CONTRACT.md
-          # section 5). CI cannot allocate; it only proves nobody quietly did.
-          # Only deployment INPUT files are inspected. Prose that merely names a
-          # forbidden value (a schema description, a comment) is not an
-          # allocation and must not fail the build.
+          # THIS GATE CHANGED SHAPE WHEN THE RESOURCES WERE ALLOCATED.
           #
-          # Two different questions are asked here, and both have to be:
-          #   1. RULES - has anyone written a concrete value where an unallocated
-          #      placeholder belongs? Every port field is covered, including
-          #      internal_port: this app publishes 127.0.0.1:<loopback>:<internal>
-          #      straight through, so the container binds the SAME integer the host
-          #      reserves (deploy/Caddyfile, Containerfile.release EXPOSE and the
-          #      registry entry all carry the one __LOOPBACK_PORT__ token). Calling
-          #      the internal port "namespaced, therefore free" is how a hardcoded
-          #      8080 - a port another app has already claimed - slipped into a
-          #      committed contract while the loopback port was still a placeholder.
-          #   2. RESERVED - if any CIDR appears at all, does it collide with a
-          #      network that is already taken? Registry validation rejects
-          #      OVERLAP, not merely equality, so string comparison against
-          #      "10.89.2.0/24" is not a check: 10.89.2.0/25, 10.89.0.0/16 and
-          #      10.89.2.7/32 are all the same collision and none of them are that
-          #      string. ipaddress does the real containment test.
+          # It used to assert that every port and subnet field still held its
+          # unallocated token, because choosing them is a human decision proven
+          # against live host state. That decision has now been made and proven:
+          # loopback 8082 (free per `ss -ltn` on the host, with 8080 left to the
+          # pixelbattle-landing reservation) and 10.89.4.0/24 (non-overlapping
+          # per `podman network inspect`), landed in the platform-ops registry
+          # reservation for slug market-structure-lab.
           #
-          # When a human does allocate, they update these RULES in the same
-          # reviewed change that lands the integers - deliberately, not by
-          # discovering CI is red.
+          # The gate's PURPOSE is unchanged: nobody may quietly write a port or a
+          # CIDR into a deployment input. What changed is the correct value. So
+          # instead of "must still be a token" it now asks:
+          #   1. CONSISTENCY - every port literal in a deployment input equals the
+          #      one allocated port. This app publishes 127.0.0.1:<loopback>:<internal>
+          #      straight through, so a second integer anywhere means the container
+          #      binds a port the host does not reserve. That is exactly how a
+          #      hardcoded 8080 - a port another app had already claimed - once
+          #      reached a committed contract.
+          #   2. RESERVED - any CIDR present must not collide with a network that
+          #      is already taken. Overlap, not equality: 10.89.2.0/25 and
+          #      10.89.0.0/16 are the same collision as 10.89.2.0/24 and neither is
+          #      that string. ipaddress does the real containment test.
+          #   3. SOURCE OF TRUTH - release/contract.json still carries real values
+          #      and no leftover token, since release.yml renders every artifact
+          #      from it.
+          CONTRACT = pathlib.Path("release/contract.json")
+          contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+          network = contract.get("network", {})
+          PORT = network.get("loopback_port")
+          SUBNET = network.get("subnet")
+          errors = []
+          if not (isinstance(PORT, int) and not isinstance(PORT, bool) and 1024 <= PORT <= 65535):
+              errors.append((CONTRACT, 0, "network.loopback_port is not an allocated port: %r" % (PORT,)))
+          if network.get("internal_port") != PORT:
+              errors.append((CONTRACT, 0, "internal_port %r != loopback_port %r; this app binds the "
+                             "integer it publishes" % (network.get("internal_port"), PORT)))
+          try:
+              ALLOCATED = ipaddress.ip_network(SUBNET)
+          except Exception:
+              ALLOCATED = None
+              errors.append((CONTRACT, 0, "network.subnet is not an allocated CIDR: %r" % (SUBNET,)))
+
           SCOPE = ["deploy", "release", "platform"]
           NAMES = ("compose.yaml", "compose.yml", "compose.template.yaml",
                    "compose.production.yaml", "Containerfile", "Containerfile.release")
-          # Documentation is not configuration. Several files here deliberately
-          # NAME the forbidden subnet and the taken ports so a human reading them
-          # cannot pick one by accident; failing the build on that prose would
-          # teach people to delete the warning instead of the value. So the whole
-          # documentation block is skipped - not merely its first line - along
-          # with comments and trailing comments.
+          # Documentation is not configuration; several files deliberately NAME a
+          # forbidden subnet or a taken port so a human cannot pick one by
+          # accident, and failing the build on that prose would teach people to
+          # delete the warning instead of the value.
           DOC_KEYS = {"description", "title", "comment", "note", "notes",
                       "examples", "rationale"}
           KEY_LINE = re.compile(r'^-?\s*"?(\$?[A-Za-z_][A-Za-z0-9_-]*)"?\s*:')
-          RULES = [
-              (re.compile(r'127\.0\.0\.1:\d+:\d+'),
-               "hardcoded loopback publish mapping; keep __LOOPBACK_PORT__ until a human allocates a port"),
-              (re.compile(r'"?loopback_port"?\s*[:=]\s*"?\d'),
-               "hardcoded loopback port; keep __LOOPBACK_PORT__ until a human allocates one"),
-              (re.compile(r'"?internal_port"?\s*[:=]\s*"?\d'),
-               "hardcoded internal port; this app binds the same integer it publishes, so keep "
-               "__LOOPBACK_PORT__ here too until a human allocates one"),
-              (re.compile(r'"?subnet"?\s*[:=]\s*"?\d'),
-               "hardcoded subnet; keep __APP_SUBNET__ until a human allocates one"),
-              # Caddy site-address line, e.g. ":8080 {" — the in-container listener.
-              (re.compile(r'^\s*:\d+\s*\{'),
-               "hardcoded Caddy site address; keep :__LOOPBACK_PORT__ until a human allocates a port"),
-              # Containerfile EXPOSE, e.g. "EXPOSE 8080".
-              (re.compile(r'^\s*EXPOSE\s+\d'),
-               "hardcoded EXPOSE port; keep __LOOPBACK_PORT__ until a human allocates one"),
-              # Any loopback healthcheck/probe URL, e.g. http://127.0.0.1:8080/healthz.
-              (re.compile(r'127\.0\.0\.1:\d+/'),
-               "hardcoded loopback probe URL; keep __LOOPBACK_PORT__ until a human allocates one"),
+          PORT_PATTERNS = [
+              (re.compile(r'127\.0\.0\.1:(\d+):(\d+)'), "loopback publish mapping"),
+              (re.compile(r'"?loopback_port"?\s*[:=]\s*"?(\d+)'), "loopback_port"),
+              (re.compile(r'"?internal_port"?\s*[:=]\s*"?(\d+)'), "internal_port"),
+              (re.compile(r'^\s*:(\d+)\s*\{'), "Caddy site address"),
+              (re.compile(r'^\s*EXPOSE\s+(\d+)'), "EXPOSE"),
+              (re.compile(r'127\.0\.0\.1:(\d+)/'), "loopback probe URL"),
           ]
-
-          # Networks the live host baseline and the root registry prove are taken.
           RESERVED = [
-              ("10.89.2.0/24", "platform-private-edge (live baseline); NEVER usable by this app"),
+              ("10.89.2.0/24", "platform-private-edge (live baseline)"),
               ("10.88.0.0/16", "the Podman default network"),
               ("10.89.0.0/24", "hoa-meetings"),
               ("10.89.1.0/24", "cyberpunk-sky-raid"),
               ("10.89.3.0/24", "the pixelbattle-landing reservation"),
           ]
-          RESERVED = [(ipaddress.ip_network(cidr), owner) for cidr, owner in RESERVED]
+          RESERVED = [(ipaddress.ip_network(c), o) for c, o in RESERVED]
+          # The schema DEFINES the token shape and the example ILLUSTRATES it;
+          # neither is a rendered deployment input, and release.yml refuses to
+          # stage the example as a release. Only real inputs must carry the
+          # allocated value.
+          DESCRIBES_THE_SHAPE = {
+              pathlib.Path("release/contract.schema.json"),
+              pathlib.Path("release/contract.example.json"),
+          }
           CIDR_TOKEN = re.compile(r'(?<![\w.])((?:\d{1,3}\.){3}\d{1,3}/\d{1,2})(?![\w.])')
 
           targets = []
@@ -1272,13 +1280,12 @@ jobs:
                   targets.extend(p for p in base.rglob("*") if p.is_file())
 
           def configuration_lines(path, text):
-              """Yield (line number, code) for every line that configures something."""
               doc_indent = None
               for number, raw in enumerate(text.splitlines(), start=1):
                   stripped, indent = raw.strip(), len(raw) - len(raw.lstrip())
                   if doc_indent is not None:
                       if not stripped or indent > doc_indent:
-                          continue          # still inside a documentation block
+                          continue
                       doc_indent = None
                   if not stripped or stripped.startswith(("#", "//")):
                       continue
@@ -1291,35 +1298,43 @@ jobs:
                   if stripped:
                       yield number, stripped
 
-          errors = []
           for path in sorted(set(targets)):
               try:
                   text = path.read_text(encoding="utf-8")
               except (UnicodeDecodeError, OSError):
                   continue
               for number, stripped in configuration_lines(path, text):
-                  for pattern, message in RULES:
-                      if pattern.search(stripped):
-                          errors.append((path, number, message))
+                  if path not in DESCRIBES_THE_SHAPE and (
+                          "__LOOPBACK_PORT__" in stripped or "__APP_SUBNET__" in stripped):
+                      errors.append((path, number,
+                                     "unrendered placeholder after allocation; every deployment input "
+                                     "must carry the allocated value"))
+                  for pattern, what in PORT_PATTERNS:
+                      m = pattern.search(stripped)
+                      if not m:
+                          continue
+                      for group in m.groups():
+                          if int(group) != PORT:
+                              errors.append((path, number,
+                                             "%s uses port %s; the allocated port is %d and this app "
+                                             "binds the integer it publishes" % (what, group, PORT)))
                   for token in CIDR_TOKEN.findall(stripped):
                       try:
                           candidate = ipaddress.ip_network(token, strict=False)
-                      except ValueError as exc:
-                          errors.append((path, number, "%s is not a valid IPv4 CIDR (%s)" % (token, exc)))
+                      except ValueError:
+                          continue
+                      if ALLOCATED is not None and candidate == ALLOCATED:
                           continue
                       for reserved, owner in RESERVED:
                           if candidate.overlaps(reserved):
                               errors.append((path, number,
-                                             "%s OVERLAPS %s, which belongs to %s. Overlap - not merely "
-                                             "equality - is what registry validation rejects, and a human "
-                                             "must re-prove non-overlap against live `podman network "
-                                             "inspect` output before any network is created."
-                                             % (token, reserved, owner)))
-          for path, number, message in errors:
-              print("::error file=%s,line=%d::%s" % (path, number, message))
-          print("Allocation guard: %d file(s) inspected, %d placeholder/overlap violation(s), "
-                "%d reserved network(s) checked." % (len(set(targets)), len(errors), len(RESERVED)))
-          sys.exit(1 if errors else 0)
+                                             "%s overlaps %s, owned by %s" % (token, reserved, owner)))
+
+          if errors:
+              for path, number, message in errors:
+                  print("::error file=%s,line=%s::%s" % (path, number or 1, message))
+              sys.exit(1)
+          print("Deployment resources: loopback %d, subnet %s, consistent across every input." % (PORT, SUBNET))
           PY
 
       - name: Release contract documents validate against the release schema

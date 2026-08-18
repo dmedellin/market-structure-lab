@@ -51,9 +51,9 @@ services:
     # Caddy, which reverse-proxies to 127.0.0.1:__LOOPBACK_PORT__. Binding any
     # other interface would publish the app around the edge.
     ports:
-      - "127.0.0.1:__LOOPBACK_PORT__:__LOOPBACK_PORT__"
+      - "127.0.0.1:8082:8082"
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O-", "http://127.0.0.1:__LOOPBACK_PORT__/healthz"]
+      test: ["CMD", "wget", "-q", "-O-", "http://127.0.0.1:8082/healthz"]
       interval: 30s
       timeout: 3s
       retries: 3
@@ -75,4 +75,4 @@ networks:
     ipam:
       config:
         # UNALLOCATED — see the allocation banner at the top of this file.
-        - subnet: __APP_SUBNET__
+        - subnet: 10.89.4.0/24

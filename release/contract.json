@@ -8,11 +8,6 @@
     "build.base_images[].digest is __BASE_IMAGE_DIGEST__ because Containerfile.release is the only place a base image is pinned; the workflow copies the digests it actually built from there, so the two can never drift.",
     "placeholders_present is true, so every release gate must refuse this document as it stands."
   ],
-  "unallocated": [
-    "/network/loopback_port",
-    "/network/internal_port",
-    "/network/subnet"
-  ],
   "release_id": "0000000000000000000000000000000000000000-000000000000",
   "application": {
     "slug": "market-structure-lab",
@@ -71,9 +66,9 @@
   },
   "network": {
     "loopback_host": "127.0.0.1",
-    "loopback_port": "__LOOPBACK_PORT__",
-    "internal_port": "__LOOPBACK_PORT__",
-    "subnet": "__APP_SUBNET__",
+    "loopback_port": 8082,
+    "internal_port": 8082,
+    "subnet": "10.89.4.0/24",
     "class": "ordinary-rootful-bridge"
   },
   "health": {
@@ -10569,5 +10564,5 @@
     "workflow_run_attempt": 1,
     "environment": "production"
   },
-  "placeholders_present": true
+  "placeholders_present": false
 }

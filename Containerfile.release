@@ -542,7 +542,7 @@ RUN caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile
 RUN setcap -r /usr/bin/caddy
 
 USER 1000:1000
-EXPOSE __LOOPBACK_PORT__
+EXPOSE 8082
 
 # NOTE: `podman build` defaults to OCI image format, which DROPS HEALTHCHECK
 # ("HEALTHCHECK is not supported for OCI image format and will be ignored").
@@ -550,4 +550,4 @@ EXPOSE __LOOPBACK_PORT__
 # authoritative liveness signal for the platform is the compose healthcheck in
 # compose.template.yaml, which is what the deploy wrapper waits on; this line is
 # a convenience for local runs and must not be relied on alone.
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD wget -q -O- http://127.0.0.1:__LOOPBACK_PORT__/healthz || exit 1
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 CMD wget -q -O- http://127.0.0.1:8082/healthz || exit 1

@@ -61,9 +61,9 @@ apps:
         - market-structure-lab
     network:
       loopback_host: 127.0.0.1
-      loopback_port: __LOOPBACK_PORT__   # UNALLOCATED — human allocation + live preflight
-      internal_port: __LOOPBACK_PORT__   # same value; the container listens on the published port
-      subnet: __APP_SUBNET__             # UNALLOCATED — must not overlap anything; never 10.89.2.0/24
+      loopback_port: 8082   # allocated; free per live ss -ltn on the host
+      internal_port: 8082   # same value; the container listens on the published port
+      subnet: 10.89.4.0/24   # allocated; proved non-overlapping per live podman network inspect
       class: ordinary-rootful-bridge
     health:
       path: /healthz
@@ -83,7 +83,7 @@ apps:
       websocket: false
       headers_profile: geterdone-learn-static-v1
       cache_profile: geterdone-learn-static-v1
-      caddy_fragment: /etc/caddy/sites-enabled/learn.geterdone.io.caddy
+      caddy_fragment: /etc/caddy/sites.d/learn.geterdone.io.caddy
       dns_provider: godaddy
       tls_mode: caddy-automatic-public
     persistence:
