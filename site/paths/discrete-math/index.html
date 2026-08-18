@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -967,7 +1027,7 @@ T(n) = 2T(n/2) + n  ⟹  T(n) = Θ(n log n)</div>
     </section>
     <section class="section" id="courses">
       <div class="section-head"><div><p class="kicker">The sequence</p><h2>All 8 courses, in order</h2></div><p>Each course assumes the ones before it and nothing else. Course 3 proves things about the sets built in course 2; course 5 counts the outcomes course 4 taught you to count; course 8 analyses the structures course 7 built.</p></div>
-      <div class="spine"><a class="spine-item" href="../../logic-and-proof/"><div class="spine-num">01</div><div class="spine-body"><strong>Logic and Proof</strong><p>Make a statement precise enough to be true or false, then establish it. Connectives and truth tables, logical equivalence, quantifiers and the order they come in, valid inference, and direct, contrapositive, contradiction and case proofs written out in full.</p><div class="spine-meta"><span>14 lessons</span><span>Beginner</span><span>Available now</span></div></div></a><a class="spine-item" href="../../sets-relations-functions/"><div class="spine-num">02</div><div class="spine-body"><strong>Sets, Relations, and Functions</strong><p>Sets, the operations on them and the identities those obey; relations and the two structures they produce &mdash; partitions and orderings; functions, injections, surjections and bijections; countable and uncountable; and the counting principle that follows from all of it.</p><div class="spine-meta"><span>14 lessons</span><span>Beginner</span><span>Available now</span></div></div></a><a class="spine-item" href="../../induction-and-recursion/"><div class="spine-num">03</div><div class="spine-body"><strong>Induction and Recursion</strong><p>Course 1 ended by showing that checking cases is not proving. This is the answer: prove <span class="math">P(k) → P(k+1)</span> once and the claim holds for every <span class="math">n</span> you could ever check and every one you could not. Then the same idea applied to definitions, to data, to algorithms and to recurrences.</p><div class="spine-meta"><span>12 lessons</span><span>Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../combinatorics-and-counting/"><div class="spine-num">04</div><div class="spine-body"><strong>Combinatorics and Counting</strong><p>How many? The two basic rules, the four ways to choose <span class="math">r</span> from <span class="math">n</span>, what changes when repetition is allowed, how to correct an over-count, and the double-counting arguments that prove identities without algebra.</p><div class="spine-meta"><span>14 lessons</span><span>Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../discrete-probability/"><div class="spine-num">05</div><div class="spine-body"><strong>Discrete Probability</strong><p>Counting with a denominator. Every probability here is a ratio of counts, so course 4 does most of the work &mdash; and the parts that go wrong, conditioning and independence, go wrong for reasons that have nothing to do with arithmetic.</p><div class="spine-meta"><span>12 lessons</span><span>Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../number-theory-and-cryptography/"><div class="spine-num">06</div><div class="spine-body"><strong>Number Theory and Cryptography</strong><p>Everything follows from one theorem about division with remainder. Primes, gcds, congruences and modular inverses build up to RSA &mdash; which is generated, used and then broken here on primes small enough to check by hand.</p><div class="spine-meta"><span>14 lessons</span><span>Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../graphs-and-trees/"><div class="spine-num">07</div><div class="spine-body"><strong>Graphs and Trees</strong><p>The discrete structure that models everything with a relation on it: networks, dependencies, maps, molecules, schedules. Every theorem in this course is a claim about all graphs, and the lab lets you try to break each one.</p><div class="spine-meta"><span>14 lessons</span><span>Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../algorithms-and-complexity/"><div class="spine-num">08</div><div class="spine-body"><strong>Algorithms and Complexity</strong><p>The course the rest of the path was building toward. Recurrences from course 3, counting from course 4 and graphs from course 7 all reappear as the running time of something &mdash; and the last two lessons say what no algorithm can do.</p><div class="spine-meta"><span>12 lessons</span><span>Advanced</span><span>Available now</span></div></div></a></div>
+      <div class="spine"><a class="spine-item" href="../../logic-and-proof/" data-course="logic-and-proof" data-lessons="14"><div class="spine-num">01</div><div class="spine-body"><strong>Logic and Proof</strong><p>Make a statement precise enough to be true or false, then establish it. Connectives and truth tables, logical equivalence, quantifiers and the order they come in, valid inference, and direct, contrapositive, contradiction and case proofs written out in full.</p><div class="spine-meta"><span>14 lessons</span><span>Beginner</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../sets-relations-functions/" data-course="sets-relations-functions" data-lessons="14"><div class="spine-num">02</div><div class="spine-body"><strong>Sets, Relations, and Functions</strong><p>Sets, the operations on them and the identities those obey; relations and the two structures they produce &mdash; partitions and orderings; functions, injections, surjections and bijections; countable and uncountable; and the counting principle that follows from all of it.</p><div class="spine-meta"><span>14 lessons</span><span>Beginner</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../induction-and-recursion/" data-course="induction-and-recursion" data-lessons="12"><div class="spine-num">03</div><div class="spine-body"><strong>Induction and Recursion</strong><p>Course 1 ended by showing that checking cases is not proving. This is the answer: prove <span class="math">P(k) → P(k+1)</span> once and the claim holds for every <span class="math">n</span> you could ever check and every one you could not. Then the same idea applied to definitions, to data, to algorithms and to recurrences.</p><div class="spine-meta"><span>12 lessons</span><span>Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../combinatorics-and-counting/" data-course="combinatorics-and-counting" data-lessons="14"><div class="spine-num">04</div><div class="spine-body"><strong>Combinatorics and Counting</strong><p>How many? The two basic rules, the four ways to choose <span class="math">r</span> from <span class="math">n</span>, what changes when repetition is allowed, how to correct an over-count, and the double-counting arguments that prove identities without algebra.</p><div class="spine-meta"><span>14 lessons</span><span>Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../discrete-probability/" data-course="discrete-probability" data-lessons="12"><div class="spine-num">05</div><div class="spine-body"><strong>Discrete Probability</strong><p>Counting with a denominator. Every probability here is a ratio of counts, so course 4 does most of the work &mdash; and the parts that go wrong, conditioning and independence, go wrong for reasons that have nothing to do with arithmetic.</p><div class="spine-meta"><span>12 lessons</span><span>Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../number-theory-and-cryptography/" data-course="number-theory-and-cryptography" data-lessons="14"><div class="spine-num">06</div><div class="spine-body"><strong>Number Theory and Cryptography</strong><p>Everything follows from one theorem about division with remainder. Primes, gcds, congruences and modular inverses build up to RSA &mdash; which is generated, used and then broken here on primes small enough to check by hand.</p><div class="spine-meta"><span>14 lessons</span><span>Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../graphs-and-trees/" data-course="graphs-and-trees" data-lessons="14"><div class="spine-num">07</div><div class="spine-body"><strong>Graphs and Trees</strong><p>The discrete structure that models everything with a relation on it: networks, dependencies, maps, molecules, schedules. Every theorem in this course is a claim about all graphs, and the lab lets you try to break each one.</p><div class="spine-meta"><span>14 lessons</span><span>Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../algorithms-and-complexity/" data-course="algorithms-and-complexity" data-lessons="12"><div class="spine-num">08</div><div class="spine-body"><strong>Algorithms and Complexity</strong><p>The course the rest of the path was building toward. Recurrences from course 3, counting from course 4 and graphs from course 7 all reappear as the running time of something &mdash; and the last two lessons say what no algorithm can do.</p><div class="spine-meta"><span>12 lessons</span><span>Advanced</span><span>Available now</span><span class="spine-progress"></span></div></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1013,6 +1073,41 @@ T(n) = 2T(n/2) + n  ⟹  T(n) = Θ(n log n)</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var marks = window.learnProgress.read();
+    [].slice.call(document.querySelectorAll('.spine-item[data-course]')).forEach(function (item) {
+      var slug = item.getAttribute('data-course');
+      var total = parseInt(item.getAttribute('data-lessons'), 10) || 0;
+      var n = Object.keys(marks).filter(function (k) { return k.indexOf(slug + '/') === 0; }).length;
+      var out = item.querySelector('.spine-progress');
+      if (!out || !total) return;
+      out.textContent = n ? n + ' of ' + total + ' done' : '';
+      item.classList.toggle('is-started', n > 0);
+      item.classList.toggle('is-complete', n >= total);
+    });
+  })();
   </script>
 </body>
 </html>

@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ multiply an inequality by a negative  ⟹  reverse it
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Solve and justify</h3><p>Carry a linear equation to <span class="math">x = </span> a number, naming the operation applied to both sides at each step, and check the answer in the ORIGINAL equation.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Recognise the three outcomes</h3><p>Tell a conditional equation from an identity and from a contradiction, and read <span class="math">0 = 0</span> and <span class="math">0 = 5</span> correctly rather than as "x = 0".</p></article><article class="card concept-card"><div class="icon">3</div><h3>Rearrange any formula</h3><p>Solve a literal equation for whichever letter is asked for, including when that letter appears twice.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Handle inequalities and absolute value</h3><p>Solve linear, compound and absolute-value statements, reverse the sign when and only when you must, and write the answer in interval notation.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 13 lessons, in order</h2></div><p>Lessons 1 to 6 are equations, 7 and 8 apply them, and 9 to 13 are inequalities, absolute value and the notation for a solution set.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./what-it-means-to-solve-an-equation/"><div class="num">01</div><div><strong>What It Means to Solve an Equation</strong><span>A solution is a value that makes the statement true.</span></div></a><a class="syllabus-item" href="./one-and-two-step-equations/"><div class="num">02</div><div><strong>One- and Two-Step Equations</strong><span>Undoing operations in the reverse of the order they were applied.</span></div></a><a class="syllabus-item" href="./variables-on-both-sides/"><div class="num">03</div><div><strong>Variables on Both Sides</strong><span>Collecting the unknown on one side without losing a sign.</span></div></a><a class="syllabus-item" href="./equations-with-fractions/"><div class="num">04</div><div><strong>Equations with Fractions</strong><span>Clearing denominators with the least common denominator.</span></div></a><a class="syllabus-item" href="./literal-equations-and-formulas/"><div class="num">05</div><div><strong>Literal Equations and Formulas</strong><span>Solving for one letter among several.</span></div></a><a class="syllabus-item" href="./identities-and-contradictions/"><div class="num">06</div><div><strong>Identities and Contradictions</strong><span>When every number works, and when none does.</span></div></a><a class="syllabus-item" href="./ratio-proportion-and-percent/"><div class="num">07</div><div><strong>Ratio, Proportion and Percent</strong><span>Three applications that are one equation in disguise.</span></div></a><a class="syllabus-item" href="./modelling-with-linear-equations/"><div class="num">08</div><div><strong>Modelling with Linear Equations</strong><span>From a described situation to an equation you can solve.</span></div></a><a class="syllabus-item" href="./linear-inequalities/"><div class="num">09</div><div><strong>Linear Inequalities</strong><span>Solving, and the one rule that reverses the sign.</span></div></a><a class="syllabus-item" href="./compound-inequalities/"><div class="num">10</div><div><strong>Compound Inequalities</strong><span>And and or, intersection and union.</span></div></a><a class="syllabus-item" href="./absolute-value-equations/"><div class="num">11</div><div><strong>Absolute Value Equations</strong><span>Two cases, and when there are none.</span></div></a><a class="syllabus-item" href="./absolute-value-inequalities/"><div class="num">12</div><div><strong>Absolute Value Inequalities</strong><span>Less-than gives an interval, greater-than gives two.</span></div></a><a class="syllabus-item" href="./interval-and-set-builder-notation/"><div class="num">13</div><div><strong>Interval and Set-Builder Notation</strong><span>Writing a solution set so a reader knows exactly what it holds.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 13 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 6 are equations, 7 and 8 apply them, and 9 to 13 are inequalities, absolute value and the notation for a solution set.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./what-it-means-to-solve-an-equation/" data-lesson="linear-equations-and-inequalities/what-it-means-to-solve-an-equation"><div class="num">01</div><div><strong>What It Means to Solve an Equation</strong><span>A solution is a value that makes the statement true.</span></div></a><a class="syllabus-item" href="./one-and-two-step-equations/" data-lesson="linear-equations-and-inequalities/one-and-two-step-equations"><div class="num">02</div><div><strong>One- and Two-Step Equations</strong><span>Undoing operations in the reverse of the order they were applied.</span></div></a><a class="syllabus-item" href="./variables-on-both-sides/" data-lesson="linear-equations-and-inequalities/variables-on-both-sides"><div class="num">03</div><div><strong>Variables on Both Sides</strong><span>Collecting the unknown on one side without losing a sign.</span></div></a><a class="syllabus-item" href="./equations-with-fractions/" data-lesson="linear-equations-and-inequalities/equations-with-fractions"><div class="num">04</div><div><strong>Equations with Fractions</strong><span>Clearing denominators with the least common denominator.</span></div></a><a class="syllabus-item" href="./literal-equations-and-formulas/" data-lesson="linear-equations-and-inequalities/literal-equations-and-formulas"><div class="num">05</div><div><strong>Literal Equations and Formulas</strong><span>Solving for one letter among several.</span></div></a><a class="syllabus-item" href="./identities-and-contradictions/" data-lesson="linear-equations-and-inequalities/identities-and-contradictions"><div class="num">06</div><div><strong>Identities and Contradictions</strong><span>When every number works, and when none does.</span></div></a><a class="syllabus-item" href="./ratio-proportion-and-percent/" data-lesson="linear-equations-and-inequalities/ratio-proportion-and-percent"><div class="num">07</div><div><strong>Ratio, Proportion and Percent</strong><span>Three applications that are one equation in disguise.</span></div></a><a class="syllabus-item" href="./modelling-with-linear-equations/" data-lesson="linear-equations-and-inequalities/modelling-with-linear-equations"><div class="num">08</div><div><strong>Modelling with Linear Equations</strong><span>From a described situation to an equation you can solve.</span></div></a><a class="syllabus-item" href="./linear-inequalities/" data-lesson="linear-equations-and-inequalities/linear-inequalities"><div class="num">09</div><div><strong>Linear Inequalities</strong><span>Solving, and the one rule that reverses the sign.</span></div></a><a class="syllabus-item" href="./compound-inequalities/" data-lesson="linear-equations-and-inequalities/compound-inequalities"><div class="num">10</div><div><strong>Compound Inequalities</strong><span>And and or, intersection and union.</span></div></a><a class="syllabus-item" href="./absolute-value-equations/" data-lesson="linear-equations-and-inequalities/absolute-value-equations"><div class="num">11</div><div><strong>Absolute Value Equations</strong><span>Two cases, and when there are none.</span></div></a><a class="syllabus-item" href="./absolute-value-inequalities/" data-lesson="linear-equations-and-inequalities/absolute-value-inequalities"><div class="num">12</div><div><strong>Absolute Value Inequalities</strong><span>Less-than gives an interval, greater-than gives two.</span></div></a><a class="syllabus-item" href="./interval-and-set-builder-notation/" data-lesson="linear-equations-and-inequalities/interval-and-set-builder-notation"><div class="num">13</div><div><strong>Interval and Set-Builder Notation</strong><span>Writing a solution set so a reader knows exactly what it holds.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ multiply an inequality by a negative  ⟹  reverse it
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

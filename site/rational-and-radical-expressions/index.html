@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ degree of top vs bottom  ⟹  the horizontal asymptote</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>State the domain first</h3><p>Find every value that makes a denominator zero or a radicand negative, and exclude it before simplifying rather than after.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Simplify and combine</h3><p>Cancel only common FACTORS, find a least common denominator that is not just the product, and reduce a complex fraction two different ways.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Solve and then check</h3><p>Clear denominators or square both sides, solve, and test every candidate against the original &mdash; because both moves can create solutions that are not ones.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Read a rational graph</h3><p>Locate vertical asymptotes, holes and the end behaviour from the factored form, and tell an asymptote from a hole.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2></div><p>Lessons 1 to 7 are rational expressions, equations and graphs; lessons 8 to 12 are radicals, from simplification to radical functions.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./rational-expressions-and-their-domains/"><div class="num">01</div><div><strong>Rational Expressions and Their Domains</strong><span>The values a denominator forbids, found before anything is simplified.</span></div></a><a class="syllabus-item" href="./simplifying-rational-expressions/"><div class="num">02</div><div><strong>Simplifying Rational Expressions</strong><span>Cancel factors, never terms, and keep the domain you started with.</span></div></a><a class="syllabus-item" href="./multiplying-and-dividing-rational-expressions/"><div class="num">03</div><div><strong>Multiplying and Dividing Rational Expressions</strong><span>Multiply straight across, divide by flipping, and factor before either.</span></div></a><a class="syllabus-item" href="./adding-and-subtracting-rational-expressions/"><div class="num">04</div><div><strong>Adding and Subtracting Rational Expressions</strong><span>A common denominator built from factors, and a minus sign that reaches every term.</span></div></a><a class="syllabus-item" href="./complex-fractions/"><div class="num">05</div><div><strong>Complex Fractions</strong><span>A fraction whose parts are themselves fractions, cleared two different ways.</span></div></a><a class="syllabus-item" href="./solving-rational-equations/"><div class="num">06</div><div><strong>Solving Rational Equations</strong><span>Clear the denominators, solve, then test every candidate in the original equation.</span></div></a><a class="syllabus-item" href="./graphs-and-asymptotes/"><div class="num">07</div><div><strong>Graphs and Asymptotes</strong><span>Asymptotes, holes, and what the degrees tell you.</span></div></a><a class="syllabus-item" href="./simplifying-radical-expressions/"><div class="num">08</div><div><strong>Simplifying Radical Expressions</strong><span>nth roots, the principal root, and why √(x²) is |x|.</span></div></a><a class="syllabus-item" href="./operations-with-radicals/"><div class="num">09</div><div><strong>Adding, Subtracting and Multiplying Radicals</strong><span>Like radicals combine; unlike radicals simply do not.</span></div></a><a class="syllabus-item" href="./rationalizing-denominators/"><div class="num">10</div><div><strong>Rationalizing Denominators</strong><span>Multiply by 1, chosen so the root leaves the bottom.</span></div></a><a class="syllabus-item" href="./solving-radical-equations/"><div class="num">11</div><div><strong>Solving Radical Equations</strong><span>Raise both sides, solve, then check every candidate.</span></div></a><a class="syllabus-item" href="./radical-functions-and-their-graphs/"><div class="num">12</div><div><strong>Radical Functions and Their Graphs</strong><span>Solve an inequality to find the domain, then graph.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 7 are rational expressions, equations and graphs; lessons 8 to 12 are radicals, from simplification to radical functions.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./rational-expressions-and-their-domains/" data-lesson="rational-and-radical-expressions/rational-expressions-and-their-domains"><div class="num">01</div><div><strong>Rational Expressions and Their Domains</strong><span>The values a denominator forbids, found before anything is simplified.</span></div></a><a class="syllabus-item" href="./simplifying-rational-expressions/" data-lesson="rational-and-radical-expressions/simplifying-rational-expressions"><div class="num">02</div><div><strong>Simplifying Rational Expressions</strong><span>Cancel factors, never terms, and keep the domain you started with.</span></div></a><a class="syllabus-item" href="./multiplying-and-dividing-rational-expressions/" data-lesson="rational-and-radical-expressions/multiplying-and-dividing-rational-expressions"><div class="num">03</div><div><strong>Multiplying and Dividing Rational Expressions</strong><span>Multiply straight across, divide by flipping, and factor before either.</span></div></a><a class="syllabus-item" href="./adding-and-subtracting-rational-expressions/" data-lesson="rational-and-radical-expressions/adding-and-subtracting-rational-expressions"><div class="num">04</div><div><strong>Adding and Subtracting Rational Expressions</strong><span>A common denominator built from factors, and a minus sign that reaches every term.</span></div></a><a class="syllabus-item" href="./complex-fractions/" data-lesson="rational-and-radical-expressions/complex-fractions"><div class="num">05</div><div><strong>Complex Fractions</strong><span>A fraction whose parts are themselves fractions, cleared two different ways.</span></div></a><a class="syllabus-item" href="./solving-rational-equations/" data-lesson="rational-and-radical-expressions/solving-rational-equations"><div class="num">06</div><div><strong>Solving Rational Equations</strong><span>Clear the denominators, solve, then test every candidate in the original equation.</span></div></a><a class="syllabus-item" href="./graphs-and-asymptotes/" data-lesson="rational-and-radical-expressions/graphs-and-asymptotes"><div class="num">07</div><div><strong>Graphs and Asymptotes</strong><span>Asymptotes, holes, and what the degrees tell you.</span></div></a><a class="syllabus-item" href="./simplifying-radical-expressions/" data-lesson="rational-and-radical-expressions/simplifying-radical-expressions"><div class="num">08</div><div><strong>Simplifying Radical Expressions</strong><span>nth roots, the principal root, and why √(x²) is |x|.</span></div></a><a class="syllabus-item" href="./operations-with-radicals/" data-lesson="rational-and-radical-expressions/operations-with-radicals"><div class="num">09</div><div><strong>Adding, Subtracting and Multiplying Radicals</strong><span>Like radicals combine; unlike radicals simply do not.</span></div></a><a class="syllabus-item" href="./rationalizing-denominators/" data-lesson="rational-and-radical-expressions/rationalizing-denominators"><div class="num">10</div><div><strong>Rationalizing Denominators</strong><span>Multiply by 1, chosen so the root leaves the bottom.</span></div></a><a class="syllabus-item" href="./solving-radical-equations/" data-lesson="rational-and-radical-expressions/solving-radical-equations"><div class="num">11</div><div><strong>Solving Radical Equations</strong><span>Raise both sides, solve, then check every candidate.</span></div></a><a class="syllabus-item" href="./radical-functions-and-their-graphs/" data-lesson="rational-and-radical-expressions/radical-functions-and-their-graphs"><div class="num">12</div><div><strong>Radical Functions and Their Graphs</strong><span>Solve an inequality to find the domain, then graph.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ degree of top vs bottom  ⟹  the horizontal asymptote</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

@@ -116,6 +116,25 @@
 	}
 	header @revalidate Cache-Control "no-cache"
 
+	# --- Sign-in pages: the only two that may reach Microsoft ---
+	# Every other page is served the CSP above, whose connect-src is 'self', so a
+	# lesson that started calling an identity provider would be blocked by the
+	# browser as well as by the test suite. These two need exactly two origins:
+	# the token endpoint and Graph, for the reader's own OneDrive app folder.
+	# form-action is widened for the same reason -- the authorize step is a
+	# navigation to login.microsoftonline.com -- and nothing else is relaxed.
+	@signin path /oauth2/spa/callback/* /progress/*
+	header @signin {
+		-Server
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Cross-Origin-Resource-Policy "same-site"
+		Cache-Control "no-store"
+		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+		Content-Security-Policy "default-src 'none'; base-uri 'none'; form-action 'self' https://login.microsoftonline.com; frame-ancestors 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://login.microsoftonline.com https://graph.microsoft.com"
+	}
+
 	# --- Health endpoint (registry health.path=/healthz, success_status=200) ---
 	# Availability probe only: no build metadata, no internal topology, no secrets.
 	# Never cached, and kept out of the access log so the 30s HEALTHCHECK is quiet.

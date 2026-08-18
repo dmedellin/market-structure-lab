@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ m₁m₂ = −1         perpendicular
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Read and write a line four ways</h3><p>Move between slope-intercept, point-slope, standard form and two given points, and pick the form that makes the question easy.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Apply the definition of a function</h3><p>Decide whether a rule, a table or a graph defines a function, and say which input breaks it when one does.</p></article><article class="card concept-card"><div class="icon">3</div><h3>State a domain and a range</h3><p>Find what a formula excludes &mdash; a zero denominator, a negative under a square root &mdash; and write the result in interval notation.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Transform, compose and invert</h3><p>Predict the graph of <span class="math">a·f(b(x − h)) + k</span> from the parent, compose two functions in the right order, and find an inverse and the restriction it needs.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 6 are lines. Lesson 7 defines a function, and 8 to 14 develop everything a function has: notation, domain, shape, composition, inverse.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./the-coordinate-plane/"><div class="num">01</div><div><strong>The Coordinate Plane</strong><span>Ordered pairs, axes and quadrants: where a graph lives.</span></div></a><a class="syllabus-item" href="./graphing-a-linear-equation/"><div class="num">02</div><div><strong>Graphing a Linear Equation</strong><span>From a table of solutions to a straight line, and the intercept shortcut.</span></div></a><a class="syllabus-item" href="./slope/"><div class="num">03</div><div><strong>Slope</strong><span>One number for steepness and direction, and why it does not depend on the two points you pick.</span></div></a><a class="syllabus-item" href="./slope-intercept-form/"><div class="num">04</div><div><strong>Slope-Intercept Form</strong><span>y = mx + b, and reading a line straight off its equation.</span></div></a><a class="syllabus-item" href="./point-slope-and-standard-form/"><div class="num">05</div><div><strong>Point-Slope and Standard Form</strong><span>Building a line from a point and a slope, and the form that treats x and y alike.</span></div></a><a class="syllabus-item" href="./parallel-and-perpendicular-lines/"><div class="num">06</div><div><strong>Parallel and Perpendicular Lines</strong><span>Two slope tests, and the vertical case that neither test covers.</span></div></a><a class="syllabus-item" href="./what-a-function-is/"><div class="num">07</div><div><strong>What a Function Is</strong><span>Exactly one output for each input, and the test that checks it.</span></div></a><a class="syllabus-item" href="./function-notation/"><div class="num">08</div><div><strong>Function Notation</strong><span>f(x) is a value, not a product.</span></div></a><a class="syllabus-item" href="./domain-and-range/"><div class="num">09</div><div><strong>Domain and Range</strong><span>What goes in, what comes out, and what is excluded.</span></div></a><a class="syllabus-item" href="./piecewise-functions/"><div class="num">10</div><div><strong>Piecewise Functions</strong><span>One function, several formulas, and the joins between them.</span></div></a><a class="syllabus-item" href="./transformations-of-graphs/"><div class="num">11</div><div><strong>Transformations of Graphs</strong><span>Shift, stretch and reflect, from the parent curve.</span></div></a><a class="syllabus-item" href="./composition-of-functions/"><div class="num">12</div><div><strong>Composition of Functions</strong><span>Feeding one function into another, in a fixed order.</span></div></a><a class="syllabus-item" href="./inverse-functions/"><div class="num">13</div><div><strong>Inverse Functions</strong><span>Undoing a function, and the restriction that is usually needed.</span></div></a><a class="syllabus-item" href="./linear-inequalities-in-two-variables/"><div class="num">14</div><div><strong>Linear Inequalities in Two Variables</strong><span>A boundary line, and which side of it is the answer.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 6 are lines. Lesson 7 defines a function, and 8 to 14 develop everything a function has: notation, domain, shape, composition, inverse.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./the-coordinate-plane/" data-lesson="lines-functions-and-graphs/the-coordinate-plane"><div class="num">01</div><div><strong>The Coordinate Plane</strong><span>Ordered pairs, axes and quadrants: where a graph lives.</span></div></a><a class="syllabus-item" href="./graphing-a-linear-equation/" data-lesson="lines-functions-and-graphs/graphing-a-linear-equation"><div class="num">02</div><div><strong>Graphing a Linear Equation</strong><span>From a table of solutions to a straight line, and the intercept shortcut.</span></div></a><a class="syllabus-item" href="./slope/" data-lesson="lines-functions-and-graphs/slope"><div class="num">03</div><div><strong>Slope</strong><span>One number for steepness and direction, and why it does not depend on the two points you pick.</span></div></a><a class="syllabus-item" href="./slope-intercept-form/" data-lesson="lines-functions-and-graphs/slope-intercept-form"><div class="num">04</div><div><strong>Slope-Intercept Form</strong><span>y = mx + b, and reading a line straight off its equation.</span></div></a><a class="syllabus-item" href="./point-slope-and-standard-form/" data-lesson="lines-functions-and-graphs/point-slope-and-standard-form"><div class="num">05</div><div><strong>Point-Slope and Standard Form</strong><span>Building a line from a point and a slope, and the form that treats x and y alike.</span></div></a><a class="syllabus-item" href="./parallel-and-perpendicular-lines/" data-lesson="lines-functions-and-graphs/parallel-and-perpendicular-lines"><div class="num">06</div><div><strong>Parallel and Perpendicular Lines</strong><span>Two slope tests, and the vertical case that neither test covers.</span></div></a><a class="syllabus-item" href="./what-a-function-is/" data-lesson="lines-functions-and-graphs/what-a-function-is"><div class="num">07</div><div><strong>What a Function Is</strong><span>Exactly one output for each input, and the test that checks it.</span></div></a><a class="syllabus-item" href="./function-notation/" data-lesson="lines-functions-and-graphs/function-notation"><div class="num">08</div><div><strong>Function Notation</strong><span>f(x) is a value, not a product.</span></div></a><a class="syllabus-item" href="./domain-and-range/" data-lesson="lines-functions-and-graphs/domain-and-range"><div class="num">09</div><div><strong>Domain and Range</strong><span>What goes in, what comes out, and what is excluded.</span></div></a><a class="syllabus-item" href="./piecewise-functions/" data-lesson="lines-functions-and-graphs/piecewise-functions"><div class="num">10</div><div><strong>Piecewise Functions</strong><span>One function, several formulas, and the joins between them.</span></div></a><a class="syllabus-item" href="./transformations-of-graphs/" data-lesson="lines-functions-and-graphs/transformations-of-graphs"><div class="num">11</div><div><strong>Transformations of Graphs</strong><span>Shift, stretch and reflect, from the parent curve.</span></div></a><a class="syllabus-item" href="./composition-of-functions/" data-lesson="lines-functions-and-graphs/composition-of-functions"><div class="num">12</div><div><strong>Composition of Functions</strong><span>Feeding one function into another, in a fixed order.</span></div></a><a class="syllabus-item" href="./inverse-functions/" data-lesson="lines-functions-and-graphs/inverse-functions"><div class="num">13</div><div><strong>Inverse Functions</strong><span>Undoing a function, and the restriction that is usually needed.</span></div></a><a class="syllabus-item" href="./linear-inequalities-in-two-variables/" data-lesson="lines-functions-and-graphs/linear-inequalities-in-two-variables"><div class="num">14</div><div><strong>Linear Inequalities in Two Variables</strong><span>A boundary line, and which side of it is the answer.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ m₁m₂ = −1         perpendicular
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

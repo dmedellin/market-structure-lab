@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ the optimum of a linear objective sits at a corner</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Solve a system three ways</h3><p>By substitution, by elimination and by graphing, and say which is quickest for a given system before starting.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Classify before solving</h3><p>Recognise an inconsistent system and a dependent one from the algebra, and connect each to what the lines or planes are doing.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Row reduce</h3><p>Write a system as an augmented matrix, carry it to reduced row echelon form, and read the solution &mdash; including when there is not exactly one.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Use the determinant as a test</h3><p>Compute it two ways, use it to decide invertibility before attempting an inverse, and apply Cramer's rule where it is the quickest route.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 10 lessons, in order</h2></div><p>Lessons 1 to 4 solve systems by hand. Lessons 5 to 9 build the matrix machinery that automates exactly that work, and lesson 10 applies it.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./systems-of-two-linear-equations/"><div class="num">01</div><div><strong>Systems of Two Linear Equations</strong><span>Two lines, and the three things they can do.</span></div></a><a class="syllabus-item" href="./solving-by-substitution/"><div class="num">02</div><div><strong>Solving by Substitution</strong><span>Replacing one unknown with an expression in the other.</span></div></a><a class="syllabus-item" href="./solving-by-elimination/"><div class="num">03</div><div><strong>Solving by Elimination</strong><span>Adding equations to make an unknown disappear.</span></div></a><a class="syllabus-item" href="./systems-in-three-variables/"><div class="num">04</div><div><strong>Systems in Three Variables</strong><span>Three planes, and elimination done twice.</span></div></a><a class="syllabus-item" href="./matrices-and-row-operations/"><div class="num">05</div><div><strong>Matrices and Row Operations</strong><span>The same elimination, with the letters removed.</span></div></a><a class="syllabus-item" href="./gaussian-elimination/"><div class="num">06</div><div><strong>Gaussian Elimination</strong><span>Row reduction to echelon form, mechanically.</span></div></a><a class="syllabus-item" href="./matrix-arithmetic/"><div class="num">07</div><div><strong>Matrix Arithmetic</strong><span>Addition, scalar multiples, and the product that is not elementwise.</span></div></a><a class="syllabus-item" href="./determinants-and-cramers-rule/"><div class="num">08</div><div><strong>Determinants and Cramer&#x27;s Rule</strong><span>One number that decides whether a system has one solution.</span></div></a><a class="syllabus-item" href="./inverse-matrices/"><div class="num">09</div><div><strong>Inverse Matrices</strong><span>The matrix that undoes another, and when there is not one.</span></div></a><a class="syllabus-item" href="./systems-of-inequalities-and-linear-programming/"><div class="num">10</div><div><strong>Systems of Inequalities and Linear Programming</strong><span>A feasible region, and where the optimum has to be.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 10 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 4 solve systems by hand. Lessons 5 to 9 build the matrix machinery that automates exactly that work, and lesson 10 applies it.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./systems-of-two-linear-equations/" data-lesson="systems-and-matrices/systems-of-two-linear-equations"><div class="num">01</div><div><strong>Systems of Two Linear Equations</strong><span>Two lines, and the three things they can do.</span></div></a><a class="syllabus-item" href="./solving-by-substitution/" data-lesson="systems-and-matrices/solving-by-substitution"><div class="num">02</div><div><strong>Solving by Substitution</strong><span>Replacing one unknown with an expression in the other.</span></div></a><a class="syllabus-item" href="./solving-by-elimination/" data-lesson="systems-and-matrices/solving-by-elimination"><div class="num">03</div><div><strong>Solving by Elimination</strong><span>Adding equations to make an unknown disappear.</span></div></a><a class="syllabus-item" href="./systems-in-three-variables/" data-lesson="systems-and-matrices/systems-in-three-variables"><div class="num">04</div><div><strong>Systems in Three Variables</strong><span>Three planes, and elimination done twice.</span></div></a><a class="syllabus-item" href="./matrices-and-row-operations/" data-lesson="systems-and-matrices/matrices-and-row-operations"><div class="num">05</div><div><strong>Matrices and Row Operations</strong><span>The same elimination, with the letters removed.</span></div></a><a class="syllabus-item" href="./gaussian-elimination/" data-lesson="systems-and-matrices/gaussian-elimination"><div class="num">06</div><div><strong>Gaussian Elimination</strong><span>Row reduction to echelon form, mechanically.</span></div></a><a class="syllabus-item" href="./matrix-arithmetic/" data-lesson="systems-and-matrices/matrix-arithmetic"><div class="num">07</div><div><strong>Matrix Arithmetic</strong><span>Addition, scalar multiples, and the product that is not elementwise.</span></div></a><a class="syllabus-item" href="./determinants-and-cramers-rule/" data-lesson="systems-and-matrices/determinants-and-cramers-rule"><div class="num">08</div><div><strong>Determinants and Cramer&#x27;s Rule</strong><span>One number that decides whether a system has one solution.</span></div></a><a class="syllabus-item" href="./inverse-matrices/" data-lesson="systems-and-matrices/inverse-matrices"><div class="num">09</div><div><strong>Inverse Matrices</strong><span>The matrix that undoes another, and when there is not one.</span></div></a><a class="syllabus-item" href="./systems-of-inequalities-and-linear-programming/" data-lesson="systems-and-matrices/systems-of-inequalities-and-linear-programming"><div class="num">10</div><div><strong>Systems of Inequalities and Linear Programming</strong><span>A feasible region, and where the optimum has to be.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ the optimum of a linear objective sits at a corner</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

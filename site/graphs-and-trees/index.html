@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ Euler circuit  ⟺  connected and every degree even
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Read and build the representations</h3><p>Adjacency matrix, adjacency list and drawing &mdash; and know which makes a given question easy.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Apply the standard criteria</h3><p>Euler's degree condition, bipartiteness as the absence of odd cycles, and the tree characterisation, each with the proof behind it.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Run the algorithms</h3><p>Breadth-first and depth-first search, Dijkstra, Kruskal and greedy colouring, and say what each guarantees.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Tell easy problems from hard ones</h3><p>Euler circuits are decided in one pass; Hamilton circuits are NP-complete. The problems look alike and are not.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 5 are the basics, 6 to 10 are traversals and paths, 11 to 13 are trees, and 14 is planarity.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./graphs-and-graph-models/"><div class="num">01</div><div><strong>Graphs and Graph Models</strong><span>Vertices, edges, and the things they model.</span></div></a><a class="syllabus-item" href="./degree-and-the-handshake-theorem/"><div class="num">02</div><div><strong>Degree and the Handshake Theorem</strong><span>The degrees sum to twice the edges — always.</span></div></a><a class="syllabus-item" href="./graph-representations/"><div class="num">03</div><div><strong>Graph Representations</strong><span>Adjacency matrix, adjacency list, and what each makes cheap.</span></div></a><a class="syllabus-item" href="./paths-and-connectivity/"><div class="num">04</div><div><strong>Paths and Connectivity</strong><span>Walks, paths, cycles, components — and what disconnects a graph.</span></div></a><a class="syllabus-item" href="./graph-isomorphism/"><div class="num">05</div><div><strong>Subgraphs and Graph Isomorphism</strong><span>When two different drawings are the same graph.</span></div></a><a class="syllabus-item" href="./bipartite-graphs/"><div class="num">06</div><div><strong>Bipartite Graphs</strong><span>Two-colourable, and equivalently free of odd cycles.</span></div></a><a class="syllabus-item" href="./euler-and-hamilton/"><div class="num">07</div><div><strong>Euler and Hamilton Paths</strong><span>Every edge once, or every vertex once — and the two are nothing alike.</span></div></a><a class="syllabus-item" href="./graph-traversal/"><div class="num">08</div><div><strong>Breadth-First and Depth-First Search</strong><span>Two ways to visit everything, with different shapes and different uses.</span></div></a><a class="syllabus-item" href="./shortest-paths/"><div class="num">09</div><div><strong>Shortest Paths and Dijkstra&#x27;s Algorithm</strong><span>Fewest edges is not cheapest route.</span></div></a><a class="syllabus-item" href="./trees/"><div class="num">10</div><div><strong>Trees</strong><span>Connected and acyclic — and five other equivalent descriptions.</span></div></a><a class="syllabus-item" href="./tree-traversals/"><div class="num">11</div><div><strong>Rooted Trees and Traversals</strong><span>Preorder, inorder, postorder — three ways to visit every node.</span></div></a><a class="syllabus-item" href="./spanning-trees/"><div class="num">12</div><div><strong>Spanning Trees and Minimum Spanning Trees</strong><span>Connect everything with as few — or as cheap — edges as possible.</span></div></a><a class="syllabus-item" href="./graph-colouring/"><div class="num">13</div><div><strong>Graph Colouring</strong><span>Colour the vertices so no edge joins two of the same colour.</span></div></a><a class="syllabus-item" href="./planar-graphs/"><div class="num">14</div><div><strong>Planar Graphs and Euler&#x27;s Formula</strong><span>Drawable without crossings, and the formula that constrains it.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 5 are the basics, 6 to 10 are traversals and paths, 11 to 13 are trees, and 14 is planarity.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./graphs-and-graph-models/" data-lesson="graphs-and-trees/graphs-and-graph-models"><div class="num">01</div><div><strong>Graphs and Graph Models</strong><span>Vertices, edges, and the things they model.</span></div></a><a class="syllabus-item" href="./degree-and-the-handshake-theorem/" data-lesson="graphs-and-trees/degree-and-the-handshake-theorem"><div class="num">02</div><div><strong>Degree and the Handshake Theorem</strong><span>The degrees sum to twice the edges — always.</span></div></a><a class="syllabus-item" href="./graph-representations/" data-lesson="graphs-and-trees/graph-representations"><div class="num">03</div><div><strong>Graph Representations</strong><span>Adjacency matrix, adjacency list, and what each makes cheap.</span></div></a><a class="syllabus-item" href="./paths-and-connectivity/" data-lesson="graphs-and-trees/paths-and-connectivity"><div class="num">04</div><div><strong>Paths and Connectivity</strong><span>Walks, paths, cycles, components — and what disconnects a graph.</span></div></a><a class="syllabus-item" href="./graph-isomorphism/" data-lesson="graphs-and-trees/graph-isomorphism"><div class="num">05</div><div><strong>Subgraphs and Graph Isomorphism</strong><span>When two different drawings are the same graph.</span></div></a><a class="syllabus-item" href="./bipartite-graphs/" data-lesson="graphs-and-trees/bipartite-graphs"><div class="num">06</div><div><strong>Bipartite Graphs</strong><span>Two-colourable, and equivalently free of odd cycles.</span></div></a><a class="syllabus-item" href="./euler-and-hamilton/" data-lesson="graphs-and-trees/euler-and-hamilton"><div class="num">07</div><div><strong>Euler and Hamilton Paths</strong><span>Every edge once, or every vertex once — and the two are nothing alike.</span></div></a><a class="syllabus-item" href="./graph-traversal/" data-lesson="graphs-and-trees/graph-traversal"><div class="num">08</div><div><strong>Breadth-First and Depth-First Search</strong><span>Two ways to visit everything, with different shapes and different uses.</span></div></a><a class="syllabus-item" href="./shortest-paths/" data-lesson="graphs-and-trees/shortest-paths"><div class="num">09</div><div><strong>Shortest Paths and Dijkstra&#x27;s Algorithm</strong><span>Fewest edges is not cheapest route.</span></div></a><a class="syllabus-item" href="./trees/" data-lesson="graphs-and-trees/trees"><div class="num">10</div><div><strong>Trees</strong><span>Connected and acyclic — and five other equivalent descriptions.</span></div></a><a class="syllabus-item" href="./tree-traversals/" data-lesson="graphs-and-trees/tree-traversals"><div class="num">11</div><div><strong>Rooted Trees and Traversals</strong><span>Preorder, inorder, postorder — three ways to visit every node.</span></div></a><a class="syllabus-item" href="./spanning-trees/" data-lesson="graphs-and-trees/spanning-trees"><div class="num">12</div><div><strong>Spanning Trees and Minimum Spanning Trees</strong><span>Connect everything with as few — or as cheap — edges as possible.</span></div></a><a class="syllabus-item" href="./graph-colouring/" data-lesson="graphs-and-trees/graph-colouring"><div class="num">13</div><div><strong>Graph Colouring</strong><span>Colour the vertices so no edge joins two of the same colour.</span></div></a><a class="syllabus-item" href="./planar-graphs/" data-lesson="graphs-and-trees/planar-graphs"><div class="num">14</div><div><strong>Planar Graphs and Euler&#x27;s Formula</strong><span>Drawable without crossings, and the formula that constrains it.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ Euler circuit  ⟺  connected and every degree even
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ A = P·e^(rt)        e = 2.71828…</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Read an exponential graph</h3><p>Identify growth from decay by the base alone, find the horizontal asymptote, and say why the curve never reaches it.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Define a logarithm correctly</h3><p>State <span class="math">log_b(x)</span> as the exponent that produces <span class="math">x</span>, convert between the two forms instantly, and evaluate one without a calculator when you can.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Apply the three laws</h3><p>Expand and condense logarithmic expressions, and avoid the two invented laws that catch everyone &mdash; <span class="math">log(M + N)</span> and <span class="math">log M / log N</span>.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Solve both kinds of equation</h3><p>Take a logarithm of both sides to bring a variable down, exponentiate to undo a logarithm, and check every answer against the domain.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2></div><p>Lessons 1 to 3 are exponential functions and <span class="math">e</span>; 4 to 8 define the logarithm and its laws; 9 to 12 solve and apply.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./exponential-functions/"><div class="num">01</div><div><strong>Exponential Functions</strong><span>The variable moves into the exponent.</span></div></a><a class="syllabus-item" href="./growth-and-decay/"><div class="num">02</div><div><strong>Growth and Decay</strong><span>One model, two behaviours, decided by the base.</span></div></a><a class="syllabus-item" href="./the-number-e/"><div class="num">03</div><div><strong>The Number e</strong><span>Where e comes from, by compounding faster and faster.</span></div></a><a class="syllabus-item" href="./what-a-logarithm-is/"><div class="num">04</div><div><strong>What a Logarithm Is</strong><span>A logarithm is an exponent. That sentence is the lesson.</span></div></a><a class="syllabus-item" href="./logarithmic-functions-and-their-graphs/"><div class="num">05</div><div><strong>Logarithmic Functions and Their Graphs</strong><span>The inverse of an exponential, reflected in y = x.</span></div></a><a class="syllabus-item" href="./the-laws-of-logarithms/"><div class="num">06</div><div><strong>The Laws of Logarithms</strong><span>Three laws, which are the exponent laws read backwards.</span></div></a><a class="syllabus-item" href="./common-and-natural-logarithms/"><div class="num">07</div><div><strong>Common and Natural Logarithms</strong><span>Base 10 and base e, and the notation for each.</span></div></a><a class="syllabus-item" href="./change-of-base/"><div class="num">08</div><div><strong>Change of Base</strong><span>Computing a logarithm in any base from one you have.</span></div></a><a class="syllabus-item" href="./solving-exponential-equations/"><div class="num">09</div><div><strong>Solving Exponential Equations</strong><span>Taking a logarithm of both sides to bring the variable down.</span></div></a><a class="syllabus-item" href="./solving-logarithmic-equations/"><div class="num">10</div><div><strong>Solving Logarithmic Equations</strong><span>Condensing, exponentiating, and checking the domain.</span></div></a><a class="syllabus-item" href="./compound-interest-and-continuous-growth/"><div class="num">11</div><div><strong>Compound Interest and Continuous Growth</strong><span>Where the two exponential formulas come from.</span></div></a><a class="syllabus-item" href="./logarithmic-scales/"><div class="num">12</div><div><strong>Logarithmic Scales</strong><span>Why decibels, pH and magnitude are logarithms.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 3 are exponential functions and <span class="math">e</span>; 4 to 8 define the logarithm and its laws; 9 to 12 solve and apply.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./exponential-functions/" data-lesson="exponential-and-logarithmic-functions/exponential-functions"><div class="num">01</div><div><strong>Exponential Functions</strong><span>The variable moves into the exponent.</span></div></a><a class="syllabus-item" href="./growth-and-decay/" data-lesson="exponential-and-logarithmic-functions/growth-and-decay"><div class="num">02</div><div><strong>Growth and Decay</strong><span>One model, two behaviours, decided by the base.</span></div></a><a class="syllabus-item" href="./the-number-e/" data-lesson="exponential-and-logarithmic-functions/the-number-e"><div class="num">03</div><div><strong>The Number e</strong><span>Where e comes from, by compounding faster and faster.</span></div></a><a class="syllabus-item" href="./what-a-logarithm-is/" data-lesson="exponential-and-logarithmic-functions/what-a-logarithm-is"><div class="num">04</div><div><strong>What a Logarithm Is</strong><span>A logarithm is an exponent. That sentence is the lesson.</span></div></a><a class="syllabus-item" href="./logarithmic-functions-and-their-graphs/" data-lesson="exponential-and-logarithmic-functions/logarithmic-functions-and-their-graphs"><div class="num">05</div><div><strong>Logarithmic Functions and Their Graphs</strong><span>The inverse of an exponential, reflected in y = x.</span></div></a><a class="syllabus-item" href="./the-laws-of-logarithms/" data-lesson="exponential-and-logarithmic-functions/the-laws-of-logarithms"><div class="num">06</div><div><strong>The Laws of Logarithms</strong><span>Three laws, which are the exponent laws read backwards.</span></div></a><a class="syllabus-item" href="./common-and-natural-logarithms/" data-lesson="exponential-and-logarithmic-functions/common-and-natural-logarithms"><div class="num">07</div><div><strong>Common and Natural Logarithms</strong><span>Base 10 and base e, and the notation for each.</span></div></a><a class="syllabus-item" href="./change-of-base/" data-lesson="exponential-and-logarithmic-functions/change-of-base"><div class="num">08</div><div><strong>Change of Base</strong><span>Computing a logarithm in any base from one you have.</span></div></a><a class="syllabus-item" href="./solving-exponential-equations/" data-lesson="exponential-and-logarithmic-functions/solving-exponential-equations"><div class="num">09</div><div><strong>Solving Exponential Equations</strong><span>Taking a logarithm of both sides to bring the variable down.</span></div></a><a class="syllabus-item" href="./solving-logarithmic-equations/" data-lesson="exponential-and-logarithmic-functions/solving-logarithmic-equations"><div class="num">10</div><div><strong>Solving Logarithmic Equations</strong><span>Condensing, exponentiating, and checking the domain.</span></div></a><a class="syllabus-item" href="./compound-interest-and-continuous-growth/" data-lesson="exponential-and-logarithmic-functions/compound-interest-and-continuous-growth"><div class="num">11</div><div><strong>Compound Interest and Continuous Growth</strong><span>Where the two exponential formulas come from.</span></div></a><a class="syllabus-item" href="./logarithmic-scales/" data-lesson="exponential-and-logarithmic-functions/logarithmic-scales"><div class="num">12</div><div><strong>Logarithmic Scales</strong><span>Why decibels, pH and magnitude are logarithms.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ A = P·e^(rt)        e = 2.71828…</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

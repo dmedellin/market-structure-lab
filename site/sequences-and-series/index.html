@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ S∞ = a₁/(1 − r)             only when |r| &lt; 1
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Move between the two definitions</h3><p>Turn a recursive rule into a closed form and back, and say which one answers which question &mdash; the hundredth term is a closed-form question.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Read and write sigma notation</h3><p>Expand a sum, write one down, and shift an index without changing the value.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Sum both families</h3><p>Derive the arithmetic sum by pairing and the geometric sum by the <span class="math">Sₙ − rSₙ</span> cancellation, rather than reciting either formula.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Decide whether an infinite sum exists</h3><p>Apply <span class="math">|r| < 1</span> and say what the sum means when it holds &mdash; a limit of partial sums, not an act of adding infinitely many things.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 11 lessons, in order</h2></div><p>Lessons 1 and 2 set up sequences and the notation for their sums. Lessons 3 to 5 handle the two families and partial sums, 6 to 8 go infinite, and 9 to 11 are the binomial theorem.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./sequences-and-recursion/"><div class="num">01</div><div><strong>Sequences and Recursion</strong><span>A function on the positive integers, defined two ways.</span></div></a><a class="syllabus-item" href="./sigma-notation/"><div class="num">02</div><div><strong>Sigma Notation</strong><span>Writing a sum without writing every term, and shifting the index.</span></div></a><a class="syllabus-item" href="./arithmetic-sequences-and-series/"><div class="num">03</div><div><strong>Arithmetic Sequences and Series</strong><span>A constant difference, and Gauss&#x27;s trick for the sum.</span></div></a><a class="syllabus-item" href="./geometric-sequences-and-series/"><div class="num">04</div><div><strong>Geometric Sequences and Series</strong><span>A constant ratio, and a sum that can be infinite.</span></div></a><a class="syllabus-item" href="./partial-sums-and-telescoping/"><div class="num">05</div><div><strong>Partial Sums and Telescoping</strong><span>The sequence of sums, and the ones that collapse.</span></div></a><a class="syllabus-item" href="./infinite-geometric-series/"><div class="num">06</div><div><strong>Infinite Geometric Series</strong><span>When adding forever gives a finite answer, and when it does not.</span></div></a><a class="syllabus-item" href="./repeating-decimals-as-series/"><div class="num">07</div><div><strong>Repeating Decimals as Series</strong><span>Why 0.999... is 1, settled by the sum formula.</span></div></a><a class="syllabus-item" href="./annuities-and-accumulated-payments/"><div class="num">08</div><div><strong>Annuities and Accumulated Payments</strong><span>A stream of payments is a geometric series.</span></div></a><a class="syllabus-item" href="./pascals-triangle/"><div class="num">09</div><div><strong>Pascal&#x27;s Triangle</strong><span>Each entry the sum of the two above it, and what that counts.</span></div></a><a class="syllabus-item" href="./the-binomial-theorem/"><div class="num">10</div><div><strong>The Binomial Theorem</strong><span>Expanding (a+b)^n without multiplying it out.</span></div></a><a class="syllabus-item" href="./the-general-term-of-an-expansion/"><div class="num">11</div><div><strong>The General Term of an Expansion</strong><span>Picking one term out of an expansion without writing the rest.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 11 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 and 2 set up sequences and the notation for their sums. Lessons 3 to 5 handle the two families and partial sums, 6 to 8 go infinite, and 9 to 11 are the binomial theorem.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./sequences-and-recursion/" data-lesson="sequences-and-series/sequences-and-recursion"><div class="num">01</div><div><strong>Sequences and Recursion</strong><span>A function on the positive integers, defined two ways.</span></div></a><a class="syllabus-item" href="./sigma-notation/" data-lesson="sequences-and-series/sigma-notation"><div class="num">02</div><div><strong>Sigma Notation</strong><span>Writing a sum without writing every term, and shifting the index.</span></div></a><a class="syllabus-item" href="./arithmetic-sequences-and-series/" data-lesson="sequences-and-series/arithmetic-sequences-and-series"><div class="num">03</div><div><strong>Arithmetic Sequences and Series</strong><span>A constant difference, and Gauss&#x27;s trick for the sum.</span></div></a><a class="syllabus-item" href="./geometric-sequences-and-series/" data-lesson="sequences-and-series/geometric-sequences-and-series"><div class="num">04</div><div><strong>Geometric Sequences and Series</strong><span>A constant ratio, and a sum that can be infinite.</span></div></a><a class="syllabus-item" href="./partial-sums-and-telescoping/" data-lesson="sequences-and-series/partial-sums-and-telescoping"><div class="num">05</div><div><strong>Partial Sums and Telescoping</strong><span>The sequence of sums, and the ones that collapse.</span></div></a><a class="syllabus-item" href="./infinite-geometric-series/" data-lesson="sequences-and-series/infinite-geometric-series"><div class="num">06</div><div><strong>Infinite Geometric Series</strong><span>When adding forever gives a finite answer, and when it does not.</span></div></a><a class="syllabus-item" href="./repeating-decimals-as-series/" data-lesson="sequences-and-series/repeating-decimals-as-series"><div class="num">07</div><div><strong>Repeating Decimals as Series</strong><span>Why 0.999... is 1, settled by the sum formula.</span></div></a><a class="syllabus-item" href="./annuities-and-accumulated-payments/" data-lesson="sequences-and-series/annuities-and-accumulated-payments"><div class="num">08</div><div><strong>Annuities and Accumulated Payments</strong><span>A stream of payments is a geometric series.</span></div></a><a class="syllabus-item" href="./pascals-triangle/" data-lesson="sequences-and-series/pascals-triangle"><div class="num">09</div><div><strong>Pascal&#x27;s Triangle</strong><span>Each entry the sum of the two above it, and what that counts.</span></div></a><a class="syllabus-item" href="./the-binomial-theorem/" data-lesson="sequences-and-series/the-binomial-theorem"><div class="num">10</div><div><strong>The Binomial Theorem</strong><span>Expanding (a+b)^n without multiplying it out.</span></div></a><a class="syllabus-item" href="./the-general-term-of-an-expansion/" data-lesson="sequences-and-series/the-general-term-of-an-expansion"><div class="num">11</div><div><strong>The General Term of an Expansion</strong><span>Picking one term out of an expansion without writing the rest.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ S∞ = a₁/(1 − r)             only when |r| &lt; 1
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

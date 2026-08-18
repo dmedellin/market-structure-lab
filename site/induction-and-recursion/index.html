@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ T(n) = aT(n/b) + nᵈ    ⟹  compare log_b a with d</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Write a correct induction proof</h3><p>Base case, explicit inductive hypothesis, and a step that actually uses it &mdash; the three parts a proof is graded on, and the three it usually loses.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Choose ordinary or strong induction</h3><p>Recognise the claims where <span class="math">P(k)</span> alone is not enough, and state the stronger hypothesis correctly rather than reaching for it by habit.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Define and reason about recursive objects</h3><p>Recursive definitions of sequences, sets and structures, and the structural induction that proves things about them.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Solve a recurrence</h3><p>Linear homogeneous by characteristic roots, nonhomogeneous by a particular solution, and divide-and-conquer by the master theorem.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2></div><p>Lessons 1 to 5 are induction, 6 to 8 recursion, 9 to 11 recurrences, and 12 applies all three to program correctness.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./the-well-ordering-principle/"><div class="num">01</div><div><strong>The Well-Ordering Principle</strong><span>Every nonempty set of naturals has a least element — and why that is enough.</span></div></a><a class="syllabus-item" href="./mathematical-induction/"><div class="num">02</div><div><strong>Mathematical Induction</strong><span>Base case, inductive step, conclusion — and the step must use the hypothesis.</span></div></a><a class="syllabus-item" href="./induction-with-sums-and-products/"><div class="num">03</div><div><strong>Induction with Sums and Products</strong><span>The standard family of identities, and the pattern they share.</span></div></a><a class="syllabus-item" href="./induction-with-inequalities-and-divisibility/"><div class="num">04</div><div><strong>Induction with Inequalities and Divisibility</strong><span>Two families where the base case is often not <span class="math">n = 1</span>.</span></div></a><a class="syllabus-item" href="./strong-induction/"><div class="num">05</div><div><strong>Strong Induction</strong><span>Assume every earlier case, not only the previous one.</span></div></a><a class="syllabus-item" href="./recursive-definitions/"><div class="num">06</div><div><strong>Recursive Definitions</strong><span>Defining an object in terms of smaller instances of itself.</span></div></a><a class="syllabus-item" href="./structural-induction/"><div class="num">07</div><div><strong>Structural Induction</strong><span>Induction over how an object was built, not over a number.</span></div></a><a class="syllabus-item" href="./recursive-algorithms/"><div class="num">08</div><div><strong>Recursive Algorithms and Correctness</strong><span>An algorithm that calls itself, and the induction that proves it right.</span></div></a><a class="syllabus-item" href="./recurrence-relations/"><div class="num">09</div><div><strong>Recurrence Relations</strong><span>Sequences defined by their own earlier terms.</span></div></a><a class="syllabus-item" href="./solving-linear-recurrences/"><div class="num">10</div><div><strong>Solving Linear Recurrences</strong><span>Characteristic roots, repeated roots, and particular solutions.</span></div></a><a class="syllabus-item" href="./divide-and-conquer-recurrences/"><div class="num">11</div><div><strong>Divide-and-Conquer Recurrences</strong><span><span class="math">T(n) = aT(n/b) + f(n)</span>, and the one comparison that solves it.</span></div></a><a class="syllabus-item" href="./loop-invariants-and-correctness/"><div class="num">12</div><div><strong>Loop Invariants and Program Correctness</strong><span>Induction, applied to a loop instead of to a number.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 5 are induction, 6 to 8 recursion, 9 to 11 recurrences, and 12 applies all three to program correctness.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./the-well-ordering-principle/" data-lesson="induction-and-recursion/the-well-ordering-principle"><div class="num">01</div><div><strong>The Well-Ordering Principle</strong><span>Every nonempty set of naturals has a least element — and why that is enough.</span></div></a><a class="syllabus-item" href="./mathematical-induction/" data-lesson="induction-and-recursion/mathematical-induction"><div class="num">02</div><div><strong>Mathematical Induction</strong><span>Base case, inductive step, conclusion — and the step must use the hypothesis.</span></div></a><a class="syllabus-item" href="./induction-with-sums-and-products/" data-lesson="induction-and-recursion/induction-with-sums-and-products"><div class="num">03</div><div><strong>Induction with Sums and Products</strong><span>The standard family of identities, and the pattern they share.</span></div></a><a class="syllabus-item" href="./induction-with-inequalities-and-divisibility/" data-lesson="induction-and-recursion/induction-with-inequalities-and-divisibility"><div class="num">04</div><div><strong>Induction with Inequalities and Divisibility</strong><span>Two families where the base case is often not <span class="math">n = 1</span>.</span></div></a><a class="syllabus-item" href="./strong-induction/" data-lesson="induction-and-recursion/strong-induction"><div class="num">05</div><div><strong>Strong Induction</strong><span>Assume every earlier case, not only the previous one.</span></div></a><a class="syllabus-item" href="./recursive-definitions/" data-lesson="induction-and-recursion/recursive-definitions"><div class="num">06</div><div><strong>Recursive Definitions</strong><span>Defining an object in terms of smaller instances of itself.</span></div></a><a class="syllabus-item" href="./structural-induction/" data-lesson="induction-and-recursion/structural-induction"><div class="num">07</div><div><strong>Structural Induction</strong><span>Induction over how an object was built, not over a number.</span></div></a><a class="syllabus-item" href="./recursive-algorithms/" data-lesson="induction-and-recursion/recursive-algorithms"><div class="num">08</div><div><strong>Recursive Algorithms and Correctness</strong><span>An algorithm that calls itself, and the induction that proves it right.</span></div></a><a class="syllabus-item" href="./recurrence-relations/" data-lesson="induction-and-recursion/recurrence-relations"><div class="num">09</div><div><strong>Recurrence Relations</strong><span>Sequences defined by their own earlier terms.</span></div></a><a class="syllabus-item" href="./solving-linear-recurrences/" data-lesson="induction-and-recursion/solving-linear-recurrences"><div class="num">10</div><div><strong>Solving Linear Recurrences</strong><span>Characteristic roots, repeated roots, and particular solutions.</span></div></a><a class="syllabus-item" href="./divide-and-conquer-recurrences/" data-lesson="induction-and-recursion/divide-and-conquer-recurrences"><div class="num">11</div><div><strong>Divide-and-Conquer Recurrences</strong><span><span class="math">T(n) = aT(n/b) + f(n)</span>, and the one comparison that solves it.</span></div></a><a class="syllabus-item" href="./loop-invariants-and-correctness/" data-lesson="induction-and-recursion/loop-invariants-and-correctness"><div class="num">12</div><div><strong>Loop Invariants and Program Correctness</strong><span>Induction, applied to a loop instead of to a number.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ T(n) = aT(n/b) + nᵈ    ⟹  compare log_b a with d</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

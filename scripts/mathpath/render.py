@@ -6,9 +6,10 @@ pager, the palette or the theme toggle even if a lesson wanted one.
 """
 
 import html
+import json
 import re
 
-from . import chrome, labs
+from . import chrome, labs, progress
 from .chrome import esc
 
 ORIGIN = chrome.CANONICAL_ORIGIN
@@ -280,6 +281,10 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
         )
     else:
         nxt = ("../", "%s &middot; course home" % esc(course["title"]), True)
+    # The completion mark sits between the material and the pager: the moment a
+    # reader has finished. localStorage only, no request, never a gate.
+    lesson_id = "%s/%s" % (course["slug"], lesson["slug"])
+    parts.append(progress.LESSON_MARKUP % "../..")
     parts.append(chrome.pager(prev=prev, next=nxt))
 
     parts.append(
@@ -300,7 +305,9 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
     ]
     parts.append(chrome.close(labs.cfg_literal("QUIZ", quiz)
                              + "\n  (function () {\n" + lab.script + "  })();\n"
-                             + labs.QUIZ_SCRIPT))
+                             + labs.QUIZ_SCRIPT
+                             + progress.PROGRESS_JS
+                             + progress.LESSON_JS % json.dumps(lesson_id)))
     return "".join(parts)
 
 
@@ -311,9 +318,10 @@ def course_home(*, course, index, courses, path):
     lessons = course["lessons"]
 
     syllabus = "".join(
-        '<a class="syllabus-item" href="./%s/"><div class="num">%02d</div>'
+        '<a class="syllabus-item" href="./%s/" data-lesson="%s/%s"><div class="num">%02d</div>'
         "<div><strong>%s</strong><span>%s</span></div></a>"
-        % (lesson["slug"], i + 1, esc(lesson["title"]), esc_inline(lesson["one_line"]))
+        % (lesson["slug"], course["slug"], lesson["slug"], i + 1,
+           esc(lesson["title"]), esc_inline(lesson["one_line"]))
         for i, lesson in enumerate(lessons)
     )
     outcomes = "".join(
@@ -407,7 +415,8 @@ def course_home(*, course, index, courses, path):
         "    </section>\n" % (inline(course["outcomes_intro"]), outcomes),
         '    <section class="section" id="syllabus">\n'
         '      <div class="section-head"><div><p class="kicker">Syllabus</p>'
-        "<h2>All %d lessons, in order</h2></div><p>%s</p></div>\n"
+        '<h2>All %d lessons, in order</h2>'
+        '<p class="course-progress" id="courseProgress"></p></div><p>%s</p></div>\n'
         '      <div class="syllabus">%s</div>\n'
         "    </section>\n" % (len(lessons), inline(course["syllabus_intro"]), syllabus),
         '    <section class="section">\n'
@@ -426,7 +435,7 @@ def course_home(*, course, index, courses, path):
             "<strong>%s.</strong> %s" % (esc(course["title"]), inline(course["footer_lead"])),
             path["material"],
         ),
-        chrome.close(""),
+        chrome.close(progress.PROGRESS_JS + progress.COURSE_JS),
     ]
     return "".join(parts)
 
@@ -438,12 +447,13 @@ def path_page(path):
     url = "/paths/%s/" % path["slug"]
 
     spine = "".join(
-        '<a class="spine-item" href="../../%s/"><div class="spine-num">%02d</div>'
+        '<a class="spine-item" href="../../%s/" data-course="%s" data-lessons="%d"><div class="spine-num">%02d</div>'
         '<div class="spine-body"><strong>%s</strong><p>%s</p>'
-        '<div class="spine-meta"><span>%d lessons</span><span>%s</span><span>Available now</span></div>'
+        '<div class="spine-meta"><span>%d lessons</span><span>%s</span><span>Available now</span><span class="spine-progress"></span></div>'
         "</div></a>"
         % (
-            course["slug"], course["number"], esc(course["title"]),
+            course["slug"], course["slug"], len(course["lessons"]),
+            course["number"], esc(course["title"]),
             inline(course["blurb"]), len(course["lessons"]), esc(course["level"]),
         )
         for course in courses
@@ -517,6 +527,6 @@ def path_page(path):
         ),
         "    </main>\n",
         chrome.footer(inline(path["footer_lead"]), path["material"]),
-        chrome.close(""),
+        chrome.close(progress.PROGRESS_JS + progress.PATH_JS),
     ]
     return "".join(parts)

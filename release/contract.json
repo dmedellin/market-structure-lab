@@ -10549,6 +10549,60 @@
         "timeout_seconds": 10,
         "attempts": 2,
         "blocking": true
+      },
+      {
+        "id": "signin-callback",
+        "description": "The Microsoft sign-in redirect target. Published like any other page and must answer 200; it carries no course material and gates nothing.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/oauth2/spa/callback/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/oauth2/spa/callback/\"",
+            "Signing you in",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
+      },
+      {
+        "id": "progress-page",
+        "description": "The progress page: completion marks kept in the reader's own browser, with optional sign-in to carry them between devices. It unlocks no material.",
+        "scope": "public",
+        "method": "GET",
+        "path": "/progress/",
+        "expect": {
+          "status": 200,
+          "max_redirects": 2,
+          "same_origin_redirects_only": true,
+          "body_contains": [
+            "<link rel=\"canonical\" href=\"https://learn.geterdone.io/progress/\"",
+            "Your progress",
+            "Educational use only"
+          ],
+          "headers": [
+            {
+              "name": "Content-Type",
+              "match": "contains",
+              "value": "text/html"
+            }
+          ]
+        },
+        "timeout_seconds": 10,
+        "attempts": 2,
+        "blocking": true
       }
     ]
   },

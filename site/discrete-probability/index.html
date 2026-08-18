@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ E[X + Y] = E[X] + E[Y]           always, independent or not</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Compute a probability from a sample space</h3><p>Identify the outcomes, check they are equally likely, count the event, and divide &mdash; with the counting techniques of course 4.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Condition without falling into the standard traps</h3><p><span class="math">P(A|B)</span> and <span class="math">P(B|A)</span> are different numbers, and the base rate is what separates them.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Use Bayes&#x27; theorem on a real question</h3><p>The medical-test calculation, done properly, and the reason its answer surprises almost everyone.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Compute expectation and variance</h3><p>From the definition, and by linearity &mdash; which holds whether or not the variables are independent, and is the most useful fact in the course.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2></div><p>Lessons 1 to 3 set up the model, 4 to 6 are conditioning, and 7 to 12 are random variables and the two distributions worth knowing by name.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./sample-spaces-and-events/"><div class="num">01</div><div><strong>Sample Spaces and Events</strong><span>The set of outcomes, and the subsets we ask about.</span></div></a><a class="syllabus-item" href="./computing-probabilities/"><div class="num">02</div><div><strong>Computing Probabilities</strong><span>Counting the event, counting the space, dividing.</span></div></a><a class="syllabus-item" href="./probability-axioms/"><div class="num">03</div><div><strong>The Probability Axioms</strong><span>Three rules that every probability assignment obeys.</span></div></a><a class="syllabus-item" href="./conditional-probability/"><div class="num">04</div><div><strong>Conditional Probability</strong><span>Restricting the sample space to what you now know.</span></div></a><a class="syllabus-item" href="./independence/"><div class="num">05</div><div><strong>Independence</strong><span><span class="math">P(A ∩ B) = P(A)P(B)</span>, and nothing more.</span></div></a><a class="syllabus-item" href="./bayes-theorem/"><div class="num">06</div><div><strong>Bayes&#x27; Theorem</strong><span>Reversing a conditional, and why the base rate dominates.</span></div></a><a class="syllabus-item" href="./random-variables/"><div class="num">07</div><div><strong>Random Variables</strong><span>A number attached to each outcome.</span></div></a><a class="syllabus-item" href="./expected-value/"><div class="num">08</div><div><strong>Expected Value</strong><span>The probability-weighted average, and what it does not mean.</span></div></a><a class="syllabus-item" href="./linearity-of-expectation/"><div class="num">09</div><div><strong>Linearity of Expectation</strong><span><span class="math">E[X + Y] = E[X] + E[Y]</span>, whether or not they are independent.</span></div></a><a class="syllabus-item" href="./variance/"><div class="num">10</div><div><strong>Variance and Standard Deviation</strong><span>How far from the mean, on average — squared.</span></div></a><a class="syllabus-item" href="./binomial-distribution/"><div class="num">11</div><div><strong>Bernoulli Trials and the Binomial Distribution</strong><span>Counting successes in a fixed number of independent trials.</span></div></a><a class="syllabus-item" href="./geometric-distribution/"><div class="num">12</div><div><strong>The Geometric Distribution and Waiting Times</strong><span>How long until the first success — and why the average misleads.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 3 set up the model, 4 to 6 are conditioning, and 7 to 12 are random variables and the two distributions worth knowing by name.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./sample-spaces-and-events/" data-lesson="discrete-probability/sample-spaces-and-events"><div class="num">01</div><div><strong>Sample Spaces and Events</strong><span>The set of outcomes, and the subsets we ask about.</span></div></a><a class="syllabus-item" href="./computing-probabilities/" data-lesson="discrete-probability/computing-probabilities"><div class="num">02</div><div><strong>Computing Probabilities</strong><span>Counting the event, counting the space, dividing.</span></div></a><a class="syllabus-item" href="./probability-axioms/" data-lesson="discrete-probability/probability-axioms"><div class="num">03</div><div><strong>The Probability Axioms</strong><span>Three rules that every probability assignment obeys.</span></div></a><a class="syllabus-item" href="./conditional-probability/" data-lesson="discrete-probability/conditional-probability"><div class="num">04</div><div><strong>Conditional Probability</strong><span>Restricting the sample space to what you now know.</span></div></a><a class="syllabus-item" href="./independence/" data-lesson="discrete-probability/independence"><div class="num">05</div><div><strong>Independence</strong><span><span class="math">P(A ∩ B) = P(A)P(B)</span>, and nothing more.</span></div></a><a class="syllabus-item" href="./bayes-theorem/" data-lesson="discrete-probability/bayes-theorem"><div class="num">06</div><div><strong>Bayes&#x27; Theorem</strong><span>Reversing a conditional, and why the base rate dominates.</span></div></a><a class="syllabus-item" href="./random-variables/" data-lesson="discrete-probability/random-variables"><div class="num">07</div><div><strong>Random Variables</strong><span>A number attached to each outcome.</span></div></a><a class="syllabus-item" href="./expected-value/" data-lesson="discrete-probability/expected-value"><div class="num">08</div><div><strong>Expected Value</strong><span>The probability-weighted average, and what it does not mean.</span></div></a><a class="syllabus-item" href="./linearity-of-expectation/" data-lesson="discrete-probability/linearity-of-expectation"><div class="num">09</div><div><strong>Linearity of Expectation</strong><span><span class="math">E[X + Y] = E[X] + E[Y]</span>, whether or not they are independent.</span></div></a><a class="syllabus-item" href="./variance/" data-lesson="discrete-probability/variance"><div class="num">10</div><div><strong>Variance and Standard Deviation</strong><span>How far from the mean, on average — squared.</span></div></a><a class="syllabus-item" href="./binomial-distribution/" data-lesson="discrete-probability/binomial-distribution"><div class="num">11</div><div><strong>Bernoulli Trials and the Binomial Distribution</strong><span>Counting successes in a fixed number of independent trials.</span></div></a><a class="syllabus-item" href="./geometric-distribution/" data-lesson="discrete-probability/geometric-distribution"><div class="num">12</div><div><strong>The Geometric Distribution and Waiting Times</strong><span>How long until the first success — and why the average misleads.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ E[X + Y] = E[X] + E[Y]           always, independent or not</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

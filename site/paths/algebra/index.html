@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -966,7 +1026,7 @@ aₙ = a₁r^(n−1)                  Sₙ = a₁(1 − rⁿ)/(1 − r)</div>
     </section>
     <section class="section" id="courses">
       <div class="section-head"><div><p class="kicker">The sequence</p><h2>All 9 courses, in order</h2></div><p>Each course assumes the ones before it and nothing else. Course 4 factors the expressions course 1 taught you to build; course 5 cannot start until you can factor; course 6 needs both, and course 8 needs all of them.</p></div>
-      <div class="spine"><a class="spine-item" href="../../algebra-foundations/"><div class="spine-num">01</div><div class="spine-body"><strong>Foundations of Algebra</strong><p>Arithmetic, made general. Why a letter can stand for a number, which rearrangements are always allowed and which only look allowed, and the exponent and radical rules that everything after this course leans on.</p><div class="spine-meta"><span>13 lessons</span><span>Beginner</span><span>Available now</span></div></div></a><a class="spine-item" href="../../linear-equations-and-inequalities/"><div class="spine-num">02</div><div class="spine-body"><strong>Linear Equations and Inequalities</strong><p>Find the value that makes a statement true &mdash; and know why each move you made kept it true. Linear equations, literal formulas, inequalities, compound and absolute value statements, and the notation for writing a solution set down.</p><div class="spine-meta"><span>13 lessons</span><span>Beginner</span><span>Available now</span></div></div></a><a class="spine-item" href="../../lines-functions-and-graphs/"><div class="spine-num">03</div><div class="spine-body"><strong>Lines, Functions and Graphs</strong><p>Put algebra on a picture. Slope and every form of a line, then the definition that organises the rest of the path &mdash; a function &mdash; with its notation, its domain, the transformations that move its graph, and its inverse.</p><div class="spine-meta"><span>14 lessons</span><span>Beginner → Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../polynomials-and-factoring/"><div class="spine-num">04</div><div class="spine-body"><strong>Polynomials and Factoring</strong><p>Multiply out, then learn to go back. The factored form is the one that answers questions &mdash; where a graph crosses, when a product is zero &mdash; and this course is about producing it reliably rather than by inspection.</p><div class="spine-meta"><span>13 lessons</span><span>Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../rational-and-radical-expressions/"><div class="spine-num">05</div><div class="spine-body"><strong>Rational and Radical Expressions</strong><p>What happens when a variable lands in a denominator or under a root. Both put values out of bounds, both create solutions that are not solutions, and both need the domain written down before the algebra starts.</p><div class="spine-meta"><span>12 lessons</span><span>Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../quadratics-and-complex-numbers/"><div class="spine-num">06</div><div class="spine-body"><strong>Quadratics and Complex Numbers</strong><p>One equation shape, four solution methods, and a number system that has to be extended so that every one of them always finishes. Completing the square is the centre of the course: it derives the formula and it puts a parabola in vertex form.</p><div class="spine-meta"><span>14 lessons</span><span>Intermediate</span><span>Available now</span></div></div></a><a class="spine-item" href="../../exponential-and-logarithmic-functions/"><div class="spine-num">07</div><div class="spine-body"><strong>Exponential and Logarithmic Functions</strong><p>The variable moves into the exponent, and ordinary algebra stops working. A logarithm is the tool that brings it back down &mdash; defined as an inverse, with three laws that are the exponent laws read backwards.</p><div class="spine-meta"><span>12 lessons</span><span>Intermediate → Advanced</span><span>Available now</span></div></div></a><a class="spine-item" href="../../systems-and-matrices/"><div class="spine-num">08</div><div class="spine-body"><strong>Systems and Matrices</strong><p>Solve for several unknowns together, then find the notation that removes the bookkeeping. A matrix is elimination with the letters deleted, which is why this course does elimination by hand first and only then writes it down as rows.</p><div class="spine-meta"><span>10 lessons</span><span>Advanced</span><span>Available now</span></div></div></a><a class="spine-item" href="../../sequences-and-series/"><div class="spine-num">09</div><div class="spine-body"><strong>Sequences and Series</strong><p>A sequence is a function whose input is a position. Once that is settled, two families cover almost everything a school course needs, both have a closed form for the n-th term and for the sum, and one of them can be added forever.</p><div class="spine-meta"><span>11 lessons</span><span>Intermediate → Advanced</span><span>Available now</span></div></div></a></div>
+      <div class="spine"><a class="spine-item" href="../../algebra-foundations/" data-course="algebra-foundations" data-lessons="13"><div class="spine-num">01</div><div class="spine-body"><strong>Foundations of Algebra</strong><p>Arithmetic, made general. Why a letter can stand for a number, which rearrangements are always allowed and which only look allowed, and the exponent and radical rules that everything after this course leans on.</p><div class="spine-meta"><span>13 lessons</span><span>Beginner</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../linear-equations-and-inequalities/" data-course="linear-equations-and-inequalities" data-lessons="13"><div class="spine-num">02</div><div class="spine-body"><strong>Linear Equations and Inequalities</strong><p>Find the value that makes a statement true &mdash; and know why each move you made kept it true. Linear equations, literal formulas, inequalities, compound and absolute value statements, and the notation for writing a solution set down.</p><div class="spine-meta"><span>13 lessons</span><span>Beginner</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../lines-functions-and-graphs/" data-course="lines-functions-and-graphs" data-lessons="14"><div class="spine-num">03</div><div class="spine-body"><strong>Lines, Functions and Graphs</strong><p>Put algebra on a picture. Slope and every form of a line, then the definition that organises the rest of the path &mdash; a function &mdash; with its notation, its domain, the transformations that move its graph, and its inverse.</p><div class="spine-meta"><span>14 lessons</span><span>Beginner → Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../polynomials-and-factoring/" data-course="polynomials-and-factoring" data-lessons="13"><div class="spine-num">04</div><div class="spine-body"><strong>Polynomials and Factoring</strong><p>Multiply out, then learn to go back. The factored form is the one that answers questions &mdash; where a graph crosses, when a product is zero &mdash; and this course is about producing it reliably rather than by inspection.</p><div class="spine-meta"><span>13 lessons</span><span>Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../rational-and-radical-expressions/" data-course="rational-and-radical-expressions" data-lessons="12"><div class="spine-num">05</div><div class="spine-body"><strong>Rational and Radical Expressions</strong><p>What happens when a variable lands in a denominator or under a root. Both put values out of bounds, both create solutions that are not solutions, and both need the domain written down before the algebra starts.</p><div class="spine-meta"><span>12 lessons</span><span>Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../quadratics-and-complex-numbers/" data-course="quadratics-and-complex-numbers" data-lessons="14"><div class="spine-num">06</div><div class="spine-body"><strong>Quadratics and Complex Numbers</strong><p>One equation shape, four solution methods, and a number system that has to be extended so that every one of them always finishes. Completing the square is the centre of the course: it derives the formula and it puts a parabola in vertex form.</p><div class="spine-meta"><span>14 lessons</span><span>Intermediate</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../exponential-and-logarithmic-functions/" data-course="exponential-and-logarithmic-functions" data-lessons="12"><div class="spine-num">07</div><div class="spine-body"><strong>Exponential and Logarithmic Functions</strong><p>The variable moves into the exponent, and ordinary algebra stops working. A logarithm is the tool that brings it back down &mdash; defined as an inverse, with three laws that are the exponent laws read backwards.</p><div class="spine-meta"><span>12 lessons</span><span>Intermediate → Advanced</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../systems-and-matrices/" data-course="systems-and-matrices" data-lessons="10"><div class="spine-num">08</div><div class="spine-body"><strong>Systems and Matrices</strong><p>Solve for several unknowns together, then find the notation that removes the bookkeeping. A matrix is elimination with the letters deleted, which is why this course does elimination by hand first and only then writes it down as rows.</p><div class="spine-meta"><span>10 lessons</span><span>Advanced</span><span>Available now</span><span class="spine-progress"></span></div></div></a><a class="spine-item" href="../../sequences-and-series/" data-course="sequences-and-series" data-lessons="11"><div class="spine-num">09</div><div class="spine-body"><strong>Sequences and Series</strong><p>A sequence is a function whose input is a position. Once that is settled, two families cover almost everything a school course needs, both have a closed form for the n-th term and for the sum, and one of them can be added forever.</p><div class="spine-meta"><span>11 lessons</span><span>Intermediate → Advanced</span><span>Available now</span><span class="spine-progress"></span></div></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1012,6 +1072,41 @@ aₙ = a₁r^(n−1)                  Sₙ = a₁(1 − rⁿ)/(1 − r)</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var marks = window.learnProgress.read();
+    [].slice.call(document.querySelectorAll('.spine-item[data-course]')).forEach(function (item) {
+      var slug = item.getAttribute('data-course');
+      var total = parseInt(item.getAttribute('data-lessons'), 10) || 0;
+      var n = Object.keys(marks).filter(function (k) { return k.indexOf(slug + '/') === 0; }).length;
+      var out = item.querySelector('.spine-progress');
+      if (!out || !total) return;
+      out.textContent = n ? n + ' of ' + total + ' done' : '';
+      item.classList.toggle('is-started', n > 0);
+      item.classList.toggle('is-complete', n >= total);
+    });
+  })();
   </script>
 </body>
 </html>

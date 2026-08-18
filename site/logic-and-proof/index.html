@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ p → q   ≡   ¬q → ¬p           contraposition: the basis of a proof metho
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Read a formula unambiguously</h3><p>Parse a compound statement, apply precedence correctly, and build its truth table without guessing at what <span class="math">→</span> means when its hypothesis is false.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Prove two statements equivalent</h3><p>Either by a full truth table, or by a chain of named equivalences &mdash; and know that one separating assignment refutes the claim outright.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Handle quantifiers with care</h3><p>Distinguish <span class="math">∀x ∃y</span> from <span class="math">∃x ∀y</span>, negate a quantified statement mechanically, and recognise the vacuous truth that catches everyone once.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Write the four standard proofs</h3><p>Direct, contrapositive, contradiction and cases &mdash; knowing which shape of claim invites which technique, and what each one owes the reader.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 7 are propositional logic, 8 to 10 add quantifiers, and 11 to 14 turn all of it into proofs.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./propositions-and-truth-values/"><div class="num">01</div><div><strong>Propositions and Truth Values</strong><span>What counts as a proposition, and what does not.</span></div></a><a class="syllabus-item" href="./logical-connectives/"><div class="num">02</div><div><strong>Logical Connectives</strong><span>Negation, conjunction, disjunction, exclusive or.</span></div></a><a class="syllabus-item" href="./truth-tables/"><div class="num">03</div><div><strong>Truth Tables</strong><span>The complete method for evaluating any compound statement.</span></div></a><a class="syllabus-item" href="./conditional-statements/"><div class="num">04</div><div><strong>The Conditional and Its Relatives</strong><span>If-then, converse, inverse, contrapositive, and vacuous truth.</span></div></a><a class="syllabus-item" href="./logical-equivalence/"><div class="num">05</div><div><strong>Logical Equivalence</strong><span>When two formulas say the same thing, and the laws that rewrite one into the other.</span></div></a><a class="syllabus-item" href="./tautologies-and-satisfiability/"><div class="num">06</div><div><strong>Tautology, Contradiction, Satisfiability</strong><span>Always true, never true, and sometimes true.</span></div></a><a class="syllabus-item" href="./normal-forms-and-boolean-algebra/"><div class="num">07</div><div><strong>Normal Forms and Boolean Algebra</strong><span>Every formula rewritten into one of two standard shapes.</span></div></a><a class="syllabus-item" href="./predicates-and-quantifiers/"><div class="num">08</div><div><strong>Predicates and Quantifiers</strong><span>Turning open sentences into propositions.</span></div></a><a class="syllabus-item" href="./nested-quantifiers/"><div class="num">09</div><div><strong>Nested Quantifiers</strong><span>Why <span class="math">∀x ∃y</span> and <span class="math">∃y ∀x</span> are different claims.</span></div></a><a class="syllabus-item" href="./negating-quantified-statements/"><div class="num">10</div><div><strong>Negating Quantified Statements</strong><span>Push the negation inward; every quantifier flips.</span></div></a><a class="syllabus-item" href="./rules-of-inference/"><div class="num">11</div><div><strong>Rules of Inference</strong><span>Valid argument forms, and the two fallacies that mimic them.</span></div></a><a class="syllabus-item" href="./direct-proof/"><div class="num">12</div><div><strong>Direct Proof</strong><span>Assume the hypothesis, derive the conclusion, write it for a reader.</span></div></a><a class="syllabus-item" href="./contraposition-and-contradiction/"><div class="num">13</div><div><strong>Contraposition and Contradiction</strong><span>Two indirect techniques, and when each is the right one.</span></div></a><a class="syllabus-item" href="./proof-by-cases-and-counterexample/"><div class="num">14</div><div><strong>Cases, Counterexamples, and Writing a Proof</strong><span>Exhaustive cases, single counterexamples, and the standard a proof must meet.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 7 are propositional logic, 8 to 10 add quantifiers, and 11 to 14 turn all of it into proofs.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./propositions-and-truth-values/" data-lesson="logic-and-proof/propositions-and-truth-values"><div class="num">01</div><div><strong>Propositions and Truth Values</strong><span>What counts as a proposition, and what does not.</span></div></a><a class="syllabus-item" href="./logical-connectives/" data-lesson="logic-and-proof/logical-connectives"><div class="num">02</div><div><strong>Logical Connectives</strong><span>Negation, conjunction, disjunction, exclusive or.</span></div></a><a class="syllabus-item" href="./truth-tables/" data-lesson="logic-and-proof/truth-tables"><div class="num">03</div><div><strong>Truth Tables</strong><span>The complete method for evaluating any compound statement.</span></div></a><a class="syllabus-item" href="./conditional-statements/" data-lesson="logic-and-proof/conditional-statements"><div class="num">04</div><div><strong>The Conditional and Its Relatives</strong><span>If-then, converse, inverse, contrapositive, and vacuous truth.</span></div></a><a class="syllabus-item" href="./logical-equivalence/" data-lesson="logic-and-proof/logical-equivalence"><div class="num">05</div><div><strong>Logical Equivalence</strong><span>When two formulas say the same thing, and the laws that rewrite one into the other.</span></div></a><a class="syllabus-item" href="./tautologies-and-satisfiability/" data-lesson="logic-and-proof/tautologies-and-satisfiability"><div class="num">06</div><div><strong>Tautology, Contradiction, Satisfiability</strong><span>Always true, never true, and sometimes true.</span></div></a><a class="syllabus-item" href="./normal-forms-and-boolean-algebra/" data-lesson="logic-and-proof/normal-forms-and-boolean-algebra"><div class="num">07</div><div><strong>Normal Forms and Boolean Algebra</strong><span>Every formula rewritten into one of two standard shapes.</span></div></a><a class="syllabus-item" href="./predicates-and-quantifiers/" data-lesson="logic-and-proof/predicates-and-quantifiers"><div class="num">08</div><div><strong>Predicates and Quantifiers</strong><span>Turning open sentences into propositions.</span></div></a><a class="syllabus-item" href="./nested-quantifiers/" data-lesson="logic-and-proof/nested-quantifiers"><div class="num">09</div><div><strong>Nested Quantifiers</strong><span>Why <span class="math">∀x ∃y</span> and <span class="math">∃y ∀x</span> are different claims.</span></div></a><a class="syllabus-item" href="./negating-quantified-statements/" data-lesson="logic-and-proof/negating-quantified-statements"><div class="num">10</div><div><strong>Negating Quantified Statements</strong><span>Push the negation inward; every quantifier flips.</span></div></a><a class="syllabus-item" href="./rules-of-inference/" data-lesson="logic-and-proof/rules-of-inference"><div class="num">11</div><div><strong>Rules of Inference</strong><span>Valid argument forms, and the two fallacies that mimic them.</span></div></a><a class="syllabus-item" href="./direct-proof/" data-lesson="logic-and-proof/direct-proof"><div class="num">12</div><div><strong>Direct Proof</strong><span>Assume the hypothesis, derive the conclusion, write it for a reader.</span></div></a><a class="syllabus-item" href="./contraposition-and-contradiction/" data-lesson="logic-and-proof/contraposition-and-contradiction"><div class="num">13</div><div><strong>Contraposition and Contradiction</strong><span>Two indirect techniques, and when each is the right one.</span></div></a><a class="syllabus-item" href="./proof-by-cases-and-counterexample/" data-lesson="logic-and-proof/proof-by-cases-and-counterexample"><div class="num">14</div><div><strong>Cases, Counterexamples, and Writing a Proof</strong><span>Exhaustive cases, single counterexamples, and the standard a proof must meet.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1021,6 +1081,48 @@ p → q   ≡   ¬q → ¬p           contraposition: the basis of a proof metho
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

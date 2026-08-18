@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ ed ≡ 1 (mod φ(n))  ⟹  m^{ed} ≡ m  (mod n)     RSA</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Run the algorithms by hand</h3><p>Division, Euclid, extended Euclid, fast exponentiation. Each with its trace, so the method transfers to paper.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Solve congruences</h3><p>Decide solvability, count the solutions, and find them &mdash; including simultaneous systems by the Chinese remainder theorem.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Use Fermat and Euler</h3><p>Reduce enormous exponents to small ones, and know exactly which hypotheses each theorem needs.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Explain RSA honestly</h3><p>Generate a key, encrypt and decrypt, and then recover the private key by factoring &mdash; which is what shows what the security actually depends on.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 6 are divisibility and gcd, 7 to 11 are modular arithmetic, and 12 to 14 apply all of it.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./divisibility-and-the-division-algorithm/"><div class="num">01</div><div><strong>Divisibility and the Division Algorithm</strong><span>Every division leaves a unique quotient and remainder.</span></div></a><a class="syllabus-item" href="./primes-and-factorisation/"><div class="num">02</div><div><strong>Primes and Unique Factorisation</strong><span>Every integer above 1 factors into primes, in exactly one way.</span></div></a><a class="syllabus-item" href="./the-sieve-of-eratosthenes/"><div class="num">03</div><div><strong>The Sieve of Eratosthenes</strong><span>Cross out the multiples; what survives is prime.</span></div></a><a class="syllabus-item" href="./greatest-common-divisor/"><div class="num">04</div><div><strong>Greatest Common Divisor</strong><span>The largest number dividing both, and how not to find it.</span></div></a><a class="syllabus-item" href="./the-euclidean-algorithm/"><div class="num">05</div><div><strong>The Euclidean Algorithm</strong><span>Replace <span class="math">(a, b)</span> by <span class="math">(b, a mod b)</span> until the remainder is zero.</span></div></a><a class="syllabus-item" href="./bezout-and-modular-inverses/"><div class="num">06</div><div><strong>Bézout&#x27;s Identity and Modular Inverses</strong><span>The gcd is a linear combination — and that gives inverses.</span></div></a><a class="syllabus-item" href="./modular-arithmetic/"><div class="num">07</div><div><strong>Modular Arithmetic</strong><span>Arithmetic on remainders, and why it is well defined.</span></div></a><a class="syllabus-item" href="./modular-exponentiation/"><div class="num">08</div><div><strong>Modular Exponentiation</strong><span>Compute <span class="math">aᵇ mod m</span> without ever forming <span class="math">aᵇ</span>.</span></div></a><a class="syllabus-item" href="./linear-congruences/"><div class="num">09</div><div><strong>Linear Congruences</strong><span><span class="math">ax ≡ b (mod m)</span>: solvable exactly when <span class="math">gcd(a,m)</span> divides <span class="math">b</span>.</span></div></a><a class="syllabus-item" href="./chinese-remainder-theorem/"><div class="num">10</div><div><strong>The Chinese Remainder Theorem</strong><span>Simultaneous congruences with coprime moduli have exactly one solution.</span></div></a><a class="syllabus-item" href="./fermat-and-euler/"><div class="num">11</div><div><strong>Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem</strong><span>Exponents reduce modulo <span class="math">φ(m)</span>, not modulo <span class="math">m</span>.</span></div></a><a class="syllabus-item" href="./hashing-and-pseudorandom-numbers/"><div class="num">12</div><div><strong>Hashing and Pseudorandom Numbers</strong><span>Two everyday uses of modular arithmetic.</span></div></a><a class="syllabus-item" href="./classical-ciphers/"><div class="num">13</div><div><strong>Classical Ciphers</strong><span>Shift, affine and Vigenère — and why each one falls.</span></div></a><a class="syllabus-item" href="./rsa-encryption/"><div class="num">14</div><div><strong>RSA Encryption</strong><span>Public-key encryption from Euler&#x27;s theorem — and what its security rests on.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 6 are divisibility and gcd, 7 to 11 are modular arithmetic, and 12 to 14 apply all of it.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./divisibility-and-the-division-algorithm/" data-lesson="number-theory-and-cryptography/divisibility-and-the-division-algorithm"><div class="num">01</div><div><strong>Divisibility and the Division Algorithm</strong><span>Every division leaves a unique quotient and remainder.</span></div></a><a class="syllabus-item" href="./primes-and-factorisation/" data-lesson="number-theory-and-cryptography/primes-and-factorisation"><div class="num">02</div><div><strong>Primes and Unique Factorisation</strong><span>Every integer above 1 factors into primes, in exactly one way.</span></div></a><a class="syllabus-item" href="./the-sieve-of-eratosthenes/" data-lesson="number-theory-and-cryptography/the-sieve-of-eratosthenes"><div class="num">03</div><div><strong>The Sieve of Eratosthenes</strong><span>Cross out the multiples; what survives is prime.</span></div></a><a class="syllabus-item" href="./greatest-common-divisor/" data-lesson="number-theory-and-cryptography/greatest-common-divisor"><div class="num">04</div><div><strong>Greatest Common Divisor</strong><span>The largest number dividing both, and how not to find it.</span></div></a><a class="syllabus-item" href="./the-euclidean-algorithm/" data-lesson="number-theory-and-cryptography/the-euclidean-algorithm"><div class="num">05</div><div><strong>The Euclidean Algorithm</strong><span>Replace <span class="math">(a, b)</span> by <span class="math">(b, a mod b)</span> until the remainder is zero.</span></div></a><a class="syllabus-item" href="./bezout-and-modular-inverses/" data-lesson="number-theory-and-cryptography/bezout-and-modular-inverses"><div class="num">06</div><div><strong>Bézout&#x27;s Identity and Modular Inverses</strong><span>The gcd is a linear combination — and that gives inverses.</span></div></a><a class="syllabus-item" href="./modular-arithmetic/" data-lesson="number-theory-and-cryptography/modular-arithmetic"><div class="num">07</div><div><strong>Modular Arithmetic</strong><span>Arithmetic on remainders, and why it is well defined.</span></div></a><a class="syllabus-item" href="./modular-exponentiation/" data-lesson="number-theory-and-cryptography/modular-exponentiation"><div class="num">08</div><div><strong>Modular Exponentiation</strong><span>Compute <span class="math">aᵇ mod m</span> without ever forming <span class="math">aᵇ</span>.</span></div></a><a class="syllabus-item" href="./linear-congruences/" data-lesson="number-theory-and-cryptography/linear-congruences"><div class="num">09</div><div><strong>Linear Congruences</strong><span><span class="math">ax ≡ b (mod m)</span>: solvable exactly when <span class="math">gcd(a,m)</span> divides <span class="math">b</span>.</span></div></a><a class="syllabus-item" href="./chinese-remainder-theorem/" data-lesson="number-theory-and-cryptography/chinese-remainder-theorem"><div class="num">10</div><div><strong>The Chinese Remainder Theorem</strong><span>Simultaneous congruences with coprime moduli have exactly one solution.</span></div></a><a class="syllabus-item" href="./fermat-and-euler/" data-lesson="number-theory-and-cryptography/fermat-and-euler"><div class="num">11</div><div><strong>Fermat&#x27;s Little Theorem and Euler&#x27;s Theorem</strong><span>Exponents reduce modulo <span class="math">φ(m)</span>, not modulo <span class="math">m</span>.</span></div></a><a class="syllabus-item" href="./hashing-and-pseudorandom-numbers/" data-lesson="number-theory-and-cryptography/hashing-and-pseudorandom-numbers"><div class="num">12</div><div><strong>Hashing and Pseudorandom Numbers</strong><span>Two everyday uses of modular arithmetic.</span></div></a><a class="syllabus-item" href="./classical-ciphers/" data-lesson="number-theory-and-cryptography/classical-ciphers"><div class="num">13</div><div><strong>Classical Ciphers</strong><span>Shift, affine and Vigenère — and why each one falls.</span></div></a><a class="syllabus-item" href="./rsa-encryption/" data-lesson="number-theory-and-cryptography/rsa-encryption"><div class="num">14</div><div><strong>RSA Encryption</strong><span>Public-key encryption from Euler&#x27;s theorem — and what its security rests on.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ ed ≡ 1 (mod φ(n))  ⟹  m^{ed} ≡ m  (mod n)     RSA</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

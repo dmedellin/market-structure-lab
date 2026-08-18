@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ C(n+r−1, r)                    unordered, with repetition
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Pick the right one of four rules</h3><p>Ordered or not, repetition or not. The arithmetic is easy; the classification is where the answer is won or lost.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Count with restrictions</h3><p>Complementary counting, cases, and knowing when to count the bad outcomes instead of the good ones.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Correct an over-count</h3><p>Inclusion and exclusion for any number of sets, and derangements as the canonical application.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Prove an identity by counting</h3><p>Count one set two ways and conclude the two expressions are equal &mdash; shorter and more informative than the algebra.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 4 are the basic rules, 5 to 8 the binomial coefficients and repetition, 9 to 11 corrections and bounds, and 12 to 14 the techniques that generalise them.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./sum-and-product-rules/"><div class="num">01</div><div><strong>The Sum and Product Rules</strong><span>Add for alternatives, multiply for stages.</span></div></a><a class="syllabus-item" href="./counting-with-restrictions/"><div class="num">02</div><div><strong>Counting with Restrictions</strong><span>Cases, complements, and the order in which constraints are applied.</span></div></a><a class="syllabus-item" href="./permutations/"><div class="num">03</div><div><strong>Permutations</strong><span>Ordered selections without repetition.</span></div></a><a class="syllabus-item" href="./combinations/"><div class="num">04</div><div><strong>Combinations</strong><span>Unordered selections without repetition.</span></div></a><a class="syllabus-item" href="./binomial-coefficients/"><div class="num">05</div><div><strong>Binomial Coefficients and Pascal&#x27;s Triangle</strong><span>The numbers <span class="math">C(n, r)</span>, arranged so their identities become visible.</span></div></a><a class="syllabus-item" href="./the-binomial-theorem/"><div class="num">06</div><div><strong>The Binomial Theorem</strong><span>Why the same numbers count subsets and expand powers.</span></div></a><a class="syllabus-item" href="./permutations-with-repetition/"><div class="num">07</div><div><strong>Permutations with Repetition</strong><span>Arrangements when objects may repeat, or are indistinguishable.</span></div></a><a class="syllabus-item" href="./combinations-with-repetition/"><div class="num">08</div><div><strong>Combinations with Repetition</strong><span>Stars and bars: <span class="math">C(n + r − 1, r)</span>.</span></div></a><a class="syllabus-item" href="./inclusion-exclusion/"><div class="num">09</div><div><strong>The Inclusion-Exclusion Principle</strong><span>Add the sizes, subtract the pairs, add back the triples.</span></div></a><a class="syllabus-item" href="./derangements/"><div class="num">10</div><div><strong>Derangements</strong><span>Permutations with no fixed point, and the surprising limit.</span></div></a><a class="syllabus-item" href="./generalized-pigeonhole/"><div class="num">11</div><div><strong>The Generalised Pigeonhole Principle</strong><span><span class="math">⌈n/k⌉</span> in a box, and what that proves.</span></div></a><a class="syllabus-item" href="./generating-functions/"><div class="num">12</div><div><strong>Generating Functions</strong><span>Encode a sequence as coefficients and let algebra do the counting.</span></div></a><a class="syllabus-item" href="./combinatorial-proof/"><div class="num">13</div><div><strong>Combinatorial Proof</strong><span>Count one set two ways, or biject two sets.</span></div></a><a class="syllabus-item" href="./choosing-a-counting-method/"><div class="num">14</div><div><strong>Choosing a Counting Method</strong><span>The decision procedure, and how to check the answer.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 4 are the basic rules, 5 to 8 the binomial coefficients and repetition, 9 to 11 corrections and bounds, and 12 to 14 the techniques that generalise them.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./sum-and-product-rules/" data-lesson="combinatorics-and-counting/sum-and-product-rules"><div class="num">01</div><div><strong>The Sum and Product Rules</strong><span>Add for alternatives, multiply for stages.</span></div></a><a class="syllabus-item" href="./counting-with-restrictions/" data-lesson="combinatorics-and-counting/counting-with-restrictions"><div class="num">02</div><div><strong>Counting with Restrictions</strong><span>Cases, complements, and the order in which constraints are applied.</span></div></a><a class="syllabus-item" href="./permutations/" data-lesson="combinatorics-and-counting/permutations"><div class="num">03</div><div><strong>Permutations</strong><span>Ordered selections without repetition.</span></div></a><a class="syllabus-item" href="./combinations/" data-lesson="combinatorics-and-counting/combinations"><div class="num">04</div><div><strong>Combinations</strong><span>Unordered selections without repetition.</span></div></a><a class="syllabus-item" href="./binomial-coefficients/" data-lesson="combinatorics-and-counting/binomial-coefficients"><div class="num">05</div><div><strong>Binomial Coefficients and Pascal&#x27;s Triangle</strong><span>The numbers <span class="math">C(n, r)</span>, arranged so their identities become visible.</span></div></a><a class="syllabus-item" href="./the-binomial-theorem/" data-lesson="combinatorics-and-counting/the-binomial-theorem"><div class="num">06</div><div><strong>The Binomial Theorem</strong><span>Why the same numbers count subsets and expand powers.</span></div></a><a class="syllabus-item" href="./permutations-with-repetition/" data-lesson="combinatorics-and-counting/permutations-with-repetition"><div class="num">07</div><div><strong>Permutations with Repetition</strong><span>Arrangements when objects may repeat, or are indistinguishable.</span></div></a><a class="syllabus-item" href="./combinations-with-repetition/" data-lesson="combinatorics-and-counting/combinations-with-repetition"><div class="num">08</div><div><strong>Combinations with Repetition</strong><span>Stars and bars: <span class="math">C(n + r − 1, r)</span>.</span></div></a><a class="syllabus-item" href="./inclusion-exclusion/" data-lesson="combinatorics-and-counting/inclusion-exclusion"><div class="num">09</div><div><strong>The Inclusion-Exclusion Principle</strong><span>Add the sizes, subtract the pairs, add back the triples.</span></div></a><a class="syllabus-item" href="./derangements/" data-lesson="combinatorics-and-counting/derangements"><div class="num">10</div><div><strong>Derangements</strong><span>Permutations with no fixed point, and the surprising limit.</span></div></a><a class="syllabus-item" href="./generalized-pigeonhole/" data-lesson="combinatorics-and-counting/generalized-pigeonhole"><div class="num">11</div><div><strong>The Generalised Pigeonhole Principle</strong><span><span class="math">⌈n/k⌉</span> in a box, and what that proves.</span></div></a><a class="syllabus-item" href="./generating-functions/" data-lesson="combinatorics-and-counting/generating-functions"><div class="num">12</div><div><strong>Generating Functions</strong><span>Encode a sequence as coefficients and let algebra do the counting.</span></div></a><a class="syllabus-item" href="./combinatorial-proof/" data-lesson="combinatorics-and-counting/combinatorial-proof"><div class="num">13</div><div><strong>Combinatorial Proof</strong><span>Count one set two ways, or biject two sets.</span></div></a><a class="syllabus-item" href="./choosing-a-counting-method/" data-lesson="combinatorics-and-counting/choosing-a-counting-method"><div class="num">14</div><div><strong>Choosing a Counting Method</strong><span>The decision procedure, and how to check the answer.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ C(n+r−1, r)                    unordered, with repetition
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

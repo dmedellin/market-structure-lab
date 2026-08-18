@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ x^(1/n) = the n-th root of x
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Evaluate without ambiguity</h3><p>Apply the order of operations to an expression with nested brackets, exponents and a fraction bar, and get the value a marker gets.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Name the property you used</h3><p>Say which of commutativity, associativity, distribution or the identity you just applied &mdash; and notice when you have used one that does not exist.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Work fluently with exponents and radicals</h3><p>Combine powers, handle a zero or negative exponent, convert between <span class="math">x^(1/n)</span> and roots, and simplify a radical to its lowest form.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Turn a sentence into an expression</h3><p>Translate an English quantity into algebra, keeping track of what the letter stands for &mdash; which is where most word-problem errors are made.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 13 lessons, in order</h2></div><p>Lessons 1 to 4 are the number system and the rules; 5 to 9 are exponents and radicals; 10 to 13 build expressions and read them back as English.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./real-numbers-and-the-number-line/"><div class="num">01</div><div><strong>Real Numbers and the Number Line</strong><span>Which numbers there are, and where each one sits.</span></div></a><a class="syllabus-item" href="./properties-of-the-real-numbers/"><div class="num">02</div><div><strong>Properties of the Real Numbers</strong><span>Commutativity, associativity, distribution, identities, inverses.</span></div></a><a class="syllabus-item" href="./order-of-operations/"><div class="num">03</div><div><strong>Order of Operations</strong><span>One expression, one value, and the convention that guarantees it.</span></div></a><a class="syllabus-item" href="./absolute-value/"><div class="num">04</div><div><strong>Absolute Value</strong><span>Distance from zero, and why the definition has two cases.</span></div></a><a class="syllabus-item" href="./integer-exponents/"><div class="num">05</div><div><strong>Integer Exponents</strong><span>The laws, including what a zero and a negative exponent mean.</span></div></a><a class="syllabus-item" href="./scientific-notation/"><div class="num">06</div><div><strong>Scientific Notation</strong><span>Writing very large and very small numbers, and computing with them.</span></div></a><a class="syllabus-item" href="./roots-and-radicals/"><div class="num">07</div><div><strong>Roots and Radicals</strong><span>Square roots, n-th roots, and which of them are real.</span></div></a><a class="syllabus-item" href="./rational-exponents/"><div class="num">08</div><div><strong>Rational Exponents</strong><span>Why x^(1/n) must mean the n-th root if the laws are to hold.</span></div></a><a class="syllabus-item" href="./algebraic-expressions-and-terms/"><div class="num">09</div><div><strong>Algebraic Expressions and Terms</strong><span>Variables, terms, coefficients, and the anatomy of an expression.</span></div></a><a class="syllabus-item" href="./the-distributive-law/"><div class="num">10</div><div><strong>The Distributive Law</strong><span>The one property that connects addition and multiplication.</span></div></a><a class="syllabus-item" href="./combining-like-terms/"><div class="num">11</div><div><strong>Combining Like Terms</strong><span>What makes two terms alike, and what does not.</span></div></a><a class="syllabus-item" href="./evaluating-expressions/"><div class="num">12</div><div><strong>Evaluating Expressions</strong><span>Substitution done carefully, brackets and all.</span></div></a><a class="syllabus-item" href="./translating-words-into-algebra/"><div class="num">13</div><div><strong>Translating Words into Algebra</strong><span>Turning a sentence into an expression, and naming the unknown.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 13 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 4 are the number system and the rules; 5 to 9 are exponents and radicals; 10 to 13 build expressions and read them back as English.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./real-numbers-and-the-number-line/" data-lesson="algebra-foundations/real-numbers-and-the-number-line"><div class="num">01</div><div><strong>Real Numbers and the Number Line</strong><span>Which numbers there are, and where each one sits.</span></div></a><a class="syllabus-item" href="./properties-of-the-real-numbers/" data-lesson="algebra-foundations/properties-of-the-real-numbers"><div class="num">02</div><div><strong>Properties of the Real Numbers</strong><span>Commutativity, associativity, distribution, identities, inverses.</span></div></a><a class="syllabus-item" href="./order-of-operations/" data-lesson="algebra-foundations/order-of-operations"><div class="num">03</div><div><strong>Order of Operations</strong><span>One expression, one value, and the convention that guarantees it.</span></div></a><a class="syllabus-item" href="./absolute-value/" data-lesson="algebra-foundations/absolute-value"><div class="num">04</div><div><strong>Absolute Value</strong><span>Distance from zero, and why the definition has two cases.</span></div></a><a class="syllabus-item" href="./integer-exponents/" data-lesson="algebra-foundations/integer-exponents"><div class="num">05</div><div><strong>Integer Exponents</strong><span>The laws, including what a zero and a negative exponent mean.</span></div></a><a class="syllabus-item" href="./scientific-notation/" data-lesson="algebra-foundations/scientific-notation"><div class="num">06</div><div><strong>Scientific Notation</strong><span>Writing very large and very small numbers, and computing with them.</span></div></a><a class="syllabus-item" href="./roots-and-radicals/" data-lesson="algebra-foundations/roots-and-radicals"><div class="num">07</div><div><strong>Roots and Radicals</strong><span>Square roots, n-th roots, and which of them are real.</span></div></a><a class="syllabus-item" href="./rational-exponents/" data-lesson="algebra-foundations/rational-exponents"><div class="num">08</div><div><strong>Rational Exponents</strong><span>Why x^(1/n) must mean the n-th root if the laws are to hold.</span></div></a><a class="syllabus-item" href="./algebraic-expressions-and-terms/" data-lesson="algebra-foundations/algebraic-expressions-and-terms"><div class="num">09</div><div><strong>Algebraic Expressions and Terms</strong><span>Variables, terms, coefficients, and the anatomy of an expression.</span></div></a><a class="syllabus-item" href="./the-distributive-law/" data-lesson="algebra-foundations/the-distributive-law"><div class="num">10</div><div><strong>The Distributive Law</strong><span>The one property that connects addition and multiplication.</span></div></a><a class="syllabus-item" href="./combining-like-terms/" data-lesson="algebra-foundations/combining-like-terms"><div class="num">11</div><div><strong>Combining Like Terms</strong><span>What makes two terms alike, and what does not.</span></div></a><a class="syllabus-item" href="./evaluating-expressions/" data-lesson="algebra-foundations/evaluating-expressions"><div class="num">12</div><div><strong>Evaluating Expressions</strong><span>Substitution done carefully, brackets and all.</span></div></a><a class="syllabus-item" href="./translating-words-into-algebra/" data-lesson="algebra-foundations/translating-words-into-algebra"><div class="num">13</div><div><strong>Translating Words into Algebra</strong><span>Turning a sentence into an expression, and naming the unknown.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1021,6 +1081,48 @@ x^(1/n) = the n-th root of x
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

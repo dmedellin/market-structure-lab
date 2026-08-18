@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ some problems have NO algorithm at all</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Prove a bound with witnesses</h3><p>Big-O is an existence claim about a constant and a threshold. Producing them is the proof; quoting the class is not.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Analyse loops and recursions</h3><p>Counting the operations of an iterative algorithm, and solving a divide-and-conquer recurrence with the master theorem.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Recognise the two design techniques</h3><p>Greedy where it is provably correct, dynamic programming where it is not &mdash; and be able to say which and why.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Place a problem</h3><p>P, NP, NP-complete, undecidable. Knowing which of those a problem is in changes what you should attempt.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2></div><p>Lessons 1 to 2 are what an algorithm is and what correctness means, 3 to 8 are analysis, 9 to 10 are design, and 11 to 12 are the limits.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./algorithms-and-pseudocode/"><div class="num">01</div><div><strong>Algorithms and Pseudocode</strong><span>A finite, definite procedure — and how to write one down.</span></div></a><a class="syllabus-item" href="./correctness-and-termination/"><div class="num">02</div><div><strong>Correctness and Termination</strong><span>Two separate obligations, and neither is optional.</span></div></a><a class="syllabus-item" href="./growth-of-functions/"><div class="num">03</div><div><strong>The Growth of Functions</strong><span>What matters at scale, and what does not.</span></div></a><a class="syllabus-item" href="./big-o-notation/"><div class="num">04</div><div><strong>Big-O, Big-Omega and Big-Theta</strong><span>Upper bound, lower bound, and both — each with explicit witnesses.</span></div></a><a class="syllabus-item" href="./analysing-iterative-algorithms/"><div class="num">05</div><div><strong>Analysing Iterative Algorithms</strong><span>Count the dominant operation as a function of the input size.</span></div></a><a class="syllabus-item" href="./searching-and-sorting/"><div class="num">06</div><div><strong>Searching and Sorting</strong><span>The standard algorithms, and the lower bound nobody can beat.</span></div></a><a class="syllabus-item" href="./divide-and-conquer/"><div class="num">07</div><div><strong>Divide and Conquer</strong><span>Split, solve the pieces, combine — and the theorem that costs it.</span></div></a><a class="syllabus-item" href="./recursion-trees-and-amortised-analysis/"><div class="num">08</div><div><strong>Recursion Trees and Amortised Analysis</strong><span>When the master theorem does not apply, and when the worst case is misleading.</span></div></a><a class="syllabus-item" href="./greedy-algorithms/"><div class="num">09</div><div><strong>Greedy Algorithms</strong><span>Take the best local choice — and prove it was safe.</span></div></a><a class="syllabus-item" href="./dynamic-programming/"><div class="num">10</div><div><strong>Dynamic Programming</strong><span>Solve every subproblem once, and reuse the answers.</span></div></a><a class="syllabus-item" href="./complexity-classes/"><div class="num">11</div><div><strong>P, NP and NP-Completeness</strong><span>Solvable quickly, checkable quickly, and the hardest problems in between.</span></div></a><a class="syllabus-item" href="./decidability-and-the-halting-problem/"><div class="num">12</div><div><strong>Decidability and the Halting Problem</strong><span>Some problems have no algorithm at all — and that is provable.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 12 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 2 are what an algorithm is and what correctness means, 3 to 8 are analysis, 9 to 10 are design, and 11 to 12 are the limits.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./algorithms-and-pseudocode/" data-lesson="algorithms-and-complexity/algorithms-and-pseudocode"><div class="num">01</div><div><strong>Algorithms and Pseudocode</strong><span>A finite, definite procedure — and how to write one down.</span></div></a><a class="syllabus-item" href="./correctness-and-termination/" data-lesson="algorithms-and-complexity/correctness-and-termination"><div class="num">02</div><div><strong>Correctness and Termination</strong><span>Two separate obligations, and neither is optional.</span></div></a><a class="syllabus-item" href="./growth-of-functions/" data-lesson="algorithms-and-complexity/growth-of-functions"><div class="num">03</div><div><strong>The Growth of Functions</strong><span>What matters at scale, and what does not.</span></div></a><a class="syllabus-item" href="./big-o-notation/" data-lesson="algorithms-and-complexity/big-o-notation"><div class="num">04</div><div><strong>Big-O, Big-Omega and Big-Theta</strong><span>Upper bound, lower bound, and both — each with explicit witnesses.</span></div></a><a class="syllabus-item" href="./analysing-iterative-algorithms/" data-lesson="algorithms-and-complexity/analysing-iterative-algorithms"><div class="num">05</div><div><strong>Analysing Iterative Algorithms</strong><span>Count the dominant operation as a function of the input size.</span></div></a><a class="syllabus-item" href="./searching-and-sorting/" data-lesson="algorithms-and-complexity/searching-and-sorting"><div class="num">06</div><div><strong>Searching and Sorting</strong><span>The standard algorithms, and the lower bound nobody can beat.</span></div></a><a class="syllabus-item" href="./divide-and-conquer/" data-lesson="algorithms-and-complexity/divide-and-conquer"><div class="num">07</div><div><strong>Divide and Conquer</strong><span>Split, solve the pieces, combine — and the theorem that costs it.</span></div></a><a class="syllabus-item" href="./recursion-trees-and-amortised-analysis/" data-lesson="algorithms-and-complexity/recursion-trees-and-amortised-analysis"><div class="num">08</div><div><strong>Recursion Trees and Amortised Analysis</strong><span>When the master theorem does not apply, and when the worst case is misleading.</span></div></a><a class="syllabus-item" href="./greedy-algorithms/" data-lesson="algorithms-and-complexity/greedy-algorithms"><div class="num">09</div><div><strong>Greedy Algorithms</strong><span>Take the best local choice — and prove it was safe.</span></div></a><a class="syllabus-item" href="./dynamic-programming/" data-lesson="algorithms-and-complexity/dynamic-programming"><div class="num">10</div><div><strong>Dynamic Programming</strong><span>Solve every subproblem once, and reuse the answers.</span></div></a><a class="syllabus-item" href="./complexity-classes/" data-lesson="algorithms-and-complexity/complexity-classes"><div class="num">11</div><div><strong>P, NP and NP-Completeness</strong><span>Solvable quickly, checkable quickly, and the hardest problems in between.</span></div></a><a class="syllabus-item" href="./decidability-and-the-halting-problem/" data-lesson="algorithms-and-complexity/decidability-and-the-halting-problem"><div class="num">12</div><div><strong>Decidability and the Halting Problem</strong><span>Some problems have no algorithm at all — and that is provable.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ some problems have NO algorithm at all</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

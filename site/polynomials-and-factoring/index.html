@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ root p/q  ⟹  p | a₀  and  q | aₙ</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Operate on polynomials</h3><p>Add, subtract and multiply polynomials of any degree, and recognise the special products on sight rather than expanding them.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Choose the right factoring technique</h3><p>Work down a decision list &mdash; common factor, then count the terms, then match a pattern &mdash; instead of trying methods at random.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Divide polynomials</h3><p>Carry out long division, use synthetic division where it applies, and read the remainder as a function value.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Find every rational root</h3><p>Generate the candidate list from the constant and leading coefficients, test it, and know that an empty result is an answer.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 13 lessons, in order</h2></div><p>Lessons 1 to 4 multiply. Lessons 5 to 9 factor, in the order you should try the techniques. Lessons 10 to 13 divide and then graph.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./polynomials-degree-and-standard-form/"><div class="num">01</div><div><strong>Polynomials, Degree and Standard Form</strong><span>What counts as a polynomial, and what does not.</span></div></a><a class="syllabus-item" href="./adding-and-subtracting-polynomials/"><div class="num">02</div><div><strong>Adding and Subtracting Polynomials</strong><span>Like terms combine; everything else stays where it is.</span></div></a><a class="syllabus-item" href="./multiplying-polynomials/"><div class="num">03</div><div><strong>Multiplying Polynomials</strong><span>Every term times every term, then collect.</span></div></a><a class="syllabus-item" href="./special-products/"><div class="num">04</div><div><strong>Special Products</strong><span>Four patterns worth recognising instead of expanding.</span></div></a><a class="syllabus-item" href="./factoring-out-the-greatest-common-factor/"><div class="num">05</div><div><strong>Factoring Out the Greatest Common Factor</strong><span>The first move on every factoring problem, without exception.</span></div></a><a class="syllabus-item" href="./factoring-by-grouping/"><div class="num">06</div><div><strong>Factoring by Grouping</strong><span>Four terms, two pairs, one shared bracket.</span></div></a><a class="syllabus-item" href="./factoring-simple-trinomials/"><div class="num">07</div><div><strong>Factoring Simple Trinomials</strong><span>Two numbers with the right product and the right sum.</span></div></a><a class="syllabus-item" href="./the-ac-method/"><div class="num">08</div><div><strong>The AC Method</strong><span>Factoring ax² + bx + c when a is not 1.</span></div></a><a class="syllabus-item" href="./factoring-special-forms/"><div class="num">09</div><div><strong>Factoring Special Forms</strong><span>Differences of squares, perfect square trinomials, sums and differences of cubes.</span></div></a><a class="syllabus-item" href="./polynomial-long-division/"><div class="num">10</div><div><strong>Polynomial Long Division</strong><span>Dividing by any polynomial, and what the remainder means.</span></div></a><a class="syllabus-item" href="./synthetic-division-and-the-remainder-theorem/"><div class="num">11</div><div><strong>Synthetic Division and the Remainder Theorem</strong><span>A shorthand for dividing by x - c, and what the remainder equals.</span></div></a><a class="syllabus-item" href="./the-factor-theorem-and-rational-roots/"><div class="num">12</div><div><strong>The Factor Theorem and Rational Roots</strong><span>Turning a root into a factor, and generating every candidate root.</span></div></a><a class="syllabus-item" href="./graphs-of-polynomial-functions/"><div class="num">13</div><div><strong>Graphs of Polynomial Functions</strong><span>Reading end behaviour, roots and multiplicity off the factored form.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 13 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 4 multiply. Lessons 5 to 9 factor, in the order you should try the techniques. Lessons 10 to 13 divide and then graph.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./polynomials-degree-and-standard-form/" data-lesson="polynomials-and-factoring/polynomials-degree-and-standard-form"><div class="num">01</div><div><strong>Polynomials, Degree and Standard Form</strong><span>What counts as a polynomial, and what does not.</span></div></a><a class="syllabus-item" href="./adding-and-subtracting-polynomials/" data-lesson="polynomials-and-factoring/adding-and-subtracting-polynomials"><div class="num">02</div><div><strong>Adding and Subtracting Polynomials</strong><span>Like terms combine; everything else stays where it is.</span></div></a><a class="syllabus-item" href="./multiplying-polynomials/" data-lesson="polynomials-and-factoring/multiplying-polynomials"><div class="num">03</div><div><strong>Multiplying Polynomials</strong><span>Every term times every term, then collect.</span></div></a><a class="syllabus-item" href="./special-products/" data-lesson="polynomials-and-factoring/special-products"><div class="num">04</div><div><strong>Special Products</strong><span>Four patterns worth recognising instead of expanding.</span></div></a><a class="syllabus-item" href="./factoring-out-the-greatest-common-factor/" data-lesson="polynomials-and-factoring/factoring-out-the-greatest-common-factor"><div class="num">05</div><div><strong>Factoring Out the Greatest Common Factor</strong><span>The first move on every factoring problem, without exception.</span></div></a><a class="syllabus-item" href="./factoring-by-grouping/" data-lesson="polynomials-and-factoring/factoring-by-grouping"><div class="num">06</div><div><strong>Factoring by Grouping</strong><span>Four terms, two pairs, one shared bracket.</span></div></a><a class="syllabus-item" href="./factoring-simple-trinomials/" data-lesson="polynomials-and-factoring/factoring-simple-trinomials"><div class="num">07</div><div><strong>Factoring Simple Trinomials</strong><span>Two numbers with the right product and the right sum.</span></div></a><a class="syllabus-item" href="./the-ac-method/" data-lesson="polynomials-and-factoring/the-ac-method"><div class="num">08</div><div><strong>The AC Method</strong><span>Factoring ax² + bx + c when a is not 1.</span></div></a><a class="syllabus-item" href="./factoring-special-forms/" data-lesson="polynomials-and-factoring/factoring-special-forms"><div class="num">09</div><div><strong>Factoring Special Forms</strong><span>Differences of squares, perfect square trinomials, sums and differences of cubes.</span></div></a><a class="syllabus-item" href="./polynomial-long-division/" data-lesson="polynomials-and-factoring/polynomial-long-division"><div class="num">10</div><div><strong>Polynomial Long Division</strong><span>Dividing by any polynomial, and what the remainder means.</span></div></a><a class="syllabus-item" href="./synthetic-division-and-the-remainder-theorem/" data-lesson="polynomials-and-factoring/synthetic-division-and-the-remainder-theorem"><div class="num">11</div><div><strong>Synthetic Division and the Remainder Theorem</strong><span>A shorthand for dividing by x - c, and what the remainder equals.</span></div></a><a class="syllabus-item" href="./the-factor-theorem-and-rational-roots/" data-lesson="polynomials-and-factoring/the-factor-theorem-and-rational-roots"><div class="num">12</div><div><strong>The Factor Theorem and Rational Roots</strong><span>Turning a root into a factor, and generating every candidate root.</span></div></a><a class="syllabus-item" href="./graphs-of-polynomial-functions/" data-lesson="polynomials-and-factoring/graphs-of-polynomial-functions"><div class="num">13</div><div><strong>Graphs of Polynomial Functions</strong><span>Reading end behaviour, roots and multiplicity off the factored form.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ root p/q  ⟹  p | a₀  and  q | aₙ</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

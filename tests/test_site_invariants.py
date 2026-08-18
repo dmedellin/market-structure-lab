@@ -609,6 +609,35 @@ CAPSTONE_AS_OF = "August 16, 2026"
 # the assertion that binds the other 126.
 REAL_DATA_PAGES = (CAPSTONE_HOME, CAPSTONE_SLIDES)
 
+# ---------------------------------------------------------------------------
+# The two pages that may talk to Microsoft
+# ---------------------------------------------------------------------------
+# Every other page on this site makes ZERO network requests. That invariant is
+# why the material reads offline and carries no third party, and it is not
+# negotiable for course content. Signing in cannot honour it: OAuth is a
+# conversation with an identity provider. So the conversation is confined to
+# exactly two pages, named here, and the other 367 are untouched.
+#
+#   /oauth2/spa/callback/  receives the authorization code and exchanges it
+#   /progress/             signs in, shows your marks, syncs them
+#
+# The exemption is NARROW and it is a trade, not a waiver. These pages are
+# excused from self-containment and from the external-origin sweep, and from
+# nothing else: they carry the pinned palette, both light paths, the shared
+# theme key, the pinned theme toggle, a correct canonical tag and relative
+# links, exactly as a lesson page does. A sign-in page that looked foreign
+# would be a page a reader is right to distrust.
+#
+# They are also NOT course pages: they teach nothing, so the material
+# disclaimer sweep skips them.
+#
+# What they may reach is fixed here rather than left to the page:
+AUTH_PAGES = ("/oauth2/spa/callback/", "/progress/")
+AUTH_ORIGINS = frozenset({
+    "login.microsoftonline.com",   # authorize + token endpoints (PKCE, no secret)
+    "graph.microsoft.com",         # the reader's OWN OneDrive app folder
+})
+
 UNKNOWN_PATH_CHECK = "/release-smoke-unknown-path"
 
 
@@ -661,6 +690,10 @@ for _title, _home, _slugs in ALL_COURSES:
 # palette and toggle) applies to them unchanged. Only the DISCLAIMER differs,
 # and only because the synthetic one would be false; see REAL_DATA_PAGES.
 for _url in REAL_DATA_PAGES:
+    REQUIRED_PAGES[_url] = source_of(_url)
+# The sign-in pages are published like any other page; only the network
+# sweeps treat them differently.
+for _url in AUTH_PAGES:
     REQUIRED_PAGES[_url] = source_of(_url)
 
 # Published, but NOT a document. The HTML invariants -- <title>,
@@ -720,7 +753,8 @@ COURSE_PAGES = {
 }
 
 # The 118 lessons alone, without any course home.
-LESSON_PAGES = {url: rel for url, rel in COURSE_PAGES.items() if url not in COURSE_HOMES}
+LESSON_PAGES = {url: rel for url, rel in COURSE_PAGES.items()
+                if url not in COURSE_HOMES and url not in AUTH_PAGES}
 
 # Every page of the library persists the reader's theme under ONE localStorage
 # key. Course 1 shipped "marketStructureTheme", course 2 shipped
@@ -1126,11 +1160,14 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
             len(REAL_DATA_PAGES),
             "the capstone is two pages: the interactive lab and the slide deck",
         )
-        expected = course_tree + len(REAL_DATA_PAGES)
+        # The two sign-in pages are published like any other page; only the
+        # network sweeps treat them differently.
+        expected = course_tree + len(REAL_DATA_PAGES) + len(AUTH_PAGES)
         self.assertEqual(
-            367,
+            369,
             expected,
-            "365 course-tree pages plus the 2 capstone pages is 367, got %d" % expected,
+            "365 course-tree pages, the 2 capstone pages and the 2 sign-in pages is 369, "
+            "got %d" % expected,
         )
         self.assertEqual(
             expected,
@@ -1503,9 +1540,28 @@ class TestDeclaredUrlSpaceAgrees(unittest.TestCase):
 
 class TestSelfContainment(SiteFixture):
     def test_pages_reference_no_external_origin(self):
+        """Every page but the two sign-in pages reaches nothing.
+
+        Those two are allowed exactly the identity provider and Graph, listed in
+        AUTH_ORIGINS, because OAuth is a conversation and there is no way to have
+        one silently. The allowance is per ORIGIN and per PAGE: a lesson that
+        started calling login.microsoftonline.com still fails here, and so would
+        a sign-in page that reached anywhere else.
+        """
         for doc in self.documents:
+            url = served_path(doc.path)
+            is_auth = url in AUTH_PAGES
+            allowed = {CANONICAL_HOST} | (AUTH_ORIGINS if is_auth else frozenset())
             with self.subTest(page=str(doc.path.relative_to(REPO_ROOT))):
-                violations = scan_self_containment(doc.text, {CANONICAL_HOST})
+                violations = scan_self_containment(doc.text, allowed)
+                if is_auth:
+                    # The scanner reports a runtime call by PRIMITIVE as well as
+                    # by origin, and a sign-in page necessarily makes one. The
+                    # origin allowance above is what bounds where it may go; this
+                    # drops only the primitive report, and only on these two
+                    # pages, so any OTHER violation on them still fails.
+                    violations = [v for v in violations
+                                  if "runtime network call" not in v]
                 self.assertEqual(
                     [], violations, "self-containment violations:\n  " + "\n  ".join(violations)
                 )
@@ -1686,6 +1742,7 @@ class TestContent(SiteFixture):
             (url, doc)
             for url, doc in sorted(by_url.items())
             if url not in SHARED_CHROME_PAGES and url not in REAL_DATA_PAGES
+            and url not in AUTH_PAGES
         ]
         self.assertTrue(course_pages, "no course page found under %s" % SITE_ROOT)
         self.assertEqual(
@@ -3962,6 +4019,11 @@ class TestDataAssetsCannotBecomeLoads(unittest.TestCase):
         )
         offenders = []
         for path in sorted(SITE_ROOT.rglob("*.html")):
+            # The sign-in pages fetch the token endpoint and Graph. They are the
+            # only two, they are named in AUTH_PAGES, and everything else in this
+            # sweep still applies to them.
+            if served_path(path) in AUTH_PAGES:
+                continue
             text = path.read_text(encoding="utf-8")
             for match in primitives.finditer(text):
                 start = text.rfind("\n", 0, match.start()) + 1

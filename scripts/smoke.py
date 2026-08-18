@@ -891,6 +891,19 @@ PUBLISHED_ASSETS = (
 )
 
 
+# The two pages that may talk to Microsoft. They are published like any other
+# page and must answer 200; what makes them different is only that their own
+# JavaScript reaches an identity provider, which is a property of the page, not
+# of the response this client checks. They carry no material disclaimer because
+# they teach nothing.
+AUTH_PAGE_TARGETS = (
+    ("signin-callback", "/oauth2/spa/callback/",
+     (canonical_marker("/oauth2/spa/callback/"), "Signing you in", DISCLAIMER_MARKER)),
+    ("progress-page", "/progress/",
+     (canonical_marker("/progress/"), "Your progress", DISCLAIMER_MARKER)),
+)
+
+
 def path_page_targets(args):
     """(check id, path, markers) for every PATH page the library publishes.
 
@@ -953,6 +966,7 @@ def lesson_targets(args):
         + COURSE_8_LESSONS
         + MATH_COURSE_LESSONS
         + ALGEBRA_COURSE_LESSONS
+        + AUTH_PAGE_TARGETS
     ):
         if path in seen:
             # --lesson-path was pointed at a lesson that is already in the map;

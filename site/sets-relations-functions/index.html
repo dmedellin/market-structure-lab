@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ equivalence relation  ⟺  partition
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Prove a set identity</h3><p>By double inclusion or by a chain of laws &mdash; and know that a Venn diagram illustrates an identity without proving it.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Classify a relation</h3><p>Decide reflexivity, symmetry, antisymmetry and transitivity by checking the definition, and recognise the equivalence relations and partial orders.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Work with functions precisely</h3><p>Distinguish injective from surjective, compose functions in the right order, and say exactly when an inverse exists.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Compare infinite sets</h3><p>Show <span class="math">ℤ</span> and <span class="math">ℚ</span> are countable and <span class="math">ℝ</span> is not, using the two arguments that settle both &mdash; explicit listing and diagonalisation.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 5 are sets, 6 to 9 relations, 10 to 12 functions, and 13 and 14 the counting consequences that course 4 builds on.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./sets-and-membership/"><div class="num">01</div><div><strong>Sets and Membership</strong><span>Collections, membership, and the two ways to describe a set.</span></div></a><a class="syllabus-item" href="./subsets-and-power-sets/"><div class="num">02</div><div><strong>Subsets and Power Sets</strong><span>Containment, proper containment, and the set of all subsets.</span></div></a><a class="syllabus-item" href="./set-operations/"><div class="num">03</div><div><strong>Set Operations</strong><span>Union, intersection, difference, complement, symmetric difference.</span></div></a><a class="syllabus-item" href="./set-identities/"><div class="num">04</div><div><strong>Set Identities and Proofs</strong><span>The laws, and the two ways to prove one.</span></div></a><a class="syllabus-item" href="./cartesian-products-and-tuples/"><div class="num">05</div><div><strong>Cartesian Products and Tuples</strong><span>Ordered pairs, and the set of all of them.</span></div></a><a class="syllabus-item" href="./binary-relations/"><div class="num">06</div><div><strong>Binary Relations</strong><span>A relation is a set of ordered pairs, and nothing more.</span></div></a><a class="syllabus-item" href="./properties-of-relations/"><div class="num">07</div><div><strong>Properties of Relations</strong><span>Reflexive, symmetric, antisymmetric, transitive — and closures.</span></div></a><a class="syllabus-item" href="./equivalence-relations-and-partitions/"><div class="num">08</div><div><strong>Equivalence Relations and Partitions</strong><span>Reflexive, symmetric, transitive — and the partition that comes free.</span></div></a><a class="syllabus-item" href="./partial-orders/"><div class="num">09</div><div><strong>Partial Orders</strong><span>Reflexive, antisymmetric, transitive — ranking rather than grouping.</span></div></a><a class="syllabus-item" href="./functions/"><div class="num">10</div><div><strong>Functions</strong><span>A relation where every input has exactly one output.</span></div></a><a class="syllabus-item" href="./injective-surjective-bijective/"><div class="num">11</div><div><strong>Injective, Surjective, Bijective</strong><span>No collisions, no gaps, or neither.</span></div></a><a class="syllabus-item" href="./composition-and-inverses/"><div class="num">12</div><div><strong>Composition and Inverse Functions</strong><span>Chaining functions, and undoing them.</span></div></a><a class="syllabus-item" href="./cardinality-and-countability/"><div class="num">13</div><div><strong>Cardinality and Countability</strong><span>Same size means a bijection, even for infinite sets.</span></div></a><a class="syllabus-item" href="./the-pigeonhole-principle/"><div class="num">14</div><div><strong>The Pigeonhole Principle</strong><span>More objects than boxes means some box has two.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 5 are sets, 6 to 9 relations, 10 to 12 functions, and 13 and 14 the counting consequences that course 4 builds on.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./sets-and-membership/" data-lesson="sets-relations-functions/sets-and-membership"><div class="num">01</div><div><strong>Sets and Membership</strong><span>Collections, membership, and the two ways to describe a set.</span></div></a><a class="syllabus-item" href="./subsets-and-power-sets/" data-lesson="sets-relations-functions/subsets-and-power-sets"><div class="num">02</div><div><strong>Subsets and Power Sets</strong><span>Containment, proper containment, and the set of all subsets.</span></div></a><a class="syllabus-item" href="./set-operations/" data-lesson="sets-relations-functions/set-operations"><div class="num">03</div><div><strong>Set Operations</strong><span>Union, intersection, difference, complement, symmetric difference.</span></div></a><a class="syllabus-item" href="./set-identities/" data-lesson="sets-relations-functions/set-identities"><div class="num">04</div><div><strong>Set Identities and Proofs</strong><span>The laws, and the two ways to prove one.</span></div></a><a class="syllabus-item" href="./cartesian-products-and-tuples/" data-lesson="sets-relations-functions/cartesian-products-and-tuples"><div class="num">05</div><div><strong>Cartesian Products and Tuples</strong><span>Ordered pairs, and the set of all of them.</span></div></a><a class="syllabus-item" href="./binary-relations/" data-lesson="sets-relations-functions/binary-relations"><div class="num">06</div><div><strong>Binary Relations</strong><span>A relation is a set of ordered pairs, and nothing more.</span></div></a><a class="syllabus-item" href="./properties-of-relations/" data-lesson="sets-relations-functions/properties-of-relations"><div class="num">07</div><div><strong>Properties of Relations</strong><span>Reflexive, symmetric, antisymmetric, transitive — and closures.</span></div></a><a class="syllabus-item" href="./equivalence-relations-and-partitions/" data-lesson="sets-relations-functions/equivalence-relations-and-partitions"><div class="num">08</div><div><strong>Equivalence Relations and Partitions</strong><span>Reflexive, symmetric, transitive — and the partition that comes free.</span></div></a><a class="syllabus-item" href="./partial-orders/" data-lesson="sets-relations-functions/partial-orders"><div class="num">09</div><div><strong>Partial Orders</strong><span>Reflexive, antisymmetric, transitive — ranking rather than grouping.</span></div></a><a class="syllabus-item" href="./functions/" data-lesson="sets-relations-functions/functions"><div class="num">10</div><div><strong>Functions</strong><span>A relation where every input has exactly one output.</span></div></a><a class="syllabus-item" href="./injective-surjective-bijective/" data-lesson="sets-relations-functions/injective-surjective-bijective"><div class="num">11</div><div><strong>Injective, Surjective, Bijective</strong><span>No collisions, no gaps, or neither.</span></div></a><a class="syllabus-item" href="./composition-and-inverses/" data-lesson="sets-relations-functions/composition-and-inverses"><div class="num">12</div><div><strong>Composition and Inverse Functions</strong><span>Chaining functions, and undoing them.</span></div></a><a class="syllabus-item" href="./cardinality-and-countability/" data-lesson="sets-relations-functions/cardinality-and-countability"><div class="num">13</div><div><strong>Cardinality and Countability</strong><span>Same size means a bijection, even for infinite sets.</span></div></a><a class="syllabus-item" href="./the-pigeonhole-principle/" data-lesson="sets-relations-functions/the-pigeonhole-principle"><div class="num">14</div><div><strong>The Pigeonhole Principle</strong><span>More objects than boxes means some box has two.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ equivalence relation  ⟺  partition
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>

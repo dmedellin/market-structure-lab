@@ -897,6 +897,66 @@
     .path-move.next { text-align: right; }
     .path-move.is-complete { border-color: var(--line-strong); background: var(--panel-3); }
 
+    /* ---------- Completion marks ----------
+       A note the reader makes to themselves, kept in localStorage. Never a
+       network request on a lesson page, and never a gate: the material reads
+       identically whether or not anything is ticked. */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+    .course-progress {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .syllabus-item.is-done .num { background: var(--green); color: var(--on-accent); }
+    .spine-progress { color: var(--green); font-weight: 750; }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 40px;
@@ -970,8 +1030,8 @@ i² = −1        y = a(x − h)² + k</div>
       <div class="grid-4"><article class="card concept-card"><div class="icon">1</div><h3>Pick a method deliberately</h3><p>Use factoring when it is quick, the square root property when there is no linear term, and the formula when nothing else applies &mdash; not always the formula.</p></article><article class="card concept-card"><div class="icon">2</div><h3>Complete the square</h3><p>Carry out the process on any quadratic, and recognise it as both the derivation of the formula and the route to vertex form.</p></article><article class="card concept-card"><div class="icon">3</div><h3>Use the discriminant</h3><p>Predict the number and kind of solutions before solving, and connect that to the number of times the parabola meets the x-axis.</p></article><article class="card concept-card"><div class="icon">4</div><h3>Work with complex numbers</h3><p>Add, multiply and divide complex numbers, use the conjugate, and interpret a conjugate pair of roots as a parabola that misses the axis.</p></article></div>
     </section>
     <section class="section" id="syllabus">
-      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2></div><p>Lessons 1 to 6 solve quadratics and count their solutions; 7 to 9 build the complex numbers; 10 to 14 graph, optimise and extend.</p></div>
-      <div class="syllabus"><a class="syllabus-item" href="./quadratic-equations-and-the-zero-product-property/"><div class="num">01</div><div><strong>Quadratic Equations and the Zero Product Property</strong><span>Why a product being zero is the whole method.</span></div></a><a class="syllabus-item" href="./solving-by-factoring/"><div class="num">02</div><div><strong>Solving by Factoring</strong><span>The quickest method, when it applies.</span></div></a><a class="syllabus-item" href="./the-square-root-property/"><div class="num">03</div><div><strong>The Square Root Property</strong><span>Two roots, and the plus-or-minus that is not optional.</span></div></a><a class="syllabus-item" href="./completing-the-square/"><div class="num">04</div><div><strong>Completing the Square</strong><span>Turning any quadratic into a perfect square plus a constant.</span></div></a><a class="syllabus-item" href="./the-quadratic-formula/"><div class="num">05</div><div><strong>The Quadratic Formula</strong><span>Completing the square once, in general, and keeping the result.</span></div></a><a class="syllabus-item" href="./the-discriminant/"><div class="num">06</div><div><strong>The Discriminant</strong><span>Counting the solutions before finding them.</span></div></a><a class="syllabus-item" href="./complex-numbers/"><div class="num">07</div><div><strong>Complex Numbers</strong><span>Defining i, and what a complex number is.</span></div></a><a class="syllabus-item" href="./operations-with-complex-numbers/"><div class="num">08</div><div><strong>Operations with Complex Numbers</strong><span>Arithmetic, and the conjugate that makes division work.</span></div></a><a class="syllabus-item" href="./complex-roots-of-quadratics/"><div class="num">09</div><div><strong>Complex Roots of Quadratics</strong><span>A negative discriminant, and the pair it produces.</span></div></a><a class="syllabus-item" href="./graphs-of-quadratic-functions/"><div class="num">10</div><div><strong>Graphs of Quadratic Functions</strong><span>The parabola, its direction, and its intercepts.</span></div></a><a class="syllabus-item" href="./vertex-form-and-the-axis-of-symmetry/"><div class="num">11</div><div><strong>Vertex Form and the Axis of Symmetry</strong><span>Reading the vertex straight off the equation.</span></div></a><a class="syllabus-item" href="./maximum-and-minimum-problems/"><div class="num">12</div><div><strong>Maximum and Minimum Problems</strong><span>Optimisation without calculus, using the vertex.</span></div></a><a class="syllabus-item" href="./quadratic-inequalities/"><div class="num">13</div><div><strong>Quadratic Inequalities</strong><span>Sign analysis, and reading the answer off the graph.</span></div></a><a class="syllabus-item" href="./equations-reducible-to-quadratic-form/"><div class="num">14</div><div><strong>Equations Reducible to Quadratic Form</strong><span>Substitution that turns a quartic into a quadratic.</span></div></a></div>
+      <div class="section-head"><div><p class="kicker">Syllabus</p><h2>All 14 lessons, in order</h2><p class="course-progress" id="courseProgress"></p></div><p>Lessons 1 to 6 solve quadratics and count their solutions; 7 to 9 build the complex numbers; 10 to 14 graph, optimise and extend.</p></div>
+      <div class="syllabus"><a class="syllabus-item" href="./quadratic-equations-and-the-zero-product-property/" data-lesson="quadratics-and-complex-numbers/quadratic-equations-and-the-zero-product-property"><div class="num">01</div><div><strong>Quadratic Equations and the Zero Product Property</strong><span>Why a product being zero is the whole method.</span></div></a><a class="syllabus-item" href="./solving-by-factoring/" data-lesson="quadratics-and-complex-numbers/solving-by-factoring"><div class="num">02</div><div><strong>Solving by Factoring</strong><span>The quickest method, when it applies.</span></div></a><a class="syllabus-item" href="./the-square-root-property/" data-lesson="quadratics-and-complex-numbers/the-square-root-property"><div class="num">03</div><div><strong>The Square Root Property</strong><span>Two roots, and the plus-or-minus that is not optional.</span></div></a><a class="syllabus-item" href="./completing-the-square/" data-lesson="quadratics-and-complex-numbers/completing-the-square"><div class="num">04</div><div><strong>Completing the Square</strong><span>Turning any quadratic into a perfect square plus a constant.</span></div></a><a class="syllabus-item" href="./the-quadratic-formula/" data-lesson="quadratics-and-complex-numbers/the-quadratic-formula"><div class="num">05</div><div><strong>The Quadratic Formula</strong><span>Completing the square once, in general, and keeping the result.</span></div></a><a class="syllabus-item" href="./the-discriminant/" data-lesson="quadratics-and-complex-numbers/the-discriminant"><div class="num">06</div><div><strong>The Discriminant</strong><span>Counting the solutions before finding them.</span></div></a><a class="syllabus-item" href="./complex-numbers/" data-lesson="quadratics-and-complex-numbers/complex-numbers"><div class="num">07</div><div><strong>Complex Numbers</strong><span>Defining i, and what a complex number is.</span></div></a><a class="syllabus-item" href="./operations-with-complex-numbers/" data-lesson="quadratics-and-complex-numbers/operations-with-complex-numbers"><div class="num">08</div><div><strong>Operations with Complex Numbers</strong><span>Arithmetic, and the conjugate that makes division work.</span></div></a><a class="syllabus-item" href="./complex-roots-of-quadratics/" data-lesson="quadratics-and-complex-numbers/complex-roots-of-quadratics"><div class="num">09</div><div><strong>Complex Roots of Quadratics</strong><span>A negative discriminant, and the pair it produces.</span></div></a><a class="syllabus-item" href="./graphs-of-quadratic-functions/" data-lesson="quadratics-and-complex-numbers/graphs-of-quadratic-functions"><div class="num">10</div><div><strong>Graphs of Quadratic Functions</strong><span>The parabola, its direction, and its intercepts.</span></div></a><a class="syllabus-item" href="./vertex-form-and-the-axis-of-symmetry/" data-lesson="quadratics-and-complex-numbers/vertex-form-and-the-axis-of-symmetry"><div class="num">11</div><div><strong>Vertex Form and the Axis of Symmetry</strong><span>Reading the vertex straight off the equation.</span></div></a><a class="syllabus-item" href="./maximum-and-minimum-problems/" data-lesson="quadratics-and-complex-numbers/maximum-and-minimum-problems"><div class="num">12</div><div><strong>Maximum and Minimum Problems</strong><span>Optimisation without calculus, using the vertex.</span></div></a><a class="syllabus-item" href="./quadratic-inequalities/" data-lesson="quadratics-and-complex-numbers/quadratic-inequalities"><div class="num">13</div><div><strong>Quadratic Inequalities</strong><span>Sign analysis, and reading the answer off the graph.</span></div></a><a class="syllabus-item" href="./equations-reducible-to-quadratic-form/" data-lesson="quadratics-and-complex-numbers/equations-reducible-to-quadratic-form"><div class="num">14</div><div><strong>Equations Reducible to Quadratic Form</strong><span>Substitution that turns a quartic into a quadratic.</span></div></a></div>
     </section>
     <section class="section">
       <div class="grid-2">
@@ -1022,6 +1082,48 @@ i² = −1        y = a(x − h)² + k</div>
       }
       paintIcon();
     })();
+
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('.syllabus-item[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
   </script>
 </body>
 </html>
