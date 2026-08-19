@@ -110,7 +110,7 @@ check('full: every course finished', e.statCourses.textContent, String(TOTAL_COU
 check('full: every subject started', e.statPaths.textContent, String(LIBRARY.length));
 check('full: ring is fully drawn (offset 0)', Number(e.ringFill.getAttribute('stroke-dashoffset')), 0);
 check('full: the ring states its value to a screen reader',
-      e.ringTitle.textContent, TOTAL + ' of ' + TOTAL + ' lessons complete (100%)');
+      e.ring.getAttribute('aria-label'), TOTAL + ' of ' + TOTAL + ' lessons complete (100%)');
 
 /* 3. One whole course, and nothing else. This is the case the old page could
  *    not express at all: it knew a mark existed but not what it was part of. */

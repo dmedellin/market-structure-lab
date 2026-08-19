@@ -358,8 +358,8 @@ PROGRESS_BODY = """    <noscript>
         </div>
       </div>
       <div class="hero-visual">
-        <svg class="pg-ring" viewBox="0 0 120 120" role="img" aria-labelledby="ringTitle">
-          <title id="ringTitle">Overall completion</title>
+        <svg class="pg-ring" id="ring" viewBox="0 0 120 120" role="img"
+             aria-label="Overall completion: nothing marked yet.">
           <circle class="pg-ring-track" cx="60" cy="60" r="52" />
           <circle class="pg-ring-fill" id="ringFill" cx="60" cy="60" r="52"
                   stroke-dasharray="326.7" stroke-dashoffset="326.7" />
@@ -493,8 +493,8 @@ PROGRESS_PAGE_JS = """
       fill.setAttribute('stroke-dashoffset', (CIRC * (1 - p / 100)).toFixed(1));
       document.getElementById('ringPct').textContent = p + '%%';
       document.getElementById('ringSub').textContent = t.done + ' OF ' + t.total;
-      document.getElementById('ringTitle').textContent =
-        t.done + ' of ' + t.total + ' lessons complete (' + p + '%%)';
+      document.getElementById('ring').setAttribute('aria-label',
+        t.done + ' of ' + t.total + ' lessons complete (' + p + '%%)');
     }
 
     function paintStats(t) {
