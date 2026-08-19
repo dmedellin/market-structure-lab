@@ -577,6 +577,21 @@ jobs:
           fi
           node scripts/progresscheck.js
 
+      - name: Lesson feedback records, ticks and exports correctly
+        run: |
+          set -euo pipefail
+          # The recommendation panel is built almost entirely by script, so the
+          # Python suite -- which reads the static file -- cannot see one of its
+          # behaviours. Three things here are checked NOWHERE else: the store
+          # (only exercised by clicking), the Markdown export (generated text no
+          # page renders), and escaping, because the list is the first place on
+          # this site where text a person typed is put back into the page.
+          if ! command -v node > /dev/null; then
+            echo "::error::node is required to check the feedback feature and is not on PATH."
+            exit 1
+          fi
+          node scripts/feedbackcheck.js
+
       - name: Every generated lab executes
         run: |
           set -euo pipefail

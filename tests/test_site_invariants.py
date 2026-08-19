@@ -4338,3 +4338,72 @@ class TestTradingPathCanBeTicked(SiteFixture):
             "the trading path page's per-course lesson counts disagree with the "
             "courses themselves, so a reader would see a total they can never reach",
         )
+
+
+# Recommendations: what a reader thinks should CHANGE about a lesson, as
+# opposed to the completion mark, which says they have finished it.
+FEEDBACK_PANEL_ID = "lessonFeedback"
+FEEDBACK_LESSON_RE = re.compile(r'<section class="lesson-feedback"[^>]*data-lesson-id="([^"]*)"', re.S)
+NOSCRIPT_RE = re.compile(r"<noscript\b.*?</noscript>", re.S | re.I)
+
+
+class TestEveryLessonTakesFeedback(SiteFixture):
+    """The panel exists on every lesson, and is keyed to that lesson."""
+
+    def lesson_pages(self):
+        for doc in self.documents:
+            if PROGRESS_TOGGLE_ID in doc.ids:
+                yield served_path(doc.path), doc
+
+    def test_every_lesson_has_a_panel_keyed_to_itself(self):
+        """A panel keyed to the wrong lesson files notes against another page.
+
+        Both families are checked in one sweep -- the 218 generated lessons and
+        the 118 hand-patched trading ones -- because a reader cannot tell which
+        family they are on and neither should behave differently.
+        """
+        wrong = []
+        for url, doc in self.lesson_pages():
+            if FEEDBACK_PANEL_ID not in doc.ids:
+                wrong.append("%s has no feedback panel" % url)
+                continue
+            found = FEEDBACK_LESSON_RE.search(doc.text)
+            expected = url.strip("/")
+            if found is None:
+                wrong.append("%s has a panel with no lesson id" % url)
+            elif found.group(1) != expected:
+                wrong.append("%s files notes against %r" % (url, found.group(1)))
+        self.assertEqual([], sorted(wrong), "lesson feedback panels: %s" % sorted(wrong))
+
+    def test_the_sweep_covers_both_lesson_families(self):
+        """Guard the guard: this must not quietly become a check of one path."""
+        urls = [url for url, _doc in self.lesson_pages()]
+        trading = [u for u in urls if u.startswith("/technical-indicators/")]
+        generated = [u for u in urls if u.startswith("/logic-and-proof/")]
+        self.assertTrue(trading, "no trading lessons were swept")
+        self.assertTrue(generated, "no generated lessons were swept")
+        self.assertGreater(len(urls), 300, "only %d lesson(s) swept" % len(urls))
+
+    def test_the_controls_are_styled_with_scripting_ON(self):
+        """Rules that live only inside <noscript> style nothing for a reader.
+
+        This is not hypothetical. The patcher that added these controls to the
+        trading pages inserted its stylesheet before the LAST </style>, and
+        every one of those pages ends with a <noscript><style> that hides the
+        theme toggle -- so the completion button and the whole feedback panel
+        rendered unstyled for everybody who had JavaScript on, which is
+        everybody who can use them. Every other check passed: the markup was
+        valid, the ids were right, and the behaviour worked.
+        """
+        unstyled = []
+        for url, doc in self.lesson_pages():
+            css = stylesheet(NOSCRIPT_RE.sub(" ", doc.text))
+            for selector in (".progress-toggle", ".lesson-feedback", ".fb-item"):
+                if selector not in css:
+                    unstyled.append("%s: %s is styled only inside <noscript>" % (url, selector))
+        self.assertEqual(
+            [], sorted(unstyled)[:6],
+            "these controls have no styling once <noscript> is discounted, so "
+            "they render unstyled for every reader who can actually use them: %s"
+            % sorted(unstyled)[:6],
+        )

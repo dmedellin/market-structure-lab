@@ -31,6 +31,9 @@ import pathlib
 import re
 import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from mathpath import feedback, progress  # noqa: E402
+
 SITE = pathlib.Path(__file__).resolve().parent.parent / "site"
 PATH_PAGE = "paths/trading/index.html"
 
@@ -49,7 +52,7 @@ SIGNIN_TITLE = ("Optional. Signing in carries your completion ticks to your othe
 # used here (--line, --line-strong, --panel, --panel-2, --text, --muted, --cyan,
 # --green, --on-accent) are all defined by these pages already, in all three
 # palette blocks; that was checked rather than assumed.
-CSS = """
+CSS = feedback.CSS + """
     .progress-bar {
       display: flex;
       flex-direction: column;
@@ -155,45 +158,6 @@ CSS = """
 # key, the same date format, the same shape of stored value. A tick made on a
 # trading lesson and a tick made on an algebra lesson have to be the same kind
 # of thing, because /progress/ counts them together.
-PROGRESS_JS = """
-  /* Completion marks. localStorage only: no request leaves the page. */
-  (function () {
-    var KEY = 'learn-progress';
-    function read() {
-      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
-      catch (e) { return {}; }
-    }
-    function write(map) {
-      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
-    }
-    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
-    function toggle(id) {
-      var map = read();
-      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
-      write(map);
-      return done(id);
-    }
-    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
-  })();
-"""
-
-LESSON_JS = """
-  (function () {
-    var button = document.getElementById('progressToggle');
-    if (!button || !window.learnProgress) return;
-    var id = %s;
-    var label = document.getElementById('progressLabel');
-    function paint() {
-      var on = window.learnProgress.done(id);
-      button.classList.toggle('is-done', on);
-      button.setAttribute('aria-pressed', on ? 'true' : 'false');
-      label.textContent = on ? 'Completed' : 'Mark this lesson complete';
-    }
-    button.addEventListener('click', function () { window.learnProgress.toggle(id); paint(); });
-    paint();
-  })();
-"""
-
 COURSE_JS = """
   (function () {
     if (!window.learnProgress) return;
@@ -306,18 +270,29 @@ def course_lessons(slug):
 # --- the four edits, each replacing its own marked region ------------------
 def ensure_css(text):
     block = "%s%s    %s" % (CSS_BEGIN, CSS, CSS_END)
-    if CSS_BEGIN in text:
-        # A LAMBDA, not a string. re.sub processes escapes in a replacement
-        # string, and this CSS contains `content: " \\2713"` -- as a replacement
-        # that is read as the octal escape \\271 and silently rewrites the tick
-        # to "\u00b93". The second run of this script did exactly that.
-        return re.sub(re.escape(CSS_BEGIN) + r".*?" + re.escape(CSS_END),
-                      lambda _m: block, text, count=1, flags=re.S)
-    # The LAST style block, so these rules are the last word at equal specificity.
-    marker = text.rfind("</style>")
+    # An existing block is REMOVED and re-inserted, never edited where it sits.
+    # Editing in place cannot fix a block that is in the wrong place, and the
+    # first version of this patcher put it in one -- so a rerun would have kept
+    # the whole feature inside <noscript> forever. Removal restores the file to
+    # its unpatched text, which is what keeps this idempotent.
+    text = re.sub(r"[ \t]*" + re.escape(CSS_BEGIN) + r".*?" + re.escape(CSS_END) + r"\n?",
+                  lambda _m: "", text, flags=re.S)
+    # The FIRST style block -- the page's own stylesheet. NOT the last: every
+    # one of these pages ends with a <noscript><style> that hides the theme
+    # toggle, and rules put there apply only when scripting is OFF. The first
+    # version of this patcher used rfind and buried the whole feature in that
+    # block, so the toggle and the feedback panel rendered unstyled for every
+    # reader who had JavaScript on -- which is everyone who can use them.
+    marker = text.find("</style>")
     if marker == -1:
         raise SystemExit("no <style> block to extend")
-    return text[:marker] + "    " + block + "\n" + text[marker:]
+    # Insert as WHOLE LINES before the closing tag's own line, so the </style>
+    # line keeps the indentation it came with. Inserting at the tag itself made
+    # the block's column depend on that indentation, while removal above eats
+    # it -- so the first rerun moved the block by two spaces and only then
+    # settled. Idempotent from the first run is the requirement, not eventually.
+    line_start = text.rfind("\n", 0, marker) + 1
+    return text[:line_start] + "    " + block + "\n" + text[line_start:]
 
 
 def ensure_script(text, body):
@@ -373,6 +348,35 @@ def ensure_lesson_toggle(text, lesson_id, relative):
         raise SystemExit("no lesson pager to precede")
     line_start = text.rfind("\n", 0, anchor) + 1
     return text[:line_start] + markup.lstrip("\n") + "\n" + text[line_start:]
+
+
+def ensure_feedback_panel(text, lesson_id, lesson_title, course_title):
+    """The recommendations panel, at the foot of the lesson.
+
+    Placed after the pager and before the footer, which is where the generated
+    lessons put it: past the material and the completion mark, so it reads as
+    "now that you have been through this", not as a form to fill in first.
+    """
+    markup = feedback.MARKUP % {
+        "id": esc(lesson_id),
+        "lesson": esc(lesson_title),
+        "course": esc(course_title),
+    }
+    if 'id="lessonFeedback"' in text:
+        return re.sub(r'\n    <section class="lesson-feedback".*?\n    </section>\n',
+                      lambda _m: markup, text, count=1, flags=re.S)
+    # Anchored on the pager, not on the footer: the seven market-structure
+    # lessons close with a bare <footer> and the rest with <footer class="footer">,
+    # so the footer is not a reliable landmark. Every lesson page has the pager --
+    # the completion toggle above is placed by finding it.
+    nav = text.find('<nav class="lesson-nav"')
+    if nav == -1:
+        raise SystemExit("no lesson pager to follow")
+    close = text.find("</nav>", nav)
+    if close == -1:
+        raise SystemExit("unterminated lesson pager")
+    close += len("</nav>")
+    return text[:close] + "\n" + markup + text[close:]
 
 
 def ensure_course_hooks(text, course_slug, lessons):
@@ -453,7 +457,10 @@ def main():
             text = ensure_css(before)
             text = ensure_masthead(text, relative)
             text = ensure_lesson_toggle(text, lesson_id, relative)
-            text = ensure_script(text, PROGRESS_JS + (LESSON_JS % lesson_id) + SIGNIN_JS)
+            text = ensure_feedback_panel(text, "%s/%s" % (course["slug"], lesson["slug"]),
+                                         lesson["title"], course["title"])
+            text = ensure_script(text, progress.PROGRESS_JS + (progress.LESSON_JS % lesson_id)
+                                 + feedback.STORE_JS + feedback.LESSON_JS + SIGNIN_JS)
             save(relative, text, before)
 
         # Course home: a tick against each lesson it lists, and a count.
@@ -462,7 +469,7 @@ def main():
         text = ensure_css(before)
         text = ensure_masthead(text, relative)
         text = ensure_course_hooks(text, course["slug"], course["lessons"])
-        text = ensure_script(text, PROGRESS_JS + COURSE_JS + SIGNIN_JS)
+        text = ensure_script(text, progress.PROGRESS_JS + COURSE_JS + SIGNIN_JS)
         save(relative, text, before)
 
     # The path page: the same count, per course, on its spine.
@@ -470,7 +477,7 @@ def main():
     text = ensure_css(before)
     text = ensure_masthead(text, PATH_PAGE)
     text = ensure_path_hooks(text, courses)
-    text = ensure_script(text, PROGRESS_JS + PATH_JS + SIGNIN_JS)
+    text = ensure_script(text, progress.PROGRESS_JS + PATH_JS + SIGNIN_JS)
     save(PATH_PAGE, text, before)
 
     # The capstone pages are not lessons -- they belong to no course's list and

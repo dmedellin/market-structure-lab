@@ -41,6 +41,9 @@ LIGHT_TOKENS = """      color-scheme: light;
       --shadow: 0 22px 55px rgba(39, 77, 101, 0.14);"""
 
 
+from . import feedback
+
+
 def _light_block(selector, indent):
     body = "\n".join(
         (indent + line.strip()) if line.strip() else line
@@ -1004,4 +1007,4 @@ def stylesheet():
             + "\n    }",
         )
         .replace("__TOGGLE_LIGHT__", _light_block('[data-theme="light"]', "      "))
-    )
+    ) + feedback.CSS

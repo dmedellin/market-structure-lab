@@ -39,6 +39,13 @@ SCOPES = "openid profile offline_access Files.ReadWrite.AppFolder"
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent / "site"
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from mathpath import feedback as _feedback  # noqa: E402
+
+# The same store the 336 lesson pages write to. /progress/ only reads and ticks;
+# recommendations are always WRITTEN on the lesson they are about.
+FEEDBACK_STORE_JS = _feedback.STORE_JS
+
 # The library's own brand glyph, the same one the site index draws. It is
 # markup, so it reaches topbar() as markup; the previous "&#10003;" was escaped
 # on the way through and shipped as the literal text &#10003;.
@@ -404,6 +411,17 @@ PROGRESS_BODY = """    <noscript>
     <h2>Recently marked</h2>
     <div id="recent"></div>
 
+    <h2>Recommendations</h2>
+    <p class="muted" style="margin-top:0;">Notes you left at the foot of a lesson about what should
+    change there. Tick one off here or on the lesson itself &mdash; it is the same list. Export
+    gives you a checklist you can paste somewhere and work through.</p>
+    <div class="fb-actions" style="margin-bottom:14px;">
+      <button class="btn primary" type="button" id="fbExportAll">Export all as Markdown</button>
+      <button class="btn" type="button" id="fbExportJson">Export as JSON</button>
+      <span class="fb-count" id="fbTotals"></span>
+    </div>
+    <div id="feedback"></div>
+
     <div class="card" id="account">
       <div class="pg-account">
         <div>
@@ -583,6 +601,65 @@ PROGRESS_PAGE_JS = """
       el.innerHTML = (rows ? '<ul class="pg-recent">' + rows + '</ul>' : '') + extra;
     }
 
+    /* Every recommendation in the library, grouped by the lesson it is about.
+       LESSON_INDEX supplies the titles, so a note reads as "Logic and Proof -
+       Truth Tables" rather than as a slug. A note whose lesson has left the
+       library still appears, under its raw id, for the same reason a stale
+       completion mark does: it is the reader's and dropping it silently would
+       be worse than showing it plainly. */
+    function feedbackEntries() {
+      var store = window.learnFeedback ? window.learnFeedback.read() : {};
+      return Object.keys(store).sort().map(function (id) {
+        var known = LESSON_INDEX[id];
+        return {
+          id: id,
+          title: known ? known.lesson.title : id,
+          where: known ? known.course.title + ' \u00b7 ' + known.path.title : 'no longer in the library',
+          url: '../' + id + '/',
+          known: !!known,
+          items: store[id] || []
+        };
+      }).filter(function (entry) { return entry.items.length; });
+    }
+
+    function paintFeedback() {
+      var host = document.getElementById('feedback');
+      if (!host || !window.learnFeedback) return;
+      var entries = feedbackEntries();
+      var open = 0, total = 0;
+      entries.forEach(function (e) {
+        total += e.items.length;
+        open += e.items.filter(function (i) { return !i.done; }).length;
+      });
+      document.getElementById('fbTotals').textContent = total
+        ? open + ' open \u00b7 ' + (total - open) + ' done \u00b7 ' + entries.length +
+          ' lesson' + (entries.length === 1 ? '' : 's')
+        : '';
+      if (!entries.length) {
+        host.innerHTML = '<p class="muted">Nothing recorded yet. Open any lesson and use the ' +
+          'feedback panel at the foot of the page.</p>';
+        return;
+      }
+      host.innerHTML = entries.map(function (e) {
+        var rows = e.items.map(function (item) {
+          var when = item.done && item.closed
+            ? 'Added ' + item.created + ' \u00b7 done ' + item.closed
+            : 'Added ' + item.created;
+          return '<li class="fb-item' + (item.done ? ' is-done' : '') + '">' +
+            '<button class="fb-tick" type="button" data-lesson="' + esc(e.id) + '"' +
+            ' data-id="' + esc(item.id) + '" aria-pressed="' + (item.done ? 'true' : 'false') +
+            '" title="Mark this recommendation done"><span aria-hidden="true">&#10003;</span>' +
+            '<span class="fb-sr">Mark done</span></button>' +
+            '<span><p class="fb-body">' + esc(item.text) + '</p>' +
+            '<span class="fb-when">' + when + '</span></span></li>';
+        }).join('');
+        return '<section class="card pg-path"><div class="pg-path-head">' +
+          '<h3>' + (e.known ? '<a href="' + esc(e.url) + '">' + esc(e.title) + '</a>' : esc(e.title)) +
+          '</h3><span class="pg-count">' + esc(e.where) + '</span></div>' +
+          '<ul class="fb-list">' + rows + '</ul></section>';
+      }).join('');
+    }
+
     function paint() {
       var marks = read();
       var t = tally(marks);
@@ -590,6 +667,7 @@ PROGRESS_PAGE_JS = """
       paintStats(t);
       paintPaths(t);
       paintRecent(t, marks);
+      paintFeedback();
     }
 
     function paintAuth() {
@@ -633,6 +711,37 @@ PROGRESS_PAGE_JS = """
         });
       }).catch(function (e) { say('Sync failed: ' + e.message, 'bad'); });
     });
+    /* Ticking here and ticking on the lesson are the same operation on the
+       same store, so the two views cannot disagree. */
+    var feedbackHost = document.getElementById('feedback');
+    if (feedbackHost) {
+      feedbackHost.addEventListener('click', function (event) {
+        var button = event.target.closest ? event.target.closest('.fb-tick') : null;
+        if (!button || !window.learnFeedback) return;
+        window.learnFeedback.toggle(button.getAttribute('data-lesson'), button.getAttribute('data-id'));
+        paintFeedback();
+      });
+    }
+    var exportAll = document.getElementById('fbExportAll');
+    if (exportAll) {
+      exportAll.addEventListener('click', function () {
+        var entries = feedbackEntries();
+        if (!entries.length) { say('Nothing to export yet.', ''); return; }
+        var body = window.learnFeedback.markdown(entries, 'Learn \u2014 recommendations');
+        window.learnFeedback.download('learn-recommendations-' + window.learnFeedback.today() + '.md', body);
+      });
+    }
+    var exportJson = document.getElementById('fbExportJson');
+    if (exportJson) {
+      exportJson.addEventListener('click', function () {
+        /* Markdown is lossy -- it drops ids and flattens newlines -- so the raw
+           store is offered too, for anyone who wants to keep or move it. */
+        var raw = JSON.stringify(window.learnFeedback.read(), null, 2);
+        window.learnFeedback.download(
+          'learn-recommendations-' + window.learnFeedback.today() + '.json', raw, 'application/json');
+      });
+    }
+
     paintAuth(); paint();
   })();
 """
@@ -658,7 +767,7 @@ def main():
          "Your progress | Learn \u00b7 geterdone.io",
          "Your completion marks, kept in this browser. Sign in with Microsoft to "
          "carry them to another device. Nothing here is graded and no material is locked.",
-         PROGRESS_BODY, auth + SYNC_JS + progress_js, PROGRESS_CSS),
+         PROGRESS_BODY, auth + SYNC_JS + FEEDBACK_STORE_JS + progress_js, PROGRESS_CSS),
     ]
     for relative, canonical, up, title, description, body, script, extra_css in pages:
         target = ROOT / relative

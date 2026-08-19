@@ -1013,6 +1013,91 @@
     .footer p { margin: 0 0 7px; }
     .footer a { font-weight: 650; }
 
+    .lesson-feedback {
+      margin-top: 18px;
+      padding: 17px 19px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+    }
+    .lesson-feedback h2 { margin: 0 0 6px; font-size: 1.06rem; letter-spacing: -0.01em; }
+    .fb-lead { margin: 0 0 13px; color: var(--muted); font-size: 0.85rem; }
+    .fb-sr {
+      position: absolute; width: 1px; height: 1px;
+      overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+    }
+    .fb-text {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 11px 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+    .fb-text:focus { outline: 2px solid var(--cyan); outline-offset: 1px; }
+    .fb-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 11px;
+    }
+    .fb-count { color: var(--muted); font-size: 0.82rem; font-weight: 650; }
+
+    .fb-list { list-style: none; margin: 15px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .fb-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 11px;
+      align-items: start;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .fb-item.is-done { border-color: var(--green); }
+    .fb-item.is-done .fb-body { color: var(--muted); text-decoration: line-through; }
+    .fb-tick {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: var(--panel);
+      color: transparent;
+      font-size: 0.78rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .fb-tick:hover { border-color: var(--cyan); }
+    .fb-item.is-done .fb-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .fb-body { margin: 0; font-size: 0.9rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .fb-when { display: block; margin-top: 4px; color: var(--muted); font-size: 0.76rem; font-weight: 600; }
+    .fb-drop {
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: none;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 3px 7px;
+    }
+    .fb-drop:hover { color: var(--red); border-color: var(--line); }
+    .fb-empty { margin: 15px 0 0; color: var(--muted); font-size: 0.85rem; }
+
     /* .hero-visual svg is width:100%, and (0,1,1) outranks a bare .pg-ring, so
        the ring has to be named through its parent or it stretches to the full
        width of the hero panel. */
@@ -1168,6 +1253,17 @@
 
     <h2>Recently marked</h2>
     <div id="recent"></div>
+
+    <h2>Recommendations</h2>
+    <p class="muted" style="margin-top:0;">Notes you left at the foot of a lesson about what should
+    change there. Tick one off here or on the lesson itself &mdash; it is the same list. Export
+    gives you a checklist you can paste somewhere and work through.</p>
+    <div class="fb-actions" style="margin-bottom:14px;">
+      <button class="btn primary" type="button" id="fbExportAll">Export all as Markdown</button>
+      <button class="btn" type="button" id="fbExportJson">Export as JSON</button>
+      <span class="fb-count" id="fbTotals"></span>
+    </div>
+    <div id="feedback"></div>
 
     <div class="card" id="account">
       <div class="pg-account">
@@ -1353,6 +1449,100 @@
     return out;
   }
 
+  /* Recommendations. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-feedback';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function today() { return new Date().toISOString().slice(0, 10); }
+    var counter = 0;
+    function newId() {
+      counter += 1;
+      return Date.now().toString(36) + '-' + counter.toString(36);
+    }
+    function list(lesson) {
+      var all = read()[lesson];
+      return Object.prototype.toString.call(all) === '[object Array]' ? all : [];
+    }
+    function save(lesson, items) {
+      var map = read();
+      if (items.length) { map[lesson] = items; } else { delete map[lesson]; }
+      write(map);
+    }
+    function add(lesson, text) {
+      text = String(text == null ? '' : text).trim();
+      if (!text) return null;
+      var items = list(lesson);
+      var item = { id: newId(), text: text, done: false, created: today(), closed: null };
+      items.push(item);
+      save(lesson, items);
+      return item;
+    }
+    function toggle(lesson, id) {
+      var items = list(lesson);
+      items.forEach(function (item) {
+        if (item.id !== id) return;
+        item.done = !item.done;
+        item.closed = item.done ? today() : null;
+      });
+      save(lesson, items);
+    }
+    function remove(lesson, id) {
+      save(lesson, list(lesson).filter(function (item) { return item.id !== id; }));
+    }
+
+    /* A checklist somebody can act on: the done state ticked in the page is the
+       done state in the file. Titles are passed in because this store knows
+       lesson IDS, not what they are called. */
+    function markdown(entries, heading) {
+      var out = ['# ' + heading, ''];
+      entries.forEach(function (entry) {
+        if (!entry.items.length) return;
+        out.push('## ' + entry.title);
+        if (entry.url) out.push('');
+        if (entry.url) out.push(entry.url);
+        out.push('');
+        entry.items.forEach(function (item) {
+          var when = item.done && item.closed
+            ? ' _(added ' + item.created + ', done ' + item.closed + ')_'
+            : ' _(added ' + item.created + ')_';
+          out.push('- [' + (item.done ? 'x' : ' ') + '] ' +
+                   String(item.text).replace(/\r?\n/g, ' ') + when);
+        });
+        out.push('');
+      });
+      if (out.length === 2) out.push('_No recommendations recorded._');
+      return out.join('\n');
+    }
+
+    /* A Blob and an <a download>. This is a LOCAL save, not a request: nothing
+       is uploaded and no origin is contacted. */
+    function download(filename, text, type) {
+      var blob = new Blob([text], { type: (type || 'text/markdown') + ';charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    }
+    function slugify(text) {
+      return String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    window.learnFeedback = {
+      key: KEY, read: read, list: list, add: add, toggle: toggle, remove: remove,
+      markdown: markdown, download: download, slugify: slugify, today: today
+    };
+  })();
+
   (function () {
     var KEY = 'learn-progress';
     /* The whole tickable library, embedded at build time from the same data the
@@ -1499,6 +1689,65 @@
       el.innerHTML = (rows ? '<ul class="pg-recent">' + rows + '</ul>' : '') + extra;
     }
 
+    /* Every recommendation in the library, grouped by the lesson it is about.
+       LESSON_INDEX supplies the titles, so a note reads as "Logic and Proof -
+       Truth Tables" rather than as a slug. A note whose lesson has left the
+       library still appears, under its raw id, for the same reason a stale
+       completion mark does: it is the reader's and dropping it silently would
+       be worse than showing it plainly. */
+    function feedbackEntries() {
+      var store = window.learnFeedback ? window.learnFeedback.read() : {};
+      return Object.keys(store).sort().map(function (id) {
+        var known = LESSON_INDEX[id];
+        return {
+          id: id,
+          title: known ? known.lesson.title : id,
+          where: known ? known.course.title + ' · ' + known.path.title : 'no longer in the library',
+          url: '../' + id + '/',
+          known: !!known,
+          items: store[id] || []
+        };
+      }).filter(function (entry) { return entry.items.length; });
+    }
+
+    function paintFeedback() {
+      var host = document.getElementById('feedback');
+      if (!host || !window.learnFeedback) return;
+      var entries = feedbackEntries();
+      var open = 0, total = 0;
+      entries.forEach(function (e) {
+        total += e.items.length;
+        open += e.items.filter(function (i) { return !i.done; }).length;
+      });
+      document.getElementById('fbTotals').textContent = total
+        ? open + ' open · ' + (total - open) + ' done · ' + entries.length +
+          ' lesson' + (entries.length === 1 ? '' : 's')
+        : '';
+      if (!entries.length) {
+        host.innerHTML = '<p class="muted">Nothing recorded yet. Open any lesson and use the ' +
+          'feedback panel at the foot of the page.</p>';
+        return;
+      }
+      host.innerHTML = entries.map(function (e) {
+        var rows = e.items.map(function (item) {
+          var when = item.done && item.closed
+            ? 'Added ' + item.created + ' · done ' + item.closed
+            : 'Added ' + item.created;
+          return '<li class="fb-item' + (item.done ? ' is-done' : '') + '">' +
+            '<button class="fb-tick" type="button" data-lesson="' + esc(e.id) + '"' +
+            ' data-id="' + esc(item.id) + '" aria-pressed="' + (item.done ? 'true' : 'false') +
+            '" title="Mark this recommendation done"><span aria-hidden="true">&#10003;</span>' +
+            '<span class="fb-sr">Mark done</span></button>' +
+            '<span><p class="fb-body">' + esc(item.text) + '</p>' +
+            '<span class="fb-when">' + when + '</span></span></li>';
+        }).join('');
+        return '<section class="card pg-path"><div class="pg-path-head">' +
+          '<h3>' + (e.known ? '<a href="' + esc(e.url) + '">' + esc(e.title) + '</a>' : esc(e.title)) +
+          '</h3><span class="pg-count">' + esc(e.where) + '</span></div>' +
+          '<ul class="fb-list">' + rows + '</ul></section>';
+      }).join('');
+    }
+
     function paint() {
       var marks = read();
       var t = tally(marks);
@@ -1506,6 +1755,7 @@
       paintStats(t);
       paintPaths(t);
       paintRecent(t, marks);
+      paintFeedback();
     }
 
     function paintAuth() {
@@ -1549,6 +1799,37 @@
         });
       }).catch(function (e) { say('Sync failed: ' + e.message, 'bad'); });
     });
+    /* Ticking here and ticking on the lesson are the same operation on the
+       same store, so the two views cannot disagree. */
+    var feedbackHost = document.getElementById('feedback');
+    if (feedbackHost) {
+      feedbackHost.addEventListener('click', function (event) {
+        var button = event.target.closest ? event.target.closest('.fb-tick') : null;
+        if (!button || !window.learnFeedback) return;
+        window.learnFeedback.toggle(button.getAttribute('data-lesson'), button.getAttribute('data-id'));
+        paintFeedback();
+      });
+    }
+    var exportAll = document.getElementById('fbExportAll');
+    if (exportAll) {
+      exportAll.addEventListener('click', function () {
+        var entries = feedbackEntries();
+        if (!entries.length) { say('Nothing to export yet.', ''); return; }
+        var body = window.learnFeedback.markdown(entries, 'Learn — recommendations');
+        window.learnFeedback.download('learn-recommendations-' + window.learnFeedback.today() + '.md', body);
+      });
+    }
+    var exportJson = document.getElementById('fbExportJson');
+    if (exportJson) {
+      exportJson.addEventListener('click', function () {
+        /* Markdown is lossy -- it drops ids and flattens newlines -- so the raw
+           store is offered too, for anyone who wants to keep or move it. */
+        var raw = JSON.stringify(window.learnFeedback.read(), null, 2);
+        window.learnFeedback.download(
+          'learn-recommendations-' + window.learnFeedback.today() + '.json', raw, 'application/json');
+      });
+    }
+
     paintAuth(); paint();
   })();
   </script>

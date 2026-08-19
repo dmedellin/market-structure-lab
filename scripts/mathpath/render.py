@@ -9,7 +9,7 @@ import html
 import json
 import re
 
-from . import chrome, labs, progress
+from . import chrome, feedback, labs, progress
 from .chrome import esc
 
 ORIGIN = chrome.CANONICAL_ORIGIN
@@ -287,6 +287,13 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
     lesson_id = "%s/%s" % (course["slug"], lesson["slug"])
     parts.append(progress.LESSON_MARKUP % "../..")
     parts.append(chrome.pager(prev=prev, next=nxt))
+    # Recommendations for this lesson: what should CHANGE about it, as opposed
+    # to the completion mark above, which says the reader has finished it.
+    parts.append(feedback.MARKUP % {
+        "id": esc(lesson_id),
+        "lesson": esc(plain(lesson["title"])),
+        "course": esc(plain(course["title"])),
+    })
 
     parts.append(
         chrome.footer(
@@ -308,7 +315,9 @@ def lesson_page(*, path, course, lesson, index, prev_lesson, next_lesson):
                              + "\n  (function () {\n" + lab.script + "  })();\n"
                              + labs.QUIZ_SCRIPT
                              + progress.PROGRESS_JS
-                             + progress.LESSON_JS % json.dumps(lesson_id)))
+                             + progress.LESSON_JS % json.dumps(lesson_id)
+                             + feedback.STORE_JS
+                             + feedback.LESSON_JS))
     return "".join(parts)
 
 
