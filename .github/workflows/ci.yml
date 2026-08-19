@@ -1349,6 +1349,15 @@ jobs:
                       yield number, stripped
 
           for path in sorted(set(targets)):
+              # Markdown under a scanned directory is PROSE, never configuration.
+              # The DOC_KEYS escape above only covers a value under a YAML or
+              # JSON key, so a briefing file that writes "never 10.89.2.0/24" in
+              # a sentence failed this step -- which is the exact outcome the
+              # comment above says to avoid, because it teaches people to delete
+              # the warning rather than the value. No render input is markdown;
+              # RENDER_INPUTS is an explicit list and is checked separately.
+              if path.suffix.lower() in {".md", ".markdown"}:
+                  continue
               try:
                   text = path.read_text(encoding="utf-8")
               except (UnicodeDecodeError, OSError):
