@@ -4171,3 +4171,95 @@ class TestTheWayIntoSignIn(SiteFixture):
             ".topbar-actions child, or space-between spreads them apart: %s"
             % sorted(stranded),
         )
+
+
+# Two defects that shipped to production together, both visible on /progress/
+# and neither catchable by anything already here.
+ESCAPED_ENTITY_RE = re.compile(r"&amp;#\d+;")
+HIDDEN_RULE_RE = re.compile(r"\[hidden\]\s*\{[^}]*display:\s*none\s*!important")
+# A selector that only theme.py writes, so "this page inlines the shared
+# stylesheet" is a fact about the page rather than a list to maintain.
+HIDDEN_ELEMENT_RE = re.compile(r"<([a-zA-Z][a-zA-Z0-9]*)[^>]*?\shidden(?=[\s/>=])[^>]*>")
+CLASS_ATTR_RE = re.compile(r'class="([^"]*)"')
+DISPLAY_DECL_RE = re.compile(r"(?<![-a-z])display\s*:")
+
+
+class TestChromeRendersWhatItMeans(SiteFixture):
+    """Markup that reaches the reader as its own source text is a defect."""
+
+    def test_no_page_ships_a_double_escaped_character_entity(self):
+        """"&#10003;" escaped once more is the literal text &#10003;.
+
+        topbar() escapes any brand mark that is not already markup, which is
+        right for a course number and wrong for an entity. Both sign-in pages
+        therefore drew the string "&#10003;" where the logo belongs, in the
+        masthead, on the two pages a reader is asked to trust with a sign-in.
+        """
+        offenders = []
+        for doc in self.documents:
+            for match in ESCAPED_ENTITY_RE.finditer(doc.text):
+                offenders.append("%s: %s" % (served_path(doc.path), match.group(0)))
+        self.assertEqual(
+            [], sorted(offenders),
+            "a character entity was escaped on its way into the page, so the "
+            "reader sees its source text instead of the character: %s" % sorted(offenders),
+        )
+
+    def test_nothing_hidden_wears_a_class_that_un_hides_it(self):
+        """`hidden` is a DEFAULT, and any author rule that sets display beats it.
+
+        The browser's own rule is `[hidden] { display: none }` at UA
+        precedence. The shared .btn sets `display: inline-flex`, which outranks
+        it -- so `<button class="btn" hidden>` is not hidden at all. That is
+        exactly how "Sign out" came to sit beside "Sign in" on a page reading
+        "Not signed in": the script set the attribute correctly, and the
+        attribute did nothing.
+
+        Checked per element rather than by demanding a stylesheet rule
+        everywhere, because a page whose hidden elements wear no
+        display-setting class is already correct and should not be made to
+        carry a rule it has no use for.
+        """
+        offenders = []
+        for doc in self.documents:
+            page = served_path(doc.path)
+            # stylesheet() strips CSS comments. That matters here more than
+            # anywhere: theme.py's comment EXPLAINING this bug names both
+            # "[hidden]" and ".btn", and parsed as a rule it marks .btn settled
+            # and switches this test off. It did exactly that until caught.
+            css = stylesheet(doc.text)
+            if HIDDEN_RULE_RE.search(css):
+                continue  # the page settles it once, for every element
+            rules = [(selector, body) for _at, selector, body in css_rules(css)]
+            # A class the page neutralises itself -- `.results[hidden] { display:
+            # none }` -- is handled, and must not be reported as if it were not.
+            settled = {
+                name
+                for selector, body in rules
+                if "[hidden]" in selector and DISPLAY_DECL_RE.search(body)
+                for name in re.findall(r"\.([A-Za-z0-9_-]+)", selector)
+            }
+            clean = COMMENT_RE.sub(" ", doc.text)
+            for tag in HIDDEN_ELEMENT_RE.finditer(clean):
+                classes = CLASS_ATTR_RE.search(tag.group(0))
+                for name in (classes.group(1).split() if classes else []):
+                    if name in settled:
+                        continue
+                    for selector, body in rules:
+                        # A class name ends at the token boundary: .btn must not
+                        # match .btn-row, or the report names the wrong rule.
+                        if "[hidden]" in selector:
+                            continue
+                        if not re.search(r"\.%s(?![\w-])" % re.escape(name), selector):
+                            continue
+                        if DISPLAY_DECL_RE.search(body):
+                            offenders.append(
+                                "%s: <%s ... hidden> wears .%s, and `%s` sets display"
+                                % (page, tag.group(1), name, selector.strip()[:60])
+                            )
+        self.assertEqual(
+            [], sorted(set(offenders)),
+            "these elements are marked hidden but carry a class that sets "
+            "display, which outranks the browser's [hidden] rule, so they stay "
+            "on screen: %s" % sorted(set(offenders)),
+        )

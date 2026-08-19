@@ -39,7 +39,51 @@ SCOPES = "openid profile offline_access Files.ReadWrite.AppFolder"
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent / "site"
 
-def page(*, title, description, canonical_path, up, body, script):
+# The library's own brand glyph, the same one the site index draws. It is
+# markup, so it reaches topbar() as markup; the previous "&#10003;" was escaped
+# on the way through and shipped as the literal text &#10003;.
+BRAND_MARK = (
+    '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="6" '
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" '
+    'focusable="false"><path d="M14 45L26 33L38 41L51 18" /></svg>'
+)
+
+
+def library_inventory():
+    """Every lesson a reader can actually TICK, as compact JSON.
+
+    The progress page cannot fetch this -- it is a page on a site that makes no
+    network requests, and its two allowed origins are Microsoft's, not mine --
+    so the inventory is embedded at build time from the same data the pages are
+    generated from. There is therefore no second copy to drift: a lesson exists
+    here only because build_paths.py built a page for it.
+
+    The trading path is deliberately absent. Its pages carry no completion
+    toggle, so its lessons cannot be ticked, and counting them in the
+    denominator would tell a reader who has finished everything tickable that
+    they are a third of the way through.
+    """
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+    import build_paths
+    return [
+        {
+            "slug": path["slug"],
+            "title": path["title"],
+            "courses": [
+                {
+                    "slug": course["slug"],
+                    "title": course["title"],
+                    "n": course["number"],
+                    "lessons": [[l["slug"], l["title"]] for l in course["lessons"]],
+                }
+                for course in path["courses"]
+            ],
+        }
+        for path in build_paths.GENERATED_PATHS
+    ]
+
+
+def page(*, title, description, canonical_path, up, body, script, extra_css=""):
     """One auth page, in the library's own chrome.
 
     Deliberately NOT a bespoke shell. These two pages are exempt from
@@ -53,9 +97,10 @@ def page(*, title, description, canonical_path, up, body, script):
     from mathpath import chrome
     return "".join([
         chrome.head(title=title, description=description,
-                    canonical_path=canonical_path, favicon=chrome.FAVICON_PATH),
+                    canonical_path=canonical_path, favicon=chrome.FAVICON_PATH,
+                    extra_css=extra_css),
         chrome.topbar(home_href=up, home_label="Back to the Learn library",
-                      mark="&#10003;", strong="Learn", sub="geterdone.io",
+                      mark=BRAND_MARK, strong="Learn", sub="geterdone.io",
                       nav=[("Library", up, False)],
                       signin_href=up + "progress/",
                       signin_current=(canonical_path == "/progress/")),
@@ -210,17 +255,142 @@ CALLBACK_JS = """
   })();
 """
 
-PROGRESS_BODY = """    <h1>Your progress</h1>
-    <p class="lead">Completion marks are yours: you tick a lesson when you have done it. Nothing checks
-    them and nothing is graded.</p>
+# Page-scoped. These styles belong to ONE page, so they are not added to the
+# shared stylesheet that every one of the other 240 pages inlines.
+PROGRESS_CSS = """
+    /* .hero-visual svg is width:100%, and (0,1,1) outranks a bare .pg-ring, so
+       the ring has to be named through its parent or it stretches to the full
+       width of the hero panel. */
+    .hero-visual .pg-ring { width: min(210px, 100%); height: auto; margin: 0 auto; display: block; }
+    .pg-ring circle { fill: none; stroke-width: 12; }
+    /* NOT --panel-2: .hero-visual is already --panel-2, so a track in that
+       colour is invisible and the arc reads as a stray floating pill. */
+    .pg-ring .pg-ring-track { stroke: var(--line-strong); }
+    .pg-ring .pg-ring-fill {
+      stroke: var(--cyan);
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset 600ms ease;
+    }
+    .pg-ring-pct { font-size: 30px; font-weight: 800; fill: var(--text); }
+    .pg-ring-sub { font-size: 11px; font-weight: 700; fill: var(--muted); letter-spacing: 0.08em; }
 
-    <div class="card">
-      <div class="row" style="justify-content:space-between;">
+    .pg-bar { height: 7px; border-radius: 999px; background: var(--panel-2); overflow: hidden; }
+    .pg-bar-fill { height: 100%; border-radius: 999px; background: var(--cyan); transition: width 500ms ease; }
+    .pg-bar-fill.is-done { background: var(--green); }
+
+    #main .card { padding: 18px; }
+    #main > .card { margin-top: 14px; }
+    .pg-path { margin-top: 14px; }
+    .pg-path-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .pg-path-head h3 { margin: 0; font-size: 1.12rem; letter-spacing: -0.01em; }
+    .pg-count { color: var(--muted); font-size: 0.84rem; font-weight: 700; white-space: nowrap; }
+
+    .pg-courses { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+    .pg-course {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 13px;
+      align-items: center;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      text-decoration: none;
+      color: inherit;
+    }
+    .pg-course:hover { border-color: var(--line-strong); }
+    .pg-num {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      font-size: 0.8rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    .pg-course.is-done .pg-num { background: var(--green); color: var(--on-accent); border-color: transparent; }
+    .pg-course-name { font-weight: 700; font-size: 0.94rem; margin-bottom: 6px; }
+
+    .pg-recent { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+    .pg-recent li {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 11px;
+      align-items: baseline;
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-2);
+    }
+    .pg-recent .pg-tick { color: var(--green); font-weight: 800; }
+    .pg-recent a { color: inherit; font-weight: 700; text-decoration: none; }
+    .pg-recent a:hover { text-decoration: underline; }
+    .pg-when { color: var(--muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .pg-where { display: block; color: var(--muted); font-size: 0.78rem; font-weight: 600; }
+
+    .pg-account { display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+"""
+
+PROGRESS_BODY = """    <noscript>
+      <div class="noscript-note">
+        <strong>JavaScript is off, so none of the figures below can be filled in.</strong>
+        Your completion marks are kept in this browser's own storage, and reading
+        them needs a script &mdash; so the meters read zero here rather than
+        reading your marks. Nothing has been lost: turn JavaScript on and the
+        numbers come back. The course material itself needs none of this.
+      </div>
+    </noscript>
+
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Your progress</span>
+        <h1>What you have <span class="gradient-text">finished so far.</span></h1>
+        <p class="lead">A completion mark is a note you make to yourself: you tick a lesson when you
+        have done it. Nothing checks them, nothing is graded, and no material is locked behind them.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="../">Back to the library</a>
+          <a class="btn ghost" href="#account">Carry marks to another device</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <svg class="pg-ring" viewBox="0 0 120 120" role="img" aria-labelledby="ringTitle">
+          <title id="ringTitle">Overall completion</title>
+          <circle class="pg-ring-track" cx="60" cy="60" r="52" />
+          <circle class="pg-ring-fill" id="ringFill" cx="60" cy="60" r="52"
+                  stroke-dasharray="326.7" stroke-dashoffset="326.7" />
+          <text class="pg-ring-pct" x="60" y="58" text-anchor="middle" id="ringPct">0%</text>
+          <text class="pg-ring-sub" x="60" y="76" text-anchor="middle" id="ringSub">COMPLETE</text>
+        </svg>
+      </div>
+    </section>
+
+    <dl class="stats" id="stats">
+      <div><dt>Lessons ticked</dt><dd><span id="statLessons">0</span><small id="statLessonsOf">&nbsp;</small></dd></div>
+      <div><dt>Courses finished</dt><dd><span id="statCourses">0</span><small id="statCoursesOf">&nbsp;</small></dd></div>
+      <div><dt>Subjects started</dt><dd><span id="statPaths">0</span><small id="statPathsOf">&nbsp;</small></dd></div>
+      <div><dt>Last marked</dt><dd><span id="statLast">&#8212;</span><small id="statLastNote">&nbsp;</small></dd></div>
+    </dl>
+
+    <div class="status" id="status" hidden></div>
+
+    <h2>By subject</h2>
+    <div id="paths"></div>
+
+    <h2>Recently marked</h2>
+    <div id="recent"></div>
+
+    <div class="card" id="account">
+      <div class="pg-account">
         <div>
           <strong id="who">Not signed in</strong>
           <p class="muted" style="margin:4px 0 0;" id="whoNote">Marks are saved in this browser only.</p>
         </div>
-        <div class="row">
+        <div class="btn-row">
           <button class="btn primary" id="signin" type="button">Sign in with Microsoft</button>
           <button class="btn" id="signout" type="button" hidden>Sign out</button>
         </div>
@@ -232,59 +402,176 @@ PROGRESS_BODY = """    <h1>Your progress</h1>
       <p>Your marks are written to <strong>your own OneDrive</strong>, in this application's private folder,
       as one small JSON file. They are not stored on this server. Syncing merges both sides, so a lesson
       ticked on either device stays ticked.</p>
-      <p class="row">
+      <p class="btn-row">
         <button class="btn" id="sync" type="button">Sync now</button>
         <span class="muted" id="syncNote"></span>
       </p>
     </div>
-
-    <div class="status" id="status" hidden></div>
-
-    <h2>Marked complete</h2>
-    <div id="list"><p class="muted">Nothing marked yet. Open a lesson and use the button at the foot of the page.</p></div>
 
     <div class="card">
       <h2 style="margin-top:0;">What signing in does not do</h2>
       <p>It does not unlock anything. Every lesson, every lab and every word of the material is readable
       without an account, and always will be. Signing in only moves your own ticks between your own devices.</p>
       <p class="muted">Clearing your browser data clears local marks. If you have synced, they are still in your OneDrive.</p>
-      <p class="row"><a class="btn" href="../">Back to the library</a></p>
     </div>
 """
 
 PROGRESS_PAGE_JS = """
   (function () {
     var KEY = 'learn-progress';
+    /* The whole tickable library, embedded at build time from the same data the
+       lesson pages were generated from. It is what makes "12 of 218" a fact
+       rather than a guess: without it this page could only count the marks it
+       happens to hold and had no idea what the denominator was. */
+    var LIBRARY = %(library)s;
+
+    var TOTAL_LESSONS = 0, TOTAL_COURSES = 0;
+    var LESSON_INDEX = {};   /* "course/lesson" -> {course, lesson, path} */
+    LIBRARY.forEach(function (path) {
+      TOTAL_COURSES += path.courses.length;
+      path.courses.forEach(function (course) {
+        TOTAL_LESSONS += course.lessons.length;
+        course.lessons.forEach(function (pair) {
+          LESSON_INDEX[course.slug + '/' + pair[0]] =
+            { course: course, lesson: { slug: pair[0], title: pair[1] }, path: path };
+        });
+      });
+    });
+
     function read() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
     function write(m) { try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {} }
+
     var statusEl = document.getElementById('status');
     function say(text, kind) {
       statusEl.hidden = false;
       statusEl.textContent = text;
       statusEl.className = 'status' + (kind ? ' ' + kind : '');
     }
-    function pretty(id) {
-      var bits = id.split('/');
-      var title = function (s) { return s.replace(/-/g, ' ').replace(/^./, function (c) { return c.toUpperCase(); }); };
-      return bits.length === 2 ? [title(bits[0]), title(bits[1])] : [id, ''];
+    function esc(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
-    function paint() {
-      var marks = read();
-      var ids = Object.keys(marks).sort();
-      var list = document.getElementById('list');
-      if (!ids.length) {
-        list.innerHTML = '<p class="muted">Nothing marked yet. Open a lesson and use the button at the foot of the page.</p>';
+    function pct(done, total) { return total ? Math.round((done / total) * 100) : 0; }
+    function bar(done, total) {
+      return '<div class="pg-bar" aria-hidden="true"><div class="pg-bar-fill' +
+             (done === total && total ? ' is-done' : '') +
+             '" style="width:' + pct(done, total) + '%%;"></div></div>';
+    }
+
+    /* One pass over the marks, producing every number the page shows. Each
+       count comes from the SAME tally, so the ring, the stats, the per-subject
+       meters and the list cannot disagree with each other. */
+    function tally(marks) {
+      var t = { done: 0, total: TOTAL_LESSONS, courses: 0, paths: 0, known: [], unknown: [] };
+      Object.keys(marks).forEach(function (id) {
+        (LESSON_INDEX[id] ? t.known : t.unknown).push(id);
+      });
+      t.done = t.known.length;
+      t.byPath = LIBRARY.map(function (path) {
+        var row = { path: path, done: 0, total: 0, courses: [] };
+        path.courses.forEach(function (course) {
+          var done = 0;
+          course.lessons.forEach(function (pair) {
+            if (marks[course.slug + '/' + pair[0]]) done++;
+          });
+          row.courses.push({ course: course, done: done, total: course.lessons.length });
+          row.done += done;
+          row.total += course.lessons.length;
+          if (done === course.lessons.length && course.lessons.length) t.courses++;
+        });
+        if (row.done > 0) t.paths++;
+        return row;
+      });
+      return t;
+    }
+
+    function paintRing(t) {
+      var CIRC = 2 * Math.PI * 52;
+      var p = pct(t.done, t.total);
+      var fill = document.getElementById('ringFill');
+      fill.setAttribute('stroke-dasharray', CIRC.toFixed(1));
+      fill.setAttribute('stroke-dashoffset', (CIRC * (1 - p / 100)).toFixed(1));
+      document.getElementById('ringPct').textContent = p + '%%';
+      document.getElementById('ringSub').textContent = t.done + ' OF ' + t.total;
+      document.getElementById('ringTitle').textContent =
+        t.done + ' of ' + t.total + ' lessons complete (' + p + '%%)';
+    }
+
+    function paintStats(t) {
+      document.getElementById('statLessons').textContent = t.done;
+      document.getElementById('statLessonsOf').textContent = 'of ' + t.total + ' tickable';
+      document.getElementById('statCourses').textContent = t.courses;
+      document.getElementById('statCoursesOf').textContent = 'of ' + TOTAL_COURSES;
+      document.getElementById('statPaths').textContent = t.paths;
+      document.getElementById('statPathsOf').textContent = 'of ' + LIBRARY.length;
+      var latest = null;
+      Object.keys(read()).forEach(function (id) {
+        var d = read()[id];
+        if (typeof d === 'string' && (latest === null || d > latest)) latest = d;
+      });
+      document.getElementById('statLast').textContent = latest || '\u2014';
+      document.getElementById('statLastNote').textContent = latest ? '' : 'nothing yet';
+    }
+
+    function paintPaths(t) {
+      document.getElementById('paths').innerHTML = t.byPath.map(function (row) {
+        var courses = row.courses.map(function (c) {
+          var done = c.done === c.total && c.total;
+          return '<a class="pg-course' + (done ? ' is-done' : '') + '" href="../' + esc(c.course.slug) + '/">' +
+                 '<span class="pg-num">' + (done ? '&#10003;' : c.course.n) + '</span>' +
+                 '<span><span class="pg-course-name">' + esc(c.course.title) + '</span>' + bar(c.done, c.total) + '</span>' +
+                 '<span class="pg-count">' + c.done + ' / ' + c.total + '</span></a>';
+        }).join('');
+        return '<section class="card pg-path"><div class="pg-path-head">' +
+               '<h3>' + esc(row.path.title) + '</h3>' +
+               '<span class="pg-count">' + row.done + ' of ' + row.total + ' lessons &middot; ' +
+               pct(row.done, row.total) + '%%</span></div>' +
+               bar(row.done, row.total) +
+               '<ul class="pg-courses">' + courses + '</ul></section>';
+      }).join('');
+    }
+
+    function paintRecent(t, marks) {
+      var el = document.getElementById('recent');
+      if (!t.known.length && !t.unknown.length) {
+        el.innerHTML = '<p class="muted">Nothing marked yet. Open a lesson and use the button at the ' +
+          'foot of the page &mdash; it is the same tick that fills the meters above.</p>';
         return;
       }
-      var rows = ids.map(function (id) {
-        var p = pretty(id);
-        return '<tr><td class="tick">&#10003;</td><td>' + p[1] + '</td><td class="muted">' + p[0] +
-               '</td><td class="muted">' + marks[id] + '</td></tr>';
+      var rows = t.known.slice().sort(function (a, b) {
+        var da = marks[a] || '', db = marks[b] || '';
+        return da === db ? a.localeCompare(b) : (da < db ? 1 : -1);
+      }).map(function (id) {
+        var e = LESSON_INDEX[id];
+        return '<li><span class="pg-tick" aria-hidden="true">&#10003;</span>' +
+               '<span><a href="../' + esc(e.course.slug) + '/' + esc(e.lesson.slug) + '/">' +
+               esc(e.lesson.title) + '</a>' +
+               '<span class="pg-where">' + esc(e.course.title) + ' &middot; ' + esc(e.path.title) + '</span></span>' +
+               '<span class="pg-when">' + esc(marks[id]) + '</span></li>';
       }).join('');
-      list.innerHTML = '<p class="muted">' + ids.length + ' lesson' + (ids.length === 1 ? '' : 's') +
-        ' marked complete.</p><table><thead><tr><th></th><th>Lesson</th><th>Course</th><th>Marked</th></tr></thead><tbody>' +
-        rows + '</tbody></table>';
+      var extra = '';
+      /* A mark whose lesson is no longer in the library is still the reader's.
+         Counting it in the totals would be wrong, and dropping it silently
+         would be worse -- so it is shown, and shown as what it is. */
+      if (t.unknown.length) {
+        var one = t.unknown.length === 1;
+        extra = '<p class="muted" style="margin-top:14px;">' + t.unknown.length +
+          (one ? ' mark refers to a lesson that is no longer in the library, so it is not counted above: '
+               : ' marks refer to lessons that are no longer in the library, so they are not counted above: ') +
+          t.unknown.map(esc).join(', ') + '.</p>';
+      }
+      el.innerHTML = (rows ? '<ul class="pg-recent">' + rows + '</ul>' : '') + extra;
     }
+
+    function paint() {
+      var marks = read();
+      var t = tally(marks);
+      paintRing(t);
+      paintStats(t);
+      paintPaths(t);
+      paintRecent(t, marks);
+    }
+
     function paintAuth() {
       var s = Session.get();
       var signedIn = !!(s && s.access_token);
@@ -339,22 +626,26 @@ def main():
         "graph": json.dumps(GRAPH),
     }
     auth = AUTH_JS % values
+    progress_js = PROGRESS_PAGE_JS % {
+        "library": json.dumps(library_inventory(), separators=(",", ":")),
+    }
     pages = [
         ("oauth2/spa/callback/index.html", "/oauth2/spa/callback/", "../../../",
          "Signing in | Learn \u00b7 geterdone.io",
          "Receives the Microsoft sign-in redirect. Holds no course material.",
-         CALLBACK_BODY, auth + CALLBACK_JS),
+         CALLBACK_BODY, auth + CALLBACK_JS, ""),
         ("progress/index.html", "/progress/", "../",
          "Your progress | Learn \u00b7 geterdone.io",
          "Your completion marks, kept in this browser. Sign in with Microsoft to "
          "carry them to another device. Nothing here is graded and no material is locked.",
-         PROGRESS_BODY, auth + SYNC_JS + PROGRESS_PAGE_JS),
+         PROGRESS_BODY, auth + SYNC_JS + progress_js, PROGRESS_CSS),
     ]
-    for relative, canonical, up, title, description, body, script in pages:
+    for relative, canonical, up, title, description, body, script, extra_css in pages:
         target = ROOT / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(page(title=title, description=description,
-                               canonical_path=canonical, up=up, body=body, script=script),
+                               canonical_path=canonical, up=up, body=body, script=script,
+                               extra_css=extra_css),
                           encoding="utf-8")
         print("wrote site/%s (%d bytes)" % (relative, target.stat().st_size))
 

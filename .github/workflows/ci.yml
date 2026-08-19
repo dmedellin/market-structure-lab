@@ -560,6 +560,23 @@ jobs:
           fi
           node scripts/mathcheck.js
 
+      - name: The progress page's numbers agree with each other
+        run: |
+          set -euo pipefail
+          # /progress/ is built almost entirely by script, so the Python suite --
+          # which reads the STATIC file -- cannot see one number it shows. A ring
+          # reading 40%, a stats row reading 12, and a subject meter reading 5 are
+          # all plausible markup and none of them is checked by anything else.
+          # This runs the shipped script against a stub DOM and asserts the views
+          # agree: the per-subject meters must sum to the headline, a mark for a
+          # retired lesson must not inflate the totals, and a finished library
+          # must read 100 rather than 99.
+          if ! command -v node > /dev/null; then
+            echo "::error::node is required to check the progress arithmetic and is not on PATH."
+            exit 1
+          fi
+          node scripts/progresscheck.js
+
       - name: Every generated lab executes
         run: |
           set -euo pipefail

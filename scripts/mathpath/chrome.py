@@ -200,7 +200,8 @@ def esc(text):
     return html.escape(str(text), quote=True)
 
 
-def head(*, title, description, canonical_path, favicon, og_description=None):
+def head(*, title, description, canonical_path, favicon, og_description=None,
+         extra_css=""):
     """The <head> of any page on this path.
 
     canonical_path is the published directory URL ("/paths/discrete-math/").
@@ -238,7 +239,7 @@ def head(*, title, description, canonical_path, favicon, og_description=None):
   <meta name="twitter:description" content="{social}" />
   <meta name="twitter:url" content="{url}" />
 
-  <style>{css}  </style>
+  <style>{css}{extra_css}  </style>
 
 {prepaint}
 </head>
@@ -251,6 +252,7 @@ def head(*, title, description, canonical_path, favicon, og_description=None):
         url=url,
         favicon=favicon,
         css=stylesheet(),
+        extra_css=extra_css,
         prepaint=PREPAINT,
     )
 
@@ -258,7 +260,10 @@ def head(*, title, description, canonical_path, favicon, og_description=None):
 def topbar(*, home_href, home_label, mark, strong, sub, nav=None,
            signin_href=None, signin_current=False):
     """The masthead: brand link home, optional in-page nav, theme toggle."""
-    if mark.startswith("<"):
+    # A mark that is already markup passes through: an SVG logo, or a bare
+    # character entity. Escaping "&#10003;" is what put the literal text
+    # "&#10003;" in the masthead of both sign-in pages.
+    if mark.startswith("<") or (mark.startswith("&") and mark.endswith(";")):
         mark_markup = mark
     else:
         mark_markup = esc(mark)

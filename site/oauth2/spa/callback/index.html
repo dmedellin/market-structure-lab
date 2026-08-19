@@ -246,6 +246,13 @@
     /* The masthead is space-between, so the right-hand controls have to be
        ONE child or they get spread apart with the sign-in stranded in the
        middle of the bar. */
+    /* The browser's own [hidden] rule is `display: none` at UA precedence, so
+       ANY class that sets display beats it. .btn sets inline-flex, which is why
+       "Sign out" sat next to "Sign in" on a page that said "Not signed in":
+       the attribute was set correctly and did nothing. Author-level and
+       !important so hidden means hidden regardless of what else matches. */
+    [hidden] { display: none !important; }
+
     .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
 
     /* The masthead sign-in. Sized to sit beside the theme toggle rather than
@@ -1021,7 +1028,7 @@
   <div class="shell">
     <header class="topbar">
       <a class="brand" href="../../../" aria-label="Back to the Learn library">
-        <span class="brand-mark" aria-hidden="true">&amp;#10003;</span>
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 45L26 33L38 41L51 18" /></svg></span>
         <span class="brand-copy"><strong>Learn</strong><span>geterdone.io</span></span>
       </a>
 

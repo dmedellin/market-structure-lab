@@ -224,6 +224,13 @@ __TOGGLE_LIGHT__
     /* The masthead is space-between, so the right-hand controls have to be
        ONE child or they get spread apart with the sign-in stranded in the
        middle of the bar. */
+    /* The browser's own [hidden] rule is `display: none` at UA precedence, so
+       ANY class that sets display beats it. .btn sets inline-flex, which is why
+       "Sign out" sat next to "Sign in" on a page that said "Not signed in":
+       the attribute was set correctly and did nothing. Author-level and
+       !important so hidden means hidden regardless of what else matches. */
+    [hidden] { display: none !important; }
+
     .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
 
     /* The masthead sign-in. Sized to sit beside the theme toggle rather than

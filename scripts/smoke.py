@@ -908,8 +908,15 @@ AUTH_ALLOWED_ORIGINS = ("login.microsoftonline.com", "graph.microsoft.com")
 AUTH_PAGE_TARGETS = (
     ("signin-callback", "/oauth2/spa/callback/",
      (canonical_marker("/oauth2/spa/callback/"), "Signing you in", DISCLAIMER_MARKER)),
+    # The last two markers are the embedded lesson inventory and the meter it
+    # feeds. /progress/ measures a reader against the whole tickable library,
+    # and it cannot fetch that -- it is built in. If the build ever ships the
+    # page without it, every figure silently becomes "0 of 0": a page that
+    # looks fine, serves 200, and tells a reader who has finished six courses
+    # that they have finished nothing.
     ("progress-page", "/progress/",
-     (canonical_marker("/progress/"), "Your progress", DISCLAIMER_MARKER)),
+     (canonical_marker("/progress/"), "Your progress", DISCLAIMER_MARKER,
+      "var LIBRARY = [{", 'id="ringFill"')),
 )
 
 
