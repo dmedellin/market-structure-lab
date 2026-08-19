@@ -140,8 +140,36 @@ const perPath = (e.paths.innerHTML.match(/(\d+) of \d+ lessons/g) || [])
 check('scattered: subject meters sum to the headline',
       perPath.reduce((a, b) => a + b, 0), shown);
 check('scattered: no course counted as finished', e.statCourses.textContent, '0');
-check('scattered: both subjects started', e.statPaths.textContent, String(LIBRARY.length));
+// Derived from the marks this case actually makes, NOT from LIBRARY.length.
+// Those two numbers were equal while there were two paths, and the assertion
+// silently encoded the coincidence; a third path broke it.
+const touched = new Set();
+LIBRARY.forEach(p => p.courses.forEach(c => c.lessons.forEach(l => {
+  if (scattered[c.slug + '/' + l[0]]) touched.add(p.slug);
+})));
+check('scattered: every subject with a mark counts as started',
+      e.statPaths.textContent, String(touched.size));
 check('scattered: latest date wins the "last marked" stat', e.statLast.textContent, '2026-08-04');
+
+/* 4b. The trading path. Its 118 lessons were hand-written and untickable
+ *     until add_progress_marks.py gave them the same toggle, so this asserts
+ *     the thing that was actually broken: a trading tick has to count exactly
+ *     like a mathematics one, in the same key space, toward the same totals. */
+const trading = LIBRARY.filter(p => p.slug === 'trading');
+check('trading: the path is in the inventory at all', trading.length, 1);
+if (trading.length) {
+  const tc = trading[0].courses[0];
+  const one = {}; one[tc.slug + '/' + tc.lessons[0][0]] = '2026-08-19';
+  const te = run(one);
+  check('trading: a trading tick counts toward the headline', te.statLessons.textContent, '1');
+  check('trading: it starts the trading subject', te.statPaths.textContent, '1');
+  check('trading: it is not treated as a stale mark',
+        /no longer in the library/.test(te.recent.innerHTML), false);
+  check('trading: the lesson is named, not slugified',
+        te.recent.innerHTML.indexOf(tc.lessons[0][1]) !== -1, true);
+  check('trading: every trading lesson is reachable from the inventory',
+        trading[0].courses.reduce((n, c) => n + c.lessons.length, 0), 118);
+}
 
 /* 5. A mark for a lesson that is no longer in the library. It must not inflate
  *    the totals, and it must not vanish either. */

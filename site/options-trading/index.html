@@ -1038,7 +1038,107 @@
       /* The toggle is a JS-only control: without JS it renders, invites a click,
          and does nothing. Hide it rather than ship a dead affordance. */
       #themeToggle { display: none; }
-    </style>
+        /* progress-marks:begin */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+
+    .course-progress {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* A finished lesson on a course home, and a finished course on the path
+       page. Both are a tick and a border -- never a change of size, because a
+       card that grows when marked makes the page jump under the reader. */
+    .lesson-card.is-done { border-color: var(--green); }
+    .lesson-card.is-done .lesson-ord::after {
+      content: " \2713";
+      color: var(--green);
+      font-weight: 900;
+    }
+    .course-card.is-complete { border-color: var(--green); }
+    .course-progress-note {
+      display: block;
+      margin-top: 9px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+    .course-progress-note:empty { display: none; }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; line-height: 1; color: var(--line-strong); }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 38px; justify-content: center; }
+    }
+    /* progress-marks:end */
+</style>
   </noscript>
 
   <script>
@@ -1089,7 +1189,7 @@
         <a href="#references">References</a>
       </nav>
 
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+      <div class="topbar-actions"><a class="signin-btn" id="signinLink" href="../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
     </header>
 
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1317,13 +1417,15 @@
             <p>What you are actually buying, before any of it has a price. The terms written into every contract and who owes what; the four positions calls and puts can take; whether a strike is in, at or out of the money; what the premium is made of; and how to read the chain it is quoted on — including the bid-ask spread you pay on the way in and again on the way out.</p>
           </div>
 
+          <p class="course-progress" id="courseProgress">None of the 16 lessons marked complete</p>
+
           <ol class="course-track" role="list" start="1">
 
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">01</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/options-contract-fundamentals">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A contract card listing strike, expiry and a hundred-share multiplier, sitting between a holder tile that owns the right and a writer tile that carries the obligation, with premium flowing from the holder to the writer.">
                     <rect class="sv-tile-live" x="8" y="38" width="88" height="48" rx="14" />
@@ -1383,7 +1485,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">02</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/calls-and-puts">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Four expiration payoff diagrams in a two by two grid — long call and short call on the top row, long put and short put on the bottom — each bending at its own dashed strike line.">
                     <g class="sv-grid">
@@ -1443,7 +1545,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">03</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/moneyness">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A strike ladder split into three bands for a call — in the money below the stock price, at the money at the nearest strike, and out of the money above it — with the stock price marked by a dashed line on the axis.">
                     <rect class="sv-profit" x="14" y="34" width="122" height="52" rx="9" />
@@ -1502,7 +1604,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">04</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/option-premium">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Four premium bars across successive strikes, each split into a solid intrinsic block at the bottom and a lighter extrinsic block on top; the intrinsic block shrinks to nothing on the last bar while extrinsic value remains.">
                     <line class="sv-axis" x1="20" y1="126" x2="346" y2="126" />
@@ -1561,7 +1663,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">05</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/option-chain-and-liquidity">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Three rows of an option chain with strike, bid, ask and volume columns; the selected bottom row is highlighted and the gap between its bid and its ask is bracketed underneath and labelled as the spread.">
                     <g class="sv-text">
@@ -1639,7 +1741,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">06</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/expiration-and-time-decay">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Extrinsic value decaying along the days-to-expiration axis: a shaded curve that falls gently from sixty days, then drops steeply through the last week to nothing at expiration.">
                     <path class="sv-extrinsic" d="M28 36C120 48 200 64 258 86C302 104 328 120 340 124L340 124L28 124Z" />
@@ -1690,7 +1792,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">07</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/implied-volatility">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Two option value curves over the same stock prices — a higher curve at high implied volatility and a lower dashed curve at low implied volatility — both sitting above the straight intrinsic value line that bends at the strike.">
                     <line class="sv-axis" x1="18" y1="126" x2="346" y2="126" />
@@ -1740,7 +1842,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">08</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/delta-and-gamma">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A delta curve rising from zero to one across stock prices with a straight dashed tangent drawn at the strike showing the delta-only estimate, above a row of gamma bars that peak at the same strike.">
                     <line class="sv-axis" x1="18" y1="96" x2="346" y2="96" />
@@ -1801,7 +1903,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">09</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/theta-and-vega">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Four bars around a zero line showing how one week of decay pushes value down, a rise in implied volatility pushes it up, and the resulting net estimate is then compared with a full repricing bar.">
                     <line class="sv-axis" x1="18" y1="77" x2="346" y2="77" />
@@ -1863,7 +1965,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">10</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/long-calls-and-long-puts">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A long call payoff: a flat shaded loss equal to the premium up to the dashed strike, then a rising line that crosses zero at the marked breakeven and opens into the shaded profit region.">
                     <polygon class="sv-loss" points="22,120 140,120 196,88 22,88" />
@@ -1913,7 +2015,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">11</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/covered-calls">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A covered call payoff drawn over the dashed stock-only line: it sits slightly higher by the premium collected, then flattens into a capped ceiling at the short strike while the stock line keeps rising past it.">
                     <line class="sv-axis" x1="18" y1="86" x2="346" y2="86" />
@@ -1962,7 +2064,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">12</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/cash-secured-puts">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A cash-secured put: a reserved cash tile beside a payoff line that rises from a deep loss, crosses zero at the marked effective purchase price, and flattens at the premium collected above the strike.">
                     <rect class="sv-tile" x="12" y="12" width="104" height="42" rx="13" />
@@ -2013,7 +2115,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">13</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/vertical-debit-spreads">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A vertical debit spread payoff: flat at the maximum loss up to the long strike, rising between the two dashed strikes through the breakeven, then flat again at the capped maximum profit above the short strike.">
                     <polygon class="sv-loss" points="22,118 120,118 169,86 22,86" />
@@ -2065,7 +2167,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">14</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/vertical-credit-spreads">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A vertical credit spread payoff, the mirror of the debit spread: flat at the maximum profit equal to the credit up to the short strike, falling between the two dashed strikes through the breakeven, then flat at the capped maximum loss.">
                     <polygon class="sv-profit" points="22,44 120,44 186,86 22,86" />
@@ -2129,7 +2231,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">15</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/exercise-assignment-and-expiration">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Expiration branching into two outcomes: an in-the-money branch leading to assignment and a hundred shares changing hands, and an out-of-the-money branch leading to the contract expiring worthless.">
                     <rect class="sv-tile-live" x="10" y="58" width="96" height="40" rx="13" />
@@ -2184,7 +2286,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">16</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="options-trading/options-trade-planning">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A plan checklist of four passing rows on the left, a scored ring showing seventy-eight out of a hundred, and an export tile beneath it holding the trade plan JSON file.">
                     <g class="sv-check">
@@ -2401,6 +2503,70 @@
 
       paintIcon();
     })();
+  </script>
+  <script data-progress-marks>
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
+
+  (function () {
+    var a = document.getElementById('signinLink');
+    if (!a) return;
+    var s = null;
+    try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+    catch (e) { return; }
+    if (!s || !s.access_token) return;
+    var label = document.getElementById('signinLabel');
+    var name = null;
+    try {
+      if (s.id_token) {
+        var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name = c.name || c.preferred_username || null;
+      }
+    } catch (e) { name = null; }
+    if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+    a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+      + '. Your completion ticks can follow you to another device.');
+    a.classList.add('is-in');
+  })();
   </script>
 </body>
 </html>

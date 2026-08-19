@@ -58,14 +58,34 @@ def library_inventory():
     generated from. There is therefore no second copy to drift: a lesson exists
     here only because build_paths.py built a page for it.
 
-    The trading path is deliberately absent. Its pages carry no completion
-    toggle, so its lessons cannot be ticked, and counting them in the
-    denominator would tell a reader who has finished everything tickable that
-    they are a third of the way through.
+    The trading path is included now that its 118 lessons carry the same
+    toggle (see add_progress_marks.py). It is read from the PUBLISHED pages
+    rather than from a table here, because those pages are hand-written and
+    have no generator -- the path page lists the courses in order and each
+    course home lists its lessons, so a trading lesson is in this inventory
+    precisely because a course home links to it. That is the same "no second
+    copy" rule the generated paths get for free.
+
+    Order matches the site index: Trading, then the two mathematics paths.
     """
     sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
     import build_paths
-    return [
+    import add_progress_marks
+
+    trading = {
+        "slug": "trading",
+        "title": "Trading",
+        "courses": [
+            {
+                "slug": course["slug"],
+                "title": course["title"],
+                "n": number,
+                "lessons": [[l["slug"], l["title"]] for l in course["lessons"]],
+            }
+            for number, course in enumerate(add_progress_marks.trading_inventory(), start=1)
+        ],
+    }
+    return [trading] + [
         {
             "slug": path["slug"],
             "title": path["title"],

@@ -879,7 +879,107 @@
       /* The toggle is a JS-only control: without JS it renders, invites a click,
          and does nothing. Hide it rather than ship a dead affordance. */
       #themeToggle { display: none; }
-    </style>
+        /* progress-marks:begin */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+
+    .course-progress {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* A finished lesson on a course home, and a finished course on the path
+       page. Both are a tick and a border -- never a change of size, because a
+       card that grows when marked makes the page jump under the reader. */
+    .lesson-card.is-done { border-color: var(--green); }
+    .lesson-card.is-done .lesson-ord::after {
+      content: " \2713";
+      color: var(--green);
+      font-weight: 900;
+    }
+    .course-card.is-complete { border-color: var(--green); }
+    .course-progress-note {
+      display: block;
+      margin-top: 9px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+    .course-progress-note:empty { display: none; }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; line-height: 1; color: var(--line-strong); }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 38px; justify-content: center; }
+    }
+    /* progress-marks:end */
+</style>
   </noscript>
 
   <script>
@@ -931,7 +1031,7 @@
         <a href="#next-course">Next course</a>
       </nav>
 
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+      <div class="topbar-actions"><a class="signin-btn" id="signinLink" href="../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
     </header>
 
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1073,13 +1173,15 @@
              registered in tests/test_site_invariants.py (REQUIRED_PAGES) and in the
              release acceptance checks.
              =================================================================== -->
-        <ol class="course-track" role="list">
+        <p class="course-progress" id="courseProgress">None of the 7 lessons marked complete</p>
+
+          <ol class="course-track" role="list">
 
           <li class="course-step">
             <div class="step-rail">
               <p class="step-num" aria-hidden="true">01</p>
             </div>
-            <article class="lesson-card">
+            <article class="lesson-card" data-lesson="market-structure/market-structure">
               <div class="thumb">
                 <svg viewBox="0 0 360 150" role="img" aria-label="A rising structure line drawn through its swing points, labelled higher low and higher high, with the protected low carried right as a dashed level.">
                   <g class="sv-grid">
@@ -1141,7 +1243,7 @@
             <div class="step-rail">
               <p class="step-num" aria-hidden="true">02</p>
             </div>
-            <article class="lesson-card">
+            <article class="lesson-card" data-lesson="market-structure/ranges-breakouts-liquidity">
               <div class="thumb">
                 <svg viewBox="0 0 360 150" role="img" aria-label="Price rotating between the two boundaries of a shaded range, one spike sweeping above the range high and closing back inside, then a confirmed breakout that retests the old high from above.">
                   <g class="sv-grid">
@@ -1201,7 +1303,7 @@
             <div class="step-rail">
               <p class="step-num" aria-hidden="true">03</p>
             </div>
-            <article class="lesson-card">
+            <article class="lesson-card" data-lesson="market-structure/multi-timeframe-market-structure">
               <div class="thumb">
                 <svg viewBox="0 0 360 150" role="img" aria-label="Two side-by-side panels: a higher-timeframe uptrend on the left with one segment boxed, and on the right the lower-timeframe detail of that same segment, with an entry marker and a dashed invalidation level.">
                   <rect class="sv-tile" x="8" y="8" width="164" height="134" rx="10" opacity=".55" />
@@ -1263,7 +1365,7 @@
             <div class="step-rail">
               <p class="step-num" aria-hidden="true">04</p>
             </div>
-            <article class="lesson-card">
+            <article class="lesson-card" data-lesson="market-structure/pullbacks-entry-models">
               <div class="thumb">
                 <svg viewBox="0 0 360 150" role="img" aria-label="Candles pulling back into a shaded zone and then continuing higher, with three entry markers on the same pullback — aggressive inside it, confirmation at the turn, continuation after the higher low holds — above a dashed invalidation level.">
                   <g class="sv-grid">
@@ -1334,7 +1436,7 @@
             <div class="step-rail">
               <p class="step-num" aria-hidden="true">05</p>
             </div>
-            <article class="lesson-card">
+            <article class="lesson-card" data-lesson="market-structure/invalidation-stops-risk-reward">
               <div class="thumb">
                 <svg viewBox="0 0 360 150" role="img" aria-label="A planned trade measured in R: an entry line, a red one-R stop band below it, and two green target bands of the same height above it marking one R and two R.">
                   <g class="sv-grid">
@@ -1396,7 +1498,7 @@
             <div class="step-rail">
               <p class="step-num" aria-hidden="true">06</p>
             </div>
-            <article class="lesson-card">
+            <article class="lesson-card" data-lesson="market-structure/volume-relative-strength">
               <div class="thumb">
                 <svg viewBox="0 0 360 150" role="img" aria-label="Two normalized performance lines from a common start — a solid leader pulling away from a dashed benchmark, with the gap between them shaded — above a row of volume bars in which the two expansion bars are highlighted.">
                   <g class="sv-grid">
@@ -1466,7 +1568,7 @@
             <div class="step-rail">
               <p class="step-num" aria-hidden="true">07</p>
             </div>
-            <article class="lesson-card">
+            <article class="lesson-card" data-lesson="market-structure/options-contract-selection">
               <div class="thumb">
                 <svg viewBox="0 0 360 150" role="img" aria-label="A grid of candidate option contracts across strikes and expirations with one contract selected, and beside it the payoff line of that contract: a flat premium loss below the strike, then a rise through break-even.">
                   <text class="sv-text" x="14" y="20">STRIKE × EXPIRY</text>
@@ -1595,6 +1697,70 @@
 
       paintIcon();
     })();
+  </script>
+  <script data-progress-marks>
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
+
+  (function () {
+    var a = document.getElementById('signinLink');
+    if (!a) return;
+    var s = null;
+    try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+    catch (e) { return; }
+    if (!s || !s.access_token) return;
+    var label = document.getElementById('signinLabel');
+    var name = null;
+    try {
+      if (s.id_token) {
+        var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name = c.name || c.preferred_username || null;
+      }
+    } catch (e) { name = null; }
+    if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+    a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+      + '. Your completion ticks can follow you to another device.');
+    a.classList.add('is-in');
+  })();
   </script>
 </body>
 </html>

@@ -4263,3 +4263,78 @@ class TestChromeRendersWhatItMeans(SiteFixture):
             "display, which outranks the browser's [hidden] rule, so they stay "
             "on screen: %s" % sorted(set(offenders)),
         )
+
+
+# The trading path's 129 pages are hand-written and have no generator, so the
+# completion marks were added to them in place by scripts/add_progress_marks.py.
+# What a generated path gets by construction, this path only has for as long as
+# nobody edits a page and drops a hook -- so the hooks are checked here against
+# the SAME course declaration the rest of this file uses.
+DATA_LESSON_RE = re.compile(r'data-lesson="([^"]*)"')
+DATA_COURSE_RE = re.compile(r'data-course="([^"]*)"\s+data-lessons="(\d+)"')
+LESSON_ID_RE = re.compile(r"var id = \"([^\"]+)\";")
+
+
+class TestTradingPathCanBeTicked(SiteFixture):
+    """Every trading lesson is markable, and the marks add up to the course."""
+
+    def by_url(self):
+        return {served_path(doc.path): doc for doc in self.documents}
+
+    def test_every_trading_lesson_carries_a_toggle_for_its_own_id(self):
+        """A toggle keyed to the wrong lesson silently ticks a different page.
+
+        The id is written into the page by a patcher that derives it from the
+        course home's own links, so a mis-stamped page is exactly the failure
+        that leaves no visible trace: the button works, the tick lands on
+        another lesson, and /progress/ shows a lesson the reader never opened.
+        """
+        pages = self.by_url()
+        wrong = []
+        for _title, home, slugs in COURSES:
+            for slug in slugs:
+                url = lesson_url(home, slug)
+                doc = pages.get(url)
+                if doc is None:
+                    wrong.append("%s is not published" % url)
+                    continue
+                if PROGRESS_TOGGLE_ID not in doc.ids:
+                    wrong.append("%s has no completion toggle" % url)
+                    continue
+                found = LESSON_ID_RE.search(doc.text)
+                expected = "%s/%s" % (home.strip("/"), slug)
+                if found is None:
+                    wrong.append("%s has a toggle but no id" % url)
+                elif found.group(1) != expected:
+                    wrong.append("%s ticks %r, not %r" % (url, found.group(1), expected))
+        self.assertEqual([], sorted(wrong), "trading lesson toggles: %s" % sorted(wrong))
+
+    def test_every_trading_course_home_hooks_exactly_its_own_lessons(self):
+        pages = self.by_url()
+        wrong = []
+        for _title, home, slugs in COURSES:
+            doc = pages[home]
+            found = DATA_LESSON_RE.findall(doc.text)
+            expected = ["%s/%s" % (home.strip("/"), slug) for slug in slugs]
+            if found != expected:
+                wrong.append(
+                    "%s hooks %d card(s), expected %d; first difference %r vs %r"
+                    % (home, len(found), len(expected),
+                       (found or [None])[0], (expected or [None])[0])
+                )
+            if "courseProgress" not in doc.ids:
+                wrong.append("%s has no completion count" % home)
+        self.assertEqual([], sorted(wrong), "trading course homes: %s" % sorted(wrong))
+
+    def test_the_trading_path_page_counts_each_course_correctly(self):
+        """data-lessons is the denominator a reader sees; a stale one misleads."""
+        doc = self.by_url()[PATH_PAGE]
+        found = dict(
+            (slug, int(total)) for slug, total in DATA_COURSE_RE.findall(doc.text)
+        )
+        expected = dict((home.strip("/"), len(slugs)) for _t, home, slugs in COURSES)
+        self.assertEqual(
+            expected, found,
+            "the trading path page's per-course lesson counts disagree with the "
+            "courses themselves, so a reader would see a total they can never reach",
+        )

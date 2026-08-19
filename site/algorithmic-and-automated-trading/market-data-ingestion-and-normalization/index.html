@@ -295,7 +295,107 @@ input[type=range]{width:100%;accent-color:var(--cyan)}.segmented{display:grid;gr
       /* The toggle is a JS-only control: without JS it renders, invites a click,
          and does nothing. Hide it rather than ship a dead affordance. */
       #themeToggle { display: none; }
-    </style>
+        /* progress-marks:begin */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+
+    .course-progress {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* A finished lesson on a course home, and a finished course on the path
+       page. Both are a tick and a border -- never a change of size, because a
+       card that grows when marked makes the page jump under the reader. */
+    .lesson-card.is-done { border-color: var(--green); }
+    .lesson-card.is-done .lesson-ord::after {
+      content: " \2713";
+      color: var(--green);
+      font-weight: 900;
+    }
+    .course-card.is-complete { border-color: var(--green); }
+    .course-progress-note {
+      display: block;
+      margin-top: 9px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+    .course-progress-note:empty { display: none; }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; line-height: 1; color: var(--line-strong); }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 38px; justify-content: center; }
+    }
+    /* progress-marks:end */
+</style>
   </noscript>
 
   <script>
@@ -320,7 +420,7 @@ input[type=range]{width:100%;accent-color:var(--cyan)}.segmented{display:grid;gr
 <main class="shell">
   <header class="topbar">
     <div class="brand"><div class="brand-mark">A</div><div class="brand-copy"><strong>Algorithmic and Automated Trading</strong><span>Course 8 · Lesson 03</span></div></div>
-    <div class="top-actions"><button class="icon-btn" id="resetBtn" type="button" aria-label="Reset lab" title="Reset lab">↻</button><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
+    <div class="top-actions"><button class="icon-btn" id="resetBtn" type="button" aria-label="Reset lab" title="Reset lab">↻</button><div class="topbar-actions"><a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div></div>
   </header>
   <nav class="crumbs" aria-label="Breadcrumb">
     <a href="../../">Learn library</a>
@@ -339,6 +439,14 @@ input[type=range]{width:100%;accent-color:var(--cyan)}.segmented{display:grid;gr
   <section class="section"><div class="section-head"><div><span class="eyebrow">Knowledge check</span><h2>Check your understanding</h2></div><p>Select one answer for each question. Feedback appears immediately.</p></div><div class="quiz"><article class="question" data-correct="0"><h3>1. Why preserve event time and receive time?</h3><div class="choices"><button class="choice" type="button">To measure lateness and process events correctly</button><button class="choice" type="button">To double trading volume</button><button class="choice" type="button">To avoid symbol mapping</button></div><div class="feedback">The difference reveals transport delay and supports correct event ordering.</div></article><article class="question" data-correct="0"><h3>2. A duplicate trade event can cause:</h3><div class="choices"><button class="choice" type="button">Repeated signals or incorrect volume</button><button class="choice" type="button">Lower network latency</button><button class="choice" type="button">Guaranteed order rejection</button></div><div class="feedback">Repeated input may update indicators and strategy state more than once.</div></article><article class="question" data-correct="0"><h3>3. Normalization should occur:</h3><div class="choices"><button class="choice" type="button">Before strategies consume the feed</button><button class="choice" type="button">Only after an order fills</button><button class="choice" type="button">Inside every chart independently</button></div><div class="feedback">A common model keeps downstream behavior consistent and testable.</div></article></div></section>
   <section class="section"><div class="two-col"><article class="list-card good"><h3>Practical rules</h3><ul><li>Store provider timestamps and system receive timestamps.</li><li>Deduplicate with stable event identifiers or sequence rules.</li><li>Stop or degrade trading when data freshness exceeds a defined limit.</li></ul></article><article class="list-card bad"><h3>Common mistakes</h3><ul><li>Treating arrival order as market order.</li><li>Silently filling missing values without quality flags.</li><li>Mixing adjusted historical prices with unadjusted live prices.</li></ul></article></div></section>
   <section class="section"><div class="section-head"><div><span class="eyebrow">References</span><h2>Official reading</h2></div><p>These sources cover algorithmic controls, market access, broker APIs, system operations, or security.</p></div><div style="display:grid;gap:10px"><div class="reference"><p><strong>Alpaca · WebSocket Market Data</strong><br>Official example of receiving real-time stock, option, crypto, and news updates over a streaming API.</p><a href="https://docs.alpaca.markets/us/docs/streaming-market-data" target="_blank" rel="noopener noreferrer">Open official reference ↗</a></div><div class="reference"><p><strong>FINRA · Regulatory Notice 15-09</strong><br>Official guidance on supervision, testing, controls, documentation, and monitoring for algorithmic trading strategies.</p><a href="https://www.finra.org/rules-guidance/notices/15-09" target="_blank" rel="noopener noreferrer">Open official reference ↗</a></div></div></section>
+    <div class="progress-bar">
+      <button class="progress-toggle" id="progressToggle" type="button" aria-pressed="false">
+        <span class="progress-tick" aria-hidden="true">&#10003;</span><span id="progressLabel">Mark this lesson complete</span>
+      </button>
+      <p class="progress-note">Kept in this browser only, for you. Nothing is sent anywhere and nothing checks it.
+        <a href="../../progress/">Carry it to another device</a>.</p>
+    </div>
+
   <nav class="lesson-nav" aria-label="Lesson navigation">
     <a class="lesson-link prev" href="../trading-system-architecture-and-components/" rel="prev"><span>Previous lesson</span><strong>02 &middot; Trading System Architecture and Components</strong></a>
     <a class="lesson-link next" href="../time-sessions-events-and-scheduling/" rel="next"><span>Next lesson</span><strong>04 &middot; Time, Sessions, Events, and Scheduling</strong></a>
@@ -450,4 +558,61 @@ function initLabSpecific(){let defect='duplicates',count=4,view='normalized',fre
 window.initLab=()=>{if(activeCleanup){activeCleanup();activeCleanup=null}$('#controls').innerHTML='';$('#extraVisual').innerHTML='';$('#kpis').innerHTML='';window.redrawLab=null;activeCleanup=initLabSpecific()};
 window.initLab();
 </script>
+  <script data-progress-marks>
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    var button = document.getElementById('progressToggle');
+    if (!button || !window.learnProgress) return;
+    var id = "algorithmic-and-automated-trading/market-data-ingestion-and-normalization";
+    var label = document.getElementById('progressLabel');
+    function paint() {
+      var on = window.learnProgress.done(id);
+      button.classList.toggle('is-done', on);
+      button.setAttribute('aria-pressed', on ? 'true' : 'false');
+      label.textContent = on ? 'Completed' : 'Mark this lesson complete';
+    }
+    button.addEventListener('click', function () { window.learnProgress.toggle(id); paint(); });
+    paint();
+  })();
+
+  (function () {
+    var a = document.getElementById('signinLink');
+    if (!a) return;
+    var s = null;
+    try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+    catch (e) { return; }
+    if (!s || !s.access_token) return;
+    var label = document.getElementById('signinLabel');
+    var name = null;
+    try {
+      if (s.id_token) {
+        var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name = c.name || c.preferred_username || null;
+      }
+    } catch (e) { name = null; }
+    if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+    a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+      + '. Your completion ticks can follow you to another device.');
+    a.classList.add('is-in');
+  })();
+  </script>
 </body></html>

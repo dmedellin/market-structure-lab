@@ -1008,7 +1008,107 @@
       /* The toggle is a JS-only control: without JS it renders, invites a click,
          and does nothing. Hide it rather than ship a dead affordance. */
       #themeToggle { display: none; }
-    </style>
+        /* progress-marks:begin */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+
+    .course-progress {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* A finished lesson on a course home, and a finished course on the path
+       page. Both are a tick and a border -- never a change of size, because a
+       card that grows when marked makes the page jump under the reader. */
+    .lesson-card.is-done { border-color: var(--green); }
+    .lesson-card.is-done .lesson-ord::after {
+      content: " \2713";
+      color: var(--green);
+      font-weight: 900;
+    }
+    .course-card.is-complete { border-color: var(--green); }
+    .course-progress-note {
+      display: block;
+      margin-top: 9px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+    .course-progress-note:empty { display: none; }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; line-height: 1; color: var(--line-strong); }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 38px; justify-content: center; }
+    }
+    /* progress-marks:end */
+</style>
   </noscript>
 
   <script>
@@ -1066,7 +1166,7 @@
         <a href="#rules">Rule export</a>
       </nav>
 
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+      <div class="topbar-actions"><a class="signin-btn" id="signinLink" href="../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
     </header>
 
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1337,13 +1437,15 @@
             <p>What the number under the chart counts, and what it refuses to say. Volume measures participation, not direction: a completed trade always has both a buyer and a seller, so a tall bar tells you how much changed hands, never who won. This stage sets the reading habits the rest of the course depends on — pairing price progress with changing activity, normalizing current volume against a comparable baseline before anything gets called a spike, and separating expansion from climax and absorption.</p>
           </div>
 
+          <p class="course-progress" id="courseProgress">None of the 16 lessons marked complete</p>
+
           <ol class="course-track" role="list" start="1">
 
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">01</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/volume-fundamentals">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A price line across the top of the panel with a row of volume bars beneath it, one bar much taller than the rest, showing that the bars record how much traded rather than which direction price took.">
                     <g class="sv-grid">
@@ -1409,7 +1511,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">02</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/price-volume-relationships">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Four tiles, each pairing a price arrow with a volume bar: price up on rising volume, price up on falling volume, price down on rising volume, and price down on falling volume.">
                     <g class="sv-tile">
@@ -1471,7 +1573,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">03</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/relative-volume-and-volume-spikes">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A row of volume bars under a dashed baseline that marks the comparable average, with one bar rising far above the baseline and highlighted as a spike.">
                     <line class="sv-axis" x1="8" y1="118" x2="352" y2="118" />
@@ -1533,7 +1635,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">04</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/volume-confirmation">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Price crossing a dashed structural level twice: the first break is backed by a tall volume bar and marked with a check, the second is backed by a small bar, fails back below the level, and is marked with a cross.">
                     <line class="sv-zero" x1="8" y1="54" x2="352" y2="54" />
@@ -1597,7 +1699,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">05</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/on-balance-volume">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A price line making a higher second peak above a stepped On-Balance Volume line that makes a lower second peak, with dashed lines joining each pair of peaks to show the two series disagreeing.">
                     <path class="sv-price" d="M14 58C34 48 44 34 62 30C80 26 92 38 110 46C128 54 140 58 158 54C176 50 186 32 204 24C222 16 232 14 250 18C268 22 280 34 298 42C316 50 330 48 346 44" />
@@ -1648,7 +1750,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">06</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/accumulation-distribution-and-chaikin-money-flow">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A single bar with its full high-to-low range drawn as a wick and the closing price marked near the top of the range, beside a money-flow oscillator that swings above and below a dashed zero line.">
                     <line class="sv-wick" x1="44" y1="14" x2="44" y2="104" />
@@ -1711,7 +1813,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">07</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/volume-weighted-average-price">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A price line weaving above and below a smooth volume-weighted average price line, with the excursions above and below marked, over a row of small volume bars.">
                     <g class="sv-grid">
@@ -1778,7 +1880,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">08</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/anchored-volume-weighted-average-price">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A dashed vertical marker at a chosen event, with a volume-weighted average price line that begins at that event and runs forward beneath a price line held above it.">
                     <g class="sv-grid">
@@ -1841,7 +1943,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">09</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/volume-profile">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Horizontal bars stacked by price level, longest in the middle and shorter at the extremes, forming a volume profile beside the price path that produced it.">
                     <g class="sv-bar">
@@ -1896,7 +1998,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">10</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/value-area-poc-hvn-lvn">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="The same profile with a shaded value area between two dashed boundaries, the point of control highlighted as the longest bar inside it, a thick high-volume node and a thin low-volume node labelled outside it.">
                     <rect class="sv-fill" x="8" y="38" width="344" height="54" rx="6" />
@@ -1969,7 +2071,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">11</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/bid-ask-spread-and-order-types">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A quote ladder with three resting ask levels above and three resting bid levels below, the gap between them marked as the spread, and an arrow showing a marketable order crossing that gap to trade.">
                     <g class="sv-tile">
@@ -2035,7 +2137,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">12</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/time-and-sales">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Six rows of a transaction stream, each carrying a side marker and a size bar, with a downward arrow beside them standing for the pace at which prints arrive.">
                     <g class="sv-tile">
@@ -2102,7 +2204,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">13</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/footprint-charts-and-bid-ask-delta">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Two candles drawn as stacks of price-level cells, each cell splitting executed volume into a bid-classified bar to the left of the centre line and an ask-classified bar to the right.">
                     <line class="sv-zero" x1="104" y1="10" x2="104" y2="126" />
@@ -2170,7 +2272,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">14</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/cumulative-volume-delta">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A price line reaching a higher second peak above a filled cumulative delta curve that peaks lower the second time, with dashed lines joining each pair of peaks across a dashed zero line.">
                     <path class="sv-price" d="M14 56C36 46 50 34 74 32C98 30 110 44 134 48C158 52 172 40 196 32C220 24 234 18 258 20C282 22 296 34 320 40C332 43 340 42 348 40" />
@@ -2223,7 +2325,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">15</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/order-book-and-market-depth">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A market-depth staircase: displayed bid liquidity accumulating in steps to the left of a dashed midpoint and displayed ask liquidity accumulating in steps to the right of it.">
                     <path class="sv-fill-up" d="M180 100H156V88H132V76H108V62H84V50H60V36H20V112H180Z" />
@@ -2285,7 +2387,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">16</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="volume-and-order-flow/volume-and-order-flow-trading-rules">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Four stacked condition rows for context, participation, location and flow feeding into a price series where an entry is marked in green and an exit in red, with the finished specification shown between braces as an exportable rule set.">
                     <g class="sv-tile">
@@ -2481,6 +2583,70 @@
 
       paintIcon();
     })();
+  </script>
+  <script data-progress-marks>
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
+
+  (function () {
+    var a = document.getElementById('signinLink');
+    if (!a) return;
+    var s = null;
+    try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+    catch (e) { return; }
+    if (!s || !s.access_token) return;
+    var label = document.getElementById('signinLabel');
+    var name = null;
+    try {
+      if (s.id_token) {
+        var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name = c.name || c.preferred_username || null;
+      }
+    } catch (e) { name = null; }
+    if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+    a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+      + '. Your completion ticks can follow you to another device.');
+    a.classList.add('is-in');
+  })();
   </script>
 </body>
 </html>

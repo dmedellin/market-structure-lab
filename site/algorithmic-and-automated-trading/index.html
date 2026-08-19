@@ -1053,7 +1053,107 @@
       /* The toggle is a JS-only control: without JS it renders, invites a click,
          and does nothing. Hide it rather than ship a dead affordance. */
       #themeToggle { display: none; }
-    </style>
+        /* progress-marks:begin */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+
+    .course-progress {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* A finished lesson on a course home, and a finished course on the path
+       page. Both are a tick and a border -- never a change of size, because a
+       card that grows when marked makes the page jump under the reader. */
+    .lesson-card.is-done { border-color: var(--green); }
+    .lesson-card.is-done .lesson-ord::after {
+      content: " \2713";
+      color: var(--green);
+      font-weight: 900;
+    }
+    .course-card.is-complete { border-color: var(--green); }
+    .course-progress-note {
+      display: block;
+      margin-top: 9px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+    .course-progress-note:empty { display: none; }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; line-height: 1; color: var(--line-strong); }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 38px; justify-content: center; }
+    }
+    /* progress-marks:end */
+</style>
   </noscript>
 
   <script>
@@ -1106,7 +1206,7 @@
         <a href="#spec">Specification</a>
       </nav>
 
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+      <div class="topbar-actions"><a class="signin-btn" id="signinLink" href="../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
     </header>
 
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1390,13 +1490,15 @@
             <p>Before anything runs: what the parts of a trading system are, and how much authority each level of automation actually takes. A strategy that lives in your head produces a different trade every time; a strategy encoded as separate rules, signals, risk checks and orders produces the same decision from the same events — which is the minimum condition for everything that follows. This stage draws the boundaries, then fills them in: the data model events arrive as, the calendar and scheduler that say when a decision is even allowed, and the signal engine whose state is explicit enough that a repeat or a stale value cannot slip through as a new trade.</p>
           </div>
 
+          <p class="course-progress" id="courseProgress">None of the 16 lessons marked complete</p>
+
           <ol class="course-track" role="list" start="1">
 
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">01</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/algorithmic-and-automated-trading-fundamentals">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Five responsibilities drawn as separate chips — rules, signal, risk, order and fill — above three automation levels, alert, approval and automatic, with only the last one highlighted, showing that the parts stay separate however much authority is delegated.">
                     <g class="sv-tile">
@@ -1465,7 +1567,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">02</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/trading-system-architecture-and-components">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Three service tiles — ingest, decide and execute — joined by arrows, with a shared state store beneath the middle one that both the decision and the execution service write to, showing services, boundaries and the one place state is owned.">
                     <rect class="sv-tile" x="8" y="16" width="96" height="40" rx="12" />
@@ -1523,7 +1625,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">03</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/market-data-ingestion-and-normalization">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Raw prints scattered at the left, one pair overlapping and crossed out as a duplicate and one arriving late marked in red, funnelled into a single clean normalized line at the right.">
                     <g class="sv-text">
@@ -1584,7 +1686,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">04</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/time-sessions-events-and-scheduling">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A trading day drawn as a price line between two amber dashed session boundaries, with the closed periods shaded at either end, a shaded event window in the middle, and evenly spaced scheduler ticks beneath.">
                     <rect class="sv-fill-warm" x="8" y="30" width="60" height="62" />
@@ -1643,7 +1745,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">05</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/signal-engine-and-strategy-state">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A three-state machine — flat, long, flat — joined by entry and exit transitions, with a self-loop back into the long state crossed out in red to show a repeated signal being refused.">
                     <circle class="sv-ring" cx="46" cy="50" r="22" />
@@ -1714,7 +1816,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">06</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/portfolio-position-and-risk-engine">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Four cyan bars showing current exposure beneath an amber dashed limit line, and a fifth red bar for a proposed order that would breach the limit, crossed out before it is submitted.">
                     <rect class="sv-bar-hi" x="20" y="70" width="28" height="40" />
@@ -1770,7 +1872,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">07</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/broker-apis-and-order-lifecycle">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Four order states climbing left to right — new, accepted, partially filled, filled — with a purple dashed line running back beneath them from the broker into the middle of the sequence, showing status arriving asynchronously.">
                     <rect class="sv-tile" x="8" y="40" width="72" height="30" rx="10" />
@@ -1831,7 +1933,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">08</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/order-management-and-execution">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A depth ladder with ask sizes above and bid sizes below an amber dashed decision-price line, the reader&#x27;s own resting order drawn in cyan on that line, and a green fill marker dropped below the line to show the difference between the decision price and the price actually obtained.">
                     <line class="sv-level" x1="64" y1="62" x2="352" y2="62" />
@@ -1902,7 +2004,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">09</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/paper-trading-and-forward-testing">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A purple dashed curve for what the backtest assumed running above a cyan curve for what forward testing observed, with an amber dashed marker where paper trading begins and a bracket measuring the gap between the two at the right.">
                     <g class="sv-grid">
@@ -1958,7 +2060,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">10</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/scanners-alerts-and-human-approval">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Four ranked candidate bars: the first accepted with a green check, the second crossed out in red as a duplicate alert, the third faded and marked expired, the fourth still pending.">
                     <g class="sv-text">
@@ -2018,7 +2120,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">11</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/reliability-idempotency-retries-and-recovery">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Two attempts leaving the system on separate lines — the first ending in a red cross marked timeout, the second retried carrying the same key on an amber dashed link — converging on one tile marked with a green check to show a single order was created.">
                     <g class="sv-flow">
@@ -2087,7 +2189,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">12</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/observability-logging-and-auditability">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Three stacked measurement rows — data age, decision latency against an amber dashed threshold, and error rate — above a nested row of trace spans, showing one trace recorded per decision.">
                     <path class="sv-fast" d="M92 26C116 20 134 32 158 26C182 20 200 30 224 24C248 18 266 28 290 22" />
@@ -2142,7 +2244,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">13</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/security-secrets-permissions-and-kill-switches">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A secret held in a vault tile at the left, three permission chips beside it with read and trade granted by green checks and withdrawal refused by a red cross, and a kill switch at the right whose thrown red lever stops new orders.">
                     <rect class="sv-tile" x="8" y="20" width="92" height="64" rx="13" />
@@ -2206,7 +2308,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">14</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/deployment-environments-and-configuration">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="The same artifact square carried across three environment tiles — development, paper, then live — by arrows, with a red rollback arc curving back from live to paper.">
                     <rect class="sv-tile" x="8" y="30" width="100" height="48" rx="13" />
@@ -2277,7 +2379,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">15</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/ai-assisted-and-agentic-trading-workflows">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A purple dashed AI proposal box at the left, an amber dashed authority boundary, then a cyan deterministic risk-and-rules gate feeding execution; a second purple dashed arrow attempting to bypass the gate is crossed out in red.">
                     <path class="sv-slow-dash" d="M14 26H98A6 6 0 0 1 104 32V72A6 6 0 0 1 98 78H14A6 6 0 0 1 8 72V32A6 6 0 0 1 14 26Z" />
@@ -2336,7 +2438,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">16</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="algorithmic-and-automated-trading/automated-trading-system-specification-and-production-readiness">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A specification document at the left with four readiness rows, three checked green and the last crossed red, an amber dashed readiness gate beside it, and a highlighted tile marked live and bounded that the arrow only reaches through the gate.">
                     <rect class="sv-tile" x="8" y="14" width="180" height="94" rx="13" />
@@ -2552,6 +2654,70 @@
 
       paintIcon();
     })();
+  </script>
+  <script data-progress-marks>
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
+
+  (function () {
+    var a = document.getElementById('signinLink');
+    if (!a) return;
+    var s = null;
+    try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+    catch (e) { return; }
+    if (!s || !s.access_token) return;
+    var label = document.getElementById('signinLabel');
+    var name = null;
+    try {
+      if (s.id_token) {
+        var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name = c.name || c.preferred_username || null;
+      }
+    } catch (e) { name = null; }
+    if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+    a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+      + '. Your completion ticks can follow you to another device.');
+    a.classList.add('is-in');
+  })();
   </script>
 </body>
 </html>

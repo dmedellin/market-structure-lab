@@ -989,7 +989,107 @@
       /* The toggle is a JS-only control: without JS it renders, invites a click,
          and does nothing. Hide it rather than ship a dead affordance. */
       #themeToggle { display: none; }
-    </style>
+        /* progress-marks:begin */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+
+    .course-progress {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* A finished lesson on a course home, and a finished course on the path
+       page. Both are a tick and a border -- never a change of size, because a
+       card that grows when marked makes the page jump under the reader. */
+    .lesson-card.is-done { border-color: var(--green); }
+    .lesson-card.is-done .lesson-ord::after {
+      content: " \2713";
+      color: var(--green);
+      font-weight: 900;
+    }
+    .course-card.is-complete { border-color: var(--green); }
+    .course-progress-note {
+      display: block;
+      margin-top: 9px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+    .course-progress-note:empty { display: none; }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; line-height: 1; color: var(--line-strong); }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 38px; justify-content: center; }
+    }
+    /* progress-marks:end */
+</style>
   </noscript>
 
   <script>
@@ -1042,7 +1142,7 @@
         <a href="#journal">Journal format</a>
       </nav>
 
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+      <div class="topbar-actions"><a class="signin-btn" id="signinLink" href="../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
     </header>
 
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1260,13 +1360,15 @@
             <p>Before any pattern has a name: the conditional plan you are willing to act on, the levels that plan refers to, and the independent evidence that decides whether the idea is worth taking at all. Everything downstream is written against what you decide here.</p>
           </div>
 
+          <p class="course-progress" id="courseProgress">None of the 15 lessons marked complete</p>
+
           <ol class="course-track" role="list" start="1">
 
             <li class="course-step">
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">01</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/trade-thesis">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A trade plan written as three stacked conditional rows — if, then, unless — each with a filled bar, feeding an arrow into a single checked plan tile.">
                     <g class="sv-tile">
@@ -1324,7 +1426,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">02</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/support-resistance">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Price rotating between a shaded resistance band across the top and a shaded support band across the bottom, then breaking above resistance and returning to it from above, where the old ceiling holds as a floor.">
                     <g class="sv-grid">
@@ -1384,7 +1486,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">03</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/confluence">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Five separate lines of evidence converging on one setup — three of them solid and confirming, two dashed and weak — scoring four out of five on a stack of ranked bars.">
                     <g class="sv-zone-line">
@@ -1459,7 +1561,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">04</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/breakout-setups">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Price compressing under a flat dashed ceiling, thrusting through it, then returning to the old ceiling and holding above it on the retest before continuing higher.">
                     <g class="sv-grid">
@@ -1513,7 +1615,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">05</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/pullback-setups">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="An impulse leg higher, a pullback that stops inside a shaded mid-leg zone at a higher low, and the continuation that follows out of it.">
                     <g class="sv-grid">
@@ -1568,7 +1670,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">06</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/reversal-setups">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A mature uptrend that posts a lower high, breaks the dashed level marking its last protected low, retests that broken level from below, and then trends down.">
                     <g class="sv-grid">
@@ -1634,7 +1736,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">07</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/entry-confirmation">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A run of candles with one ringed trigger candle: the first that satisfies the entry rule, with the entry level carried right from its close.">
                     <g class="sv-grid">
@@ -1712,7 +1814,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">08</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/stop-loss-placement">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A rising chart with the entry level marked, a shaded risk band beneath it, and a draggable stop handle sitting on the dashed stop line below the last swing low.">
                     <g class="sv-grid">
@@ -1769,7 +1871,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">09</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/profit-targets">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="An entry line with three dashed target levels above it at one, two, and three R, a shaded first-target band, and a scale-out marker where price reaches each one.">
                     <line class="sv-entry" x1="14" y1="112" x2="346" y2="112" />
@@ -1836,7 +1938,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">10</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/risk-to-reward">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A short shaded risk bar of one R beside a tall shaded reward bar of three R, and next to them a break-even win-rate meter with its marker near the low end of the scale.">
                     <line class="sv-axis" x1="14" y1="130" x2="186" y2="130" />
@@ -1898,7 +2000,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">11</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/position-sizing">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="An account equity bar with a small highlighted risk slice at one end, a measured distance between the entry line and the dashed stop line beneath it, and the resulting quantity shown as a grid of ten unit tiles.">
                     <text class="sv-text" x="14" y="22">EQUITY</text>
@@ -1963,7 +2065,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">12</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/trade-management">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Price advancing while a dashed stop line ratchets up beneath it in steps, with a marked point where part of the position is scaled out.">
                     <g class="sv-grid">
@@ -2027,7 +2129,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">13</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/backtesting">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="An equity curve rising across a sample split into in-sample and out-of-sample halves by a dashed divider, with the distribution of individual R outcomes plotted as bars above and below a zero line beneath it.">
                     <g class="sv-grid">
@@ -2097,7 +2199,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">14</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/trading-journal">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="A journal table with a header row and four trade rows, each marked won or lost, feeding an arrow into a tile labelled JSON: the exported trade-journal-v1 file.">
                     <rect class="sv-tile" x="14" y="16" width="210" height="24" rx="8" />
@@ -2166,7 +2268,7 @@
               <div class="step-rail">
                 <p class="step-num" aria-hidden="true">15</p>
               </div>
-              <article class="lesson-card">
+              <article class="lesson-card" data-lesson="trade-setup-execution/performance-review">
                 <div class="thumb">
                   <svg viewBox="0 0 360 150" role="img" aria-label="Performance segmented into five groups, each with a bar above the zero line for trades that followed the plan and a bar below it for trades that did not, with the strongest segment ringed and a dashed rule line drawn across the chart.">
                     <line class="sv-axis" x1="14" y1="112" x2="346" y2="112" />
@@ -2346,6 +2448,70 @@
 
       paintIcon();
     })();
+  </script>
+  <script data-progress-marks>
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    if (!window.learnProgress) return;
+    var out = document.getElementById('courseProgress');
+    var items = [].slice.call(document.querySelectorAll('[data-lesson]'));
+    if (!items.length) return;
+    function paint() {
+      var n = 0;
+      items.forEach(function (item) {
+        var on = window.learnProgress.done(item.getAttribute('data-lesson'));
+        item.classList.toggle('is-done', on);
+        if (on) n += 1;
+      });
+      if (out) {
+        out.textContent = n === 0
+          ? 'None of the ' + items.length + ' lessons marked complete'
+          : n + ' of ' + items.length + ' lessons marked complete';
+      }
+    }
+    paint();
+    window.addEventListener('storage', paint);
+  })();
+
+  (function () {
+    var a = document.getElementById('signinLink');
+    if (!a) return;
+    var s = null;
+    try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+    catch (e) { return; }
+    if (!s || !s.access_token) return;
+    var label = document.getElementById('signinLabel');
+    var name = null;
+    try {
+      if (s.id_token) {
+        var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name = c.name || c.preferred_username || null;
+      }
+    } catch (e) { name = null; }
+    if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+    a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+      + '. Your completion ticks can follow you to another device.');
+    a.classList.add('is-in');
+  })();
   </script>
 </body>
 </html>

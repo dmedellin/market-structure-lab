@@ -1247,7 +1247,107 @@ svg polyline{fill:none!important}
       /* The toggle is a JS-only control: without JS it renders, invites a click,
          and does nothing. Hide it rather than ship a dead affordance. */
       #themeToggle { display: none; }
-    </style>
+        /* progress-marks:begin */
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 22px;
+      padding: 15px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-2);
+    }
+    .progress-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      align-self: flex-start;
+      padding: 10px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .progress-toggle:hover { border-color: var(--cyan); }
+    .progress-toggle .progress-tick {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--line-strong);
+      background: var(--panel-2);
+      color: transparent;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+    .progress-toggle.is-done { border-color: var(--green); color: var(--green); }
+    .progress-toggle.is-done .progress-tick {
+      border-color: var(--green);
+      background: var(--green);
+      color: var(--on-accent);
+    }
+    .progress-note { margin: 0; color: var(--muted); font-size: 0.82rem; }
+    .progress-note a { color: var(--cyan); }
+
+    .course-progress {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* A finished lesson on a course home, and a finished course on the path
+       page. Both are a tick and a border -- never a change of size, because a
+       card that grows when marked makes the page jump under the reader. */
+    .lesson-card.is-done { border-color: var(--green); }
+    .lesson-card.is-done .lesson-ord::after {
+      content: " \2713";
+      color: var(--green);
+      font-weight: 900;
+    }
+    .course-card.is-complete { border-color: var(--green); }
+    .course-progress-note {
+      display: block;
+      margin-top: 9px;
+      color: var(--green);
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+    .course-progress-note:empty { display: none; }
+
+    .topbar-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: none;
+      padding: 0 12px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel-2);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .signin-btn:hover { color: var(--text); border-color: var(--line-strong); }
+    .signin-mark { font-size: 0.6rem; line-height: 1; color: var(--line-strong); }
+    .signin-btn.is-in .signin-mark { color: var(--green); }
+    @media (max-width: 560px) {
+      .signin-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .signin-btn { padding: 0; width: 38px; justify-content: center; }
+    }
+    /* progress-marks:end */
+</style>
   </noscript>
 
   <script>
@@ -1278,7 +1378,7 @@ svg polyline{fill:none!important}
         <div class="brand-mark" aria-hidden="true">11</div>
         <div class="brand-copy"><strong>Technical Indicators</strong><span>Course 4 · Standalone interactive lesson</span></div>
       </a>
-      <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button>
+      <div class="topbar-actions"><a class="signin-btn" id="signinLink" href="../../progress/" title="Optional. Signing in carries your completion ticks to your other devices; it unlocks nothing, because nothing here is locked."><span class="signin-mark" aria-hidden="true">&#9679;</span><span class="signin-label" id="signinLabel">Sign in</span></a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle theme">☾</button></div>
     </header>
 
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -1331,6 +1431,14 @@ svg polyline{fill:none!important}
     </div></section>
     <section class="section"><div class="grid-2"><article class="card card-pad"><h3 style="margin-top:0;">Common mistakes</h3><div class="lesson-list"><div class="lesson-row"><div class="num">1</div><div><strong>Using the current high to test itself</strong><span>Including the current bar can move the upper channel to the same new high and obscure the intended comparison.</span></div></div><div class="lesson-row"><div class="num">2</div><div><strong>Counting every close above as a new breakout</strong><span>Define whether only the first transition outside is an event or whether repeated bars matter.</span></div></div><div class="lesson-row"><div class="num">3</div><div><strong>Assuming a breakout must continue</strong><span>Donchian Channels identify new rolling extremes, not guaranteed acceptance beyond them.</span></div></div></div></article><article class="card card-pad"><h3 style="margin-top:0;">Completion standard</h3><div class="callout"><div class="mark">✓</div><div><strong>Finish when you can state exactly which bars define the channel.</strong><p>Calculate current and prior Donchian levels, identify the breakout comparison, count events without double-counting states, and state the required confirmation and exit.</p></div></div><div class="note" style="margin-top:12px;"><strong>Calculation note:</strong> This lesson displays either a channel including the current bar or one through the current bar, while signal markers always compare the close against the previous bar’s completed lookback.</div></article></div></section>
     </main>
+
+    <div class="progress-bar">
+      <button class="progress-toggle" id="progressToggle" type="button" aria-pressed="false">
+        <span class="progress-tick" aria-hidden="true">&#10003;</span><span id="progressLabel">Mark this lesson complete</span>
+      </button>
+      <p class="progress-note">Kept in this browser only, for you. Nothing is sent anywhere and nothing checks it.
+        <a href="../../progress/">Carry it to another device</a>.</p>
+    </div>
 
     <nav class="lesson-nav" aria-label="Lesson navigation">
       <a class="lesson-link prev" href="../keltner-channels/" rel="prev"><span>Previous lesson</span><strong>10 &middot; Keltner Channels</strong></a>
@@ -1492,5 +1600,62 @@ function renderDon(){
 }
 ['donScenario','donPeriod','donCurrent'].forEach(id=>byId(id).addEventListener('input',renderDon));setupTheme(()=>{drawHero('breakout');renderDon()});drawHero('breakout');renderDon();
 setupQuiz({promptId:'donQuizPrompt',choicesId:'donQuizChoices',feedbackId:'donQuizFeedback',scoreId:'donQuizScore',nextId:'donQuizNext',questions:[{"prompt":"What defines the upper Donchian Channel?","choices":["The average close","The highest high in the selected lookback","The current ATR","The RSI threshold"],"answer":1,"explanation":"The channel tracks rolling price extremes."},{"prompt":"Why use the prior channel for a breakout comparison?","choices":["To compare the current bar with a boundary known before it formed","To include future prices","To remove volatility","To calculate volume"],"answer":0,"explanation":"The current high can otherwise redefine the same upper boundary being tested."},{"prompt":"A close above the prior upper channel establishes what?","choices":["A new rolling breakout event under the rule","Guaranteed trend continuation","Low volatility","A fundamental valuation change"],"answer":0,"explanation":"It satisfies the defined price event, but continuation still requires risk and context rules."},{"prompt":"Increasing the Donchian lookback usually does what to the channel?","choices":["Uses a broader history and often produces fewer new extremes","Uses less data","Makes it a momentum oscillator","Removes all false breaks"],"answer":0,"explanation":"Longer windows retain older extremes and normally require a larger move to establish a new one."}]});</script>
+  <script data-progress-marks>
+  /* Completion marks. localStorage only: no request leaves the page. */
+  (function () {
+    var KEY = 'learn-progress';
+    function read() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+      catch (e) { return {}; }
+    }
+    function write(map) {
+      try { localStorage.setItem(KEY, JSON.stringify(map)); } catch (e) { /* private mode */ }
+    }
+    function done(id) { return Object.prototype.hasOwnProperty.call(read(), id); }
+    function toggle(id) {
+      var map = read();
+      if (done(id)) { delete map[id]; } else { map[id] = new Date().toISOString().slice(0, 10); }
+      write(map);
+      return done(id);
+    }
+    window.learnProgress = { read: read, done: done, toggle: toggle, key: KEY };
+  })();
+
+  (function () {
+    var button = document.getElementById('progressToggle');
+    if (!button || !window.learnProgress) return;
+    var id = "technical-indicators/donchian-channels";
+    var label = document.getElementById('progressLabel');
+    function paint() {
+      var on = window.learnProgress.done(id);
+      button.classList.toggle('is-done', on);
+      button.setAttribute('aria-pressed', on ? 'true' : 'false');
+      label.textContent = on ? 'Completed' : 'Mark this lesson complete';
+    }
+    button.addEventListener('click', function () { window.learnProgress.toggle(id); paint(); });
+    paint();
+  })();
+
+  (function () {
+    var a = document.getElementById('signinLink');
+    if (!a) return;
+    var s = null;
+    try { s = JSON.parse(sessionStorage.getItem('learn-auth') || 'null'); }
+    catch (e) { return; }
+    if (!s || !s.access_token) return;
+    var label = document.getElementById('signinLabel');
+    var name = null;
+    try {
+      if (s.id_token) {
+        var c = JSON.parse(atob(s.id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        name = c.name || c.preferred_username || null;
+      }
+    } catch (e) { name = null; }
+    if (label) label.textContent = name ? String(name).split(' ')[0] : 'Signed in';
+    a.setAttribute('title', (name ? 'Signed in as ' + name : 'Signed in')
+      + '. Your completion ticks can follow you to another device.');
+    a.classList.add('is-in');
+  })();
+  </script>
 </body>
 </html>
