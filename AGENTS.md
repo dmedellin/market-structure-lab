@@ -325,17 +325,17 @@ it stay wrong?"** A confidently wrong lab passes every markup check. A wrong
 test passes silently, forever. Those get the strongest model regardless of how
 small the diff looks.
 
-| agent | model | owns | why this tier |
-| --- | --- | --- | --- |
-| `site-architect` | **opus** | URL space, cross-path design, retirements | one decision reshapes five declarations and the public URL space |
-| `chrome-renderer` | **opus** | `scripts/mathpath/{chrome,theme,render,progress,feedback}.py` | one edit lands on all 336 lessons at once |
-| `lab-arithmetic` | **opus** | `scripts/mathpath/labs/`, `scripts/mathcheck.js` | exact rational arithmetic; a wrong answer is invisible to every other check |
-| `invariants` | **opus** | `tests/test_site_invariants.py` | a test that is wrong passes, and keeps passing |
-| `release-safety` | **opus** | `release/`, `Containerfile.release`, `.github/workflows/`, `deploy/` | irreversible and expensive; **read-only and dry-run by default** |
-| `content-author` | sonnet | `content/discrete_math/`, `content/algebra/` | high volume, and `mathcheck`/`labcheck` are real gates behind it |
-| `trading-pages` | sonnet | the eight trading course trees, `scripts/add_progress_marks.py` | hand-authored, blast radius is one course |
-| `self-containment` | sonnet | the invariant across its declaration sites | a pattern sweep with a fixed rule |
-| `test-triage` | haiku | run the suites, read failures, report which ones and where | mechanical, high volume, no design judgement |
+| agent | tier | Claude | Codex | owns | why this tier |
+| --- | --- | --- | --- | --- | --- |
+| `site-architect` | deep | opus | `-p deep` | URL space, cross-path design, retirements | one decision reshapes five declarations and the public URL space |
+| `chrome-renderer` | deep | opus | `-p deep` | `scripts/mathpath/{chrome,theme,render,progress,feedback}.py` | one edit lands on all 336 lessons at once |
+| `lab-arithmetic` | deep | opus | `-p deep` | `scripts/mathpath/labs/`, `scripts/mathcheck.js` | exact rational arithmetic; a wrong answer is invisible to every other check |
+| `invariants` | deep | opus | `-p deep` | `tests/test_site_invariants.py` | a test that is wrong passes, and keeps passing |
+| `release-safety` | safety | opus | `-p safety` | `release/`, `Containerfile.release`, `.github/workflows/`, `deploy/` | irreversible and expensive; **read-only** |
+| `content-author` | build | sonnet | `-p build` | `content/discrete_math/`, `content/algebra/` | high volume, and `mathcheck`/`labcheck` are real gates behind it |
+| `trading-pages` | build | sonnet | `-p build` | the eight trading course trees, `scripts/add_progress_marks.py` | hand-authored, blast radius is one course |
+| `self-containment` | build | sonnet | `-p build` | the invariant across its declaration sites | a pattern sweep with a fixed rule |
+| `test-triage` | triage | haiku | `-p triage` | run the suites, read failures, report which ones and where | mechanical, high volume, no design judgement |
 
 Two rules that matter more than the table:
 
@@ -347,4 +347,35 @@ Two rules that matter more than the table:
    agent's call.
 
 Model names are also the only thing here that dates quickly. The tiers are the
-contract; the specific model behind "opus" or "sonnet" is not.
+contract; the specific model behind a tier is not.
+
+### Running these
+
+**Claude Code** discovers the nine agents in `.claude/agents/`; each carries its
+own model and tool set, and the two that touch production have no edit or write
+tool at all.
+
+**Codex** takes the same tiers as profiles in `$CODEX_HOME`, verified against
+this machine (CLI 0.144.6):
+
+    codex -p deep      # gpt-5.6-sol   xhigh   workspace-write
+    codex -p build     # gpt-5.6-terra medium  workspace-write
+    codex -p triage    # gpt-5.6-luna  low     read-only
+    codex -p safety    # gpt-5.6-sol   high    read-only
+
+The read-only sandbox is enforced by the runtime, not merely requested in a
+prompt — which is the whole reason the production tiers use it. Note that
+`codex exec` sets `approval: never` because it is non-interactive; the sandbox
+still applies, and that is what stops it.
+
+Codex also reads **nested `AGENTS.md`** files, whose scope is the directory tree
+they sit in, with the deepest file winning. `scripts/mathpath/`, `content/`,
+`tests/`, `release/` and `.github/` each carry one, so an agent working there
+gets that area's rules without the root document having to hold them all. The
+root doc has a size budget (`project_doc_max_bytes`, 32 KB by default) and is
+already at ~20 KB, so new detail belongs in a nested file, not here.
+
+`site/` deliberately has NO `AGENTS.md`, even though it is the directory that
+most needs the warning: everything under `site/` is published, and
+`tests/test_site_invariants.py` fails on any published file that is not a
+declared URL. Its rule lives in §8 above, which every agent loads anyway.
