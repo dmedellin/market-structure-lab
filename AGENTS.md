@@ -8,16 +8,18 @@ agent) edits this repository and the platform that will eventually serve it.
 An educational static site published as **Learn** at `https://learn.geterdone.io`:
 
 The site is a subject-agnostic LIBRARY OF PATHS. A path is an ordered sequence of
-courses on one subject. There are two: **Trading** (8 courses, 118 lessons,
-hand-authored and normalized at intake) and **Discrete Mathematics** (8 courses,
-106 lessons, GENERATED from `content/discrete_math/`). The published URL space:
+courses on one subject. There are three: **Trading** (8 courses, 118 lessons,
+hand-authored and normalized at intake), **Discrete Mathematics** (8 courses, 106
+lessons, GENERATED from `content/discrete_math/`) and **Algebra** (9 courses, 112
+lessons, GENERATED from `content/algebra/`). 25 courses and 336 lessons in all.
+The published URL space:
 
 | URL | Served from |
 | --- | --- |
 | `learn.geterdone.io/` | `site/index.html` — the site index: the paths, plus course search |
-| `learn.geterdone.io/paths/<subject>/` | `site/paths/<subject>/index.html` — one page per path: `trading`, `discrete-math` |
-| `learn.geterdone.io/<course>/` | `site/<course>/index.html` — one of the sixteen course homes |
-| `learn.geterdone.io/<course>/<lesson>/` | `site/<course>/<lesson>/index.html` — one of the 224 lessons |
+| `learn.geterdone.io/paths/<subject>/` | `site/paths/<subject>/index.html` — one page per path: `trading`, `discrete-math`, `algebra` |
+| `learn.geterdone.io/<course>/` | `site/<course>/index.html` — one of the 25 course homes |
+| `learn.geterdone.io/<course>/<lesson>/` | `site/<course>/<lesson>/index.html` — one of the 336 lessons |
 
 The site index and the path pages are SHARED CHROME: they must not assume the
 subject is trading — not in copy, not in a footer, not in metadata. Only course
@@ -28,19 +30,25 @@ it separately rather than classifying pages by URL shape.
 `site/` is the document root. Whatever `site/` contains is exactly what `/` serves;
 an extra directory level in `site/` becomes an extra path segment in the public URL.
 
-The full 245-page map (plus eight published JSON assets) is in
+The full 369-page map (plus eight published JSON assets) is in
 [README.md](README.md#url-layout), and it is enforced in five places that must
 agree: `REQUIRED_PAGES` in `tests/test_site_invariants.py`, `scripts/smoke.py`,
 `acceptance.checks` in `release/contract.json`, the "Published URL space is
 complete" step in `.github/workflows/ci.yml`, and the publish guards in
 `.github/workflows/pages.yml` and `Containerfile.release`.
 
-Two sets of URLs are retired, with no redirect stubs: the seven FLAT lesson URLs
+Every lesson carries a completion toggle and a feedback panel, so a lesson page
+is also a piece of UI. The trading lessons are hand-written and were given those
+controls in place by `scripts/add_progress_marks.py`, which is idempotent and is
+the only sanctioned way to edit all 129 trading pages at once.
+
+Three sets of URLs are retired, with no redirect stubs: the seven FLAT lesson URLs
 course 1 published first, and the whole `/market-structure-lab/` prefix it used
 until the paths layer landed (that slug names the repository and the application,
-not the course, so the course took its own name — `/market-structure/`). Breaking
-both was accepted deliberately, and no guard, test, or contract may list them
-again.
+not the course, so the course took its own name — `/market-structure/`), and
+`/systems-matrices-and-sequences/`, retired when that course was split in two.
+Breaking all three was accepted deliberately, and no guard, test, or contract may
+list them again.
 
 The apex `geterdone.io` is a **separate, live GitHub Pages site that this repository
 does not control**. Do not deploy to it, reconfigure it, or write anything that
@@ -255,3 +263,88 @@ python3 scripts/smoke.py http://127.0.0.1:8000 # acceptance checks against a run
 
 Do not add a package manager, bundler, or test framework to make a check easier.
 Dependency-light is a deliberate property of this repository, not an accident.
+
+## 8. Reading this repository without burning a context window
+
+**87% of this repository by bytes is generated output that nobody should read.**
+Measured, tracked files only:
+
+| area | files | bytes | ≈ tokens |
+| --- | ---: | ---: | ---: |
+| `site/` | 378 | 41.4 MB | **~10,400,000** |
+| `content/` | 62 | 2.9 MB | ~714,000 |
+| `scripts/` | 36 | 1.9 MB | ~470,000 |
+| `release/` | 3 | 1.0 MB | ~245,000 |
+| `tests/` | 1 | 0.2 MB | ~52,000 |
+
+One Algebra course-9 lesson is 220 KB — **about 55,000 tokens**. Three of them
+do not fit in a context window. This is not a hypothetical cost; it is the
+single largest thing that can go wrong with an automated change here.
+
+**Never read these whole. There is no task that requires it:**
+
+- `site/**/*.html` — output. For the two generated paths it is rebuilt from
+  `content/` by `scripts/build_paths.py`, so the source of truth is the content
+  package and the renderer, never the page. For the trading path the page IS the
+  source, but you still want a targeted range, not 27,000 tokens of inlined lab.
+- `release/contract.json`, `release/contract.example.json` — 832 KB of generated
+  URL manifest between them. Query them; do not open them.
+- `scripts/mathpath/labs/algebra_systems.py` (264 KB) and its siblings — read the
+  function you are changing.
+- `tests/test_site_invariants.py` — 4,000+ lines. Find the class, read the class.
+
+**Do this instead.** Every one of these answers a real question for a few
+hundred tokens:
+
+```sh
+grep -rl 'data-lesson=' site | wc -l                 # which pages carry a hook
+grep -n 'class TestSelfContainment' tests/test_site_invariants.py
+sed -n '620,700p' tests/test_site_invariants.py      # then read just that range
+python3 -c "import json;d=json.load(open('release/contract.json'));print(len(d['acceptance']['checks']))"
+git diff --stat                                      # what actually changed
+python3 scripts/build_paths.py --check               # is any page stale (no rebuild)
+```
+
+Prefer running a check over reading the thing it checks. The suites in section 7
+and the Node checkers below are cheap and they answer questions that reading
+cannot: `mathcheck.js` proves the arithmetic, `labcheck.js` proves every lab
+runs, `progresscheck.js` proves the completion figures agree with each other,
+`feedbackcheck.js` proves the recommendation panel records, ticks, escapes and
+exports.
+
+Some invariants exist ONLY in `.github/workflows/ci.yml` and the local suite will
+not catch them — "exactly one `<title>` per document" is one, and an SVG
+`<title>` violates it. Before pushing, run the workflow's own steps locally
+rather than discovering them remotely.
+
+## 9. Which agent does what, and on which model
+
+The work here splits along blast radius, and the model should follow it. The
+question is not "how hard is this task" but **"if this goes wrong, how long does
+it stay wrong?"** A confidently wrong lab passes every markup check. A wrong
+test passes silently, forever. Those get the strongest model regardless of how
+small the diff looks.
+
+| agent | model | owns | why this tier |
+| --- | --- | --- | --- |
+| `site-architect` | **opus** | URL space, cross-path design, retirements | one decision reshapes five declarations and the public URL space |
+| `chrome-renderer` | **opus** | `scripts/mathpath/{chrome,theme,render,progress,feedback}.py` | one edit lands on all 336 lessons at once |
+| `lab-arithmetic` | **opus** | `scripts/mathpath/labs/`, `scripts/mathcheck.js` | exact rational arithmetic; a wrong answer is invisible to every other check |
+| `invariants` | **opus** | `tests/test_site_invariants.py` | a test that is wrong passes, and keeps passing |
+| `release-safety` | **opus** | `release/`, `Containerfile.release`, `.github/workflows/`, `deploy/` | irreversible and expensive; **read-only and dry-run by default** |
+| `content-author` | sonnet | `content/discrete_math/`, `content/algebra/` | high volume, and `mathcheck`/`labcheck` are real gates behind it |
+| `trading-pages` | sonnet | the eight trading course trees, `scripts/add_progress_marks.py` | hand-authored, blast radius is one course |
+| `self-containment` | sonnet | the invariant across its declaration sites | a pattern sweep with a fixed rule |
+| `test-triage` | haiku | run the suites, read failures, report which ones and where | mechanical, high volume, no design judgement |
+
+Two rules that matter more than the table:
+
+1. **Escalate on evidence, not on nerves.** If a sonnet agent finds it is
+   reasoning about the URL space, the release contract, or whether a test is
+   itself correct, it should stop and hand back rather than proceed carefully.
+2. **Never let a cheap model decide it is finished.** `test-triage` reports; it
+   does not judge whether a failure is acceptable. That is the requesting
+   agent's call.
+
+Model names are also the only thing here that dates quickly. The tiers are the
+contract; the specific model behind "opus" or "sonnet" is not.
